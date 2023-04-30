@@ -1,4 +1,4 @@
-// # Demo Canvas 037 
+// # Demo Canvas 037
 // Pan and zoom using a Picture entity
 //
 // Scrawl-canvas does not include built-in functionality to easily "zoom" (expand/contract the contents of) a &lt;canvas> element. Nor does it include functionality to "pan" (move in any direction through the contents of) the canvas. The use cases for, and the user interactions for controlling, such functionality are too varied; any attempt to capture a particular approach within the library's code base would necessarily make other, equally valid, approaches more problematic for developers to implement.
@@ -28,7 +28,7 @@ let currentScale = maxScale,
     fromTop = 0;
 
 // Convenience variables to access key Scrawl-canvas objects stored in the library
-const canvas = scrawl.library.canvas.mycanvas, 
+const canvas = scrawl.library.canvas.mycanvas,
     base = canvas.base,
     baseGroup = base.get('group');
 
@@ -111,9 +111,9 @@ scrawl.addListener('down', () => {
     const here = base.here,
         target = baseGroup.getArtefactAt(base.here);
 
-    draggingArtefact = (target && target.artefact && target.artefact.type == 'Picture') ? 
-        target.artefact : 
-        false; 
+    draggingArtefact = (target && target.artefact && target.artefact.type == 'Picture') ?
+        target.artefact :
+        false;
 
     if (draggingArtefact) {
         currentDragX = here.x;

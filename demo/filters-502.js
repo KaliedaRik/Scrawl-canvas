@@ -1,4 +1,4 @@
-// # Demo Filters 502 
+// # Demo Filters 502
 // SVG-based filter example: gaussian blur
 
 // [Run code](../../demo/filters-502.html)

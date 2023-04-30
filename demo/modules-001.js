@@ -63,15 +63,15 @@ scrawl.makeRender({
 
 // #### User interaction
 scrawl.addListener(
-    'move', 
-    () => canvas.cascadeEventAction('move'), 
-    canvas.domElement 
+    'move',
+    () => canvas.cascadeEventAction('move'),
+    canvas.domElement
 );
 
 scrawl.addNativeListener(
-    'touchstart', 
-    () => canvas.cascadeEventAction('move'), 
-    canvas.domElement 
+    'touchstart',
+    () => canvas.cascadeEventAction('move'),
+    canvas.domElement
 );
 
 // For this demo we will suppress touchmove functionality over the canvas
@@ -119,7 +119,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                         // + SC library purges are batched to run once per RAF
                         // + We can't rebuild until after the library is purged
                         setTimeout(() => barGraph.build({
-                            namespace: name('bars'), 
+                            namespace: name('bars'),
                             dataSource: `data/crimes-in-${currentArea.toLowerCase()}.json`,
                             canvas,
                             scrawl,
@@ -131,7 +131,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
 
                         // Again, we delay the rebuild to the next Display cycle
                         setTimeout(() => lineGraph.build({
-                            namespace: name('lines'), 
+                            namespace: name('lines'),
                             dataSource: `data/crimes-in-${currentArea.toLowerCase()}.json`,
                             category: currentCategory,
                             canvas,
@@ -152,7 +152,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                         lineGraph.kill();
 
                         barGraph.build({
-                            namespace: name('bars'), 
+                            namespace: name('bars'),
                             dataSource: `data/crimes-in-${currentArea.toLowerCase()}.json`,
                             canvas,
                             scrawl,
@@ -165,7 +165,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                         barGraph.kill();
 
                         lineGraph.build({
-                            namespace: name('lines'), 
+                            namespace: name('lines'),
                             dataSource: `data/crimes-in-${currentArea.toLowerCase()}.json`,
                             category: currentCategory,
                             canvas,
@@ -186,7 +186,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                     lineGraph.update({
                         namespace: name('lines'),
                         category: currentCategory,
-                        canvas, 
+                        canvas,
                         scrawl,
                     });
                 }
@@ -205,7 +205,7 @@ frame.build({
 });
 
 barGraph.build({
-    namespace: name('bars'), 
+    namespace: name('bars'),
     dataSource: 'data/crimes-in-hackney.json',
     canvas,
     scrawl,

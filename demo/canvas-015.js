@@ -1,4 +1,4 @@
-// # Demo Canvas 015 
+// # Demo Canvas 015
 // Phrase entity (make, clone, method, multiline)
 
 // [Run code](../../demo/canvas-015.html)

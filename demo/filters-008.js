@@ -1,4 +1,4 @@
-// # Demo Filters 008 
+// # Demo Filters 008
 // Filter parameters: tint
 
 // [Run code](../../demo/filters-008.html)
@@ -97,7 +97,7 @@ scrawl.addNativeListener(['change'], (e) => {
             blueInRed.value = b;
         }
         else if ('greenColor' === target) {
-            
+
             myFilter.set({ greenColor: val });
 
 // @ts-expect-error
@@ -108,7 +108,7 @@ scrawl.addNativeListener(['change'], (e) => {
             blueInGreen.value = b;
         }
         else if ('blueColor' === target) {
-            
+
             myFilter.set({ blueColor: val });
 
 // @ts-expect-error

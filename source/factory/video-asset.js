@@ -162,8 +162,8 @@ P.checkSource = function (width, height) {
 
         this.sourceLoaded = true;
 
-        if (this.sourceNaturalWidth !== source.videoWidth || 
-                this.sourceNaturalHeight !== source.videoHeight || 
+        if (this.sourceNaturalWidth !== source.videoWidth ||
+                this.sourceNaturalHeight !== source.videoHeight ||
                 this.sourceNaturalWidth !== width ||
                 this.sourceNaturalHeight !== height) {
 
@@ -178,7 +178,7 @@ P.checkSource = function (width, height) {
 
 
 // #### Managing video sources
-// The following functions invoke their [namesake functions on the source &lt;video> element](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement). 
+// The following functions invoke their [namesake functions on the source &lt;video> element](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement).
 // + Note that some of the functions are defined as being asynchronous; for these functions, we wrap the invocations in Promises which cascade back to the original invocation (probably in user code).
 // + All of these functions are also mapped onto the factories which consume the videoAsset - Picture entitys and Pattern styles - so they can be invoked on those objects instead on the videoAsset instance.
 
@@ -324,12 +324,12 @@ export const importMediaStream = function (items = Ωempty) {
 
     // For video, limiting functionality to accepting user values for video width and height (as minDIMENSION, maxDIMENSION and the ideal DIMENSION, and a preference for which camera to use - where applicable
     constraints.video = {};
-    
+
     const width = constraints.video.width = {};
     if (items.minWidth) width.min = items.minWidth;
     if (items.maxWidth) width.max = items.maxWidth;
     width.ideal = (items.width) ? items.width : 1280;
-    
+
     const height = constraints.video.height = {};
     if (items.minHeight) height.min = items.minHeight;
     if (items.maxHeight) height.max = items.maxHeight;
@@ -337,7 +337,7 @@ export const importMediaStream = function (items = Ωempty) {
 
     // For mobile devices etc - values can be 'user' or 'environment'
     if (items.facing) constraints.video.facingMode = items.facing;
-    
+
     // We need a video element to receive the media stream
     const name = items.name || generateUniqueString();
 

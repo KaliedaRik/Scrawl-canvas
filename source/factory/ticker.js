@@ -2,11 +2,11 @@
 // Ticker objects represent a timeline against which [Tween](./tween.html) and [Action](./action.html) objects will run.
 // + ___A Ticker is an animation___ (but not a Scrawl-canvas [Animation](./animation.html)) object; it defines a `fn` function internally which will check through all Tween and Action objects subscribing to it and, where appropriate, trigger their `update` functions.
 // + This module defines and launches a `coreTickersAnimation` Animation object; all Ticker objects get added to this object when their `run` or `resume` functions are triggered.
-// + The `coreTickersAnimation` object runs in the Scrawl-canvas `animationLoop` which is tied to the browser/device's requestAnimationFrame (RAF) functionality. 
+// + The `coreTickersAnimation` object runs in the Scrawl-canvas `animationLoop` which is tied to the browser/device's requestAnimationFrame (RAF) functionality.
 // + `coreTickersAnimation` runs before other Animation objects, thus ___Tween/Action updates happen before any Display cycle functionality___.
 // + Unlike Animation objects, ___Ticker objects do not run automatically___ as soon as they have been created.
 // + To trigger a Ticker object, invoke its `run` or `resume` functions.
-// 
+//
 // Ticker objects have an ___effective duration___ - a set number of milliseconds for which they will run.
 // + We can set this value directly, using the `duration` attribute.
 // + We can also ask the Ticker to calculate its own effective duration, taking into accout the start times and duration of its currently subscribed Tweens and Actions
@@ -107,8 +107,8 @@ baseMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
-// __order__ - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts. 
-// + Higher order Tickers will be processed after lower order Tickers. 
+// __order__ - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts.
+// + Higher order Tickers will be processed after lower order Tickers.
 // + Tickers with the same `order` value will be processed in the order in which they were defined in code.
     order: 1,
 
@@ -124,7 +124,7 @@ const defaultAttributes = {
 // __killOnComplete__ - Boolean flag. When set, the Ticker will kill both itself and all Tweens and Actions associated with it at the end of its run
     killOnComplete: false,
 
-// __cycles__ - positive integer Number representing the number of cycles the Ticker will run before it completes. 
+// __cycles__ - positive integer Number representing the number of cycles the Ticker will run before it completes.
 // + A value of `0` indicates that the Ticker should repeat itself forever, until its `halt`, `seekTo`, `seekFor`, `complete` or `reset` functions are triggered.
 // + Note that Tween and Action animation direction is determined by those objects (via their `reverseOnCycleEnd` and `reversed` flags). Tickers always repeat in a forwards direction - they loop back to their start; they never reverse time.
     cycles: 1,
@@ -223,7 +223,7 @@ S.subscribers = function (item) {
 S.order = function (item) {
 
     this.order = item;
-    
+
     if (this.active) tickerAnimationsFlag = true;
 };
 
@@ -231,7 +231,7 @@ S.order = function (item) {
 S.cycles = function (item) {
 
     this.cycles = item;
-    
+
     if (!this.cycles) this.cycleCount = 0;
 };
 
@@ -248,7 +248,7 @@ S.duration = function (item) {
     if(xt(subscribers)){
 
         for (i = 0, iz = subscribers.length; i < iz; i++) {
-        
+
             target = tween[subscribers[i]];
 
             if (target) {
@@ -264,19 +264,19 @@ S.duration = function (item) {
 
 // #### Subscription management
 
-// `subscribe` - accepts a Tween or Action name-String, or an Array of such Strings. 
+// `subscribe` - accepts a Tween or Action name-String, or an Array of such Strings.
 P.subscribe = function (items) {
 
     const myItems = requestArray();
     if (_isArray(items)) myItems.push(...items);
     else myItems.push(items);
-    
+
     let i, iz, item, name;
 
     for (i = 0, iz = myItems.length; i < iz; i++) {
 
         item = myItems[i];
-        
+
         if(item != null){
 
             if (item.substring) name = item;
@@ -301,7 +301,7 @@ P.unsubscribe = function (items) {
     const myItems = requestArray();
     if (_isArray(items)) myItems.push(...items);
     else myItems.push(items);
-    
+
     let i, iz, item, name;
 
     for (i = 0, iz = myItems.length; i < iz; i++) {
@@ -392,11 +392,11 @@ P.sortSubscribers = function () {
 // + First argument is an object that gets applied as the argument to each Tween/Action object's `set` function.
 // + Second argument is a Boolean; when set, subscribed Tween/Actions will be told to reverse their current direction.
 P.updateSubscribers = function(items, reversed) {
-    
+
     reversed = (xt(reversed)) ? reversed : false;
 
     const subs = this.getSubscriberObjects();
-    
+
     let i, iz;
 
     if (reversed) {
@@ -422,7 +422,7 @@ P.changeSubscriberDirection = function () {
     const subs = this.getSubscriberObjects();
 
     subs.forEach(sub => sub.reversed = !sub.reversed);
-    
+
     return this;
 };
 
@@ -453,7 +453,7 @@ P.recalculateEffectiveDuration = function() {
 
     const subs = this.getSubscriberObjects();
 
-    let durationValue, 
+    let durationValue,
         duration = 0;
 
     if (!this.duration) {
@@ -478,7 +478,7 @@ P.setEffectiveDuration = function() {
     let temp;
 
     if (this.duration) {
-    
+
         temp = convertTime(this.duration);
 
         // Cannot use %-String values for Ticker `duration` attribute
@@ -532,7 +532,7 @@ P.fn = function (reverseOrder) {
         cycles = this.cycles,
         effectiveDuration = this.effectiveDuration,
         eventChoke = this.eventChoke;
-    
+
     let i, iz, subs, eTime, now, e,
         currentTime, tick,
         active = this.active,
@@ -580,7 +580,7 @@ P.fn = function (reverseOrder) {
                     result.tick = effectiveDuration;
                     result.reverseTick = 0;
                     active = this.active = false;
-                    
+
                     if (cycles) {
 
                         cycleCount++
@@ -641,7 +641,7 @@ P.fn = function (reverseOrder) {
 
 // #### Animation control
 
-// `run` 
+// `run`
 // + Start the Ticker from time 0.
 // + Trigger the object's `onRun` function.
 P.run = function () {
@@ -746,7 +746,7 @@ P.reverse = function (resume = false) {
 
     this.fn();
     this.active = false;
-    
+
     if (typeof this.onReverse == FUNCTION) this.onReverse();
 
     if (resume) this.resume();

@@ -1,4 +1,4 @@
-// # Demo Filters 014 
+// # Demo Filters 014
 // Filter parameters: areaAlpha
 
 // [Run code](../../demo/filters-014.html)

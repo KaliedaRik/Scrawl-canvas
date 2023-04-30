@@ -123,7 +123,7 @@ const defaultAttributes = {
     // __range__ and __rangeFrom__ - Vector objects with some convenience pseudo-attributes to make setting them a bit easier: _rangeX, rangeY, rangeZ, rangeFromX, rangeFromY, rangeFromZ_.
     // + These attributes set each generated particle'sinitial velocity; their values represent the distance travelled in the x, y and z directions, as measured in pixels-per-second.
     // + The `rangeFrom` attributes (float Numbers that can be negative) the lowest value in that dimension that will be generated. This value is ___local to the particle___ thus negative values are to the left (x) or above (y) or behind (z) the particle's initial position.
-    // + The `range` attributes (again, float Numbers that can be negative) are the ___maximum (or least maximum) random value___ which will be added to the rangeFrom value. 
+    // + The `range` attributes (again, float Numbers that can be negative) are the ___maximum (or least maximum) random value___ which will be added to the rangeFrom value.
     // + All particles are assigned a (constrained) random velocity in this manner when they are generated.
     range: null,
     rangeFrom: null,
@@ -160,7 +160,7 @@ const defaultAttributes = {
 
     killBeyondCanvas: false,
 
-    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Emitter entity will set the maximum permitted length of the history array whenever it generates a new Particle. 
+    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Emitter entity will set the maximum permitted length of the history array whenever it generates a new Particle.
     historyLength: 1,
 
     // Emitter entitys will, as part of the Display cycle, apply any force objects assigned to a Particle. The initial forces assigned to every new Particle will be in line with the Force objects included in the Emitter's __forces__ Array.
@@ -187,7 +187,7 @@ const defaultAttributes = {
     resetAfterBlur: 3,
 
     // ##### Not defined in the defs object, but set up in the constructor and setters
-    
+
     // __particleStore__ - an Array where all the Emitter's current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Emitter's artefact - or perform equivalent &lt;canvas> context engine instructions - onto the host Cell. These actions will be defined in the `stampAction` function.
 
     // The user-defined stamp functions __preAction__, __stampAction__ and __postAction__ are invoked in turn one each tick of the Display cycle. By default these functions do nothing, meaning nothing gets drawn to the canvas
@@ -243,7 +243,7 @@ P.factoryKill = function (killArtefact, killWorld) {
 
     this.fillColorFactory.kill();
     this.strokeColorFactory.kill();
-    
+
     this.deadParticles.forEach(p => p.kill());
     this.liveParticles.forEach(p => p.kill());
     this.particleStore.forEach(p => p.kill());
@@ -493,7 +493,7 @@ P.prepareStamp = function () {
         if (particleCount) {
 
             const reqParticles = particleCount - particleStore.length;
-            
+
             if (reqParticles <= 0) canGenerate = 0;
             else if (reqParticles < canGenerate) canGenerate = reqParticles;
         }
@@ -533,7 +533,7 @@ P.addParticles = function (req) {
     };
 
     let i, p, cx, cy, timeKill, radiusKill;
-    
+
     const timeChoke = _now();
 
     // The emitter object retains details of the initial values required for eachg particle it generates
@@ -566,8 +566,8 @@ P.addParticles = function (req) {
             const test = (item) => testEngine.isPointInPath(pathObject, ...item, winding);
 
             testCell.rotateDestination(testEngine, cx, cy, generateInArea);
-            
-            GenerateInAreaLoops:    
+
+            GenerateInAreaLoops:
             for (i = 0; i < req; i++) {
 
                 let coordFlag = false;
@@ -592,11 +592,11 @@ P.addParticles = function (req) {
                     velocityY: velocityCalc(fy, y),
                     velocityZ: velocityCalc(fz, z),
 
-                    historyLength, 
-                    engine, 
-                    forces, 
+                    historyLength,
+                    engine,
+                    forces,
 
-                    mass: calc(mass, massVariation), 
+                    mass: calc(mass, massVariation),
 
                     fill: fillColorFactory.getRangeColor(_random()),
                     stroke: strokeColorFactory.getRangeColor(_random()),
@@ -631,7 +631,7 @@ P.addParticles = function (req) {
                     if (timeChoke + generationChoke < _now()) break GenerateAlongPathLoops;
 
                     coord = generateAlongPath.getPathPositionData(_random(), true);
-                    
+
                     if (coord) coordFlag = true;
                 }
 
@@ -646,12 +646,12 @@ P.addParticles = function (req) {
                     velocityY: velocityCalc(fy, y),
                     velocityZ: velocityCalc(fz, z),
 
-                    historyLength, 
-                    engine, 
-                    forces, 
+                    historyLength,
+                    engine,
+                    forces,
 
-                    mass: calc(mass, massVariation), 
- 
+                    mass: calc(mass, massVariation),
+
                     fill: fillColorFactory.getRangeColor(_random()),
                     stroke: strokeColorFactory.getRangeColor(_random()),
                 });
@@ -698,11 +698,11 @@ P.addParticles = function (req) {
                 positionY: res.y,
                 positionZ: res.z,
 
-                historyLength, 
-                engine, 
-                forces, 
+                historyLength,
+                engine,
+                forces,
 
-                mass: calc(mass, massVariation), 
+                mass: calc(mass, massVariation),
 
                 fill: fillColorFactory.getRangeColor(_random()),
                 stroke: strokeColorFactory.getRangeColor(_random()),
@@ -765,11 +765,11 @@ P.addParticles = function (req) {
                 positionY: res.y,
                 positionZ: res.z,
 
-                historyLength, 
-                engine, 
-                forces, 
+                historyLength,
+                engine,
+                forces,
 
-                mass: calc(mass, massVariation), 
+                mass: calc(mass, massVariation),
 
                 fill: fillColorFactory.getRangeColor(_random()),
                 stroke: strokeColorFactory.getRangeColor(_random()),
@@ -812,7 +812,7 @@ P.addParticles = function (req) {
     else {
 
         [cx, cy] = currentStampPosition;
-        
+
         for (i = 0; i < req; i++) {
 
             p = requestParticle();
@@ -826,11 +826,11 @@ P.addParticles = function (req) {
                 velocityY: velocityCalc(fy, y),
                 velocityZ: velocityCalc(fz, z),
 
-                historyLength, 
-                engine, 
-                forces, 
+                historyLength,
+                engine,
+                forces,
 
-                mass: calc(mass, massVariation), 
+                mass: calc(mass, massVariation),
 
                 fill: fillColorFactory.getRangeColor(_random()),
                 stroke: strokeColorFactory.getRangeColor(_random()),
@@ -856,7 +856,7 @@ P.regularStamp = function () {
     const host = this.currentHost;
 
     let deltaTime = _tick;
-    
+
     const now = _now();
 
     if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
@@ -957,11 +957,11 @@ P.checkHit = function (items = [], mycell) {
 //     tickMultiplier: 2,
 //     userAttributes: [
 //         {
-//             key: 'particleColor', 
+//             key: 'particleColor',
 //             defaultValue: '#F0F8FF',
 //         },
 //         {
-//             key: 'alphaDecay', 
+//             key: 'alphaDecay',
 //             defaultValue: 6,
 //         },
 //     ],

@@ -1,4 +1,4 @@
-// # Demo Canvas 030 
+// # Demo Canvas 030
 // Polyline entity functionality
 // + Note that the Polyline entity remains experimental technology and may be subject to breaking changes in future minor updates
 
@@ -18,7 +18,7 @@ const absoluteCoords = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 20
 const relativeCoords = [['50%', 'center'], ['40%', '10%'], ['20%', '40%'], ['25%', '80%'], ['70%', '75%'], ['85%', '60%']];
 
 
-// ... And a third coordinate array using Wheel entitys 
+// ... And a third coordinate array using Wheel entitys
 absoluteCoords.forEach((item, index) => {
 
     const [x, y] = item;
@@ -164,7 +164,7 @@ for (let i = 0; i < 10; i++) {
         path: 'my-polyline',
         pathPosition: i / 100,
         lockTo: 'path',
-        
+
         delta: {
             pathPosition: 0.001,
         },

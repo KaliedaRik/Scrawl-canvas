@@ -15,7 +15,7 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     const defaultAttributes = {
 
-// __delta__ - a Javascript object containing `{key:value, key:value, etc}` attributes. 
+// __delta__ - a Javascript object containing `{key:value, key:value, etc}` attributes.
 // + As part of the Display cycle, delta values get added to artefact attribute values - this is a very simple form of animation.
 // + __deltaConstraints__ - Object mirroring the `delta` object which we use to set bounds on the delta values, and instructions on what to do when those bounds are crossed.
 // + __noDeltaUpdates__ - Boolean flag to switch off the automatic application of delta attribute values as part of each iteration of the Display cycle.
@@ -36,7 +36,7 @@ export default function (P = Ωempty) {
 //     noDeltaUpdates: false,
 // });
 // ```
-// 
+//
 // Note that the `delta` and `deltaConstraints` objects are set up in the mixin/position.js module, not here
         delta: null,
         noDeltaUpdates: false,
@@ -185,7 +185,7 @@ export default function (P = Ωempty) {
                                     this.set({
                                         [key]: fVal + parseFloat(delta[key]) + PC,
                                     });
-                                    break; 
+                                    break;
 
                                 case LOOP :
 
@@ -201,7 +201,7 @@ export default function (P = Ωempty) {
                                             [key]: fVal + (fMax - fMin) + PC,
                                         });
                                     }
-                                    break; 
+                                    break;
                             }
                         }
                     }
@@ -233,7 +233,7 @@ export default function (P = Ωempty) {
                                     this.set({
                                         [key]: val + delta[key],
                                     });
-                                    break; 
+                                    break;
 
                                 case LOOP :
 
@@ -249,7 +249,7 @@ export default function (P = Ωempty) {
                                             [key]: val + (max - min),
                                         });
                                     }
-                                    break; 
+                                    break;
                             }
                         }
                     }

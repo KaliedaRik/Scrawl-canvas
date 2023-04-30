@@ -1,4 +1,4 @@
-// # Demo Canvas 043 
+// # Demo Canvas 043
 // Test various clipping strategies
 
 // [Run code](../../demo/canvas-043.html)
@@ -140,7 +140,7 @@ scrawl.makeDragZone({
 });
 
 
-// #### Canvas 2: 
+// #### Canvas 2:
 // Generate and use Picture entitys from clipped scenes
 const ns2 = `canvas2`;
 const name2 = (name) => `${ns2}-${name}`;
@@ -245,7 +245,7 @@ scrawl.createImageFromCell(prepName('star-clip'), name2('star-image'));
 const canvasTwoPostInitialization = function () {
 
     console.log('running canvasTwoPostInitialization()');
-    
+
     const drag = scrawl.makeGroup({
         name: name2('drag-group'),
     });
@@ -307,7 +307,7 @@ const canvasTwoPostInitialization = function () {
 };
 
 
-// #### Canvas 3: 
+// #### Canvas 3:
 // Emulate clipping to a Phrase entity using a composite scene rendered in its own cell
 const ns3 = `canvas3`;
 const name3 = (name) => `${ns3}-${name}`;
@@ -332,7 +332,7 @@ const c3Phrase = scrawl.makePhrase({
 const canvasThreePostInitialization = function () {
 
     console.log('running canvasThreePostInitialization()');
-    
+
     // create our drag group and dragzone
     const drag = scrawl.makeGroup({
         name: name3('drag-group'),
@@ -383,7 +383,7 @@ const canvasThreePostInitialization = function () {
     scrawl.makeBlock({
         name: name3('serif-block'),
         group: canvas3.get('baseGroup'),
-        width, 
+        width,
         height,
         start: ['center', 'center'],
         handle: ['center', 'center'],
@@ -395,7 +395,7 @@ const canvasThreePostInitialization = function () {
 
     c3Cell.set({
         width,
-        height, 
+        height,
         handle: ['center', 'center'],
         pivot: name3('serif-block'),
         addPivotRotation: true,
@@ -427,7 +427,7 @@ scrawl.makeRender({
     name: 'demo-animation',
     target: [canvas1, canvas2, canvas3],
 
-    // Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once 
+    // Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once
     afterCreated: postInitialization,
 });
 

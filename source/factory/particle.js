@@ -20,7 +20,7 @@
 // + All artefacts (including all entitys) can position themselves by reference to a named (non-recycled) Particle.
 //
 // #### The particle pool
-// As part of a particle animation many thousands of Particle objects may need to be generated, used and then discarded. Scrawl-canvas attempts to make this more efficient by pooling particle objects so that they can be reused as the animation progresses. 
+// As part of a particle animation many thousands of Particle objects may need to be generated, used and then discarded. Scrawl-canvas attempts to make this more efficient by pooling particle objects so that they can be reused as the animation progresses.
 
 
 // #### Demos:
@@ -225,7 +225,7 @@ D.load = λnull;
 
 
 // #### Prototype functions
-// `initializePositions` - internal function called by all particle factories 
+// `initializePositions` - internal function called by all particle factories
 // + Setup initial Arrays and Objects.
 P.initializePositions = function () {
 
@@ -358,7 +358,7 @@ P.manageHistory = function (tick, host) {
     }
 };
 
-// `run` - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an physics entity (Emitter, Net, Tracer). Note that there is no equivalent `halt` function; instead, we set the particle's `isRunning` attribute to false to get it removed from the system. 
+// `run` - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an physics entity (Emitter, Net, Tracer). Note that there is no equivalent `halt` function; instead, we set the particle's `isRunning` attribute to false to get it removed from the system.
 P.run = function (timeKill, radiusKill, killBeyondCanvas) {
 
     // We can kill a Particle if it has lasted longer than its alloted lifetime. Lifetime (if required) is assigned to the Particle by its entity when generated.
@@ -372,7 +372,7 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas) {
     // We can kill a Particle if it has passed a certain distance beyond its initial position. Kill radius value (if required) is assigned to the Particle by its entity when generated.
     this.distanceLimit = 0;
     if (radiusKill) {
-        
+
         this.initialPosition.set(this.position);
         this.distanceLimit = radiusKill;
     }

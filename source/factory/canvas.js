@@ -1,12 +1,12 @@
 // # Canvas factory
 // Scrawl-canvas mediates between its system and &lt;canvas> elements in the DOM using Canvas wrapper objects. The wrapper includes a handle to the visible element, but most work is done on a second &lt;canvas> element - the __base Cell__ - which is not part of the DOM, thus excluded from a browser's Document interface (including events).
-// 
+//
 // The Canvas factory is not used directly; the factory is not exported as part of the [scrawl object](../scrawl.html) during Scrawl-canvas initialization. Instead, wrappers can be created for DOM-based &lt;canvas> elements using the following scrawl functions:
 // + `scrawl.getCanvas` - locates a &lt;canvas> element in the DOM and creates a wrapper for it.
 // + `scrawl.addCanvas` - generates a new &lt;canvas> element, creates a wrapper for it, then adds it to the DOM.
 //
 // During initialization Scrawl-canvas will search the DOM tree and automatically create Canvas wrappers for all the &lt;canvas> elements it discovers. The first &lt;canvas> element discovered becomes the __current canvas__; all entitys created without a specified `group` attribute will be assigned to that element's wrapper's base Cell's Group object. We can change the current canvas by invoking the `scrawl.setCurrentCanvas` function.
-// 
+//
 // A canvas wrapper can include more than one Cell object. It will always include a base Cell object; additional Cells can be treated as ___cell layers___ and/or normal artefacts contributing to the final display.
 //
 // During their creation, Canvas wrappers will directly modify the DOM, adding &lt;div> and &lt;nav> elements to it. These new elements are used as _holds_ where the Canvas will store data and text, mainly to expose &lt;a> links and &lt;p> blocks which expose scene details to assistive technologies (accessibility). These additional elements have zero dimensions and should not affect the layout or painting of the rest of the web page.
@@ -21,20 +21,20 @@
 
 
 // #### Demos:
-// + All canvas and packets demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
+// + All canvas and packets demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
 // + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
 // + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
 
 
 // #### Imports
-import { 
-    canvas as libCanvas, 
-    cell, 
-    constructors, 
-    artefact, 
-    group, 
-    purge, 
+import {
+    canvas as libCanvas,
+    cell,
+    constructors,
+    artefact,
+    group,
+    purge,
 } from '../core/library.js';
 
 import { domShow, scrawlCanvasHold } from '../core/document.js';
@@ -256,7 +256,7 @@ const defaultAttributes = {
     trackHere: SUBSCRIBE,
 
 // __fit__ - String indicating how the base Cell should copy its contents over to the &lt;canvas> element as the final step in the Display cycle. Accepted values are: `fill`, `contain`, `cover`, `none` (but not `scale-down`).
-// 
+//
 // The aim of this functionality is to replicate the CSS `object-fit` property - [detailed here](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) - for &lt;canvas> elements. We apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.
     fit: NONE,
 
@@ -270,13 +270,13 @@ const defaultAttributes = {
 // For ___Device Pixel Ratio___, we need to tell the canvas whether it should ignore resetting the canvas dimensions - if, for instance, we set them to '100%' in CSS - and whether we have set the base to static dimensions (via `setBase`)
 // + We only need to worry about this after we invoke `scrawl.setIgnorePixelRatio(false)` in the demo code
 //
-// __ignoreCanvasCssDimensions__ - skip setting the &lt;canvas> element's CSS width and height when dimensions change. When the flag is set to `false` (default), we need to set the CSS values to a valuepx String which will then allow us to set the canvas drawing dimensions to take into account the display's device pixel ratio value. Set the flag to `true` if the canvas has been initialized as responsive by setting its CSS dimensions values to a value% String. 
+// __ignoreCanvasCssDimensions__ - skip setting the &lt;canvas> element's CSS width and height when dimensions change. When the flag is set to `false` (default), we need to set the CSS values to a valuepx String which will then allow us to set the canvas drawing dimensions to take into account the display's device pixel ratio value. Set the flag to `true` if the canvas has been initialized as responsive by setting its CSS dimensions values to a value% String.
 // + Note that Scrawl-canvas ignores any attempt to set CSS dimension (width, height) values in the `css` attribute of the `set({})` function.
     ignoreCanvasCssDimensions: false,
 
 // ##### Accessibility attributes
 // &lt;canvas> elements are __raster images__ - they contain no information within their content (beyond pixel data) which can be analyzed or passed on to the browser or other device. The element _can_ include `title` and various `item` attributes (alongside custom `data-` attributes) but inclusion of these depends entirely on the developer remembering to include them when coding up a web page.
-// 
+//
 // Scrawl-canvas attempts to automate _some_ (but not _all_) accessibility work through inclusion of the following Canvas attributes (specifically, Scrawl-canvas implements [ARIA attributes](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)):
 // + __title__ - this attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
 // + __label__ and __description__ - these attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using `aria-labelledby` and `aria-describedby` attributes
@@ -461,13 +461,13 @@ S.onEntityNoHover = function (item) {
     });
 };
 
-// `baseGroup` - get the Canvas wrapper's base Cell's named group 
+// `baseGroup` - get the Canvas wrapper's base Cell's named group
 G.baseGroup = function () {
 
     return group[this.base.name];
 };
 
-// `baseName` - get the Canvas wrapper's base Cell's name 
+// `baseName` - get the Canvas wrapper's base Cell's name
 G.baseName = function () {
 
     return this.base.name;
@@ -563,7 +563,7 @@ P.buildCell = function (items = Ωempty) {
     if (!host) items.host = this.base.name;
 
     const mycell = makeCell(items);
-    
+
     this.addCell(mycell);
     this.cleanCells();
     return mycell;
@@ -637,7 +637,7 @@ P.killCell = function (item) {
 // ##### Display cycle functions
 
 // `clear` - For Cell objects in the wrapper's __cells__ (and associated) Arrays:
-// + If the Cell object's `cleared` flag is true, invoke the Cell's `clear` function 
+// + If the Cell object's `cleared` flag is true, invoke the Cell's `clear` function
 // + Note that the Display canvas itself does not clearuntil the show stage, to minimize flickering
 P.clear = function () {
 
@@ -655,7 +655,7 @@ P.clear = function () {
 
 // `compile` - For Cell objects in the wrapper's __cells__ (and associated) Arrays:
 // + sort Cell objects depending on their `compileOrder` attribute - Cells with lower order values will be processed first
-// + if the Cell object's `compiled` flag is true, invoke the Cell's `compile` function 
+// + if the Cell object's `compiled` flag is true, invoke the Cell's `compile` function
 P.compile = function () {
 
     // Handle constituent cells
@@ -677,7 +677,7 @@ P.compile = function () {
 
 // `show` - For Cell objects in the wrapper's __cells__ (and associated) Arrays:
 // + sort Cell objects depending on their `showOrder` attribute - Cells with lower order values will be processed first
-// + if the Cell object's `shown` flag is true, invoke the Cell's `show` function 
+// + if the Cell object's `shown` flag is true, invoke the Cell's `show` function
 //
 // And then:
 // + copy the base Cells display over to the Canvas wrapper's &lt;canvas> element
@@ -714,8 +714,8 @@ P.render = function () {
 
 // `cleanCells` - internal function triggered each time there is an update to the __cells__ Array attribute, or a constituent Cell sets the Canvas wrapper's `dirtyCell` flag.
 // + Cell objects include attribute flags - `cleared`, `compiled`, `shown` - which tell their Canvas wrapper whether they should be included in each part of the Display cycle
-// + For the compile and show steps, Cell objects also include attributes - `compileOrder`, `showOrder` - indicating the order in which they should be processed (compared to other Cell objects). 
-// + The sorting algorithm for all three operations is a bucket sort. 
+// + For the compile and show steps, Cell objects also include attributes - `compileOrder`, `showOrder` - indicating the order in which they should be processed (compared to other Cell objects).
+// + The sorting algorithm for all three operations is a bucket sort.
 // + The results of these operations are deposited in three internal Arrays which are used as part of the Canvas wrapper's clear/compile/show functionality.
 //
 // We do things this way because there may be situations where a Cell needs to calculate and compile before another cell, but should be shown (applied to) the base Cell after the other Cells (so it appears on top of them).
@@ -728,7 +728,7 @@ P.cleanCells = function () {
         tempShow = requestArray();
 
     const { cells, cellBatchesClear, cellBatchesCompile, cellBatchesShow } = this;
-    
+
     let mycell, order, arr, i, iz;
 
     for (i = 0, iz = cells.length; i < iz; i++) {
@@ -791,9 +791,9 @@ P.cleanCells = function () {
 
 
 // ##### Handling DOM events
-// `cascadeEventAction` - The Canvas wrapper's &lt;canvas> element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups' artefacts. 
+// `cascadeEventAction` - The Canvas wrapper's &lt;canvas> element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups' artefacts.
 //
-// This allows us to 'regionalize' various parts of the &lt;canvas> element so that they respond in a similar way to an HTML __image map__ (defined using &lt;map> and &lt;area> elements) 
+// This allows us to 'regionalize' various parts of the &lt;canvas> element so that they respond in a similar way to an HTML __image map__ (defined using &lt;map> and &lt;area> elements)
 // + Cascaded events are limited to mouse and touch events, which Scrawl-canvas bundles together into 5 types of event: `down`, `up` (which also captures click events), `enter`, `leave`, `move`.
 // + Returns an Array of name Strings for the entitys at the current mouse cursor coordinates; the Array is also accessible from the Canvas wrapper's `currentActiveEntityNames` attribute.
 P.cascadeEventAction = function (action, e = {}) {
@@ -917,7 +917,7 @@ P.cascadeEventAction = function (action, e = {}) {
     return [].concat(currentActiveEntityNames);
 };
 
-// `getEntityHits`, `checkHover` - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper 
+// `getEntityHits`, `checkHover` - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper
 P.getEntityHits = function () {
 
     return this.cascadeEventAction();
@@ -1019,11 +1019,11 @@ export const getCanvas = function (search) {
 
 // Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
 
-// `Exported variables` (to modules). 
+// `Exported variables` (to modules).
 export let currentCanvas = null;
 export let currentGroup = null;
 
-// `Exported function` (to modules and scrawl object). 
+// `Exported function` (to modules and scrawl object).
 export const setCurrentCanvas = function (item) {
 
     let changeFlag = false;
@@ -1036,14 +1036,14 @@ export const setCurrentCanvas = function (item) {
 
             if (mycanvas) {
                 currentCanvas = mycanvas;
-                changeFlag = true;    
+                changeFlag = true;
             }
         }
         else if (item.type == T_CANVAS) {
 
-            currentCanvas = item;    
-            changeFlag = true;    
-        } 
+            currentCanvas = item;
+            changeFlag = true;
+        }
     }
 
     if (changeFlag && currentCanvas.base) {
@@ -1054,7 +1054,7 @@ export const setCurrentCanvas = function (item) {
     }
 };
 
-// `Exported function` (to modules and scrawl object). Use __addCanvas__ to add a Scrawl-canvas canvas element to a web page. The items argument should include 
+// `Exported function` (to modules and scrawl object). Use __addCanvas__ to add a Scrawl-canvas canvas element to a web page. The items argument should include
 // + __host__ - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)
 // + __name__ - String identifier for the element; will generate a random name for the canvas if no name is supplied.
 // + any other regular Scrawl-canvas Canvas artefact attribute

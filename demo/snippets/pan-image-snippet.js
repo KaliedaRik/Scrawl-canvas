@@ -19,7 +19,7 @@
 //
 // __Purpose:__ Displays a pan effect on an image, where users can click and drag the image to explore it
 //
-// __Function input:__ 
+// __Function input:__
 // + the DOM element - a block element - usually a &lt;div> element - containing one or more &lt;img> elements
 //
 // __Function output:__ a Javascript object will be returned, containing the following attributes
@@ -41,7 +41,7 @@
 // ```
 
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + Sets the element background to `transparent`
 // + Imports any &lt;img> elements it finds in the element, switching their display styling to 'none'
 export default function (scrawl, el) {
@@ -62,7 +62,7 @@ export default function (scrawl, el) {
         // Set the DOM element's background color to transparent so we can see the new canvas
         el.style.backgroundColor = 'transparent';
 
-        // Grab all the child &lt;img> elements 
+        // Grab all the child &lt;img> elements
         let images = el.querySelectorAll('img'),
             imgName = `${name}-image`;
 
@@ -186,7 +186,7 @@ export default function (scrawl, el) {
             if (canvasWidth !== imageWidth || canvasHeight !== imageHeight) {
 
                 const [sourceWidth, sourceHeight] = panImage.get('sourceDimensions');
-    
+
                 // We want the image we paint in our canvas to keep its asset's original aspect ratio
                 aspectWidth = canvasWidth / sourceWidth;
                 aspectHeight = canvasHeight / sourceHeight;

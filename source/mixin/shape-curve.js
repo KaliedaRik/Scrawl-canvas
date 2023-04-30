@@ -1,5 +1,5 @@
 // # Shape-curve mixin
-// This mixin defines additional attributes and functionality used byScrawl-canvas __line__, __quadratic__ and __bezier__ path-defined entitys. 
+// This mixin defines additional attributes and functionality used byScrawl-canvas __line__, __quadratic__ and __bezier__ path-defined entitys.
 //
 // These entitys have additional positioning coordinates (`startControl` and `endControl` for Bezier entitys; `control` for Quadratic entitys; all three entity types use the `end` coordinate) which we use to construct and position them. Other artefacts can pivot themselves to these coordinates, and path-defined entitys can pivot the coordinates to other artefacts.
 
@@ -33,7 +33,7 @@ export default function (P = Ωempty) {
         end: null,
 
 // __endPivot__, __endPivotCorner__, __addEndPivotHandle__, __addEndPivotOffset__
-// + Like the `start` coordinate, the `end` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
+// + Like the `start` coordinate, the `end` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
         endPivot: ZERO_STR,
         endPivotCorner: ZERO_STR,
         addEndPivotHandle: false,
@@ -258,11 +258,11 @@ P.factoryKill = function () {
         else if (item) {
 
             const oldControl = this[attr];
-            
+
             let newControl = (item.substring) ? artefact[item] : item;
 
             if (attr.includes(T_PIVOT)) {
-                
+
                 if (newControl && newControl.isArtefact) {
 
                     if (oldControl && oldControl.isArtefact) removeItem(oldControl.pivoted, this.name);
@@ -272,7 +272,7 @@ P.factoryKill = function () {
             }
 
             else if (attr.includes(T_PATH)) {
-                
+
                 if (newControl && newControl.isArtefact) {
 
                     if (oldControl && oldControl.isArtefact) removeItem(oldControl.pathed, this.name);
@@ -282,7 +282,7 @@ P.factoryKill = function () {
             }
 
             else if (attr.includes(T_PARTICLE)) {
-                
+
                 newControl = (item.substring) ? particle[item] : item;
 
                 // For particles, we only care in cases where the particle has not yet been generated
@@ -322,7 +322,7 @@ P.factoryKill = function () {
                     myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
                     angle = this.getQuadraticAngle(myLen, ...vars);
                     break;
-                    
+
                 case BEZIER :
                     myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
                     angle = this.getBezierAngle(myLen, ...vars);
@@ -389,8 +389,8 @@ P.factoryKill = function () {
 
             this.dirtyStampPositions = true;
 
-// `useStartAsControlPoint` 
-// + When false, this flag indicates that line, quadratic and bezier shapes should treat `start` Coordinate updates as an instruction to move the entire Shape. 
+// `useStartAsControlPoint`
+// + When false, this flag indicates that line, quadratic and bezier shapes should treat `start` Coordinate updates as an instruction to move the entire Shape.
 // + When true, the Coordinate is used to define the shape of the Shape relative to its other control/end Coordinates
             if (this.useStartAsControlPoint) {
 
@@ -467,7 +467,7 @@ P.factoryKill = function () {
             if (art) part = art;
         }
 
-        let lock = this[`${label}LockTo`], 
+        let lock = this[`${label}LockTo`],
             x, y, ox, oy, here, host, dims,
             raw = this[label],
             current = this[`current${capLabel}`];
@@ -528,7 +528,7 @@ P.factoryKill = function () {
                 break;
 
             default :
-                
+
                 x = y = 0;
 
                 host = this.getHost();

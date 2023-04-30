@@ -78,7 +78,7 @@ export default function (P = Ωempty) {
                 name = this.name;
 
             let newMimic = (item.substring) ? artefact[item] : item;
-            
+
             if (!newMimic) {
 
                 newMimic = asset[item];
@@ -168,7 +168,7 @@ export default function (P = Ωempty) {
         this.addOwnRotationToMimic = item;
         this.dirtyRotation = true;
     };
- 
+
 
 // #### Prototype functions
 

@@ -1,4 +1,4 @@
-// # Demo Canvas 035 
+// # Demo Canvas 035
 // Pattern style functionality
 
 // [Run code](../../demo/canvas-035.html)
@@ -42,7 +42,7 @@ const videoPattern = scrawl.makePattern({
 
     name: 'video-pattern',
     videoSource: 'img/Sea - 4006.mp4',
-}); 
+});
 
 // The video can't play until we detect some form of user interaction
 scrawl.addListener('up', () => {
@@ -99,7 +99,7 @@ scrawl.makeBlock({
 
 
 // Create a spritesheet-based pattern
-// + As defined in the [CanvasPattern API](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern) the pattern constructor takes an image source (&lt;img>, SVG &lt;image>, &lt;video>, &lt;canvas>, ImageBitmap, or OffscreenCanvas) as its argument, but is not able to use just a part of that source for the pattern. 
+// + As defined in the [CanvasPattern API](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern) the pattern constructor takes an image source (&lt;img>, SVG &lt;image>, &lt;video>, &lt;canvas>, ImageBitmap, or OffscreenCanvas) as its argument, but is not able to use just a part of that source for the pattern.
 // + To use a spritesheet as a source, we need to work around this limitation by putting a Picture entity using the spritesheet into a Cell, then using the Cell as the pattern's source.
 canvas.buildCell({
 

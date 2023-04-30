@@ -24,8 +24,8 @@ export default function (items) {
     // Check we can proceed
     if (assetName && page && canvas && scrawl) {
 
-        const { 
-            size = 400, 
+        const {
+            size = 400,
             backgroundColor = 'rgb(0 0 0 / 0)',
             minimumColor = 'azure',
             medialColor = 'blue',
@@ -102,7 +102,7 @@ export default function (items) {
                     }
 
                     const views = dayData[i] - minViews;
-                    
+
                     let dataColor;
 
                     // Get the appropriate color for this data point's value
@@ -187,13 +187,13 @@ const getData = (page = 'Cat') => {
             min: 0,
             fromdate: '20200101',
             todate: '20200101',
-            sunday: [], 
-            monday: [], 
-            tuesday: [], 
-            wednesday: [], 
-            thursday: [], 
-            friday: [], 
-            saturday: [], 
+            sunday: [],
+            monday: [],
+            tuesday: [],
+            wednesday: [],
+            thursday: [],
+            friday: [],
+            saturday: [],
         };
 
         const t = new Date(),
@@ -206,7 +206,7 @@ const getData = (page = 'Cat') => {
             todate = t.toISOString().split('T')[0].replace(/-/g, '');
 
         let dayCounter = f.getDay(),
-            maxViews = 0, 
+            maxViews = 0,
             minViews = -1;
 
         const url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/${page}/daily/${fromdate}/${todate}`;

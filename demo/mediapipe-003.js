@@ -61,7 +61,7 @@ const updateLabelsAndWorm = function (asset) {
                     text: `${index}`,
                     handle: ['center', 'center'],
                     width: 20,
-                    justify: 'center', 
+                    justify: 'center',
                     font: '10px Arial',
                 }));
             });
@@ -93,7 +93,7 @@ const updateLabelsAndWorm = function (asset) {
 
             const temp = wormStart;
             wormStart = wormEnd;
-            wormEnd = temp; 
+            wormEnd = temp;
         }
 
 // @ts-expect-error
@@ -117,7 +117,7 @@ const myAsset = scrawl.makeRawAsset({
 
     userAttributes: [{
 
-        key: 'mesh', 
+        key: 'mesh',
         defaultValue: false,
         setter: function (item) {
 
@@ -137,15 +137,15 @@ const myAsset = scrawl.makeRawAsset({
             }
         },
     },{
-        key: 'entitys', 
+        key: 'entitys',
         defaultValue: [],
         setter: () => {},
     },{
-        key: 'canvasWidth', 
+        key: 'canvasWidth',
         defaultValue: 0,
         setter: () => {},
     },{
-        key: 'canvasHeight', 
+        key: 'canvasHeight',
         defaultValue: 0,
         setter: () => {},
     }],
@@ -211,7 +211,7 @@ scrawl.importMediaStream({
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
 
-    model.setOptions({   
+    model.setOptions({
         maxNumFaces: 1,
         minDetectionConfidence: 0.5,
         minTrackingConfidence: 0.5

@@ -1,4 +1,4 @@
-// # Demo Particles 007 
+// # Demo Particles 007
 // Particle Force objects: generation and functionality
 
 // [Run code](../../demo/particles-007.html)
@@ -75,7 +75,7 @@ const myWorld = scrawl.makeWorld({
 
     userAttributes: [
         {
-            key: 'brownianIntensity', 
+            key: 'brownianIntensity',
             defaultValue: 2,
         },
     ],
@@ -151,7 +151,7 @@ const myEmitter = scrawl.makeEmitter({
         copyHeight: '100%',
 
         method: 'fill',
-        visibility: false, 
+        visibility: false,
 
         noUserInteraction: true,
         noPositionDependencies: true,

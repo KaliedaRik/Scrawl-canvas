@@ -9,7 +9,7 @@
 // [Run code](../../demo/snippets-001.html)
 
 
-// Import the Scrawl-canvas object 
+// Import the Scrawl-canvas object
 // + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
 import * as scrawl from '../source/scrawl.js';
 

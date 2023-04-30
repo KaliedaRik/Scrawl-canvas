@@ -166,7 +166,7 @@ const defaultAttributes = {
 // + The 'current', or last evaluated color
 // + The 'maximum' range color; relevant attributes are suffixed with `_max`
 // + The 'minimum' range color; relevant attributes are suffixed with `_min`
-// 
+//
 // On recieving a color to store or process, the Color object will calculate the color's values in several different color spaces: `RGB`, `HSL`, `HWB`, `XYZ`, `LAB`, `LCH`, `OKLAB`, `OKLCH`
     rgb: null,
     rgb_max: null,
@@ -257,10 +257,10 @@ P.kill = function () {
             if (isa_obj(shadow) && shadow.name == myname) state.shadowColor = state.defs.shadowColor;
         }
     });
-    
+
     // Remove style from the Scrawl-canvas library
     this.deregister();
-    
+
     return this;
 };
 
@@ -321,7 +321,7 @@ P.set = function (items = Ωempty) {
 
         const setters = this.setters,
             defs = this.defs;
-        
+
         let predefined, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
@@ -407,12 +407,12 @@ P.setEasingHelper = function (item) {
     }
     else if (item.substring && easeEngines[item]) {
 
-        this.easing = item; 
+        this.easing = item;
         this.easingFunction = λfirstArg;
     }
     else {
 
-        this.easing = LINEAR; 
+        this.easing = LINEAR;
         this.easingFunction = λfirstArg;
     }
 };
@@ -449,12 +449,12 @@ S.returnColorAs = function (item) {
     this.setReturnColorAsHelper(item);
 };
 P.setReturnColorAs = function (item) {
-    
+
     this.setReturnColorAsHelper(item);
     return this;
 };
 P.setReturnColorAsHelper = function (item) {
-    
+
     if (item.substring) {
 
         item = item.toUpperCase();
@@ -634,7 +634,7 @@ P.checkColor = function (item) {
     return BLANK;
 };
 
-// `getRangeColor` - function which generates a color in the range between the minimum and maximum colors. 
+// `getRangeColor` - function which generates a color in the range between the minimum and maximum colors.
 // + when the argument is `0` the minimum color is returned; values below 0 are rounded up to 0
 // + when the argument is `1` the maximum color is returned; values above 1 are rounded down to 1
 // + values between `0` and `1` will return a blended color between the minimum and maximum colors
@@ -698,7 +698,7 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
             if (bMin === bMax) b = bMin;
             else if (test > 180 || test < -180) {
 
-                b = (test > 0) ? 
+                b = (test > 0) ?
                     interpolate(val, bMin + 360, bMax) :
                     interpolate(val, bMin - 360, bMax);
             }
@@ -726,7 +726,7 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
             if (dMin === dMax) d = dMin;
             else if (test > 180 || test < -180) {
 
-                d = (test > 0) ? 
+                d = (test > 0) ?
                     interpolate(val, dMin + 360, dMax) :
                     interpolate(val, dMin - 360, dMax);
             }
@@ -746,7 +746,7 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
             return [b, c, d, a];
 
         // RGB/LAB/OKLAB generate color gradients matching CSS. XYZ also looks good.
-        default : 
+        default :
 
             if (aMin === aMax) a = aMin;
             else a = interpolate(val, aMin, aMax);
@@ -1013,9 +1013,9 @@ P.convert = function (color, suffix = ZERO_STR) {
         lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
-    } 
+    }
     else if (color.includes(_XYZ)) {
-        
+
         [a, b, c, d] = this.extractFromXyzColorString(color);
 
         rgb.push(...this.convertXYZtoRGB(b, c, d), a);
@@ -1107,31 +1107,31 @@ P.extractRGBfromColor = function (color) {
 
         [a, b, c, d] = this.extractFromHwbColorString(color);
         return [b, c, d, a];
-    } 
+    }
     else if (color.includes(_XYZ)) {
-        
+
         [a, b, c, d] = this.extractFromXyzColorString(color);
         return [...this.convertXYZtoRGB(b, c, d), a];
     }
     else if (color.includes(_OKLAB) && !supportsOKLAB) {
 
         [a, b, c, d] = this.extractFromOklabColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(b, c, d)), a]; 
+        return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(b, c, d)), a];
     }
     else if (color.includes(_OKLCH) && !supportsOKLCH) {
 
         [a, b, c, d] = this.extractFromOklchColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(...this.convertOKLCHtoOKLAB(b, c, d))), a]; 
+        return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(...this.convertOKLCHtoOKLAB(b, c, d))), a];
     }
     else if (color.includes(_LAB) && !supportsLAB) {
 
         [a, b, c, d] = this.extractFromLabColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a]; 
+        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a];
     }
     else if (color.includes(_LCH) && !supportsLCH) {
 
         [a, b, c, d] = this.extractFromLchColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a]; 
+        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a];
     }
     else return this.getColorFromCanvas(color);
 };
@@ -1215,7 +1215,7 @@ P.convertRGBtoHSL = function (red, green, blue) {
 
 // `convertHSLtoRGB` - internal helper function
 P.convertHSLtoRGB = function (hue, sat, light) {
-    
+
     hue = correctAngle(hue);
     sat /= 100;
     light /= 100;
@@ -1260,12 +1260,12 @@ P.convertRGBHtoHWB = function (red, green, blue, hue) {
 
 // `convertHWBtoRGB` - internal helper function
 P.convertHWBtoRGB = function (hue, white, black) {
-    
+
     white /= 100;
     black /= 100;
 
     if (white + black >= 1) {
-    
+
         const gray = white / (white + black);
         return [gray, gray, gray];
     }

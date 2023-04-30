@@ -36,7 +36,7 @@ const {
     setGuiControlChars,
 
 } = initializeCanvasSceneEditor({
-    sceneCanvas, 
+    sceneCanvas,
     domEntityEditor: '#scene-canvas-dahsboard',
     sceneDimensions: 1000,
 }, scrawl);
@@ -169,7 +169,7 @@ const button = document.querySelector('#update-keyboard-shortcuts-action');
 const buttonClickAction = () => {
 
     const keys = window.prompt('To change the keyboard settings to move, scale and rotate selected entitys, enter the desired characters (11 in total) in the order MOVE-DELTA, MOVE-UP, MOVE-LEFT, MOVE-DOWN, MOVE-RIGHT, SCALE-DELTA, SCALE-GROW, SCALE-SHRINK, ROTATE-DELTA, ROTATE-CLOCKWISE, ROTATE-ANTI-CLOCKWISE (with no spaces or separating commas etc, though the comma key can be used as a shortcut). Character case will be ignored.', 'QWASDBNMGJH');
-    
+
     setGuiControlChars(keys);
 };
 

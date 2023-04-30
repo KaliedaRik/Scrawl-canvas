@@ -1,4 +1,4 @@
-// # Demo Filters 023 
+// # Demo Filters 023
 // Filter parameters: randomNoise
 
 // [Run code](../../demo/filters-023.html)
@@ -89,8 +89,8 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-const width = document.querySelector('#width'), 
-    height = document.querySelector('#height'), 
+const width = document.querySelector('#width'),
+    height = document.querySelector('#height'),
     level = document.querySelector('#level'),
     opacity = document.querySelector('#opacity');
 

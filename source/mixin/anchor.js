@@ -190,7 +190,7 @@ export default function (P = Ωempty) {
 // The artefact's factory and `set` functions' argument object can include a single __anchor__ attribute, whose value should be an object containing anchor key:value pairs
 // ```
 // artefact.set({
-//    
+//
 //     anchor: {
 //         description: 'value',
 //         type: 'value',
@@ -215,7 +215,7 @@ export default function (P = Ωempty) {
 
 // The `buildAnchor` function triggers the (re)build of the &lt;a> element and adds it to the DOM
 //
-// Scrawl-canvas generated anchor links are kept in hidden &lt;nav> elements - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs. 
+// Scrawl-canvas generated anchor links are kept in hidden &lt;nav> elements - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs.
 //
 // This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
     P.buildAnchor = function (items) {

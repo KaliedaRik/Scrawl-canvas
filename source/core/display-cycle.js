@@ -40,7 +40,7 @@ const displayCycleBatchProcess = function (rootWrappers, method) {
 // + For canvas artefacts, clear its Cell assets' display (reset all pixels to 0, or the designated background color) ready for them to be redrawn
 // + For stack artefacts - no action required
 
-// `Exported function` (to modules and scrawl object). 
+// `Exported function` (to modules and scrawl object).
 export const clear = function (...items) {
 
     const wrappers = displayCycleHelper(items);
@@ -52,7 +52,7 @@ export const clear = function (...items) {
 // + For both canvas and stack artefacts, perform necessary entity/element positional calculations
 // + Additionally for canvas artefacts, stamp associated entitys onto the canvas's constituent cell assets
 
-// `Exported function` (to modules and scrawl object). 
+// `Exported function` (to modules and scrawl object).
 export const compile = function (...items) {
 
     const wrappers = displayCycleHelper(items);
@@ -64,7 +64,7 @@ export const compile = function (...items) {
 // + For canvas artefacts, stamp additional 'layer' canvases onto the base canvas, then copy the base canvas onto the display canvas
 // + For stack artefacts - invoke the __domShow__ function, if any of its constituent elements require DOM-related updating
 
-// `Exported function` (to modules and scrawl object). 
+// `Exported function` (to modules and scrawl object).
 export const show = function (...items) {
 
     const wrappers = displayCycleHelper(items);
@@ -75,7 +75,7 @@ export const show = function (...items) {
 //
 // + Orchestrate the clear, compile and show actions on each stack and canvas DOM element
 
-// `Exported function` (to modules and scrawl object). 
+// `Exported function` (to modules and scrawl object).
 export const render = function (...items) {
 
     const wrappers = displayCycleHelper(items);

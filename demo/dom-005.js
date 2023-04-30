@@ -61,8 +61,8 @@ const makeStars = function (buildNumber) {
 
         const r1 = Math.random();
 
-        const v = scrawl.requestVector({ 
-            x: 1 
+        const v = scrawl.requestVector({
+            x: 1
         }).rotate(Math.random() * 360).scalarMultiply(300);
 
         const x = v.x,

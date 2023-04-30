@@ -1,4 +1,4 @@
-// # Demo Canvas 016 
+// # Demo Canvas 016
 // Phrase entity position and font attributes; Block mimic functionality
 
 // [Run code](../../demo/canvas-016.html)

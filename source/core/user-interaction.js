@@ -178,7 +178,7 @@ const moveAction = function (e) {
 
 // The events that trigger this function (touchstart, touchmove, touchend, touchcancel) are tied to the window object, not to any particular DOM element.
 
-// Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. 
+// Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame.
 //
 // TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.
 let touchActionLastChecked = 0,
@@ -250,7 +250,7 @@ const updateUiSubscribedElement = function (art) {
 
     if (dom) {
 
-        if (!dom.here) dom.here = {}; 
+        if (!dom.here) dom.here = {};
 
         const { here, domElement:el } = dom;
 
@@ -369,7 +369,7 @@ const updateUiSubscribedElement = function (art) {
                     }
                 }
                 else {
-                
+
                     // Stack and Element artefacts resize test.
                     // + Tested in Demo [DOM-011](../../demo/dom-011.html).
                     if (w !== here.w || h !== here.h) {

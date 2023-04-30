@@ -97,7 +97,7 @@ export default function (P = Ωempty) {
                 const oldAsset = this.asset;
 
                 if (oldAsset && oldAsset.unsubscribe) oldAsset.unsubscribe(this);
-            
+
                 myAsset.subscribe(this);
             }
         }
@@ -117,7 +117,7 @@ export default function (P = Ωempty) {
                 const oldAsset = this.asset;
 
                 if (oldAsset && oldAsset.unsubscribe) oldAsset.unsubscribe(this);
-            
+
                 myAsset.subscribe(this);
             }
         }
@@ -137,7 +137,7 @@ export default function (P = Ωempty) {
                 const oldAsset = this.asset;
 
                 if (oldAsset && oldAsset.unsubscribe) oldAsset.unsubscribe(this);
-            
+
                 myAsset.subscribe(this);
             }
         }

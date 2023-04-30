@@ -1,4 +1,4 @@
-// # Demo Particles 004 
+// # Demo Particles 004
 // Emit particles along the length of a path
 
 // [Run code](../../demo/particles-004.html)
@@ -23,7 +23,7 @@ const myWorld = scrawl.makeWorld({
 
 // #### User-controlled bezier curve with star emitter along its length
 
-// Pins to control the shape of the bezier 
+// Pins to control the shape of the bezier
 scrawl.makeWheel({
 
     name: 'pin-1',
@@ -99,7 +99,7 @@ const stars = scrawl.makeStar({
 
     fillStyle: 'gold',
     method: 'fillThenDraw',
-    visibility: false, 
+    visibility: false,
 
     noUserInteraction: true,
     noPositionDependencies: true,
@@ -124,7 +124,7 @@ const emitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history;
-        
+
         let remaining, start;
 
         if (history.length) {
@@ -133,7 +133,7 @@ const emitter = scrawl.makeEmitter({
 
             artefact.simpleStamp(host, {
 
-                start, 
+                start,
                 globalAlpha: remaining / 5,
             });
         }
@@ -158,7 +158,7 @@ scrawl.makeLine({
 emitter.clone({
 
     name: 'emitter-2',
-    artefact: stars.clone({ 
+    artefact: stars.clone({
         name: 'stars-2',
         fillStyle: 'red',
     }),
@@ -182,7 +182,7 @@ scrawl.makeOval({
 emitter.clone({
 
     name: 'emitter-3',
-    artefact: stars.clone({ 
+    artefact: stars.clone({
         name: 'stars-3',
         fillStyle: 'blue',
     }),

@@ -1,4 +1,4 @@
-// # Demo Canvas 019a 
+// # Demo Canvas 019a
 // Gradient and Color factories - transparency - alternative approach using Cells instead of images
 
 // [Run code](../../demo/canvas-019a.html)
@@ -125,7 +125,7 @@ data.forEach(scene => {
         lockFillStyleToEntity: true,
     });
 
-    // Now we can draw our blurred image into the scene 
+    // Now we can draw our blurred image into the scene
     // + We use some compositing magic so it only appears where the gradient is not transparent
     makePicture({
 

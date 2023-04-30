@@ -231,7 +231,7 @@ P.kill = function () {
     animateRemove(this.name);
 
     this.deregister();
-    
+
     return true;
 };
 
@@ -250,7 +250,7 @@ P.run = function () {
     animateAdd(this.name);
 
     if (this.target) this.target.checkAccessibilityValues();
-    
+
     setTimeout(() => forceUpdate(), 20);
 
     return this;
@@ -307,7 +307,7 @@ P.halt = function () {
 // });
 // ```
 export const makeRender = function (items) {
-    
+
     if (!items) return false;
     return new RenderAnimation(items);
 };

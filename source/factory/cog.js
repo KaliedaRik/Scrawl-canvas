@@ -2,14 +2,14 @@
 // A factory for generating star shape-based entitys
 //
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
-// 
+//
 // All path-defined entitys can be positioned, cloned, filtered etc:
-// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use `scale` instead.
-// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Path-defined entitys can be cloned, and killed.
 
@@ -212,7 +212,7 @@ S.curve = function (item) {
 
     if (item && PERMITTED_CURVES.includes(item)) this.curve = item;
     else this.curve = BEZIER;
-    
+
     this.updateDirty();
 };
 
@@ -253,7 +253,7 @@ P.makeCogPath = function () {
             innerControlsDistance = (innerControlsDistance.substring) ? (parseFloat(innerControlsDistance) / 100) * hW : innerControlsDistance;
             outerControlsOffset = (outerControlsOffset.substring) ? (parseFloat(outerControlsOffset) / 100) * hW : outerControlsOffset;
             innerControlsOffset = (innerControlsOffset.substring) ? (parseFloat(innerControlsOffset) / 100) * hW : innerControlsOffset;
-        } 
+        }
     }
 
     const outerPoint = requestVector({x: 0, y: -outerRadius}),

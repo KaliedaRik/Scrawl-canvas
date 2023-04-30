@@ -23,7 +23,7 @@ const locateTarget = (item) => {
         let result;
 
         return (TARGET_SECTIONS.some(section => {
-            
+
             result = library[section][item];
             return result;
 
@@ -41,7 +41,7 @@ export default function (P = Ωempty) {
     const defaultAttributes = {
 
 // __order__ - integer Number (defaults to `1`) - the order in which Tween/Actions run is determined by their order value: Tween/Actions with a lower order value run before those with a higher value
-// + Run order for Tween/Actions with the same order value is determined by the order in which they are defined in code 
+// + Run order for Tween/Actions with the same order value is determined by the order in which they are defined in code
         order: 1,
 
 // __ticker__ - String - the name-String of the Ticker the Tween/Action uses for its timeline
@@ -85,7 +85,7 @@ export default function (P = Ωempty) {
         if (ticker == `${this.name}_ticker`) {
 
             const t = animationtickers[ticker];
-            
+
             if (t) t.kill();
         }
         else if (ticker) this.removeFromTicker(ticker);
@@ -116,7 +116,7 @@ export default function (P = Ωempty) {
     S.action = function (item) {
 
         this.action = item;
-        
+
         if (typeof this.action != FUNCTION) this.action = λnull;
     };
 
@@ -256,7 +256,7 @@ export default function (P = Ωempty) {
         items.forEach(item => {
 
             let myObj;
-            
+
             if (typeof item == FUNCTION) myObj = item;
             else myObj = locateTarget(item);
 

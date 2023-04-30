@@ -180,9 +180,9 @@ P.killArtefacts = function () {
 const G = P.getters,
     S = P.setters;
 
-// Artefect membership of the Group object is better handled by the dedicated artefact management functions - __addArtefacts__, __removeArtefacts__, __clearArtefacts__, __moveArtefactsIntoGroup__.  
+// Artefect membership of the Group object is better handled by the dedicated artefact management functions - __addArtefacts__, __removeArtefacts__, __clearArtefacts__, __moveArtefactsIntoGroup__.
 
-// Returns a new Array containing the name String values of current artefact members 
+// Returns a new Array containing the name String values of current artefact members
 G.artefacts = function () {
 
     return [].concat(this.artefacts);
@@ -203,7 +203,7 @@ S.host = function (item) {
     const host = this.getHost(item);
 
     if (host && host.addGroups) {
-        
+
         this.host = item;
         host.addGroups(this.name);
 
@@ -337,7 +337,7 @@ P.sortArtefacts = function () {
         const { artefacts, artefactCalculateBuckets, artefactStampBuckets } = this;
 
         let obj, order, i, iz, name, arr;
-        
+
         for (i = 0, iz = artefacts.length; i < iz; i++) {
 
             name = artefacts[i];
@@ -395,7 +395,7 @@ P.prepareStamp = function (myCell) {
     this.artefactCalculateBuckets.forEach(art => {
 
         if (art.lib == ENTITY) {
-            
+
             if (!art.currentHost || art.currentHost.name != host.name) {
 
                 art.currentHost = host;
@@ -438,13 +438,13 @@ P.stampAction = function (myCell) {
             if (realEngine) {
 
                 realEngine.save();
-                
+
                 realEngine.globalCompositeOperation = SOURCE_OVER;
                 realEngine.globalAlpha = 1;
                 realEngine.setTransform(1, 0, 0, 1, 0, 0);
 
                 realEngine.drawImage(tempElement, 0, 0);
-                
+
                 realEngine.restore();
 
                 const tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
@@ -471,7 +471,7 @@ P.applyFilters = function (myCell) {
 
     // Action a request to use the filtered artefacts as a stencil - as determined by the Group's `isStencil` flag
     if (this.isStencil) {
-        
+
         filterCellEngine.save();
         filterCellEngine.globalCompositeOperation = SOURCE_IN;
         filterCellEngine.globalAlpha = 1;
@@ -480,7 +480,7 @@ P.applyFilters = function (myCell) {
         filterCellEngine.restore();
 
         this.dirtyFilterIdentifier = true;
-    } 
+    }
 
     // At this point we will send the contents of the filterHost canvas over to the filter engine
     filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
@@ -502,7 +502,7 @@ P.applyFilters = function (myCell) {
         filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
         filterCellEngine.putImageData(img, 0, 0);
     }
-    
+
     currentEngine.save();
     currentEngine.setTransform(1, 0, 0, 1, 0, 0);
     currentEngine.drawImage(filterCellElement, 0, 0);
@@ -578,7 +578,7 @@ P.getCellCoverage = function (img) {
 
         if (data[counter]) {
 
-            y = _floor(i / width); 
+            y = _floor(i / width);
             x = i - (y * width);
 
             if (minX > x) minX = x;
@@ -731,7 +731,7 @@ P.cascadeAction = function (items, action) {
     this.artefacts.forEach(name => {
 
         art = artefact[name];
-        
+
         if(art && art[action]) art[action](items);
     });
     return this;
@@ -756,7 +756,7 @@ P.addFiltersToEntitys = function (...args) {
     this.artefacts.forEach(name => {
 
         ent = entity[name];
-        
+
         if (ent && ent.addFilters) ent.addFilters(args);
     });
     return this;
@@ -793,9 +793,9 @@ P.clearFiltersFromEntitys = function () {
 };
 
 // #### Collision functionality
-// The `getArtefactAt` function checks to see if any of the Group object's artefacts are located at the supplied coordinates in the argument object. 
+// The `getArtefactAt` function checks to see if any of the Group object's artefacts are located at the supplied coordinates in the argument object.
 //
-// The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. 
+// The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function.
 //
 // Where no artefacts are present at that coordinate the function returns false.
 //
@@ -817,7 +817,7 @@ P.getArtefactAt = function (items) {
     for (let i = artBuckets.length - 1; i >= 0; i--) {
 
         art = artBuckets[i];
-        
+
         if (art) {
 
             result = art.checkHit(items, myCell);
@@ -839,7 +839,7 @@ P.getArtefactAt = function (items) {
 P.getAllArtefactsAt = function (items) {
 
     this.sortArtefacts();
-    
+
     const myCell = requestCell(),
         artBuckets = this.artefactStampBuckets,
         resultNames = requestArray(),
@@ -850,11 +850,11 @@ P.getAllArtefactsAt = function (items) {
     for (let i = artBuckets.length - 1; i >= 0; i--) {
 
         art = artBuckets[i];
-        
+
         if (art) {
 
             result = art.checkHit(items, myCell);
-            
+
             if (result && result.artefact) {
 
                 hit = result.artefact;

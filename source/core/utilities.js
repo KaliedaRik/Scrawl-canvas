@@ -13,16 +13,16 @@ import { _cos, _create, _entries, _floor, _freeze, _isArray, _pi, _pow, _random,
 // ```
 // addStrings(20, 40);
 // -> 60
-//    
+//
 // addStrings('20%', 40);
 // -> '60%'
-//  
+//
 // addStrings(20, '40%');
 // -> '60%'
-//  
+//
 // addStrings('20%', '40%');
 // -> '60%'
-//  
+//
 // addStrings('center', 3);
 // -> '53%'
 // ```
@@ -61,13 +61,13 @@ export const constrain = function (val, min, max) {
 // ```
 // convertTime(5000);
 // -> ['ms', 5000]
-//    
+//
 // convertTime('50%');
 // -> ['%', 50]
-//  
-// convertTime('5000ms'); 
+//
+// convertTime('5000ms');
 // -> ['ms', 5000]
-//  
+//
 // convertTime('5s');
 // -> ['ms', 5000]
 // ```
@@ -79,7 +79,7 @@ export const convertTime = (item) => {
 
         const a = item.match(/^\d+\.?\d*(\D*)/);
         let timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : MS;
-        
+
         let timeValue = parseFloat(item);
 
         if (!isNaN(timeValue)) {
@@ -96,7 +96,7 @@ export const convertTime = (item) => {
                 default:
                     timeUnit = MS;
             }
-            
+
             return [timeUnit, timeValue];
         }
         return [MS, 0];
@@ -137,7 +137,7 @@ export const λpromise = () => Promise.resolve(true);
 export const Ωempty = _freeze({});
 
 
-// __generateUuid__ is a simple (crude) uuid generator 
+// __generateUuid__ is a simple (crude) uuid generator
 // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 // (imported 2017-07-08)
 export const generateUuid = () => {
@@ -161,7 +161,7 @@ export const generateUniqueString = () => {
 
 // __interpolate__ clamp a value between a maximum and minimum value
 export const interpolate = function (val, min, max) {
-    
+
     return min + val * (max - min);
 };
 
@@ -251,7 +251,7 @@ export const mergeOver = (original, additional) => {
 // var original = { name: 'Peter', age: 42, job: 'lawyer' };
 // var additional = { age: 32, job: null, pet: 'cat' };
 // scrawl.utils.mergeOver(original, additional);
-//    
+//
 // -> { name: 'Peter', age: 32, pet: 'cat' }
 // ```
 export const mergeDiscard = (original, additional) => {
@@ -273,7 +273,7 @@ export const mergeDiscard = (original, additional) => {
 // Example:
 // ```
 // var myarray = ['apple', 'orange'];
-// scrawl.utils.pushUnique(myarray, 'apple');    
+// scrawl.utils.pushUnique(myarray, 'apple');
 // -> ['apple', 'orange']
 //
 // scrawl.utils.pushUnique(myarray, 'banana');
@@ -301,10 +301,10 @@ export const pushUnique = (myArray, potentialMember) => {
 // Example:
 // ```
 // var myarray = ['apple', 'orange'];
-// scrawl.utils.removeItem(myarray, 'banana');   
+// scrawl.utils.removeItem(myarray, 'banana');
 // -> ['apple', 'orange']
 //
-// scrawl.utils.removeItem(myarray, 'apple');    
+// scrawl.utils.removeItem(myarray, 'apple');
 // -> ['orange']
 // ```
 export const removeItem = (myArray, unwantedMember) => {
@@ -344,7 +344,7 @@ export const easeEngines = {
     out: (t) => 1 - _cos((t * _pi) / 2),
     in: (t) => _sin((t * _pi) / 2),
     easeIn: (t) => {
-        
+
         const temp = 1 - t;
         return 1 - (temp * temp);
     },
@@ -415,7 +415,7 @@ export const easeEngines = {
     quintic: (t) => t * t * t * (t * (t * 6 - 15) + 10),
 
 // The following easing variations come from the [easings.net](https://easings.net/) web page
-// + Note: the naming convention for easing is different in Scrawl-canvas. Easing out implies a speeding up, while easing in implies a slowing down. Think of a train easing into a station, and then easing out of it again as it continues its journey. 
+// + Note: the naming convention for easing is different in Scrawl-canvas. Easing out implies a speeding up, while easing in implies a slowing down. Think of a train easing into a station, and then easing out of it again as it continues its journey.
     easeOutSine: (t) => 1 - _cos((t * _pi) / 2),
     easeInSine: (t) => _sin((t * _pi) / 2),
     easeOutInSine: (t) => -(_cos(_pi * t) - 1) / 2,
@@ -445,7 +445,7 @@ export const easeEngines = {
 
     easeOutCirc: (t) => 1 - _sqrt(1 - _pow(t, 2)),
     easeInCirc: (t) => _sqrt(1 - _pow(t - 1, 2)),
-    easeOutInCirc: (t) => { 
+    easeOutInCirc: (t) => {
 
         if (t < 0.5) return (1 - _sqrt(1 - _pow(2 * t, 2))) / 2;
         return (_sqrt(1 - _pow(-2 * t + 2, 2)) + 1) / 2;
@@ -484,7 +484,7 @@ export const easeEngines = {
 
         t = 1 - t;
 
-        const n1 = 7.5625, 
+        const n1 = 7.5625,
             d1 = 2.75;
 
         if (t < 1 / d1) return 1 - (n1 * t * t);
@@ -495,7 +495,7 @@ export const easeEngines = {
 
     easeInBounce: (t) => {
 
-        const n1 = 7.5625, 
+        const n1 = 7.5625,
             d1 = 2.75;
 
         if (t < 1 / d1) return n1 * t * t;

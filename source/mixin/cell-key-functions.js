@@ -113,7 +113,7 @@ export default function (P = Ωempty) {
                 else if (cellnames.includes(item)) brokenStyle = cell[item];
 
                 if (brokenStyle) {
-                    
+
                     entity.state.fillStyle = brokenStyle;
                     engine.fillStyle = brokenStyle.getData(entity, layer);
                 }
@@ -197,7 +197,7 @@ export default function (P = Ωempty) {
                 else if (cellnames.includes(item)) brokenStyle = cell[item];
 
                 if (brokenStyle) {
-                    
+
                     entity.state.strokeStyle = brokenStyle;
                     engine.strokeStyle = brokenStyle.getData(entity, layer);
                 }
@@ -208,8 +208,8 @@ export default function (P = Ωempty) {
     });
 
     // The following functions are used as part of entity object `stamp` functionality - specifically for those with a __method__ whose appearance is affected by shadows, and for the `clear` method
-    // + Scrawl-canvas, for the most part, avoids using engine.save() and engine.restore() functionality, instead preferring to keep track of engine state in State objects. 
-    // + When clearing and restoring shadows - a frequent operation given Scrawl-canvas functionality around stamping methods - both the Cell's state object and the Canvas context engine need to be updated with the necessary data 
+    // + Scrawl-canvas, for the most part, avoids using engine.save() and engine.restore() functionality, instead preferring to keep track of engine state in State objects.
+    // + When clearing and restoring shadows - a frequent operation given Scrawl-canvas functionality around stamping methods - both the Cell's state object and the Canvas context engine need to be updated with the necessary data
     // + The same reasoning holds when setting up the context engine to 'clear' an entity from the canvas display instead of stamping it onto the canvas
 
     // `clearShadow`

@@ -1,4 +1,4 @@
-// # Demo Canvas 038 
+// # Demo Canvas 038
 // Responsive Shape-based entitys
 
 // [Run code](../../demo/canvas-038.html)
@@ -57,7 +57,7 @@ scrawl.makeTetragon({
     strokeStyle: 'darkgreen',
 
     radiusX: 100,
-    radiusY: 140,    
+    radiusY: 140,
 });
 
 scrawl.makeLine({

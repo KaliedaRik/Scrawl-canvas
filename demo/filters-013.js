@@ -1,4 +1,4 @@
-// # Demo Filters 013 
+// # Demo Filters 013
 // Filter parameters: flood
 
 // [Run code](../../demo/filters-013.html)
@@ -100,8 +100,8 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
         const val = e.target.value;
 
-        myFilter.set({ 
-            reference: val, 
+        myFilter.set({
+            reference: val,
         });
 
         const [r, g, b, a] = colorFactory.extractRGBfromColor(val)

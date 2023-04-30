@@ -1,4 +1,4 @@
-// # Demo Canvas 013 
+// # Demo Canvas 013
 // Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog
 
 // [Run code](../../demo/canvas-013.html)
@@ -31,7 +31,7 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
-// ##### makeOval factory function 
+// ##### makeOval factory function
 makeOval({
     name: name('circle'),
     fillStyle: 'lightGreen',
@@ -70,7 +70,7 @@ makeOval({
     intersectY: 0.32,
 });
 
-// ##### makeRectangle factory function 
+// ##### makeRectangle factory function
 makeRectangle({
     name: name('ovalRectangle'),
     startX: 20,
@@ -106,7 +106,7 @@ makeRectangle({
     offshootB: 0.2,
 });
 
-// ##### makeLine factory function 
+// ##### makeLine factory function
 makeLine({
     name: name('firstLine'),
     startX: 20,
@@ -134,7 +134,7 @@ makeLine({
     endY: '14%',
 });
 
-// ##### makeQuadratic factory function 
+// ##### makeQuadratic factory function
 makeQuadratic({
     name: name('firstQuad'),
     startX: '5%',
@@ -166,7 +166,7 @@ makeQuadratic({
     endY: '23%',
 });
 
-// ##### makeBezier factory function 
+// ##### makeBezier factory function
 makeBezier({
     name: name('firstBezier'),
     startX: '5%',
@@ -200,7 +200,7 @@ makeBezier({
     endX: '91%',
 });
 
-// ##### makeTetragon factory function 
+// ##### makeTetragon factory function
 makeTetragon({
     name: name('square'),
     fillStyle: 'lightGreen',
@@ -237,7 +237,7 @@ makeTetragon({
     intersectX: 0.32,
 });
 
-// ##### makePolygon factory function 
+// ##### makePolygon factory function
 makePolygon({
     name: name('equiTriangle'),
     startX: 20,
@@ -267,7 +267,7 @@ makePolygon({
     sides: 11,
 });
 
-// ##### makeStar factory function 
+// ##### makeStar factory function
 makeStar({
     name: name('5star'),
     startX: 20,
@@ -293,7 +293,7 @@ makeStar({
     twist: 115,
 });
 
-// ##### makeSpiral factory function 
+// ##### makeSpiral factory function
 makeSpiral({
     name: name('spiral1'),
     strokeStyle: 'darkgreen',
@@ -327,7 +327,7 @@ makeSpiral({
     drawFromLoop: 3,
 });
 
-// ##### makeCog factory function 
+// ##### makeCog factory function
 makeCog({
     name: name('tooth-cog'),
     startX: 20,

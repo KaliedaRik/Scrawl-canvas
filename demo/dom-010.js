@@ -41,7 +41,7 @@ const controls = function () {
 
         e.preventDefault();
         e.returnValue = false;
-        
+
         switch (e.target.id) {
 
             case 'action_1':
@@ -82,7 +82,7 @@ const controls = function () {
                 });
 
                 break;
-                
+
             case 'action_4':
 
 // @ts-expect-error
@@ -98,7 +98,7 @@ const controls = function () {
                 b3.disabled = 'disabled';
 // @ts-expect-error
                 b4.disabled = 'disabled';
-                
+
                 hostStack.kill();
 
                 break;

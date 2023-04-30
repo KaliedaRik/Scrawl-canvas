@@ -1,4 +1,4 @@
-// # Demo Filters 009 
+// # Demo Filters 009
 // Filter parameters: pixelate
 
 // [Run code](../../demo/filters-009.html)

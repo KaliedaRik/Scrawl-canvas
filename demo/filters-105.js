@@ -1,4 +1,4 @@
-// # Demo Filters 105 
+// # Demo Filters 105
 // Use entitys to generate points for the tiles filter
 
 // [Run code](../../demo/filters-105.html)

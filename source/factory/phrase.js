@@ -1,10 +1,10 @@
 // # Phrase factory
 // Phrase entitys are graphical text rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [CanvasRenderingContext2D interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - in particular the `fillRect`, `strokeRect`, `fillText` and `strokeText` methods.
-// + Positioning functionality for the Phrase is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
-// + Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Positioning functionality for the Phrase is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
+// + Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Phrases can be cloned, and killed.
 //
@@ -12,8 +12,8 @@
 // + The `width` attribute is required for multi-line text. When set, Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.
 // + The `height` attribute is normally disregarded. Instead height is calculated as a combination of the font `size`, `lineheight`, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text's length and the entity's `width` attribute.
 //
-// __Be aware that text is _always_ rendered as a graphic, not a block.__ 
-// + Scrawl-canvas ignores all attempts to set the canvas context engine's `textAlign` and `textBaseline` attributes, which are permanently set to the defaults `left` and `top` respectively. 
+// __Be aware that text is _always_ rendered as a graphic, not a block.__
+// + Scrawl-canvas ignores all attempts to set the canvas context engine's `textAlign` and `textBaseline` attributes, which are permanently set to the defaults `left` and `top` respectively.
 // + Each glyph (letter) is stamped separately onto the canvas - this allows us to include letterspacing and justification functionality, and to allow text to be styled on a per-glyph basis (overline/underline, highlight, color, bold/italics, etc).
 //
 // Phrase entitys use [FontAttribute objects](./fontAttribute.html) to help manage their text font:
@@ -193,7 +193,7 @@ const defaultAttributes = {
     width: AUTO,
 
 // __exposeText__ - Boolean accessibility feature
-// + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. 
+// + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element.
 // + The element - a &lt;div> - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
     exposeText: true,
 
@@ -228,7 +228,7 @@ const defaultAttributes = {
 // + `overline` - boolean - whether overline should be applied to the glyph
 // + `defaults` - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity's current font and fill/stroke style values
 //
-// Usage: 
+// Usage:
 // 1. Add styling objects to the `sectionClasses` Array - a number of styling objects are pre-defined for every Phrase entity; these can be added to, modified or deleted at any time using the `addSectionClass` and `removeSectionClass` functions.
 // 2. If necessary, update the entity's `sectionClassMarker` delimiter attrbute. The attribute has to be a String, but that string can define a Regular Expression - for example setting the attribute to `[§<>]` will identify style markup delimeted by both `§marker-label§` and `<marker-label>`.
 // 3. Add section style markup to the Phrase entity's text attribute value.
@@ -402,7 +402,7 @@ G.text = function () {
 S.text = function (item) {
 
     this.text = ensureString(item);
-    
+
     this.dirtyText = true;
     this.dirtyPathObject = true;
     this.dirtyDimensions = true;
@@ -413,7 +413,7 @@ S.text = function (item) {
 S.justify = function (item) {
 
     if (JUSTIFICATIONS.includes(item)) this.justify = item;
-    
+
     this.dirtyText = true;
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
@@ -470,7 +470,7 @@ S.lineHeight = function (item) {
     // TODO: text display, entity height and pathObject fall out of sync at small/negative values
     // + This is a temporary fix
     if (this.lineHeight < 0.5) this.lineHeight = 0.5;
-    
+
     this.dirtyPathObject = true;
     this.dirtyText = true;
     this.dirtyFilterIdentifier = true;
@@ -595,7 +595,7 @@ D.textPathPosition = function (item) {
 
 // ##### FontAttribute attributes
 // Phrase entitys break down fonts into their constituent parts using [FontAttribute](./fontAttribute.html) objects.
-// + The Canvas API standards for using fonts on a canvas (`font`, `textAlign`, `textBaseline`) are near-useless, and often lead to a sub-par display of text. 
+// + The Canvas API standards for using fonts on a canvas (`font`, `textAlign`, `textBaseline`) are near-useless, and often lead to a sub-par display of text.
 // + Thus Phrase entitys hide these from the developer, instead giving them functions to get/set/update fonts which align more closely with CSS standards.
 // + Note that the Canvas API only supports a subset of possible CSS font-related values, and that the level of support for even these will vary between browsers/devices. The Phrase entity will do work to ensure the font strings passed to the Canvas API CanvasRenderingContext2D engine will be valid (thus avoiding unnecessary runtime errors), but this may not be the same as a developer specifies in their code.
 
@@ -726,7 +726,7 @@ G.family = function () {
     return this.fontAttributes.get(FAMILY);
 };
 S.family = function (item) {
-    
+
     this.fontAttributes.set({family: item});
 
     this.dirtyFont = true;
@@ -793,7 +793,7 @@ P.setSectionStyles = function (text) {
 };
 
 // `addSectionClass`, `removeSectionClass` - add and remove section class definitions to the entity's `sectionClasses` object.
-// 
+//
 // WARNING: the SectionClass object has been moved to the library, rather than created individually on each Phrase entity. This means that changes to the object will affect all phrases that make use of that class. __Namespacing new classes is strongly recommended!__
 P.addSectionClass = function (label, obj) {
 
@@ -841,14 +841,14 @@ P.getTextPath = function () {
 // #### Display cycle functionality
 // Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.
 
-// `cleanPathObject` - overwrites mixin/entity.js functionality so that it can deal with the `dirtyFont`, `dirtyText` and `dirtyHandle` flags 
+// `cleanPathObject` - overwrites mixin/entity.js functionality so that it can deal with the `dirtyFont`, `dirtyText` and `dirtyHandle` flags
 // + Fonts don't have accessible paths; Phrase entity pathObjects represent the bounding box around the entity's text.
 P.cleanPathObject = function () {
 
     this.dirtyPathObject = false;
 
     if (!this.noPathUpdates || !this.pathObject) {
-        
+
         if (this.dirtyFont && this.fontAttributes) {
 
             this.dirtyFont = false;
@@ -861,7 +861,7 @@ P.cleanPathObject = function () {
         if (this.dirtyHandle) this.cleanHandle();
 
         const p = this.pathObject = new Path2D();
-        
+
         const handle = this.currentHandle,
             dims = this.currentDimensions,
 
@@ -984,7 +984,7 @@ P.calculateTextPositions = function (mytext) {
         textLineWords = requestArray(),
         textPositions = requestArray();
 
-    let gStyle, gPos, item, 
+    let gStyle, gPos, item,
         starts, ends, cursor, height,
         space, i, iz, j, jz;
 
@@ -1015,14 +1015,14 @@ P.calculateTextPositions = function (mytext) {
     fontAttributes.updateMetadata(scale, lineHeight, host);
     glyphAttributes.updateMetadata(scale, lineHeight, host);
 
-    const defaultFont = fontAttributes.getFontString(), 
-        defaultFillStyle = makeStyle(state.fillStyle), 
-        defaultStrokeStyle = makeStyle(state.strokeStyle), 
-        defaultSpace = this.letterSpacing * scale; 
+    const defaultFont = fontAttributes.getFontString(),
+        defaultFillStyle = makeStyle(state.fillStyle),
+        defaultStrokeStyle = makeStyle(state.strokeStyle),
+        defaultSpace = this.letterSpacing * scale;
 
-    let currentFont = defaultFont, 
-        currentFillStyle = defaultFillStyle, 
-        currentStrokeStyle = defaultStrokeStyle, 
+    let currentFont = defaultFont,
+        currentFillStyle = defaultFillStyle,
+        currentStrokeStyle = defaultStrokeStyle,
         currentSpace = defaultSpace;
 
     /*
@@ -1211,7 +1211,7 @@ P.calculateTextPositions = function (mytext) {
         if (glyphArr[0]) engine.font = glyphArr[0];
 
         singles.push(engine.measureText(glyph).width);
-        
+
         nextGlyph = textPositions[i + 1];
         nextGlyph = (!treatWordAsGlyph && nextGlyph) ? nextGlyph[6] : false;
 
@@ -1306,7 +1306,7 @@ P.calculateTextPositions = function (mytext) {
     this.cleanHandle();
     this.dirtyHandle = false;
     handle = this.currentHandle;
-    
+
     handleX = -handle[0] * scale;
     handleY = -handle[1] * scale;
 
@@ -1365,7 +1365,7 @@ P.calculateTextPositions = function (mytext) {
 
                     item = textPositions[cursor];
 
-                    // BUG: There's an issue here which causes the function to fail when `treatWordAsGlyph` flag is set to true. Affects non-path-referencing Phrase entitys. This test to see if item exists is a temporary fix. 
+                    // BUG: There's an issue here which causes the function to fail when `treatWordAsGlyph` flag is set to true. Affects non-path-referencing Phrase entitys. This test to see if item exists is a temporary fix.
                     // + Question: do we only care about treating word as glyph when it references a path? Probably no - we need to care about attempts to add space between letters (glyphs) as that may have an unwanted effect on heavily kerned fonts, or fonts with a lot of ligatures between various glyphs.
                     if (item) {
 
@@ -1464,7 +1464,7 @@ P.regularStamp = function () {
             pos = this.textPositions;
 
             let p, pathData;
-            
+
             const cr = this.currentRotation;
 
             // TODO: is this still needed?
@@ -1538,10 +1538,10 @@ P.calculateGlyphPathPositions = function () {
         // textPathPosition Array indexes [
         // 0-font - font definition, or null
         // 1-strokeStyle - Boolean
-        // 2-fillStyle - Boolean 
+        // 2-fillStyle - Boolean
         // 3-highlight - Boolean
         // 4-underline - Boolean
-        // 5-overline - Boolean 
+        // 5-overline - Boolean
         // 6-text - String
         // 7-startX - Number - on paths, acts as a negative offset for justifying glyphs
         // 8-startY - Number
@@ -1571,8 +1571,8 @@ P.calculateGlyphPathPositions = function () {
             localPathPos = (localPathPos > 0.5) ? localPathPos - 1 : localPathPos + 1;
         }
 
-        posArray[10] = (localPathPos <= 1 && localPathPos >= 0) ? 
-            path.getPathPositionData(localPathPos, pathSpeed) : 
+        posArray[10] = (localPathPos <= 1 && localPathPos >= 0) ?
+            path.getPathPositionData(localPathPos, pathSpeed) :
             false;
 
         posArray[9] = width;
@@ -1641,19 +1641,19 @@ P.preStamper = function (dest, engine, entity, args) {
 P.stamper = {
 
     // `stamper.draw`
-    draw: function (engine, entity, data) { 
+    draw: function (engine, entity, data) {
 
         engine.strokeText(...data);
     },
 
     // `stamper.fill`
-    fill: function (engine, entity, data) { 
+    fill: function (engine, entity, data) {
 
         engine.fillText(...data);
     },
 
     // `stamper.drawAndFill`
-    drawAndFill: function (engine, entity, data) { 
+    drawAndFill: function (engine, entity, data) {
 
         engine.strokeText(...data);
         engine.fillText(...data);
@@ -1664,7 +1664,7 @@ P.stamper = {
     },
 
     // `stamper.fillAndDraw`
-    fillAndDraw: function (engine, entity, data) { 
+    fillAndDraw: function (engine, entity, data) {
 
         engine.fillText(...data);
         engine.strokeText(...data);
@@ -1675,27 +1675,27 @@ P.stamper = {
     },
 
     // `stamper.drawThenFill`
-    drawThenFill: function (engine, entity, data) { 
+    drawThenFill: function (engine, entity, data) {
 
         engine.strokeText(...data);
         engine.fillText(...data);
     },
 
     // `stamper.fillThenDraw`
-    fillThenDraw: function (engine, entity, data) { 
+    fillThenDraw: function (engine, entity, data) {
 
         engine.fillText(...data);
         engine.strokeText(...data);
     },
 
     // `stamper.clear`
-    clear: function (engine, entity, data) { 
+    clear: function (engine, entity, data) {
 
         const gco = engine.globalCompositeOperation;
         engine.globalCompositeOperation = DESTINATION_OUT;
         engine.fillText(...data);
         engine.globalCompositeOperation = gco;
-    },    
+    },
 };
 
 // `drawBoundingBox` - internal helper function called by `regularStamp`

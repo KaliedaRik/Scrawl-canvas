@@ -87,7 +87,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
     // Editing options are dependant on:
     // + if more than 1 entitys selected, then a restricted set of editing options get presented and will affect all entitys (in a delta-like manner)
     // + if only one entity is selected, then editing options should relate to that entity's type
-    // 
+    //
     // We use a filter to help indicate which entitys are currently selected
     scrawl.makeFilter({
         name: 'selected-entitys-border',
@@ -346,7 +346,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
 
     // Drag-and-drop entitys
     const updateControllersDisplayOnStart = () => {
-        
+
         keyboardEntitys.set({
             noFilters: true,
         });

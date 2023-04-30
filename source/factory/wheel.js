@@ -1,11 +1,11 @@
 // # Wheel factory
 // Wheel entitys are circles and part-circles rendered onto a DOM &lt;canvas> element using the Canvas 2D API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) - specifically the arc() and lineTo() methods.
-// + Positioning functionality for the Wheel is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Positioning functionality for the Wheel is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Wheel dimensions are tied closely to its __radius__ attribute; relative dimensions are calculated using the Wheel's Cell container's width.
-// + Wheels can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Wheels can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be animated directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Wheels can be cloned, and killed.
 
@@ -112,7 +112,7 @@ const S = P.setters,
     D = P.deltaSetters;
 
 
-// __width__ and __height__ (and dimensions) values are largely irrelevant to Wheel entitys; they get used internally purely as part of the Display cycle stamp functionality. 
+// __width__ and __height__ (and dimensions) values are largely irrelevant to Wheel entitys; they get used internally purely as part of the Display cycle stamp functionality.
 
 // If they are used to (delta)set the entity's values then the radius will be set to half the supplied value with String% values calculated from the entity's host's width, while height and width will equalize to maintain dimensional integrity.
 S.width = function (val) {
@@ -303,31 +303,31 @@ P.cleanPathObject = function () {
 // #### Factory
 // ```
 // scrawl.makeWheel({
-// 
+//
 //     name: 'mywheel-fill',
 //     radius: 50,
 //     startAngle: 15,
 //     endAngle: -15,
 //     includeCenter: true,
-// 
+//
 //     startX: 475,
 //     startY: 475,
-// 
+//
 //     fillStyle: 'purple',
 //     strokeStyle: 'gold',
-// 
+//
 //     lineWidth: 6,
 //     lineJoin: 'round',
 //     shadowOffsetX: 4,
 //     shadowOffsetY: 4,
 //     shadowBlur: 2,
 //     shadowColor: 'black',
-// 
+//
 // }).clone({
-// 
+//
 //     name: 'mywheel-draw',
 //     startX: 325,
-// 
+//
 //     method: 'draw',
 //     sharedState: true,
 // });

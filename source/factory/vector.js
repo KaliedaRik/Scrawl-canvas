@@ -71,7 +71,7 @@ P.setY = function (y) {
 P.setZ = function (z) {
 
     if (!xt(z)) throw new Error(`${this.name} Vector error - setZ() arguments error: ${z}`);
-    
+
     this.z = z;
 
     return this;
@@ -80,7 +80,7 @@ P.setZ = function (z) {
 P.setXY = function (x, y) {
 
     if (!xta(x, y)) throw new Error(`${this.name} Vector error - setXY() arguments error: ${x}, ${y}`);
-    
+
     this.x = x;
     this.y = y;
 
@@ -108,7 +108,7 @@ P.setFromArray = function (args) {
     if (!_isArray(args)) throw new Error(`${this.name} Vector error - setFromArray() arguments error: ${args}`);
 
     const [x, y, z] = args;
-    
+
     if (isa_number(x)) this.x = x;
     if (isa_number(y)) this.y = y;
     if (isa_number(z)) this.z = z;
@@ -119,7 +119,7 @@ P.setFromArray = function (args) {
 P.setFromVector = function (item) {
 
     if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${_stringify(item)}`);
-    
+
     const {x, y, z} = item;
 
     if (isa_number(x)) this.x = x;
@@ -254,7 +254,7 @@ P.rotate = function (angle) {
 
     let arg = _atan2(this.y, this.x);
     arg += (angle * 0.01745329251);
-    
+
     const mag = this.getMagnitude();
 
     this.x = mag * _cos(arg);
@@ -275,9 +275,9 @@ P.reverse = function () {
 
 // Normalize the Vector
 P.normalize = function() {
-    
+
     const val = this.getMagnitude();
-    
+
     if (val > 0) {
         this.x /= val;
         this.y /= val;
@@ -312,7 +312,7 @@ export const releaseVector = function (item) {
 
 // #### Factory
 export const makeVector = function (x, y, z) {
-    
+
     return new Vector(x, y, z);
 };
 

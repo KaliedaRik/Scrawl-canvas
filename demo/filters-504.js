@@ -1,4 +1,4 @@
-// # Demo Filters 504 
+// # Demo Filters 504
 // SVG-based filter example: duotone
 
 // [Run code](../../demo/filters-504.html)

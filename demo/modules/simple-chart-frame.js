@@ -90,7 +90,7 @@ const build = function (items) {
             startY: '9%',
             size: '1.2rem',
         });
-        
+
         subtitle.addSectionClass('RED', { fill: 'darkred' });
 
         const yLabelTop = scrawl.makePhrase({

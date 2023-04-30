@@ -198,9 +198,9 @@ const buttonControls = function () {
 
     let spinListener;
 
-    const startAnimationButton = artefact.start_animation, 
-        stopAnimationButton = artefact.stop_animation, 
-        startListenersButton = artefact.start_listeners, 
+    const startAnimationButton = artefact.start_animation,
+        stopAnimationButton = artefact.stop_animation,
+        startListenersButton = artefact.start_listeners,
         stopListenersButton = artefact.stop_listeners;
 
     // Defining the spin event listener here

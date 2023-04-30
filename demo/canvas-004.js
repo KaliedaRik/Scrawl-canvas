@@ -1,4 +1,4 @@
-// # Demo Canvas 004 
+// # Demo Canvas 004
 // Radial gradients
 
 // [Run code](../../demo/canvas-004.html)

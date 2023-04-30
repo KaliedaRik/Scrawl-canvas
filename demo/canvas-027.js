@@ -1,4 +1,4 @@
-// # Demo Canvas 027 
+// # Demo Canvas 027
 // Video control and manipulation; chroma-based hit zone
 
 // [Run code](../../demo/canvas-027.html)
@@ -344,9 +344,9 @@ const mygoose = scrawl.makeBlock({
 });
 
 myLocalTweenFactory(
-    name('test-goose1-tween'), 
-    name('test-video-ticker'), 
-    name('test-goose1-hitzone'), 
+    name('test-goose1-tween'),
+    name('test-video-ticker'),
+    name('test-goose1-hitzone'),
     [
         [0, '3s', '27%', '73%', '12%', '66%'],
         ['3s', '3s', '12%', '66%', '-3%', '68%']
@@ -363,7 +363,7 @@ scrawl.makeAction({
 
     targets: [name('test-goose1-hitzone')],
 
-    action: function () { 
+    action: function () {
 
         this.targets[0].set({
 
@@ -376,7 +376,7 @@ scrawl.makeAction({
     name: name('test-goose1-action-hide'),
     time: '6s',
 
-    action: function () { 
+    action: function () {
 
         this.targets[0].set({
 
@@ -402,9 +402,9 @@ mygoose.clone({
 });
 
 myLocalTweenFactory(
-    name('test-goose2-tween'), 
-    name('test-video-ticker'), 
-    name('test-goose2-hitzone'), 
+    name('test-goose2-tween'),
+    name('test-video-ticker'),
+    name('test-goose2-hitzone'),
     [
         [0,       '4s',   '89%', '89%', '77%', '80%'],
         ['4s',    '4s',   '77%', '80%', '65%', '80%'],

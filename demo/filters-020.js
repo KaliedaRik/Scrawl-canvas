@@ -1,4 +1,4 @@
-// # Demo Filters 020 
+// # Demo Filters 020
 // Parameters for: clampChannels filter
 
 // [Run code](../../demo/filters-020.html)
@@ -122,7 +122,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
             lowBlue.value = b;
         }
         else if ('high-color' === target) {
-            
+
             myFilter.set({ highColor: val });
 
 // @ts-expect-error

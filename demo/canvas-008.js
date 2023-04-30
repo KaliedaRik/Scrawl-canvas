@@ -1,4 +1,4 @@
-// # Demo Canvas 008 
+// # Demo Canvas 008
 // Picture entity position; manipulate copy attributes
 
 // [Run code](../../demo/canvas-008.html)
@@ -81,7 +81,7 @@ piccy.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    // Getting values using this approach allows us to see the raw, unprocessed values held by the entity. 
+    // Getting values using this approach allows us to see the raw, unprocessed values held by the entity.
     // + Use piccy.get('attributeName') to obtain the processed values being used by the entity
     const [copyW, copyH] = piccy.copyDimensions;
     const [copyX, copyY] = piccy.copyStart;

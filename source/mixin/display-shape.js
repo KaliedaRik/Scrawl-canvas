@@ -19,7 +19,7 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     const defaultAttributes = {
 
-// Scrawl-canvas recognises five shapes, separated by four breakpoints: 
+// Scrawl-canvas recognises five shapes, separated by four breakpoints:
 // + `banner`
 // + `landscape`
 // + `rectangle`
@@ -27,7 +27,7 @@ export default function (P = Ωempty) {
 // + `skyscraper`
 //
 // The values assigned to the breakpoints are Float numbers for the displayed Canvas element's width/height ratio - the value `3` represents the case where the width value is three times __more__ than the height value, while `0.35` represents a width (roughly) 3 times __less__ than the height.
-// 
+//
 // We can set a Canvas artefact's breakpoints in one go using the dedicated `setDisplayShapeBreakpoints()` function, as below. Alternatively we can use the regular `set()` function, supplying the attributes `breakToBanner`, `breakToLandscape`, `breakToPortrait` and `breakToSkyscraper` as required. The values given here are the default values for Canvas artefacts.
         breakToBanner: 3,
         breakToLandscape: 1.5,
@@ -40,7 +40,7 @@ export default function (P = Ωempty) {
         actionPortraitShape: null,
         actionSkyscraperShape: null,
 
-// Scrawl-canvas also recognises five areas, again separated by four breakpoints: 
+// Scrawl-canvas also recognises five areas, again separated by four breakpoints:
 // + `smallest`
 // + `smaller`
 // + `regular`
@@ -49,7 +49,7 @@ export default function (P = Ωempty) {
 //
 // The values assigned to the breakpoints are Float numbers for the displayed Canvas element's pixel area (`width * height`).
 // + Useful for dynamic Cells - for example Canvas base Cells, where the canvas `baseMatchesCanvasDimensions` flag has been set to `true`; in these situations we can use the area breakpoints to adjust entity dimensions and scales, and text font sizes, to better match the changed environment.
-// + The other option - to set the base Cell's dimensions to known, static values and set the canvas's `fit` attribute - suffers from image degredation when the canvas and its base cell's dimensions are excessively different. 
+// + The other option - to set the base Cell's dimensions to known, static values and set the canvas's `fit` attribute - suffers from image degredation when the canvas and its base cell's dimensions are excessively different.
         breakToSmallest: 20000,
         breakToSmaller: 80000,
         breakToLarger: 180000,
@@ -68,7 +68,7 @@ export default function (P = Ωempty) {
 // #### Packet management
     P.packetFunctions = pushUnique(P.packetFunctions, ['actionBannerShape', 'actionLandscapeShape', 'actionRectangleShape', 'actionPortraitShape', 'actionSkyscraperShape', 'actionSmallestArea', 'actionSmallerArea', 'actionRegularArea', 'actionLargerArea', 'actionLargestArea']);
 
-    
+
 // #### Clone management
 // No additional clone functionality defined here
 
@@ -363,7 +363,7 @@ export default function (P = Ωempty) {
                 return false;
             }
             else if (ratio < skyscraper) {
-                
+
                 if (current != SKYSCRAPER) {
 
                     this.currentDisplayShape = SKYSCRAPER;
@@ -373,7 +373,7 @@ export default function (P = Ωempty) {
                 return false;
             }
             else if (ratio < portrait) {
-                
+
                 if (current != PORTRAIT) {
 
                     this.currentDisplayShape = PORTRAIT;
@@ -438,7 +438,7 @@ export default function (P = Ωempty) {
                 return false;
             }
             else if (area < smallest) {
-                
+
                 if (current != SMALLEST) {
 
                     this.currentDisplayArea = SMALLEST;
@@ -448,7 +448,7 @@ export default function (P = Ωempty) {
                 return false;
             }
             else if (area < smaller) {
-                
+
                 if (current != SMALLER) {
 
                     this.currentDisplayArea = SMALLER;

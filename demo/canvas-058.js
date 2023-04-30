@@ -1,4 +1,4 @@
-// # Demo Canvas 058 
+// # Demo Canvas 058
 // Image smoothing
 
 // [Run code](../../demo/canvas-058.html)

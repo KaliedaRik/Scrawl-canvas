@@ -28,19 +28,19 @@ export default function (P = Ωempty) {
 // #### Get, Set, deltaSet
 // The __defs__ object supplies default values for a Scrawl-canvas object. Setter functions will check to see that a related defs attribute exists before allowing users to update an object attribute. Similarly the getter function will use the defs object to supply default values for an attribute that has not otherwise been set, or has been deleted by a user.
     P.defs = {};
-        
+
 
 // The __getters__ object holds a suite of functions for given factory object attributes that need to have their values processed before they can be returned to the user.
     P.getters = {};
-        
+
 
 // The __setters__ object holds a suite of functions for given factory object attributes that need to process a new value before setting it to the attribute.
     P.setters = {};
-        
+
 
 // The __deltaSetters__ object holds a suite of functions for given factory object attributes that need to process a new value before adding it to the attribute's existing value.
     P.deltaSetters = {};
-    
+
 // `get` - Retrieve an attribute value using the __get__ function. While many attributes can be retrieved directly - for example, _scrawl.artefact.myelement.scale_ - some attributes should only ever be retrieved using get:
 // ```
 // scrawl.artefact.myelement.get('startX');
@@ -90,7 +90,7 @@ export default function (P = Ωempty) {
 
             const setters = this.setters,
                 defs = this.defs;
-            
+
             for (i = 0; i < keysLen; i++) {
 
                 key = keys[i];
@@ -128,7 +128,7 @@ export default function (P = Ωempty) {
 
             const setters = this.deltaSetters,
                 defs = this.defs;
-            
+
             for (i = 0; i < keysLen; i++) {
 
                 key = keys[i];
@@ -316,7 +316,7 @@ export default function (P = Ωempty) {
                     test = this.processPacketOut(key, val, packetDefaultInclusions);
                     if (test) copy[key] = val;
                 }
-            } 
+            }
         }, this);
 
         // Start cascade down to factory to complete the copy object's build
@@ -359,7 +359,7 @@ export default function (P = Ωempty) {
 
 // `importPacket` - Import and unpack a string representation of a factory object using the __saveAsPacket__ function.
 // + Uses __fetch__, thus is an asynchronous process and returns a promise
-// + Once we have the packet, we can further action it using actionPacket() 
+// + Once we have the packet, we can further action it using actionPacket()
     P.importPacket = function (items) {
 
         const self = this;
@@ -624,14 +624,14 @@ export default function (P = Ωempty) {
 // `makeName` - If the developer doesn't supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.
     P.makeName = function (item) {
 
-        if (item && item.substring && !library[`${this.lib}names`].includes(item)) this.name = item;                
+        if (item && item.substring && !library[`${this.lib}names`].includes(item)) this.name = item;
         else this.name = generateUniqueString();
 
         return this;
     };
 
 
-// `register` - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function's type value. 
+// `register` - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function's type value.
 // + Some objects are stored in more than one place - for example the artefacts section will include Stack, Element and Canvas objects in addition to various Entity objects
     P.register = function () {
 

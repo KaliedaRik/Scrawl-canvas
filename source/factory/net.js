@@ -105,7 +105,7 @@ const defaultAttributes = {
     // + Can be set using the String name of an artefact object, or the artefact object itself.
     artefact: null,
 
-    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Net entity will set the maximum permitted length of the history array whenever it generates a new Particle. 
+    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Net entity will set the maximum permitted length of the history array whenever it generates a new Particle.
     historyLength: 1,
 
     // Net entitys will, as part of the Display cycle, apply any force objects assigned to a Particle. The initial forces assigned to every new Particle will be in line with the Force objects included in the Net's __forces__ Array.
@@ -135,7 +135,7 @@ const defaultAttributes = {
     // ##### weak-net, strong-net
     // __rows__, __columns__ - positive integer Numbers
     rows: 0,
-    columns: 0, 
+    columns: 0,
 
     // __rowDistance__, __columnDistance__ - positive float Numbers, representing the absolute pixel distance between rows and columns, or percentage String values representing the distance as measured relative to the host Cell's dimensions
     rowDistance: 0,
@@ -167,7 +167,7 @@ const defaultAttributes = {
     resetAfterBlur: 3,
 
     // ##### Not defined in the defs object, but set up in the constructor and setters
-    
+
     // __particleStore__ - an Array where all the Net's current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Net's artefact - or perform equivalent &lt;canvas> context engine instructions - onto the host Cell. These actions will be defined in the `stampAction` function.
 
     // __stampAction__ - define all major rendering actions in this function. The function receives the following arguments: `(artefact, particle, host)` - where `artefact` is the Net entity's artefact object (if any has been defined/set); `particle` is the current Particle object whose history needs to be rendered onto the canvas; and `host` is the Cell wrapper on which we will draw our graphics
@@ -214,7 +214,7 @@ P.postCloneAction = function(clone) {
 P.factoryKill = function (killArtefact, killWorld) {
 
     this.isRunning = false;
-    if (killArtefact) {       
+    if (killArtefact) {
 
         this.artefact.kill();
         if (this.shapeTemplate) this.shapeTemplate.kill();
@@ -355,7 +355,7 @@ P.regularStamp = function () {
         postGenerate.call(this);
     }
 
-    // The physics core of the function: 
+    // The physics core of the function:
     // + Calculate the forces acting on each of the Net entity's particles
     // + Add the Spring constraints to the particles
     // + Get the particles to update themselves, using the appropriate physics engine
@@ -422,7 +422,7 @@ P.regularStamp = function () {
             engine.moveTo(p.position.x, p.position.y);
             engine.arc(p.position.x, p.position.y, hitRadius, 0, _piDouble);
         });
-        
+
         engine.stroke();
         engine.restore();
     }
@@ -435,14 +435,14 @@ P.regularStamp = function () {
 P.restart = function () {
 
     this.purgeParticlesFromLibrary();
-    
+
     this.lastUpdated = _now();
 
     return this;
 };
 
 // `checkHit` - overwrites the function defined in mixin/position.js
-// + The Net entity's hit areas are circles centred on the entity's Particle's positions. 
+// + The Net entity's hit areas are circles centred on the entity's Particle's positions.
 // + Nets cannot be dragged; the Particles that make up the Net can be dragged.
 P.checkHit = function (items = [], mycell) {
 
@@ -560,7 +560,7 @@ const springMaker = function (particleFrom, particleTo, springName) {
         particleFrom,
         particleTo,
 
-        springConstant, 
+        springConstant,
         damperConstant,
 
         restLength: l * restLength,
@@ -609,9 +609,9 @@ const generators = {
                         velocityY: 0,
                         velocityZ: 0,
 
-                        historyLength, 
-                        engine, 
-                        forces, 
+                        historyLength,
+                        engine,
+                        forces,
 
                         mass,
 
@@ -687,9 +687,9 @@ const generators = {
                         velocityY: 0,
                         velocityZ: 0,
 
-                        historyLength, 
-                        engine, 
-                        forces, 
+                        historyLength,
+                        engine,
+                        forces,
 
                         mass,
 

@@ -29,10 +29,10 @@ import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVE
 const domShowElements = [];
 let domShowRequired = false;
 
-// `Exported function` (to modules). 
+// `Exported function` (to modules).
 export const setDomShowRequired = (val = true) => domShowRequired = val;
 
-// `Exported function` (to modules). 
+// `Exported function` (to modules).
 export const addDomShowElement = function (item = ZERO_STR) {
 
     if (item && item.substring) {
@@ -211,7 +211,7 @@ export const domShow = function (singleArtefact = ZERO_STR) {
 };
 
 // #### DOM Holding areas
-// `Exported handles` (to modules). During its initialization phase, Scrawl-canvas will add two hidden 'hold' elements at the top and bottom of the document body where it can add additional elements as-and-when required. 
+// `Exported handles` (to modules). During its initialization phase, Scrawl-canvas will add two hidden 'hold' elements at the top and bottom of the document body where it can add additional elements as-and-when required.
 
 // Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas> elements to inform non-visual website visitors about content in the canvas.
 export const scrawlCanvasHold = document.createElement('div');

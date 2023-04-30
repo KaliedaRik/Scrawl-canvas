@@ -1,4 +1,4 @@
-// # Demo Filters 027 
+// # Demo Filters 027
 // Filter parameters: reducePalette
 
 // [Run code](../../demo/filters-027.html)

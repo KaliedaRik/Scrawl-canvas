@@ -1,4 +1,4 @@
-// # Demo Particles 010 
+// # Demo Particles 010
 // Net entity: using a shape path as a net template
 
 // [Run code](../../demo/particles-010.html)
@@ -74,7 +74,7 @@ scrawl.makeNet({
 
             if (regex.test(p.name)) {
 
-                p.set({ 
+                p.set({
                     fill: 'red',
                     stroke: 'black',
                     forces: [],
@@ -115,7 +115,7 @@ scrawl.makeNet({
         fillStyle: 'yellow',
         strokeStyle: 'gold',
 
-        visibility: false, 
+        visibility: false,
 
         noUserInteraction: true,
         noPositionDependencies: true,
@@ -127,10 +127,10 @@ scrawl.makeNet({
 
             const [ , , ...start] = particle.history[0];
 
-            artefact.simpleStamp(host, { 
+            artefact.simpleStamp(host, {
                 start,
-                fillStyle: particle.fill, 
-                strokeStyle: particle.stroke, 
+                fillStyle: particle.fill,
+                strokeStyle: particle.stroke,
             });
     },
     particlesAreDraggable: true,

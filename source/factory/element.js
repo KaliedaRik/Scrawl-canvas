@@ -5,11 +5,11 @@
 // + They can also base their dimensions on absolute (px) or relative (%) values
 // + They can be __animated__ directly (`set`, `deltaSet`), or through automation (`delta` object), or through the Scrawl-canvas `tween` functionality
 // + They can be stored and retrieved ('packet' functionality), cloned ('clone', based on packets) and killed ('kill' functions)
-// 
+//
 // __A [Stack](./stack.html) is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
 // ```
-// Stack    ~~> Canvas/Cell  
-// Element  ~~> Entity (eg Block)  
+// Stack    ~~> Canvas/Cell
+// Element  ~~> Entity (eg Block)
 // ```
 // During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
 // + Stack elements have `relative` positioning within the DOM
@@ -49,7 +49,7 @@ import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '..
 
 // #### Element constructor
 const Element = function (items = Ωempty) {
-    
+
     const el = items.domElement;
 
     this.makeName(items.name);
@@ -57,7 +57,7 @@ const Element = function (items = Ωempty) {
 
     if (el) {
 
-        // Scrawl-canvas does not retain an Element's textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes `text` (for textContent, which automatically escapes all HTML-related tags and entities) and `content` (which should respect HTML tags and entities) 
+        // Scrawl-canvas does not retain an Element's textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes `text` (for textContent, which automatically escapes all HTML-related tags and entities) and `content` (which should respect HTML tags and entities)
         if (items.text) el.textContent = items.text;
         else if (items.content) el.innerHTML = items.content;
     }
@@ -82,7 +82,7 @@ const Element = function (items = Ωempty) {
     if (myEl) myEl.id = this.name;
 
     this.apply();
-    
+
     return this;
 };
 
@@ -136,7 +136,7 @@ P.factoryKill = function () {
 const S = P.setters;
 
 
-// `text` - __this is the preferred way to update an element's text content__ because the text supplied in the argument is not treated as HTML by the browser. 
+// `text` - __this is the preferred way to update an element's text content__ because the text supplied in the argument is not treated as HTML by the browser.
 //
 // When we update the DOM attribute `element.textContent`, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its 'kids' after updating the text
 S.text = function (item) {
@@ -199,7 +199,7 @@ P.addCanvas = function (items = Ωempty) {
             el = this.domElement;
 
         canvas.id = `${this.name}-canvas`;
-        
+
         const rect = el.getBoundingClientRect();
 
         el.parentNode.insertBefore(canvas, this.domElement);
@@ -215,7 +215,7 @@ P.addCanvas = function (items = Ωempty) {
 
             mimic: this.name,
             lockTo: MIMIC,
-            
+
             useMimicDimensions: true,
             useMimicScale: true,
             useMimicStart: true,
@@ -291,7 +291,7 @@ P.addCanvas = function (items = Ωempty) {
 // });
 // ```
 export const makeElement = function (items) {
-    
+
     if (!items) return false;
     return new Element(items);
 };

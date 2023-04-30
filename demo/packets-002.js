@@ -69,14 +69,14 @@ scrawl.makeTween({
     reverseOnCycleEnd: true,
 
     definitions: [{
-        
+
         attribute: 'fillStyle',
         start: 0,
         end: 1,
         engine: function (start, change, position) {
 
            const temp = 1 - position;
-           
+
            const val = (position < 0.5) ?
                 start + ((position * position) * change * 2) :
                 (start + change) + ((temp * temp) * -change * 2);

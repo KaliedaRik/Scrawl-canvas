@@ -2,14 +2,14 @@
 // A factory for generating straight linbe shape-based entitys
 //
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
-// 
+//
 // All path-defined entitys can be positioned, cloned, filtered etc:
-// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use `scale` instead.
-// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Path-defined entitys can be cloned, and killed.
 
@@ -120,7 +120,7 @@ P.cleanSpecies = function () {
 
 // `makeLinePath` - internal helper function - called by `cleanSpecies`
 P.makeLinePath = function () {
-    
+
     let p = ZERO_PATH;
     const { currentStampPosition, currentEnd } = this;
 
@@ -137,7 +137,7 @@ P.makeLinePath = function () {
     return p;
 };
 
-// `cleanDimensions` - internal helper function called by `prepareStamp` 
+// `cleanDimensions` - internal helper function called by `prepareStamp`
 // + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
 P.cleanDimensions = function () {
 
@@ -175,7 +175,7 @@ P.preparePinsForStamp = function () {
 // ##### makeLine
 // Accepts argument with attributes:
 // + __start__ (___startX___, ___startY___) Coordinate, or __pivot__/__mimic__/__path__ reference artefact (required)
-// + __end__ (___endX___, ___endY___) Coordinate, or __endPivot__/__endPath__ reference artefact (required) 
+// + __end__ (___endX___, ___endY___) Coordinate, or __endPivot__/__endPath__ reference artefact (required)
 // + If using reference artefacts, may also need to set the __lockTo__ (___lockXTo___, ___lockYTo___) and __endLockTo__ lock attributes
 // + additional reference-linked attributes for the `end` coordinate: __endPivotCorner__, __addEndPivotHandle__, __addEndPivotOffset__, __endPathPosition__, __addEndPathHandle__, __addEndPathOffset__
 //

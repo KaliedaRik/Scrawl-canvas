@@ -1,7 +1,7 @@
 // # The Animation Loop
-// Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - __animationLoop__ - for all animation objects. 
+// Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - __animationLoop__ - for all animation objects.
 //
-// [Animation objects](../factory/animation.html) are Scrawl-canvas objects with a __fn__ attribute; the function will be invoked once per RAF cycle. 
+// [Animation objects](../factory/animation.html) are Scrawl-canvas objects with a __fn__ attribute; the function will be invoked once per RAF cycle.
 //
 // The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the __doAnimation__ flag remains true.
 //
@@ -44,7 +44,7 @@ import { releaseArray, requestArray } from '../factory/array-pool.js';
 import { _floor } from './shared-vars.js';
 
 
-// Local constants 
+// Local constants
 const animate_sorted = [];
 const animate = [];
 
@@ -111,7 +111,7 @@ const animationLoop = () => {
 
         animate_sorted[i].fn();
     }
-    
+
     if (getDoAnimation()) window.requestAnimationFrame(animationLoop);
 };
 

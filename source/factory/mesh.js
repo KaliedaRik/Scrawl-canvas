@@ -4,9 +4,9 @@
 // Mesh entitys are ___composite entitys___ - an entity that relies on other entitys for its basic functionality.
 // + Every Mesh object requires a [Net](./net.html) entity create the grid that it uses for transforming its image.
 // + A Mesh entity also requires a [Picture](./picture.html) entity to act as its image source.
-// + Meshes can (in theory) use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
-// + They can (in theory) use __Anchor__ objects for user navigation. 
-// + They can (in theory) be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + Meshes can (in theory) use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
+// + They can (in theory) use __Anchor__ objects for user navigation.
+// + They can (in theory) be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can (in theory) be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Meshes can (in theory) be cloned, and killed.
 //
@@ -98,8 +98,8 @@ const defaultAttributes = {
 // __net__ - A Mesh entity requires a Net entity, set to generate a weak or strong net, to supply Particle objects to act as its mapping coordinates.
     net: null,
 
-// __isHorizontalCopy__ - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. 
-// + To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to `false` 
+// __isHorizontalCopy__ - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image.
+// + To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to `false`
     isHorizontalCopy: true,
 
 // __source__ - The Picture entity source for this Mesh. For initialization and/or `set`, we can supply either the Picture entity itself, or its name-String value.
@@ -107,19 +107,19 @@ const defaultAttributes = {
 // + Note that any ___filters should be applied to the Picture entity___; Mesh entitys do not support filter functionality but will apply a Picture's filters to the source image as-and-where appropriate.
     source: null,
 
-// __sourceIsVideoOrSprite__ - Boolean flag - If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame. 
-// + It's easier to tell the Mesh entity to do this using a flag, rather than get the Picture entity to update all its Mesh subscribers on every display cycle. 
+// __sourceIsVideoOrSprite__ - Boolean flag - If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame.
+// + It's easier to tell the Mesh entity to do this using a flag, rather than get the Picture entity to update all its Mesh subscribers on every display cycle.
 // + For Pictures using image assets the flag must be set to `false` (the default); setting the flag to `true` will significantly degrade display and animation performance.
     sourceIsVideoOrSprite: false,
 
-// The current Frame drawing process often leads to [moiré interference patterns](https://en.wikipedia.org/wiki/Moir%C3%A9_pattern) appearing in the resulting image. Scrawl-canvas uses a resize trick to blur out these patterns. 
+// The current Frame drawing process often leads to [moiré interference patterns](https://en.wikipedia.org/wiki/Moir%C3%A9_pattern) appearing in the resulting image. Scrawl-canvas uses a resize trick to blur out these patterns.
 //
-// __interferenceLoops__ (positive integer Number), __interferenceFactor__ (positive float Number) - The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized. 
+// __interferenceLoops__ (positive integer Number), __interferenceFactor__ (positive float Number) - The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized.
 // + If inteference patterns still appear in the final image, tweak these values to see if a better output can be achieved.
     interferenceLoops: 2,
     interferenceFactor: 1.03,
 
-// The Mesh entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts. 
+// The Mesh entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
 // It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__, __collides__.
     visibility: true,
@@ -172,7 +172,7 @@ const defaultAttributes = {
 //         rel:
 //         target:
 //         anchorType
-//         clickAction: 
+//         clickAction:
 //     }
 // ```
 //
@@ -180,8 +180,8 @@ const defaultAttributes = {
     method: FILL,
 
 
-// Mesh entitys support appropriate styling attributes, mainly for their stroke styles (used with the `draw`, `drawAndFill`, `fillAndDraw`, `drawThenFill` and `fillThenDraw` stamping methods). 
-// + These ___state___ attributes are stored directly on the object, rather than in a separate [State](./state.html) object. 
+// Mesh entitys support appropriate styling attributes, mainly for their stroke styles (used with the `draw`, `drawAndFill`, `fillAndDraw`, `drawThenFill` and `fillThenDraw` stamping methods).
+// + These ___state___ attributes are stored directly on the object, rather than in a separate [State](./state.html) object.
 //
 // The following attributes are thus supported:
 //
@@ -551,14 +551,14 @@ P.prepareStamp = function() {
 // `setSourceDimension` - internal function called by `prepareStamp`.
 // + We make the source dimensions a square of the longest row 'path'
 // + This way, we can do a horizontal scan, or a vertical scan with no further calculation
-// 
+//
 // This function also:
 // + Calculates the bounding box
 // + Creates the perimeter path object
 // + Stores the (relative) lengths of individual struts in each row
 //
-// TODO: consider drawing order of squares - is there a way we can predict which squares are going to be behind other squares ... 
-// + For instance by adding together the particle z values for each square, then filling in the lowest square first? 
+// TODO: consider drawing order of squares - is there a way we can predict which squares are going to be behind other squares ...
+// + For instance by adding together the particle z values for each square, then filling in the lowest square first?
 // + May also be a way of calculating a cull of squares so that we don't need to fill in squares entirely covered by other squares?
 P.setSourceDimension = function () {
 
@@ -586,7 +586,7 @@ P.setSourceDimension = function () {
 
             for (x = 0, xz = columns - 1; x < xz; x++) {
 
-                pos = (y * columns) + x; 
+                pos = (y * columns) + x;
 
                 [x0, y0] = particlePositions[pos];
                 [x1, y1] = particlePositions[pos + 1];
@@ -710,7 +710,7 @@ P.simpleStamp = function (host, changes) {
     if (host && host.type == T_CELL) {
 
         this.currentHost = host;
-        
+
         if (changes) {
 
             this.set(changes);
@@ -779,7 +779,7 @@ P.cleanInput = function () {
     canvas.height = sourceDimension;
     engine.setTransform(1, 0, 0, 1, 0, 0);
 
-    this.source.stamp(true, cell, { 
+    this.source.stamp(true, cell, {
         startX: 0,
         startY: 0,
         handleX: 0,
@@ -803,7 +803,7 @@ P.cleanInput = function () {
 // `cleanOutput` - internal function called by `stamp`
 // + If you're not a fan of big functions, please look away now.
 P.cleanOutput = function () {
-    
+
     // const _piHalf = Math.PI / 2;
 
     this.dirtyOutput = false;
@@ -1110,9 +1110,9 @@ P.checkHit = function (items = [], mycell) {
 
         return r;
     }
-    
+
     if (poolCellFlag) releaseCell(mycell);
-    
+
     return false;
 };
 

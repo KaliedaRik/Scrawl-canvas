@@ -22,7 +22,7 @@ import { _floor } from './shared-vars.js';
 // #### Local variables
 const rootElements = [];
 const rootElements_sorted = [];
-    
+
 export const rootElementsAdd = (val) => {
     pushUnique(rootElements, val);
     setRootElementsSort(true);

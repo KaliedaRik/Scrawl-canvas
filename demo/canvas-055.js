@@ -1,4 +1,4 @@
-// # Demo Canvas 055 
+// # Demo Canvas 055
 // Crescent entity functionality
 
 // [Run code](../../demo/canvas-055.html)

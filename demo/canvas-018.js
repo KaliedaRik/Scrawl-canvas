@@ -1,4 +1,4 @@
-// # Demo Canvas 018 
+// # Demo Canvas 018
 // Phrase entity - text along a path
 
 // [Run code](../../demo/canvas-018.html)

@@ -55,8 +55,8 @@ const defaultAttributes = {
 // ```
 // filename-String: [width-Number, height-Number]
 // {
-//     'river-300.jpg': [300, 225], 
-//     'river-600.jpg': [600, 450], 
+//     'river-300.jpg': [300, 225],
+//     'river-600.jpg': [600, 450],
 //     'river-900.jpg': [900, 675]
 // }
 // ```
@@ -129,7 +129,7 @@ S.currentSrc = function (item) {
 P.checkSource = function (width, height) {
 
     const el = this.source;
-    
+
     let action = ELEMENT;
 
     if (this.sourceLoaded) {
@@ -143,7 +143,7 @@ P.checkSource = function (width, height) {
             });
 
             iDims = this.intrinsicDimensions[this.currentFile];
-            
+
             if (iDims) action = INTRINSIC;
             else action = ZERO;
         }
@@ -160,7 +160,7 @@ P.checkSource = function (width, height) {
 
             case INTRINSIC :
 
-                if (this.sourceNaturalWidth !== iDims[0] || 
+                if (this.sourceNaturalWidth !== iDims[0] ||
                         this.sourceNaturalHeight !== iDims[1]) {
 
                     this.sourceNaturalWidth = iDims[0];
@@ -172,8 +172,8 @@ P.checkSource = function (width, height) {
 
             default:
 
-                if (this.sourceNaturalWidth !== el.naturalWidth || 
-                        this.sourceNaturalHeight !== el.naturalHeight || 
+                if (this.sourceNaturalWidth !== el.naturalWidth ||
+                        this.sourceNaturalHeight !== el.naturalHeight ||
                         this.sourceNaturalWidth !== width ||
                         this.sourceNaturalHeight !== height) {
 
@@ -213,7 +213,7 @@ export const importImage = function (...args) {
 
     args.forEach(item => {
 
-        let name, url, className, visibility, 
+        let name, url, className, visibility,
             parent = false;
 
         let flag = false;
@@ -244,7 +244,7 @@ export const importImage = function (...args) {
 
                 flag = true;
             }
-        }    
+        }
 
         if (flag) {
 
@@ -262,14 +262,14 @@ export const importImage = function (...args) {
             img.style.display = (visibility) ? BLOCK : NONE;
 
             if (parent) parent.appendChild(img);
-            
+
             img.onload = () => {
 
                 image.set({
                     source: img,
                 });
             };
-            
+
             img.src = url;
 
             image.set({
@@ -285,7 +285,7 @@ export const importImage = function (...args) {
 
 // `importDomImage` - import images defined in the web page HTML code
 // + Required argument is a query string used to search the dom for matching elements
-// + Scrawl-canvas does not remove &lt;img> elements from the DOM (this is a breaking change from Scrawl-canvas v7.0). 
+// + Scrawl-canvas does not remove &lt;img> elements from the DOM (this is a breaking change from Scrawl-canvas v7.0).
 // + If &lt;img> elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: `display: none;`, `opacity: 0;`, etc.
 export const importDomImage = function (query) {
 

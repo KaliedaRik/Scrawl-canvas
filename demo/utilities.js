@@ -51,7 +51,7 @@ ${xtra()}`;
 // Get a full, dynamic report on the Scrawl-canvas library's current contents
 const reportFullLibrary = (scrawl) => {
 
-    const { 
+    const {
         anchor, anchornames,
         animation, animationnames,
         animationtickers, animationtickersnames,
@@ -290,7 +290,7 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
 const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) => {
 
     const groupname = 'mycanvas_base';
-    
+
     let packet, res;
 
     const checkGroupBucket = (name, groupname) => {

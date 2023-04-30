@@ -179,7 +179,7 @@ P.rotate = function (angle) {
 
     let r0 = _atan2(y, x);
     r0 += (angle * 0.01745329251);
-    
+
     const r1 = _hypot(x, y);
 
     this[0] = r1 * _cos(r0);
@@ -205,9 +205,9 @@ P.getDotProduct = function (coord) {
 
 // __Normalize__ the Array's members (treating the Coordinate as if it was a 2D vector)
 P.normalize = function() {
-    
+
     const val = this.getMagnitude();
-    
+
     if (val > 0) {
         this[0] /= val;
         this[1] /= val;

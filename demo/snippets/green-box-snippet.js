@@ -31,7 +31,7 @@
 //
 
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + Adds a green box to the background display
 export default function (scrawl, el) {
 

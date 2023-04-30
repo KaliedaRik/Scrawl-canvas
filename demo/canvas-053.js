@@ -1,4 +1,4 @@
-// # Demo Canvas 053 
+// # Demo Canvas 053
 // Display output from a Reaction-Diffusion asset
 
 // [Run code](../../demo/canvas-053.html)
@@ -145,7 +145,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     const mx = myPattern.patternMatrix;
 
-    const matrixVals = (mx) ? 
+    const matrixVals = (mx) ?
         `[${mx.a}, ${mx.b}, ${mx.c}, ${mx.d}, ${mx.e}, ${mx.f}]` :
         '[]';
 
@@ -198,7 +198,7 @@ addNativeListener('input', (e) => {
                 });
                 break;
 
-            default: 
+            default:
                 reactionAsset.set({
                     initialSettingPreference: 'random',
                 });
@@ -651,7 +651,7 @@ addNativeListener(['change', 'input'], (e) => {
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
-            default: 
+            default:
 // @ts-expect-error
                 qs_diffusionRateA.value = 0.2097;
 // @ts-expect-error

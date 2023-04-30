@@ -1,4 +1,4 @@
-// # Demo Canvas 054 
+// # Demo Canvas 054
 // Animated contour lines: map a complex gradient to NoiseAsset output
 
 // [Run code](../../demo/canvas-054.html)

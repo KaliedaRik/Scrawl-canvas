@@ -1,4 +1,4 @@
-// # Demo Canvas 036 
+// # Demo Canvas 036
 // Cell functionality (functionality and associated tests needs to be expanded)
 
 // [Run code](../../demo/canvas-036.html)

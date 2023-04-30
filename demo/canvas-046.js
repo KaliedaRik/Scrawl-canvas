@@ -1,4 +1,4 @@
-// # Demo Canvas 046 
+// # Demo Canvas 046
 // Kill cycles for Cell, Group, Tween/Ticker, Picture and Asset objects, and Picture source elements in the DOM
 
 // [Run code](../../demo/canvas-046.html)
@@ -9,7 +9,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Smoke ring generator
 // We could place this code in its own module then import it into this code
-// + The generator creates a new Cell, adds a Polyline entity to it, compiles the Cell and captures the output into a DOM image. 
+// + The generator creates a new Cell, adds a Polyline entity to it, compiles the Cell and captures the output into a DOM image.
 // + It then creates a Picture entity from the asset captured from the Cell.
 // + Finally it constructs a Tween to animate various aspects of the Picture entity.
 // + When the Tween completes it will destroy all the objects - including the DOM &lt;img> element - associated with the smoke ring, and then destroy itself.

@@ -161,7 +161,7 @@ export const importSprite = function (...args) {
     args.forEach(item => {
 
         // Load the sprite image in the normal way
-        let name, urls, className, visibility, manifest, 
+        let name, urls, className, visibility, manifest,
             parent = false;
 
         let flag = false;
@@ -220,7 +220,7 @@ export const importSprite = function (...args) {
             urls.forEach(url => {
 
                 const img = document.createElement(IMG);
-                
+
                 let filename, match;
 
                 if (fileTlas.test(url)) {
@@ -236,7 +236,7 @@ export const importSprite = function (...args) {
                 img.style.display = (visibility) ? BLOCK : NONE;
 
                 if (parent) parent.appendChild(img);
-                
+
                 img.src = url;
 
                 imgArray.push(img);

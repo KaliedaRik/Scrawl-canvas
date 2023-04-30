@@ -1,4 +1,4 @@
-// # Demo Canvas 042 
+// # Demo Canvas 042
 // Canvas entity clip regions
 
 // [Run code](../../demo/canvas-042.html)
@@ -15,7 +15,7 @@ const canvas = scrawl.library.artefact.mycanvas,
 // Import image from DOM, and create Picture entity using it
 scrawl.importDomImage('.canal');
 
-// The image to be clipped 
+// The image to be clipped
 scrawl.makePicture({
 
     name: 'background',
@@ -56,7 +56,7 @@ scrawl.makeWheel({
 scrawl.makePhrase({
     name: 'phrase-clipper',
     text: 'HELLO!',
-    font: '50px arial, sans-serif',    
+    font: '50px arial, sans-serif',
 // @ts-expect-error
 }).set(generics);
 

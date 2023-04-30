@@ -1,11 +1,11 @@
 // # Crescent factory
 // Crescent entitys are formed by the intersection of two circles, rendered onto a DOM &lt;canvas> element using the Canvas 2D API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) - specifically the arc() method.
-// + Positioning functionality for the Crescent is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Positioning functionality for the Crescent is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Crescent dimensions are tied closely to its __radius__ attribute; relative dimensions are calculated using the Crescent's Cell container's width.
-// + Crescents can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Crescents can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be animated directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Crescents can be cloned, and killed.
 
@@ -100,7 +100,7 @@ const S = P.setters,
     D = P.deltaSetters;
 
 
-// __width__ and __height__ (and dimensions) values are largely irrelevant to Crescent entitys; they get used internally purely as part of the Display cycle stamp functionality. 
+// __width__ and __height__ (and dimensions) values are largely irrelevant to Crescent entitys; they get used internally purely as part of the Display cycle stamp functionality.
 
 // If they are used to (delta)set the entity's values then outerRadius will be set to the supplied width value with String% values calculated from the entity's host's width, while innerRadius will be set to the supplied height value with String% values calculated from the entity's host's height
 S.outerRadius = function (val) {
@@ -238,7 +238,7 @@ P.calculateInterception = function () {
             const {engine, element} = cell;
 
             const v = requestCoordinate();
-            
+
             let a, b;
 
             // Decided to calculate the start/end angles for each circle through brute force
@@ -323,7 +323,7 @@ P.cleanPathObject = function () {
 
             const pOuter = this.pathObjectOuter = new Path2D();
             const pInner = this.pathObjectInner = new Path2D();
-        
+
             if (displayIntersect) p.arc(x, y, oR, ocs, oce);
             else p.arc(x, y, oR, ocs, oce, true);
 
@@ -470,7 +470,7 @@ P.clear = function (engine) {
 
     engine.globalCompositeOperation = DESTINATION_OUT;
     engine.fill(this.pathObject, this.winding);
-    
+
     engine.globalCompositeOperation = gco;
 };
 

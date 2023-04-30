@@ -99,7 +99,7 @@ const defaultAttributes = {
     data: null,
 
     // __updateSource__ - a user-defined function which will be run every time a subscriber invokes checkSource when the `dirtyData` flag is set to true
-    // + At a minimum, the function will need to set the canvas element's dimensions (__width__ and __height__, both Numbers) and make an effort to draw something onto the canvas element 
+    // + At a minimum, the function will need to set the canvas element's dimensions (__width__ and __height__, both Numbers) and make an effort to draw something onto the canvas element
     updateSource: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);

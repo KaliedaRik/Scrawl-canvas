@@ -1,4 +1,4 @@
-// # Demo Canvas 033 
+// # Demo Canvas 033
 // User preferences: prefers-color-scheme; prefers-reduced-motion
 
 // [Run code](../../demo/canvas-033.html)
@@ -86,7 +86,7 @@ canvas.setColorSchemeDarkAction(() => {
 });
 
 canvas.setColorSchemeLightAction(() => {
-    
+
     canvas.set({ backgroundColor: background_light});
     textGroup.setArtefacts({ fillStyle: text_light});
 });
@@ -111,14 +111,14 @@ const checkE = (e) => {
     if (e) {
         if ("keydown" === e.type) {
             // spacebar
-            if (32 === e.keycode) return true; 
+            if (32 === e.keycode) return true;
             // enter key
-            if (13 === e.keycode) return true; 
+            if (13 === e.keycode) return true;
         }
         // mouse click
-        if ("click" === e.type) return true; 
+        if ("click" === e.type) return true;
         // tap
-        if ("touchend" === e.type) return true; 
+        if ("touchend" === e.type) return true;
     }
     return false;
 };

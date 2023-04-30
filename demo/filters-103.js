@@ -1,4 +1,4 @@
-// # Demo Filters 103 
+// # Demo Filters 103
 // A gallery of compound filter effects
 
 // [Run code](../../demo/filters-103.html)
@@ -12,9 +12,9 @@ scrawl.importDomImage('.flowers');
 
 // #### Scene setup and animation
 const {
-    'canvas-1':canvas1, 
-    'canvas-2':canvas2, 
-    'canvas-3':canvas3, 
+    'canvas-1':canvas1,
+    'canvas-2':canvas2,
+    'canvas-3':canvas3,
     'canvas-4':canvas4,
     'canvas-5':canvas5,
     'canvas-6':canvas6,

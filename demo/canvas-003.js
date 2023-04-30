@@ -1,4 +1,4 @@
-// # Demo Canvas 003 
+// # Demo Canvas 003
 // Linear gradients
 
 // [Run code](../../demo/canvas-003.html)

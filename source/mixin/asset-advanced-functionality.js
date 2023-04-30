@@ -57,7 +57,7 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
 // These all route get/set/setDelta attribute changes through to the Gradient object
-    const S = P.setters, 
+    const S = P.setters,
         D = P.deltaSetters;
 
     S.paletteStart = function (item) {
@@ -215,7 +215,7 @@ export default function (P = Ωempty) {
                 const img = engine.getImageData(0, 0, width, height),
                     iData = img.data,
                     len = width * height;
-                
+
                 let i, v, c;
 
                 const now = _now();
@@ -240,7 +240,7 @@ export default function (P = Ωempty) {
                 for (i = 0; i < len; i++) {
 
                     v = _floor(this.getOutputValue(i, width) * 255) * 4;
-                    
+
                     c = i * 4;
 
                     iData[c] = gData[v];

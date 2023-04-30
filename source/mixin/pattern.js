@@ -112,9 +112,9 @@ export default function (P = Ωempty) {
 
             if (mycell.substring) mycell = cell[mycell];
 
-            let source = this.source, 
+            let source = this.source,
                 loaded = this.sourceLoaded;
-            
+
             const repeat = this.repeat,
                 engine = mycell.engine;
 

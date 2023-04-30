@@ -1,4 +1,4 @@
-// # Demo Filters 503 
+// # Demo Filters 503
 // SVG-based filter example: posterize
 
 // [Run code](../../demo/filters-503.html)

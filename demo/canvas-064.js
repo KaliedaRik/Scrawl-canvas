@@ -17,7 +17,7 @@ canvas.setBase({
 });
 
 scrawl.makeGroup({
-    
+
     name: 'pin-group',
     host: canvas.base.name,
 });
@@ -25,7 +25,7 @@ scrawl.makeGroup({
 const pinArray = [];
 
 for (let i = 0; i < 6; i++) {
-  
+
     pinArray.push(scrawl.makeWheel({
 
         name: `pin-${i}`,

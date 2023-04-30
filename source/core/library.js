@@ -1,5 +1,5 @@
 // # Core library
-// Scrawl-canvas stores most of the objects it creates in a centralized space, so that they can be referenced from other places in the code base, and from user-written code. 
+// Scrawl-canvas stores most of the objects it creates in a centralized space, so that they can be referenced from other places in the code base, and from user-written code.
 //
 // While some sections are dedicated to a single type of object, other sections are aggregations - this may lead to name conflicts if coders are not rigorous in their naming conventions when creating objects (through the __make__ factory functions).
 //
@@ -52,7 +52,7 @@ export const element = {};
 export const elementnames = [];
 
 
-// All canvas-related artefacts (Blocks, Wheels, etc) get stored in the __entity__ section of the library. 
+// All canvas-related artefacts (Blocks, Wheels, etc) get stored in the __entity__ section of the library.
 export const entity = {};
 export const entitynames = [];
 
@@ -70,26 +70,26 @@ export const fontattributenames = [];
 // Objects created using the __makeGroup__ factory, and generated as part of the process of creating Stack and Canvas artefacts, and Cell assets.
 export const group = {};
 export const groupnames = [];
-    
+
 
 // Used internally by Gradient and RadialGradient styles
 export const palette = {};
 export const palettenames = [];
-    
+
 
 // Physics-related objects
 export const particle = {};
 export const particlenames = [];
-    
+
 export const force = {};
 export const forcenames = [];
 
 export const spring = {};
 export const springnames = [];
-    
+
 export const world = {};
 export const worldnames = [];
-    
+
 // Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories
 export const stack = {};
 export const stacknames = [];
@@ -98,7 +98,7 @@ export const stacknames = [];
 // Objects created using the __makeTween__ and __makeAction__ factories
 export const tween = {};
 export const tweennames = [];
-    
+
 
 // Objects created using the __makeGradient__, __makeRadialGradient__, __makePattern__ and __makeColor__ factories
 export const styles = {};

@@ -2,7 +2,7 @@
 // FontAttribute objects are used exclusively by [Phrase](./phrase.html) entitys. They hold data about the Phrase entity's current font
 // + The constructor uses naming functionality (from the [base](../mixin/base.html) mixin), but doesn't actually store FontAttribute instances in the [library](../core/library.html)
 // + Instead they are referenced directly from each Phrase instance.
-// + FontAttribute instances get cloned as part of the Phrase stamp functionality (because of subsequent 'update' invocations on them). 
+// + FontAttribute instances get cloned as part of the Phrase stamp functionality (because of subsequent 'update' invocations on them).
 // + If we stored FA instances in the library we'd risk running out of memory, or slowing up code speed, as the cloned instances are pretty temporary and get thrown away whenever a new Phrase.set invocation (involving font attributes) happens.
 //
 // The Phrase entity includes functionality to allow the getting and setting of FontAttribute attributes directly on the entity instance.
@@ -84,10 +84,10 @@ const defaultAttributes = {
 // + `1ex` is ≈ '0.5em'
 // + `1cap`, `1ch`, `1ic` are all ≈ '1em'
 //
-// Length percentage values, with calculation based on the &lt;canvas> element's computed font size: 
+// Length percentage values, with calculation based on the &lt;canvas> element's computed font size:
 // + `120%` = '1.2em'
 //
-// Non-numerical values (in the Fonts standards, 'absolute-size' and 'relative-size' keywords) will calculate a size based on the &lt;canvas> element's computed font size: 
+// Non-numerical values (in the Fonts standards, 'absolute-size' and 'relative-size' keywords) will calculate a size based on the &lt;canvas> element's computed font size:
 // + `xx-small` = 60% of the computed font size
 // + `x-small` = 75% of the computed font size
 // + `small` = 89% of the computed font size
@@ -104,16 +104,16 @@ const defaultAttributes = {
 // + `1vmax` - is 1% of the larger viewport dimension
 // + `1vmin` - is 1% of the smaller viewport dimension
 // + Scrawl-canvas treats `1vi` as ≈ 1vw, and `1vb` as ≈ 1vh
-// 
+//
 // Absolute length values convert as follow:
 // + `1in` (inch) = 96px
 // + `1cm` (centimeter) = 37.80px
 // + `1mm` (millimeter) = 3.78px
-// + `1Q` (quarter mm) = 0.95px 
+// + `1Q` (quarter mm) = 0.95px
 // + `1pc` (pica) = 16px
 // + `1pt` (point) = 1.33px
 // + `1px` (pixel) = 1px
-// 
+//
 // Note: we break down the `size` attribute into two components: __sizeValue__ and __sizeMetric__. Line height values are ignored and, when present in a font string, may break the code!
     sizeValue: 12,
     sizeMetric: PX,
@@ -145,7 +145,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 const G = P.getters,
     S = P.setters;
 
-// __size__ - pseudo-attribute 
+// __size__ - pseudo-attribute
 // + getter returns a CSS fontSize String
 G.size = function () {
 
@@ -157,7 +157,7 @@ S.size = function (item) {
 
     if (xt(item)) {
 
-        let size = 0, 
+        let size = 0,
             metric = MEDIUM;
 
         if (item.includes(XX_SMALL)) metric = XX_SMALL;
@@ -406,7 +406,7 @@ P.updateMetadata = function (scale, lineHeight, host) {
         this.lineHeight = lineHeight;
         this.dirtyFont = true;
     }
-    
+
     const currentHost = (this.host && this.host.type && this.host.type == T_CELL) ? this.host.name : ZERO_STR;
     if (host && host.type && host.type == T_CELL && host.name !== currentHost) {
 

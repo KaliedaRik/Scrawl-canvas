@@ -1,4 +1,4 @@
-// # Demo Filters 007 
+// # Demo Filters 007
 // Filter parameters: channels
 
 // [Run code](../../demo/filters-007.html)

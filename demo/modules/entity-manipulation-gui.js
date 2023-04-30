@@ -247,7 +247,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
                 method: 'draw',
                 strokeStyle: 'red',
 
-                start, 
+                start,
 
                 pivot: moveControl,
                 lockTo: 'pivot',
@@ -341,7 +341,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     };
 
 
-    // MOVE pin's drag-drop functionality 
+    // MOVE pin's drag-drop functionality
     const startMove = () => {
 
         updateControllerDisplay.onStart();
@@ -377,7 +377,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     });
 
 
-    // ROLL pin's drag-drop functionality 
+    // ROLL pin's drag-drop functionality
     const rotatePinGroup = scrawl.makeGroup({
         name: `${cell.name}-gui-rotate-group`,
     });
@@ -465,7 +465,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
         rotateStartValues = {};
 
         const coord = scrawl.requestCoordinate();
-        
+
         selectedEntitys.artefacts.forEach(name => {
 
             const artefact = selectedEntitys.getArtefact(name);
@@ -548,7 +548,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     });
 
 
-    // SCALE pin's drag-drop functionality 
+    // SCALE pin's drag-drop functionality
     const scalePinGroup = scrawl.makeGroup({
 
         name: `${cell.name}-gui-scale-group`,
@@ -671,7 +671,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     };
 
     const endScaleGroup = () => {
-        
+
         scalingWithShift = false;
         updateControllerDisplay.onEnd();
         restorePinDisplay(scaleControl);
@@ -916,7 +916,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     const setDeltaAngle = () => {
 
         const val = window.prompt('Set the delta angle to be applied to selected entitys via keyboard interactions', '0.5');
-        
+
         deltaAngle = parseFloat(val);
 
         if (isNaN(deltaAngle)) deltaAngle = 0.5;
@@ -925,7 +925,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     const setDeltaScale = () => {
 
         const val = window.prompt('Set the delta scale to be applied to selected entitys via keyboard interactions', '0.01');
-        
+
         deltaScale = parseFloat(val);
 
         if (isNaN(deltaScale)) deltaScale = 0.5;
@@ -934,7 +934,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     const setDeltaMove = () => {
 
         const val = window.prompt('Set the delta move (in px) to be applied to selected entitys via keyboard interactions', '1');
-        
+
         deltaMove = parseInt(val, 10);
 
         if (isNaN(deltaMove)) deltaMove = 1;
@@ -956,7 +956,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     const setGuiControlChars = (chars) => {
 
         if (chars != null) {
-            
+
             chars = chars.replace(/ /g, '');
 
             if (chars.length === 11) {
@@ -975,52 +975,52 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
                 currentGuiControlChars = chars.toUpperCase();
 
                 // q
-                shiftedActions[currentGuiControlChars[0]] = () => setDeltaMove(); 
+                shiftedActions[currentGuiControlChars[0]] = () => setDeltaMove();
                 // w
-                shiftedActions[currentGuiControlChars[1]] = () => moveGuiPin('up'); 
+                shiftedActions[currentGuiControlChars[1]] = () => moveGuiPin('up');
                 // a
-                shiftedActions[currentGuiControlChars[2]] = () => moveGuiPin('left'); 
+                shiftedActions[currentGuiControlChars[2]] = () => moveGuiPin('left');
                 // s
-                shiftedActions[currentGuiControlChars[3]] = () => moveGuiPin('down'); 
+                shiftedActions[currentGuiControlChars[3]] = () => moveGuiPin('down');
                 // d
-                shiftedActions[currentGuiControlChars[4]] = () => moveGuiPin('right'); 
+                shiftedActions[currentGuiControlChars[4]] = () => moveGuiPin('right');
                 // b
-                shiftedActions[currentGuiControlChars[5]] = () => setDeltaScale(); 
+                shiftedActions[currentGuiControlChars[5]] = () => setDeltaScale();
                 // n
-                shiftedActions[currentGuiControlChars[6]] = () => scaleEntitys('grow'); 
+                shiftedActions[currentGuiControlChars[6]] = () => scaleEntitys('grow');
                 // m
-                shiftedActions[currentGuiControlChars[7]] = () => scaleEntitys('shrink'); 
+                shiftedActions[currentGuiControlChars[7]] = () => scaleEntitys('shrink');
                 // g
-                shiftedActions[currentGuiControlChars[8]] = () => setDeltaAngle(); 
+                shiftedActions[currentGuiControlChars[8]] = () => setDeltaAngle();
                 // j
-                shiftedActions[currentGuiControlChars[9]] = () => rotateEntitys('dextral'); 
+                shiftedActions[currentGuiControlChars[9]] = () => rotateEntitys('dextral');
                 // h
-                shiftedActions[currentGuiControlChars[10]] = () => rotateEntitys('sinistral'); 
+                shiftedActions[currentGuiControlChars[10]] = () => rotateEntitys('sinistral');
 
                 currentGuiControlChars = currentGuiControlChars.toLowerCase();
 
                 // q
-                unshiftedActions[currentGuiControlChars[0]] = () => setDeltaMove(); 
+                unshiftedActions[currentGuiControlChars[0]] = () => setDeltaMove();
                 // w
-                unshiftedActions[currentGuiControlChars[1]] = () => moveSelection('up'); 
+                unshiftedActions[currentGuiControlChars[1]] = () => moveSelection('up');
                 // a
-                unshiftedActions[currentGuiControlChars[2]] = () => moveSelection('left'); 
+                unshiftedActions[currentGuiControlChars[2]] = () => moveSelection('left');
                 // s
-                unshiftedActions[currentGuiControlChars[3]] = () => moveSelection('down'); 
+                unshiftedActions[currentGuiControlChars[3]] = () => moveSelection('down');
                 // d
-                unshiftedActions[currentGuiControlChars[4]] = () => moveSelection('right'); 
+                unshiftedActions[currentGuiControlChars[4]] = () => moveSelection('right');
                 // b
-                unshiftedActions[currentGuiControlChars[5]] = () => setDeltaScale(); 
+                unshiftedActions[currentGuiControlChars[5]] = () => setDeltaScale();
                 // n
-                unshiftedActions[currentGuiControlChars[6]] = () => scaleGroup('grow'); 
+                unshiftedActions[currentGuiControlChars[6]] = () => scaleGroup('grow');
                 // m
-                unshiftedActions[currentGuiControlChars[7]] = () => scaleGroup('shrink'); 
+                unshiftedActions[currentGuiControlChars[7]] = () => scaleGroup('shrink');
                 // g
-                unshiftedActions[currentGuiControlChars[8]] = () => setDeltaAngle(); 
+                unshiftedActions[currentGuiControlChars[8]] = () => setDeltaAngle();
                 // j
-                unshiftedActions[currentGuiControlChars[9]] = () => rotateGroup('dextral'); 
+                unshiftedActions[currentGuiControlChars[9]] = () => rotateGroup('dextral');
                 // h
-                unshiftedActions[currentGuiControlChars[10]] = () => rotateGroup('sinistral'); 
+                unshiftedActions[currentGuiControlChars[10]] = () => rotateGroup('sinistral');
 
                 keyboard = scrawl.makeKeyboardZone({
                     zone: canvas,

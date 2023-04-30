@@ -1,5 +1,5 @@
 // # Shape-basic mixin
-// This mixin defines the key attributes and functionality for all Scrawl-canvas __path-defined entitys__. 
+// This mixin defines the key attributes and functionality for all Scrawl-canvas __path-defined entitys__.
 
 
 // #### Imports
@@ -301,7 +301,7 @@ export default function (P = Ωempty) {
                     myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
                     angle = this.getQuadraticAngle(myLen, ...vars);
                     break;
-                    
+
                 case BEZIER :
                     myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
                     angle = this.getBezierAngle(myLen, ...vars);
@@ -331,10 +331,10 @@ export default function (P = Ωempty) {
         if (this.useAsPath && xt(pos) && pos.toFixed) {
 
             const unitPartials = this.unitPartials;
-            
+
             let previousLen = 0,
                 remainder = pos % 1;
-            
+
             let stoppingLen, myLen, i, iz, unit, species;
 
             // ... because sometimes everything doesn't all add up to 1
@@ -399,7 +399,7 @@ export default function (P = Ωempty) {
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
     };
 
-    // `cleanDimensions` - internal helper function called by `prepareStamp` 
+    // `cleanDimensions` - internal helper function called by `prepareStamp`
     // + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
     P.cleanDimensions = function () {
 
@@ -462,7 +462,7 @@ export default function (P = Ωempty) {
 
             dims[0] = parseFloat((maxX - minX).toFixed(1));
             dims[1] = parseFloat((maxY - minY).toFixed(1));
-            
+
             if(dims[0] !== currentDims[0] || dims[1] !== currentDims[1]) {
 
                 currentDims[0] = dims[0];
@@ -482,10 +482,10 @@ export default function (P = Ωempty) {
                 const flatProgression = requestArray(),
                     flatPositions = requestArray();
 
-                let lastLength = 0, 
+                let lastLength = 0,
                     currentPartial,
                     lastPartial,
-                    progression, 
+                    progression,
                     positions,
                     i, iz, j, jz, l, p;
 
@@ -627,7 +627,7 @@ export default function (P = Ωempty) {
 
         engine.globalCompositeOperation = DESTINATION_OUT;
         engine.fill(this.pathObject, this.winding);
-        
+
         engine.globalCompositeOperation = gco;
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);

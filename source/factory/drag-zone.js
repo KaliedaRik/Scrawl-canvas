@@ -13,7 +13,7 @@
 // + __.exposeCurrentArtefact__ - Boolean (default: false)
 // + __.preventTouchDefaultWhenDragging__ - Boolean (default: false)
 // + __.resetCoordsToZeroOnTouchEnd__ - Boolean (default: true)
-// 
+//
 // At the heart of the drag zone are a set of functions (or alternatively, objects that can be applied to the selected artefact) which define the actions that happen when a user starts, continues and stops dragging an artefact in the zone. It is possible to set different actions depending on whether the user is pressing the shift button while they perform the drag action:
 // + __.updateOnStart__, __.updateOnShiftStart__ - Function, or a `set` object to be applied to the current artefact
 // + __.updateOnEnd__, __.updateOnShiftEnd__ - Function, or a `set` object to be applied to the current artefact
@@ -48,21 +48,21 @@ const dragZones = {};
 const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {
 
     let {
-        zone, 
-        coordinateSource, 
-        collisionGroup, 
-        startOn, 
-        endOn, 
-        updateOnStart, 
-        updateOnEnd, 
-        updateWhileMoving, 
-        updateOnShiftStart, 
-        updateOnShiftEnd, 
-        updateWhileShiftMoving, 
+        zone,
+        coordinateSource,
+        collisionGroup,
+        startOn,
+        endOn,
+        updateOnStart,
+        updateOnEnd,
+        updateWhileMoving,
+        updateOnShiftStart,
+        updateOnShiftEnd,
+        updateWhileShiftMoving,
         updateOnPrematureExit,
-        exposeCurrentArtefact, 
-        preventTouchDefaultWhenDragging, 
-        resetCoordsToZeroOnTouchEnd, 
+        exposeCurrentArtefact,
+        preventTouchDefaultWhenDragging,
+        resetCoordsToZeroOnTouchEnd,
         processingOrder,
     } = items;
 
@@ -143,7 +143,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     const checkE = function (e) {
 
         if (e && e.cancelable) {
-            
+
             if (preventTouchDefaultWhenDragging && current) {
 
                 e.preventDefault();
@@ -246,7 +246,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
     const data = {
         name: `${zone.name}_${collisionGroup.name}_${processingOrder}`,
-        exposeCurrentArtefact, 
+        exposeCurrentArtefact,
         target,
         processingOrder,
         pickup,
@@ -261,7 +261,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     dragZones[zone.name].sort((a, b) => a.processingOrder - b.processingOrder);
 
     return {
-        exposeCurrentArtefact, 
+        exposeCurrentArtefact,
         getCurrent,
         kill,
         zone,

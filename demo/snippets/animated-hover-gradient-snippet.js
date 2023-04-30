@@ -19,7 +19,7 @@
 //
 // __Purpose:__ adds a gradient behind the words, which animates on user hover over the &lt;span> (or similar) element.
 //
-// __Function input:__ 
+// __Function input:__
 // + the DOM element - generally a block or inline-block element.
 //
 // __Function output:__ a Javascript object will be returned, containing the following attributes
@@ -41,7 +41,7 @@
 // ```
 
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + no additional effects on the DOM element
 // + setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward
 export default function (scrawl, el) {
@@ -85,7 +85,7 @@ export default function (scrawl, el) {
         .updateColor(899, 'green')
         .updateColor(900, 'orange')
         .updateColor(999, 'orange');
-        
+
         scrawl.makeBlock({
             name: `${name}-block`,
             group,

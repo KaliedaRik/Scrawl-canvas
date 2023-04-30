@@ -1,4 +1,4 @@
-// # Demo Canvas 006 
+// # Demo Canvas 006
 // Canvas tween stress test
 
 // [Run code](../../demo/canvas-006.html)

@@ -1,4 +1,4 @@
-// # Demo Filters 501 
+// # Demo Filters 501
 // Canvas engine filter strings (based on CSS filters)
 
 // [Run code](../../demo/filters-501.html)
@@ -60,7 +60,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // No additional work required in the Javascript file to create the CSS filters; these are defined as Strings in the HTML select &lt;option> elements, and will be set on the target entitys as part of the form control user interaction below.
-// 
+//
 // ```
 // <select class="controlItem" id="filter">
 //     <option value="none">none</option>

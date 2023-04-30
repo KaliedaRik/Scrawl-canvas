@@ -1,4 +1,4 @@
-// # Demo Canvas 017 
+// # Demo Canvas 017
 // Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
 
 // [Run code](../../demo/canvas-017.html)

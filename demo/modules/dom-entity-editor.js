@@ -87,7 +87,7 @@ const getSelectField = (entity, key, fieldData) => {
 
     const isBoolean = ('boolean' === fieldData.glue[1]);
     const optionsList = [];
-    
+
     const el = document.createElement('div');
     el.classList.add('sc-dee-field-container');
 
@@ -662,7 +662,7 @@ const initializeDomEntityEditor = (items = {}, scrawl) => {
     }
 
     let currentEditor = document.createElement('div');
-    
+
     domEntityEditor.appendChild(currentEditor);
 
 

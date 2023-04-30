@@ -1,4 +1,4 @@
-// # Demo Particles 012 
+// # Demo Particles 012
 // Use Net entity particles as reference coordinates for other artefacts
 
 // [Run code](../../demo/particles-012.html)
@@ -80,7 +80,7 @@ scrawl.makeNet({
     artefact: scrawl.makeBlock({
 
         name: 'unseen-net-block',
-        visibility: false, 
+        visibility: false,
     }),
 });
 
@@ -324,7 +324,7 @@ scrawl.makeTracer({
         history.forEach((p, index) => {
 
             [remaining, z, ...start] = p;
-            
+
             artefact.simpleStamp(host, {
                 start,
                 scale: (len - index) / len,
@@ -337,13 +337,13 @@ scrawl.makeTracer({
     name: 'trace-2',
     particle: 'test-net-11-14',
     artefact: scrawl.library.entity['burn-1'].clone({ name: 'burn-2'}),
-    
+
 }).clone({
 
     name: 'trace-3',
     particle: 'test-net-12-14',
     artefact: scrawl.library.entity['burn-1'].clone({ name: 'burn-3'}),
-    
+
 }).clone({
 
     name: 'trace-4',

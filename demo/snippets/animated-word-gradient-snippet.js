@@ -19,7 +19,7 @@
 //
 // __Purpose:__ imports the element's text and adds an animated gradient effect to it.
 //
-// __Function input:__ 
+// __Function input:__
 // + the DOM element - generally a block or inline-block element.
 //
 // __Function output:__ a Javascript object will be returned, containing the following attributes
@@ -41,7 +41,7 @@
 // ```
 
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + Imports the element's background color, and sets the element background to `transparent`
 // + Imports the element's text node text, and sets the text color to `transparent`
 // + ___Note that canvas text will NEVER be as good as DOM text!___
@@ -104,7 +104,7 @@ export default function (scrawl, el) {
             name: `${name}-text`,
             group,
             font,
-            text, 
+            text,
             fillStyle: `${name}-gradient`,
 
             // This is a bad fix for mis-aligned text - a better solution would be to expose startX and startY so coder could set them individually for each instance where this snippet is used, so the replacement canvas text can line up exactly with its surrounding text

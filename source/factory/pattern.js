@@ -111,10 +111,10 @@ P.kill = function () {
         if (removeAssetOnKill.substring) asset.kill(true);
         else asset.kill();
     }
-    
+
     // Remove style from the Scrawl-canvas library
     this.deregister();
-    
+
     return this;
 };
 
@@ -164,7 +164,7 @@ P.set = function (items = Ωempty) {
         const setters = this.setters,
             source = this.source,
             defs = this.defs;
-        
+
         let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {

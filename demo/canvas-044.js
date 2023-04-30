@@ -1,4 +1,4 @@
-// # Demo Canvas 044 
+// # Demo Canvas 044
 // Building more complex patterns
 
 // [Run code](../../demo/canvas-044.html)

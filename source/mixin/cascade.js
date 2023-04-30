@@ -213,10 +213,10 @@ export default function (P = Ωempty) {
 
 
 // ##### Collision detection
-// The `getArtefactAt` function checks to see if any of the controller object's Groups' artefacts are located at the supplied coordinates in the argument object. 
+// The `getArtefactAt` function checks to see if any of the controller object's Groups' artefacts are located at the supplied coordinates in the argument object.
 // + The first artefact to report back as being at that coordinate will be returned by the function
-// + Where no artefacts are present at that coordinate the function returns false. 
-// + The artefact with the highest order attribute value will be returned first. 
+// + Where no artefacts are present at that coordinate the function returns false.
+// + The artefact with the highest order attribute value will be returned first.
 // + This function forms part of the Scrawl-canvas __drag-and-drop__ functionality.
     P.getArtefactAt = function (items) {
 
@@ -242,8 +242,8 @@ export default function (P = Ωempty) {
     };
 
 
- // The `getAllArtefactsAt` function returns all of the controller object's Groups' artefacts located at the supplied coordinates in the argument object. 
- // + The artefact with the highest order attribute value will be returned first. 
+ // The `getAllArtefactsAt` function returns all of the controller object's Groups' artefacts located at the supplied coordinates in the argument object.
+ // + The artefact with the highest order attribute value will be returned first.
  // + The function will always return an array of artefact objects, or an empty Array
     P.getAllArtefactsAt = function (items) {
 
@@ -254,7 +254,7 @@ export default function (P = Ωempty) {
         if (items) {
 
             let g, res;
-            
+
             for (let i = this.groups.length - 1; i >= 0; i--) {
 
                 g = group[this.groups[i]];

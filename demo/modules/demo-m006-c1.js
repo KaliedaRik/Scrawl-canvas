@@ -25,7 +25,7 @@ export default function (items) {
 
     // #### Scene
     canvas.set({
-        label: 'An animated canvas showing three text snippets at the top, center and bottom of the canvas. Each text describes the canvas element\'s current position (from 0% top to 100% bottom) in the browser\' viewport. The texts update as the user scrolls through the page.', 
+        label: 'An animated canvas showing three text snippets at the top, center and bottom of the canvas. Each text describes the canvas element\'s current position (from 0% top to 100% bottom) in the browser\' viewport. The texts update as the user scrolls through the page.',
     }).setAsCurrentCanvas();
 
     scrawl.makeGradient({

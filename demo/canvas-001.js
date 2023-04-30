@@ -1,4 +1,4 @@
-// # Demo Canvas 001 
+// # Demo Canvas 001
 // Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
 
 // [Run code](../../demo/canvas-001.html)

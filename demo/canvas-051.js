@@ -1,4 +1,4 @@
-// # Demo Canvas 051 
+// # Demo Canvas 051
 // Line Spirals
 
 // [Run code](../../demo/canvas-051.html)

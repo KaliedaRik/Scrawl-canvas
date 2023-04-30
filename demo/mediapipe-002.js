@@ -24,7 +24,7 @@ const myAsset = scrawl.makeRawAsset({
 
     userAttributes: [{
 
-        key: 'stuff', 
+        key: 'stuff',
         defaultValue: false,
         setter: function (item) {
 
@@ -37,11 +37,11 @@ const myAsset = scrawl.makeRawAsset({
             }
         },
     },{
-        key: 'canvasWidth', 
+        key: 'canvasWidth',
         defaultValue: 0,
         setter: () => {},
     },{
-        key: 'canvasHeight', 
+        key: 'canvasHeight',
         defaultValue: 0,
         setter: () => {},
     }],
@@ -105,7 +105,7 @@ const perform = function (stuff) {
 
 
 // ##### Import and use livestream
-// convenience handle for the media stream asset 
+// convenience handle for the media stream asset
 let video, model, output;
 
 // Capture the media stream
@@ -143,7 +143,7 @@ scrawl.importMediaStream({
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
 
-    model.setOptions({   
+    model.setOptions({
         maxNumFaces: 1,
         minDetectionConfidence: 0.5,
         minTrackingConfidence: 0.5

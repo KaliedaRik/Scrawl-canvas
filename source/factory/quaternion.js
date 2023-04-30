@@ -1,6 +1,6 @@
 // # Quaternion factory
 // Scrawl-canvas uses quaternion objects for some of its calculations - in particular for calculating DOM element 3D rotation values. These objects are not stored in the library; rather, they are kept in a __quaternion pool__ and pulled from it when required.
-// 
+//
 // TODO: there's errors in the math here! See in particular Demo [Snippets-003](../../demo/snippets-003.html) to experiment:
 // + Pitch always appears to rotate with reference to the element. Yaw and roll, however, seem to rotate with reference to the stack frame, or the element - or possibly a combination of both - dependant on the values of the other euler attributes.
 // + `quaternionMultiply` is almost certainly wrong - caused by trying to convert code meant for a y-axis-upwards frame to code that works in a y-axis-downwards frame
@@ -77,7 +77,7 @@ P.set = function (obj = Ωempty) {
     tv.x = (isa_number(x)) ? x : tv.x;
     tv.y = (isa_number(y)) ? y : tv.y;
     tv.z = (isa_number(z)) ? z : tv.z;
-    
+
     return this;
 };
 
@@ -92,7 +92,7 @@ P.setFromQuaternion = function (item) {
     tv.x = iv.x;
     tv.y = iv.y;
     tv.z = iv.z;
-    
+
     return this;
 };
 
@@ -217,7 +217,7 @@ P.quaternionRotate = function (item) {
 
     releaseQuaternion(q4);
     releaseQuaternion(q5);
-    
+
     return this
 };
 
@@ -234,7 +234,7 @@ export const requestQuaternion = function (items) {
     const q = quaternionPool.shift();
 
     q.set(items);
-    
+
     return q
 };
 

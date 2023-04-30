@@ -1,4 +1,4 @@
-// # Demo Particles 008 
+// # Demo Particles 008
 // Net entity: generation and basic functionality, including Spring objects
 
 // [Run code](../../demo/particles-008.html)
@@ -43,7 +43,7 @@ const myWorld = scrawl.makeWorld({
 
     userAttributes: [
         {
-            key: 'wind', 
+            key: 'wind',
             defaultValue: 0,
         },
     ],
@@ -109,7 +109,7 @@ const myNet = scrawl.makeNet({
             if (regex.test(p.name)) {
 
                 // Change the appearance of the selected Particles, and remove the forces acting on them
-                p.set({ 
+                p.set({
                     fill: 'black',
                     stroke: 'black',
                     forces: [],
@@ -162,7 +162,7 @@ const myNet = scrawl.makeNet({
         fillStyle: 'gold',
         strokeStyle: 'blue',
 
-        visibility: false, 
+        visibility: false,
 
         globalAlpha: 1,
 
@@ -177,10 +177,10 @@ const myNet = scrawl.makeNet({
 
         const [ , , ...start] = particle.history[0];
 
-        artefact.simpleStamp(host, { 
+        artefact.simpleStamp(host, {
             start,
-            fillStyle: particle.fill, 
-            strokeStyle: particle.stroke, 
+            fillStyle: particle.fill,
+            strokeStyle: particle.stroke,
         });
     },
 });

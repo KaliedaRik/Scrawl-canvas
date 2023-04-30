@@ -63,11 +63,11 @@ export default function (P = Ωempty) {
 
                 this.dirtyFilters = true;
                 this.dirtyImageSubscribers = true;
-        
+
             }
             else if (item.substring) {
-                
-                pushUnique(this.filters, item); 
+
+                pushUnique(this.filters, item);
 
                 this.dirtyFilters = true;
                 this.dirtyImageSubscribers = true;
@@ -83,7 +83,7 @@ export default function (P = Ωempty) {
         this.updateFilterIdentifier(!!item);
     };
 
-// `updateFilterIdentifier` - manually trigger re-memoization. The function's (optional) argument is a boolean. 
+// `updateFilterIdentifier` - manually trigger re-memoization. The function's (optional) argument is a boolean.
     P.updateFilterIdentifier = function (item) {
 
         this.dirtyFilterIdentifier = false;
@@ -195,7 +195,7 @@ export default function (P = Ωempty) {
         this.dirtyFilters = true;
         this.dirtyImageSubscribers = true;
         this.dirtyFilterIdentifier = true;
-        
+
         return this;
     };
 
@@ -209,7 +209,7 @@ export default function (P = Ωempty) {
         this.dirtyFilters = true;
         this.dirtyImageSubscribers = true;
         this.dirtyFilterIdentifier = true;
-        
+
         return this;
     };
 

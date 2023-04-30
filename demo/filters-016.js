@@ -1,4 +1,4 @@
-// # Demo Filters 016 
+// # Demo Filters 016
 // Filter parameters: newsprint
 
 // [Run code](../../demo/filters-016.html)

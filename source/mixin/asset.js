@@ -17,9 +17,9 @@
 //
 // Assets will also be created when Picture entitys or Pattern styles are defined using a 'scrawl.make' function (`makePicture`, `makePattern`), or updated with the `set` function, where the _imageSource_, _videoSource_ or _spriteSource_ key in the argument object has been set to a valid URL path string.
 //
-// Be aware that __loading assets takes time!__ 
-// + Performing a single render operation immediately after defining or updating a Picture entity or Pattern style will almost certainly fail to render the expected image/sprite/video in the canvas. 
-// + The load functionality is asynchronous (using Promises). 
+// Be aware that __loading assets takes time!__
+// + Performing a single render operation immediately after defining or updating a Picture entity or Pattern style will almost certainly fail to render the expected image/sprite/video in the canvas.
+// + The load functionality is asynchronous (using Promises).
 // + To display the resulting images in the canvas, it needs to be running an animation object (for instance, __scrawl.makeRender__) so that updates appear as soon as they have loaded, as part of the animation's Display cycle functionality.
 
 
@@ -39,16 +39,16 @@ export default function (P = Ωempty) {
         sourceLoaded: false,
 
 // __source__ - A handle to the DOM element supplying the image - either an &lt;img>, &lt;video> or &lt;canvas> element.
-// + Note that the ___Web Canvas API does not support___ using the &lt;picture> element as a legitimate image source. 
+// + Note that the ___Web Canvas API does not support___ using the &lt;picture> element as a legitimate image source.
 // + However most browsers allow the &lt;img> element to use __srcset__ and __sizes__ attributes, which will give them the same type of functionality as picture elements - for example to determine the most appropriately sized image file for the browser/device's viewport dimensions.
 // + Asset wrappers will detect, and handle actions required, if/when a browser decides to download a new image file, to update the &lt;img> element with a more detailed image, for instance when the browser viewport changes its dimensions, or a device is rotated from portrait to landscape viewing.
-// + The web Canvas API claims that __SVG__ images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img> element, and the resulting image will be entirely static, and rasterized! 
+// + The web Canvas API claims that __SVG__ images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img> element, and the resulting image will be entirely static, and rasterized!
 // + For this reason, we don't recommend trying to use SVG files for canvas image sources; instead, the SVG can be included in a Scrawl-canvas display by adding it - as an &lt;svg> element - to a Scrawl-canvas stack (see Demo DOM-003 for an example of this approach).
 // + &lt;img> elements using an animated GIF as their src are not supported.
 // + ___Be aware that this attribute cannot be directly or indirectly set.___ Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.
         source: null,
 
-// __subscribers__ - An Array containing the Picture entity and Pattern style Objects, who wish to use the asset as their source. 
+// __subscribers__ - An Array containing the Picture entity and Pattern style Objects, who wish to use the asset as their source.
 // + Pictures and Patterns may subscribe to a maximum of ONE asset at any given time, though they may set/update that asset subscription to a different asset whenever required (which involves unsubscribing their existing asset).
 // + ___Note that the contents of this Array cannot be directly or indirectly set.___ Picture entitys and Pattern styles will subscribe and unsubscribe to an asset as part of their source acquisition functionality (via the asset wrapper's __subscribe__ and __unsubscribe__ functions).
         subscribers: null,

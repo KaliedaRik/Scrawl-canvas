@@ -338,7 +338,7 @@ export default function (P = Ωempty) {
         return this;
     };
 
-// `initializeDomLayout` - internal function 
+// `initializeDomLayout` - internal function
 // + Used by factory constructors to help wrap DOM elements in a Stack, Canvas or Element wrapper
 // + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
     P.initializeDomLayout = function (items) {
@@ -346,7 +346,7 @@ export default function (P = Ωempty) {
         const el = items.domElement;
 
         if (el) {
-            
+
             const style = el.style;
 
             style.boxSizing = BORDER_BOX;
@@ -393,7 +393,7 @@ export default function (P = Ωempty) {
                 // TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
 
                 // TODO discover handle (transform, transformOrigin)
-                    
+
                 // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
                 // for Stack artefacts only, discover perspective and perspective-origin values
@@ -543,7 +543,7 @@ export default function (P = Ωempty) {
                 x = currentCorePosition.scrollX - (here.offsetX || 0),
                 y = currentCorePosition.scrollY - (here.offsetY || 0),
                 results = [];
-            
+
             let client, coord;
 
             const cornerPush = function (c) {
@@ -610,7 +610,7 @@ export default function (P = Ωempty) {
 // ##### Collision detection
 
 // `cleanPathObject`
-// + Scrawl-canvas uses the DOM wrapper element's child &lt;div> elements' position coordinates to build a `Path2D object` (which will be some form of trapezium). 
+// + Scrawl-canvas uses the DOM wrapper element's child &lt;div> elements' position coordinates to build a `Path2D object` (which will be some form of trapezium).
 // + We can now perform collision detection in the same way as we do for Canvas-based entity objects using `CanvasRenderingContext2D.isPointInPath`
     P.cleanPathObject = function () {
 
@@ -694,9 +694,9 @@ export default function (P = Ωempty) {
                 artefact: this,
             };
         }
-        
+
         if (flag) releaseCell(cell);
-        
+
         return false;
     };
 
@@ -742,7 +742,7 @@ export default function (P = Ωempty) {
                 if (this.addOwnRotationToMimic) processedRotation.quaternionRotate(calculatedRotation);
             }
             else this.dirtyMimicRotation = true;
-        } 
+        }
         else {
 
             processedRotation.set(calculatedRotation);
@@ -759,7 +759,7 @@ export default function (P = Ωempty) {
         releaseQuaternion(processedRotation);
 
         this.dirtyPositionSubscribers = true;
-        
+
         if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
     };
 
@@ -819,7 +819,7 @@ export default function (P = Ωempty) {
 // + The functionality for performing the update is defined in the [document](../core/document.html) module's `domShow` function, which will be called for each DOM-based artefact during the 'show' stage of the Display cycle
 // + Function returns a promise
 //
-// Only DOM elements whose attribute values have changed will be updated - as made clear by setting the appropriate dirty flags. Affected style attributes are: 
+// Only DOM elements whose attribute values have changed will be updated - as made clear by setting the appropriate dirty flags. Affected style attributes are:
 // + `perspectiveOrigin` and `perspective` - Stack wrappers only
 // + `position` (relative vs absolute, not position within a Stack)
 // + `width` and `height` - for dimensions

@@ -12,7 +12,7 @@
 // + This snippet supports high contrast alternative colors
 // + This snippet is not animated
 //
-// __Function input:__ 
+// __Function input:__
 // + the DOM element - generally a block or inline-block element.
 //
 // __Customisation:__ The snippet can be customised using the following data- attributes applied using CSS variables, or directly to the HTML header element:
@@ -30,7 +30,7 @@
 // + `data-shadow-blur` - (unit % of font size) percentage of the font size to blur the shadow
 // + `data-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more`
 // + `data-dark-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more`
-// 
+//
 // __Function output:__ a Javascript object will be returned, containing the following attributes
 // ```
 // {
@@ -52,7 +52,7 @@
 // Additional font-specific customisation can be added courtesy of the Text Snippet Helper module
 import { getSnippetData } from './text-snippet-helper.js';
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + Imports the element's background color, and sets the element background to `transparent`
 // + Imports the element's text node text, and sets the text color to `transparent`
 // + ___Note that canvas text will NEVER be as good as DOM text!___

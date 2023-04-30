@@ -76,7 +76,7 @@ export default function (P = Ωempty) {
 // + Canvas fill (flood) drawing operations can take into account an entity's winding choice. Two are available: the [non-zero rule](https://en.wikipedia.org/wiki/Nonzero-rule); and the [even-odd rule](https://en.wikipedia.org/wiki/Even%E2%80%93odd_rule)
         winding: NONZERO,
 
-// __flipReverse__, __flipUpend__ - Boolean flags which determine the orientation of the entity when it stamps itself on the display. 
+// __flipReverse__, __flipUpend__ - Boolean flags which determine the orientation of the entity when it stamps itself on the display.
 // + a `reversed` entity is effectively flipped 180&deg; around a vertical line passing through that entity's rotation-reflection (start) point - a face looking to the right will now look to the left
 // + an `upended` entity is effectively flipped 180&deg; around a horizontal line passing through that entity's rotation-reflection (start) point - a normal face will now appear upside-down
         flipReverse: false,
@@ -85,7 +85,7 @@ export default function (P = Ωempty) {
 // __scaleOutline__ - Boolean flag. When set, the entity will increase its `lineWidth` proportionat to the entity's `scale` value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1
         scaleOutline: true,
 
-// __lockFillStyleToEntity__, __lockStrokeStyleToEntity__ - Boolean flags. 
+// __lockFillStyleToEntity__, __lockStrokeStyleToEntity__ - Boolean flags.
 // + When set, these flags instruct any gradient-type style (Scrawl-canvas Gradient, RadialGradient) to map their `start` and `end` coordinates to the entity's dimensions
 // + Default action is for gradient-type styles to map their coordinates to the host Cell's dimensions
         lockFillStyleToEntity: false,
@@ -98,11 +98,11 @@ export default function (P = Ωempty) {
 // + `up` - triggers when a user releases their (left) mouse key while inside the entity's fillable area - this can also be used for capturing mouse click and touch tap actions
 // + `leave` - triggers when the cursor passes over the entity's outline away from its fillable area
 //
-// The events are regular functions. 
-// + `this` refers to the entity object, giving the functions access to any attribute and method set on it. 
+// The events are regular functions.
+// + `this` refers to the entity object, giving the functions access to any attribute and method set on it.
 // + They can also use variables defined elsewhere in the script code (though these will need to be rehydrated if the entity is packet stored and resurrected - see Demo [Canvas-009](../../demo/canvas-009.html) tests for an example of doing this)
-// 
-// Scrawl-canvas will not automatically trigger these functions: 
+//
+// Scrawl-canvas will not automatically trigger these functions:
 // + They can be triggered as part of an Animation object's function checking for hits on a Group of entitys
 // + Similar checks can be included in a RenderAnimation hook function
 // + Alternatively we can set up an event listener on the DOM &lt;canvas> element, which invokes a call to cascade a mouse/touch `move` event down to its associated entitys - in this case the entitys will check the event themselves and trigger the appropriate function
@@ -411,19 +411,19 @@ export default function (P = Ωempty) {
 // The main entity compile-related functions are:
 // + __prepareStamp__ - a synchronous function called at the start of the compile step where an entity will check its dirty flags and update position, dimensions and other attributes accordingly.
 // + __stamp__ - this is where the main drawing activity happens. This function calls one of two other functions: __filteredStamp__; or __regularStamp__ which in turn rely on the __regularStampSynchronousActions__ function where all the drawing magic happens.
-// 
+//
 // The stamp functionality can be triggered outside of the Display cycle, if required - for instance when compiling a Cell display setup as a static background layer, which excludes itself from the Display cycle cascade's `clear` and `compile` steps.
 
 // ##### Step 1: prepare the entity for stamping
-// `prepareStamp` - all entity objects need to check the following dirty flags and take corrective action when a flag is set. 
-// + The order in which flags get checked is important! 
+// `prepareStamp` - all entity objects need to check the following dirty flags and take corrective action when a flag is set.
+// + The order in which flags get checked is important!
 // + As part of the checking process, additional dirty flags may be set early in the function, for processing later on in the function.
 //
 // If an entity relies on another artefact as a `pivot`, `mimic` or `path` reference, those artefacts should be processed earlier in the compile cascade. This can be achieved by:
 // + Placing the reference artefacts in a different Group, whose __order__ attribute has been set to a lower value than this entity's Group's order value
 // + If both entity and reference artefact are in the same Group, give this entity an order value higher than its reference.
 // + If both entity and the reference artefact are in the same Group, and have the same order value, then make sure that the reference artefact is defined in code before the entity.
-// 
+//
 // Note that some entity factories need to overwrite this function to meet their particular requirements. Many of the _clean functions_ mentioned below are defined in the [position mixin](./position.html).
     P.prepareStamp = function() {
 
@@ -551,7 +551,7 @@ export default function (P = Ωempty) {
         if (dirtyFilters || !this.currentFilters) this.cleanFilters();
 
         // Save current host data into a set of vars, ready for restoration after web engine completes or fails
-        const { 
+        const {
             element: currEl,
             engine: currEng,
             currentDimensions: currDims,
@@ -597,7 +597,7 @@ export default function (P = Ωempty) {
                     filterEng.restore();
 
                     this.dirtyFilterIdentifier = true;
-                } 
+                }
 
                 filterEng.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -623,7 +623,7 @@ export default function (P = Ωempty) {
 
             currEng.globalAlpha = (state && state.globalAlpha) ? state.globalAlpha : 1;
             currEng.globalCompositeOperation = (state && state.globalCompositeOperation) ? state.globalCompositeOperation : SOURCE_OVER;
-            
+
             currEng.setTransform(1, 0, 0, 1, 0, 0);
 
             currEng.drawImage(filterEl, 0, 0);
@@ -689,7 +689,7 @@ export default function (P = Ωempty) {
 
             if (data[counter]) {
 
-                y = _floor(i / width); 
+                y = _floor(i / width);
                 x = i - (y * width);
 
                 if (minX > x) minX = x;
@@ -711,7 +711,7 @@ export default function (P = Ωempty) {
         if (host && GOOD_HOST.includes(host.type)) {
 
             this.currentHost = host;
-            
+
             if (changes) this.set(changes);
             this.prepareStamp();
 
@@ -790,7 +790,7 @@ export default function (P = Ωempty) {
 
         engine.globalCompositeOperation = DESTINATION_OUT;
         engine.fill(this.pathObject, this.winding);
-        
+
         engine.globalCompositeOperation = gco;
     };
 

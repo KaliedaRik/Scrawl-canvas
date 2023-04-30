@@ -1,4 +1,4 @@
-// # Demo Filters 019 
+// # Demo Filters 019
 // Filter parameters: edgeDetect, sharpen
 
 // [Run code](../../demo/filters-019.html)

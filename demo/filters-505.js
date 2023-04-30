@@ -1,4 +1,4 @@
-// # Demo Filters 505 
+// # Demo Filters 505
 // SVG-based filter example: noise
 
 // [Run code](../../demo/filters-505.html)

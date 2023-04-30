@@ -1,4 +1,4 @@
-// # Demo Filters 005 
+// # Demo Filters 005
 // Filter parameters: channelstep
 
 // [Run code](../../demo/filters-005.html)

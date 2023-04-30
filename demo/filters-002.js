@@ -1,4 +1,4 @@
-// # Demo Filters 002 
+// # Demo Filters 002
 // Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert
 
 // [Run code](../../demo/filters-002.html)

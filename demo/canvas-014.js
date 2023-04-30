@@ -1,4 +1,4 @@
-// # Demo Canvas 014 
+// # Demo Canvas 014
 // Line, Quadratic and Bezier entitys - control lock alternatives
 
 // [Run code](../../demo/canvas-014.html)

@@ -1,4 +1,4 @@
-// # Demo Filters 018 
+// # Demo Filters 018
 // Filter parameters: emboss
 
 // [Run code](../../demo/filters-018.html)

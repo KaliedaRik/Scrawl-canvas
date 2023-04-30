@@ -12,7 +12,7 @@ import { reportSpeed } from './utilities.js';
 const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 let myTracker;
 
-// Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
+// Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
 // @ts-expect-error
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
@@ -105,7 +105,7 @@ scrawl.makeTween({
             end: 340
         }
     ]
-}).clone({ 
+}).clone({
     name: 'mySecondClonedTween',
     targets: artefact.mythirdelement,
     useNewTicker: true,
@@ -197,12 +197,12 @@ scrawl.makeAction({
     name: 'lapStarted',
     time: '0%',
 
-    action: function () { 
+    action: function () {
         if (myTracker) myTracker.send('event', 'Ticker progress', 'Ticker loop starting (forwards)', `Action ${this.name} on ${this.ticker}`) ;
     },
 
-    revert: function () { 
-        if (myTracker) myTracker.send('event', 'Ticker progress', 'Ticker loop starting (reversed)', `Action ${this.name} on ${this.ticker}`); 
+    revert: function () {
+        if (myTracker) myTracker.send('event', 'Ticker progress', 'Ticker loop starting (reversed)', `Action ${this.name} on ${this.ticker}`);
     },
 
 }).clone({
@@ -210,12 +210,12 @@ scrawl.makeAction({
     name: 'lapCompleted',
     time: '100%',
 
-    action: function () { 
-        if (myTracker) myTracker.send('event', 'Ticker progress', '100% complete (forwards)', `Action ${this.name} on ${this.ticker}`); 
+    action: function () {
+        if (myTracker) myTracker.send('event', 'Ticker progress', '100% complete (forwards)', `Action ${this.name} on ${this.ticker}`);
     },
 
-    revert: function () { 
-        if (myTracker) myTracker.send('event', 'Ticker progress', '100% complete (reversed)', `Action ${this.name} on ${this.ticker}`); 
+    revert: function () {
+        if (myTracker) myTracker.send('event', 'Ticker progress', '100% complete (reversed)', `Action ${this.name} on ${this.ticker}`);
     },
 
 }).clone({
@@ -223,12 +223,12 @@ scrawl.makeAction({
     name: 'halfwayThere',
     time: '50%',
 
-    action: function () { 
-        if (myTracker) myTracker.send('event', 'Ticker progress', '50% complete (forwards)', `Action ${this.name} on ${this.ticker}`); 
+    action: function () {
+        if (myTracker) myTracker.send('event', 'Ticker progress', '50% complete (forwards)', `Action ${this.name} on ${this.ticker}`);
     },
 
-    revert: function () { 
-        if (myTracker) myTracker.send('event', 'Ticker progress', '50% complete (reversed)', `Action ${this.name} on ${this.ticker}`); 
+    revert: function () {
+        if (myTracker) myTracker.send('event', 'Ticker progress', '50% complete (reversed)', `Action ${this.name} on ${this.ticker}`);
     },
 });
 
@@ -238,12 +238,12 @@ const smallboat = scrawl.library.tween.mySecondClonedTween;
 
 smallboat.set({
 
-    onHalt: function () { 
-        if (myTracker) myTracker.send('event', 'Tween state', 'halt', `Tween ${this.name} on ${this.ticker}`) 
+    onHalt: function () {
+        if (myTracker) myTracker.send('event', 'Tween state', 'halt', `Tween ${this.name} on ${this.ticker}`)
     },
 
-    onResume: function () { 
-        if (myTracker) myTracker.send('event', 'Tween state', 'resume', `Tween ${this.name} on ${this.ticker}`) 
+    onResume: function () {
+        if (myTracker) myTracker.send('event', 'Tween state', 'resume', `Tween ${this.name} on ${this.ticker}`)
     },
 });
 

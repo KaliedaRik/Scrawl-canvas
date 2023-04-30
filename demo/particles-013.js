@@ -130,7 +130,7 @@ scrawl.makeEmitter({
         handle: ['center', 'center'],
 
         method: 'fill',
-        visibility: false, 
+        visibility: false,
 
         noUserInteraction: true,
         noPositionDependencies: true,
@@ -141,7 +141,7 @@ scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history;
-        
+
         let remaining, globalAlpha, scale, start, z;
 
         // These particles only keep data for their most recent position
@@ -154,9 +154,9 @@ scrawl.makeEmitter({
             if (globalAlpha > 0 && scale > 0) {
 
                 artefact.simpleStamp(host, {
-                    start, 
-                    scale, 
-                    globalAlpha, 
+                    start,
+                    scale,
+                    globalAlpha,
                     fillStyle: particle.fill,
                 });
             }
@@ -186,7 +186,7 @@ scrawl.makeStar({
 });
 
 
-// #### Tree spangles 
+// #### Tree spangles
 // The tree spangles decoration is a set of stars within the tree which fade in, rotate andf elongate over the course of their lives
 // + Uses an area-based Emitter entity positioned within the tree Shape entity's path
 scrawl.makeEmitter({
@@ -219,7 +219,7 @@ scrawl.makeEmitter({
         handle: ['center', 'center'],
 
         method: 'fill',
-        visibility: false, 
+        visibility: false,
 
         delta: {
             roll: 0.6,
@@ -265,7 +265,7 @@ scrawl.makeEmitter({
             }
 
             artefact.simpleStamp(host, {
-                start, 
+                start,
                 fillStyle: particle.fill,
                 globalAlpha,
                 radius1,
@@ -400,42 +400,42 @@ scrawl.makePicture({
 
     name: 'candle-2',
     pathPosition: 0.793,
-    
+
 }).clone({
 
     name: 'candle-3',
     pathPosition: 0.272,
-    
+
 }).clone({
 
     name: 'candle-4',
     pathPosition: 0.696,
-    
+
 }).clone({
 
     name: 'candle-5',
     pathPosition: 0.352,
-    
+
 }).clone({
 
     name: 'candle-6',
     pathPosition: 0.616,
-    
+
 }).clone({
 
     name: 'candle-7',
     pathPosition: 0.413,
-    
+
 }).clone({
 
     name: 'candle-8',
     pathPosition: 0.555,
-    
+
 }).clone({
 
     name: 'candle-9',
     pathPosition: 0.459,
-    
+
 }).clone({
 
     name: 'candle-10',

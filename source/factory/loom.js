@@ -4,9 +4,9 @@
 // Loom entitys are ___composite entitys___ - an entity that relies on other entitys for its basic functionality.
 // + Every Loom object requires two (or one) path-enabled [Shape](./shape.html) entitys to act as its left and right tracks.
 // + A Loom entity also requires a [Picture](./picture.html) entity to act as its image source.
-// + Looms can use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + Looms can use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Looms can be cloned, and killed.
 //
@@ -98,7 +98,7 @@ const defaultAttributes = {
     fromPath: null,
     toPath: null,
 
-// __fromPathStart__, __fromPathEnd__ and __toPathStart__, __toPathEnd__ - float Numbers generally between `0.0 - 1.0` - The Loom entity can set the start and end cursors on each of its path struts, between which the image will be drawn. 
+// __fromPathStart__, __fromPathEnd__ and __toPathStart__, __toPathEnd__ - float Numbers generally between `0.0 - 1.0` - The Loom entity can set the start and end cursors on each of its path struts, between which the image will be drawn.
 // + These can be animated to allow the image to _flow_ between one part of the display and another, changing its shape as it moves.
     fromPathStart: 0,
     fromPathEnd: 1,
@@ -106,17 +106,17 @@ const defaultAttributes = {
     toPathStart: 0,
     toPathEnd: 1,
 
-// __synchronizePathCursors__ - Boolean flag - To make sure the `from...` and `to...` strut start points, and end points, have the same value set the attribute to `true` (default). 
+// __synchronizePathCursors__ - Boolean flag - To make sure the `from...` and `to...` strut start points, and end points, have the same value set the attribute to `true` (default).
 // + Setting it to `false` allows the cursors to be set independently on each strut ... which in turn may lead to unexpected display consequences.
     synchronizePathCursors: true,
 
-//  __loopPathCursors__ - Boolean flag - For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa). 
+//  __loopPathCursors__ - Boolean flag - For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa).
 // + To change this functionality - so that the image slowly disappears as it animates up and down past the ends of the struts, set the attribute to `false`.
     loopPathCursors: true,
     constantPathSpeed: true,
 
-// __isHorizontalCopy__ - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. 
-// + To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to `false` 
+// __isHorizontalCopy__ - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image.
+// + To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to `false`
     isHorizontalCopy: true,
 
 // __showBoundingBox__ (Boolean), __boundingBoxColor__ (CSS color String) - Mainly for library development/testing work - shows the loom entity's bounding box - which is calculated from the constituent Shape entitys' current bounding boxes.
@@ -128,19 +128,19 @@ const defaultAttributes = {
 // + Note that any ___filters should be applied to the Picture entity___; Loom entitys do not support filter functionality but will apply a Picture's filters to the source image as-and-where appropriate.
     source: null,
 
-// __sourceIsVideoOrSprite__ - Boolean flag - If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame. 
-// + It's easier to tell the Loom entity to do this using a flag, rather than get the Picture entity to update all its Loom subscribers on every display cycle. 
+// __sourceIsVideoOrSprite__ - Boolean flag - If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame.
+// + It's easier to tell the Loom entity to do this using a flag, rather than get the Picture entity to update all its Loom subscribers on every display cycle.
 // + For Pictures using image assets the flag must be set to `false` (the default); setting the flag to `true` will significantly degrade display and animation performance.
     sourceIsVideoOrSprite: false,
 
-// The current Frame drawing process often leads to [moiré interference patterns](https://en.wikipedia.org/wiki/Moir%C3%A9_pattern) appearing in the resulting image. Scrawl-canvas uses a resize trick to blur out these patterns. 
+// The current Frame drawing process often leads to [moiré interference patterns](https://en.wikipedia.org/wiki/Moir%C3%A9_pattern) appearing in the resulting image. Scrawl-canvas uses a resize trick to blur out these patterns.
 //
-// __interferenceLoops__ (positive integer Number), __interferenceFactor__ (positive float Number) - The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized. 
+// __interferenceLoops__ (positive integer Number), __interferenceFactor__ (positive float Number) - The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized.
 // + If inteference patterns still appear in the final image, tweak these values to see if a better output can be achieved.
     interferenceLoops: 2,
     interferenceFactor: 1.03,
 
-// The Loom entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts. 
+// The Loom entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
 // It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__, __collides__.
     visibility: true,
@@ -192,7 +192,7 @@ const defaultAttributes = {
 //         rel:
 //         target:
 //         anchorType
-//         clickAction: 
+//         clickAction:
 //     }
 // ```
 //
@@ -202,8 +202,8 @@ const defaultAttributes = {
     method: FILL,
 
 
-// Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the `draw`, `drawAndFill`, `fillAndDraw`, `drawThenFill` and `fillThenDraw` stamping methods). 
-// + These ___state___ attributes are stored directly on the object, rather than in a separate [State](./state.html) object. 
+// Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the `draw`, `drawAndFill`, `fillAndDraw`, `drawThenFill` and `fillThenDraw` stamping methods).
+// + These ___state___ attributes are stored directly on the object, rather than in a separate [State](./state.html) object.
 //
 // The following attributes are thus supported:
 //
@@ -674,7 +674,7 @@ P.prepareStamp = function() {
         tPath = this.toPath;
 
     // Sanity check 1
-    // + `getBoundingBox` will recalculate and set the `dirtyPathData` flag 
+    // + `getBoundingBox` will recalculate and set the `dirtyPathData` flag
     // + if paths have set the Loom's `dirtyStart` flag
     const [startX, startY] = this.getBoundingBox();
 
@@ -776,7 +776,7 @@ P.setSourceDimension = function (val) {
 
     // if other functions call setSourceDimension, they will do it without supplying a new value
     // + in which case we can calculate and update it here
-    // + other functions do it as a sanity check 
+    // + other functions do it as a sanity check
     else {
 
         const fPath = this.fromPath,
@@ -803,7 +803,7 @@ P.simpleStamp = function (host, changes) {
     if (host && GOOD_HOST.includes(host.type)) {
 
         this.currentHost = host;
-        
+
         if (changes) {
 
             this.set(changes);
@@ -867,7 +867,7 @@ P.cleanInput = function () {
     canvas.height = sourceDimension;
     engine.setTransform(1, 0, 0, 1, 0, 0);
 
-    this.source.stamp(true, cell, { 
+    this.source.stamp(true, cell, {
         startX: 0,
         startY: 0,
         handleX: 0,
@@ -892,10 +892,10 @@ P.cleanInput = function () {
 // `cleanOutput` - internal function called by `stamp`
 // + If you're not a fan of big functions, please look away now.
 P.cleanOutput = function () {
-    
+
     this.dirtyOutput = false;
 
-    const sourceDimension = this.sourceDimension, 
+    const sourceDimension = this.sourceDimension,
         sourceData = this.sourceImageData;
 
     if (sourceDimension && sourceData) {
@@ -921,7 +921,7 @@ P.cleanOutput = function () {
             fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, i, j,
 
             watchFromPath = this.watchFromPath,
-            watchIndex = this.watchIndex, 
+            watchIndex = this.watchIndex,
             engineInstructions = this.engineInstructions,
             engineDeltaLengths = this.engineDeltaLengths,
             instruction;
@@ -1335,7 +1335,7 @@ P.checkHit = function (items = []) {
     if (this.noUserInteraction) return false;
 
     let tests = (!_isArray(items)) ?  [items] : items,
-        targetData = (this.output && this.output.data) ? this.output.data : false, 
+        targetData = (this.output && this.output.data) ? this.output.data : false,
         tx, ty, cx, cy, index;
 
     if (targetData) {
@@ -1361,7 +1361,7 @@ P.checkHit = function (items = []) {
             cx = tx - x;
             cy = ty - y;
 
-            if (cx < 0 || cx > w || cy < 0 || cy > h) return false; 
+            if (cx < 0 || cx > w || cy < 0 || cy > h) return false;
 
             index = (((cy * w) + cx) * 4) + 3;
 

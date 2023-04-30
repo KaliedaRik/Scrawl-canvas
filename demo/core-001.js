@@ -1,5 +1,5 @@
-// Import the Scrawl-canvas file, using: 
-// - either an absolute path to it; 
+// Import the Scrawl-canvas file, using:
+// - either an absolute path to it;
 // - or a path relative to the html file which loaded this user-defined javascript file
 import scrawl from '../source/scrawl.js'
 

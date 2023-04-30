@@ -1,4 +1,4 @@
-// # Demo Canvas 024 
+// # Demo Canvas 024
 // Loom entity functionality
 
 // [Run code](../../demo/canvas-024.html)

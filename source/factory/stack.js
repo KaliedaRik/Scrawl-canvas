@@ -5,11 +5,11 @@
 // + They can also base their dimensions on absolute (px) or relative (%) values
 // + They can be __animated__ directly (`set`, `deltaSet`), or through automation (`delta` object), or through the Scrawl-canvas `tween` functionality
 // + They can be stored and retrieved ('packet' functionality), cloned ('clone', based on packets) and killed ('kill' functions)
-// 
+//
 // __A Stack is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
 // ```
-// Stack    ~~> Canvas/Cell  
-// Element  ~~> Entity (eg Block)  
+// Stack    ~~> Canvas/Cell
+// Element  ~~> Entity (eg Block)
 // ```
 // During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
 // + Stack elements have `relative` positioning within the DOM
@@ -28,7 +28,7 @@
 
 
 // #### Demos:
-// + All stack demos include Stack wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
+// + All stack demos include Stack wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
 // + [DOM-001](../../demo/dom-001.html) - Loading the scrawl-canvas library using a script tag in the HTML code
 // + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
 // + [DOM-010](../../demo/dom-010.html) - Add and remove (kill) Scrawl-canvas Stack elements programmatically
@@ -146,7 +146,7 @@ const defaultAttributes = {
     position: RELATIVE,
     perspective: null,
 
-// __trackHere__ 
+// __trackHere__
     trackHere: SUBSCRIBE,
 
 // TODO: This is all about a mad idea we may have for making stacks 'responsive' to viewport changes. It needs a lot more thinking through. Search on 'isResponsive' to find the relevant function below
@@ -317,7 +317,7 @@ P.cleanPerspective = function () {
 
 // TODO - experimental! `checkResponsive`
 //
-// Scrawl-canvas Stack artefacts - at the __root__ level - cannot have 'String%' dimensions, which means they have absolute dimensions - because everything that relies on 'String%' dimensions needs an absolute (number) value for their calculations at the root, which is the stack. 
+// Scrawl-canvas Stack artefacts - at the __root__ level - cannot have 'String%' dimensions, which means they have absolute dimensions - because everything that relies on 'String%' dimensions needs an absolute (number) value for their calculations at the root, which is the stack.
 //
 // But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack's absolute dimensions accordingly ... if the __isResponsive__ flag has been set to true for the Stack (default is 'false' - may change this in due course).
 //
@@ -387,7 +387,7 @@ P.render = function () {
     this.show();
 };
 
-// `addExistingDomElements` - argument is a CSS query search String. All elements in the DOM matching the search will be __moved__ into the Stack wrapper's DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements' CSS attributes, they will be __positioned absolutely__ within the Stack and given start, handle and offset values of `[0, 0]`. 
+// `addExistingDomElements` - argument is a CSS query search String. All elements in the DOM matching the search will be __moved__ into the Stack wrapper's DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements' CSS attributes, they will be __positioned absolutely__ within the Stack and given start, handle and offset values of `[0, 0]`.
 P.addExistingDomElements = function (search) {
 
     if (xt(search)) {
@@ -399,7 +399,7 @@ P.addExistingDomElements = function (search) {
         for (i = 0, iz = elements.length; i < iz; i++) {
 
             el = elements[i];
-            
+
             if (isa_dom(el)) {
 
                 captured = makeElement({
@@ -468,7 +468,7 @@ constructors.Stack = Stack;
 
 
 // #### Stack discovery
-// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them. 
+// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them.
 //
 // This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
 export const getStacks = function (query = $DATA_SCRAWL_STACK) {
@@ -520,7 +520,7 @@ const processNewStackChildren = function (el, name) {
 
     // Only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
     Array.from(el.children).forEach(child => {
-    
+
         if (child.getAttribute(DATA_SCRAWL_STACK) == null && !isa_canvas(child) && child.tagName != $SCRIPT) {
 
             dims = child.getBoundingClientRect();
@@ -553,7 +553,7 @@ const processNewStackChildren = function (el, name) {
     });
 };
 
-// `Exported function` (to modules and scrawl object). Use __addStack__ to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include 
+// `Exported function` (to modules and scrawl object). Use __addStack__ to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include
 // + __element__ - the DOM element to be the stack - if not present, will autogenerate a div element
 // + __host__ - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element's current place or, failing all else, add the stack to the end of the document body
 // + __name__ - String identifier for the stack; if not included the function will attempt to use the element's existing id or name attribute or, failing that, generate a random name for the stack.
@@ -591,7 +591,7 @@ export const addStack = function (items = Ωempty) {
     // set the 'data-scrawl-stack' attribute on the stack-to-be element
     el.setAttribute(DATA_SCRAWL_STACK, DATA_SCRAWL_STACK);
 
-    // determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element's group 
+    // determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element's group
     if (host && host.getAttribute(DATA_SCRAWL_STACK) != null) {
 
         hostinscrawl = artefact[host.id];

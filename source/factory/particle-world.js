@@ -132,8 +132,8 @@ S.gravity = function (item) { if (this.gravity && xt(item)) this.gravity.set(ite
 
 // #### Prototype functions
 
-// `addAttribute`, `removeAttribute` - we can use these functions to add and remove other attributes to the World object. See the following Demos for examples of constructing a World object and adding attributes to it: 
-// + [particles-007](../../demo/particles-007.html) Particle Force objects: generation and functionality; and 
+// `addAttribute`, `removeAttribute` - we can use these functions to add and remove other attributes to the World object. See the following Demos for examples of constructing a World object and adding attributes to it:
+// + [particles-007](../../demo/particles-007.html) Particle Force objects: generation and functionality; and
 // + [particles-008](../../demo/particles-008.html) Net entity: generation and basic functionality, including Spring objects.
 P.addAttribute = function (items = Ωempty) {
 
@@ -198,13 +198,13 @@ P.initializeAttributes = function (types) {
 //     userAttributes: [
 //
 //         {
-//             key: 'testCoordinate', 
+//             key: 'testCoordinate',
 //             type: 'Coordinate',
 //             getter: function () { return [].concat(this.testCoordinate) },
 //             setter: function (item) { this.testCoordinate.set(item) },
 //         },
 //         {
-//             key: 'particleColor', 
+//             key: 'particleColor',
 //             defaultValue: '#F0F8FF',
 //         },
 //     ],

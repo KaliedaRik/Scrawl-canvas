@@ -48,7 +48,7 @@ mimic.set({
 
     mimic: 'myelement',
     lockTo: 'mimic',
-    
+
     useMimicDimensions: true,
     useMimicScale: true,
     useMimicStart: true,

@@ -1,10 +1,10 @@
 // # Block factory
 // Block entitys are rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) - specifically the `rect` method.
-// + Positioning and dimensions functionality for the Block is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
-// + Blocks can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Positioning and dimensions functionality for the Block is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
+// + Blocks can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Blocks can be cloned, and killed.
 
@@ -96,7 +96,7 @@ P.cleanPathObject = function () {
     if (!this.noPathUpdates || !this.pathObject) {
 
         const p = this.pathObject = new Path2D();
-        
+
         const handle = this.currentStampHandlePosition,
             scale = this.currentScale,
             dims = this.currentDimensions;

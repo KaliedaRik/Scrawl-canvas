@@ -1,4 +1,4 @@
-// # Demo Canvas 048 
+// # Demo Canvas 048
 // Display a filtered media stream
 
 // [Run code](../../demo/canvas-048.html)

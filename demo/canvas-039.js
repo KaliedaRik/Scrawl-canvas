@@ -1,4 +1,4 @@
-// # Demo Canvas 039 
+// # Demo Canvas 039
 // Detecting mouse/pointer cursor movements across a non-base Cell
 
 // [Run code](../../demo/canvas-039.html)

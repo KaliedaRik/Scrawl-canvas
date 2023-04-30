@@ -1,4 +1,4 @@
-// # Demo Canvas 029 
+// # Demo Canvas 029
 // Phrase entitys and gradients
 
 // [Run code](../../demo/canvas-029.html)
@@ -130,7 +130,7 @@ scrawl.makePhrase({
     lockFillStyleToEntity: false,
 
     flipReverse: true,
-    
+
 }).clone({
 
     name: name('test-phrase-7'),
@@ -144,7 +144,7 @@ scrawl.makePhrase({
 
     flipReverse: false,
     flipUpend: false,
-    
+
     roll: 0,
     scale: 1,
 
@@ -192,7 +192,7 @@ scrawl.makeBlock({
 
     width: '100%',
     height: 10,
-    
+
     fillStyle: name('gradient-1'),
 
     order: 0,
@@ -210,14 +210,14 @@ const myGroup = scrawl.makeGroup({
     name: name('text-group'),
 
 }).addArtefacts(
-    name('test-phrase-1'), 
-    name('test-phrase-2'), 
-    name('test-phrase-3'), 
+    name('test-phrase-1'),
+    name('test-phrase-2'),
+    name('test-phrase-3'),
     name('test-phrase-4'),
-    name('test-phrase-5'), 
-    name('test-phrase-6'), 
-    name('test-phrase-7'), 
-    name('test-phrase-8'), 
+    name('test-phrase-5'),
+    name('test-phrase-6'),
+    name('test-phrase-7'),
+    name('test-phrase-8'),
     name('test-phrase-9'),
 );
 
@@ -299,7 +299,7 @@ console.log(scrawl.library);
 
 
 // Text measurements
-// 
+//
 // To see forthcoming measurements, we need to go to chrome://flags and enable 'Experimental Web Platform Features'
 // + The eventual aim is to replace a whole stack of code in factory/phrase.js where we calculate font height etc
 // + At the moment Phrase entitys ignore font baselines; positioning is entirely from the top left corner of the text rectangle

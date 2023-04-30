@@ -1,4 +1,4 @@
-// # Demo Filters 004 
+// # Demo Filters 004
 // Filter parameters: threshold
 
 // [Run code](../../demo/filters-004.html)

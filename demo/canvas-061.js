@@ -198,7 +198,7 @@ scrawl.addNativeListener(['click'], () => {
 
 
 // Setup form
-const precision = document.querySelector('#precision'), 
+const precision = document.querySelector('#precision'),
     easing = document.querySelector('#easing'),
     gradient = document.querySelector('#colorStops'),
     method = document.querySelector('#method');

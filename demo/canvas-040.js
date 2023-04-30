@@ -1,4 +1,4 @@
-// # Demo Canvas 040 
+// # Demo Canvas 040
 // Trace out a Shape path over time
 
 // [Run code](../../demo/canvas-040.html)
@@ -385,7 +385,7 @@ const myWorld = scrawl.makeWorld({
     userAttributes: [
 
         {
-            key: 'progress', 
+            key: 'progress',
             defaultValue: 0,
             setter: function (item) {
 
@@ -432,14 +432,14 @@ const checkDirty = function () {
 // Build a tween to progressively outline the arrow Shape entity
 // + We actually tween the myWorld.progress attribute, which in turn will update the arrow and japan entitys
 const myTween = scrawl.makeTween({
-  
+
   name: 'line-progression',
-  
+
   duration: 5000,
   reverseOnCycleEnd: true,
   cycles: 0,
   targets: myWorld,
-  
+
   definitions: [
     {
       attribute: 'progress',

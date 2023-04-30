@@ -1,4 +1,4 @@
-// # Demo Canvas 041 
+// # Demo Canvas 041
 // Access and use a canvas context engine using the makeAnimation factory
 
 // [Run code](../../demo/canvas-041.html)

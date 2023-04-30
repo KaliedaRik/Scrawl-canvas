@@ -139,7 +139,7 @@ const myWorld = makeWorld({
 
     userAttributes: [
         {
-            key: 'coords', 
+            key: 'coords',
             defaultValue: [],
 // @ts-expect-error
             getter: function () { return [].concat(this.coords) },
@@ -183,7 +183,7 @@ makeEmitter({
     particleCount: 80,
     start: ['center', 'center'],
 
-    killRadius: 500, 
+    killRadius: 500,
     killRadiusVariation: 0,
 
     rangeX: 24,
@@ -206,7 +206,7 @@ makeEmitter({
         strokeStyle: 'orange',
         method: 'fillThenDraw',
 
-        visibility: false, 
+        visibility: false,
 
         noUserInteraction: true,
         noPositionDependencies: true,

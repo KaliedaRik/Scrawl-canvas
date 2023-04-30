@@ -1,4 +1,4 @@
-// # Demo Canvas 019 
+// # Demo Canvas 019
 // Gradient and Color factories - transparency
 
 // [Run code](../../demo/canvas-019.html)

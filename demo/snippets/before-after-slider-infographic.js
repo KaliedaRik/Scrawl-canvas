@@ -9,24 +9,24 @@
 //
 // Note that this is a highly complex snippet, which relies on recieving an element to process in a very specific format containing a number of required child elements. All elements are expected to have various specified data- attributes which are used to build the infographic.
 //
-// __Function input:__ 
+// __Function input:__
 // ```
-// <div 
+// <div
 //   id="infographic-unique name"
 //   class="some-class-name"
 //   data-label="Infographic title - required for accessibility"
 //   data-description="Infographic description - required for accessibility">
-//   
-//   <div 
+//
+//   <div
 //     id="left-panel-unique-name"
 //       data-date="date of image"
 //     data-frame="left">
 //
-//     <img 
+//     <img
 //       id="left-panel-image-unique-name"
-//       alt="Alternative text for image - required for accessibility" 
+//       alt="Alternative text for image - required for accessibility"
 //       src="path/to/image/url" />
-// 
+//
 //     <!--
 //       Each &lt;p> element needs an id value together with some data- attributes
 //
@@ -34,7 +34,7 @@
 //           - for proof of concept we're only handling spot pins, not area pins
 //
 //         - data-position - required (no default value)
-//           - a string of two percentage values, separated by a comma 
+//           - a string of two percentage values, separated by a comma
 //           - these are the 'x%, y%' coords where the pin will appear on image
 //
 //         - data-fill - pin fill color - default is "red"
@@ -43,23 +43,23 @@
 //         - data-labelbackground - default is "rgb(0 0 0 / 0.2)"
 //
 //         - data-labelposition - default is "below"
-//           - where we want the text to appear relative to the pin's location 
+//           - where we want the text to appear relative to the pin's location
 //           - acceptable values: "left", "right", "above", "below"
 //
 //         - data-shared - default is not included
 //           - if included, we create the pin on both panels
 //
-//       The text in the <p> element is the text that will be used for the pin's 
-//       label. Note that the snippet has been set up to interpret and display 
-//       the following inline markup: 
+//       The text in the <p> element is the text that will be used for the pin's
+//       label. Note that the snippet has been set up to interpret and display
+//       the following inline markup:
 //         - <b></b>, <strong></strong>, <i></i>, <em></em>
 //         - <span class="sc-red"></span>, etc
 //     -->
 //
-//     <p 
-//       id="pin-unique-id" 
-//       data-type="pin" 
-//       data-position="59%, 21%" 
+//     <p
+//       id="pin-unique-id"
+//       data-type="pin"
+//       data-position="59%, 21%"
 //       data-fill="blue",
 //       data-stroke="yellow",
 //       data-labelwidth="30%"
@@ -69,14 +69,14 @@
 //
 //   </div>
 //
-//   <div 
+//   <div
 //     id="right-panel-unique-name"
 //       data-date="date of image"
 //     data-frame="right">
 //
-//     <img 
+//     <img
 //       id="right-panel-image-unique-name"
-//       alt="Alternative text for image - required for accessibility" 
+//       alt="Alternative text for image - required for accessibility"
 //       src="path/to/image/url" />
 //
 //     <p>...Pin definitions</p>
@@ -84,29 +84,29 @@
 //   </div>
 //
 //   <!--
-//     If we also want to include any clickable links in the infographic, 
+//     If we also want to include any clickable links in the infographic,
 //     we can include them in a &lt;nav> element
 //       - data-position - required (no default value)
-//         - a string of two percentage values, separated by a comma 
+//         - a string of two percentage values, separated by a comma
 //         - these are the 'x%, y%' coords where the link will appear over image
 //
 //       - data-justify - one of: "left", "right", "center" (default)
 //       - data-width - defaults to "20%"
-//       - data-background - defaults to "rgb(0 0 0 / 0.2)" 
+//       - data-background - defaults to "rgb(0 0 0 / 0.2)"
 //   -->
 //
 //   <nav>
-//     <a 
-//       id="link-unique-id" 
-//       href="https://absolute/link/url" 
-//       data-position="1%, 95%" 
+//     <a
+//       id="link-unique-id"
+//       href="https://absolute/link/url"
+//       data-position="1%, 95%"
 //       data-width="45%"
 //       data-justify="left">Text to include in the link</a>
 //
-//     <a 
-//       id="another-link-unique-id" 
-//       href="relative/link/url" 
-//       data-position="99%, 95%" 
+//     <a
+//       id="another-link-unique-id"
+//       href="relative/link/url"
+//       data-position="99%, 95%"
 //       data-width="45%"
 //       data-background="darkblue"
 //       data-justify="right">Different text for different link</a>
@@ -126,7 +126,7 @@
 //
 // Note that this snippet has a profound effect on the element it processes, moving images inside a canvas element and deleting most of the child elements (to prevent copy repetition for screen readers)
 //
-// __Function output:__ 
+// __Function output:__
 // ```
 // {
 //     element           // wrapper
@@ -137,7 +137,7 @@
 // ```
 //
 // ### Snippet code
-// Internal function to scrape data from the supplied element 
+// Internal function to scrape data from the supplied element
 const getPanelData = function (el, store, canvas) {
 
     if (!el) return false;
@@ -173,7 +173,7 @@ const getPanelData = function (el, store, canvas) {
     return store;
 };
 
-// Internal function to scrape data from the supplied element 
+// Internal function to scrape data from the supplied element
 const getNavigationData = function (el, store) {
 
     if (!el) return false;
@@ -243,7 +243,7 @@ const pinFactory = function (scrawl, items, canvas, pinTextGroup, pinTextBackgro
             if (checkVisibility(pin)) {
 
                 // Increase the visible pin's size
-                pin.set({ 
+                pin.set({
                     radius: 15,
                     lineWidth: 4,
                 });
@@ -260,9 +260,9 @@ const pinFactory = function (scrawl, items, canvas, pinTextGroup, pinTextBackgro
         onLeave: function () {
 
             if (checkVisibility(pin)) {
-                
+
                 // Decrease the visible pin's size
-                pin.set({ 
+                pin.set({
                     radius: 10,
                     lineWidth: 2,
                 });
@@ -772,7 +772,7 @@ export default function (scrawl, el) {
 
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
-                    
+
                     pinFactory(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.name = `${n}-right`
@@ -790,7 +790,7 @@ export default function (scrawl, el) {
 
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
-                    
+
                     pinFactory(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.name = `${n}-right`

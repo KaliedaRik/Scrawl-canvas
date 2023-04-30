@@ -1,4 +1,4 @@
-// # Demo Canvas 026 
+// # Demo Canvas 026
 // Tower of Hanoi
 
 // [Run code](../../demo/canvas-026.html)
@@ -124,8 +124,8 @@ const checkPeg = function () {
         name: name('pegs'),
 
     }).addArtefacts(
-        name('peg-1'), 
-        name('peg-2'), 
+        name('peg-1'),
+        name('peg-2'),
         name('peg-3'),
     );
 
@@ -133,8 +133,8 @@ const checkPeg = function () {
     const pegState = {
 
         [name('peg-1')]: [
-            name('disc-1'), 
-            name('disc-2'), 
+            name('disc-1'),
+            name('disc-2'),
             name('disc-3'),
         ],
         [name('peg-2')]: [],
@@ -142,7 +142,7 @@ const checkPeg = function () {
     };
 
     // Function to update the game's state
-    // - mydisc will always be the last member of an array, 
+    // - mydisc will always be the last member of an array,
     // - so we can pop it when found, then push it onto mypeg
     const updateState = function (mypeg, mydisc) {
 
@@ -203,8 +203,8 @@ const checkPeg = function () {
                     updateState(peg, disc);
                     updateDiscGroup();
 
-                    disc.set({ 
-                        pivot: peg, 
+                    disc.set({
+                        pivot: peg,
                     });
                 }
             }

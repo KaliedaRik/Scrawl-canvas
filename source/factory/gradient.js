@@ -75,7 +75,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 
 // `buildStyle` - internal function: creates the linear gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
 P.buildStyle = function (cell) {
-    
+
     if (cell) {
 
         const engine = cell.engine;
@@ -83,7 +83,7 @@ P.buildStyle = function (cell) {
         if (engine) {
 
             const gradient = engine.createLinearGradient(...this.gradientArgs);
-            
+
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
     }

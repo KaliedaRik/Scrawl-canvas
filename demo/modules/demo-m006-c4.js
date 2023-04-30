@@ -33,7 +33,7 @@ export default function (items) {
     const targetPos = calculateTargetPosition(assets.target, 5);
 
     canvas.set({
-        label: 'The canvas displays an image of statues in a cemetery (Havana, Cuba). As the user scrolls through the page the image moves to focus on particular points of interest', 
+        label: 'The canvas displays an image of statues in a cemetery (Havana, Cuba). As the user scrolls through the page the image moves to focus on particular points of interest',
     }).setAsCurrentCanvas();
 
     canvas.setBase({

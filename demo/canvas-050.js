@@ -1,4 +1,4 @@
-// # Demo Canvas 050 
+// # Demo Canvas 050
 // Manipulate artefact delta animation values
 
 // [Run code](../../demo/canvas-050.html)

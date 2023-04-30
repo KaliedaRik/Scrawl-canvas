@@ -47,7 +47,7 @@
 //
 // __Purpose:__ adds a spotlight effect to an element. When the user hovers the mouse over the element, a 'spotlight' gradient will track the mouse's movements.
 //
-// __Function input:__ 
+// __Function input:__
 // + the DOM element, or a handle to it, as the first argument.
 // + an optional key:value Object as the second argument
 //
@@ -68,7 +68,7 @@
 //
 // myElements.forEach(el => spotlightText(scrawl, el));
 // ```
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + no additional effects on the DOM element
 // + setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward
 export default function (scrawl, el, args = {}) {
@@ -92,7 +92,7 @@ export default function (scrawl, el, args = {}) {
         // + `afterCompile` - runs between the 'compile' and 'show' stages of the display cycle
         // + `afterShow` - for any cleanup work required after the display cycle completes
         // + `error` - a function to run when an error in the display cycle occurs
-        // 
+        //
         // For this snippet, we'll define and add an animation hook function after the animation object has been created
         animationHooks: {},
 
@@ -170,7 +170,7 @@ export default function (scrawl, el, args = {}) {
             fillStyle: backgroundColor,
             lockFillStyleToEntity: true,
 
-            method: 'fill', 
+            method: 'fill',
         });
     }
 

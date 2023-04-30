@@ -1,4 +1,4 @@
-// # Demo Canvas 031 
+// # Demo Canvas 031
 // Cell generation and processing order - kaleidoscope clock
 
 // [Run code](../../demo/canvas-031.html)
@@ -207,7 +207,7 @@ for (let i = 0; i < 50; i++) {
     });
 }
 
-// We don't display the background Cell. Instead we use it as the source for a set of Picture entitys 
+// We don't display the background Cell. Instead we use it as the source for a set of Picture entitys
 scrawl.makePicture({
 
     name: `${namespace}-segment-0`,

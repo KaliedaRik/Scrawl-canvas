@@ -1,4 +1,4 @@
-// # Demo Canvas 011 
+// # Demo Canvas 011
 // Shape entity (make, clone, method); drag and drop shape entitys
 
 // [Run code](../../demo/canvas-011.html)

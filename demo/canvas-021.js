@@ -1,4 +1,4 @@
-// # Demo Canvas 021 
+// # Demo Canvas 021
 // Import and use spritesheets
 
 // [Run code](../../demo/canvas-021.html)
@@ -48,7 +48,7 @@ const piccy = scrawl.makePicture({
 piccy.playSprite();
 
 
-// Create a second Picture entity (by cloning the first one) 
+// Create a second Picture entity (by cloning the first one)
 // + uses a different animation track (as defined in the manifest)
 // + start the animation - playing it at a faster speed (compared to the original)
 piccy.clone({
@@ -67,7 +67,7 @@ piccy.clone({
 
 
 // ___Import a set of spritesheet assets___
-// + Comprises a number of different image files bound together by a manifest. 
+// + Comprises a number of different image files bound together by a manifest.
 // + In this case we don't have a separate manifest `.json` file, instead we define it as part of the import statement
 scrawl.importSprite({
 

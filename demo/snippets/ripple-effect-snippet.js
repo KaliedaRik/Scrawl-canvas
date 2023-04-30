@@ -6,11 +6,11 @@
 //
 // ### 'Ripple effect' snippet
 // __Purpose:__ replicate the Material design 'ripple effect' when user clicks on an element decorated with this snippet.
-// __Function input:__ 
+// __Function input:__
 // + the DOM element, or a handle to it, as the first argument.
 // + an optional key:value Object as the second argument
 //
-// __Function output:__ 
+// __Function output:__
 // ```
 // {
 //     element           // wrapper
@@ -31,7 +31,7 @@
 // }));
 // ```
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + The DOM element's background color will be brought into the canvas, with the element's backgroundColor set to `transparent` - any background image, gradient, etc will be hidden by the snippet effect
 export default function (scrawl, el, args = {}) {
 
@@ -61,12 +61,12 @@ export default function (scrawl, el, args = {}) {
 
         // We don't want a transparent background - default to beige!
         if (
-            'rgb(0 0 0 / 0)' === backgroundColor || 
-            'rgba(0 0 0 / 0)' === backgroundColor || 
-            'rgba(0, 0, 0, 0)' === backgroundColor || 
-            'rgba(0,0,0,0)' === backgroundColor || 
-            'transparent' === backgroundColor || 
-            '#00000000' === backgroundColor || 
+            'rgb(0 0 0 / 0)' === backgroundColor ||
+            'rgba(0 0 0 / 0)' === backgroundColor ||
+            'rgba(0, 0, 0, 0)' === backgroundColor ||
+            'rgba(0,0,0,0)' === backgroundColor ||
+            'transparent' === backgroundColor ||
+            '#00000000' === backgroundColor ||
             '#0000' === backgroundColor
         ) {
             backgroundColor = 'beige';
@@ -74,9 +74,9 @@ export default function (scrawl, el, args = {}) {
 
         canvas.set({
             backgroundColor,
-        })        
+        })
         wrapper.domElement.style.backgroundColor = 'transparent';
- 
+
         // We add an event listener to the DOM element
         const clickAction = () => {
 

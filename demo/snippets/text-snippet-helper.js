@@ -175,12 +175,12 @@ export const getSnippetData = (snippet, scrawl) => {
             localFontSize = parseFloat(fontSize);
 
         phrase.set({
-            style: fontStyle, 
-            variant: fontVariant, 
-            weight: fontWeight, 
-            size: fontSize, 
-            family: fontFamily, 
-            lineHeight: (localLineHeight / localFontSize) * lineheightAdjuster, 
+            style: fontStyle,
+            variant: fontVariant,
+            weight: fontWeight,
+            size: fontSize,
+            family: fontFamily,
+            lineHeight: (localLineHeight / localFontSize) * lineheightAdjuster,
             width: '100%',
             text: processText(el.innerHTML),
             startY: Math.round(localFontSize * yOffset),
@@ -224,12 +224,12 @@ export const getSnippetData = (snippet, scrawl) => {
                 localFontSize = parseFloat(fontSize);
 
             textGroup.setArtefacts({
-                style: fontStyle, 
-                variant: fontVariant, 
-                weight: fontWeight, 
-                size: fontSize, 
-                family: fontFamily, 
-                lineHeight: (localLineHeight / localFontSize) * lineheightAdjuster, 
+                style: fontStyle,
+                variant: fontVariant,
+                weight: fontWeight,
+                size: fontSize,
+                family: fontFamily,
+                lineHeight: (localLineHeight / localFontSize) * lineheightAdjuster,
                 startY: Math.round(localFontSize * yOffset),
                 underlineWidth: Math.round(localFontSize * underlineWidth) || 1,
                 justify: textAlign || 'left',
@@ -299,14 +299,14 @@ export const getSnippetData = (snippet, scrawl) => {
         canvas.setReduceMotionAction(() => {
 
             if (doAnimation) {
-                
+
                 doAnimation = false;
                 control.textContent = 'Play';
                 animationEndFunctions.forEach(a => a());
                 eternalTweens.forEach(t => t.halt());
             }
         });
-        
+
         canvas.setNoPreferenceMotionAction(() => {
 
             if (!doAnimation) {

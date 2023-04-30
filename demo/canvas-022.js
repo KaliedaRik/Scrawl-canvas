@@ -1,4 +1,4 @@
-// # Demo Canvas 022 
+// # Demo Canvas 022
 // Grid entity - basic functionality (color, gradients)
 
 // [Run code](../../demo/canvas-022.html)

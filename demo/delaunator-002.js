@@ -98,7 +98,7 @@ const myAsset = scrawl.makeRawAsset({
 
         // __points__ - an array holding the coordinate arrays we generate elsewhere
         // + For this demo, we will be updating the first coordinate point with the mouse cursor's position when it is over the canvas element
-        key: 'points', 
+        key: 'points',
         defaultValue: [],
         setter: function (item) {
 
@@ -106,22 +106,22 @@ const myAsset = scrawl.makeRawAsset({
         },
     },{
         // __here__ - a handle to our Canvas wrapper's base Cell's `here` object, which gives us the current mouse cursor coordinates
-        key: 'here', 
+        key: 'here',
         defaultValue: null,
     },{
         // __delaunay__ - a handle to the current Delaunator object we recreate on each update
-        key: 'delaunay', 
+        key: 'delaunay',
         defaultValue: null,
     },{
         // __canvasWidth__, __canvasHeight__ - make the RawAsset's dimensions the same as our canvas base Cell's dimensions
-        key: 'canvasWidth', 
+        key: 'canvasWidth',
         defaultValue: baseDimension,
     },{
-        key: 'canvasHeight', 
+        key: 'canvasHeight',
         defaultValue: baseDimension,
     },{
         // __trigger__ - we update the RawAsset at the start of each Display cycle by setting its `trigger` attribute. All the work with recreating the Delaunator object happens here
-        key: 'trigger', 
+        key: 'trigger',
         defaultValue: false,
         setter: function (item) {
 
@@ -219,7 +219,7 @@ scrawl.makeFilter({
         lineMix: 'webbed-background',
         compose: 'source-atop',
     },{
-        // Tile shadows - blur the voronoi web then apply it, offset up and left, to the image 
+        // Tile shadows - blur the voronoi web then apply it, offset up and left, to the image
         action: 'gaussian-blur',
         lineIn: 'web',
         lineOut: 'blurred-web',
@@ -231,7 +231,7 @@ scrawl.makeFilter({
         offsetY: -2,
         compose: 'destination-atop',
     },{
-        // Tile highlights - invert the blurred web then apply it, offset down and right, to the image 
+        // Tile highlights - invert the blurred web then apply it, offset down and right, to the image
         action: 'invert-channels',
         lineIn: 'blurred-web',
         lineOut: 'blurred-web',
@@ -244,7 +244,7 @@ scrawl.makeFilter({
     }],
 });
 
-// Display our image in a Picture entity - the filter is applied here 
+// Display our image in a Picture entity - the filter is applied here
 const piccy = scrawl.makePicture({
 
     name: 'myFlower',

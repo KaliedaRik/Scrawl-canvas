@@ -58,23 +58,23 @@ export default function (items) {
             name: `${name}-asset`,
 
             userAttributes: [{
-                key: 'lottie', 
+                key: 'lottie',
                 defaultValue: controller,
                 setter: () => {},
             },{
-                key: 'lottieCanvas', 
+                key: 'lottieCanvas',
                 defaultValue: null,
                 setter: () => {},
             },{
-                key: 'canvasWidth', 
+                key: 'canvasWidth',
                 defaultValue: 0,
                 setter: () => {},
             },{
-                key: 'canvasHeight', 
+                key: 'canvasHeight',
                 defaultValue: 0,
                 setter: () => {},
             },{
-                key: 'trigger', 
+                key: 'trigger',
                 defaultValue: false,
                 setter: function (item) { this.dirtyData = item },
             }],

@@ -1,4 +1,4 @@
-// # Demo Canvas 002 
+// # Demo Canvas 002
 // Block and wheel entity positioning (start, pivot, mimic, mouse)
 
 // [Run code](../../demo/canvas-002.html)

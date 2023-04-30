@@ -100,7 +100,7 @@ const defaultAttributes = {
     seed: DEFAULT_SEED,
     size: 256,
 
-    // The __scale__ attribute determines the relative scale of the noise calculation, which affects the noise output. Think of it as a rather idiosyncratic zoom factor 
+    // The __scale__ attribute determines the relative scale of the noise calculation, which affects the noise output. Think of it as a rather idiosyncratic zoom factor
     scale: 50,
 
     // Attributes used when calculating the noise map include:
@@ -115,7 +115,7 @@ const defaultAttributes = {
     // The __smoothing__ attribute - a String value - identifies the smoothing function that will be applied pixel noise values as they are calculated. There are a wide number of functions available; default: `quintic`
     smoothing: QUINTIC,
 
-    // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. 
+    // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete.
     // + Permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`, `random`
     sumFunction: NONE,
 
@@ -125,7 +125,7 @@ const defaultAttributes = {
     // __sumAmplitude__ - a Number - is used by the modular sum function
     sumAmplitude: 5,
 
-    // Worley functionality found in the [jackunion/tooloud GitHub repository](https://github.com/jackunion/tooloud/blob/master/src/Worley.js). 
+    // Worley functionality found in the [jackunion/tooloud GitHub repository](https://github.com/jackunion/tooloud/blob/master/src/Worley.js).
     // + The noise generated can be one of __worley-euclidean__ or __worley-manhattan__
     // + we can amend the noise via the `worleyOutput` and `worleyDepth` attributes
     //
@@ -378,7 +378,7 @@ P.cleanNoise = function () {
             // Calculate a relative scale, and setup min/max variables
             const relativeScale = _pow(width, -scale / 100);
 
-            let max = -1000, 
+            let max = -1000,
                 min = 1000;
 
             // This is the core of the calculation, performed for each cell in the noiseValues 2d array
@@ -412,7 +412,7 @@ P.cleanNoise = function () {
 
                         // Amplitude and frequency will update once per octave calculation; totalNoise is the sum of all octave results
                         totalNoise = 0;
-                        amplitude = 1; 
+                        amplitude = 1;
                         frequency = 1;
 
                         // The calculation will be performed at least once
@@ -491,13 +491,13 @@ const simplexConstantG = (3 - _sqrt(3)) / 6;
 const simplexConstantDoubleG = ((3 - _sqrt(3)) / 6) * 2;
 
 const perlinGrad = _freeze([
-    _freeze([1, 1]), 
-    _freeze([-1, 1]), 
-    _freeze([1, -1]), 
-    _freeze([-1, -1]), 
-    _freeze([1, 0]), 
-    _freeze([-1, 0]), 
-    _freeze([0, 1]), 
+    _freeze([1, 1]),
+    _freeze([-1, 1]),
+    _freeze([1, -1]),
+    _freeze([-1, -1]),
+    _freeze([1, 0]),
+    _freeze([-1, 0]),
+    _freeze([0, 1]),
     _freeze([0, -1])
 ]);
 
@@ -516,7 +516,7 @@ P.noiseEngines = {
             const {grad, size, rndEngine} = this;
 
             let dist;
-            
+
             grad.length = 0;
 
             for(let i = 0; i < size; i++) {
@@ -556,15 +556,15 @@ P.noiseEngines = {
 
             const sx = smoothing(rx0),
                 sy = smoothing(ry0);
-            
+
             u = rx0 * grad[b00][0] + ry0 * grad[b00][1];
             v = rx1 * grad[b10][0] + ry0 * grad[b10][1];
             const a = interpolate(sx, u, v);
-            
+
             u = rx0 * grad[b01][0] + ry1 * grad[b01][1];
             v = rx1 * grad[b11][0] + ry1 * grad[b11][1];
             const b = interpolate(sx, u, v);
-            
+
             return 0.5 * (1 + interpolate(sy, a, b));
         },
     },
@@ -582,33 +582,33 @@ P.noiseEngines = {
 
             let u, v;
 
-            const bx0 = _floor(x) % size, 
+            const bx0 = _floor(x) % size,
                 bx1 = (bx0 + 1) % size;
 
-            const rx0 = x - _floor(x), 
+            const rx0 = x - _floor(x),
                 rx1 = rx0 - 1;
 
-            const by0 = _floor(y) % size, 
+            const by0 = _floor(y) % size,
                 by1 = (by0 + 1) % size;
 
-            const ry0 = y - _floor(y), 
+            const ry0 = y - _floor(y),
                 ry1 = ry0 - 1;
 
-            const i = perm[bx0], 
-                j = perm[bx1]; 
+            const i = perm[bx0],
+                j = perm[bx1];
 
-            const b00 = permMod8[i + by0], 
-                b10 = permMod8[j + by0], 
-                b01 = permMod8[i + by1], 
+            const b00 = permMod8[i + by0],
+                b10 = permMod8[j + by0],
+                b01 = permMod8[i + by1],
                 b11 = permMod8[j + by1];
-            
+
             const sx = smoothing(rx0),
                 sy = smoothing(ry0);
-            
+
             u = rx0 * perlinGrad[b00][0] + ry0 * perlinGrad[b00][1];
             v = rx1 * perlinGrad[b10][0] + ry0 * perlinGrad[b10][1];
             const a = interpolate(sx, u, v);
-            
+
             u = rx0 * perlinGrad[b01][0] + ry1 * perlinGrad[b01][1];
             v = rx1 * perlinGrad[b11][0] + ry1 * perlinGrad[b11][1];
             const b = interpolate(sx, u, v);
@@ -634,9 +634,9 @@ P.noiseEngines = {
                 const [gx, gy] = perlinGrad[gridPos];
                 return calc * calc * ((gx * cx) + (gy * cy));
             };
-            
+
             const { size, perm, permMod8 } = this;
-            
+
             const summedCoordinates = (x + y) * simplexConstantF,
                 summedX = _floor(x + summedCoordinates),
                 summedY = _floor(y + summedCoordinates),
@@ -644,7 +644,7 @@ P.noiseEngines = {
 
             const cornerX = x - (summedX - modifiedSummedCoordinates),
                 cornerY = y - (summedY - modifiedSummedCoordinates);
-            
+
             const remainderX = summedX % size,
                 remainderY = summedY % size;
 
@@ -802,7 +802,7 @@ P.generatePermutationTable = function () {
 
         perm[i] = i;
     }
-    
+
     while (--i) {
 
         j = _floor(rndEngine.random() * size);
@@ -810,7 +810,7 @@ P.generatePermutationTable = function () {
         perm[i] = perm[j];
         perm[j] = k;
     }
-    
+
     for(i = 0; i < size; i++) {
 
         perm[i + size] = perm[i];

@@ -7,10 +7,10 @@
 
 
 // ##### Gradients and color stops
-// The [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) uses a rather convoluted way to add color data to a [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) interface object: 
-// + the object is created first on the &lt;canvas> context engine where it is to be applied, with __start__ and __end__ coordinates, 
-// + then color stops are _individually_ added to it afterwards. 
-// + This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient. 
+// The [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) uses a rather convoluted way to add color data to a [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) interface object:
+// + the object is created first on the &lt;canvas> context engine where it is to be applied, with __start__ and __end__ coordinates,
+// + then color stops are _individually_ added to it afterwards.
+// + This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient.
 // + And only one gradient may be applied to the context engine at any time.
 //
 // The specificity of the above requirements - in particular relating to position coordinates - and the inability to update the CanvasGradient beyond adding color stops to it, means that storing these objects for future use is not a useful proposition ... especially in a dynamic environment where we want the gradient to move in-step with an entity, or animate its colors in some way.
@@ -29,10 +29,10 @@
 //         "index-label-between-0-and-999 ": [redValue, greenValue, blueValue, alphaValue]
 //     },
 // }
-// ``` 
+// ```
 // To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color:
 //
-// ``` 
+// ```
 // myGradient.set({
 //
 //     colors: [
@@ -42,7 +42,7 @@
 //         [0, 'white'],
 //     ]
 // });
-// ``` 
+// ```
 
 
 // #### Demos:
@@ -83,7 +83,7 @@ const Palette = function (items = Ωempty) {
     this.colors = items.colors || {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
 
     this.stops = _seal(Array(1000).fill(BLANK));
-    
+
     this.easingFunction = λfirstArg;
 
     this.set(items);
@@ -109,10 +109,10 @@ baseMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
-// The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an Array with four members holding color data as values. 
+// The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an Array with four members holding color data as values.
     colors: null,
 
-// The __stops__ array is a fixed Array of length 1000 containing color strings for each index. 
+// The __stops__ array is a fixed Array of length 1000 containing color strings for each index.
     stops: null,
 
 // If the __cyclic__ flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -> 0 stops boundary
@@ -153,7 +153,7 @@ P.kill = function () {
     if (this.factory && this.factory.kill) this.factory.kill();
 
     this.deregister();
-    
+
     return this;
 };
 
@@ -195,7 +195,7 @@ S.colors = function (item) {
 
         item.forEach(c => {
 
-            const [pos, col] = c; 
+            const [pos, col] = c;
             if (pos.toFixed && col.substring) {
 
                 f.convert(col);
@@ -207,7 +207,7 @@ S.colors = function (item) {
     }
 };
 
-// __easing__, __easingFunction__ - the easing to be applied to the gradient 
+// __easing__, __easingFunction__ - the easing to be applied to the gradient
 // + Can accept a String value identifying an SC pre-defined easing function (default: `linear`)
 // + Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)
 S.easing = function (item) {
@@ -230,12 +230,12 @@ P.setEasingHelper = function (item) {
     }
     else if (item.substring && easeEngines[item]) {
 
-        this.easing = item; 
+        this.easing = item;
         this.easingFunction = λfirstArg;
     }
     else {
 
-        this.easing = LINEAR; 
+        this.easing = LINEAR;
         this.easingFunction = λfirstArg;
     }
     this.dirtyPalette = true;
@@ -280,7 +280,7 @@ G.returnColorAs = function () {
     return this.getReturnColorAs();
 };
 S.returnColorAs = function (item) {
-    
+
     this.factory.set({
 
         returnColorAs: item,
@@ -331,7 +331,7 @@ P.recalculate = function () {
 
     const colorKeys = _keys(colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
 
-    let currentKey = colorKeys[0], 
+    let currentKey = colorKeys[0],
         nextKey, currentVals, nextVals, diff, i, iz, j;
 
     const [b, c, d, a] = colors[`${currentKey} `];
@@ -382,11 +382,11 @@ P.updateColor = function (index, color) {
 // `removeColor` - remove a gradient-type style's Palette object color from a specified index
 // + __index__ - positive integer number between 0 and 999 inclusive
 P.removeColor = function (index) {
-    
+
     if (xt(index)) {
 
         index = (index.substring) ? parseInt(index, 10) : _floor(index);
-        
+
         if (index >= 0 && index < 1000) {
 
             index += SPACE;
@@ -404,7 +404,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
     const { stops, easing, easingFunction, precision } = this;
 
     const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
-    
+
     let spread, offset, i, iz, item, n;
 
     if (gradient) {
@@ -429,7 +429,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
             gradient.addColorStop(0, stops[start]);
             gradient.addColorStop(1, stops[end]);
-        
+
             spread = end - start;
 
             if (precisionTest) {
@@ -520,7 +520,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                 gradient.addColorStop(0, stops[start]);
                 gradient.addColorStop(1, stops[end]);
-            
+
                 spread = start - end;
 
                 if (precisionTest) {

@@ -55,7 +55,7 @@ const myAsset = scrawl.makeRawAsset({
     userAttributes: [{
 
         // MediaPipe gives us imageData objects which we can drawImaghe into the RawAsset canvas element
-        key: 'mask', 
+        key: 'mask',
         defaultValue: [],
         setter: function (item) {
 
@@ -70,11 +70,11 @@ const myAsset = scrawl.makeRawAsset({
             }
         },
     },{
-        key: 'canvasWidth', 
+        key: 'canvasWidth',
         defaultValue: 0,
         setter: () => {},
     },{
-        key: 'canvasHeight', 
+        key: 'canvasHeight',
         defaultValue: 0,
         setter: () => {},
     }],
@@ -126,7 +126,7 @@ const perform = function (mask) {
 
 
 // ##### Import and use livestream
-// convenience handle for the media stream asset 
+// convenience handle for the media stream asset
 let video, model, myBackground, myOutline;
 
 // Capture the media stream
@@ -239,7 +239,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
                 myBackground.set({
                     visibility: true,
                 });
-                
+
                 myBackground.addFilters(val);
             }
             else {

@@ -21,7 +21,7 @@ export default function (P = Ωempty) {
         pivot: ZERO_STR,
 
 // __pivotCorner__ - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to `topLeft`, `topRight`, `bottomRight` or `bottomLeft`; default is `''` to use the Element's start coordinate.
-        pivotCorner: ZERO_STR,  
+        pivotCorner: ZERO_STR,
 
 // __pivotPin__ - Polyline entitys are composed of a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).
         pivotPin: 0,
@@ -116,7 +116,7 @@ export default function (P = Ωempty) {
         this.addPivotRotation = item;
         this.dirtyRotation = true;
     };
- 
+
 
 // #### Prototype functions
 

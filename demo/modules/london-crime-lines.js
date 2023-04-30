@@ -126,9 +126,9 @@ api.build = function (items) {
                 currentData = rawData;
 
                 graph.build({
-                    namespace, 
+                    namespace,
                     data: getData(category),
-                    canvas, 
+                    canvas,
                     scrawl,
                 });
 

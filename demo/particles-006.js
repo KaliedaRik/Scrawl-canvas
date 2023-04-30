@@ -1,4 +1,4 @@
-// # Demo Particles 006 
+// # Demo Particles 006
 // Fixed number of particles in a field; preAction and postAction functionality
 
 // [Run code](../../demo/particles-006.html)
@@ -33,7 +33,7 @@ const myWorld = scrawl.makeWorld({
 
     userAttributes: [
         {
-            key: 'connectionRadius', 
+            key: 'connectionRadius',
             defaultValue: 80,
         },
     ],
@@ -74,7 +74,7 @@ const myEmitter = scrawl.makeEmitter({
         strokeStyle: 'gray',
         method: 'fillThenDraw',
 
-        visibility: false, 
+        visibility: false,
 
         noUserInteraction: true,
         noPositionDependencies: true,
@@ -119,7 +119,7 @@ const myEmitter = scrawl.makeEmitter({
                             mag = test.getMagnitude();
 
                         scrawl.releaseVector(test);
- 
+
                          if (mag < radius) {
 
                             const opacity = (radius - mag) / radius;

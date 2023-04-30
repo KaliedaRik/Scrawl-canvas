@@ -18,11 +18,11 @@
 // ### 'Placeholder' snippet
 // __Purpose:__ Place a large X across the DOM element to indicate that it is a placeholder for something else
 //
-// __Function input:__ 
+// __Function input:__
 // + any block-displayed DOM element
 // + additional data values can be passed by setting appropriate `data-` attributes on the DOM element
 //
-// __Function output:__ 
+// __Function output:__
 // ```
 // {
 //     element           // wrapper
@@ -72,7 +72,7 @@ export default function (scrawl, el) {
 
             canvas.set({
                 backgroundColor,
-            })        
+            })
             wrapper.domElement.style.backgroundColor = 'transparent';
         }
 

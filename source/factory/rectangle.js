@@ -2,14 +2,14 @@
 // A factory for generating rectangular shape-based entitys, including round-cornered rectangles
 //
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
-// 
+//
 // All path-defined entitys can be positioned, cloned, filtered etc:
-// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use `scale` instead.
-// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Path-defined entitys can be cloned, and killed.
 
@@ -428,7 +428,7 @@ P.cleanSpecies = function () {
     this.pathDefinition = this.makeRectanglePath();
 };
 
-// `cleanDimensions` - internal helper function called by `prepareStamp` 
+// `cleanDimensions` - internal helper function called by `prepareStamp`
 // + Unlike other Shape entitys, Rectangles have settable dimensions `rectangleWidth` and `rectangleWidth`.
 P.cleanDimensions = function () {
 
@@ -450,7 +450,7 @@ P.cleanDimensions = function () {
         if (h.substring) h = (parseFloat(h) / 100) * hostDims[1];
 
         const mimic = this.mimic;
-        
+
         let mimicDims;
 
         if (mimic && mimic.name && this.useMimicDimensions) mimicDims = mimic.currentDimensions;
@@ -518,17 +518,17 @@ P.makeRectanglePath = function () {
     if (width - _tlx - _trx !== 0) myData += `h${width - _tlx - _trx}`;
 
     if (_trx + _try !== 0) myData += `c${_trx * A},${_try * B} ${_trx - (_trx * B)},${_try - (_try * A)}, ${_trx},${_try}`;
-    
+
     if (height - _try - _bry !== 0) myData += `v${height - _try - _bry}`;
-    
+
     if (_brx + _bry !== 0) myData += `c${-_brx * B},${_bry * A} ${-_brx + (_brx * A)},${_bry - (_bry * B)} ${-_brx},${_bry}`;
-    
+
     if (-width + _blx + _brx !== 0) myData += `h${-width + _blx + _brx}`;
-    
+
     if (_blx + _bly !== 0) myData += `c${-_blx * A},${-_bly * B} ${-_blx + (_blx * B)},${-_bly + (_bly * A)} ${-_blx},${-_bly}`;
-    
+
     if (-height + _tly + _bly !== 0) myData += `v${-height + _tly + _bly}`;
-    
+
     if (_tlx + _tly !== 0) myData += `c${_tlx * B},${-_tly * A} ${_tlx - (_tlx * A)},${-_tly + (_tly * B)} ${_tlx},${-_tly}`;
 
     myData += 'z';
@@ -558,7 +558,7 @@ P.calculateLocalPathAdditionalActions = function () {
 // Rectangle Shapes are unique in that they require width and height dimensions, supplied in the __rectangleWidth__ and __rectangleHeight__ attributes.
 //
 // Internally, Scrawl-canvas uses quadratic curves to construct the corners. The _bend_ of these corners is set by the quadratic's control point which doesn't have its own coordinate but is rather calculated using two float Number variables: __offshootA__ (default: `0.55`) and __offshootB__ (default: `0`) - change these values to make the corners more or less bendy.
-// 
+//
 // Each corner of the rectangle can be rounded using __radius__ values. Like the ___oval Shape___, the corner has both a horizontal `x` radius and a vertical `y` radius. Thus to draw a rectangle, we need to supply a total of 8 radius measurements:
 // + __radiusTLX__ - the __T__op __L__eft corner's `x` radius
 // + __radiusTLY__ - the __T__op __L__eft corner's `y` radius

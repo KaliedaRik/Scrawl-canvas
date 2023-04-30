@@ -1,4 +1,4 @@
-// # Demo Canvas 007 
+// # Demo Canvas 007
 // Apply filters at the entity, group and cell level
 
 // [Run code](../../demo/canvas-007.html)
@@ -601,7 +601,7 @@ makeFilter({
             action: 'gaussian-blur',
             lineIn: 'source-alpha',
             lineOut: 'shadow',
-            radius: 2, 
+            radius: 2,
         },
         {
             action: 'compose',
@@ -664,7 +664,7 @@ const events = function () {
         e.preventDefault();
         e.returnValue = false;
 
-        let action = false, 
+        let action = false,
             val;
 
         switch (e.target.id) {

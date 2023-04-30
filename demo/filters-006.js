@@ -1,4 +1,4 @@
-// # Demo Filters 006 
+// # Demo Filters 006
 // Filter parameters: channelLevels
 
 // [Run code](../../demo/filters-006.html)
@@ -65,7 +65,7 @@ scrawl.makeRender({
 
 // #### User interaction
 scrawl.addNativeListener(
-    ['input', 'change'], 
+    ['input', 'change'],
     (e) => {
 
         let a;
@@ -82,10 +82,10 @@ scrawl.addNativeListener(
             });
         }
 
-        myFilter.set({ 
+        myFilter.set({
             [e.target.id]: a,
         });
-    }, 
+    },
     '.controlItem');
 
 // Setup form

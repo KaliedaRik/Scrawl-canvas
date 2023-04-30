@@ -35,9 +35,9 @@ const myWorld = scrawl.makeWorld({
     tickMultiplier: 2,
     userAttributes: [
         {
-            key: 'rangeColorValue', 
+            key: 'rangeColorValue',
             defaultValue: 0,
-            setter: function (item) { 
+            setter: function (item) {
 
                 this.rangeColorValue = item;
 
@@ -81,14 +81,14 @@ const emitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history;
-        
+
         let start;
 
         if (history.length) {
 
             [ , , ...start] = history[0];
 
-            artefact.simpleStamp(host, { 
+            artefact.simpleStamp(host, {
                 start,
                 fillStyle: particle.fill,
             });

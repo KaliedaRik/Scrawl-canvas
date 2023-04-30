@@ -21,7 +21,7 @@ mytext.set({
     handle: ['center', 'center'],
 });
 
-// Scrawl-canvas recognises five shapes, separated by four breakpoints: 
+// Scrawl-canvas recognises five shapes, separated by four breakpoints:
 // + `banner`
 // + `landscape`
 // + `rectangle`
@@ -29,7 +29,7 @@ mytext.set({
 // + `skyscraper`
 //
 // The values assigned to the breakpoints are Float numbers for the Stack artefact's width/height ratio - the value `3` represents the case where the width value is three times __more__ than the height value, while `0.35` represents a width (roughly) 3 times __less__ than the height.
-// 
+//
 // We can set a Stack artefact's breakpoints in one go using the dedicated `setDisplayShapeBreakpoints()` function, as below. Alternatively we can use the regular `set()` function, supplying the attributes `breakToBanner`, `breakToLandscape`, `breakToPortrait` and `breakToSkyscraper` as required. The values given here are the default values for Stack artefacts.
 stack.setDisplayShapeBreakpoints({
     breakToBanner: 3,

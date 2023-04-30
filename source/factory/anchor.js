@@ -1,5 +1,5 @@
 // # Anchor factory
-// In Scrawl-canvas, an Anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file. 
+// In Scrawl-canvas, an Anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file.
 //
 // Scrawl-canvas uses the [Anchor mixin](../mixin/anchor.html) to add anchor functionality to artefacts - in particular canvas entitys.
 //
@@ -34,7 +34,7 @@ const Anchor = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
-    
+
     this.set(this.defs);
     this.set(items);
 
@@ -172,7 +172,7 @@ S.hold = function (item) {
 // One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an 'anchor' attribute:
 // ```
 // artefact.set({
-//    
+//
 //     anchor: {
 //         description: 'value',
 //         type: 'value',
@@ -257,7 +257,7 @@ S.clickAction = function (item) {
 // #### Prototype functions
 // The `build` function builds the &lt;a> element and adds it to the DOM
 //
-// Scrawl-canvas generated anchor links are kept in hidden &lt;nav> elements - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs. 
+// Scrawl-canvas generated anchor links are kept in hidden &lt;nav> elements - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs.
 //
 // This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
 P.build = function () {
@@ -324,7 +324,7 @@ P.click = function () {
 // #### Factory
 // To create an anchor, include an anchor definition object in any artefact object's factory argument:
 // ```
-// // get a handle on the canvas where the block/link will be defined 
+// // get a handle on the canvas where the block/link will be defined
 // // (in this case a canvas with id="mycanvas")
 // let canvas = scrawl.library.artefact.mycanvas;
 // canvas.setAsCurrentCanvas();
@@ -351,12 +351,12 @@ P.click = function () {
 //     onUp: this.clickAnchor,
 // });
 //
-// // Add a listener to propagate DOM-detected click events on our canvas 
+// // Add a listener to propagate DOM-detected click events on our canvas
 // // back into the Scrawl-canvas event system
 // scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElement);
 // ```
 export const makeAnchor = function (items) {
-    
+
     if (!items) return false;
     return new Anchor(items);
 };

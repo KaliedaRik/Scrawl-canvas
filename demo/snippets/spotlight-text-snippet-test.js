@@ -54,7 +54,7 @@ export default function (scrawl, el) {
             fillStyle: 'lightgray',
             lockFillStyleToEntity: true,
 
-            method: 'fill', 
+            method: 'fill',
         });
 
         scrawl.makeBlock({

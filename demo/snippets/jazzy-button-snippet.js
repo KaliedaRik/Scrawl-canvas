@@ -12,7 +12,7 @@
 //
 // __Function input:__ a &lt;button> element, or any other block-displayed DOM element containing no child elements.
 //
-// __Function output:__ 
+// __Function output:__
 // ```
 // {
 //     element           // wrapper
@@ -45,7 +45,7 @@
 // myElements.forEach(el => jazzyButton(scrawl, el));
 // ```
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + The DOM element will appear to have a light gray background
 export default function (scrawl, el) {
 

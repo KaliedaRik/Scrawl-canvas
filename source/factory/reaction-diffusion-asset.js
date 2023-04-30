@@ -474,7 +474,7 @@ S.preset = function (item) {
                 this.initialRandomSeedLevel = 0.0045;
                 break;
 
-            default: 
+            default:
                 this.diffusionRateA = 0.2097;
                 this.diffusionRateB = 0.105;
                 this.feedRate = 0.054;
@@ -582,7 +582,7 @@ P.cleanScene = function () {
 
                 const ent = entity[initialSettingEntity],
                     cell = requestCell();
-                
+
                 const {engine:cellEngine, element:cellElement} = cell;
 
                 cellElement.width = width;
@@ -596,7 +596,7 @@ P.cleanScene = function () {
                 const initImg = cellEngine.getImageData(0, 0, width, height),
                     initData = initImg.data;
 
-                let counter = 0;   
+                let counter = 0;
 
                 // get data from alpha channel
                 for (let i = 3, iz = initData.length; i < iz; i += 4) {
@@ -629,7 +629,7 @@ P.calculateLaplacian = function (index, src) {
     const w = this.width;
 
     let res = 0,
-        row = _floor(index / w), 
+        row = _floor(index / w),
         rowAbove = this.checkRow(row - 1) * w,
         rowBelow = this.checkRow(row + 1) * w,
         rowHere = row * w,
@@ -684,7 +684,7 @@ P.checkRow = function (val) {
     if (val < 0) return h - 1;
     if (val >= h) return 0;
     return val;
-} 
+}
 
 P.checkCol = function (val) {
 
@@ -693,7 +693,7 @@ P.checkCol = function (val) {
     if (val < 0) return w - 1;
     if (val >= w) return 0;
     return val;
-} 
+}
 
 // `checkOutputValuesExist` and `getOutputValue` are internal variables that must be defined by any asset that makes use of the _assetAdvancedFunctionality.js_ mixin and its `paintCanvas` function
 P.checkOutputValuesExist = function () {

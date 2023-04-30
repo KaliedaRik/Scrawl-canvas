@@ -1,4 +1,4 @@
-// # Demo Canvas 028 
+// # Demo Canvas 028
 // Image magnifier; test some composite operations
 
 // [Run code](../../demo/canvas-028.html)

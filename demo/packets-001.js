@@ -98,7 +98,7 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "fillStyle":"red"
 //     }
 // ]
-//    
+//
 // TEST 2, TEST 3
 // [
 //     "my-box",
@@ -192,7 +192,7 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "textBaseline":"alphabetic"
 //     }
 // ]
-//    
+//
 // TEST 4
 // [
 //     "my-box",
@@ -260,19 +260,19 @@ setTimeout(() => {
 //
 //     SETUP
 //     Import test setup - check to see if entity has been deleted |> []
-//    
+//
 //     TEST 1
 //     Import test 1 error - Error: Failed to process packet due to JSON parsing error - Unexpected end of JSON input
-//    
+//
 //     TEST 2
 //     Import test 2 success - |> Block
-//    
+//
 //     TEST 3
 //     Import test 3 error - Error: Packet import from server failed - 404: Not Found - http://localhost:8080/demo/packets/packets-003-block
-//    
+//
 //     TEST 4
 //     Import test 4 success - |> Block
-//    
+//
 //     TEST 5
 //     Import test 5 success - |> Block
 

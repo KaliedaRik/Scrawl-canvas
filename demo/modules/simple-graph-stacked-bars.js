@@ -27,7 +27,7 @@ Data format requirements - a Javascript object with structure:
 
 // #### Imports
 // We need to adapt the graph frame with data specific to this graph
-import { 
+import {
     api as frame,
     dims as frameDims,
 } from './simple-chart-frame.js';
@@ -63,7 +63,7 @@ api.build = function (items) {
     // Module state
     let selectedColumn = 0,
         selectedRow = 0;
-    
+
     const currentData = data;
 
     if (namespace && canvas && data && scrawl) {
@@ -73,8 +73,8 @@ api.build = function (items) {
 
 
         // Local variables defined at the top of the build function
-        const yearLabels = data.yearLabels, 
-            categoryLabels = data.categoryLabels, 
+        const yearLabels = data.yearLabels,
+            categoryLabels = data.categoryLabels,
             yearData = data.yearData,
 
             gap = 1,
@@ -191,19 +191,19 @@ api.build = function (items) {
 
             switch (direction) {
 
-                case 'up' : 
+                case 'up' :
                     selectedRow++;
                     break;
 
-                case 'down' : 
+                case 'down' :
                     selectedRow--;
                     break;
 
-                case 'left' : 
+                case 'left' :
                     selectedColumn--;
                     break;
 
-                case 'right' : 
+                case 'right' :
                     selectedColumn++;
                     break;
             }

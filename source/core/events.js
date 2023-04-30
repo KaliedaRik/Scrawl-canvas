@@ -54,7 +54,7 @@ export const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
         }
 
         return function () {
-            
+
             observer.disconnect();
         }
     }
@@ -111,16 +111,16 @@ const actionMouseListener = function (events, fn, targets, action) {
 
     for (i = 0, iz = events.length; i < iz; i++) {
 
-        e = events[i]; 
+        e = events[i];
 
         for (j = 0, jz = targets.length; j < jz; j++) {
 
             t = targets[j];
 
             if (isa_dom(t) || t.document || t.characterSet) {
-                
+
                 switch (e) {
-                
+
                     case MOVE:
                         t[action](MOUSE_MOVE, fn, false);
                         t[action](TOUCH_MOVE, fn, {passive: false});
@@ -158,7 +158,7 @@ const actionPointerListener = function (events, fn, targets, action) {
 
     for (i = 0, iz = events.length; i < iz; i++) {
 
-        e = events[i]; 
+        e = events[i];
 
         for (j = 0, jz = targets.length; j < jz; j++) {
 
@@ -167,7 +167,7 @@ const actionPointerListener = function (events, fn, targets, action) {
             if (isa_dom(t) || t.document || t.characterSet) {
 
                 switch (e) {
-                
+
                     case MOVE:
                         t[action](POINTER_MOVE, fn, false);
                         break;
@@ -193,8 +193,8 @@ const actionPointerListener = function (events, fn, targets, action) {
     }
 };
 
-// __Any event listener__ can be added to a Scrawl-canvas stack or canvas DOM element. 
-// 
+// __Any event listener__ can be added to a Scrawl-canvas stack or canvas DOM element.
+//
 // The __scrawl.addNativeListener__ function makes adding and removing these 'native' listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.
 //
 // The function requires three arguments:
@@ -280,7 +280,7 @@ const updatePixelRatio = () => {
 
     if (!ignorePixelRatio) dpr_changeAction();
 
-    // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally? 
+    // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally?
     // + Whatever. Safari does not like, or respond to, this matchmedia query
     // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
     if (!browserIs.includes(SAFARI)) {

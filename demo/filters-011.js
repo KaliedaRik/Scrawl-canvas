@@ -1,4 +1,4 @@
-// # Demo Filters 011 
+// # Demo Filters 011
 // Filter parameters: chromakey
 
 // [Run code](../../demo/filters-011.html)

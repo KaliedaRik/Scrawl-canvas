@@ -37,7 +37,7 @@ export default function (items) {
 
     // #### Scene
     canvas.set({
-        label: 'An animated canvas showing an image of angel statues in Havana cemetery, Cuba. The image is revealed via a sequence of expanding, increasingly opaque discs as the user scrolls down the page.', 
+        label: 'An animated canvas showing an image of angel statues in Havana cemetery, Cuba. The image is revealed via a sequence of expanding, increasingly opaque discs as the user scrolls down the page.',
     }).setAsCurrentCanvas();
 
 

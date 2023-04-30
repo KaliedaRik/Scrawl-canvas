@@ -2,14 +2,14 @@
 // A factory for generating various straight-line tetragonal shape-based entitys
 //
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
-// 
+//
 // All path-defined entitys can be positioned, cloned, filtered etc:
-// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use `scale` instead.
-// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
 // + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Path-defined entitys can be cloned, and killed.
 
@@ -216,7 +216,7 @@ P.makeTetragonPath = function () {
 
             width = rx * 2;
             height = ry * 2;
-        } 
+        }
     }
     else {
 
@@ -253,10 +253,10 @@ P.calculateLocalPathAdditionalActions = function () {
 // #### Factories
 
 // ##### makeTetragon
-// Scrawl-canvas uses lines internally to create the Shape path. 
+// Scrawl-canvas uses lines internally to create the Shape path.
 // + The main shape of the tetragon is determined by differing radius lengths in the `x` and `y` directions, as set by the attributes __radiusX__ and __radiusY__; to set both radiuses to the same value, use ___radius___ instead.
 // + The radius values can be: _absolute_ (using Number values); or _relative_ using %-String values - with the y radius representing a portion of the Cell container's height and the x radius the Cell's width.
-// + The radiuses (as diameter lines) cross in the middle of the tetragon shape. We can move the position of where the intersection happens by setting a float Number value between `0.0 - 1.0` (or beyond those limits) for the __intersectX__ and __intersectY__ attributes. 
+// + The radiuses (as diameter lines) cross in the middle of the tetragon shape. We can move the position of where the intersection happens by setting a float Number value between `0.0 - 1.0` (or beyond those limits) for the __intersectX__ and __intersectY__ attributes.
 // + `intersectX` (default: `0.5`) represents the point at which the `y` diameter crosses the `x` diameter, with `0` being the left end and `1` being the right end.
 // + `intersectY` (default: `0.5`) represents the point at which the `x` diameter crosses the `y` diameter, with `0` being the top end and `1` being the bottom end.
 //

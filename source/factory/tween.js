@@ -7,7 +7,7 @@
 // + Each Tween also includes a `definitions` Array which sets out the details of the animation to be performed.
 // + The `definitions` Array can include multiple objects, each defining a change to a specific attribute that needs to be applied to the target objects.
 // + __Any number-type attribute can be animated using a Tween__ - this includes integer and float Numbers, percentage Strings (`12.5%`) and measurement Strings (`20px`).
-// + We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running). 
+// + We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running).
 // + We can dynamically halt, resume, restart and terminate Tweens in response to user interactions.
 // + Tweens include `packet` functionality: they can be saved, and cloned.
 //
@@ -118,7 +118,7 @@ const defaultAttributes = {
 // + __integer__ - Boolean flag indicating whether we should force results to be integers (default: false)
 // + __engine__ - String name for the easing function ___engine___ to be used to animate this change; or an easing function supplied by the developer.
 //
-// Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number. 
+// Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number.
 // + These values should be of a type that the target object (generally an artefact) expects to receive in its `set` function.
 // + Any object with a `set` function that takes an object as its argument can be tweened.
     definitions: null,
@@ -151,7 +151,7 @@ const defaultAttributes = {
     completeAction: null,
 
 // __ticker__ - String name of Ticker object which this Tween will associate itself with.
-// + If no Ticker is specified when building a new Tween, it will create a new Ticker object (sharing its `name` attribute) to associate with. 
+// + If no Ticker is specified when building a new Tween, it will create a new Ticker object (sharing its `name` attribute) to associate with.
 // + If the attributes below are included in the argument object, they will be passed on to the new Ticker.
 // + This attribute is kept in the Tween object, but is excluded from the Tween prototype's `defs` object.
 
@@ -227,7 +227,7 @@ P.postCloneAction = function(clone, items) {
     }
 
     if (_isArray(clone.definitions)) {
-        
+
         clone.definitions.forEach((def, index) => {
 
             if (def.engineIsFunction) def.engine = this.definitions[index].engine;
@@ -263,7 +263,7 @@ S.definitions = function (item) {
 S.commenceAction = function (item) {
 
     this.commenceAction = item;
-    
+
     if (typeof this.commenceAction != FUNCTION) this.commenceAction = λnull;
 };
 
@@ -290,11 +290,11 @@ P.set = function (items = Ωempty) {
     for (i = 0, iz = keys.length; i < iz; i++) {
 
         key = keys[i];
-        
+
         if (key != NAME) {
 
             s = setters[key];
-            
+
             if (s) s.call(this, items[key]);
             else if (typeof d[key] != UNDEF) this[key] = items[key];
         }
@@ -331,19 +331,19 @@ P.calculateEffectiveDuration = function (item) {
         cType = calculatedDur[0],
         ticker = this.ticker;
 
-    let myticker, 
+    let myticker,
         tickerDuration = 0;
 
     this.effectiveDuration = 0;
 
     if (cType == PC) {
-    
+
         if (ticker) {
-    
+
             myticker = animationtickers[ticker];
-    
+
             if (myticker) {
-    
+
                 tickerDuration = myticker.effectiveDuration;
                 this.effectiveDuration = tickerDuration * (cDur / 100);
             }
@@ -476,12 +476,12 @@ P.doSimpleUpdate = function (items = Ωempty) {
 };
 
 // `engineActions` - internal function to run built-in easing engines
-// + __engine__ - String name of the required easing. All built-in easing engines are defined in the `core/utilities` file 
+// + __engine__ - String name of the required easing. All built-in easing engines are defined in the `core/utilities` file
 // + __start__ - the `effectiveStart` value, in milliseconds.
 // + __change__ - the time in milliseconds that this animation will take (`effectiveEnd - effectiveStart`).
 // + __position__ - the time elapsed since this Tween started running
 //
-// Scrawl-canvas easing engines use the following metaphor to define their names: 
+// Scrawl-canvas easing engines use the following metaphor to define their names:
 // + `out` indicates an acceleration. Think of a train leaving the station.
 // + `in` indicates a deceleration. Think of a train arriving the station.
 // + For the legacy engines, igher numbers indicates a more intense change between starting, middle and ending speeds
@@ -511,7 +511,7 @@ P.setDefinitionsValues = function () {
             def.suffix = temp[0];
             temp = parseDefinitionsValue(def.end);
             def.effectiveEnd = temp[1];
-            
+
             // The default easing function is `linear`
             if (!xt(def.engine)) def.engine = LINEAR;
 
@@ -525,14 +525,14 @@ P.setDefinitionsValues = function () {
 P.parseDefinitionsValue = function (item) {
 
     const result = [ZERO_STR, 0];
-    
+
     if (xt(item)) {
 
         if (item.toFixed) result[1] = item;
         else if (item.substring) {
 
             const a = item.match(/^-?\d+\.?\d*(\D*)/);
-            
+
             if (xt(a[0])) result[1] = parseFloat(a);
             if (xt(a[1])) result[0] = a[1];
         }

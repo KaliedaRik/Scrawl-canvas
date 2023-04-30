@@ -1,4 +1,4 @@
-// # Demo Particles 003 
+// # Demo Particles 003
 // Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
 
 // [Run code](../../demo/particles-003.html)
@@ -14,7 +14,7 @@ scrawl.importDomImage('#bunny');
 
 
 // Create Block and Shape entitys that can be used as pivot, mimic and path objects for the Emitter entity
-scrawl.makeBlock({ 
+scrawl.makeBlock({
 
     name: 'pivot-entity',
     dimensions: [50, 30],
@@ -74,10 +74,10 @@ scrawl.makeGradient({
 
 
 // Create entitys that we can use with the particle emitter
-const wheel = scrawl.makeWheel({ 
+const wheel = scrawl.makeWheel({
 
     name: 'particle-wheel-entity',
-    radius: 20, 
+    radius: 20,
     handle: ['center', 'center'],
 
     startAngle: 20,
@@ -86,7 +86,7 @@ const wheel = scrawl.makeWheel({
 
     fillStyle: 'linear1',
     method: 'fillThenDraw',
-    visibility: false, 
+    visibility: false,
 
     noUserInteraction: true,
     noPositionDependencies: true,
@@ -94,7 +94,7 @@ const wheel = scrawl.makeWheel({
     noDeltaUpdates: true,
 });
 
-const block = scrawl.makeBlock({ 
+const block = scrawl.makeBlock({
 
     name: 'particle-block-entity',
     dimensions: [40, 16],
@@ -104,7 +104,7 @@ const block = scrawl.makeBlock({
     lockFillStyleToEntity: true,
 
     method: 'fillThenDraw',
-    visibility: false, 
+    visibility: false,
 
     noUserInteraction: true,
     noPositionDependencies: true,
@@ -125,7 +125,7 @@ const star = scrawl.makeStar({
 
     fillStyle: 'gold',
     method: 'fillThenDraw',
-    visibility: false, 
+    visibility: false,
 
     noUserInteraction: true,
     noPositionDependencies: true,
@@ -147,7 +147,7 @@ const picture = scrawl.makePicture({
     copyHeight: '100%',
 
     method: 'fill',
-    visibility: false, 
+    visibility: false,
 
     noUserInteraction: true,
     noPositionDependencies: true,

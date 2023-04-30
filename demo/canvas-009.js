@@ -1,4 +1,4 @@
-// # Demo Canvas 009 
+// # Demo Canvas 009
 // Pattern styles; Entity web link anchors; Dynamic accessibility
 
 // [Run code](../../demo/canvas-009.html)
@@ -20,7 +20,7 @@ const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 
 let myTracker;
 
-// Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
+// Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
 // @ts-expect-error
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
@@ -245,7 +245,7 @@ makeBlock({
     },
 
 }).clone({
-    
+
     name: name('brick-in-marble'),
 
     startY: '75%',
@@ -260,7 +260,7 @@ makeBlock({
     },
 
 }).clone({
-    
+
     name: name('marble-in-water'),
 
     startX: '25%',
@@ -280,11 +280,11 @@ makeBlock({
 // + Available cascadeEventAction arguments are: 'enter', 'leave', 'down', or 'up'
 // + Also, the 'move' argument will trigger enter and leave actions on the entitys, as appropriate to each
 //
-// In this case, moving the mouse cursor over a block entity will increase its line width, as specified in the __onEnter__ and __onLeave__ functions in the block factories above. 
+// In this case, moving the mouse cursor over a block entity will increase its line width, as specified in the __onEnter__ and __onLeave__ functions in the block factories above.
 //
 // Additionally, it will update the &lt;canvas> element's title attribute (for tool tips) and its ARIA label value (for accessibility)
 //
-// The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates 
+// The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates
 let interactionResults = '';
 const interactions = function () {
 

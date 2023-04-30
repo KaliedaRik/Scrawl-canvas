@@ -94,7 +94,7 @@ const defaultAttributes = {
     // + Can be set using the String name of an artefact object, or the artefact object itself.
     artefact: null,
 
-    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Emitter entity will set the maximum permitted length of the history array whenever it generates a new Particle. 
+    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Emitter entity will set the maximum permitted length of the history array whenever it generates a new Particle.
     historyLength: 1,
 
     // Note that the __hitRadius__ attribute is tied directly to the __width__ and __height__ attributes (which are effectively meaningless for this entity)
@@ -106,7 +106,7 @@ const defaultAttributes = {
     hitRadiusColor: BLACK,
 
     // ##### Not defined in the defs object, but set up in the constructor and setters
-    
+
     // __trace__ - the entity's Particle object
 
     // __stampAction__ - define all major rendering actions in this function. The function receives the following arguments: `(artefact, trace, host)` - where `artefact` is the Tracer entity's artefact object (if any has been defined/set); `trace` is the entity's Particle object whose history needs to be rendered onto the canvas; and `host` is the Cell wrapper on which we will draw our graphics

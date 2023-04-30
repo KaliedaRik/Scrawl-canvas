@@ -124,8 +124,8 @@ api.build = (items) => {
 
             // Build the graph
             graph.build ({
-                namespace, 
-                canvas, 
+                namespace,
+                canvas,
                 data,
                 scrawl,
             });

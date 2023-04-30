@@ -27,7 +27,7 @@ import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_
 
 // ## UnstackedElement constructor
 const UnstackedElement = function (el) {
-    
+
     const name = el.id || el.name;
 
     this.makeName(name);
@@ -102,7 +102,7 @@ P.addCanvas = function (items = Ωempty) {
         if (style.position == STATIC) style.position = RELATIVE;
 
         canvas.id = `${this.name}-canvas`;
-        
+
         el.prepend(canvas);
 
         const art = makeCanvas({
@@ -192,12 +192,12 @@ P.checkElementStyleValues = function () {
 
                 default :
 
-                    
+
                     hi = host[item];
                     si = style[item];
 
                     if(!xt(hi) || hi != si) {
-                
+
                         host[item] = si;
                         results[item] = si;
                     }
@@ -282,7 +282,7 @@ P.updateCanvas = function () {
 
 // ## Exported factory function
 export const makeUnstackedElement = function (items) {
-    
+
     if (!items) return false;
     return new UnstackedElement(items);
 };

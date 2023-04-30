@@ -1,4 +1,4 @@
-// # Demo Filters 010 
+// # Demo Filters 010
 // Filter parameters: chroma
 
 // [Run code](../../demo/filters-010.html)
@@ -80,8 +80,8 @@ const interpretColors = function () {
 scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
 
 scrawl.addNativeListener(
-    ['input', 'change'], 
-    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+    ['input', 'change'],
+    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }),
     '#opacity');
 
 

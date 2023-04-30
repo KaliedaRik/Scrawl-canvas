@@ -1,4 +1,4 @@
-// # Demo Filters 101 
+// # Demo Filters 101
 // Using assets in the filter stream; filter compositing
 
 // [Run code](../../demo/filters-101.html)

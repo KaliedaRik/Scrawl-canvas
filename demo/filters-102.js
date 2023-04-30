@@ -1,4 +1,4 @@
-// # Demo Filters 102 
+// # Demo Filters 102
 // Filter blend operation
 
 // [Run code](../../demo/filters-102.html)

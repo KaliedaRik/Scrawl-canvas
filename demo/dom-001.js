@@ -14,7 +14,7 @@ import {
 
 
 // #### Scene setup
-// Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the __scrawl.library.artefact__ section of the Scrawl-canvas library. The elements themselves are held in the __domElement__ attribute of the wrapper. 
+// Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the __scrawl.library.artefact__ section of the Scrawl-canvas library. The elements themselves are held in the __domElement__ attribute of the wrapper.
 const myStack = L.artefact.mystack,
     reportMessage = L.artefact.reportmessage;
 
@@ -51,7 +51,7 @@ makeAnimation({
     // Giving the animation object a name will make it easy to find in the Scrawl-canvas library object
     name: 'demo-animation',
 
-    // Every animation object must include a __fn__ function attribute which ___MUST___ return a Promise object - even if the functionality within the function is entirely synchronous. 
+    // Every animation object must include a __fn__ function attribute which ___MUST___ return a Promise object - even if the functionality within the function is entirely synchronous.
     //
     // This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise
     fn: function () {

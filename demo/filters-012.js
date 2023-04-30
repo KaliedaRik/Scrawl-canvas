@@ -1,4 +1,4 @@
-// # Demo Filters 012 
+// # Demo Filters 012
 // Filter parameters: matrix, matrix5
 
 // [Run code](../../demo/filters-012.html)
@@ -91,20 +91,20 @@ const updateWeights = function () {
     return function () {
 
 // @ts-expect-error
-        weights3 = [parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), 
+        weights3 = [parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value),
 // @ts-expect-error
-                    parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), 
+                    parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value),
 // @ts-expect-error
                     parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value)];
 
 // @ts-expect-error
-        weights5 = [parseFloat(m11.value), parseFloat(m12.value), parseFloat(m13.value), parseFloat(m14.value), parseFloat(m15.value), 
+        weights5 = [parseFloat(m11.value), parseFloat(m12.value), parseFloat(m13.value), parseFloat(m14.value), parseFloat(m15.value),
 // @ts-expect-error
-                    parseFloat(m21.value), parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), parseFloat(m25.value), 
+                    parseFloat(m21.value), parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), parseFloat(m25.value),
 // @ts-expect-error
-                    parseFloat(m31.value), parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), parseFloat(m35.value), 
+                    parseFloat(m31.value), parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), parseFloat(m35.value),
 // @ts-expect-error
-                    parseFloat(m41.value), parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value), parseFloat(m45.value), 
+                    parseFloat(m41.value), parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value), parseFloat(m45.value),
 // @ts-expect-error
                     parseFloat(m51.value), parseFloat(m52.value), parseFloat(m53.value), parseFloat(m54.value), parseFloat(m55.value)];
 

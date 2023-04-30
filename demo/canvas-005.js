@@ -1,4 +1,4 @@
-// # Demo Canvas 005 
+// # Demo Canvas 005
 // Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween; trigger canvas hover and drag UX
 
 // [Run code](../../demo/canvas-005.html)

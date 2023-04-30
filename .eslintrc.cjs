@@ -17,6 +17,7 @@ module.exports = {
         "no-useless-call": "error",
         "no-useless-return": "error",
         "no-var": "error",
-        "prefer-const": "error"
+        "prefer-const": "error",
+        "no-trailing-spaces": "error"
     }
 }

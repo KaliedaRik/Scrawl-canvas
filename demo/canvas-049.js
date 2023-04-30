@@ -1,4 +1,4 @@
-// # Demo Canvas 049 
+// # Demo Canvas 049
 // Conic gradients
 
 // [Run code](../../demo/canvas-049.html)

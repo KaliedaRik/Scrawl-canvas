@@ -1,4 +1,4 @@
-// # Demo Filters 028 
+// # Demo Filters 028
 // Stencil (background) filter functionality
 
 // [Run code](../../demo/filters-028.html)
@@ -497,7 +497,7 @@ scrawl.makeFilter({
             action: 'gaussian-blur',
             lineIn: 'source-alpha',
             lineOut: 'shadow',
-            radius: 2, 
+            radius: 2,
         },
         {
             action: 'compose',

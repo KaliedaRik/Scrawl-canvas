@@ -1,4 +1,4 @@
-// # Demo Canvas 010 
+// # Demo Canvas 010
 // Use video sources and media streams for Picture entitys
 
 // [Run code](../../demo/canvas-010.html)
@@ -30,7 +30,7 @@ const name = (n) => `${namespace}-${n}`;
 // __Get video stream from DOM &lt;video> element__
 // + When loading video assets from the DOM, note that Scrawl-canvas has to deal with the &lt;video> element operating under normal DOM rules. This means that (in most modern browsers) the video will not fetch anything beyond its metadata until at least 1px height of the video is displayed in the viewport (videos hidden by any CSS rules will not fetch anything until they are made visible).
 // + The practical implications of this is that any Picture entitys relying on the video as their asset will not display an image until the DOM video element appears in the user's viewport.
-// + To make sure the Picture entity displays the video's first frame, we need to explicitly set the DOM element's preload attribute to __auto__ 
+// + To make sure the Picture entity displays the video's first frame, we need to explicitly set the DOM element's preload attribute to __auto__
 importDomVideo('.myvideo');
 
 

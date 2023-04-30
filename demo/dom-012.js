@@ -53,7 +53,7 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
 }();
 
 
-// Animation loop 
+// Animation loop
 scrawl.makeRender({
     name: 'demo-animation',
     noTarget: true,
@@ -128,7 +128,7 @@ const controls = function () {
 
         e.preventDefault();
         e.returnValue = false;
-        
+
         switch (e.target.id) {
 
             case 'action_1':
@@ -174,7 +174,7 @@ const controls = function () {
                 mystack = false;
 
                 break;
-                
+
             case 'action_4':
 
                 scrawl.addCanvas({

@@ -1,4 +1,4 @@
-// # Demo Filters 003 
+// # Demo Filters 003
 // Filter parameters: brightness, saturation
 
 // [Run code](../../demo/filters-003.html)
@@ -229,9 +229,9 @@ alpha.value = 1;
 
 // #### Drag-and-Drop image loading functionality
 addImageDragAndDrop(canvas, '#my-image-store', [
-    entity['brightness-picture'], 
-    entity['saturation-picture'], 
-    entity['advanced-brightness-picture'], 
+    entity['brightness-picture'],
+    entity['saturation-picture'],
+    entity['advanced-brightness-picture'],
     entity['advanced-saturation-picture']
 ]);
 

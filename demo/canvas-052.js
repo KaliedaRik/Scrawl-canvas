@@ -1,4 +1,4 @@
-// # Demo Canvas 052 
+// # Demo Canvas 052
 // Create and use a RawAsset object to modify an image asset
 
 // [Run code](../../demo/canvas-052.html)
@@ -47,46 +47,46 @@ const impressionistAsset = scrawl.makeRawAsset({
 
     userAttributes: [{
         // __lineWidth__, __lineLengthMultiplier__, __lineLengthStart__, __linesToAdd__, __lineBlend__, __lineOpacity__ - some brush attributes that we'll allow the user to modify in real time.
-        key: 'lineWidth', 
+        key: 'lineWidth',
         defaultValue: 4,
     },{
-        key: 'lineLengthMultiplier', 
+        key: 'lineLengthMultiplier',
         defaultValue: 20,
     },{
-        key: 'lineLengthStart', 
+        key: 'lineLengthStart',
         defaultValue: 5,
     },{
-        key: 'linesToAdd', 
+        key: 'linesToAdd',
         defaultValue: 50,
     },{
-        key: 'lineBlend', 
+        key: 'lineBlend',
         defaultValue: 'source-over',
     },{
-        key: 'lineOpacity', 
+        key: 'lineOpacity',
         defaultValue: 1,
     },{
         // __offsetX__, __offsetY__, __rotationMultiplier__, __rotationStart__ - some additional brush rotation attributes.
-        key: 'offsetX', 
+        key: 'offsetX',
         defaultValue: 0,
     },{
-        key: 'offsetY', 
+        key: 'offsetY',
         defaultValue: 0,
     },{
-        key: 'rotationMultiplier', 
+        key: 'rotationMultiplier',
         defaultValue: 90,
     },{
-        key: 'rotationStart', 
+        key: 'rotationStart',
         defaultValue: 0,
     },{
         // __canvasWidth__, __canvasHeight__ - make the RawAsset's dimensions the same as our canvas base Cell's dimensions
-        key: 'canvasWidth', 
+        key: 'canvasWidth',
         defaultValue: dimension,
     },{
-        key: 'canvasHeight', 
+        key: 'canvasHeight',
         defaultValue: dimension,
     },{
         // __background__ - a handle to our background Picture entity, from which we will be extracting color values
-        key: 'background', 
+        key: 'background',
         defaultValue: false,
         setter: function (item) {
             this.background = item;
@@ -94,16 +94,16 @@ const impressionistAsset = scrawl.makeRawAsset({
         },
     },{
         // __noise__ - a handle to our Noise asset, from which we will be extracting brushstroke direction and length data
-        key: 'noise', 
+        key: 'noise',
         defaultValue: false,
         setter: function (item) {
             this.noise = item;
             this.dirtyData = true;
         },
     },{
-        // __trigger__ - we update the RawAsset at the start of each Display cycle by setting its `trigger` attribute. 
+        // __trigger__ - we update the RawAsset at the start of each Display cycle by setting its `trigger` attribute.
         // + It's at this point that we fill the RawAsset canvas with the background image, if required
-        key: 'trigger', 
+        key: 'trigger',
         defaultValue: false,
         setter: function () {
 
@@ -122,7 +122,7 @@ const impressionistAsset = scrawl.makeRawAsset({
                 if (source && copyArray && pasteArray ) {
 
                     // Strictly speaking, copyArray and pasteArray are Picture entity internal data structures but that doesn't stop us using them here.
-                    // + TODO: consider whether the RawAsset object should be using a Cell wrapper rather than a raw &lt;canvas> element 
+                    // + TODO: consider whether the RawAsset object should be using a Cell wrapper rather than a raw &lt;canvas> element
                     // + if we did it that way, then we would be able to simpleStamp the Picture entity onto the canvas
                     // + the reason why we're NOT doing it that way at the moment is to keep RawAsset canvases out of the SC library
                     engine.drawImage(background.source, ...background.copyArray, ...background.pasteArray);
@@ -235,17 +235,17 @@ scrawl.makeRender({
 
     // We need to trigger the RawAsset object to update its output at the start of each Display cycle
     commence: () => impressionistAsset.set({ trigger: true }),
-    
+
     afterShow: report,
 });
 
 
 // #### Drag-and-Drop image loading functionality
 addImageDragAndDrop(
-    canvas, 
-    '#my-image-store', 
-    backgroundImage, 
-    () => { 
+    canvas,
+    '#my-image-store',
+    backgroundImage,
+    () => {
         impressionistAsset.set({
             background: backgroundImage,
         });
@@ -349,7 +349,7 @@ videoButton.addEventListener("click", () => {
         };
 
         myRecorder.start();
-    } 
+    }
     else {
 
         videoButton.textContent = "Record a video";
@@ -357,7 +357,7 @@ videoButton.addEventListener("click", () => {
         myRecorder.stop();
 
         setTimeout(() => {
-            
+
             const blob = new Blob(recordedChunks, { type: "video/webm" });
 
             const url = URL.createObjectURL(blob);

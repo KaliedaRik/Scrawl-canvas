@@ -59,7 +59,7 @@ const FilterEngine = function () {
     // ### Transactional variables
 
     // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
-    this.cache = null; 
+    this.cache = null;
 
     // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
     this.actions = [];
@@ -84,7 +84,7 @@ P.action = function (packet) {
 
     const { workstoreLastAccessed, workstore, actions, theBigActionsObject } = this;
 
-    const workstoreKeys = _keys(workstore), 
+    const workstoreKeys = _keys(workstore),
         workstoreChoke = _now() - choke;
 
     let i, iz, s, actData, a;
@@ -203,7 +203,7 @@ P.getAlphaData = function (image) {
 
 
 // ### Functions invoked by a range of different action functions
-// 
+//
 // `buildImageGrid` creates an Array of Arrays which contain the indexes of each pixel in the image channel Arrays
 P.buildImageGrid = function (image) {
 
@@ -231,7 +231,7 @@ P.buildImageGrid = function (image) {
             row = [];
 
             for (x = 0; x < width; x++) {
-                
+
                 row.push(counter);
                 counter++;
             }
@@ -262,9 +262,9 @@ P.getOrAddWorkstore = function (name) {
 P.getRandomNumbers = function (items = {}) {
 
     const {
-        seed = DEFAULT_SEED, 
-        length = 0, 
-        imgWidth = 0, 
+        seed = DEFAULT_SEED,
+        length = 0,
+        imgWidth = 0,
         type = RANDOM,
     } = items;
 
@@ -377,7 +377,7 @@ P.buildImageCoordinateLookup = function (image) {
         for (let y = 0; y < height; y++) {
 
             for (let x = 0; x < width; x++) {
-                
+
                 lookup.push(_freeze([x, y]));
             }
         }
@@ -432,7 +432,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
         }
 
         const tiles = [];
-        
+
         let hold, i, iz, j, jz, x, xz, y, yz;
 
         for (j = offsetY - aHeight, jz = iHeight; j < jz; j += aHeight) {
@@ -528,7 +528,7 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
             for (i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
 
                 hold = [];
-                
+
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
 
                     if (y >= 0 && y < iHeight) {
@@ -560,10 +560,10 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
     if (iWidth && iHeight) {
 
-        let tileW = 1, 
-            tileH = 1, 
+        let tileW = 1,
+            tileH = 1,
             tileR = 1,
-            offX = 0, 
+            offX = 0,
             offY = 0,
             ang = 0,
             req = UNSET;
@@ -635,12 +635,12 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             neighbourPoints = [];
 
         let h, hz, w, wz, x, xz, y, yz,
-            pointsName = ZERO_STR; 
+            pointsName = ZERO_STR;
 
         // Check to stop the hex grid breaking when user supplies an inappropriately low `tileHeight` argument value, compared to the value supplied in the `tileRadius` argument.
         if (req == HEX_GRID && tileH / tileR < 1.05) tileH = tileR * 1.05;
 
-        let i, iz, cursor, ref, 
+        let i, iz, cursor, ref,
             counter = 0,
             halfW = _floor(tileW / 2),
             halfH = _floor(tileH / 2),
@@ -975,7 +975,7 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
     for (y = 0; y < iHeight; y++) {
 
         for (x = 0; x < iWidth; x++) {
-            
+
             pos = ((y * iWidth) + x) * 4;
             cell = [];
 
@@ -1100,7 +1100,7 @@ P.processResults = function (store, incoming, ratio) {
 
     const sData = store.data,
         iData = incoming.data;
-    
+
     let antiRatio, i, iz;
 
     if (ratio == 1) {
@@ -1191,7 +1191,7 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data,
             len = iData.length;
-        
+
         let r, g, b, a, aVal, i;
 
         let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
@@ -1233,7 +1233,7 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data,
             len = iData.length;
-        
+
         let a, j, jz, tVal;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut } = requirements;
@@ -1275,7 +1275,7 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data,
             len = iData.length;
-        
+
         let i, avg, r, g, b, a;
 
         let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
@@ -1318,7 +1318,7 @@ P.theBigActionsObject = _freeze({
                     oData[a] = iData[a];
                 }
                 else {
-    
+
                     oData[r] = (excludeRed) ? 0 : iData[r];
                     oData[g] = (excludeGreen) ? 0 : iData[g];
                     oData[b] = (excludeBlue) ? 0 : iData[b];
@@ -1333,15 +1333,15 @@ P.theBigActionsObject = _freeze({
                 oData[a] = iData[a];
             }
         }
-        
+
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
 
 // DEPRECATED! __binary__ - use the updated `threshold` filter instead, which now incorporates binary filter functionality
 //
-// __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. 
-// + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. 
+// __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations.
+// + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'.
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [BLEND]: function (requirements) {
 
@@ -1368,7 +1368,7 @@ P.theBigActionsObject = _freeze({
                 my = y - offsetY;
 
             let mPos = -1;
-            
+
             const iPos = ((iy * iWidth) + ix) * 4;
 
             if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
@@ -1999,7 +1999,7 @@ P.theBigActionsObject = _freeze({
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. 
+// __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect.
 // Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
     [BLUR]: function (requirements) {
 
@@ -2012,7 +2012,7 @@ P.theBigActionsObject = _freeze({
                 if (h != null) {
 
                     const l = h.length;
-                    
+
                     let valCounter = 0,
                         total = 0,
                         index, t;
@@ -2039,7 +2039,7 @@ P.theBigActionsObject = _freeze({
                 if (h != null) {
 
                     const l = h.length;
-                    
+
                     let valCounter = 0,
                         total = 0,
                         index, t, a, hVal;
@@ -2069,7 +2069,7 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length,
             pixelLen = _floor(len / 4);
-        
+
         let counter, r, g, b, a, pass;
 
         let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, step, lineOut} = requirements;
@@ -2159,7 +2159,7 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data,
             len = iData.length;
-        
+
         let r, g, b, a, vr, vg, vb, i, sum;
 
         let {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
@@ -2214,7 +2214,7 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data,
             len = iData.length;
-        
+
         let r, g, b, a, vr, vg, vb, i, iz, j, flag;
 
         let {opacity, ranges, lineOut} = requirements;
@@ -2263,7 +2263,7 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data,
             len = iData.length;
-        
+
         let r, g, b, a, vr, vg, vb, va, i;
 
         let {opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue, lineOut} = requirements;
@@ -2331,7 +2331,7 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data,
             len = iData.length;
-        
+
         let r, g, b, a, vr, vg, vb, i;
 
         let {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
@@ -2398,7 +2398,7 @@ P.theBigActionsObject = _freeze({
                 my = y - offsetY;
 
             let mp = -1;
-            
+
             const ip = ((iy * iWidth) + ix) * 4;
 
             if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mp = ((my * mWidth) + mx) * 4;
@@ -2739,10 +2739,10 @@ P.theBigActionsObject = _freeze({
 
                 case 'lowest' :
                     return min;
-                
+
                 case 'highest' :
                     return max;
-                
+
                 default :
                     return _floor(min + ((max - min) / 2));
             }
@@ -2770,7 +2770,7 @@ P.theBigActionsObject = _freeze({
         const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
         const m = _floor(len / 4);
-        
+
         let r, g, b, a, i;
 
         for (i = 0; i < m; i++) {
@@ -2933,7 +2933,7 @@ P.theBigActionsObject = _freeze({
             remains = ((angle % 45) / 45) * strength,
             weights = new Array(9);
 
-        weights = weights.fill(0, 0, 9); 
+        weights = weights.fill(0, 0, 9);
         weights[4] = 1;
 
         if (slices == 0) {
@@ -3016,8 +3016,8 @@ P.theBigActionsObject = _freeze({
                     oG = oData[g];
                     oB = oData[b];
 
-                    if (oR >= iR - tolerance && oR <= iR + tolerance && 
-                        oG >= iG - tolerance && oG <= iG + tolerance && 
+                    if (oR >= iR - tolerance && oR <= iR + tolerance &&
+                        oG >= iG - tolerance && oG <= iG + tolerance &&
                         oB >= iB - tolerance && oB <= iB + tolerance) {
 
                         if (keepOnlyChangedAreas) oData[a] = 0;
@@ -3297,7 +3297,7 @@ P.theBigActionsObject = _freeze({
             iWidth = input.width,
             iHeight = input.height,
             i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
-            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor, 
+            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor,
             dr, dg, db, da, ur, ug, ub, ua;
 
         let {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, lineOut} = requirements;
@@ -3320,7 +3320,7 @@ P.theBigActionsObject = _freeze({
         if (null == transparentEdges) transparentEdges = false;
 
         const rnd = this.getRandomNumbers({
-            seed, 
+            seed,
             length: iHeight * 5,
         });
 
@@ -3358,7 +3358,7 @@ P.theBigActionsObject = _freeze({
                     shiftG = (offsetGreenMin + _floor(rnd[++rndCursor] * greenRange)) * 4;
                     shiftB= (offsetBlueMin + _floor(rnd[++rndCursor] * blueRange)) * 4;
                     shiftA= (offsetAlphaMin + _floor(rnd[++rndCursor] * alphaRange)) * 4;
-                    
+
                     for (j = 0; j < step; j++) {
 
                         rows.push(shiftR, shiftG, shiftB, shiftA);
@@ -3724,7 +3724,7 @@ P.theBigActionsObject = _freeze({
             grays.length = 0;
             calcGrays.length = 0;
 
-            let avg = 0, 
+            let avg = 0,
                 i, r, g, b, a, gray,
                 l = tile.length,
                 pattern;
@@ -3745,7 +3745,7 @@ P.theBigActionsObject = _freeze({
 
             if (width === 1) grays.push(...pattern);
             else {
-                
+
                 gray = pattern[0];
                 for (i = 0; i < width; i++) {
                     calcGrays.push(gray);
@@ -3970,9 +3970,9 @@ P.theBigActionsObject = _freeze({
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __process-image__ - Add an asset to the filter, which can then be used by other filters as either their `lineIn` or `lineMix` inputs. 
+// __process-image__ - Add an asset to the filter, which can then be used by other filters as either their `lineIn` or `lineMix` inputs.
 // + `asset` - the String name of the asset object. The asset must be pre-loaded before it can be included in the filter; where things go wrong, the system will attempt to load a 1x1 transparent pixel in place of the asset.
-// + `width` and `height` - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions). 
+// + `width` and `height` - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions).
 // + `copyX`, `copyY`, `copyWidth`, `copyHeight` - the start and dimensions of the area of the image to be used in the filter; values are integer Number pixels, or % strings relative to the image's natural dimensions.
 // + If the image's dimensions differ from the source entity/Group/Cell dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left.
 // + Filters will run faster when the asset's dimensions match the dimensions of the entity/Group/Cell to which the filter is being applied.
@@ -3996,7 +3996,7 @@ P.theBigActionsObject = _freeze({
                     let temp = new ImageData(sWidth, sHeight),
                         tempData = temp.data,
                         tx, ty, tempCursor, inputCursor,
-                        dx = (sWidth - width) / 2, 
+                        dx = (sWidth - width) / 2,
                         dy = (sHeight - height) / 2;
 
                     if (dx < 0) dx = 0;
@@ -4059,7 +4059,7 @@ P.theBigActionsObject = _freeze({
         if (null == excludeTransparentPixels) excludeTransparentPixels = true;
 
         const rnd = this.getRandomNumbers({
-            seed, 
+            seed,
             length: _ceil((len / 4) * 3),
             imgWidth: iWidth,
             type: noiseType,
@@ -4080,7 +4080,7 @@ P.theBigActionsObject = _freeze({
             a = b + 1;
 
             if (noiseType == RANDOM) {
-                
+
                 rndLevel = rnd[++rndCursor];
                 rndWidth = rnd[++rndCursor];
                 rndHeight = rnd[++rndCursor];
@@ -4239,7 +4239,7 @@ P.theBigActionsObject = _freeze({
             const [candidate1, distance1] = distance[1];
             const totalscore = distance0 + distance1;
             const propensity0 = totalscore - distance0;
-                
+
             const test = rnd[rndCursor] * totalscore;
 
             if (test < propensity0) return candidate0;
@@ -4252,7 +4252,7 @@ P.theBigActionsObject = _freeze({
             const candidates = [],
                 final = [];
 
-            let f, fz, fIndex, fr, fg, fb, 
+            let f, fz, fIndex, fr, fg, fb,
                 k, kz, kIndex, kr, kg, kb,
                 dr, dg, db, dFlag;
 
@@ -4350,9 +4350,9 @@ P.theBigActionsObject = _freeze({
 
             const pl = pal.length;
 
-            let palIndex, counter, 
-                palL, palA, palB, 
-                pixL, pixA, pixB, 
+            let palIndex, counter,
+                palL, palA, palB,
+                pixL, pixA, pixB,
                 diff, dL, dA, dB,
                 j, totalScore, propensity;
 
@@ -4400,7 +4400,7 @@ P.theBigActionsObject = _freeze({
 
             totalScore = distance0 + distance1;
             propensity = totalScore - distance0;
-            
+
             test *= totalScore;
 
             if (test < propensity) return candidate0;
@@ -4417,7 +4417,7 @@ P.theBigActionsObject = _freeze({
             len = iData.length,
             quarterLen = len / 4,
             i, index,
-            r, g, b, a, red, green, blue, alpha, gray, 
+            r, g, b, a, red, green, blue, alpha, gray,
             rndCursor, indicesCursor, dataCursor,
             selectedPalette;
 
@@ -4687,7 +4687,7 @@ P.theBigActionsObject = _freeze({
             len = iData.length,
             iWidth = input.width,
             iHeight = input.height,
-            r, g, b, a, s, sz, pos, x, y, xz, yz, i, j, 
+            r, g, b, a, s, sz, pos, x, y, xz, yz, i, j,
             distance, dr, dg, db, da, dx, dy, dLen;
 
         const tempInput = new ImageData(iWidth, iHeight),
@@ -4775,7 +4775,7 @@ P.theBigActionsObject = _freeze({
                         for (i = y; i < yz; i++) {
 
                             for (j = x; j < xz; j++) {
-                                
+
                                 pos = [j, i];
 
                                 r = grid[i][j] * 4;
@@ -4828,7 +4828,7 @@ P.theBigActionsObject = _freeze({
                     for (i = y; i < yz; i++) {
 
                         for (j = x; j < xz; j++) {
-                            
+
                             r = grid[i][j] * 4;
                             g = r + 1;
                             b = g + 1;
@@ -4847,9 +4847,9 @@ P.theBigActionsObject = _freeze({
                     }
 
                     for (i = y; i < yz; i++) {
-                        
+
                         for (j = x; j < xz; j++) {
-                            
+
                             r = grid[i][j] * 4;
                             g = r + 1;
                             b = g + 1;
@@ -4869,7 +4869,7 @@ P.theBigActionsObject = _freeze({
     },
 
 // __threshold__ - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color
-// + By default this filter will grayscale the input then, for each pixel, check the color channel values against a `level` argument: pixels with grayscale values above the level value are assigned to the `high` color; otherwise they are updated to the `low` color. The "high" and "low" arguments are `[red, green, blue, alpha]` integer Number Arrays. 
+// + By default this filter will grayscale the input then, for each pixel, check the color channel values against a `level` argument: pixels with grayscale values above the level value are assigned to the `high` color; otherwise they are updated to the `low` color. The "high" and "low" arguments are `[red, green, blue, alpha]` integer Number Arrays.
 // + The convenience function will accept the pseudo-attributes `highRed`, `lowRed` etc in place of the "high" and "low" Arrays.
 // + When the `useMixedChannel` flag is set to `false` then the filter will perform the threshold check on each channel in turn; the threshold levels for these per-channel checks are set in the `red`, `green`, `blue` and `alpha` arguments
 // + Channels can be excluded from the filter action by setting the `includeRed` etc flags to false

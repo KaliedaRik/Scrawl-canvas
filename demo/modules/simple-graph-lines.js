@@ -20,7 +20,7 @@ Data supplied to graph module as Javascript object with structure:
 
 // #### Imports and exports
 // We need to adapt the graph frame with data specific to this graph
-import { 
+import {
     api as frame,
     dims as frameDims,
 } from './simple-chart-frame.js';
@@ -87,7 +87,7 @@ api.build = function (items) {
         });
 
         // The `lines` Group
-        // + A set of line Shape entitys 
+        // + A set of line Shape entitys
         // + Use position entitys for their start and end coordinate pivots
         const lineGroup = scrawl.makeGroup({
 
@@ -99,7 +99,7 @@ api.build = function (items) {
         // The `pins` Group
         // + A set of Wheel entitys to mark the position of each data point
         // + Use position entitys as their pivots
-        // + Interactive 
+        // + Interactive
         const pinGroup = scrawl.makeGroup({
 
             name: name('pin-group'),
@@ -270,11 +270,11 @@ api.build = function (items) {
 
             switch (direction) {
 
-                case 'left' : 
+                case 'left' :
                     selectedColumn--;
                     break;
 
-                case 'right' : 
+                case 'right' :
                     selectedColumn++;
                     break;
             }

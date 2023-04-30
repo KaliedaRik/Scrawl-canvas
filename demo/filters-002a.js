@@ -1,4 +1,4 @@
-// # Demo Filters 002a 
+// # Demo Filters 002a
 // Filters - cache output to improve render speeds
 
 // [Run code](../../demo/filters-002a.html)

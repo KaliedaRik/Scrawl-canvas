@@ -1,4 +1,4 @@
-// # Demo Filters 021 
+// # Demo Filters 021
 // Filter parameters: corrode
 
 // [Run code](../../demo/filters-021.html)

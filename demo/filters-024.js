@@ -1,4 +1,4 @@
-// # Demo Filters 024 
+// # Demo Filters 024
 // Filter parameters: curveWeights
 
 // [Run code](../../demo/filters-024.html)

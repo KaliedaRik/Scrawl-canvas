@@ -1,4 +1,4 @@
-// # Demo Canvas 020 
+// # Demo Canvas 020
 // Testing createImageFromXXX functionality
 
 // [Run code](../../demo/canvas-020.html)
@@ -233,19 +233,19 @@ scrawl.makePhrase({
     name: name('b1-phrase'),
     text: 'Block1',
     pivot: name('b1-image'),
-    
+
 }).clone({
 
     name: name('b2-phrase'),
     text: 'Block2',
     pivot: name('b2-image'),
-    
+
 }).clone({
 
     name: name('w1-phrase'),
     text: 'Wheel1',
     pivot: name('w1-image'),
-    
+
 }).clone({
 
     name: name('w2-phrase'),
@@ -266,7 +266,7 @@ scrawl.makeRender({
 
     // The Display cycle needs to run once before the entitys, Group and Cell are ready to have their images captured
     afterCreated: () => captureImages = true,
-    
+
     commence: imageCapture,
     afterShow: report,
 });
@@ -278,7 +278,7 @@ const events = function () {
 
     const base = canvas.base,
         group = base.get('group');
-    
+
     let currentTarget;
 
     return function (e) {

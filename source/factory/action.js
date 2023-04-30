@@ -121,7 +121,7 @@ P.set = function (items = Ωempty) {
 
         const setters = this.setters,
             defs = this.defs;
-        
+
         let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
@@ -229,18 +229,18 @@ P.update = function (items) {
 //     time: '6.25%',
 //
 //     // 'action' and 'revert' functions, to be applied to targets
-//     action: function () { 
-//         element.set({ 
-//             css: { 
-//                 backgroundColor: 'red', 
+//     action: function () {
+//         element.set({
+//             css: {
+//                 backgroundColor: 'red',
 //             },
 //         });
 //     },
 //
 //     revert: function () {
-//         element.set({ 
-//             css: { 
-//                 backgroundColor: 'blue', 
+//         element.set({
+//             css: {
+//                 backgroundColor: 'blue',
 //             },
 //         });
 //     },

@@ -1,4 +1,4 @@
-// # Demo Particles 009 
+// # Demo Particles 009
 // Net particles: drag-and-drop; collisions
 
 // [Run code](../../demo/particles-009.html)
@@ -130,7 +130,7 @@ const myNet = scrawl.makeNet({
 
             if (regex.test(p.name)) {
 
-                p.set({ 
+                p.set({
                     fill: 'lightgrey',
                     stroke: 'red',
                     forces: [],
@@ -177,7 +177,7 @@ const myNet = scrawl.makeNet({
         fillStyle: 'yellow',
         strokeStyle: 'gold',
 
-        visibility: false, 
+        visibility: false,
 
         noUserInteraction: true,
         noPositionDependencies: true,
@@ -189,10 +189,10 @@ const myNet = scrawl.makeNet({
 
         const [ , , ...start] = particle.history[0];
 
-        artefact.simpleStamp(host, { 
+        artefact.simpleStamp(host, {
             start,
-            fillStyle: particle.fill, 
-            strokeStyle: particle.stroke, 
+            fillStyle: particle.fill,
+            strokeStyle: particle.stroke,
         });
     },
 

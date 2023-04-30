@@ -1,4 +1,4 @@
-// # Demo Canvas 045 
+// # Demo Canvas 045
 // Use clipping entitys as pivots; clipping entitys and cascade events
 
 // [Run code](../../demo/canvas-045.html)
@@ -110,7 +110,7 @@ scrawl.makeBlock({
   start: ['72%', '76%'],
   dimensions: ['12%', '16%'],
   method: 'none',
-  onEnter: function () { 
+  onEnter: function () {
     if (!detailsTween.isRunning()) detailsTween.run();
   },
 });

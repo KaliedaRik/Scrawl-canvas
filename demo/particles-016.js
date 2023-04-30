@@ -1,4 +1,4 @@
-// # Demo Particles 016 
+// # Demo Particles 016
 // Mesh entitys
 
 // [Run code](../../demo/particles-016.html)
@@ -63,7 +63,7 @@ scrawl.makeNet({
         strokeStyle: 'white',
         lineWidth: 2,
 
-        visibility: false, 
+        visibility: false,
 
         noUserInteraction: true,
         noPositionDependencies: true,
@@ -75,10 +75,10 @@ scrawl.makeNet({
 
         const [ , , ...start] = particle.history[0];
 
-        artefact.simpleStamp(host, { 
+        artefact.simpleStamp(host, {
             start,
-            fillStyle: particle.fill, 
-            strokeStyle: particle.stroke, 
+            fillStyle: particle.fill,
+            strokeStyle: particle.stroke,
         });
     },
 

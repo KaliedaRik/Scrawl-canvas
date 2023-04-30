@@ -84,7 +84,7 @@ const defaultAttributes = {
     // `damperConstant` - float Number. Larger values forces the spring to take a longer time to come to equilibrium. Suggested values: 5 - 50
     damperConstant: 10,
 
-    // `restLength` - The spring's ideal length - the further away from its ideal, the more force the spring will apply to its connected body objects to get them back to their optimal distance 
+    // `restLength` - The spring's ideal length - the further away from its ideal, the more force the spring will apply to its connected body objects to get them back to their optimal distance
     restLength: 1,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -195,7 +195,7 @@ P.applySpring = function () {
 //             particleFrom: leftParticle,
 //             particleTo: rightParticle,
 //
-//             springConstant, 
+//             springConstant,
 //             damperConstant,
 //
 //             restLength: 100,

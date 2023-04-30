@@ -1,4 +1,4 @@
-// # Demo Filters 015 
+// # Demo Filters 015
 // Filter parameters: tiles
 
 // [Run code](../../demo/filters-015.html)

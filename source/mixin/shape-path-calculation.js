@@ -75,9 +75,9 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
         myLen = 0,
         i, iz, j, jz,
         checkMatch,
-        curX = 0, 
-        curY = 0, 
-        oldX = 0, 
+        curX = 0,
+        curY = 0,
+        oldX = 0,
         oldY = 0,
         reflectX = 0,
         reflectY = 0;
@@ -106,7 +106,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
         oldY = curY;
     };
 
-    // The purpose of this loop is to 
+    // The purpose of this loop is to
     // 1. convert all point values from strings to floats
     // 2. scale every value
     // 3. relativize every value to the last stated cursor position
@@ -133,9 +133,9 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                     oldY = (points[1] * scale) - start.y;
                     command = 'm';
                 }
-            } 
+            }
             else {
-                
+
                 oldX = curX;
                 oldY = curY;
             }
@@ -366,7 +366,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
 
     result.localPath = localPath;
 
-    // Calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box 
+    // Calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box
     if (useAsPath) {
 
         // Request a vector - used for reflection points
@@ -394,15 +394,15 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                     case 'v' :
                         units[i] = [LINEAR, x, y, x, p[0] + y];
                         break;
-                        
+
                     case 'm' :
                         units[i] = [MOVE, x, y];
                         break;
-                        
+
                     case 'l' :
                         units[i] = [LINEAR, x, y, p[0] + x, p[1] + y];
                         break;
-                        
+
                     case 't' :
                         if (prevData && (prevData.rx || prevData.ry)) {
 
@@ -413,11 +413,11 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         }
                         else units[i] = [QUADRATIC, x, y, x, y, p[0] + x, p[1] + y];
                         break;
-                        
+
                     case 'q' :
                         units[i] = [QUADRATIC, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
                         break;
-                        
+
                     case 's' :
                         if (prevData && (prevData.rx || prevData.ry)) {
 
@@ -428,15 +428,15 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         }
                         else units[i] = [BEZIER, x, y, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
                         break;
-                        
+
                     case 'c' :
                         units[i] = [BEZIER, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y, p[4] + x, p[5] + y];
                         break;
-                        
+
                     case 'a' :
                         units[i] = [LINEAR, x, y, p[5] + x, p[6] + y];
                         break;
-                        
+
                     case 'z' :
                         if (isNaN(x)) x = 0;
                         if (isNaN(y)) y = 0;
@@ -469,7 +469,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                     progression.push(localResults.progression);
                     positions.push(localResults.positions);
                     break;
-                    
+
                 default :
                     unitLengths[i] = 0;
             }
@@ -524,7 +524,7 @@ const rotateVector = function (v, angle) {
 
     let arg = _atan2(v.y, v.x);
     arg += (angle * 0.01745329251);
-    
+
     const mag = _sqrt((v.x * v.x) + (v.y * v.y));
 
     v.x = mag * _cos(arg);

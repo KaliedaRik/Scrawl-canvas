@@ -1,4 +1,4 @@
-// # Demo Filters 022 
+// # Demo Filters 022
 // Filter parameters: mapToGradient
 
 // [Run code](../../demo/filters-022.html)

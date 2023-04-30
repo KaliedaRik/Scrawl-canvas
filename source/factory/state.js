@@ -1,5 +1,5 @@
 // # State factory
-// Scrawl-canvas uses State objects to keep track of Cell object [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) rendering engine state. 
+// Scrawl-canvas uses State objects to keep track of Cell object [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) rendering engine state.
 //
 // Every entity object also has a State object. Before an entity is 'stamped' onto a Cell &lt;canvas> their State objects are compared, to draw up a list of changes required by the entity to bring the engine's state into alignment.
 // + State objects are not stored in the Scrawl-canvas library; they can only be accessed through their Cell or entity object.
@@ -163,7 +163,7 @@ P.processPacketOut = function (key, value, incs) {
 
     switch (key) {
 
-        case LINE_DASH : 
+        case LINE_DASH :
 
             if (!value.length) {
 
@@ -171,7 +171,7 @@ P.processPacketOut = function (key, value, incs) {
             }
             break;
 
-        default : 
+        default :
 
             if (!incs.includes(key) && value === this.defs[key]) result = false;
     }
@@ -203,7 +203,7 @@ P.set = function (items = Ωempty) {
 
     const keys = _keys(items),
         keysLen = keys.length;
-    
+
     let key, i,
         d = this.defs;
 
@@ -230,7 +230,7 @@ P.get = function (item) {
     d = this.defs[item];
 
     if (d != null) {
-    
+
         i = this[item];
         return (i != null) ? i : d;
     }

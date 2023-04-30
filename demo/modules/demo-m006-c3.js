@@ -41,7 +41,7 @@ export default function (items) {
 
     canvas.set({
         title,
-        label: 'An interactive canvas. An arrow appears in the center; its outline is drawn as the user scrolls. Labels tell the user the canvas shape and size. These labels are draggable. Links appear in the bottom corners.', 
+        label: 'An interactive canvas. An arrow appears in the center; its outline is drawn as the user scrolls. Labels tell the user the canvas shape and size. These labels are draggable. Links appear in the bottom corners.',
     }).setAsCurrentCanvas();
 
     const animGroup = scrawl.makeGroup({
@@ -136,14 +136,14 @@ export default function (items) {
         exposeText: false,
 
         onEnter: function () {
-            canvas.set({ 
+            canvas.set({
                 css: { cursor: 'pointer' },
                 title: 'https://en.wikipedia.org/wiki/Arrow',
             });
             this.set({ text: `§UNDERLINE§${this.text}`});
         },
         onLeave: function () {
-            canvas.set({ 
+            canvas.set({
                 css: { cursor: 'auto' },
                 title,
             });
@@ -166,7 +166,7 @@ export default function (items) {
         text: 'Labels',
 
         onEnter: function () {
-            canvas.set({ 
+            canvas.set({
                 css: { cursor: 'pointer' },
                 title: 'https://en.wikipedia.org/wiki/Label',
             });
@@ -357,7 +357,7 @@ export default function (items) {
         name: name('world'),
 
         userAttributes: [{
-            key: 'progress', 
+            key: 'progress',
             defaultValue: 0,
             setter: function (item) {
 
@@ -365,7 +365,7 @@ export default function (items) {
 
                 if (arrow.length != null) {
 
-                    arrow.set({ 
+                    arrow.set({
                         lineDashOffset: balance - Math.round(arrow.length * item),
                     });
                 }

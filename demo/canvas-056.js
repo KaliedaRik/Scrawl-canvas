@@ -1,4 +1,4 @@
-// # Demo Canvas 056 
+// # Demo Canvas 056
 // Seeded random number generator; point on path
 
 // [Run code](../../demo/canvas-056.html)
@@ -74,7 +74,7 @@ const secondOutline = scrawl.makeShape({
 });
 
 
-// We recalculate the Shape entity's pathDefinition value each time the user updates a control or drags one of the Polyline entity's pins. 
+// We recalculate the Shape entity's pathDefinition value each time the user updates a control or drags one of the Polyline entity's pins.
 let currentOutline = '';
 
 const checkOutlines = function () {

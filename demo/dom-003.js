@@ -87,7 +87,7 @@ stack.addNewElement({
         border: '1px solid red',
         cursor: 'grab',
     },
-    
+
 }).clone({
 
     name: 'list-no-border',

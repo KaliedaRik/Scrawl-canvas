@@ -1,4 +1,4 @@
-// # Demo Canvas 034 
+// # Demo Canvas 034
 // Determine the displayed shape of the visible canvas; react to changes in the displayed shape
 
 // [Run code](../../demo/canvas-034.html)
@@ -26,7 +26,7 @@ const mytext = scrawl.makePhrase({
     fillStyle: 'black',
 });
 
-// Scrawl-canvas recognises five shapes, separated by four breakpoints: 
+// Scrawl-canvas recognises five shapes, separated by four breakpoints:
 // + `banner`
 // + `landscape`
 // + `rectangle`
@@ -34,7 +34,7 @@ const mytext = scrawl.makePhrase({
 // + `skyscraper`
 //
 // The values assigned to the breakpoints are Float numbers for the displayed Canvas element's width/height ratio - the value `3` represents the case where the width value is three times __more__ than the height value, while `0.35` represents a width (roughly) 3 times __less__ than the height.
-// 
+//
 // We can set a Canvas artefact's breakpoints in one go using the dedicated `setDisplayShapeBreakpoints()` function, as below. Alternatively we can use the regular `set()` function, supplying the attributes `breakToBanner`, `breakToLandscape`, `breakToPortrait` and `breakToSkyscraper` as required. The values given here are the default values for Canvas artefacts.
 //
 // Similar functionality exists to adjust to the current (base) Cell area (width * height)

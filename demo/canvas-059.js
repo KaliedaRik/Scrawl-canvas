@@ -1,4 +1,4 @@
-// # Demo Canvas 059 
+// # Demo Canvas 059
 // CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab()
 
 // [Run code](../../demo/canvas-059.html)

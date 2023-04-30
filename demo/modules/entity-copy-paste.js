@@ -24,11 +24,11 @@
 const initializeEntityCopyPaste = (items = {}, scrawl) => {
 
     // Check we have required arguments/values
-    const { 
-        canvas, 
-        selectedEntitys, 
-        addControllerAttributes, 
-        updateControllerDisplay, 
+    const {
+        canvas,
+        selectedEntitys,
+        addControllerAttributes,
+        updateControllerDisplay,
         dashboard,
         createGui,
     } = items;

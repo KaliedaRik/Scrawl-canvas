@@ -1,32 +1,32 @@
 // # Position mixin
-// This mixin defines the key attributes and functionality of Scrawl-canvas __artefact objects__. 
+// This mixin defines the key attributes and functionality of Scrawl-canvas __artefact objects__.
 //
 // We define an artefact as something that can be displayed in a Scrawl-canvas [Canvas](../factory/stack.html) or [Stack](../factory/stack.html) wrapper - both of which wrap DOM elements in the web page document - &lt;canvas>, and other DOM elements (most commonly a &lt;div> element), respectively.
-// + We call canvas based artefacts __entity objects__ - these objects represent a shape, path or image drawn in the canvas. 
+// + We call canvas based artefacts __entity objects__ - these objects represent a shape, path or image drawn in the canvas.
 // + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Phrase](../factory/phrase.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; and [Wheel](../factory/wheel.html).
 // + __Other artefacts__ live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and [Element](../factory/element.html) wrappers for other direct child elements.
 //
 // ##### Positioning
 // Artefacts break away from the normal flow mechanisms of the HTML document; instead they are explicitly positioned within their containers in a variety of ways:
-// + __absolute__ positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (`[0, 0]`, `[347, 26.4]`, etc). 
+// + __absolute__ positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (`[0, 0]`, `[347, 26.4]`, etc).
 // + __relative__ positioning - where we supply the artefact with percentage coordinates, with `['0%', '0%']` representing the top left corner of the container, and `['100%', '100%']` its bottom right corner.
 // + __reference__ positioning - this is where an artefact will use another artefact's ___current___ (not given) coordinate to determine its own position. We can reference by `pivot`, or by `mimic`, or by `path`.
 //
 // Scrawl-canvas uses [Coordinate Arrays](../factory/coordinate.html) - `[x, y]` - for storing artefact coordinates. The ___Javascript types___ of the `x` and `y` parts of the coordinate can be either Numbers or Strings, and do not need to match each other: `['5%', 20]` and `[10, '15.4%']` are as valid as `[10, 20]` and `['5%', '15.4%']`.
 //
 // ##### The artefact 'rotation-reflection' point
-// Every artefact has a __start__ coordinate which, by default, is set at the artefact's top-left corner - even for Wheels and Shapes! 
-// + When we rotate an artefact, we rotate it around this coordinate. When we ___flip___ entity artefacts, we flip them around the artefact's local horizontal or vertical axis drawn through this coordinate. 
+// Every artefact has a __start__ coordinate which, by default, is set at the artefact's top-left corner - even for Wheels and Shapes!
+// + When we rotate an artefact, we rotate it around this coordinate. When we ___flip___ entity artefacts, we flip them around the artefact's local horizontal or vertical axis drawn through this coordinate.
 // + Thus what we call a 'start' coordinate is in fact the artefact's __Rotation-Reflection__ point.
 //
 // The R-R point does not need to be at the artefact's top-left corner. We can move it by giving the artefact a __handle__ coordinate - a distance measured from the artefact's top-left corner. Just as for the start coordinate, we can set the handle coordinate using absolute, relative or reference values:
-// + __absolute__ handles - where we give the artefact a distance, measured in pixels from its top left corner . 
+// + __absolute__ handles - where we give the artefact a distance, measured in pixels from its top left corner .
 // + __relative__ handles - where we supply the artefact with percentage distances measured against the artefact's own dimensions.
 // + __reference__ handles.
 // + In all cases, ___the distancing effect is along the artefact's local horizontal and vertical axes___ - if the artefact is rotated, then those axes will not be perpendicular to the containing Canvas or Stack axes.
 //
 // Normally this is enough information to position an artefact in its container. However there may be times when we need to move the artefact's R-R point a given distance along the container axes. We can achieve this by giving the artefact an __offset__ coordinate.
-// + __absolute__ offsets - where we give the artefact a distance, measured in pixels from its top left corner. 
+// + __absolute__ offsets - where we give the artefact a distance, measured in pixels from its top left corner.
 // + __relative__ offsets - where we supply the artefact with percentage distances measured against the ___container's dimensions___.
 // + __reference__ offsets.
 //
@@ -36,7 +36,7 @@
 // Another use for Coordinate Arrays is to __set the artefact's dimensions - their width and height values__. In this case we can think of the coordinate in terms of `[w, h]`. All artefacts, except Shape and Loom entitys, require dimension data.
 //
 // Just as for positioning data, an artefact's dimensions data can be supplied in absolute, relative or reference terms:
-// + __absolute__ dimensions - where we give the artefact a width and height, measured in pixels from its top left corner. 
+// + __absolute__ dimensions - where we give the artefact a width and height, measured in pixels from its top left corner.
 // + __relative__ dimensions - where we supply the artefact with percentage widths and height values, measured against the ___container's dimensions___.
 // + __reference__ dimensions.
 //
@@ -78,10 +78,10 @@
 // ```
 //
 // ##### Referencing other artefacts
-// Scrawl-canvas allows an artefact to reference other artefacts. The referenced objects supply data back to the first artefact, which it then uses to update its position and dimensions. 
+// Scrawl-canvas allows an artefact to reference other artefacts. The referenced objects supply data back to the first artefact, which it then uses to update its position and dimensions.
 // + This all happens automatically once the reference is set up, with updates occuring as part of the Scrawl-canvas __Display cycle__.
 // + To move a group of artefacts as a single unit, we can set up one as the reference artefact, with the rest using handles and offsets to supply distancing data from the reference. Updates to the reference artefact will now be transmitted automatically to all artefacts using it as their `pivot` or `mimic`.
-// 
+//
 // We __create a reference__ by setting the value of one or more of the following attributes to a reference artefact's name-String, or to the object itself:
 // + `pivot` - once set, we can then use the referenced artefact's __start__ coordinate as this artefact's start value. With appropriate flags set, we can add this artefact's __handle__ and __offset__ coordinates to the start value.
 // + `mimic` - extends the 'pivot' concept to include dimensions, alongside adding this artefact's data to the referenced artefact's data in various ways.
@@ -101,7 +101,7 @@
 // For instance if we set the lock to `['start', 'mouse']` we can make the artefact track the mouse across the container along an (invisible) vertical line, whose position is determined by the artefact's x coordinate value.
 //
 // ##### Artefact rotation
-// Scrawl-canvas artefacts can be rotated around their __Rotation-Reflection point__: 
+// Scrawl-canvas artefacts can be rotated around their __Rotation-Reflection point__:
 // + Entity artefacts, being representations of 2-dimensional graphical shapes drawn on a &lt;canvas> element, are restricted to rotating around the R-R point's ___z-axis___.
 // + Other artefacts, when part of a Stack container, can be rotated in 3 dimensions along the R-R point's ___x-axis___, ___y-axis___ and ___z-axis___.
 //
@@ -111,12 +111,12 @@
 // + __pitch__ - for `x-axis` rotations
 //
 // These __euler__ attributes are named after the [Aircraft principal axes](https://en.wikipedia.org/wiki/Aircraft_principal_axes) - mainly because I find it difficult to keep the mathematical representations in my head when thinking about rotations in 3 dimensions, but an image of an aircraft is a lot easier to visualize.
-// + Internally, Scrawl-canvas stores rotational data in [Quaternion objects](../factory/quaternion.html) rather than in matrices. 
-// 
-// Instead of 3D rotations, entity artefacts have two Boolean flags - __flipReverse__, __flipUpend__ - which determine the orientation of the entity when it stamps itself on the display. 
+// + Internally, Scrawl-canvas stores rotational data in [Quaternion objects](../factory/quaternion.html) rather than in matrices.
+//
+// Instead of 3D rotations, entity artefacts have two Boolean flags - __flipReverse__, __flipUpend__ - which determine the orientation of the entity when it stamps itself on the display.
 // + a `reversed` entity is effectively flipped 180&deg; around a vertical line passing through that entity's rotation-reflection (start) point - a face looking to the right will now look to the left
 // + an `upended` entity is effectively flipped 180&deg; around a horizontal line passing through that entity's rotation-reflection (start) point - a normal face will now appear upside-down
-// 
+//
 // We can ___emulate 3D rotations for Picture entity artefacts___ using the [Loom entity](../factory/loom.html) - see Demo [DOM-015](../../demo/dom-015.html) for an example of this in action.
 //
 // ##### Collision detection
@@ -386,10 +386,10 @@ export default function (P = Ωempty) {
 
         // Factory-specific actions required to complete the kill
         this.factoryKill(flag1, flag2);
-        
+
         // Remove artefact from the Scrawl-canvas library
         this.deregister();
-        
+
         return this;
     };
 
@@ -832,9 +832,9 @@ export default function (P = Ωempty) {
     };
 
 
-// `initializePositions` - Internal function called by all artefact factories 
+// `initializePositions` - Internal function called by all artefact factories
 // + Setup initial Arrays and Objects, including `current...` and `...Subscriber` Arrays.
-// + Create a variety of `dirty...` flags, setting them all to true. 
+// + Create a variety of `dirty...` flags, setting them all to true.
     P.initializePositions = function () {
 
         this.dimensions = makeCoordinate();
@@ -1266,7 +1266,7 @@ export default function (P = Ωempty) {
                 if (this.addOwnRotationToMimic) r += myroll;
             }
             else this.dirtyMimicRotation = true;
-        } 
+        }
         else {
 
             r = myroll;
@@ -1288,7 +1288,7 @@ export default function (P = Ωempty) {
     };
 
 
-// `cleanStampPositions` 
+// `cleanStampPositions`
 // + the __currentStampPosition__ Coordinate represents the combination of __start__ and __offset__ Coordinates to determine the current value of the artefact's _Rotation-Reflection point_.
 // + The calculation does not take into account the __handle__ Coordinate which, for entity artefacts, gets applied after the canvas engine transformation is performend for its stamp operation.
 // + DOM-based artefacts will also take handle values into consideration after the fact.
@@ -1419,7 +1419,7 @@ export default function (P = Ωempty) {
             };
 
             const localLockArray = requestCoordinate();
-            
+
             let hereFlag = false,
                 lock, here, pathData;
 
@@ -1434,7 +1434,7 @@ export default function (P = Ωempty) {
                 if (this.getCornerCoordinate) this.cleanPathObject();
             }
             else {
-                
+
                 for (let i = 0; i < 2; i++) {
 
                     lock = confirmLock(lockTo[i]);
@@ -1471,8 +1471,8 @@ export default function (P = Ωempty) {
     };
 
 
-// `cleanStampHandlePositions` 
-// + an entity's __currentStampHandlePosition__ values get applied after the canvas grid has been set up for the stamp operation. 
+// `cleanStampHandlePositions`
+// + an entity's __currentStampHandlePosition__ values get applied after the canvas grid has been set up for the stamp operation.
 // + Entities include handle values as part of their 'path' calculation.
 // + DOM-based artefacts include handle values as part of their CSS transform string.
 // + Handle values DO scale, but not here; that happens when the transform/path is recalculated.
@@ -1535,8 +1535,8 @@ export default function (P = Ωempty) {
                 stampHandle[i] = coord;
             }
         }
-        
-        // At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. 
+
+        // At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality.
         this.cleanStampHandlePositionsAdditionalActions();
 
         if (oldX != stampHandle[0] || oldY != stampHandle[1]) this.dirtyPositionSubscribers = true;
@@ -1545,7 +1545,7 @@ export default function (P = Ωempty) {
 
 
 // `checkHit`
-// + We use pool Cells (see [Cell code](../factory/cell.html)) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact. 
+// + We use pool Cells (see [Cell code](../factory/cell.html)) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact.
 // + This works both for entitys and for DOM-based artefacts.
     P.checkHit = function (items = [], mycell) {
 
@@ -1556,7 +1556,7 @@ export default function (P = Ωempty) {
         const tests = (!_isArray(items)) ?  [items] : items;
 
         let flag = false,
-            x = 0, 
+            x = 0,
             y = 0;
 
         if (!mycell) {
@@ -1598,9 +1598,9 @@ export default function (P = Ωempty) {
 
             return val;
         }
-        
+
         if (flag) releaseCell(mycell);
-        
+
         return false;
     };
 
@@ -1695,11 +1695,11 @@ export default function (P = Ωempty) {
     };
 
 // #### Subscription management
-// Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes. 
+// Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes.
 // + This notification happens when an artefact completes cleaning its attributes and detects that there have been changes which other artefacts need to be aware.
-// + The artefact doesbn't change any values in artefacts which have subscribed to them - unlike asset objects, which do directly update attribute values in their subscribing artefacts. 
+// + The artefact doesbn't change any values in artefacts which have subscribed to them - unlike asset objects, which do directly update attribute values in their subscribing artefacts.
 // + Instead, the artefact sets the appropriate `dirty` flags which the subscribing artefacts can process as they progress through the Display cycle.
-// + Because the update functionality cascades from one controlling function - `updatePositionSubscribers` - we also define a range of subsidiary functions here 
+// + Because the update functionality cascades from one controlling function - `updatePositionSubscribers` - we also define a range of subsidiary functions here
 // + TODO: some of the subsidiary functions should be moved to more appropriate factory code?
 
 // `updatePositionSubscribers`

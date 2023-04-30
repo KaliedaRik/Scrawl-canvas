@@ -19,7 +19,7 @@
 // ```
 // scrawl.observeAndUpdate({
 //
-//     // The input event which will trigger the O&U 
+//     // The input event which will trigger the O&U
 //     event: ['input', 'change'],
 //
 //     // CSS selector used to gather the DOM elements this O&U will be attached to

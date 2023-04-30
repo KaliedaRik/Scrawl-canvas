@@ -1,4 +1,4 @@
-// # Demo Canvas 025 
+// # Demo Canvas 025
 // Various responsive and non-responsive canvases; responsive images
 
 // [Run code](../../demo/canvas-025.html)

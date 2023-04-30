@@ -22,11 +22,11 @@ const stackRemoveButton = document.querySelector('#stack-remove');
 const dragZones = {};
 
 
-// #### User interaction (CANVAS test) 
+// #### User interaction (CANVAS test)
 //
 // Switch canvas
 // ------------------------
-// Load a new canvas with a different namespace into the parent element. Emulates a react component render when the component details have changed. For example: 
+// Load a new canvas with a different namespace into the parent element. Emulates a react component render when the component details have changed. For example:
 // + Start with the square canvas - onboard and capture details about that canvas and associated artefacts/objects in the libarary
 // + Switch to the round canvas - capture details about that canvas and associated artefacts/objects in the libarary. __Details about the square canvas will not be removed from the library__ without specific instruction even though the related DOM canvas no longer exists
 // + Switch back to the square canvas - it is at this point that SC should recognise the details it holds about the previous canvas are no longer relevant, purge everything related to that old canvas from the library, and then repopulate with new data
@@ -34,7 +34,7 @@ const dragZones = {};
 
 // Replace canvas
 // ------------------------
-// Load a new canvas with the same namespace into the parent element. Emulates a react component render when the component details have NOT changed - the component is rendered again because something else in the page has triggered a more general render. For example: 
+// Load a new canvas with the same namespace into the parent element. Emulates a react component render when the component details have NOT changed - the component is rendered again because something else in the page has triggered a more general render. For example:
 // + Start with the square canvas - onboard and capture details about that canvas and associated artefacts/objects in the libarary
 // + Replace that canvas with another square canvas. SC needs to identify that while details about the canvas still exist, that canvas has gone and the new canvas needs to be processed and data about it - and all related artefacts/objects - stored in the library
 
@@ -53,7 +53,7 @@ const buildSquareCanvas = (namespace) => {
     console.log('build a new square canvas element', namespace);
 
     const name = n => `${namespace}-${n}`;
-    
+
     // build canvas
     const c = `
     <canvas 
@@ -151,7 +151,7 @@ const buildCircleCanvas = (namespace) => {
     console.log('build a new circle canvas element', namespace);
 
     const name = n => `${namespace}-${n}`;
-    
+
     // build canvas
     const c = `
     <canvas 
@@ -297,11 +297,11 @@ scrawl.addNativeListener('click', reloadCanvas, canvasReplaceButton);
 scrawl.addNativeListener('click', removeCanvas, canvasRemoveButton);
 
 
-// #### User interaction (STACK test) 
+// #### User interaction (STACK test)
 //
 // Switch stack
 // ------------------------
-// Load a new stack with a different namespace into the parent element. Emulates a react component render when the component details have changed. For example: 
+// Load a new stack with a different namespace into the parent element. Emulates a react component render when the component details have changed. For example:
 // + Start with the stack1 - onboard and capture details about that stack and associated artefacts/objects in the libarary
 // + Switch to the stack2 - capture details about that stack and associated artefacts/objects in the libarary. __Details about the stack1 will not be removed from the library__ without specific instruction even though the related DOM stack no longer exists
 // + Switch back to the stack1 - it is at this point that SC should recognise the details it holds about the previous stack are no longer relevant, purge everything related to that old stack from the library, and then repopulate with new data
@@ -309,7 +309,7 @@ scrawl.addNativeListener('click', removeCanvas, canvasRemoveButton);
 
 // Replace stack
 // ------------------------
-// Load a new stack with the same namespace into the parent element. Emulates a react component render when the component details have NOT changed - the component is rendered again because something else in the page has triggered a more general render. For example: 
+// Load a new stack with the same namespace into the parent element. Emulates a react component render when the component details have NOT changed - the component is rendered again because something else in the page has triggered a more general render. For example:
 // + Start with the stack1 - onboard and capture details about that stack and associated artefacts/objects in the libarary
 // + Replace that stack with another stack1. SC needs to identify that while details about the stack still exist, that stack has gone and the new stack needs to be processed and data about it - and all related artefacts/objects - stored in the library
 
@@ -327,7 +327,7 @@ const buildStack1 = (namespace) => {
     console.log('build a new stack1 element', namespace);
 
     const name = n => `${namespace}-${n}`;
-    
+
     // build stack
     const s = `
 <div id="${namespace}" data-scrawl-stack>
@@ -376,7 +376,7 @@ const buildStack1 = (namespace) => {
 
         // Kill any old dragzone
         if (dragZones[namespace]) dragZones[namespace]();
-        
+
         dragZones[namespace] = scrawl.makeDragZone({
             zone: stack,
             endOn: ['up', 'leave'],
@@ -429,7 +429,7 @@ const buildStack2 = (namespace) => {
     console.log('build a new stack1 element', namespace);
 
     const name = n => `${namespace}-${n}`;
-    
+
     // build stack
     const s = `
 <div id="${namespace}" data-scrawl-stack>

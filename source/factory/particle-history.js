@@ -14,9 +14,9 @@
 // __ParticleHistory__ objects are Arrays in which Scrawl-canvas records history data for a given particle at a specified time. The array holds data in the following format:
 // ```
 // [
-//     Number:particle-life-time-remaining, 
-//     Number:particle-z-position, 
-//     Number:particle-x-position, 
+//     Number:particle-life-time-remaining,
+//     Number:particle-z-position,
+//     Number:particle-x-position,
 //     Number:particle-y-position
 // ]
 // ```

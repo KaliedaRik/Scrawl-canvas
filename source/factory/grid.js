@@ -6,8 +6,8 @@
 // + The display for each tile, and the gutters, can be easily updated.
 // + Grid entity __hit reports__ include an extra attribute - an array of tiles that report being hit.
 // + Grids will accept __Filter__ objects - filters are applied to the entire Grid, not to individual tiles.
-// + They can use __Anchor__ objects for user navigation. 
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can use __Anchor__ objects for user navigation.
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
 // + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Grids can be cloned, and killed.
 
@@ -180,7 +180,7 @@ S.columns = function (item) {
 
         if (item != this.columns) {
 
-            let i, iz, j, 
+            let i, iz, j,
                 currentFill = this.tileFill,
                 currentCols = this.columns,
                 newFill = [];
@@ -194,7 +194,7 @@ S.columns = function (item) {
                     if (j < currentCols) newFill.push(currentFill[(i * currentCols) + j]);
                     else newFill.push(0);
                 }
-            } 
+            }
             this.tileFill = newFill;
         }
     }
@@ -229,7 +229,7 @@ D.rows = λnull;
 
 // #### Tile management
 
-// `setAllTilesTo` - change the fill for all tiles in a Grid 
+// `setAllTilesTo` - change the fill for all tiles in a Grid
 // + Argument is an integer Number representing the index of a tileSource object
 P.setAllTilesTo = function (val) {
 
@@ -340,7 +340,7 @@ P.cleanPathObject = function () {
         const p = this.pathObject = new Path2D(),
             rowLines = new Path2D(),
             colLines = new Path2D();
-        
+
         const handle = this.currentStampHandlePosition,
             scale = this.currentScale,
             dims = this.currentDimensions;
@@ -359,7 +359,7 @@ P.cleanPathObject = function () {
             paths = this.tilePaths,
             real = this.tileRealCoordinates,
             virtual = this.tileVirtualCoordinates;
-        
+
         let i, j, cx, cy;
 
         rowLines.moveTo(x, y);
@@ -590,7 +590,7 @@ P.performFill = function (engine) {
                             scale = this.currentScale,
                             x = handle[0] * scale,
                             y = handle[1] * scale;
-                            
+
                         compCanvas.width = dims[0] * scale;
                         compCanvas.height = dims[1] * scale;
                         compEngine.globalCompositeOperation = SOURCE_OVER;
@@ -794,9 +794,9 @@ P.checkHit = function (items = [], mycell) {
             artefact: this
         };
     }
-    
+
     if (poolCellFlag) releaseCell(mycell);
-    
+
     return false;
 };
 

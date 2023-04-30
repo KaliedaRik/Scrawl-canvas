@@ -62,8 +62,8 @@ const defaultAttributes = {
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
-// In addition to the attributes defined in the __base__ and __styles__ mixins, Gradients also pass through Palette attributes to their Palette object. 
-// 
+// In addition to the attributes defined in the __base__ and __styles__ mixins, Gradients also pass through Palette attributes to their Palette object.
+//
 // Attributes from __base__ mixin:
 // + `name`
 //
@@ -80,7 +80,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // + `cyclePalette`
 //
 // Attributes from the __palette__ factory:
-// + `colors` 
+// + `colors`
 // + `cyclic`
 
 // #### Packet management
@@ -103,7 +103,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 
 // `buildStyle` - internal function: creates the radial gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
 P.buildStyle = function (cell) {
-    
+
     if (cell) {
 
         const engine = cell.engine;
@@ -113,7 +113,7 @@ P.buildStyle = function (cell) {
             if (!engine.createConicGradient) return BLANK;
 
             const gradient = engine.createConicGradient(...this.gradientArgs);
-            
+
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
     }
@@ -147,9 +147,9 @@ P.updateGradientArgs = function (x, y) {
 // });
 //
 // scrawl.makeBlock({
-//    
+//
 //     name: 'myblock',
-//    
+//
 //     width: '90%',
 //     height: '90%',
 //     startX: '5%',
@@ -158,7 +158,7 @@ P.updateGradientArgs = function (x, y) {
 //     fillStyle: graddy,
 //     strokeStyle: 'coral',
 //     lineWidth: 2,
-//    
+//
 //     method: 'fillAndDraw',
 // });
 // ```

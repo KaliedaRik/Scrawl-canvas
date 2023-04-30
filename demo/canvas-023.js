@@ -1,4 +1,4 @@
-// # Demo Canvas 023 
+// # Demo Canvas 023
 // Grid entity - using picture-based assets (image, video, sprite)
 
 // [Run code](../../demo/canvas-023.html)

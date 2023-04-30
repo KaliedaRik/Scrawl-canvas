@@ -19,7 +19,7 @@
 //
 // __Purpose:__ adds highlighting to specified words.
 //
-// __Function input:__ 
+// __Function input:__
 // + the DOM element - generally a block or inline-block element.
 // + an optional key:value Object as the second argument
 //
@@ -42,7 +42,7 @@
 // ```
 
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + no additional effects on the DOM element
 // + setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward
 export default function (scrawl, el, args = {}) {

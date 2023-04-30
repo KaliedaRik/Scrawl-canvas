@@ -1,4 +1,4 @@
-// # Demo Particles 011 
+// # Demo Particles 011
 // Tracer entity: generation and functionality
 
 // [Run code](../../demo/particles-011.html)
@@ -112,7 +112,7 @@ scrawl.makeTracer({
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history;
-        
+
         let start;
 
         history.forEach((p, index) => {
@@ -142,7 +142,7 @@ scrawl.makeTracer({
 
         const history = particle.history,
             len = history.length;
-        
+
         let start;
 
         history.forEach((p, index) => {
@@ -150,7 +150,7 @@ scrawl.makeTracer({
             if (index % 3 === 0) {
 
                 [ , , ...start] = p;
-                
+
                 artefact.simpleStamp(host, {
                     start,
                     globalAlpha: (len - index) / len,
@@ -175,7 +175,7 @@ scrawl.makeTracer({
 
         const history = particle.history,
             len = history.length;
-        
+
         let start;
 
         history.forEach((p, index) => {
@@ -183,7 +183,7 @@ scrawl.makeTracer({
             [ , , ...start] = p;
 
             const magicNumber = (len - index) / len;
-            
+
             artefact.simpleStamp(host, {
                 start,
                 scale: magicNumber * 3,

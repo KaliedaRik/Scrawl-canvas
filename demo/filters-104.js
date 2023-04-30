@@ -1,4 +1,4 @@
-// # Demo Filters 104 
+// # Demo Filters 104
 // Compound filters: Use a white-transparent gradient as a filter input
 
 // [Run code](../../demo/filters-104.html)

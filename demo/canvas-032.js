@@ -1,4 +1,4 @@
-// # Demo Canvas 032 
+// # Demo Canvas 032
 // Freehand drawing
 // + Note that the Polyline entity remains experimental technology and may be subject to breaking changes in future minor updates
 

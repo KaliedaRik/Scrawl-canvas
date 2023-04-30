@@ -1,7 +1,7 @@
 // # Cell factory
 // Scrawl-canvas uses 'hidden' canvases - &lt;canvas> elements that are not part of the DOM - for much of its functionality:
-// + When we wrap a DOM-based &lt;canvas> element in a Scrawl-canvas [Canvas](./canvas.html) wrapper, we create a second 'hidden' &lt;canvas> element and assign it as that Canvas wrapper's __base cell__. 
-// + This Cell is used for building the display during the Display cycle (`clear` and `compile` steps). 
+// + When we wrap a DOM-based &lt;canvas> element in a Scrawl-canvas [Canvas](./canvas.html) wrapper, we create a second 'hidden' &lt;canvas> element and assign it as that Canvas wrapper's __base cell__.
+// + This Cell is used for building the display during the Display cycle (`clear` and `compile` steps).
 // + It gets copied over to the Dom-based &lt;canvas> element at the end of the cycle (the `show` step).
 // + When copied over, the base cell will determine how much of its display to copy into the controller Canvas, to meet the needs of that Canvas wrapper's `fit` attribute.
 //
@@ -10,19 +10,19 @@
 // + the source for image-based objects such as __Picture entitys__ and __Pattern styles__.
 // + __artefacts__ - a Cell wrapper can act just like any artefact: it can be positioned, dimensioned, scaled and rotated ; it can act as a `pivot` or `mimic` source for other artefacts, or use them for its position and dimensions data. (Be aware, though, that Cell wrappers are NOT stored in the scrawl library's `artefact` section).
 //
-// Cell wrappers include a number of Boolean flags and other attributes to control how they are stamped onto other Cells. 
+// Cell wrappers include a number of Boolean flags and other attributes to control how they are stamped onto other Cells.
 // + We can set flags to determine whether to include the Cell in each step of the Display cycle (`cleared`, `compiled`, `shown`) - this allows us to set up, for example, 'static' Cells that only need to be compiled once and can then be used as backgrounds for other Cells and entitys to be animated over.
-// + We can vary the order in which Cell wrappers get processed during the Display cycle (`compileOrder`, `showOrder`). 
+// + We can vary the order in which Cell wrappers get processed during the Display cycle (`compileOrder`, `showOrder`).
 // + Each Cell can have its own `backgroundColor`.
 // + Each Cell can be made translucent (`alpha`).
 // + Each Cell can be stamped onto other Cell canvases using a different composition method (`composite`).
-// + Each Cell can be given its own dimensions, different to those of its Canvas wrapper, with updates cascading down to entitys that use the Cell to determine their own (relative) dimensions and start coordinates. 
+// + Each Cell can be given its own dimensions, different to those of its Canvas wrapper, with updates cascading down to entitys that use the Cell to determine their own (relative) dimensions and start coordinates.
 // + We can `scale`, `roll` and `flip` a Cell.
 // + We can control which parts of the Cell display will be copied over to its destination (`copy attributes`).
 // + We can add one or more `filters` to the Cell's outputted display.
 //
-// Every Cell wrapper will include a [Group object](./group.html) which shares the same name as the Cell. To include an entity object in a Cell wrapper's canvas display we add it to this group. 
-// + Additional Group objects can be added to the Cell wrapper as-and-when required. 
+// Every Cell wrapper will include a [Group object](./group.html) which shares the same name as the Cell. To include an entity object in a Cell wrapper's canvas display we add it to this group.
+// + Additional Group objects can be added to the Cell wrapper as-and-when required.
 // + Groups are processed in the order specified in their `order` attributes.
 // + Groups whose `visibility` flag is set to false will be skipped during the Display cycle cascade.
 //
@@ -32,7 +32,7 @@
 
 
 // #### Demos:
-// + All canvas and packets demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
+// + All canvas and packets demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
 // + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
 // + [Canvas-036](../../demo/canvas-036.html) - Cell artefact-like positional functionality
@@ -201,7 +201,7 @@ const defaultAttributes = {
 // We can also scale the Cell's size in the displayed Canvas by setting the __scale__ attribute to an appropriate value.
     scale: 1,
 
-// __flipReverse__, __flipUpend__ - Boolean flags which determine the orientation of the cell when it stamps itself on the display. 
+// __flipReverse__, __flipUpend__ - Boolean flags which determine the orientation of the cell when it stamps itself on the display.
 // + a `reversed` cell is effectively flipped 180&deg; around a vertical line passing through that cell's rotation-reflection (start) point - a face looking to the right will now look to the left
 // + an `upended` cell is effectively flipped 180&deg; around a horizontal line passing through that cell's rotation-reflection (start) point - a normal face will now appear upside-down
     flipReverse: false,
@@ -213,10 +213,10 @@ const defaultAttributes = {
 
 // Scrawl-canvas sets the following attributes automatically; do not change their values!
 
-// __isBase__ - Every displayed &lt;canvas> element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its 'base' Cell. 
+// __isBase__ - Every displayed &lt;canvas> element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its 'base' Cell.
     isBase: false,
 
-// __useAsPattern__ - Used to ignore the requirement to resize canvases to take into account device pixel ratios greater than 1 
+// __useAsPattern__ - Used to ignore the requirement to resize canvases to take into account device pixel ratios greater than 1
     useAsPattern: false,
 
 // __controller__ - A reference link to the displayed &lt;canvas> element's Scrawl-canvas wrapper (factory/canvas.js) - only 'base' cells require this handle.
@@ -287,7 +287,7 @@ P.factoryKill = function () {
 };
 
 // #### Get, Set, deltaSet
-const G = P.getters, 
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -414,7 +414,7 @@ S.showOrder = function (item) {
 };
 
 
-// __Stash coordinates and dimensions__ - which are stored in Coordinate arrays - allow us to store, and export to an image asset, a portion of the Cell's current display which can then be used (for instance) by Pattern styles. 
+// __Stash coordinates and dimensions__ - which are stored in Coordinate arrays - allow us to store, and export to an image asset, a portion of the Cell's current display which can then be used (for instance) by Pattern styles.
 // + Scrawl-canvas supplies the following _pseudo-attributes_ for dealing with the stash start coordinate (`stashX`, `stashY`) and dimensions (`stashWidth`, `stashHeight`)
 // + Each of these values can be either absolute px Numbers, or relative (to the Cell's own dimensions) '%' Strings
 S.stashX = function (val) {
@@ -770,7 +770,7 @@ P.clear = function () {
 
         engine.save();
         const tempCell = requestCell();
-        
+
         const {engine:tempEngine, element:tempEl} = tempCell;
 
         if (this.useAsPattern) {
@@ -779,7 +779,7 @@ P.clear = function () {
             tempEl.height = height;
 
             tempEngine.drawImage(element, 0, 0, width, height, 0, 0, width, height);
-            
+
             engine.clearRect(0, 0, width, height);
             engine.globalAlpha = clearAlpha;
 
@@ -790,7 +790,7 @@ P.clear = function () {
             tempEl.height = h;
 
             tempEngine.drawImage(element, 0, 0, width, height, 0, 0, width, height);
-            
+
             engine.clearRect(0, 0, width, height);
             engine.globalAlpha = clearAlpha;
 
@@ -843,16 +843,16 @@ P.show = function () {
         // Cannot draw to the destination canvas if either of its dimensions === 0
         if (!destWidth || !destHeight) return false;
 
-        const { 
-            currentScale:scale, 
-            currentDimensions, 
-            composite, 
-            alpha, 
-            controller, 
-            element, 
-            isBase, 
-            currentStampHandlePosition:handle, 
-            currentStampPosition:stamp, 
+        const {
+            currentScale:scale,
+            currentDimensions,
+            composite,
+            alpha,
+            controller,
+            element,
+            isBase,
+            currentStampHandlePosition:handle,
+            currentStampPosition:stamp,
         } = this;
 
         const curWidth = ~~(currentDimensions[0]),
@@ -863,7 +863,7 @@ P.show = function () {
         engine.save();
 
         checkEngineScale(engine);
-            
+
         engine.filter = this.filter;
 
         if (isBase) {
@@ -882,7 +882,7 @@ P.show = function () {
             engine.globalAlpha = alpha;
 
             const fit = (controller) ? controller.fit : NONE;
-            
+
             let relWidth, relHeight;
 
             switch (fit) {
@@ -1006,9 +1006,9 @@ P.stashOutputAction = function () {
 
         const [cellWidth, cellHeight] = currentDimensions;
 
-        let stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
-            stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
-            stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
+        let stashX = (stashCoordinates) ? stashCoordinates[0] : 0,
+            stashY = (stashCoordinates) ? stashCoordinates[1] : 0,
+            stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth,
             stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
 
         // Keep the stashed image within bounds of the Cell's dimensions.
@@ -1083,7 +1083,7 @@ P.getHost = function () {
         const host = asset[this.host] || artefact[this.host];
 
         if (host) this.currentHost = host;
-        
+
         return (host) ? this.currentHost : false;
     }
     return false;
@@ -1119,7 +1119,7 @@ P.updateBaseHere = function (controllerHere, fit) {
 
             const relWidth = localWidth / remoteWidth || 1,
                 relHeight = localHeight / remoteHeight || 1;
-            
+
             let offsetX, offsetY;
 
             here.w = localWidth;
@@ -1228,7 +1228,7 @@ P.cleanPathObject = function () {
     if (!this.noPathUpdates || !this.pathObject) {
 
         const p = this.pathObject = new Path2D();
-        
+
         const handle = this.currentStampHandlePosition,
             scale = this.currentScale,
             dims = this.currentDimensions;

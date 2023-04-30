@@ -24,7 +24,7 @@
 // ```
 
 
-// __Effects on the element:__ 
+// __Effects on the element:__
 // + updates the &lt;div> element's `innerHTML` data, which will replace any child elements or text placed between the element's opening and closing tags.
 export default function (scrawl, el) {
 

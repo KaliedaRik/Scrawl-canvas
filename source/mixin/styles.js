@@ -8,8 +8,8 @@
 // + the `createRadialGradient` method creates a radial gradient using the size and coordinates of two circles.
 // + the `createConicGradient` method creates a conic gradient as a 360° sweep around the gradient's start coordinate. For browsers which don't support this gradient out of the box, the method will apply no gradient to the entity.
 //
-// Common to linear and radial types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels. 
-// + Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell's dimensions. 
+// Common to linear and radial types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels.
+// + Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell's dimensions.
 // + Furthermore Scrawl-canvas allows each entity that uses a Gradient-type style to indicate whether the reference box should be that of the host Cell, or of the entity itself, through their `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags.
 
 
@@ -53,8 +53,8 @@ export default function (P = Ωempty) {
 // __start__, __end__ - Gradient-type styles use Coordinate factory Arrays to hold details of their start and end coordinates. The following _pseudo-attributes_ can also be used to reference these values:
 // + for the start coordinate, __startX__ and __startY__
 // + for the end coordinate, __endX__ and __endY__
-// 
-// In all cases, the attribute values can be Numbers, which indicate absolute pixel coordinates, or String% values for coordinates calculated relative to either Cell or entity current dimensions 
+//
+// In all cases, the attribute values can be Numbers, which indicate absolute pixel coordinates, or String% values for coordinates calculated relative to either Cell or entity current dimensions
 // + for the `x` coordinate, the Strings __left__, __center__ and __right__ are also supported
 // + for the `y` coordinate, the Strings __top__, __center__ and __bottom__ are also supported
         start: null,
@@ -151,10 +151,10 @@ export default function (P = Ωempty) {
                 if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
             }
         });
-        
+
         // Remove style from the Scrawl-canvas library
         this.deregister();
-        
+
         return this;
     };
 
@@ -272,7 +272,7 @@ export default function (P = Ωempty) {
         if (item.toFixed) {
 
             this.paletteStart = item;
-            
+
             if(item < 0 || item > 999) this.paletteStart = (item > 500) ? 999 : 0;
         }
     };
@@ -301,7 +301,7 @@ export default function (P = Ωempty) {
         if (item.toFixed) {
 
             this.paletteEnd = item;
-            
+
             if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
         }
     };
@@ -332,7 +332,7 @@ export default function (P = Ωempty) {
         if (_isArray(item) && this.palette) this.palette.set({ colors: item });
     };
 
-// `easing`, `easingFunction` - the easing to be applied to the gradient 
+// `easing`, `easingFunction` - the easing to be applied to the gradient
 // + Can accept a String value identifying an SC pre-defined easing function (default: `linear`)
 // + Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)
     S.easing = function (item) {
@@ -588,14 +588,14 @@ export default function (P = Ωempty) {
             dims = entity.currentDimensions;
             scale = entity.currentScale;
 
-            w = dims[0] * scale; 
-            h = dims[1] * scale; 
+            w = dims[0] * scale;
+            h = dims[1] * scale;
         }
         else {
 
             dims = cell.currentDimensions;
-            w = dims[0]; 
-            h = dims[1]; 
+            w = dims[0];
+            h = dims[1];
         }
 
         this.cleanPosition(this.currentStart, this.start, [w, h]);
@@ -632,13 +632,13 @@ export default function (P = Ωempty) {
 
         if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
 
-            correctX = -(entityStampHandlePosition[0] * entityScale) || 0; 
-            correctY = -(entityStampHandlePosition[1] * entityScale) || 0; 
+            correctX = -(entityStampHandlePosition[0] * entityScale) || 0;
+            correctY = -(entityStampHandlePosition[1] * entityScale) || 0;
         }
         else {
 
-            correctX = -entityStampPosition[0] || 0; 
-            correctY = -entityStampPosition[1] || 0; 
+            correctX = -entityStampPosition[0] || 0;
+            correctY = -entityStampPosition[1] || 0;
         }
         this.updateGradientArgs(correctX, correctY);
     };
@@ -667,10 +667,10 @@ export default function (P = Ωempty) {
     };
 
 // #### Gradients and color stops
-// The [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) uses a rather convoluted way to add color data to a [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) interface object: 
-// + the object is created first on the &lt;canvas> context engine where it is to be applied, with __start__ and __end__ coordinates, 
-// + then color stops are _individually_ added to it afterwards. 
-// + This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient. 
+// The [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) uses a rather convoluted way to add color data to a [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) interface object:
+// + the object is created first on the &lt;canvas> context engine where it is to be applied, with __start__ and __end__ coordinates,
+// + then color stops are _individually_ added to it afterwards.
+// + This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient.
 // + And only one gradient may be applied to the context engine at any time.
 //
 // The specificity of the above requirements - in particular relating to position coordinates - and the inability to update the CanvasGradient beyond adding color stops to it, means that storing these objects for future use is not a useful proposition ... especially in a dynamic environment where we want the gradient to move in-step with an entity, or animate its colors in some way.
@@ -689,12 +689,12 @@ export default function (P = Ωempty) {
 //         "index-label-between-0-and-999 ": [redValue, greenValue, blueValue, alphaValue]
 //     },
 // }
-// ``` 
+// ```
 // To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:
-// + the color object attribute labels MUST include a space after the String number; and 
+// + the color object attribute labels MUST include a space after the String number; and
 // + the number itself must be a positive integer in the range 0-999:
 //
-// ``` 
+// ```
 // myGradient.set({
 //
 //     colors: {
@@ -705,7 +705,7 @@ export default function (P = Ωempty) {
 //         '999 ': 'white'
 //     },
 // });
-// ``` 
+// ```
 //
 // The following __convenience functions__ are supplied to make adding, deleting and managing Palette object color stop data easier than the above:
 

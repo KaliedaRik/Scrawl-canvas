@@ -1,4 +1,4 @@
-// # Demo Canvas 015a 
+// # Demo Canvas 015a
 // Phrase entity - cache output to improve render speeds
 
 // [Run code](../../demo/canvas-015a.html)

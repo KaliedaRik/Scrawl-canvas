@@ -1,4 +1,4 @@
-// # Demo Filters 017 
+// # Demo Filters 017
 // Filter parameters: displace
 
 // [Run code](../../demo/filters-017.html)

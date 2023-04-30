@@ -11,8 +11,8 @@
 // + The ability to select an entity, or a group of entitys, for editing
 // + A simple GUI control which users can use to move, rotate and scale the selected entity or group of entitys
 // + Full accessibility via a set of keyboard commands to move, rotate and/or scale the selected entitys, the GUI control and the minimap
-// + When an entity, or group of entitys, are selected for editing, a keyboard accessible form will appear which allows users to edit a comprehensive subset of that entity's attributes 
-// + Cut|Copy|Paste functionality for selected entitys using keyboard `CTRL + X`, `CTRL + C`, `CTRL + V` keystrokes 
+// + When an entity, or group of entitys, are selected for editing, a keyboard accessible form will appear which allows users to edit a comprehensive subset of that entity's attributes
+// + Cut|Copy|Paste functionality for selected entitys using keyboard `CTRL + X`, `CTRL + C`, `CTRL + V` keystrokes
 //
 // __Inputs to the `initializeCanvasSceneEditor` function__
 // + `sceneCanvas` - SC canvas wrapper object (required)
@@ -53,7 +53,7 @@ const initializeCanvasSceneEditor = (items = {}, scrawl) => {
     if (argsCheck.length) throw new Error(`SC entity manipulation GUI module error: missing arguments${argsCheck}`);
 
 
-    // #### Build the editor 
+    // #### Build the editor
     // This is mostly plumbing work, making sure each sub-module gets the right attributes they need
     // + Because some sub-modules require access to objects/functionality supplied by other sub-modules, the order in which we initialize the modules becomes important
     //
@@ -76,7 +76,7 @@ const initializeCanvasSceneEditor = (items = {}, scrawl) => {
     // Initialize DOM entity editor functionality
     // + Will build HTML on a per-entity or group basis, which can be displayed in our dashboard element
     // + Returns an object containing functions that we can supply to the entity navigation module, where all the work happens
-    const { 
+    const {
         dashboard,
         killDomEntityEditor,
 
@@ -90,7 +90,7 @@ const initializeCanvasSceneEditor = (items = {}, scrawl) => {
     // + Adds ability to move selected entitys using mouse or keyboard
     // + Supplies a set of objects to be added to entitys that should include this functionality
     // + Opens up access to selected entitys via an array
-    const { 
+    const {
         selectedEntitys,
         addControllerAttributes,
         checkForEntityNavigationHoverActions,
@@ -98,23 +98,23 @@ const initializeCanvasSceneEditor = (items = {}, scrawl) => {
         killEntityNavigation,
 
     } = initializeEntityNavigation({
-        canvas: sceneCanvas, 
-        cell: mainCell, 
+        canvas: sceneCanvas,
+        cell: mainCell,
         dashboard,
     }, scrawl);
 
 
     // Initialize entity manipulation GUI
     // + Builds the GUI editor controls that appear on the canvas when a user selects one or more entitys for editing
-    const { 
+    const {
         checkForSelectionUpdates,
         setGuiControlChars,
         createGui,
         killEntityManipulationGui,
 
     } = initializeEntityManipulationGui({
-        canvas: sceneCanvas, 
-        cell: mainCell, 
+        canvas: sceneCanvas,
+        cell: mainCell,
         selectedEntitys,
         dashboard,
         updateControllerDisplay,
@@ -127,7 +127,7 @@ const initializeCanvasSceneEditor = (items = {}, scrawl) => {
         killEntityCopyPaste,
 
     } = initializeEntityCopyPaste({
-        canvas: sceneCanvas, 
+        canvas: sceneCanvas,
         selectedEntitys,
         addControllerAttributes,
         updateControllerDisplay,
