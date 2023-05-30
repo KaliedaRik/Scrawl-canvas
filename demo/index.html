@@ -124,7 +124,7 @@
   <main>
     <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.10.3)</span></h1>
 
-    <p>The Scrawl-canvas library has been designed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
+    <p>The Scrawl-canvas library has been developed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 
     <p><strong>These demos represent the library's testing suite.</strong> They have been designed to cover as much functionality as possible in sets of integration tests. Testing is (currently) conducted by hand: all demos must run as expected before changes can be pushed to the library's v8 or master branches on GitHub.</p>
 
@@ -169,7 +169,7 @@
       <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements (with a <strong>srcset</strong> attribute), or image files.</li>
       <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>.</li>
       <li>Scrawl-canvas includes a <strong>NoiseAsset</strong> asset (for Perlin, Simplex, Worley, etc, noise generation), alongside an <strong>RdAsset</strong> reaction-diffusion asset (for more organic patterns).</li>
-      <li>Third-party asset generators (for example TensorFlow) can be accommodated using the <strong>RawAsset</strong> asset</li>
+      <li>Third-party image/video asset generators (for example <a href="https://developers.google.com/mediapipe">MediaPipe</a>, <a href="https://www.tensorflow.org/">TensorFlow</a>, <a href="https://airbnb.io/lottie/#/">Lottie</a>) can be accommodated using the <strong>RawAsset</strong> asset.</li>
     </ul>
 
     <p>Scrawl-canvas treats additional canvas Cells (layers) in the same way as it treats entitys:</p>
@@ -1125,6 +1125,12 @@
       <div>
         <a href="dom-017.html">DOM-017</a>
         Testing getCanvas(), getStack() functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/dom-018.webp" /></div>
+      <div>
+        <a href="dom-018.html">DOM-018</a>
+        Fullscreen API functionality
       </div>
     </div>
 

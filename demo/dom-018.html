@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 018</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 018</h1>
+  <h2>Fullscreen API functionality</h2>
+  <h3>Press the enter/return key to toggle canvas into/out of full screen display mode</h3>
+
+  <div class="canvas-container">
+    <canvas 
+      id="canvas-1" 
+      data-scrawl-canvas
+      data-is-responsive="true" 
+      data-base-background-color="blanchedalmond"
+    ></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <p>Create a keyboard-mediated User Interaction to make the canvas element fullscreen</p>
+
+    <ul>
+      <li>The test creates the same functionality as described in <a href="../docs/demo/canvas-005.html">Demo Canvas-005</a>.</li>
+      <li>Press the return key to expand the canvas into fullscreen mode</li>
+      <li>The canvas should not flicker as it transitions to fill the screen; once in fullscreen mode the animation should continue as before</li>
+      <li>The top and bottom Block and Wheel entitys should not change size or shape as they have absolute dimensions; the middle entitys should shange shape/size as they have relative dimensions</li>
+      <li>All entitys should maintain their positioning within the scene in relation to each other, as they all have relative positioning</li>
+      <li>Check that the mouse cursor changes as expected when hovered over an entity</li>
+      <li>Check that all entitys can be dragged as expected, and the Block with the animated gradient responds as expected when dragged</li>
+      <li>Press the return key to deflate the canvas back into its position in the web page; note that the esc key should also invoke this action</li>
+      <li>Repeat position, size, UI and animation checks</li>
+    </ul>
+
+    <p><b>Touch test:</b> should work as expected</p>
+
+    <p><a href="../docs/demo/dom-018.html">Annotated code</a></p>
+  </div>
+
+  <script src="dom-018.js" type="module"></script>
+
+</body>
+
+</html>
