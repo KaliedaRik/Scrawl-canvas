@@ -767,10 +767,9 @@ P.setSectionStyles = function (text) {
     const search = new RegExp(this.sectionClassMarker),
         parseArray = text.split(search),
         styles = this.sectionStyles,
-        // classes = this.sectionClasses;
         classes = sectionClasses;
 
-    let parsedText = ZERO_STR,
+    let parsedText = [],
         classObj, index, styleObj;
 
     styles.length = 0;
@@ -787,9 +786,9 @@ P.setSectionStyles = function (text) {
             if (!styleObj) styles[index] = _assign({}, classObj);
             else _assign(styleObj, classObj);
         }
-        else if (xt(item)) parsedText += item;
+        else if (xt(item)) parsedText.push(...item);
     });
-    return parsedText;
+    return parsedText.join('');
 };
 
 // `addSectionClass`, `removeSectionClass` - add and remove section class definitions to the entity's `sectionClasses` object.
@@ -883,9 +882,7 @@ P.buildText = function () {
     this.dirtyText = false;
 
     let t = this.convertTextEntityCharacters(this.text);
-
     t = this.setSectionStyles(t);
-
     this.currentText = t;
 
     if (isNaN(this.currentDimensions[0])) this.dirtyText = true;
@@ -938,11 +935,10 @@ P.getCanvasTextHold = function (item) {
 P.convertTextEntityCharacters = function (item) {
 
     let mytext = item.trim();
-
     mytext = mytext.replace(CLASS_REGEX, SPACE);
-
     textEntityConverter.innerHTML = mytext;
-    return textEntityConverter.value;
+    mytext = textEntityConverter.value;
+    return mytext;
 };
 
 // `calculateTextPositions` - internal function called by `buildText`
@@ -1024,16 +1020,6 @@ P.calculateTextPositions = function (mytext) {
         currentStrokeStyle = defaultStrokeStyle,
         currentSpace = defaultSpace;
 
-    /*
-    const highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false;
-
-    const underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
-        underlinePosition = this.underlinePosition;
-
-    const overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
-        overlinePosition = this.overlinePosition;
-    */
-
     if (this.highlightStyle) makeStyle(this.highlightStyle);
     if (this.underlineStyle) makeStyle(this.underlineStyle);
     if (this.overlineStyle) makeStyle(this.overlineStyle);
@@ -1046,12 +1032,10 @@ P.calculateTextPositions = function (mytext) {
     // 2. Create `textGlyphs` array
     // + also shove the default font into the `fontLibrary` array
     const textGlyphs = requestArray();
-    if (treatWordAsGlyph) textGlyphs.push(...mytext.split(SPACE));
-    else textGlyphs.push(...mytext.split(ZERO_STR));
+    if (treatWordAsGlyph) textGlyphs.push(...mytext.join('').split(SPACE));
+    else textGlyphs.push(...mytext);
 
     fontArray.push(currentFont);
-    // textGlyphs = (treatWordAsGlyph) ? mytext.split(SPACE) : mytext.split(ZERO_STR);
-    // fontArray.push(currentFont);
 
     // 3. `textPositions` array will include an array of data for each glyph
     // + `[font, strokeStyle, fillStyle, highlight, underline, overline, text, startX, startY, (pathData)]`
@@ -1211,8 +1195,8 @@ P.calculateTextPositions = function (mytext) {
 
         singles.push(engine.measureText(glyph).width);
 
-        nextGlyph = textPositions[i + 1];
-        nextGlyph = (!treatWordAsGlyph && nextGlyph) ? nextGlyph[6] : false;
+        glyphArr = textPositions[i + 1];
+        nextGlyph = (!treatWordAsGlyph && glyphArr) ? glyphArr[6] : false;
 
         len = (nextGlyph) ? engine.measureText(`${glyph}${nextGlyph}`).width : false;
         pairs.push(len);
@@ -1227,7 +1211,10 @@ P.calculateTextPositions = function (mytext) {
             len = singles[i] + singles[i + 1];
             gPos = textPositions[i + 1];
 
-            if (len > glyph && !gPos[0]) singles[i] -= (len - glyph);
+            if (len > glyph && !gPos[0]) {
+
+                singles[i] -= (len - glyph);
+            }
         }
     }
 
@@ -1328,7 +1315,7 @@ P.calculateTextPositions = function (mytext) {
                 if (i < iz - 1 && textLineWords[i] > 1) space = (width - textLineWidths[i]) / (textLineWords[i] - 1);
                 else space = 0;
 
-                for (j = 0, jz = textLines[i].length; j < jz; j++) {
+                for (j = 0, jz = [...textLines[i]].length; j < jz; j++) {
 
                     item = textPositions[cursor];
 
@@ -1360,7 +1347,7 @@ P.calculateTextPositions = function (mytext) {
                 else if (justify == CENTER) len = ((width - textLineWidths[i]) / 2) + handleX;
                 else len = handleX;
 
-                for (j = 0, jz = textLines[i].length; j < jz; j++) {
+                for (j = 0, jz = [...textLines[i]].length; j < jz; j++) {
 
                     item = textPositions[cursor];
 

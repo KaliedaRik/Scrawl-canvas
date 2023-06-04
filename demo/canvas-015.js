@@ -82,7 +82,7 @@ makePhrase({
 }).clone({
     name: name('myphrase_multiline'),
 
-    text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+    text: 'Lorem ipsum har varit standard 😀 ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal 🤖 bokstäver och blandade dem för att göra ett 🎻 provexemplar av en bok.',
 
     width: 120,
     justify: 'center',
