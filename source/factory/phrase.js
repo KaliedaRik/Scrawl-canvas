@@ -767,10 +767,10 @@ P.setSectionStyles = function (text) {
     const search = new RegExp(this.sectionClassMarker),
         parseArray = text.split(search),
         styles = this.sectionStyles,
-        classes = sectionClasses;
+        classes = sectionClasses,
+        parsedText = [];
 
-    let parsedText = [],
-        classObj, index, styleObj;
+    let classObj, index, styleObj;
 
     styles.length = 0;
 

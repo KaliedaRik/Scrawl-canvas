@@ -99,17 +99,17 @@ THE SOFTWARE.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> { 
-    startCoreAnimationLoop, 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
+    startCoreAnimationLoop,
     stopCoreAnimationLoop,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/animation-loop.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     clear,
     compile,
     show,
     render,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/display-cycle.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     addListener,
     removeListener,
     addNativeListener,
@@ -123,10 +123,10 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/library.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/random-seed.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeSnippet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/snippets.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
-    currentCorePosition, 
-    startCoreListeners, 
-    stopCoreListeners, 
+<span class="hljs-keyword">export</span> {
+    currentCorePosition,
+    startCoreListeners,
+    stopCoreListeners,
     getTouchActionChoke,
     setTouchActionChoke,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/user-interaction.js&#x27;</span>;
@@ -143,7 +143,7 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeCog } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/cog.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/color.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeConicGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/conic-gradient.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     requestCoordinate,
     releaseCoordinate,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/coordinate.js&#x27;</span>;
@@ -157,7 +157,7 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/gradient.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeGrid } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/grid.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/group.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     importImage,
     importDomImage,
     createImageFromCell,
@@ -170,11 +170,11 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeLoom } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/loom.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeMesh } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/mesh.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeNet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/net.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     makeNoise,
     makeNoiseAsset,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/noise-asset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     observeAndUpdate,
     makeUpdater
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/observe-update.js&#x27;</span>;
@@ -185,7 +185,7 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makePolygon } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polygon.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makePolyline } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polyline.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeQuadratic } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quadratic.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     requestQuaternion,
     releaseQuaternion,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quaternion.js&#x27;</span>;
@@ -198,7 +198,7 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeSpiral } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spiral.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { importSprite } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/sprite-asset.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeSpring } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particle-spring.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     addStack,
     getStack,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/stack.js&#x27;</span>;
@@ -207,11 +207,11 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeTicker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/ticker.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeTracer } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tracer.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeTween } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tween.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
-    requestVector, 
+<span class="hljs-keyword">export</span> {
+    requestVector,
     releaseVector,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/vector.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { 
+<span class="hljs-keyword">export</span> {
     importDomVideo,
     importVideo,
     importMediaStream,
