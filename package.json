@@ -46,5 +46,5 @@
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.5.5"
   },
-  "dependencies": {}
+  "packageManager": "yarn@4.0.1"
 }
