@@ -39,11 +39,11 @@
   },
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
     "docco": "^0.9.1",
     "eslint": "^8.39.0",
     "light-server": "^2.9.1",
     "rollup": "^2.64.0",
-    "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.5.5"
   },
   "packageManager": "yarn@4.0.1"
