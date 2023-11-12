@@ -524,6 +524,11 @@
                   ./source/mixin/tween.js
                 </a>
               
+                
+                <a class="source" href="../scrawl.html">
+                  ./source/scrawl.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -2387,7 +2392,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
         myname = el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">NAME</span>),
         position = <span class="hljs-variable constant_">ABSOLUTE</span>;
 
-    <span class="hljs-keyword">if</span> (!mygroup) {
+    <span class="hljs-keyword">if</span> (!mygroup || mygroup === <span class="hljs-variable constant_">ROOT</span>) {
 
         el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable constant_">ROOT</span>);
         mygroup = <span class="hljs-variable constant_">ROOT</span>;

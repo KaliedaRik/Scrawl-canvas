@@ -60,9 +60,9 @@ const toggleFullScreen = () => {
     if (isFS) {
 
         if (!document[isFS]) container1[requestFS]();
-        
+
         else if (document[releaseFS]) document[releaseFS]();
-    };
+    }
 };
 
 

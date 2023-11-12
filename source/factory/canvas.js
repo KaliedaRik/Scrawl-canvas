@@ -969,7 +969,7 @@ const addInitialCanvasElement = function (el) {
         myname = el.id || el.getAttribute(NAME),
         position = ABSOLUTE;
 
-    if (!mygroup) {
+    if (!mygroup || mygroup === ROOT) {
 
         el.setAttribute(DATA_SCRAWL_GROUP, ROOT);
         mygroup = ROOT;
