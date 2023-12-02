@@ -63,9 +63,13 @@ const myAsset = scrawl.makeRawAsset({
 
             if (item) {
 
+// @ts-expect-error
                 this.canvasWidth = item.width;
+// @ts-expect-error
                 this.canvasHeight = item.height;
+// @ts-expect-error
                 this.mask = item;
+// @ts-expect-error
                 this.dirtyData = true;
             }
         },

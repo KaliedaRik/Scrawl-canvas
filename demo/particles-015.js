@@ -39,6 +39,7 @@ const myWorld = scrawl.makeWorld({
             defaultValue: 0,
             setter: function (item) {
 
+// @ts-expect-error
                 this.rangeColorValue = item;
 
                 emitter.set({

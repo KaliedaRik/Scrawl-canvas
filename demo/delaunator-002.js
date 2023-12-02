@@ -102,6 +102,7 @@ const myAsset = scrawl.makeRawAsset({
         defaultValue: [],
         setter: function (item) {
 
+// @ts-expect-error
             this.points = [...item];
         },
     },{
@@ -131,8 +132,10 @@ const myAsset = scrawl.makeRawAsset({
             if (here && here.active) points[0] = [here.x, here.y];
             else points[0] = [...center];
 
+// @ts-expect-error
             this.delaunay = Delaunator.from(points);
 
+// @ts-expect-error
             this.dirtyData = item;
         },
     }],
