@@ -127,12 +127,16 @@ const myAsset = scrawl.makeRawAsset({
 
                 if (img) {
 
+// @ts-expect-error
                     this.canvasWidth =  img.width;
+// @ts-expect-error
                     this.canvasHeight = img.height;
                 }
 
+// @ts-expect-error
                 if (mesh) this.mesh = mesh;
 
+// @ts-expect-error
                 this.dirtyData = true;
             }
         },

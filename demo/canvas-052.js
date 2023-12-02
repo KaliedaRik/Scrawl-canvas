@@ -89,7 +89,9 @@ const impressionistAsset = scrawl.makeRawAsset({
         key: 'background',
         defaultValue: false,
         setter: function (item) {
+// @ts-expect-error
             this.background = item;
+// @ts-expect-error
             this.dirtyBackground = true;
         },
     },{
@@ -97,7 +99,9 @@ const impressionistAsset = scrawl.makeRawAsset({
         key: 'noise',
         defaultValue: false,
         setter: function (item) {
+// @ts-expect-error
             this.noise = item;
+// @ts-expect-error
             this.dirtyData = true;
         },
     },{
@@ -107,8 +111,10 @@ const impressionistAsset = scrawl.makeRawAsset({
         defaultValue: false,
         setter: function () {
 
+// @ts-expect-error
             if (this.dirtyBackground) {
 
+// @ts-expect-error
                 this.dirtyBackground = false;
 
 // @ts-expect-error
@@ -127,12 +133,16 @@ const impressionistAsset = scrawl.makeRawAsset({
                     // + the reason why we're NOT doing it that way at the moment is to keep RawAsset canvases out of the SC library
                     engine.drawImage(background.source, ...background.copyArray, ...background.pasteArray);
 
+// @ts-expect-error
                     this.backgroundData = engine.getImageData(0, 0, dimension, dimension);
 
+// @ts-expect-error
                     this.dirtyData = true;
                 }
+// @ts-expect-error
                 else this.dirtyBackground = true;
             }
+// @ts-expect-error
             else this.dirtyData = true;
         },
     }],

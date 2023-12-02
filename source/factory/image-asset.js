@@ -378,8 +378,8 @@ export const createImageFromEntity = function (item, stashAsAsset = false) {
 };
 
 
-// #### Factory
-export const makeImageAsset = function (items) {
+// #### Factory (not exported)
+const makeImageAsset = function (items) {
 
     if (!items) return false;
     return new ImageAsset(items);

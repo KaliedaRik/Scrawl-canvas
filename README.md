@@ -152,6 +152,12 @@ The tool chain includes the [ESLint](https://eslint.org/) package to impose some
 $> yarn lint
 ```
 
+The tool chain also includes the [Knip](https://knip.dev/) package to check for unused files and exports in the source Javascript. To run Knip:
+
+```sh
+$> yarn knip
+```
+
 ### TypeScript support
 Scrawl-canvas supports TypeScript through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.
 

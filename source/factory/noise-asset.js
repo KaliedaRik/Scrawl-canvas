@@ -1106,6 +1106,10 @@ export const makeNoiseAsset = function (items) {
 };
 
 // Deprecated - old name
-export const makeNoise = makeNoiseAsset;
+export const makeNoise = function (items) {
+
+    if (!items) return false;
+    return new NoiseAsset(items);
+};
 
 constructors.NoiseAsset = NoiseAsset;

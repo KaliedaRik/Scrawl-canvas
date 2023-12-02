@@ -30,9 +30,13 @@ const myAsset = scrawl.makeRawAsset({
 
             if (item) {
 
+// @ts-expect-error
                 this.stuff = item;
+// @ts-expect-error
                 this.canvasWidth =  width;
+// @ts-expect-error
                 this.canvasHeight = height;
+// @ts-expect-error
                 this.dirtyData = true;
             }
         },

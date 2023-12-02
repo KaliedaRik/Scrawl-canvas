@@ -40,6 +40,7 @@ const myWorld = makeWorld({
         {
             key: 'hello',
             defaultValue: 'Hello World',
+// @ts-expect-error
             setter: function (item) { this.hello = `Hello ${item}!`},
         },
         {

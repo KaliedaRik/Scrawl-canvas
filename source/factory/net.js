@@ -1030,10 +1030,6 @@ const generators = {
                 }
             }
 
-            // TODO: consider whether we need these
-            // else if (HUB_ARTEFACTS_2.includes(host.type)) {}
-            // else if (HUB_ARTEFACTS_3.includes(host.type)) {}
-
             const [x, y] = shapeTemplate.get(POSITION);
 
             const hub = makeParticle({

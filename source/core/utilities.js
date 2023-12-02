@@ -193,33 +193,6 @@ export const isa_obj = item => (Object.prototype.toString.call(item) == $OBJECT)
 export const isa_quaternion = item => (item && item.type && item.type == T_QUATERNION) ? true : false;
 
 
-// __mergeInto__ takes two objects and merges the attributes of one into the other. This function mutates the 'original' object rather than generating a third, new onject
-//
-// Example:
-// ```
-// var original = { name: 'Peter', age: 42, job: 'lawyer' };
-// var additional = { age: 32, job: 'coder', pet: 'cat' };
-// scrawl.utils.mergeInto(original, additional);
-//
-// -> { name: 'Peter', age: 42, job: 'lawyer', pet: 'cat' }
-// ```
-export const mergeInto = (original, additional) => {
-
-    if (isa_obj(original) && isa_obj(additional)) {
-
-        for (const key in additional) {
-
-/* eslint-disable-next-line */
-            if (additional.hasOwnProperty(key) && typeof original[key] == UNDEF) {
-
-                original[key] = additional[key];
-            }
-        }
-    }
-    return original;
-};
-
-
 // __mergeOver__ takes two objects and writes the attributes of one over the other. This function mutates the 'original' object rather than generating a third, new onject
 //
 // Example:
@@ -528,9 +501,6 @@ export const easeEngines = {
         }
     },
 };
-
-
-export const getArrayType = someObject => someObject && someObject.constructor && someObject.constructor.name && someObject.constructor.name || null;
 
 
 // Code to detect browser from Code Box: https://code-boxx.com/detect-browser-with-javascript/
