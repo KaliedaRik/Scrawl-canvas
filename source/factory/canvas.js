@@ -1020,10 +1020,10 @@ export const getCanvas = function (search) {
 // Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
 
 // `Exported variables` (to modules).
-export let currentCanvas = null;
 export let currentGroup = null;
 
 // `Exported function` (to modules and scrawl object).
+let currentCanvas = null;
 export const setCurrentCanvas = function (item) {
 
     let changeFlag = false;

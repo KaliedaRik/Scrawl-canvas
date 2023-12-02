@@ -497,8 +497,8 @@ export const importVideo = function (...args) {
 };
 
 
-// #### Factory
-export const makeVideoAsset = function (items) {
+// #### Factory (not exported)
+const makeVideoAsset = function (items) {
 
     if (!items) return false;
     return new VideoAsset(items);

@@ -96,12 +96,4 @@ export const releaseParticleHistory = function (h) {
     }
 };
 
-
-// #### Factory
-export const makeParticleHistory = function (items) {
-
-    if (!items) return false;
-    return new ParticleHistory(items);
-};
-
 constructors.ParticleHistory = ParticleHistory;
