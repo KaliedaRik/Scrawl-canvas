@@ -38,7 +38,6 @@ export default function (P = Ωempty) {
         addOwnRotationToMimic: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
-    mergeOver(P, defaultAttributes);
 
 
 // #### Packet management

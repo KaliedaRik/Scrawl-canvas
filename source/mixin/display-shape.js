@@ -62,7 +62,6 @@ export default function (P = Ωempty) {
         actionLargestArea: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
-    mergeOver(P, defaultAttributes);
 
 
 // #### Packet management
