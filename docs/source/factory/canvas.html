@@ -2478,8 +2478,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> currentCanvas = <span class="hljs-literal">null</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> currentGroup = <span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> currentGroup = <span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -2494,7 +2493,8 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setCurrentCanvas = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentCanvas = <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setCurrentCanvas = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> changeFlag = <span class="hljs-literal">false</span>;
 

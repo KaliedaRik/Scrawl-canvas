@@ -345,11 +345,6 @@
                 </a>
               
                 
-                <a class="source" href="core-001.html">
-                  ./demo/core-001.js
-                </a>
-              
-                
                 <a class="source" href="delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -1122,15 +1117,68 @@
 
                 <span class="hljs-keyword">const</span> {<span class="hljs-attr">image</span>:img, <span class="hljs-attr">multiFaceLandmarks</span>:mesh} = item;
 
-                <span class="hljs-keyword">if</span> (img) {
+                <span class="hljs-keyword">if</span> (img) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> =  img.<span class="hljs-property">width</span>;
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = img.<span class="hljs-property">height</span>;
-                }
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> =  img.<span class="hljs-property">width</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                <span class="hljs-keyword">if</span> (mesh) <span class="hljs-variable language_">this</span>.<span class="hljs-property">mesh</span> = mesh;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = img.<span class="hljs-property">height</span>;
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (mesh) <span class="hljs-variable language_">this</span>.<span class="hljs-property">mesh</span> = mesh;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
             }
         },
     },{
@@ -1158,11 +1206,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>The forever loop function, which captures the MediaPipe model’s output and passes it on to our raw asset for processing</p>
 
@@ -1175,11 +1223,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>To get the raw asset working, something needs to subscribe to it - even though we’re not using the asset to output any graphics in this demo. We only need to create the Picture entity once.</p>
 
@@ -1195,11 +1243,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h5 id="import-and-use-media-stream">Import and use media stream</h5>
 
@@ -1210,11 +1258,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Capture the media stream</p>
 
@@ -1232,11 +1280,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1247,11 +1295,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1273,11 +1321,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Start the MediaPipe model</p>
 
@@ -1288,11 +1336,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1315,11 +1363,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Use MediaPipe’s camera functionality to get updates to the forever loop</p>
 
@@ -1330,11 +1378,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1359,11 +1407,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1375,11 +1423,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1395,11 +1443,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -1423,11 +1471,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
