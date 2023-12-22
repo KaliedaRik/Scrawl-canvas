@@ -345,11 +345,6 @@
                 </a>
               
                 
-                <a class="source" href="core-001.html">
-                  ./demo/core-001.js
-                </a>
-              
-                
                 <a class="source" href="delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -1062,11 +1057,7 @@
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;background&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">background</span> = item;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span> = <span class="hljs-literal">true</span>;
-        },
-    },{</pre></div></div>
+        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {</pre></div></div>
             
         </li>
         
@@ -1077,17 +1068,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p><strong>noise</strong> - a handle to our Noise asset, from which we will be extracting brushstroke direction and length data</p>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;noise&#x27;</span>,
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">noise</span> = item;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
-        },
-    },{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">background</span> = item;</pre></div></div>
             
         </li>
         
@@ -1098,20 +1083,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p><strong>trigger</strong> - we update the RawAsset at the start of each Display cycle by setting its <code>trigger</code> attribute.</p>
-<ul>
-<li>It’s at this point that we fill the RawAsset canvas with the background image, if required</li>
-</ul>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>,
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span>) {
-
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span> = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span> = <span class="hljs-literal">true</span>;
+        },
+    },{</pre></div></div>
             
         </li>
         
@@ -1121,6 +1099,105 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p><strong>noise</strong> - a handle to our Noise asset, from which we will be extracting brushstroke direction and length data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;noise&#x27;</span>,
+        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">noise</span> = item;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+        },
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p><strong>trigger</strong> - we update the RawAsset at the start of each Display cycle by setting its <code>trigger</code> attribute.</p>
+<ul>
+<li>It’s at this point that we fill the RawAsset canvas with the background image, if required</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>,
+        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span> = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1138,11 +1215,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Strictly speaking, copyArray and pasteArray are Picture entity internal data structures but that doesn’t stop us using them here.</p>
 <ul>
@@ -1153,26 +1230,80 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    engine.<span class="hljs-title function_">drawImage</span>(background.<span class="hljs-property">source</span>, ...background.<span class="hljs-property">copyArray</span>, ...background.<span class="hljs-property">pasteArray</span>);
+            <div class="content"><div class='highlight'><pre>                    engine.<span class="hljs-title function_">drawImage</span>(background.<span class="hljs-property">source</span>, ...background.<span class="hljs-property">copyArray</span>, ...background.<span class="hljs-property">pasteArray</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">backgroundData</span> = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, dimension, dimension);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">backgroundData</span> = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, dimension, dimension);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
-                }
-                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span> = <span class="hljs-literal">true</span>;
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyBackground</span> = <span class="hljs-literal">true</span>;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
         },
     }],</pre></div></div>
             
         </li>
         
         
-        <li id="section-17">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>assetWrapper</code> is the same as <code>this</code> when function is declared with the function keyword</p>
 <ul>
@@ -1239,11 +1370,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1279,11 +1410,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-19">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1295,11 +1426,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-20">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1313,11 +1444,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-21">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>We need to trigger the RawAsset object to update its output at the start of each Display cycle</p>
 
@@ -1331,11 +1462,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-22">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
 
@@ -1355,11 +1486,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-23">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality</p>
@@ -1410,11 +1541,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-24">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Setup form
 @ts-expect-error</p>
@@ -1426,11 +1557,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1441,11 +1572,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1456,11 +1587,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1471,11 +1602,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1486,11 +1617,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-29">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1501,11 +1632,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-30">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1516,11 +1647,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-31">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1531,11 +1662,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1546,11 +1677,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1561,11 +1692,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1576,11 +1707,11 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <h4 id="video-recording-and-download-functionality">Video recording and download functionality</h4>
 
@@ -1639,11 +1770,11 @@ videoButton.<span class="hljs-title function_">addEventListener</span>(<span cla
         </li>
         
         
-        <li id="section-36">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
