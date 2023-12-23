@@ -58,7 +58,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.11.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-11-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-10-4.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.11.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-11-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-11-0.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -160,6 +160,8 @@ $> yarn knip
 
 ### TypeScript support
 Scrawl-canvas supports TypeScript through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.
+
+To view the library's API types, try the [tsdocs.dev website](https://tsdocs.dev/docs/scrawl-canvas).
 
 To aid development, we test the definitions file against the entire suite of Demo code .js files supplied as part of the library. From the root of the project, run the following command:
 
