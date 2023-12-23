@@ -48,7 +48,6 @@ export default function (P = Ωempty) {
 
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
-    mergeOver(P, defaultAttributes);
 
 
 // #### Packet management

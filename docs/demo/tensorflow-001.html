@@ -345,11 +345,6 @@
                 </a>
               
                 
-                <a class="source" href="core-001.html">
-                  ./demo/core-001.js
-                </a>
-              
-                
                 <a class="source" href="delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -934,9 +929,22 @@
 
                 segs.<span class="hljs-property">keypoints</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> parts[s.<span class="hljs-property">part</span>] = s.<span class="hljs-property">position</span>);
 
-                <span class="hljs-keyword">if</span> (parts.<span class="hljs-property">leftEye</span> != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (parts.<span class="hljs-property">leftEye</span> != <span class="hljs-literal">null</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
 
                     <span class="hljs-keyword">const</span> eye = parts.<span class="hljs-property">leftEye</span>;
 
@@ -950,9 +958,22 @@
                     leftEye[<span class="hljs-number">1</span>] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(leftEyeY.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / leftEyeY.<span class="hljs-property">length</span>);
                 }
 
-                <span class="hljs-keyword">if</span> (parts.<span class="hljs-property">rightEye</span> != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (parts.<span class="hljs-property">rightEye</span> != <span class="hljs-literal">null</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
 
                     <span class="hljs-keyword">const</span> eye = parts.<span class="hljs-property">rightEye</span>;
 
@@ -970,28 +991,108 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>We can also check for image dimensions as that info is also passed on by the model output</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">width</span> &amp;&amp; item.<span class="hljs-property">height</span>) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">width</span> &amp;&amp; item.<span class="hljs-property">height</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> !== item.<span class="hljs-property">width</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> !== item.<span class="hljs-property">width</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> = item.<span class="hljs-property">width</span>;
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
-                }
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> = item.<span class="hljs-property">width</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> !== item.<span class="hljs-property">height</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = item.<span class="hljs-property">height</span>;
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> !== item.<span class="hljs-property">height</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = item.<span class="hljs-property">height</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
                 }
             }
         },
@@ -1035,11 +1136,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>assetWrapper</code> is the same as <code>this</code> when function is declared with the function keyword</p>
 
@@ -1053,11 +1154,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Clear the canvas, resizing it if required</p>
 
@@ -1069,11 +1170,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Draw our filled circles onto the canvas</p>
 
@@ -1096,11 +1197,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>The forever loop function, which captures the tensorflow model’s output and passes it on to our raw asset for processing</p>
 
@@ -1120,11 +1221,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h5 id="import-and-use-livestream">Import and use livestream</h5>
 <p>convenience handle for the media stream asset</p>
@@ -1136,11 +1237,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Capture the media stream</p>
 
@@ -1157,11 +1258,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream’s video element’s dimensions have not been set
 @ts-expect-error</p>
@@ -1173,11 +1274,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1188,11 +1289,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Take the media stream and display it in our canvas element</p>
 
@@ -1213,11 +1314,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Start the TensorFlow model</p>
 
@@ -1228,11 +1329,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1245,11 +1346,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Display the visual generated by our raw asset</p>
 
@@ -1268,11 +1369,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Invoke the forever loop</p>
 
@@ -1287,11 +1388,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1303,11 +1404,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 

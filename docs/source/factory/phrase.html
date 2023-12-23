@@ -524,6 +524,11 @@
                   ./source/mixin/tween.js
                 </a>
               
+                
+                <a class="source" href="../scrawl.html">
+                  ./source/scrawl.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -2102,10 +2107,10 @@ S.<span class="hljs-property">family</span> = <span class="hljs-keyword">functio
     <span class="hljs-keyword">const</span> search = <span class="hljs-keyword">new</span> <span class="hljs-title class_">RegExp</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">sectionClassMarker</span>),
         parseArray = text.<span class="hljs-title function_">split</span>(search),
         styles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sectionStyles</span>,
-        classes = sectionClasses;
+        classes = sectionClasses,
+        parsedText = [];
 
-    <span class="hljs-keyword">let</span> parsedText = [],
-        classObj, index, styleObj;
+    <span class="hljs-keyword">let</span> classObj, index, styleObj;
 
     styles.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 

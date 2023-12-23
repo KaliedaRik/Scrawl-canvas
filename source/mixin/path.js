@@ -32,7 +32,6 @@ export default function (P = Ωempty) {
         constantSpeedAlongPath: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
-    mergeOver(P, defaultAttributes);
 
 
 // #### Packet management

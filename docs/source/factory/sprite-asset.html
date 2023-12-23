@@ -524,6 +524,11 @@
                   ./source/mixin/tween.js
                 </a>
               
+                
+                <a class="source" href="../scrawl.html">
+                  ./source/scrawl.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -821,12 +826,9 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p><code>gettableSpriteAssetAtributes</code>, <code>settableSpriteAssetAtributes</code> - exported Arrays.</p>
+              <h4 id="importing-spritesheets-into-scrawl-canvas">Importing spritesheets into Scrawl-canvas</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> gettableSpriteAssetAtributes = [];
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> settableSpriteAssetAtributes = [];</pre></div></div>
             
         </li>
         
@@ -836,19 +838,6 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <h4 id="importing-spritesheets-into-scrawl-canvas">Importing spritesheets into Scrawl-canvas</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>importSprite</code> - load sprite images and manifest files from a remote server and create assets from them</p>
 <p>Arguments can be a comma-separated list of String urls. For example, for a spritesheet at server url <code>http://www.example.com/path/to/image/flower.jpg</code>:</p>
@@ -864,11 +853,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Alternatively, the arguments can include an object with the following attributes:</p>
 <ul>
@@ -911,11 +900,11 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Load the sprite image in the normal way</p>
 
@@ -964,11 +953,11 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Get manifest</p>
 
@@ -1028,11 +1017,11 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>TODO: Scrawl-canvas does not yet support importing spritesheets defined in the web page HTML code</p>
 
@@ -1041,17 +1030,17 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <h4 id="factory">Factory</h4>
+              <h4 id="factory-not-exported">Factory (not exported)</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeSpriteAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSpriteAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SpriteAsset</span>(items);
@@ -1062,11 +1051,11 @@ constructors.<span class="hljs-property">SpriteAsset</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Examples used in Demos</p>
 <ul>

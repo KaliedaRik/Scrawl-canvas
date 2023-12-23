@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.10.4 - 1 July 2023` 
+Version: `8.11.0 - 23 December 2023` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -58,7 +58,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.10.4 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-10-4.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-10-4.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.11.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-11-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-11-0.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -106,7 +106,7 @@ Alternatively, a zip package of the v8.10.4 files can be downloaded from this li
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.10.4';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.11.0';
     [...]
 </script>
 ```
@@ -152,8 +152,16 @@ The tool chain includes the [ESLint](https://eslint.org/) package to impose some
 $> yarn lint
 ```
 
+The tool chain also includes the [Knip](https://knip.dev/) package to check for unused files and exports in the source Javascript. To run Knip:
+
+```sh
+$> yarn knip
+```
+
 ### TypeScript support
 Scrawl-canvas supports TypeScript through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.
+
+To view the library's API types, try the [tsdocs.dev website](https://tsdocs.dev/docs/scrawl-canvas).
 
 To aid development, we test the definitions file against the entire suite of Demo code .js files supplied as part of the library. From the root of the project, run the following command:
 

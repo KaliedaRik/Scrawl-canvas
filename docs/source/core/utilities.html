@@ -524,6 +524,11 @@
                   ./source/mixin/tween.js
                 </a>
               
+                
+                <a class="source" href="../scrawl.html">
+                  ./source/scrawl.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -942,42 +947,6 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p><strong>mergeInto</strong> takes two objects and merges the attributes of one into the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
-<p>Example:</p>
-<pre><code><span class="hljs-keyword">var</span> original = { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;lawyer&#x27;</span> };
-<span class="hljs-keyword">var</span> additional = { <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;coder&#x27;</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> };
-scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">mergeInto</span>(original, additional);
-
--&gt; { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;lawyer&#x27;</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> }
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeInto</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(original) &amp;&amp; <span class="hljs-title function_">isa_obj</span>(additional)) {
-
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> additional) {
-
-<span class="hljs-comment">/* eslint-disable-next-line */</span>
-            <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key) &amp;&amp; <span class="hljs-keyword">typeof</span> original[key] == <span class="hljs-variable constant_">UNDEF</span>) {
-
-                original[key] = additional[key];
-            }
-        }
-    }
-    <span class="hljs-keyword">return</span> original;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
               <p><strong>mergeOver</strong> takes two objects and writes the attributes of one over the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
 <pre><code><span class="hljs-keyword">var</span> original = { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;lawyer&#x27;</span> };
@@ -1005,11 +974,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>mergeDiscard</strong> iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object</p>
 <p>Example:</p>
@@ -1038,11 +1007,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>pushUnique</strong> adds a value to the end of an array, if that value is not already present in the array. This function mutates the array</p>
 <p>Example:</p>
@@ -1075,11 +1044,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>removeItem</strong> removes a value from an array. This function mutates the array</p>
 <p>Example:</p>
@@ -1108,11 +1077,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>xt</strong> checks to see if argument exists (is not ‘undefined’)</p>
 
@@ -1123,11 +1092,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><strong>xta</strong> checks to make sure that all the arguments supplied to the function exist (none are ‘undefined’)</p>
 
@@ -1138,11 +1107,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><strong>xtGet</strong> returns the first existing (not ‘undefined’) argument supplied to the function</p>
 
@@ -1153,11 +1122,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>xto</strong> checks to make sure that at least one of the arguments supplied to the function exists (is not ‘undefined’)</p>
 
@@ -1168,11 +1137,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-29">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h5 id="easing-engines">Easing engines</h5>
 <p><code>easeEngines</code> - an object in which keys define various easing functions</p>
@@ -1184,11 +1153,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Legacy easings</p>
 
@@ -1265,11 +1234,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Noise functionality easing engines</p>
 
@@ -1282,11 +1251,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>The following easing variations come from the <a href="https://easings.net/">easings.net</a> web page</p>
 <ul>
@@ -1386,11 +1355,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>This is wrong</p>
 
@@ -1418,19 +1387,16 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
             <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + res) / <span class="hljs-number">2</span>;
         }
     },
-};
-
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getArrayType</span> = someObject =&gt; someObject &amp;&amp; someObject.<span class="hljs-property">constructor</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> || <span class="hljs-literal">null</span>;</pre></div></div>
+};</pre></div></div>
             
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Code to detect browser from Code Box: <a href="https://code-boxx.com/detect-browser-with-javascript/">https://code-boxx.com/detect-browser-with-javascript/</a></p>
 <ul>
@@ -1466,11 +1432,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Create an Object prototype</p>
 

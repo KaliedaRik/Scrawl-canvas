@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.10.4
+// Type definitions for Scrawl-canvas 8.11.0
 
 
 

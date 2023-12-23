@@ -110,10 +110,6 @@ S.source = function (items = []) {
 // Sprite assets do not use the `checkSource` function. Instead, Picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)
 P.checkSource = λnull;
 
-// `gettableSpriteAssetAtributes`, `settableSpriteAssetAtributes` - exported Arrays.
-export const gettableSpriteAssetAtributes = [];
-export const settableSpriteAssetAtributes = [];
-
 
 // #### Importing spritesheets into Scrawl-canvas
 
@@ -257,8 +253,8 @@ export const importSprite = function (...args) {
 // TODO: Scrawl-canvas does not yet support importing spritesheets defined in the web page HTML code
 
 
-// #### Factory
-export const makeSpriteAsset = function (items) {
+// #### Factory (not exported)
+const makeSpriteAsset = function (items) {
 
     if (!items) return false;
     return new SpriteAsset(items);

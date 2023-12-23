@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.10.4 - 1 July 2023
+// #### Version 8.11.0 - 23 December 2023
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -32,17 +32,17 @@ export const init = _init;
 if (typeof window !== 'undefined') _init();
 
 // ## Export Scrawl-canvas module functions
-export { 
-    startCoreAnimationLoop, 
+export {
+    startCoreAnimationLoop,
     stopCoreAnimationLoop,
 } from './core/animation-loop.js';
-export { 
+export {
     clear,
     compile,
     show,
     render,
 } from './core/display-cycle.js';
-export { 
+export {
     addListener,
     removeListener,
     addNativeListener,
@@ -56,10 +56,10 @@ export {
 export * as library from './core/library.js';
 export { seededRandomNumberGenerator } from './core/random-seed.js';
 export { makeSnippet } from './core/snippets.js';
-export { 
-    currentCorePosition, 
-    startCoreListeners, 
-    stopCoreListeners, 
+export {
+    currentCorePosition,
+    startCoreListeners,
+    stopCoreListeners,
     getTouchActionChoke,
     setTouchActionChoke,
 } from './core/user-interaction.js';
@@ -76,7 +76,7 @@ export {
 export { makeCog } from './factory/cog.js';
 export { makeColor } from './factory/color.js';
 export { makeConicGradient } from './factory/conic-gradient.js';
-export { 
+export {
     requestCoordinate,
     releaseCoordinate,
 } from './factory/coordinate.js';
@@ -90,7 +90,7 @@ export { makeForce } from './factory/particle-force.js';
 export { makeGradient } from './factory/gradient.js';
 export { makeGrid } from './factory/grid.js';
 export { makeGroup } from './factory/group.js';
-export { 
+export {
     importImage,
     importDomImage,
     createImageFromCell,
@@ -103,11 +103,11 @@ export { makeLineSpiral } from './factory/line-spiral.js';
 export { makeLoom } from './factory/loom.js';
 export { makeMesh } from './factory/mesh.js';
 export { makeNet } from './factory/net.js';
-export { 
+export {
     makeNoise,
     makeNoiseAsset,
 } from './factory/noise-asset.js';
-export { 
+export {
     observeAndUpdate,
     makeUpdater
 } from './factory/observe-update.js';
@@ -118,7 +118,7 @@ export { makePicture } from './factory/picture.js';
 export { makePolygon } from './factory/polygon.js';
 export { makePolyline } from './factory/polyline.js';
 export { makeQuadratic } from './factory/quadratic.js';
-export { 
+export {
     requestQuaternion,
     releaseQuaternion,
 } from './factory/quaternion.js';
@@ -131,7 +131,7 @@ export { makeShape } from './factory/shape.js';
 export { makeSpiral } from './factory/spiral.js';
 export { importSprite } from './factory/sprite-asset.js';
 export { makeSpring } from './factory/particle-spring.js';
-export { 
+export {
     addStack,
     getStack,
 } from './factory/stack.js';
@@ -140,11 +140,11 @@ export { makeTetragon } from './factory/tetragon.js';
 export { makeTicker } from './factory/ticker.js';
 export { makeTracer } from './factory/tracer.js';
 export { makeTween } from './factory/tween.js';
-export { 
-    requestVector, 
+export {
+    requestVector,
     releaseVector,
 } from './factory/vector.js';
-export { 
+export {
     importDomVideo,
     importVideo,
     importMediaStream,

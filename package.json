@@ -1,14 +1,15 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.10.4",
-  "description": "Version 8.10.4 - 1 July 2023",
+  "version": "8.11.0",
+  "description": "Version 8.11.0 - 23 December 2023",
   "main": "./min/scrawl.js",
   "type": "module",
   "types": "./source/scrawl.d.ts",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
-    "dev": "light-server -p 8000 --serve . --open",
+    "dev": "browser-sync -w",
     "lint": "npx eslint source/**/*.js demo/*.js demo/**/*.js",
+    "knip": "knip",
     "test": "tsc"
   },
   "keywords": [
@@ -39,12 +40,16 @@
   },
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/browser-sync": "^2",
+    "@types/eslint": "^8",
+    "@types/node": "^20.10.2",
+    "browser-sync": "^2.29.3",
     "docco": "^0.9.1",
-    "eslint": "^8.39.0",
-    "light-server": "^2.9.1",
-    "rollup": "^2.64.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "typescript": "^4.5.5"
+    "eslint": "^8.56.0",
+    "knip": "^3.8.4",
+    "rollup": "^4.9.1",
+    "typescript": "^5.3.2"
   },
-  "dependencies": {}
+  "packageManager": "yarn@4.0.1"
 }

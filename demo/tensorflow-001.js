@@ -35,6 +35,7 @@ const myAsset = scrawl.makeRawAsset({
 
                 if (parts.leftEye != null) {
 
+// @ts-expect-error
                     this.dirtyData = true;
 
                     const eye = parts.leftEye;
@@ -51,6 +52,7 @@ const myAsset = scrawl.makeRawAsset({
 
                 if (parts.rightEye != null) {
 
+// @ts-expect-error
                     this.dirtyData = true;
 
                     const eye = parts.rightEye;
@@ -69,15 +71,21 @@ const myAsset = scrawl.makeRawAsset({
             // We can also check for image dimensions as that info is also passed on by the model output
             if (item && item.width && item.height) {
 
+// @ts-expect-error
                 if (this.canvasWidth !== item.width) {
 
+// @ts-expect-error
                     this.canvasWidth = item.width;
+// @ts-expect-error
                     this.dirtyData = true;
                 }
 
+// @ts-expect-error
                 if (this.canvasHeight !== item.height) {
 
+// @ts-expect-error
                     this.canvasHeight = item.height;
+// @ts-expect-error
                     this.dirtyData = true;
                 }
             }
