@@ -7,7 +7,7 @@
   "types": "./source/scrawl.d.ts",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
-    "dev": "light-server -p 8000 --serve . --open",
+    "dev": "browser-sync -w",
     "lint": "npx eslint source/**/*.js demo/*.js demo/**/*.js",
     "knip": "knip",
     "test": "tsc"
@@ -41,12 +41,14 @@
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "@types/browser-sync": "^2",
+    "@types/eslint": "^8",
     "@types/node": "^20.10.2",
+    "browser-sync": "^2.29.3",
     "docco": "^0.9.1",
-    "eslint": "^8.39.0",
-    "knip": "^3.8.1",
-    "light-server": "^2.9.1",
-    "rollup": "^2.64.0",
+    "eslint": "^8.56.0",
+    "knip": "^3.8.4",
+    "rollup": "^4.9.1",
     "typescript": "^5.3.2"
   },
   "packageManager": "yarn@4.0.1"
