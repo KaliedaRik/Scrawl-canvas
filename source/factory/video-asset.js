@@ -388,6 +388,84 @@ export const importMediaStream = function (items = Ωempty) {
     });
 };
 
+// `importMediaStream` - __Warning: experimental!__
+// + This function will attempt to link a mediaStream - for instance from a device's camera - to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
+// + TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
+export const importScreenCapture = function (items = Ωempty) {
+
+    // Setup the displayMediaOptions object with user-supplied data in the items argument
+    const displayMediaOptions = {
+        video: {
+            displaySurface: "browser",
+        },
+        audio: {
+            suppressLocalAudioPlayback: false,
+        },
+        preferCurrentTab: false,
+        selfBrowserSurface: "exclude",
+        systemAudio: "include",
+        surfaceSwitching: "include",
+        monitorTypeSurfaces: "include",
+    };
+
+    // We need a video element to receive the media stream
+    const name = items.name || generateUniqueString();
+
+    const el = document.createElement(VIDEO);
+
+    const vid = makeVideoAsset({
+        name: name,
+        source: el,
+    });
+
+    return new Promise((resolve, reject) => {
+
+        if (navigator && navigator.mediaDevices) {
+
+            navigator.mediaDevices.getDisplayMedia({
+                ...displayMediaOptions,
+                ...items,
+            })
+            .then(mediaStream => {
+
+            // })
+
+        //     navigator.mediaDevices.getUserMedia(constraints)
+        //     .then(mediaStream => {
+
+                const actuals = mediaStream.getVideoTracks();
+
+                let data;
+
+                if (_isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+
+                el.id = vid.name;
+
+                if (data) {
+
+                    el.width = data.width;
+                    el.height = data.height;
+                }
+
+                el.srcObject = mediaStream;
+
+                el.onloadedmetadata = function () {
+
+                    el.play();
+                }
+
+                resolve(vid);
+            })
+            .catch (err => {
+
+                console.log(err.message);
+                resolve(vid);
+            });
+        }
+        else reject('Navigator.mediaDevices object not found');
+    });
+};
+
 
 // `importVideo` - load videos from a remote server and create assets from them
 //

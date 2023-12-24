@@ -148,6 +148,7 @@ export {
     importDomVideo,
     importVideo,
     importMediaStream,
+    importScreenCapture,
 } from './factory/video-asset.js';
 export { makeWheel } from './factory/wheel.js';
 export { makeWorld } from './factory/particle-world.js';

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Screencapture 001</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Screencapture test 001</h1>
+  <h2>Screen Capture API - apply a filter to a web page</h2>
+
+  <div class="controls">
+    <div class="yellow label">Filter</div>
+    <div class="yellow">
+      <select class="controlItem" id="backgroundFilter">
+        <option value="">None</option>
+        <option value="grayscale">Grayscale</option>
+        <option value="sepia">Sepia</option>
+        <option value="invert">Invert</option>
+        <option value="red">Red</option>
+        <option value="background-blur">Blur</option>
+        <option value="pixelate">Pixelate</option>
+      </select>
+    </div>
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/screencapture-001.html">Annotated code</a></p>
+  </div>
+
+  <script src="screencapture-001.js" type="module"></script>
+
+</body>
+
+</html>
