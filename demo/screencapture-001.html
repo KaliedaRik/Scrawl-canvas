@@ -13,6 +13,13 @@
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
+    body {
+      margin: 1rem 0;
+    }
+    .canvas-hold {
+      width: 100vw;
+      height: 100vh;
+    }
   </style>
 </head>
 
@@ -35,12 +42,13 @@
     </div>
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div class="canvas-hold">
+    <canvas 
+      id="mycanvas" 
+      data-scrawl-canvas
+      data-is-responsive="true"
+    ></canvas>
+  </div>
 
   <p id="reportmessage"></p>
 
