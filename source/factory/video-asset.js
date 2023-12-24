@@ -388,12 +388,11 @@ export const importMediaStream = function (items = Ωempty) {
     });
 };
 
-// `importMediaStream` - __Warning: experimental!__
-// + This function will attempt to link a mediaStream - for instance from a device's camera - to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
-// + TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
+// `importScreenCapture` - __Warning: experimental!__
+// + This function will attempt to link a screen capture stream to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
 export const importScreenCapture = function (items = Ωempty) {
 
-    // Setup the displayMediaOptions object with user-supplied data in the items argument
+    // Setup the default displayMediaOptions object - attributes will be overwritten by user-supplied data in the items argument
     const displayMediaOptions = {
         video: {
             displaySurface: "browser",
@@ -427,11 +426,6 @@ export const importScreenCapture = function (items = Ωempty) {
                 ...items,
             })
             .then(mediaStream => {
-
-            // })
-
-        //     navigator.mediaDevices.getUserMedia(constraints)
-        //     .then(mediaStream => {
 
                 const actuals = mediaStream.getVideoTracks();
 
