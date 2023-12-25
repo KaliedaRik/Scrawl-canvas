@@ -389,7 +389,25 @@ export const importMediaStream = function (items = Ωempty) {
 };
 
 // `importScreenCapture` - __Warning: experimental!__
-// + This function will attempt to link a screen capture stream to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
+//
+// This function will attempt to link a screen capture stream to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
+
+// It takes an object argument with the following (optional) attributes - see the [MDN getDisplayMedia page](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia) for details. Defaults are as follows:
+// ```
+// {
+//     video: {
+//         displaySurface: "browser",
+//     },
+//     audio: {
+//         suppressLocalAudioPlayback: false,
+//     },
+//     preferCurrentTab: false,
+//     selfBrowserSurface: "exclude",
+//     systemAudio: "include",
+//     surfaceSwitching: "include",
+//     monitorTypeSurfaces: "include",
+// }
+// ```
 export const importScreenCapture = function (items = Ωempty) {
 
     // Setup the default displayMediaOptions object - attributes will be overwritten by user-supplied data in the items argument

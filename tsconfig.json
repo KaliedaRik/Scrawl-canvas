@@ -5,7 +5,8 @@
     "noEmit": true,
     "target": "esnext",
     "module": "esnext",
-    "strict": false
+    "strict": false,
+    "types": []
   },
   "include": [
     "demo/**/*.js",

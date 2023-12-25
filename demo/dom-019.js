@@ -1,7 +1,7 @@
 // # Demo Screencapture 001
-// MediaPipe Selfie Segmentation - model image output
+// Screen Capture API - apply a filter to a browser web page
 
-// [Run code](../../demo/screencapture-001.html)
+// [Run code](../../demo/dom-019.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
