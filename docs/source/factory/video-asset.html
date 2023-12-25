@@ -1327,6 +1327,141 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
+              <p><code>importScreenCapture</code> - <strong>Warning: experimental!</strong></p>
+<p>This function will attempt to link a screen capture stream to an offscreen &lt;video&gt; element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>It takes an object argument with the following (optional) attributes - see the <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia">MDN getDisplayMedia page</a> for details. Defaults are as follows:</p>
+<pre><code>{
+    <span class="hljs-attr">video</span>: {
+        <span class="hljs-attr">displaySurface</span>: <span class="hljs-string">&quot;browser&quot;</span>,
+    },
+    <span class="hljs-attr">audio</span>: {
+        <span class="hljs-attr">suppressLocalAudioPlayback</span>: <span class="hljs-literal">false</span>,
+    },
+    <span class="hljs-attr">preferCurrentTab</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">selfBrowserSurface</span>: <span class="hljs-string">&quot;exclude&quot;</span>,
+    <span class="hljs-attr">systemAudio</span>: <span class="hljs-string">&quot;include&quot;</span>,
+    <span class="hljs-attr">surfaceSwitching</span>: <span class="hljs-string">&quot;include&quot;</span>,
+    <span class="hljs-attr">monitorTypeSurfaces</span>: <span class="hljs-string">&quot;include&quot;</span>,
+}
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importScreenCapture = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>Setup the default displayMediaOptions object - attributes will be overwritten by user-supplied data in the items argument</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> displayMediaOptions = {
+        <span class="hljs-attr">video</span>: {
+            <span class="hljs-attr">displaySurface</span>: <span class="hljs-string">&quot;browser&quot;</span>,
+        },
+        <span class="hljs-attr">audio</span>: {
+            <span class="hljs-attr">suppressLocalAudioPlayback</span>: <span class="hljs-literal">false</span>,
+        },
+        <span class="hljs-attr">preferCurrentTab</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">selfBrowserSurface</span>: <span class="hljs-string">&quot;exclude&quot;</span>,
+        <span class="hljs-attr">systemAudio</span>: <span class="hljs-string">&quot;include&quot;</span>,
+        <span class="hljs-attr">surfaceSwitching</span>: <span class="hljs-string">&quot;include&quot;</span>,
+        <span class="hljs-attr">monitorTypeSurfaces</span>: <span class="hljs-string">&quot;include&quot;</span>,
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>We need a video element to receive the media stream</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> name = items.<span class="hljs-property">name</span> || <span class="hljs-title function_">generateUniqueString</span>();
+
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">VIDEO</span>);
+
+    <span class="hljs-keyword">const</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
+        <span class="hljs-attr">name</span>: name,
+        <span class="hljs-attr">source</span>: el,
+    });
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (navigator &amp;&amp; navigator.<span class="hljs-property">mediaDevices</span>) {
+
+            navigator.<span class="hljs-property">mediaDevices</span>.<span class="hljs-title function_">getDisplayMedia</span>({
+                ...displayMediaOptions,
+                ...items,
+            })
+            .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mediaStream</span> =&gt;</span> {
+
+                <span class="hljs-keyword">const</span> actuals = mediaStream.<span class="hljs-title function_">getVideoTracks</span>();
+
+                <span class="hljs-keyword">let</span> data;
+
+                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(actuals) &amp;&amp; actuals[<span class="hljs-number">0</span>]) data = actuals[<span class="hljs-number">0</span>].<span class="hljs-title function_">getConstraints</span>();
+
+                el.<span class="hljs-property">id</span> = vid.<span class="hljs-property">name</span>;
+
+                <span class="hljs-keyword">if</span> (data) {
+
+                    el.<span class="hljs-property">width</span> = data.<span class="hljs-property">width</span>;
+                    el.<span class="hljs-property">height</span> = data.<span class="hljs-property">height</span>;
+                }
+
+                el.<span class="hljs-property">srcObject</span> = mediaStream;
+
+                el.<span class="hljs-property">onloadedmetadata</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+                    el.<span class="hljs-title function_">play</span>();
+                }
+
+                <span class="hljs-title function_">resolve</span>(vid);
+            })
+            .<span class="hljs-property">catch</span> (<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>);
+                <span class="hljs-title function_">resolve</span>(vid);
+            });
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Navigator.mediaDevices object not found&#x27;</span>);
+    });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
               <p><code>importVideo</code> - load videos from a remote server and create assets from them</p>
 <p>Arguments can be a comma-separated list of String urls. For example, for a video link at server url <code>http://www.example.com/path/to/image/flower.mp4</code>:</p>
 <ul>
@@ -1364,11 +1499,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-36">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>one or more string urls has been passed to the function</p>
 <ul>
@@ -1394,11 +1529,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-37">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>a single object has been passed to the function</p>
 <ul>
@@ -1423,11 +1558,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-38">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>build the video element</p>
 
@@ -1482,11 +1617,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-39">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <h4 id="factory-not-exported">Factory (not exported)</h4>
 
