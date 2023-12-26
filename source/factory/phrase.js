@@ -62,12 +62,6 @@
 //   readonly attribute double alphabeticBaseline;
 //   readonly attribute double ideographicBaseline;
 // };
-//
-// Upcoming new font attributes:
-// enum CanvasFontKerning { "auto", "normal", "none" };
-// enum CanvasFontStretch { "ultra-condensed", "extra-condensed", "condensed", "semi-condensed", "normal", "semi-expanded", "expanded", "extra-expanded", "ultra-expanded" };
-// enum CanvasFontVariantCaps { "normal", "small-caps", "all-small-caps", "petite-caps", "all-petite-caps", "unicase", "titling-caps" };
-// enum CanvasTextRendering { "auto", "optimizeSpeed", "optimizeLegibility", "geometricPrecision" };
 
 
 // #### Imports
@@ -86,7 +80,7 @@ import { makeFontAttributes } from './font-attributes.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STRETCH, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
@@ -217,7 +211,6 @@ const defaultAttributes = {
 // + `style` - eg 'italic'
 // + `variant` - eg 'small-caps'
 // + `weight` - eg 'bold'
-// + `stretch`
 // + `size` - any permitted font size value
 // + `family` - font family
 // + `space` - alter the letterSpacing values to spread or condense glyphs
@@ -246,7 +239,7 @@ const defaultAttributes = {
 // + `DEFAULTS` - remove all inline glyph styling from this point on
 // + `b`, `/b`, `strong`, `/strong`, `BOLD`, `/BOLD`  - add/remove bold styling
 // + `i`, `/i`, `em`, `/em`, `ITALIC`, `/ITALIC` - add/remove italic styling
-// + `SMALL-CAPS`, `/SMALL-CAPS` - add/remove small-caps styling
+// + (Deprecated!) `SMALL-CAPS`, `/SMALL-CAPS` - add/remove small-caps styling
 // + `HIGHLIGHT`, `/HIGHLIGHT` - add/remove glyph background highlight
 // + `u`, `/u`, `UNDERLINE`, `/UNDERLINE` - add/remove glyph underline
 // + `OVERLINE`, `/OVERLINE` - add/remove glyph overline
@@ -656,20 +649,6 @@ S.weight = function (item) {
     this.dirtyFilterIdentifier = true;
 };
 
-// __stretch__ - CSS `font-stretch` String
-G.stretch = function () {
-
-    return this.fontAttributes.get(STRETCH);
-};
-S.stretch = function (item) {
-
-    this.fontAttributes.set({stretch: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-    this.dirtyFilterIdentifier = true;
-};
-
 // __size__ - CSS `font-size` String
 G.size = function () {
 
@@ -1052,7 +1031,6 @@ P.calculateTextPositions = function (mytext) {
     if (!sectionStyles[0]) sectionStyles[0] = {
         family: glyphAttributes.family,
         size: (glyphAttributes.sizeValue) ? `${glyphAttributes.sizeValue}${glyphAttributes.sizeMetric}` : glyphAttributes.sizeMetric,
-        stretch: glyphAttributes.stretch,
         style: glyphAttributes.style,
         variant: glyphAttributes.variant,
         weight: glyphAttributes.weight,
@@ -1128,7 +1106,7 @@ P.calculateTextPositions = function (mytext) {
                     gPos[5] = overlineFlag;
                 }
 
-                if (i !== 0 && (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
+                if (i !== 0 && (gStyle.variant || gStyle.weight || gStyle.style || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
 
                     item = glyphAttributes.update(gStyle);
                     if (item !== currentFont) {

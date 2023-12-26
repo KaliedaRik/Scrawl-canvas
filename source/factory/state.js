@@ -15,11 +15,11 @@
 // #### Imports
 import { constructors, entity, styles } from '../core/library.js';
 
-import { doCreate, isa_obj, xt, xtGet, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_obj, xt, xtGet, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _HSL, _keys, _RGB, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, MITER, NAME, NONE, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../core/shared-vars.js';
+import { _HSL, _keys, _RGB, AUTO, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NAME, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../core/shared-vars.js';
 
 
 import { makeColor } from './color.js';
@@ -136,10 +136,8 @@ P.defs = {
 
 
 // ##### Font styling
-// __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
+// __font__ - CSS compatible font string. Note that the canvas context engine will ignore a lot of the more esoteric values that can be included in the font string.
     font: DEFAULT_FONT,
-    textAlign: LEFT,
-    textBaseline: TOP,
 
 
 // ##### CSS/SVG filters
@@ -147,12 +145,26 @@ P.defs = {
 // + Be aware that entitys can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!
     filter: NONE,
 
+
 // ##### Image smoothing
 // __imageSmoothingEnabled__ - switch image smoothing on or off, on a per-entity basis
     imageSmoothingEnabled: true,
 
 // __imageSmoothingQuality__ - when image smoothing is enabled, determine the quality of image smoothing to apply to the entity.
     imageSmoothingQuality: HIGH,
+
+
+// ##### Other attributes
+// The following Canvas 2D engine attributes are actively ignored by Scrawl-canvas. For some, equivalent functionality has been coded up elsewhere in the library to manage similar/overlapping functionality provided by these attributes
+    direction: LTR,
+    fontKerning: NORMAL,
+    fontStretch: NORMAL,
+    fontVariantCaps: NORMAL,
+    letterSpacing: PX0,
+    textAlign: LEFT,
+    textBaseline: TOP,
+    textRendering: AUTO,
+    wordSpacing: PX0,
 };
 
 
@@ -274,6 +286,17 @@ S.shadowColor = function (item) {
     if (item.includes(_RGB) || item.includes(_HSL) || item.includes(HASH)) this.shadowColor = item;
     else this.shadowColor = colorChecker.checkColor(item);
 };
+
+// Actively ignore any attempts to set the following attributes
+S.direction = λnull;
+S.fontKerning = λnull;
+S.fontStretch = λnull;
+S.fontVariantCaps = λnull;
+S.letterSpacing = λnull;
+S.textAlign = λnull;
+S.textBaseline = λnull;
+S.textRendering = λnull;
+S.wordSpacing = λnull;
 
 
 // #### Prototype functions
@@ -402,8 +425,26 @@ P.setStateFromEngine = function (engine) {
 
     this.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
     this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
-    engine.textAlign = this.textAlign = LEFT;
-    engine.textBaseline = this.textBaseline = TOP;
+
+    // Actively ignore the following attributes
+    engine.direction = LTR;
+    this.direction = LTR;
+    engine.fontKerning = NORMAL;
+    this.fontKerning = NORMAL;
+    engine.fontStretch = NORMAL;
+    this.fontStretch = NORMAL;
+    engine.fontVariantCaps = NORMAL;
+    this.fontVariantCaps = NORMAL;
+    engine.letterSpacing = PX0;
+    this.letterSpacing = PX0;
+    engine.textAlign = LEFT;
+    this.textAlign = LEFT;
+    engine.textBaseline = TOP;
+    this.textBaseline = TOP;
+    engine.textRendering = AUTO;
+    this.textRendering = AUTO;
+    engine.wordSpacing = PX0;
+    this.wordSpacing = PX0;
 
     return this;
 };

@@ -584,18 +584,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/browser-sync@npm:^2":
-  version: 2.29.0
-  resolution: "@types/browser-sync@npm:2.29.0"
-  dependencies:
-    "@types/micromatch": "npm:^2"
-    "@types/node": "npm:*"
-    "@types/serve-static": "npm:*"
-    chokidar: "npm:^3.0.0"
-  checksum: 682bdbbc4a316acb6e0bf778eaa8aa19a46058d27b1d93869778ac04840a5f7eaa13a315cc61f884c7cab1b1756b8a2f069eca1a51aab7803a6124186b853ac7
-  languageName: node
-  linkType: hard
-
 "@types/cookie@npm:^0.4.1":
   version: 0.4.1
   resolution: "@types/cookie@npm:0.4.1"
@@ -629,33 +617,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/http-errors@npm:*":
-  version: 2.0.4
-  resolution: "@types/http-errors@npm:2.0.4"
-  checksum: 494670a57ad4062fee6c575047ad5782506dd35a6b9ed3894cea65830a94367bd84ba302eb3dde331871f6d70ca287bfedb1b2cf658e6132cd2cbd427ab56836
-  languageName: node
-  linkType: hard
-
 "@types/json-schema@npm:*":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
-  languageName: node
-  linkType: hard
-
-"@types/micromatch@npm:^2":
-  version: 2.3.35
-  resolution: "@types/micromatch@npm:2.3.35"
-  dependencies:
-    "@types/parse-glob": "npm:*"
-  checksum: 18153ef29bc6db940a97fb374227504ab41053449c0110925ff7f271b6e9ddbdf095217d4aebd9268463cad13dd59c70aff1d9fc480c9f22bf8cc692433f54e5
-  languageName: node
-  linkType: hard
-
-"@types/mime@npm:*":
-  version: 3.0.4
-  resolution: "@types/mime@npm:3.0.4"
-  checksum: db478bc0f99e40f7b3e01d356a9bdf7817060808a294978111340317bcd80ca35382855578c5b60fbc84ae449674bd9bb38427b18417e1f8f19e4f72f8b242cd
   languageName: node
   linkType: hard
 
@@ -674,24 +639,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: c24630d6bdd237f538d69886868fc29abba8c59f58996b6a6267c42e2253a84a18834c09408b3d887ec74f69e6828e25e3d23cf6fa0daac5902afccaf0568d7e
-  languageName: node
-  linkType: hard
-
-"@types/parse-glob@npm:*":
-  version: 3.0.32
-  resolution: "@types/parse-glob@npm:3.0.32"
-  checksum: b9019a3fe76b27bf2510e094baf20406b13e9b6a45a7a8e485241ae9a7b78dce7439e16de30a26aa923bc9a69e188ee954f07344a1f194eee96038045e35ce71
-  languageName: node
-  linkType: hard
-
-"@types/serve-static@npm:*":
-  version: 1.15.5
-  resolution: "@types/serve-static@npm:1.15.5"
-  dependencies:
-    "@types/http-errors": "npm:*"
-    "@types/mime": "npm:*"
-    "@types/node": "npm:*"
-  checksum: 811d1a2f7e74a872195e7a013bcd87a2fb1edf07eaedcb9dcfd20c1eb4bc56ad4ea0d52141c13192c91ccda7c8aeb8a530d8a7e60b9c27f5990d7e62e0fecb03
   languageName: node
   linkType: hard
 
@@ -1106,7 +1053,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^3.0.0, chokidar@npm:^3.5.1":
+"chokidar@npm:^3.5.1":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
   dependencies:
@@ -3545,7 +3492,6 @@ __metadata:
   resolution: "scrawl-canvas@workspace:."
   dependencies:
     "@rollup/plugin-terser": "npm:^0.4.4"
-    "@types/browser-sync": "npm:^2"
     "@types/eslint": "npm:^8"
     "@types/node": "npm:^20.10.2"
     browser-sync: "npm:^2.29.3"
