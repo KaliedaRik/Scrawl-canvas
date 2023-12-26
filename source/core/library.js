@@ -191,6 +191,7 @@ export const sectionClasses = {
     'OVERLINE': { overline: true },
     '/OVERLINE': { overline: false },
 
+    // Warning: font-variant functionality has been deprecated in SC and should be avoided!
     'SMALL-CAPS': { variant: 'small-caps' },
     '/SMALL-CAPS': { variant: 'normal' },
 

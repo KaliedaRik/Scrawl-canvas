@@ -41,7 +41,6 @@
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
-    "@types/browser-sync": "^2",
     "@types/eslint": "^8",
     "@types/node": "^20.10.2",
     "browser-sync": "^2.29.3",

@@ -588,11 +588,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, isa_obj, xt, xtGet, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, isa_obj, xt, xtGet, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _HSL, _keys, _RGB, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BUTT</span>, <span class="hljs-variable constant_">DEFAULT_FONT</span>, <span class="hljs-variable constant_">HASH</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">LINE_WIDTH</span>, <span class="hljs-variable constant_">MITER</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STATE_LINE_KEYS</span>, <span class="hljs-variable constant_">STATE_MAIN_KEYS</span>, <span class="hljs-variable constant_">STATE_STYLE_KEYS</span>, <span class="hljs-variable constant_">STATE_TEXT_KEYS</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">T_PHRASE</span>, <span class="hljs-variable constant_">T_STATE</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { _HSL, _keys, _RGB, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BUTT</span>, <span class="hljs-variable constant_">DEFAULT_FONT</span>, <span class="hljs-variable constant_">HASH</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">LINE_WIDTH</span>, <span class="hljs-variable constant_">LTR</span>, <span class="hljs-variable constant_">MITER</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-title class_">PX0</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STATE_LINE_KEYS</span>, <span class="hljs-variable constant_">STATE_MAIN_KEYS</span>, <span class="hljs-variable constant_">STATE_STYLE_KEYS</span>, <span class="hljs-variable constant_">STATE_TEXT_KEYS</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">T_PHRASE</span>, <span class="hljs-variable constant_">T_STATE</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
@@ -916,13 +916,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h5 id="font-styling">Font styling</h5>
-<p><strong>font</strong>, <strong>textAlign</strong>, <strong>textBaseline</strong> - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.</p>
+<p><strong>font</strong> - CSS compatible font string. Note that the canvas context engine will ignore a lot of the more esoteric values that can be included in the font string.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">font</span>: <span class="hljs-variable constant_">DEFAULT_FONT</span>,
-    <span class="hljs-attr">textAlign</span>: <span class="hljs-variable constant_">LEFT</span>,
-    <span class="hljs-attr">textBaseline</span>: <span class="hljs-variable constant_">TOP</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">font</span>: <span class="hljs-variable constant_">DEFAULT_FONT</span>,</pre></div></div>
             
         </li>
         
@@ -972,8 +970,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">imageSmoothingQuality</span>: <span class="hljs-variable constant_">HIGH</span>,
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">imageSmoothingQuality</span>: <span class="hljs-variable constant_">HIGH</span>,</pre></div></div>
             
         </li>
         
@@ -983,6 +980,31 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
               
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <h5 id="other-attributes">Other attributes</h5>
+<p>The following Canvas 2D engine attributes are actively ignored by Scrawl-canvas. For some, equivalent functionality has been coded up elsewhere in the library to manage similar/overlapping functionality provided by these attributes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">direction</span>: <span class="hljs-variable constant_">LTR</span>,
+    <span class="hljs-attr">fontKerning</span>: <span class="hljs-variable constant_">NORMAL</span>,
+    <span class="hljs-attr">fontStretch</span>: <span class="hljs-variable constant_">NORMAL</span>,
+    <span class="hljs-attr">fontVariantCaps</span>: <span class="hljs-variable constant_">NORMAL</span>,
+    <span class="hljs-attr">letterSpacing</span>: <span class="hljs-title class_">PX0</span>,
+    <span class="hljs-attr">textAlign</span>: <span class="hljs-variable constant_">LEFT</span>,
+    <span class="hljs-attr">textBaseline</span>: <span class="hljs-variable constant_">TOP</span>,
+    <span class="hljs-attr">textRendering</span>: <span class="hljs-variable constant_">AUTO</span>,
+    <span class="hljs-attr">wordSpacing</span>: <span class="hljs-title class_">PX0</span>,
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1023,27 +1045,13 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>Handled by Cell and entity objects, not by the State object</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
+              <h4 id="clone-management">Clone management</h4>
 <p>Handled by Cell and entity objects, not by the State object</p>
 
             </div>
@@ -1056,6 +1064,20 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>Handled by Cell and entity objects, not by the State object</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1103,11 +1125,11 @@ P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>The following setters use the <code>SC-system-state-do-not-remove</code> Color factory. This factory gets created when the <code>state.js</code> file first runs and is accessed only by State objects</p>
 
@@ -1152,11 +1174,34 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>Actively ignore any attempts to set the following attributes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">direction</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">fontKerning</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">fontStretch</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">fontVariantCaps</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">letterSpacing</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">textAlign</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">textBaseline</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">textRendering</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">wordSpacing</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1165,11 +1210,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>getChanges</code> is the key function performed by State objects. This is where the entity’s state is compared to a Cell engine’s current state, to identify which engine attributes need to change to bring it into alignment with the entity object’s requirements</p>
 
@@ -1192,11 +1237,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>‘filter’, ‘globalAlpha’, ‘globalCompositeOperation’, ‘imageSmoothingEnabled’, ‘imageSmoothingQuality’, ‘shadowBlur’, ‘shadowOffsetX’, ‘shadowOffsetY’</p>
 
@@ -1214,11 +1259,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>‘lineCap’, ‘lineDash’, ‘lineDashOffset’, ‘lineJoin’, ‘lineWidth’, ‘miterLimit’</p>
 
@@ -1275,11 +1320,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>‘fillStyle’, ‘shadowColor’, ‘strokeStyle’</p>
 
@@ -1294,11 +1339,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>string colors - only update if necessary</p>
 
@@ -1309,11 +1354,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Color object colors need to be extracted before they can be compared and, if necessary, updated</p>
 
@@ -1329,11 +1374,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>gradient and pattern objects - get freshly deployed with each entity stamp</p>
 
@@ -1345,11 +1390,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>‘font’</p>
 
@@ -1372,11 +1417,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>The <code>setStateFromEngine</code> function takes a CanvasRenderingContext2D engine object and updates its own attributes to match the engine’s current state.</p>
 
@@ -1393,9 +1438,39 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
     }
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineDash</span> = (<span class="hljs-title function_">xt</span>(engine.<span class="hljs-property">lineDash</span>)) ? engine.<span class="hljs-property">lineDash</span> : [];
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-title function_">xtGet</span>(engine.<span class="hljs-property">lineDashOffset</span>, <span class="hljs-number">0</span>);
-    engine.<span class="hljs-property">textAlign</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">textAlign</span> = <span class="hljs-variable constant_">LEFT</span>;
-    engine.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable constant_">TOP</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-title function_">xtGet</span>(engine.<span class="hljs-property">lineDashOffset</span>, <span class="hljs-number">0</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p>Actively ignore the following attributes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">direction</span> = <span class="hljs-variable constant_">LTR</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">direction</span> = <span class="hljs-variable constant_">LTR</span>;
+    engine.<span class="hljs-property">fontKerning</span> = <span class="hljs-variable constant_">NORMAL</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontKerning</span> = <span class="hljs-variable constant_">NORMAL</span>;
+    engine.<span class="hljs-property">fontStretch</span> = <span class="hljs-variable constant_">NORMAL</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontStretch</span> = <span class="hljs-variable constant_">NORMAL</span>;
+    engine.<span class="hljs-property">fontVariantCaps</span> = <span class="hljs-variable constant_">NORMAL</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontVariantCaps</span> = <span class="hljs-variable constant_">NORMAL</span>;
+    engine.<span class="hljs-property">letterSpacing</span> = <span class="hljs-title class_">PX0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> = <span class="hljs-title class_">PX0</span>;
+    engine.<span class="hljs-property">textAlign</span> = <span class="hljs-variable constant_">LEFT</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">textAlign</span> = <span class="hljs-variable constant_">LEFT</span>;
+    engine.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable constant_">TOP</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable constant_">TOP</span>;
+    engine.<span class="hljs-property">textRendering</span> = <span class="hljs-variable constant_">AUTO</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">textRendering</span> = <span class="hljs-variable constant_">AUTO</span>;
+    engine.<span class="hljs-property">wordSpacing</span> = <span class="hljs-title class_">PX0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpacing</span> = <span class="hljs-title class_">PX0</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -1403,11 +1478,11 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-40">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>Only used internally by Cell and entity factory functions</p>
