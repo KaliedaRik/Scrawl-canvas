@@ -55,8 +55,3 @@ export const forceUpdate = function () {
     mouseChanged = true;
     viewportChanged = true;
 };
-
-
-// Wide Gamut 2D Graphics using HTML Canvas
-// - The following code taken from [this Webkit article](https://webkit.org/blog/12058/wide-gamut-2d-graphics-using-html-canvas/)
-
