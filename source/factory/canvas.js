@@ -54,7 +54,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -97,6 +97,10 @@ const Canvas = function (items = Ωempty) {
     if (!el) this.cleanDimensions();
     else {
 
+        const ds = el.dataset;
+
+        this.d3Gamut = ds.useP3Gamut;
+
         this.engine = this.domElement.getContext(_2D);
 
         this.state = makeState({
@@ -111,8 +115,6 @@ const Canvas = function (items = Ωempty) {
 
         let baseWidth = this.currentDimensions[0],
             baseHeight = this.currentDimensions[1];
-
-        const ds = el.dataset;
 
         if (ds.isResponsive) {
 
@@ -935,8 +937,14 @@ P.cleanAria = function () {
     this.domElement.setAttribute(ROLE, this.role);
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
-}
+};
 
+
+// `p3ColorGamutActions` - handles the (unlikely) edge case where the end user drags the browser window between screens that differ in their support for wide gamut colour (p3) support
+P.p3ColorGamutActions = function (supportsP3) {
+
+    console.log(`p3ColorGamutActions triggered on ${this.name}, moving to a display that is ${supportsP3} for p3 color gamut support`);
+};
 
 // #### Factory
 export const makeCanvas = function (items) {
@@ -1129,3 +1137,6 @@ export const addCanvas = function (items = Ωempty) {
 
     return mycanvas;
 };
+
+
+// #### Detect wide-gamut (display-p3) browser and display screen support

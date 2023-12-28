@@ -47,7 +47,7 @@ import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } 
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
+import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';

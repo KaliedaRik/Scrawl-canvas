@@ -14,13 +14,17 @@
 
 
 // #### Imports
-import { canvas, cell, entity } from "./library.js";
+// import { canvas, cell, entity } from "./library.js";
 
-import { detectBrowser, isa_fn, isa_dom, λnull, Ωempty } from "./utilities.js";
+// import { detectBrowser, isa_fn, isa_dom, λnull, Ωempty } from "./utilities.js";
+import { isa_fn, isa_dom, λnull, Ωempty } from "./utilities.js";
 
 import { releaseArray, requestArray } from '../factory/array-pool.js';
 
-import { _isArray, _values, ADD_EVENT_LISTENER, CHANGE, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SAFARI, TOUCH_END, TOUCH_ENTER, TOUCH_FOLLOW, TOUCH_LEAVE, TOUCH_MOVE, TOUCH_START, UP } from './shared-vars.js';
+// import { _isArray, _values, ADD_EVENT_LISTENER, CHANGE, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SAFARI, TOUCH_END, TOUCH_ENTER, TOUCH_FOLLOW, TOUCH_LEAVE, TOUCH_MOVE, TOUCH_START, UP } from './shared-vars.js';
+import { _isArray, ADD_EVENT_LISTENER, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, TOUCH_END, TOUCH_ENTER, TOUCH_FOLLOW, TOUCH_LEAVE, TOUCH_MOVE, TOUCH_START, UP } from './shared-vars.js';
+
+// import { getIgnorePixelRatio } from './system-flags.js';
 
 
 // #### Functionality
@@ -258,35 +262,35 @@ const actionNativeListener = function (evt, fn, targ, action) {
 // DPR is detected here, but mainly handled in the `factory/cell.js` file
 // + We scale the cell by DPR - this should be the only time we touch native scale functionality!
 // + All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the `current` equivalent attributes
-let dpr_changeAction = λnull;
-export const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
+// let dpr_changeAction = λnull;
+// export const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
 
-const browserIs = detectBrowser();
+// const browserIs = detectBrowser();
 
-let dpr = 0;
-export const getPixelRatio = () => dpr;
+// let dpr = 0;
+// export const getPixelRatio = () => dpr;
 
-let ignorePixelRatio = false;
-export const getIgnorePixelRatio = () => ignorePixelRatio;
-export const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
+// let ignorePixelRatio = false;
+// export const getIgnorePixelRatio = () => ignorePixelRatio;
+// export const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
 
-const updatePixelRatio = () => {
+// const updatePixelRatio = () => {
 
-    dpr = window.devicePixelRatio;
+//     dpr = window.devicePixelRatio;
 
-    _values(canvas).forEach(v => v.dirtyDimensions = true);
-    _values(cell).forEach(v => v.dirtyDimensions = true);
-    _values(entity).forEach(v => v.dirtyHost = true);
+//     _values(canvas).forEach(v => v.dirtyDimensions = true);
+//     _values(cell).forEach(v => v.dirtyDimensions = true);
+//     _values(entity).forEach(v => v.dirtyHost = true);
 
-    if (!ignorePixelRatio) dpr_changeAction();
+//     if (!getIgnorePixelRatio()) dpr_changeAction();
 
-    // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally?
-    // + Whatever. Safari does not like, or respond to, this matchmedia query
-    // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
-    if (!browserIs.includes(SAFARI)) {
+//     // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally?
+//     // + Whatever. Safari does not like, or respond to, this matchmedia query
+//     // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
+//     if (!browserIs.includes(SAFARI)) {
 
-        matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
-    }
-};
+//         matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
+//     }
+// };
 
-updatePixelRatio();
+// updatePixelRatio();

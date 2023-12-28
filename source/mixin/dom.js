@@ -1065,7 +1065,12 @@ export default function (P = Ωempty) {
         this.colorSchemeActions();
         this.reducedTransparencyActions();
         this.reducedDataActions();
-    }
+    };
+
+
+// `p3ColorGamutActions` - is only relevant to Canvas elements, but gets invoked on all DOM artefacts
+    P.p3ColorGamutActions = λnull;
+
 
 // `apply`
 // + I really don't like this functionality - see if we can purge it from the code base?
