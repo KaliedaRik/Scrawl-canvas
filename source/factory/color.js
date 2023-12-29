@@ -1584,15 +1584,15 @@ P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
 
 // #### Browser color space support
 // We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element's engine, stamp a pixel, then check to see if the pixel is black (space not supported)
-// + We check for HWB, LAB andf LCH color space support
+// + We check for HWB, LAB, LCH, OKLAB, OKLCH, P3 color space support
 // + We assume that the browser always supports RGB and HSL  color spaces
 // + We don't check for XYZ color space support because it is not part of the [CSS Color Module Level 4 specification](https://www.w3.org/TR/css-color-4/)
-// + We don't check for OKLAB, OKLCH support at this time (Nov 2022)
 let supportsHWB = false;
 let supportsLAB = false;
 let supportsLCH = false;
 let supportsOKLAB = false;
 let supportsOKLCH = false;
+let supportsP3 = false;
 
 const browserChecker = function () {
 
@@ -1654,8 +1654,6 @@ const browserChecker = function () {
     else col = engine.fillStyle;
 
     // Test for OKLAB support
-    // + Assume no browser supports OKLAB. Safari's implementation is incomplete (Nov 2022)
-
     engine.fillStyle = 'oklab(59.686% 0.1009 0.1192)';
     engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
@@ -1673,8 +1671,6 @@ const browserChecker = function () {
     else col = engine.fillStyle;
 
     // Test for OKLCH support
-    // + Assume no browser supports OKLCH. Safari's implementation is incomplete (Nov 2022)
-
     engine.fillStyle = 'oklch(59.686% 0.15619 49.7694)';
     engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
@@ -1690,9 +1686,32 @@ const browserChecker = function () {
     // Firefox safety net
     if (supportsOKLCH && col === engine.fillStyle) supportsOKLCH = false;
     else col = engine.fillStyle;
+
+    // Test for display-p3 support
+    engine.fillStyle = 'color(display-p3 0 1 0)';
+    engine.clearRect(0, 0, 1, 1);
+    engine.fillRect(0, 0, 1, 1);
+
+    image = engine.getImageData(0, 0, 1, 1);
+
+    if (image && image.data) {
+
+        [r, g, b] = image.data;
+    }
+    if (r || g || b) supportsP3 = true;
+
+    // Firefox safety net
+    if (supportsP3 && col === engine.fillStyle) supportsP3 = false;
+    else col = engine.fillStyle;
 };
 browserChecker();
 
+console.log(`supportsHWB ${supportsHWB}`);
+console.log(`supportsLAB ${supportsLAB}`);
+console.log(`supportsLCH ${supportsLCH}`);
+console.log(`supportsOKLAB ${supportsOKLAB}`);
+console.log(`supportsOKLCH ${supportsOKLCH}`);
+console.log(`supportsP3 ${supportsP3}`);
 
 // #### Factory
 // ```

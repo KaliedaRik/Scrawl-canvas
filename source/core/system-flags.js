@@ -1,4 +1,5 @@
 // # System flags
+// These are placed in their own file here to help eliminate circular dependencies
 
 
 let trackMouse = false;

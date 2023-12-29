@@ -1068,8 +1068,8 @@ export default function (P = Ωempty) {
     };
 
 
-// `p3ColorGamutActions` - is only relevant to Canvas elements, but gets invoked on all DOM artefacts
-    P.p3ColorGamutActions = λnull;
+// `p3ColorGamutAction` - is only relevant to Canvas elements, but gets invoked on all DOM artefacts
+    P.p3ColorGamutAction = λnull;
 
 
 // `apply`

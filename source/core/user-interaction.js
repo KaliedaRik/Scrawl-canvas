@@ -39,6 +39,7 @@ export const currentCorePosition = _seal({
     prefersContrast: false,
     prefersReduceData: false,
     displaySupportsP3Color: false,
+    canvasSupportsP3Color: false,
     devicePixelRatio: 0,
     rawTouches: [],
 });
@@ -137,6 +138,22 @@ displaySupportsP3ColorMediaQuery.addEventListener(CHANGE, () => {
     }
 });
 currentCorePosition.displaySupportsP3Color = displaySupportsP3ColorMediaQuery.matches;
+
+// Also check to see if the canvas supports DisplayP3 - this is a one-time check as support is device/screen independent
+const checkCanvasSupportsDisplayP3 = () => {
+
+    const c = document.createElement("canvas");
+
+    // Needs to be done in try-catch because (apparently) Safari throws a fit if colorSpace option is supported by the canvas engine but the minimum macOS/iOS system requirements for display-p3 support are not met
+    try {
+
+        const e = c.getContext("2d", { colorSpace: "display-p3" });
+        return e.getContextAttributes().colorSpace == "display-p3";
+    }
+    catch {}
+    return false;
+};
+currentCorePosition.canvasSupportsP3Color = checkCanvasSupportsDisplayP3();
 
 
 // #### Monitoring the device pixel ratio
@@ -323,13 +340,17 @@ const updateUiSubscribedElement = function (art) {
         here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
         here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
         here.prefersReduceData = currentCorePosition.prefersReduceData;
+        here.displaySupportsP3Color = currentCorePosition.displaySupportsP3Color;
+        here.canvasSupportsP3Color = currentCorePosition.canvasSupportsP3Color;
+        here.devicePixelRatio = currentCorePosition.devicePixelRatio;
 
         if (getPrefersContrastChanged()) dom.contrastActions();
         if (getPrefersReducedMotionChanged()) dom.reducedMotionActions();
         if (getPrefersDarkColorSchemeChanged()) dom.colorSchemeActions();
         if (getPrefersReduceTransparencyChanged()) dom.reducedTransparencyActions();
         if (getPrefersReduceDataChanged()) dom.reducedDataActions();
-        if (getDisplaySupportsP3ColorChanged()) dom.p3ColorGamutActions();
+
+        if (getDisplaySupportsP3ColorChanged()) dom.p3ColorGamutAction();
 
         // DOM-element-dependant values
         if (el) {
@@ -495,13 +516,6 @@ export const removeLocalMouseMoveListener = function (wrapper) {
 };
 
 
-const updateForP3ColorChange = () => {
-
-    _values(library.canvas).forEach(v => v.p3ColorGamutActions(currentCorePosition.displaySupportsP3Color));
-    setDisplaySupportsP3ColorChanged(false);
-};
-
-
 // Animation object which checks whether any window event listeners have fired, and actions accordingly
 const coreListenersTracker = makeAnimation({
 
@@ -522,25 +536,19 @@ const coreListenersTracker = makeAnimation({
 
         if (!uiSubscribedElements.length) return false;
 
-        if ((trackMouse && mouseChanged) || prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
+        if ((trackMouse && mouseChanged) || 
+            prefersReducedMotionChanged || 
+            prefersDarkColorSchemeChanged || 
+            prefersReduceTransparencyChanged || 
+            prefersReduceDataChanged || 
+            displaySupportsP3ColorChanged) updateUiSubscribedElements();
 
-            updateUiSubscribedElements();
-
-            if (trackMouse && mouseChanged) {
-
-                setMouseChanged(false);
-            }
-
-            if (prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
-
-                setPrefersReducedMotionChanged(false);
-                setPrefersDarkColorSchemeChanged(false);
-                setPrefersReduceTransparencyChanged(false);
-                setPrefersReduceDataChanged(false);
-            }
-        }
-
-        if (displaySupportsP3ColorChanged) updateForP3ColorChange();
+        if (trackMouse && mouseChanged) setMouseChanged(false);
+        if (prefersReducedMotionChanged) setPrefersReducedMotionChanged(false);
+        if (prefersDarkColorSchemeChanged) setPrefersDarkColorSchemeChanged(false);
+        if (prefersReduceTransparencyChanged) setPrefersReduceTransparencyChanged(false);
+        if (prefersReduceDataChanged) setPrefersReduceDataChanged(false);
+        if (displaySupportsP3ColorChanged) setDisplaySupportsP3ColorChanged(false);
 
         if (viewportChanged) {
 
@@ -549,6 +557,7 @@ const coreListenersTracker = makeAnimation({
         }
     },
 });
+
 
 // `Exported functions` (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas's impact on those pages by switching off the core listeners (and also the core animation loop).
 export const startCoreListeners = function () {

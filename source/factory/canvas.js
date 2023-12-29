@@ -939,12 +939,23 @@ P.cleanAria = function () {
     this.ariaDescriptionElement.textContent = this.description;
 };
 
+// `p3ColorGamutAction` - handles the (unlikely) edge case where the end user drags the browser window between screens that differ in their support for wide gamut colour (p3) support
+P.p3ColorGamutAction = function () {
 
-// `p3ColorGamutActions` - handles the (unlikely) edge case where the end user drags the browser window between screens that differ in their support for wide gamut colour (p3) support
-P.p3ColorGamutActions = function (supportsP3) {
+    const {
+        displaySupportsP3Color,
+        canvasSupportsP3Color,
+        devicePixelRatio,
+    } = this.here;
 
-    console.log(`p3ColorGamutActions triggered on ${this.name}, moving to a display that is ${supportsP3} for p3 color gamut support`);
+    if (displaySupportsP3Color != null) {
+
+        console.log(`p3ColorGamutAction triggered on ${this.name}, moving to a display that is ${displaySupportsP3Color} for p3 color gamut support`);
+    }
+    else console.log('p3ColorGamutAction invoked with an undefined value for displaySupportsP3Color');
+    console.log(`canvasSupportsP3Color ${canvasSupportsP3Color} devicePixelRatio ${devicePixelRatio}`)
 };
+
 
 // #### Factory
 export const makeCanvas = function (items) {

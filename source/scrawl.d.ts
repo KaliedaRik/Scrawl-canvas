@@ -268,6 +268,7 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
     reduceDataAction?: DefaultInputFunction;
     reduceMotionAction?: DefaultInputFunction;
     reduceTransparencyAction?: DefaultInputFunction;
+    p3ColorGamutAction?: DefaultInputFunction;
     smoothFont?: boolean;
     trackHere?: string;
 }
