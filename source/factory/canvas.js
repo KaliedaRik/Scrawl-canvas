@@ -1148,7 +1148,3 @@ export const addCanvas = function (items = Ωempty) {
 
     return mycanvas;
 };
-
-
-// #### Detect wide-gamut (display-p3) browser and display screen support
-// - The following code taken from [this Webkit article](https://webkit.org/blog/12058/wide-gamut-2d-graphics-using-html-canvas/)
