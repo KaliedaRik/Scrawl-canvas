@@ -185,8 +185,9 @@ $> yarn build
 ```
 
 ### Star-history
-<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="https://star-history.com/embed?secret=Z2hwXzFlQ0paZ0JSSEZlRFhNYk5nMzVORWVHSnZnZ1VCRzI3cFRMNw==#KaliedaRik/Scrawl-canvas&Date" frameBorder="0"></iframe>
+![star-history-20231230](https://github.com/KaliedaRik/Scrawl-canvas/assets/5357530/3ce12e96-239c-49c2-8ff9-35f7610c4766)
 
+[See the live chart on the Star-history site](https://star-history.com/#KaliedaRik/Scrawl-canvas&Date)
 
 ### Development team
 Developed by Rik Roots: rik.roots@rikworks.co.uk
