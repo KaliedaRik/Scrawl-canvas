@@ -184,10 +184,9 @@ Running the following command on the command line will recreate the minified fil
 $> yarn build
 ```
 
-### Star-history
-![star-history-20231230](https://github.com/KaliedaRik/Scrawl-canvas/assets/5357530/3ce12e96-239c-49c2-8ff9-35f7610c4766)
+### Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=KaliedaRik/Scrawl-canvas&type=Date)](https://star-history.com/#KaliedaRik/Scrawl-canvas&Date)
 
-[See the live chart on the Star-history site](https://star-history.com/#KaliedaRik/Scrawl-canvas&Date)
 
 ### Development team
 Developed by Rik Roots: rik.roots@rikworks.co.uk
