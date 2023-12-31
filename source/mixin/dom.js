@@ -1068,10 +1068,6 @@ export default function (P = Ωempty) {
     };
 
 
-// `p3ColorGamutAction` - is only relevant to Canvas elements, but gets invoked on all DOM artefacts
-    P.p3ColorGamutAction = λnull;
-
-
 // `apply`
 // + I really don't like this functionality - see if we can purge it from the code base?
     P.apply = function() {
@@ -1086,4 +1082,4 @@ export default function (P = Ωempty) {
         this.dirtyPathObject = true;
         this.cleanPathObject();
     };
-}
+};
