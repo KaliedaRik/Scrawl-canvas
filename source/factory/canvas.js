@@ -43,10 +43,11 @@ import { rootElementsAdd, rootElementsRemove } from "../core/document-root-eleme
 
 import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { uiSubscribedElements } from '../core/user-interaction.js';
+import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
+import { getEngineValues, setEngineValues } from './cell-fragment.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 
@@ -54,7 +55,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -99,9 +100,12 @@ const Canvas = function (items = Ωempty) {
 
         const ds = el.dataset;
 
-        this.d3Gamut = ds.useP3Gamut;
+        this.useDisplayP3WhereAvailable = ds.canvasColorSpace == DISPLAY_P3 || items.canvasColorSpace == DISPLAY_P3;
+        this.canvasColorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
 
-        this.engine = this.domElement.getContext(_2D);
+console.log(this.name, 'this.canvasColorSpace', this.canvasColorSpace);
+
+        this.engine = this.domElement.getContext(_2D, { colorSpace: this.canvasColorSpace });
 
         this.state = makeState({
             engine: this.engine
@@ -153,6 +157,7 @@ const Canvas = function (items = Ωempty) {
             host: this.name,
             controller: this,
             order: 10,
+            canvasColorSpace: this.canvasColorSpace,
         };
 
         if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);
@@ -292,6 +297,10 @@ const defaultAttributes = {
     description: ZERO_STR,
 
     role: IMG,
+
+// #### Canvas Color space
+// Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'`` (default); `'display-p3'`.
+    canvasColorSpace: SRGB,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -560,7 +569,7 @@ P.updateCells = function (items = Ωempty) {
 // `buildCell` - create a Cell wrapper (wrapping a &lt;canvas> element not attached to the DOM) and add it to this Canvas wrapper's complement of Cells
 P.buildCell = function (items = Ωempty) {
 
-    const host = items.host || false;
+    const host = items.host || null;
 
     if (!host) items.host = this.base.name;
 
@@ -589,7 +598,7 @@ P.cleanDimensionsAdditionalActions = function () {
 // `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.addCell = function (item) {
 
-    item = (item.substring) ? item : item.name || false;
+    item = (item.substring) ? item : item.name || null;
 
     if (item) {
 
@@ -614,7 +623,7 @@ P.addCell = function (item) {
 // `removeCell` - remove a Cell object from the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.removeCell = function (item) {
 
-    item = (item.substring) ? item : item.name || false;
+    item = (item.substring) ? item : item.name || null;
 
     if (item) {
 
@@ -942,18 +951,40 @@ P.cleanAria = function () {
 // `p3ColorGamutAction` - handles the (unlikely) edge case where the end user drags the browser window between screens that differ in their support for wide gamut colour (p3) support
 P.p3ColorGamutAction = function () {
 
-    const {
-        displaySupportsP3Color,
-        canvasSupportsP3Color,
-        devicePixelRatio,
-    } = this.here;
+    const colorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
 
-    if (displaySupportsP3Color != null) {
+    const wrapperVals = {...this};
+    const [existingColorSpace, vals] = getEngineValues(this.engine);
 
-        console.log(`p3ColorGamutAction triggered on ${this.name}, moving to a display that is ${displaySupportsP3Color} for p3 color gamut support`);
+    console.log(`p3ColorGamutAction: wants to shift from ${existingColorSpace} to ${colorSpace}`);
+
+    if (colorSpace != existingColorSpace) {
+
+        const baseName = this.base.name;
+        const replacementCanvas = this.domElement.cloneNode(true);
+        this.domElement.replaceWith(replacementCanvas);
+        this.domElement = replacementCanvas;
+
+        const c = this.cells;
+        let mycell;
+
+        for (let i = 0, iz = c.length; i < iz; i++) {
+
+            mycell = cell[c[i]];
+
+            if (mycell) mycell.updateEngineColorSpace(colorSpace);
+        }
+
+        this.engine = this.domElement.getContext(_2D, { colorSpace });
+        this.base = cell[baseName];
+        this.base.currentHost = this;
+        this.base.controller = this;
+
+        this.cleanCells();
+
+        console.log(`p3ColorGamutAction - result: ${JSON.stringify(this.engine.getContextAttributes())}`);
+
     }
-    else console.log('p3ColorGamutAction invoked with an undefined value for displaySupportsP3Color');
-    console.log(`canvasSupportsP3Color ${canvasSupportsP3Color} devicePixelRatio ${devicePixelRatio}`)
 };
 
 
@@ -1007,7 +1038,7 @@ const addInitialCanvasElement = function (el) {
         group: mygroup,
         host: mygroup,
         position: position,
-        setInitialDimensions: true
+        setInitialDimensions: true,
     });
 };
 
@@ -1147,4 +1178,12 @@ export const addCanvas = function (items = Ωempty) {
     mycanvas.set(items);
 
     return mycanvas;
+};
+
+// Wide gamut colors helper
+const getCanvasColorSpace = (useP3) => {
+
+    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
+    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
+    return SRGB;
 };

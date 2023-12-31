@@ -150,7 +150,7 @@ const checkCanvasSupportsDisplayP3 = () => {
         const e = c.getContext("2d", { colorSpace: "display-p3" });
         return e.getContextAttributes().colorSpace == "display-p3";
     }
-    catch {}
+    catch { console.log('checkCanvasSupportsDisplayP3 errored')}
     return false;
 };
 currentCorePosition.canvasSupportsP3Color = checkCanvasSupportsDisplayP3();
@@ -536,11 +536,11 @@ const coreListenersTracker = makeAnimation({
 
         if (!uiSubscribedElements.length) return false;
 
-        if ((trackMouse && mouseChanged) || 
-            prefersReducedMotionChanged || 
-            prefersDarkColorSchemeChanged || 
-            prefersReduceTransparencyChanged || 
-            prefersReduceDataChanged || 
+        if ((trackMouse && mouseChanged) ||
+            prefersReducedMotionChanged ||
+            prefersDarkColorSchemeChanged ||
+            prefersReduceTransparencyChanged ||
+            prefersReduceDataChanged ||
             displaySupportsP3ColorChanged) updateUiSubscribedElements();
 
         if (trackMouse && mouseChanged) setMouseChanged(false);

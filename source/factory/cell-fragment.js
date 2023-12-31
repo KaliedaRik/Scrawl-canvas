@@ -10,17 +10,18 @@ import { makeState } from './state.js';
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 
-import { _2D, CANVAS, T_CELLFRAGMENT } from '../core/shared-vars.js';
+import { _2D, CANVAS, SRGB, STATE_ALL_KEYS, T_CELLFRAGMENT } from '../core/shared-vars.js';
 
 
 // #### CellFragment constructor
-const CellFragment = function (name) {
+const CellFragment = function (name, colorSpace = SRGB) {
 
     this.name = name;
 
     const element = this.element = document.createElement(CANVAS);
     const engine = this.engine = element.getContext(_2D, {
         willReadFrequently: true,
+        colorSpace,
     });
 
     element.width = 1;
@@ -88,4 +89,32 @@ export const releaseCell = function (c) {
         c.engine.restore();
         cellPool.push(c);
     }
+};
+
+// Exported functions - __getEngineValues__, __setEngineValues__
+export const getEngineValues = function (e) {
+
+    const res = {};
+    let currentColorSpace;
+
+    if (e && e.getContextAttributes) {
+
+        const attr = e.getContextAttributes();
+        currentColorSpace = attr.colorSpace;
+
+        STATE_ALL_KEYS.forEach(item => res[item] = e[item]);
+    }
+    else res.error = 'getEngineValues: no context engine supplied';
+
+    return [currentColorSpace, res];
+};
+
+export const setEngineValues = function (e, vals) {
+
+    if (e && e.getContextAttributes && vals) {
+
+        console.log('setEngineValues', e.getContextAttributes())
+        STATE_ALL_KEYS.forEach(item => e[item] = vals[item]);
+    }
+    else console.log('setEngineValues: no context engine and/or values supplied');
 };

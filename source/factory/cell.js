@@ -41,7 +41,7 @@
 
 
 // #### Imports
-import { artefact, asset, canvas, constructors, group } from '../core/library.js';
+import { artefact, asset, canvas, cell, constructors, group } from '../core/library.js';
 
 import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
 
@@ -57,7 +57,8 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from './coordina
 import { filterEngine } from './filter-engine.js';
 import { importDomImage } from './image-asset.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell, getEngineValues, setEngineValues } from './cell-fragment.js';
+
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
@@ -72,7 +73,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
+import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Cell constructor
@@ -85,21 +86,23 @@ const Cell = function (items = Ωempty) {
     this.initializePositions();
     this.initializeCascade();
 
-    if (!isa_canvas(items.element)) {
+    let mycanvas = items.element;
+    delete items.element;
 
-        const mycanvas = document.createElement(CANVAS);
+    if (!isa_canvas(mycanvas)) {
+
+        mycanvas = document.createElement(CANVAS);
         mycanvas.id = this.name;
         mycanvas.width = 300;
         mycanvas.height = 150;
-        items.element = mycanvas;
     }
 
     // The `willReadFrequently` argument attribute is not retained by the cell, but is used during the Cell element's construction. Defaults to `true`
-    this.installElement(items.element, items.willReadFrequently);
-
     this.set(this.defs);
 
     this.set(items);
+
+    this.installElement(mycanvas, items.canvasColorSpace);
 
     this.state.setStateFromEngine(this.engine);
 
@@ -224,6 +227,8 @@ const defaultAttributes = {
 
 // __includeInCascadeEventActions__ - if a non-base Cell has its `shown` flag set to true, then it is automatically included in CascadeEventActions functionality. In situations where we don't want the Cell to _directly_ appear in the canvas, but do want to include it in CascadeEventActions, then we can set this flag to `true`
     includeInCascadeEventActions: false,
+
+    willReadFrequently: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -567,11 +572,11 @@ P.checkSource = function (width, height) {
 };
 
 // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
-P.getData = function (entity, cell) {
+P.getData = function (entity, mycell) {
 
     this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 
-    return this.buildStyle(cell);
+    return this.buildStyle(mycell);
 };
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
@@ -707,11 +712,12 @@ P.subscribeAction = function (sub = {}) {
 };
 
 // `installElement` - internal function, used by the constructor
-P.installElement = function (element, willReadFrequently = true) {
+P.installElement = function (element, colorSpace = SRGB) {
 
     this.element = element;
     this.engine = this.element.getContext(_2D, {
-        willReadFrequently,
+        willReadFrequently: this.willReadFrequently,
+        colorSpace,
     });
 
     this.state = makeState({
@@ -1320,6 +1326,69 @@ P.updateHere = function () {
     }
 };
 
+
+// `updateEngineColorSpace`
+P.updateEngineColorSpace = function(colorSpace = SRGB) {
+
+    const [existingColorSpace, vals] = getEngineValues(this.engine);
+
+console.log(`#1 updateEngineColorSpace from ${existingColorSpace} to ${colorSpace}`);
+console.log('#2 engine vals', vals);
+
+    if (colorSpace != existingColorSpace) {
+
+        const wrapperVals = {...this};
+console.log('#3 wrapper vals', wrapperVals);
+
+        const defaultGroupVals = {...group[this.name]}
+        const groups = [...this.groups];
+
+        delete wrapperVals.engine;
+        delete wrapperVals.element;
+        delete wrapperVals.groups;
+        delete wrapperVals.groupBuckets;
+
+console.log('#4', group[this.name]?.name, cell[this.name]?.name)
+        group[this.name].deregister();
+        this.deregister();
+
+console.log('#5', group[this.name]?.name, cell[this.name]?.name)
+        wrapperVals.canvasColorSpace = colorSpace;
+        const mycell = makeCell(wrapperVals);
+console.log('#6', group[mycell.name]?.name, cell[mycell.name]?.name)
+
+        setEngineValues(mycell.engine, vals);
+
+        group[mycell.name].set(defaultGroupVals);
+        delete group[mycell.name].currentHost;
+        group[mycell.name].dirtyHost = true;
+
+        mycell.groups = groups;
+
+console.log('#7', mycell.engine.getContextAttributes());
+    }
+
+
+
+    // const [existingColorSpace, vals] = getEngineValues(this.engine);
+
+    // console.log('updateEngineColorSpace', this.name, colorSpace, existingColorSpace, vals);
+
+    // if (colorSpace != existingColorSpace) {
+
+    //     const e = this.element.getContext(_2D, {
+    //         willReadFrequently: this.willReadFrequently,
+    //         colorSpace,
+    //     });
+
+    //     setEngineValues(e, vals);
+
+    //     this.engine = e;
+    // }
+    // else console.log(this.name, 'updateEngineColorSpace: no update required as color spaces are the same', colorSpace);
+};
+
+
 // `checkEngineScale`
 // DPR is detected in the `core/events.js` file, but mainly handled here
 // + We scale the cell by DPR - this should be the only time we touch native scale functionality!
@@ -1340,7 +1409,6 @@ const checkEngineScale = function (engine) {
     }
     return 1;
 };
-
 
 
 // #### Factory
