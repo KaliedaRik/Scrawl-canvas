@@ -102,8 +102,6 @@ const Canvas = function (items = Ωempty) {
         this.useDisplayP3WhereAvailable = ds.canvasColorSpace == DISPLAY_P3 || items.canvasColorSpace == DISPLAY_P3;
         this.canvasColorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
 
-console.log(this.name, 'this.canvasColorSpace', this.canvasColorSpace);
-
         this.engine = this.domElement.getContext(_2D, { colorSpace: this.canvasColorSpace });
 
         this.state = makeState({

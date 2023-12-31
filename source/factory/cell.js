@@ -59,7 +59,6 @@ import { importDomImage } from './image-asset.js';
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
-
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 import positionMix from '../mixin/position.js';
