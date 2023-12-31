@@ -238,7 +238,6 @@ S.noFilters = function (item) {
 // `getHost` - internal helper function
 P.getHost = function (item) {
 
-console.log('getHost', item, this.currentHost, typeof this.currentHost, artefact[item], cell[item]);
     if (item) {
 
         if (item.type && ACCEPTED_OWNERS.includes(item.type)) return item;
@@ -269,10 +268,8 @@ P.stamp = function () {
 
         this.dirtyHost = false;
 
-console.log('stamp #1', this.name, this.dirtyHost, this.host, this.currentHost?.name)
         const currentHost = this.getHost(this.host);
 
-console.log('stamp #2', currentHost)
         if (currentHost) this.currentHost = currentHost;
         else this.dirtyHost = true;
     }

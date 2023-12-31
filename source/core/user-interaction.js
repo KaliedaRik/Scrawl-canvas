@@ -15,7 +15,7 @@ import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
-import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged, getDisplaySupportsP3ColorChanged, setDisplaySupportsP3ColorChanged } from './system-flags.js';
+import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from './system-flags.js';
 
 import { _computed, _floor, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
 
@@ -134,7 +134,6 @@ displaySupportsP3ColorMediaQuery.addEventListener(CHANGE, () => {
     if (currentCorePosition.displaySupportsP3Color != res) {
 
         currentCorePosition.displaySupportsP3Color = res;
-        setDisplaySupportsP3ColorChanged(true);
     }
 });
 currentCorePosition.displaySupportsP3Color = displaySupportsP3ColorMediaQuery.matches;
@@ -340,8 +339,6 @@ const updateUiSubscribedElement = function (art) {
         here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
         here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
         here.prefersReduceData = currentCorePosition.prefersReduceData;
-        here.displaySupportsP3Color = currentCorePosition.displaySupportsP3Color;
-        here.canvasSupportsP3Color = currentCorePosition.canvasSupportsP3Color;
         here.devicePixelRatio = currentCorePosition.devicePixelRatio;
 
         if (getPrefersContrastChanged()) dom.contrastActions();
@@ -349,8 +346,6 @@ const updateUiSubscribedElement = function (art) {
         if (getPrefersDarkColorSchemeChanged()) dom.colorSchemeActions();
         if (getPrefersReduceTransparencyChanged()) dom.reducedTransparencyActions();
         if (getPrefersReduceDataChanged()) dom.reducedDataActions();
-
-        if (getDisplaySupportsP3ColorChanged()) dom.p3ColorGamutAction();
 
         // DOM-element-dependant values
         if (el) {
@@ -531,8 +526,6 @@ const coreListenersTracker = makeAnimation({
         const prefersDarkColorSchemeChanged = getPrefersDarkColorSchemeChanged();
         const prefersReduceTransparencyChanged = getPrefersReduceTransparencyChanged();
         const prefersReduceDataChanged = getPrefersReduceDataChanged();
-        const displaySupportsP3ColorChanged = getDisplaySupportsP3ColorChanged();
-
 
         if (!uiSubscribedElements.length) return false;
 
@@ -540,15 +533,13 @@ const coreListenersTracker = makeAnimation({
             prefersReducedMotionChanged ||
             prefersDarkColorSchemeChanged ||
             prefersReduceTransparencyChanged ||
-            prefersReduceDataChanged ||
-            displaySupportsP3ColorChanged) updateUiSubscribedElements();
+            prefersReduceDataChanged) updateUiSubscribedElements();
 
         if (trackMouse && mouseChanged) setMouseChanged(false);
         if (prefersReducedMotionChanged) setPrefersReducedMotionChanged(false);
         if (prefersDarkColorSchemeChanged) setPrefersDarkColorSchemeChanged(false);
         if (prefersReduceTransparencyChanged) setPrefersReduceTransparencyChanged(false);
         if (prefersReduceDataChanged) setPrefersReduceDataChanged(false);
-        if (displaySupportsP3ColorChanged) setDisplaySupportsP3ColorChanged(false);
 
         if (viewportChanged) {
 

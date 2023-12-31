@@ -115,7 +115,6 @@ export const BOTTOMLEFT = 'bottomLeft';
 export const BOTTOMRIGHT = 'bottomRight';
 export const BUTT = 'butt';
 export const CANVAS = 'canvas';
-export const CANVAS_COLOR_SPACE = _freeze(['srgb', 'display-p3']);
 export const CANVAS_QUERY = '[data-scrawl-canvas]';
 export const CAN_PLAY_TYPE = 'canPlayType';
 export const CAP = 'cap';

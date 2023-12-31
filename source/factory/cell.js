@@ -41,7 +41,7 @@
 
 
 // #### Imports
-import { artefact, asset, canvas, cell, constructors, group } from '../core/library.js';
+import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 
 import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
 
@@ -57,7 +57,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from './coordina
 import { filterEngine } from './filter-engine.js';
 import { importDomImage } from './image-asset.js';
 
-import { releaseCell, requestCell, getEngineValues, setEngineValues } from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 
 import baseMix from '../mixin/base.js';
@@ -1325,69 +1325,6 @@ P.updateHere = function () {
         }
     }
 };
-
-
-// `updateEngineColorSpace`
-P.updateEngineColorSpace = function(colorSpace = SRGB) {
-
-    const [existingColorSpace, vals] = getEngineValues(this.engine);
-
-console.log(`#1 updateEngineColorSpace from ${existingColorSpace} to ${colorSpace}`);
-console.log('#2 engine vals', vals);
-
-    if (colorSpace != existingColorSpace) {
-
-        const wrapperVals = {...this};
-console.log('#3 wrapper vals', wrapperVals);
-
-        const defaultGroupVals = {...group[this.name]}
-        const groups = [...this.groups];
-
-        delete wrapperVals.engine;
-        delete wrapperVals.element;
-        delete wrapperVals.groups;
-        delete wrapperVals.groupBuckets;
-
-console.log('#4', group[this.name]?.name, cell[this.name]?.name)
-        group[this.name].deregister();
-        this.deregister();
-
-console.log('#5', group[this.name]?.name, cell[this.name]?.name)
-        wrapperVals.canvasColorSpace = colorSpace;
-        const mycell = makeCell(wrapperVals);
-console.log('#6', group[mycell.name]?.name, cell[mycell.name]?.name)
-
-        setEngineValues(mycell.engine, vals);
-
-        group[mycell.name].set(defaultGroupVals);
-        delete group[mycell.name].currentHost;
-        group[mycell.name].dirtyHost = true;
-
-        mycell.groups = groups;
-
-console.log('#7', mycell.engine.getContextAttributes());
-    }
-
-
-
-    // const [existingColorSpace, vals] = getEngineValues(this.engine);
-
-    // console.log('updateEngineColorSpace', this.name, colorSpace, existingColorSpace, vals);
-
-    // if (colorSpace != existingColorSpace) {
-
-    //     const e = this.element.getContext(_2D, {
-    //         willReadFrequently: this.willReadFrequently,
-    //         colorSpace,
-    //     });
-
-    //     setEngineValues(e, vals);
-
-    //     this.engine = e;
-    // }
-    // else console.log(this.name, 'updateEngineColorSpace: no update required as color spaces are the same', colorSpace);
-};
-
 
 // `checkEngineScale`
 // DPR is detected in the `core/events.js` file, but mainly handled here

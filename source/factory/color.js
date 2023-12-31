@@ -1706,12 +1706,6 @@ const browserChecker = function () {
 };
 browserChecker();
 
-console.log(`supportsHWB ${supportsHWB}`);
-console.log(`supportsLAB ${supportsLAB}`);
-console.log(`supportsLCH ${supportsLCH}`);
-console.log(`supportsOKLAB ${supportsOKLAB}`);
-console.log(`supportsOKLCH ${supportsOKLCH}`);
-console.log(`supportsP3 ${supportsP3}`);
 
 // #### Factory
 // ```

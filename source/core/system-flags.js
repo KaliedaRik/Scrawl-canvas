@@ -46,11 +46,6 @@ let rootElementsSort = true;
 export const getRootElementsSort = () => rootElementsSort;
 export const setRootElementsSort = (val) => rootElementsSort = val;
 
-let displaySupportsP3ColorChanged = false;
-export const getDisplaySupportsP3ColorChanged = () => displaySupportsP3ColorChanged;
-export const setDisplaySupportsP3ColorChanged = (val) => displaySupportsP3ColorChanged = val;
-
-
 export const forceUpdate = function () {
 
     mouseChanged = true;

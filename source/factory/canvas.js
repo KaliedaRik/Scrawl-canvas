@@ -47,7 +47,6 @@ import { uiSubscribedElements, currentCorePosition } from '../core/user-interact
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
-import { getEngineValues, setEngineValues } from './cell-fragment.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 
@@ -946,45 +945,6 @@ P.cleanAria = function () {
     this.domElement.setAttribute(ROLE, this.role);
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
-};
-
-// `p3ColorGamutAction` - handles the (unlikely) edge case where the end user drags the browser window between screens that differ in their support for wide gamut colour (p3) support
-P.p3ColorGamutAction = function () {
-
-    const colorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
-
-    const wrapperVals = {...this};
-    const [existingColorSpace, vals] = getEngineValues(this.engine);
-
-    console.log(`p3ColorGamutAction: wants to shift from ${existingColorSpace} to ${colorSpace}`);
-
-    if (colorSpace != existingColorSpace) {
-
-        const baseName = this.base.name;
-        const replacementCanvas = this.domElement.cloneNode(true);
-        this.domElement.replaceWith(replacementCanvas);
-        this.domElement = replacementCanvas;
-
-        const c = this.cells;
-        let mycell;
-
-        for (let i = 0, iz = c.length; i < iz; i++) {
-
-            mycell = cell[c[i]];
-
-            if (mycell) mycell.updateEngineColorSpace(colorSpace);
-        }
-
-        this.engine = this.domElement.getContext(_2D, { colorSpace });
-        this.base = cell[baseName];
-        this.base.currentHost = this;
-        this.base.controller = this;
-
-        this.cleanCells();
-
-        console.log(`p3ColorGamutAction - result: ${JSON.stringify(this.engine.getContextAttributes())}`);
-
-    }
 };
 
 
