@@ -21,7 +21,7 @@ import { releaseArray, requestArray } from './array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, COLOR, DEG, DISPLAY_P3, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
@@ -82,6 +82,16 @@ const OKLabtoLMS = _freeze([
 /* eslint-disable-next-line */
     _freeze([ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ])
 ]);
+
+const SRGB = 'srgb',
+    SRGB_LINEAR = 'srgb-linear',
+    A98_RGB = 'a98-rgb',
+    PROPHOTO_RGB = 'prophoto-rgb',
+    REC2020 = 'rec2020',
+    XYZ_D50 = 'xyz-d50',
+    XYZ_D65 = 'xyz-d65';
+
+
 
 // Local dedicated canvas
 const element = document.createElement(CANVAS);
@@ -206,17 +216,21 @@ const defaultAttributes = {
     oklch_max: null,
     oklch_min: null,
 
+// color('???', ...) for the various color strings.
+// + __To note:__ do not mix-and-match color strings from different predefined color spaces! SC only reserves one set of arrays for all these strings.
+// + Internally, SC converts each color() string to RGB (sRGB) values for further manipulation
+//
 // The __easing__ and __easingFunction__ attributes affect the `getRangeColor` function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1
     easing: LINEAR,
     easingFunction: null,
 
 // __colorSpace__ - String value defining the color space to be used by the Color object for its internal calculations.
-// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'`
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH', 'P3'`
     colorSpace: RGB,
 
 // __returnColorAs__ - String value defining the type of color String the Color object will return.
 // + This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers
-// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'`
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH', 'P3'`
     returnColorAs: RGB,
 
 
@@ -1079,6 +1093,8 @@ P.convert = function (color, suffix = ZERO_STR) {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     }
+    // This captures everything else, including CSS `color()` strings, named colors, hex colors, etc
+    // + All these colors get processed as RGB colors
     else {
 
         [b, c, d, a] = this.getColorFromCanvas(color);
