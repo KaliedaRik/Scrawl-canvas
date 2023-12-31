@@ -83,6 +83,7 @@ const OKLabtoLMS = _freeze([
     _freeze([ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ])
 ]);
 
+
 // Local dedicated canvas
 const element = document.createElement(CANVAS);
 element.width = 1;
@@ -206,6 +207,10 @@ const defaultAttributes = {
     oklch_max: null,
     oklch_min: null,
 
+// color('???', ...) for the various color strings.
+// + __To note:__ do not mix-and-match color strings from different predefined color spaces! SC only reserves one set of arrays for all these strings.
+// + Internally, SC converts each color() string to RGB (sRGB) values for further manipulation
+//
 // The __easing__ and __easingFunction__ attributes affect the `getRangeColor` function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1
     easing: LINEAR,
     easingFunction: null,
@@ -1079,6 +1084,8 @@ P.convert = function (color, suffix = ZERO_STR) {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     }
+    // This captures everything else, including CSS `color()` strings, named colors, hex colors, etc
+    // + All these colors get processed as RGB colors
     else {
 
         [b, c, d, a] = this.getColorFromCanvas(color);

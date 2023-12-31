@@ -1082,4 +1082,4 @@ export default function (P = Ωempty) {
         this.dirtyPathObject = true;
         this.cleanPathObject();
     };
-};
+}

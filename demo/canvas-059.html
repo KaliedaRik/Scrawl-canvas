@@ -19,13 +19,15 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 059</h1>
-  <h2>CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lab(), lch(), oklab(), oklch()</h3>
+  <h2>CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lab(), lch(), oklab(), oklch()</h2>
+  <p>Note: this canvas will use the display-p3 color space where the device, browser and display screen all support it.</p>
 
   <canvas 
     id="mycanvas" 
     width="800" 
     height="600"
     data-scrawl-canvas
+    data-canvas-color-space="display-p3"
   ></canvas>
 
   <div class="testinfo">
@@ -35,10 +37,6 @@
       <li>Check that the expected color displays in the canvas.</li>
       <li>For comparison, create a set of &lt;div> elements with their backgroundColor values set to those same color strings.</li>
     </ul>
-    <p><b>Note that:</b> browser support for different color spaces is somewhat patchy. Browsers that do support the newer color spacess in CSS may not support them in &lt;canvas> elements.</p>
-
-    <p><b>Chrome issue:</b> while Chrome supports LAB/LCH and OKLAB/OKLCH color spaces, it does not parse these colors correctly when the non-L values are given in % format.</p>
-
     <p>For browsers that do not currently support a given color space (eg: Firefox), SC will calculate the required color space color (for all permitted formatting values) and render the color on the canvas using the sRGB color space.</p>
 
     <p><b>Touch test:</b> not required</p>
