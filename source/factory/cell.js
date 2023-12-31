@@ -47,7 +47,7 @@ import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } 
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
+import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
@@ -72,7 +72,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
+import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Cell constructor
@@ -85,21 +85,23 @@ const Cell = function (items = Ωempty) {
     this.initializePositions();
     this.initializeCascade();
 
-    if (!isa_canvas(items.element)) {
+    let mycanvas = items.element;
+    delete items.element;
 
-        const mycanvas = document.createElement(CANVAS);
+    if (!isa_canvas(mycanvas)) {
+
+        mycanvas = document.createElement(CANVAS);
         mycanvas.id = this.name;
         mycanvas.width = 300;
         mycanvas.height = 150;
-        items.element = mycanvas;
     }
 
     // The `willReadFrequently` argument attribute is not retained by the cell, but is used during the Cell element's construction. Defaults to `true`
-    this.installElement(items.element, items.willReadFrequently);
-
     this.set(this.defs);
 
     this.set(items);
+
+    this.installElement(mycanvas, items.canvasColorSpace);
 
     this.state.setStateFromEngine(this.engine);
 
@@ -224,6 +226,8 @@ const defaultAttributes = {
 
 // __includeInCascadeEventActions__ - if a non-base Cell has its `shown` flag set to true, then it is automatically included in CascadeEventActions functionality. In situations where we don't want the Cell to _directly_ appear in the canvas, but do want to include it in CascadeEventActions, then we can set this flag to `true`
     includeInCascadeEventActions: false,
+
+    willReadFrequently: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -567,11 +571,11 @@ P.checkSource = function (width, height) {
 };
 
 // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
-P.getData = function (entity, cell) {
+P.getData = function (entity, mycell) {
 
     this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 
-    return this.buildStyle(cell);
+    return this.buildStyle(mycell);
 };
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
@@ -707,11 +711,12 @@ P.subscribeAction = function (sub = {}) {
 };
 
 // `installElement` - internal function, used by the constructor
-P.installElement = function (element, willReadFrequently = true) {
+P.installElement = function (element, colorSpace = SRGB) {
 
     this.element = element;
     this.engine = this.element.getContext(_2D, {
-        willReadFrequently,
+        willReadFrequently: this.willReadFrequently,
+        colorSpace,
     });
 
     this.state = makeState({
@@ -1340,7 +1345,6 @@ const checkEngineScale = function (engine) {
     }
     return 1;
 };
-
 
 
 // #### Factory

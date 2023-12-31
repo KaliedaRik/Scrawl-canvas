@@ -48,10 +48,6 @@ export {
     addNativeListener,
     removeNativeListener,
     makeAnimationObserver,
-    getPixelRatio,
-    setPixelRatioChangeAction,
-    getIgnorePixelRatio,
-    setIgnorePixelRatio,
 } from './core/events.js';
 export * as library from './core/library.js';
 export { seededRandomNumberGenerator } from './core/random-seed.js';
@@ -62,6 +58,10 @@ export {
     stopCoreListeners,
     getTouchActionChoke,
     setTouchActionChoke,
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 } from './core/user-interaction.js';
 export { forceUpdate } from './core/system-flags.js';
 export { makeAction } from './factory/action.js';

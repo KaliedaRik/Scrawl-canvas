@@ -10,17 +10,18 @@ import { makeState } from './state.js';
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 
-import { _2D, CANVAS, T_CELLFRAGMENT } from '../core/shared-vars.js';
+import { _2D, CANVAS, SRGB, T_CELLFRAGMENT } from '../core/shared-vars.js';
 
 
 // #### CellFragment constructor
-const CellFragment = function (name) {
+const CellFragment = function (name, colorSpace = SRGB) {
 
     this.name = name;
 
     const element = this.element = document.createElement(CANVAS);
     const engine = this.engine = element.getContext(_2D, {
         willReadFrequently: true,
+        colorSpace,
     });
 
     element.width = 1;

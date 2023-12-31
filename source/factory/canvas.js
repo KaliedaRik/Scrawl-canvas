@@ -43,7 +43,7 @@ import { rootElementsAdd, rootElementsRemove } from "../core/document-root-eleme
 
 import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { uiSubscribedElements } from '../core/user-interaction.js';
+import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
@@ -54,7 +54,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -97,7 +97,12 @@ const Canvas = function (items = Ωempty) {
     if (!el) this.cleanDimensions();
     else {
 
-        this.engine = this.domElement.getContext(_2D);
+        const ds = el.dataset;
+
+        this.useDisplayP3WhereAvailable = ds.canvasColorSpace == DISPLAY_P3 || items.canvasColorSpace == DISPLAY_P3;
+        this.canvasColorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
+
+        this.engine = this.domElement.getContext(_2D, { colorSpace: this.canvasColorSpace });
 
         this.state = makeState({
             engine: this.engine
@@ -111,8 +116,6 @@ const Canvas = function (items = Ωempty) {
 
         let baseWidth = this.currentDimensions[0],
             baseHeight = this.currentDimensions[1];
-
-        const ds = el.dataset;
 
         if (ds.isResponsive) {
 
@@ -151,6 +154,7 @@ const Canvas = function (items = Ωempty) {
             host: this.name,
             controller: this,
             order: 10,
+            canvasColorSpace: this.canvasColorSpace,
         };
 
         if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);
@@ -290,6 +294,10 @@ const defaultAttributes = {
     description: ZERO_STR,
 
     role: IMG,
+
+// #### Canvas Color space
+// Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'`` (default); `'display-p3'`.
+    canvasColorSpace: SRGB,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -558,7 +566,7 @@ P.updateCells = function (items = Ωempty) {
 // `buildCell` - create a Cell wrapper (wrapping a &lt;canvas> element not attached to the DOM) and add it to this Canvas wrapper's complement of Cells
 P.buildCell = function (items = Ωempty) {
 
-    const host = items.host || false;
+    const host = items.host || null;
 
     if (!host) items.host = this.base.name;
 
@@ -587,7 +595,7 @@ P.cleanDimensionsAdditionalActions = function () {
 // `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.addCell = function (item) {
 
-    item = (item.substring) ? item : item.name || false;
+    item = (item.substring) ? item : item.name || null;
 
     if (item) {
 
@@ -612,7 +620,7 @@ P.addCell = function (item) {
 // `removeCell` - remove a Cell object from the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.removeCell = function (item) {
 
-    item = (item.substring) ? item : item.name || false;
+    item = (item.substring) ? item : item.name || null;
 
     if (item) {
 
@@ -935,7 +943,7 @@ P.cleanAria = function () {
     this.domElement.setAttribute(ROLE, this.role);
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
-}
+};
 
 
 // #### Factory
@@ -988,7 +996,7 @@ const addInitialCanvasElement = function (el) {
         group: mygroup,
         host: mygroup,
         position: position,
-        setInitialDimensions: true
+        setInitialDimensions: true,
     });
 };
 
@@ -1128,4 +1136,12 @@ export const addCanvas = function (items = Ωempty) {
     mycanvas.set(items);
 
     return mycanvas;
+};
+
+// Wide gamut colors helper
+const getCanvasColorSpace = (useP3) => {
+
+    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
+    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
+    return SRGB;
 };

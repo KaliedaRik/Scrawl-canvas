@@ -11,15 +11,15 @@ interface CommonObjectInput {
     [index: string]: any;
 }
 
+type StringOrNumberInput = string | number;
+
 interface CommonHereObjectInput {
-    x?: string | number;
-    y?: string | number;
+    x?: StringOrNumberInput;
+    y?: StringOrNumberInput;
     [index: string]: any;
 }
 
-type CommonTwoElementArrayInput = [string | number, string | number] | number[];
-
-type StringOrNumberInput = string | number;
+type CommonTwoElementArrayInput = [StringOrNumberInput, StringOrNumberInput] | number[];
 
 
 
@@ -787,6 +787,8 @@ type CanvasFitValues = 'none' | 'contain' | 'cover' | 'fill';
 
 type CanvasCascadeStrings = 'down' | 'up' | 'enter' | 'leave' | 'move';
 
+type CanvasColorSpaceValues = 'srgb' | 'display-p3';
+
 interface CanvasFactoryDeltaInputs extends BaseMixinDeltaInputs, DomMixinDeltaInputs, DisplayShapeMixinDeltaInputs {
     alpha?: number;
 }
@@ -802,6 +804,7 @@ interface CanvasFactoryInputs extends BaseMixinInputs, DomMixinInputs, DisplaySh
     label?: string;
     description?: string;
     role?: string;
+    canvasColorSpace?: CanvasColorSpaceValues;
     backgroundColor?: string;
     composite?: GlobalCompositeOperationValues;
     checkForEntityHover?: boolean;
@@ -872,6 +875,7 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     checkForEntityHover?: boolean;
     onEntityHover?: DefaultInputFunction;
     onEntityNoHover?: DefaultInputFunction;
+    canvasColorSpace?: CanvasColorSpaceValues;
 }
 
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
@@ -1259,8 +1263,8 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     method?: string;
     noiseType?: 'random' | 'ordered' | 'bluenoise';
     operation?: string;
-    palette?: string | number;
-    points?: string | number | number[];
+    palette?: StringOrNumberInput;
+    points?: StringOrNumberInput | number[];
     postProcessResults?: boolean;
     processHorizontal?: boolean;
     processVertical?: boolean;
@@ -1332,7 +1336,7 @@ interface GradientInstance extends GradientFactoryInputs, GradientFactoryFunctio
 // -------------------------------------
 type GridTileTypes = 'color' | 'cellGradient' | 'gridGradient' | 'gridPicture' | 'tilePicture' | string;
 
-type GridTileGutterColors = string | number | AnyGradientInstance | GridTileObject;
+type GridTileGutterColors = StringOrNumberInput | AnyGradientInstance | GridTileObject;
 
 interface GridTileObject {
     type: GridTileTypes;

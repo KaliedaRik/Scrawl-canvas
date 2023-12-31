@@ -9,7 +9,7 @@
 // #### Imports
 import * as library from "./library.js";
 
-import { isa_obj } from "./utilities.js";
+import { detectBrowser, isa_obj, λnull } from "./utilities.js";
 
 import { addListener } from "./events.js";
 
@@ -17,7 +17,7 @@ import { makeAnimation } from "../factory/animation.js";
 
 import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from './system-flags.js';
 
-import { _computed, _floor, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
+import { _computed, _floor, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -38,6 +38,9 @@ export const currentCorePosition = _seal({
     prefersReduceTransparency: false,
     prefersContrast: false,
     prefersReduceData: false,
+    displaySupportsP3Color: false,
+    canvasSupportsP3Color: false,
+    devicePixelRatio: 0,
     rawTouches: [],
 });
 
@@ -118,6 +121,82 @@ reducedDataMediaQuery.addEventListener(CHANGE, () => {
     }
 });
 currentCorePosition.prefersReduceData = reducedDataMediaQuery.matches;
+
+
+// ### Watch for changes when user drags browser window between screens
+// __displaySupportsP3ColorMediaQuery__ - real-time check on whether the browser is being displayed on a device screen which supports wide gamut colors
+const displaySupportsP3ColorMediaQuery = window.matchMedia("(color-gamut: p3)");
+
+displaySupportsP3ColorMediaQuery.addEventListener(CHANGE, () => {
+
+    const res = displaySupportsP3ColorMediaQuery.matches;
+
+    if (currentCorePosition.displaySupportsP3Color != res) {
+
+        currentCorePosition.displaySupportsP3Color = res;
+    }
+});
+currentCorePosition.displaySupportsP3Color = displaySupportsP3ColorMediaQuery.matches;
+
+// Also check to see if the canvas supports DisplayP3 - this is a one-time check as support is device/screen independent
+const checkCanvasSupportsDisplayP3 = () => {
+
+    const c = document.createElement("canvas");
+
+    // Needs to be done in try-catch because (apparently) Safari throws a fit if colorSpace option is supported by the canvas engine but the minimum macOS/iOS system requirements for display-p3 support are not met
+    try {
+
+        const e = c.getContext("2d", { colorSpace: "display-p3" });
+        return e.getContextAttributes().colorSpace == "display-p3";
+    }
+    catch { console.log('checkCanvasSupportsDisplayP3 errored')}
+    return false;
+};
+currentCorePosition.canvasSupportsP3Color = checkCanvasSupportsDisplayP3();
+
+
+// #### Monitoring the device pixel ratio
+// DPR is detected here, but mainly handled in the `factory/cell.js` file
+// + We scale the cell by DPR - this should be the only time we touch native scale functionality!
+// + All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the `current` equivalent attributes
+//
+// __getPixelRatio__ - exported to the API
+export const getPixelRatio = () => currentCorePosition.devicePixelRatio;
+
+// __getIgnorePixelRatio__, __setIgnorePixelRatio__ - exported to the API
+let ignorePixelRatio = false;
+export const getIgnorePixelRatio = () => ignorePixelRatio;
+export const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
+
+// __setPixelRatioChangeAction__ - exported to the API
+let pixelRatioChangeAction = λnull;
+export const setPixelRatioChangeAction = (func) => pixelRatioChangeAction = func;
+
+const updatePixelRatio = () => {
+
+    const dpr = window.devicePixelRatio;
+    currentCorePosition.devicePixelRatio = dpr;
+
+    _values(library.canvas).forEach(v => v.dirtyDimensions = true);
+    _values(library.cell).forEach(v => v.dirtyDimensions = true);
+    _values(library.entity).forEach(v => v.dirtyHost = true);
+
+    if (!ignorePixelRatio) pixelRatioChangeAction();
+
+    // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally?
+    // + Whatever. Safari does not like, or respond to, this matchmedia query
+    // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
+    if (!detectBrowser().includes(SAFARI)) {
+
+        // We use a one-time media query for checking when the device pixel ratio changes
+        // + unlike the user preferences media queries, device pixel ratio can be a number of different values
+        // + we check to see if dpr changes away from the current dpr value
+        // + then we create a replacement one-time media query to check for changes away from the new value
+        matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
+    }
+};
+
+updatePixelRatio();
 
 
 // ### Watch for browser window resize, or device rotation, which trigger changes in the viewport dimensions
@@ -260,6 +339,7 @@ const updateUiSubscribedElement = function (art) {
         here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
         here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
         here.prefersReduceData = currentCorePosition.prefersReduceData;
+        here.devicePixelRatio = currentCorePosition.devicePixelRatio;
 
         if (getPrefersContrastChanged()) dom.contrastActions();
         if (getPrefersReducedMotionChanged()) dom.reducedMotionActions();
@@ -449,23 +529,17 @@ const coreListenersTracker = makeAnimation({
 
         if (!uiSubscribedElements.length) return false;
 
-        if ((trackMouse && mouseChanged) || prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
+        if ((trackMouse && mouseChanged) ||
+            prefersReducedMotionChanged ||
+            prefersDarkColorSchemeChanged ||
+            prefersReduceTransparencyChanged ||
+            prefersReduceDataChanged) updateUiSubscribedElements();
 
-            updateUiSubscribedElements();
-
-            if (trackMouse && mouseChanged) {
-
-                setMouseChanged(false);
-            }
-
-            if (prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
-
-                setPrefersReducedMotionChanged(false);
-                setPrefersDarkColorSchemeChanged(false);
-                setPrefersReduceTransparencyChanged(false);
-                setPrefersReduceDataChanged(false);
-            }
-        }
+        if (trackMouse && mouseChanged) setMouseChanged(false);
+        if (prefersReducedMotionChanged) setPrefersReducedMotionChanged(false);
+        if (prefersDarkColorSchemeChanged) setPrefersDarkColorSchemeChanged(false);
+        if (prefersReduceTransparencyChanged) setPrefersReduceTransparencyChanged(false);
+        if (prefersReduceDataChanged) setPrefersReduceDataChanged(false);
 
         if (viewportChanged) {
 
@@ -474,6 +548,7 @@ const coreListenersTracker = makeAnimation({
         }
     },
 });
+
 
 // `Exported functions` (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas's impact on those pages by switching off the core listeners (and also the core animation loop).
 export const startCoreListeners = function () {

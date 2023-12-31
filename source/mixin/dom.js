@@ -1065,7 +1065,8 @@ export default function (P = Ωempty) {
         this.colorSchemeActions();
         this.reducedTransparencyActions();
         this.reducedDataActions();
-    }
+    };
+
 
 // `apply`
 // + I really don't like this functionality - see if we can purge it from the code base?
@@ -1081,4 +1082,4 @@ export default function (P = Ωempty) {
         this.dirtyPathObject = true;
         this.cleanPathObject();
     };
-}
+};

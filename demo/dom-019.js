@@ -99,8 +99,6 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 // Set DOM form initial input values
 // @ts-expect-error
 document.querySelector('#backgroundFilter').value = '';
-// @ts-expect-error
-document.querySelector('#outlineFilter').value = '1';
 
 
 // #### Development and testing

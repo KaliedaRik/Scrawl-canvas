@@ -9,7 +9,7 @@ import { artefact } from "./library.js";
 
 import { pushUnique, Ωempty } from "./utilities.js";
 
-import { getPixelRatio, getIgnorePixelRatio } from "./events.js";
+import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 
 import { releaseArray, requestArray } from '../factory/array-pool.js';
 
