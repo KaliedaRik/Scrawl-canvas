@@ -223,10 +223,13 @@ export default function (P = Ωempty) {
                 if (gradientLastUpdated + choke < now) {
 
                     gradient.updateByDelta();
+
+                    if (gradient.cyclePalette) palette.dirtyPaletteData = true;
+
                     this.gradientLastUpdated = now;
                 }
 
-                if (palette.dirtyPalette) palette.recalculate();
+                if (palette.dirtyPalette) palette.recalculateStopColors();
 
                 const lg = colorEngine.createLinearGradient(0, 0, 255, 0);
 

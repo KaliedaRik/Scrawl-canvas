@@ -209,7 +209,6 @@ P.buildImageGrid = function (image) {
         _freeze(grid);
         setWorkstoreItem(name, grid);
         return grid;
-
     }
     return false;
 };
@@ -1059,7 +1058,7 @@ P.getGradientData = function (gradient) {
         element.width = 256;
         element.height = 1;
 
-        gradient.palette.recalculate();
+        gradient.palette.recalculateStopColors();
 
         const G = engine.createLinearGradient(0, 0, 255, 0);
 

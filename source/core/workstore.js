@@ -105,6 +105,6 @@ const purgeWorkstore = () => {
 makeAnimation({
 
     name: 'core-workstore-hygeine',
-    order: 0,
+    order: 998,
     fn: () => purgeWorkstore(),
 });

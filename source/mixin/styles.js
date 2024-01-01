@@ -273,7 +273,11 @@ export default function (P = Ωempty) {
 
             this.paletteStart = item;
 
-            if(item < 0 || item > 999) this.paletteStart = (item > 500) ? 999 : 0;
+            if(item < 0 || item > 999) {
+
+                this.paletteStart = (item > 500) ? 999 : 0;
+            }
+            this.dirtyPaletteData = true;
         }
     };
     D.paletteStart = function (item) {
@@ -291,6 +295,7 @@ export default function (P = Ωempty) {
             }
 
             this.paletteStart = p;
+            this.dirtyPaletteData = true;
         }
     };
 
@@ -303,6 +308,7 @@ export default function (P = Ωempty) {
             this.paletteEnd = item;
 
             if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
+            this.dirtyPaletteData = true;
         }
     };
 
@@ -321,6 +327,7 @@ export default function (P = Ωempty) {
             }
 
             this.paletteEnd = p;
+            this.dirtyPaletteData = true;
         }
     };
 
@@ -566,7 +573,16 @@ export default function (P = Ωempty) {
     P.getData = function (entity, cell) {
 
         // Step 1: see if the palette is dirty, from having colors added/deleted/changed
-        if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
+        if(this.palette) {
+
+            if (this.palette.dirtyPalette) this.palette.recalculateStopColors();
+
+            if (this.dirtyPaletteData) {
+
+                this.dirtyPaletteData = false;
+                this.palette.dirtyPaletteData = true;
+            }
+        }
 
         // Step 2: recalculate current start and end points
         this.cleanStyle(entity, cell);
@@ -654,15 +670,10 @@ export default function (P = Ωempty) {
         return BLANK;
     };
 
-// `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the Gradient and RadialGradient factories)
+// `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the various gradient factories)
     P.addStopsToGradient = function (gradient, start, stop, cycle) {
 
-        if (this.palette) {
-
-            this.dirtyFilterIdentifier = true;
-
-            return this.palette.addStopsToGradient(gradient, start, stop, cycle);
-        }
+        if (this.palette) return this.palette.addStopsToGradient(gradient, start, stop, cycle);
         return gradient;
     };
 
