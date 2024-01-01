@@ -224,10 +224,10 @@ export default function (P = Ωempty) {
 
                     gradient.updateByDelta();
 
-                    if (gradient.cyclePalette) palette.dirtyPaletteData = true;
-
                     this.gradientLastUpdated = now;
                 }
+
+                palette.dirtyPaletteData = true;
 
                 if (palette.dirtyPalette) palette.recalculateStopColors();
 
