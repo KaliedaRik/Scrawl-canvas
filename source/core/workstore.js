@@ -4,11 +4,11 @@ import { makeAnimation } from '../factory/animation.js';
 import { _keys, _now } from './shared-vars.js';
 
 
-// `workstore`, `workstoreLastAccessed` - Scrawl-canvas maintains a semi-permanent storage space for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.
-export const workstore = {};
-export const workstoreLastAccessed = {};
+// `workstore`, `workstoreLastAccessed` - Scrawl-canvas maintains a semi-permanent storage space for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last few seconds.
+const workstore = {};
+const workstoreLastAccessed = {};
 
-// `choke` - measure in milliseconds before an entry in the workstore goes stale and gets removed from the workstore
+// `lifetimeLength` - measure in milliseconds before an entry in the workstore goes stale and gets removed from the workstore
 let lifetimeLength = 1000;
 
 // `setWorkstoreLifetimeLength`
@@ -101,10 +101,10 @@ const purgeWorkstore = () => {
     }
 };
 
-// `coreWorkstoreHygeine` animation object runs every RAF cycle
+// `core-workstore-hygeine` animation object runs every RAF cycle
 makeAnimation({
 
-    name: 'coreWorkstoreHygeine',
+    name: 'core-workstore-hygeine',
     order: 0,
     fn: () => purgeWorkstore(),
 });

@@ -52,7 +52,7 @@ export {
 export * as library from './core/library.js';
 export { seededRandomNumberGenerator } from './core/random-seed.js';
 export { makeSnippet } from './core/snippets.js';
-export { 
+export {
     setFilterMemoizationChoke,
     setWorkstoreLifetimeLength,
     setWorkstorePurgeChoke,
