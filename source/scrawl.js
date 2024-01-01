@@ -52,6 +52,11 @@ export {
 export * as library from './core/library.js';
 export { seededRandomNumberGenerator } from './core/random-seed.js';
 export { makeSnippet } from './core/snippets.js';
+export { 
+    setFilterMemoizationChoke,
+    setWorkstoreLifetimeLength,
+    setWorkstorePurgeChoke,
+ } from './core/workstore.js';
 export {
     currentCorePosition,
     startCoreListeners,
@@ -85,7 +90,6 @@ export { makeDragZone } from './factory/drag-zone.js';
 export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
 export { makeFilter } from './factory/filter.js';
-export { setFilterMemoizationChoke } from './factory/filter-engine.js';
 export { makeForce } from './factory/particle-force.js';
 export { makeGradient } from './factory/gradient.js';
 export { makeGrid } from './factory/grid.js';
