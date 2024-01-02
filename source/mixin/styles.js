@@ -263,7 +263,11 @@ export default function (P = Ωempty) {
 // `palette` - argument has to be a Palette object
     S.palette = function (item = Ωempty) {
 
-        if(item.type == T_PALETTE) this.palette = item;
+        if(item.type == T_PALETTE) {
+
+            this.palette = item;
+            this.dirtyPalette = true;
+        }
     };
 
 // `paletteStart` - argument must be a positive integer Number in the range 0 - 999
@@ -277,7 +281,7 @@ export default function (P = Ωempty) {
 
                 this.paletteStart = (item > 500) ? 999 : 0;
             }
-            this.dirtyPaletteData = true;
+            this.dirtyPalette = true;
         }
     };
     D.paletteStart = function (item) {
@@ -295,7 +299,7 @@ export default function (P = Ωempty) {
             }
 
             this.paletteStart = p;
-            this.dirtyPaletteData = true;
+            this.dirtyPalette = true;
         }
     };
 
@@ -308,7 +312,7 @@ export default function (P = Ωempty) {
             this.paletteEnd = item;
 
             if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
-            this.dirtyPaletteData = true;
+            this.dirtyPalette = true;
         }
     };
 
@@ -327,8 +331,14 @@ export default function (P = Ωempty) {
             }
 
             this.paletteEnd = p;
-            this.dirtyPaletteData = true;
+            this.dirtyPalette = true;
         }
+    };
+
+    S.cyclePalette = function (item) {
+
+        this.cyclePalette = !!item;
+        this.dirtyPalette = true;
     };
 
 // `colors` - We can pass through an array of palette color arrays to the Palette object by setting it on the gradient-type styles object. Each palette array is in the form `[Number, String]` where:
@@ -573,15 +583,10 @@ export default function (P = Ωempty) {
     P.getData = function (entity, cell) {
 
         // Step 1: see if the palette is dirty, from having colors added/deleted/changed
-        if(this.palette) {
+        if(this.palette && this.dirtyPalette) {
 
-            if (this.palette.dirtyPalette) this.palette.recalculateStopColors();
-
-            if (this.dirtyPaletteData) {
-
-                this.dirtyPaletteData = false;
-                this.palette.dirtyPaletteData = true;
-            }
+            this.dirtyPalette = false;
+            this.palette.markAsDirty();
         }
 
         // Step 2: recalculate current start and end points

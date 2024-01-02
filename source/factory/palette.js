@@ -206,8 +206,7 @@ S.colors = function (item) {
             }
         });
         this.colors = newCols;
-        this.dirtyPalette = true;
-        this.dirtyPaletteData = true;
+        this.markAsDirty();
     }
 };
 
@@ -242,8 +241,7 @@ P.setEasingHelper = function (item) {
         this.easing = LINEAR;
         this.easingFunction = λfirstArg;
     }
-    this.dirtyPalette = true;
-    this.dirtyPaletteData = true;
+    this.markAsDirty();
 };
 
 // The __colorSpace__ and __returnColorAs__ attributes get passed through to the Palette's Color object
@@ -275,8 +273,7 @@ S.colorSpace = function (item) {
                 this.colors[key].length = 0
                 this.colors[key].push(...this.factory[itm]);
             }
-            this.dirtyPalette = true;
-            this.dirtyPaletteData = true;
+            this.markAsDirty();
         }
     }
 }
@@ -291,8 +288,7 @@ S.returnColorAs = function (item) {
 
         returnColorAs: item,
     });
-    this.dirtyPalette = true;
-    this.dirtyPaletteData = true;
+    this.markAsDirty();
 }
 
 // __precision__ - a positive integer Number value between 0 and 50. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
@@ -303,8 +299,7 @@ S.precision = function (item) {
     if (item > 50) item = 50;
 
     this.precision = item;
-    this.dirtyPalette = true;
-    this.dirtyPaletteData = true;
+    this.markAsDirty();
 };
 
 // __stops__ - Do nothing. The stops array needs to be kept private, its values set only via the `recalculateStopColors` function, which happens whenever the `dirtyPalette` attribute is set to true.
@@ -312,6 +307,12 @@ S.stops = λnull;
 
 
 // #### Prototype functions
+
+P.markAsDirty = function () {
+
+    this.dirtyPaletteData = true;
+    this.dirtyPalette = true;
+};
 
 // `getColorSpace` - returns the color factory's current colorSpace value
 P.getColorSpace = function () {
@@ -329,38 +330,41 @@ P.getReturnColorAs = function () {
 // `recalculateStopColors` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
 P.recalculateStopColors = function () {
 
-    this.dirtyPalette = false;
+    if (this.dirtyPalette) {
 
-    const { colors, stops, factory } = this;
+        this.dirtyPalette = false;
 
-    stops.fill(BLANK);
+        const { colors, stops, factory } = this;
 
-    const { colorSpace } = factory;
+        stops.fill(BLANK);
 
-    const colorKeys = _keys(colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+        const { colorSpace } = factory;
 
-    let currentKey = colorKeys[0],
-        nextKey, currentVals, nextVals, diff, i, iz, j;
+        const colorKeys = _keys(colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
 
-    const [b, c, d, a] = colors[`${currentKey} `];
+        let currentKey = colorKeys[0],
+            nextKey, currentVals, nextVals, diff, i, iz, j;
 
-    stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
+        const [b, c, d, a] = colors[`${currentKey} `];
 
-    for (i = 0, iz = colorKeys.length - 1; i < iz; i++) {
+        stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
 
-        currentKey = colorKeys[i];
-        nextKey = colorKeys[i + 1];
-        currentVals = colors[`${currentKey} `];
-        nextVals = colors[`${nextKey} `];
+        for (i = 0, iz = colorKeys.length - 1; i < iz; i++) {
 
-        factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
-        factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
+            currentKey = colorKeys[i];
+            nextKey = colorKeys[i + 1];
+            currentVals = colors[`${currentKey} `];
+            nextVals = colors[`${nextKey} `];
 
-        diff = nextKey - currentKey;
+            factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
+            factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
 
-        for (j = currentKey + 1; j <= nextKey; j++) {
+            diff = nextKey - currentKey;
 
-            stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
+            for (j = currentKey + 1; j <= nextKey; j++) {
+
+                stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
+            }
         }
     }
 };
@@ -412,75 +416,46 @@ P.getStopData = function (gradient, start, end, cycle) {
     // Option 0: in case of errors, return transparent black
     if (!gradient) return BLANK;
 
-    if (!xta(start, end)) {
-        start = 0;
-        end = 999;
-    }
-
-    const { stops, easing, easingFunction, precision } = this;
-
-    // Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient
-    if (start == end) return stops[start] || BLANK;
-
-    // check to see if data has already been memoized and is suitable for return
     const workstoreName = `${this.name}-data`;
-    let itemInWorkstore = null;
 
-    if (!this.dirtyPaletteData) {
+    const { stops } = this;
 
-        itemInWorkstore = getWorkstoreItem(workstoreName);
-        if (itemInWorkstore) return itemInWorkstore;
-    }
+    if (this.dirtyPaletteData) {
 
-    // We need to generate the data
-    this.dirtyPaletteData = false;
+        this.dirtyPaletteData = false;
 
-    const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
-
-    let spread, offset, i, iz, item, n;
-
-    let engine = easingFunction;
-    if (easing != FUNCTION && easeEngines[easing]) engine = easeEngines[easing];
-
-    const colorSpace = this.getColorSpace();
-
-    const precisionTest = (!precision || (easing == LINEAR && colorSpace == RGB)) ? false : true;
-
-    const data = [];
-
-    // Option 2: start < end, cycle irrelevant
-    if (start < end) {
-
-        data.push(0, stops[start]);
-
-        spread = end - start;
-
-        if (precisionTest) {
-
-            for (i = start + 1; i < end; i += precision) {
-
-                offset = (i - start) / spread;
-
-                if (cycle) {
-
-                    if (offset > 1) offset -= 1;
-                    else if (offset < 0) offset += 1;
-                }
-
-                offset = engine(offset);
-
-                if (offset > 0 && offset < 1) data.push(offset, stops[i]);
-            }
+        if (!xta(start, end)) {
+            start = 0;
+            end = 999;
         }
-        else {
 
-            for (i = 0, iz = keys.length; i < iz; i++) {
+        const { easing, easingFunction, precision } = this;
 
-                item = keys[i];
+        const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
 
-                if (item > start && item < end) {
+        let spread, offset, i, iz, item, n;
 
-                    offset = (item - start) / spread;
+        let engine = easingFunction;
+        if (easing != FUNCTION && easeEngines[easing]) engine = easeEngines[easing];
+
+        const colorSpace = this.getColorSpace();
+
+        const precisionTest = (!precision || (easing == LINEAR && colorSpace == RGB)) ? false : true;
+
+        const data = [];
+
+        // Option 2: start < end, cycle irrelevant
+        if (start < end) {
+
+            data.push(0, stops[start]);
+
+            spread = end - start;
+
+            if (precisionTest) {
+
+                for (i = start + 1; i < end; i += precision) {
+
+                    offset = (i - start) / spread;
 
                     if (cycle) {
 
@@ -488,34 +463,9 @@ P.getStopData = function (gradient, start, end, cycle) {
                         else if (offset < 0) offset += 1;
                     }
 
-                    if (offset > 0 && offset < 1) data.push(offset, stops[item]);
-                }
-            }
-        }
-        data.push(1, stops[end]);
-    }
+                    offset = engine(offset);
 
-    else {
-
-        // Option 3: start > end, cycle = true
-        if (cycle) {
-
-            data.push(0, stops[start]);
-
-            n = 999 - start;
-            spread = n + end;
-
-            if (precisionTest) {
-
-                for (i = 0; i < spread; i += precision) {
-
-                    item = i + start;
-
-                    if (item > 999) item -= 1000;
-
-                    offset = engine(i / spread);
-
-                    if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                    if (offset > 0 && offset < 1) data.push(offset, stops[i]);
                 }
             }
             else {
@@ -524,49 +474,15 @@ P.getStopData = function (gradient, start, end, cycle) {
 
                     item = keys[i];
 
-                    if (item == 999) offset = (item - start - 0.01) / spread;
-                    else if (item > start) offset = (item - start) / spread;
-                    else if (item == 0) offset = (item + n + 0.01) / spread;
-                    else if (item < end) offset = (item + n) / spread;
-                    else continue;
+                    if (item > start && item < end) {
 
-                    if (offset > 1) offset -= 1;
-                    else if (offset < 0) offset += 1;
+                        offset = (item - start) / spread;
 
-                    if (offset > 0 && offset < 1) data.push(offset, stops[item]);
-                }
-            }
-            data.push(1, stops[end]);
-        }
+                        if (cycle) {
 
-        // Option 4: start > end, cycle = false
-        else {
-
-            data.push(0, stops[start]);
-
-            spread = start - end;
-
-            if (precisionTest) {
-
-                for (i = end + 1; i < start; i += precision) {
-
-                    if (i < start && i > end) {
-
-                        offset = engine(1 - ((i - end) / spread));
-
-                        if (offset > 0 && offset < 1) data.push(offset, stops[i]);
-                    }
-                }
-            }
-            else {
-
-                for (i = 0, iz = keys.length; i < iz; i++) {
-
-                    item = keys[i];
-
-                    if (item < start && item > end) {
-
-                        offset = 1 - ((item - end) / spread);
+                            if (offset > 1) offset -= 1;
+                            else if (offset < 0) offset += 1;
+                        }
 
                         if (offset > 0 && offset < 1) data.push(offset, stops[item]);
                     }
@@ -574,14 +490,102 @@ P.getStopData = function (gradient, start, end, cycle) {
             }
             data.push(1, stops[end]);
         }
+
+        else {
+
+            // Option 3: start > end, cycle = true
+            if (cycle) {
+
+                data.push(0, stops[start]);
+
+                n = 999 - start;
+                spread = n + end;
+
+                if (precisionTest) {
+
+                    for (i = 0; i < spread; i += precision) {
+
+                        item = i + start;
+
+                        if (item > 999) item -= 1000;
+
+                        offset = engine(i / spread);
+
+                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                    }
+                }
+                else {
+
+                    for (i = 0, iz = keys.length; i < iz; i++) {
+
+                        item = keys[i];
+
+                        if (item == 999) offset = (item - start - 0.01) / spread;
+                        else if (item > start) offset = (item - start) / spread;
+                        else if (item == 0) offset = (item + n + 0.01) / spread;
+                        else if (item < end) offset = (item + n) / spread;
+                        else continue;
+
+                        if (offset > 1) offset -= 1;
+                        else if (offset < 0) offset += 1;
+
+                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                    }
+                }
+                data.push(1, stops[end]);
+            }
+
+            // Option 4: start > end, cycle = false
+            else {
+
+                data.push(0, stops[start]);
+
+                spread = start - end;
+
+                if (precisionTest) {
+
+                    for (i = end + 1; i < start; i += precision) {
+
+                        if (i < start && i > end) {
+
+                            offset = engine(1 - ((i - end) / spread));
+
+                            if (offset > 0 && offset < 1) data.push(offset, stops[i]);
+                        }
+                    }
+                }
+                else {
+
+                    for (i = 0, iz = keys.length; i < iz; i++) {
+
+                        item = keys[i];
+
+                        if (item < start && item > end) {
+
+                            offset = 1 - ((item - end) / spread);
+
+                            if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                        }
+                    }
+                }
+                data.push(1, stops[end]);
+            }
+        }
+        _freeze(data);
+        setWorkstoreItem(workstoreName, data);
     }
-    _freeze(data);
-    setWorkstoreItem(workstoreName, data);
-    return data;
+
+    // Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient
+    if (start == end) return stops[start] || BLANK;
+
+    // check to see if data has already been memoized and is suitable for return
+    return getWorkstoreItem(workstoreName) || BLANK;
 };
 
 // `addStopsToGradient` - complete the construction of the Canvas API CanvasGradient object
 P.addStopsToGradient = function (gradient, start, end, cycle) {
+
+    this.recalculateStopColors();
 
     const data = this.getStopData(gradient, start, end, cycle);
 
