@@ -266,7 +266,6 @@ export default function (P = Ωempty) {
         if(item.type == T_PALETTE) {
 
             item.dirtyPalette = true;
-            item.dirtyPaletteData = true;
             this.palette = item;
         }
     };

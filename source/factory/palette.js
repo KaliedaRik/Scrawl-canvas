@@ -91,7 +91,6 @@ const Palette = function (items = Ωempty) {
     this.set(items);
 
     this.dirtyPalette = true;
-    this.dirtyPaletteData = true;
     return this;
 };
 
