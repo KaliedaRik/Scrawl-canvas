@@ -263,24 +263,32 @@ export default function (P = Ωempty) {
 // `palette` - argument has to be a Palette object
     S.palette = function (item = Ωempty) {
 
-        if(item.type == T_PALETTE) this.palette = item;
+        if(item.type == T_PALETTE) {
+
+            item.dirtyPalette = true;
+            this.palette = item;
+        }
     };
 
 // `paletteStart` - argument must be a positive integer Number in the range 0 - 999
     S.paletteStart = function (item) {
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             this.paletteStart = item;
 
-            if(item < 0 || item > 999) this.paletteStart = (item > 500) ? 999 : 0;
+            if(item < 0 || item > 999) {
+
+                this.paletteStart = (item > 500) ? 999 : 0;
+            }
+            this.palette.updateData();
         }
     };
     D.paletteStart = function (item) {
 
         let p;
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             p = this.paletteStart + item;
 
@@ -291,6 +299,7 @@ export default function (P = Ωempty) {
             }
 
             this.paletteStart = p;
+            this.palette.updateData();
         }
     };
 
@@ -298,11 +307,12 @@ export default function (P = Ωempty) {
 // `paletteEnd` - argument must be a positive integer Number in the range 0 - 999
     S.paletteEnd = function (item) {
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             this.paletteEnd = item;
 
             if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
+            this.palette.updateData();
         }
     };
 
@@ -310,7 +320,7 @@ export default function (P = Ωempty) {
 
         let p;
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             p = this.paletteEnd + item;
 
@@ -321,6 +331,16 @@ export default function (P = Ωempty) {
             }
 
             this.paletteEnd = p;
+            this.palette.updateData();
+        }
+    };
+
+    S.cyclePalette = function (item) {
+
+        if (this.palette) {
+
+            this.cyclePalette = !!item;
+            this.palette.updateData();
         }
     };
 
@@ -337,7 +357,10 @@ export default function (P = Ωempty) {
 // + Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)
     S.easing = function (item) {
 
-        if (this.palette) this.palette.set({ easing: item });
+        if (this.palette) {
+
+            this.palette.set({ easing: item });
+        }
     };
     S.easingFunction = S.easing;
 
@@ -565,16 +588,13 @@ export default function (P = Ωempty) {
 // `getData` - Every styles object (Gradient, RadialGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
     P.getData = function (entity, cell) {
 
-        // Step 1: see if the palette is dirty, from having colors added/deleted/changed
-        if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
-
-        // Step 2: recalculate current start and end points
+        // Step 1: recalculate current start and end points
         this.cleanStyle(entity, cell);
 
-        // Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
+        // Step 2: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
         this.finalizeCoordinates(entity);
 
-        // Step 4: create, populate and return gradient/pattern object
+        // Step 3: create, populate and return gradient/pattern object
         return this.buildStyle(cell);
     };
 
@@ -654,15 +674,10 @@ export default function (P = Ωempty) {
         return BLANK;
     };
 
-// `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the Gradient and RadialGradient factories)
+// `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the various gradient factories)
     P.addStopsToGradient = function (gradient, start, stop, cycle) {
 
-        if (this.palette) {
-
-            this.dirtyFilterIdentifier = true;
-
-            return this.palette.addStopsToGradient(gradient, start, stop, cycle);
-        }
+        if (this.palette) return this.palette.addStopsToGradient(gradient, start, stop, cycle);
         return gradient;
     };
 

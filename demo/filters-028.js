@@ -52,6 +52,23 @@ scrawl.makePicture({
     method: 'none',
 });
 
+// Gradient
+scrawl.makeGradient({
+
+    name: name('gradient'),
+    endX: '100%',
+
+    colors: [
+        [0, 'blue'],
+        [350, 'red'],
+        [500, 'transparent'],
+        [649, 'red'],
+        [999, 'green']
+    ],
+    colorSpace: 'OKLAB',
+    precision: 5,
+});
+
 // __Displace__ filter
 scrawl.makeFilter({
     name: name('displace'),
@@ -572,7 +589,8 @@ const cog = scrawl.makeCog({
     outerControlsDistance: 20,
     innerControlsDistance: 16,
     points: 12,
-    fillStyle: 'red',
+    fillStyle: name('gradient'),
+    lockFillStyleToEntity: true,
     delta: {
         roll: 0.5,
     },
@@ -751,7 +769,7 @@ scrawl.makeUpdater({
     event: ['change'],
     origin: '.controlItem',
 
-    target: stencil,
+    target: group,
 
     useNativeListener: true,
     preventDefault: true,

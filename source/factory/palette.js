@@ -59,11 +59,13 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../core/utilities.js';
 
+import { getWorkstoreItem, setWorkstoreItem } from '../core/workstore.js';
+
 import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _entries, _floor, _isArray, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../core/shared-vars.js';
+import { _assign, _entries, _floor, _freeze, _isArray, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../core/shared-vars.js';
 
 
 // #### Palette constructor
@@ -238,7 +240,7 @@ P.setEasingHelper = function (item) {
         this.easing = LINEAR;
         this.easingFunction = λfirstArg;
     }
-    this.dirtyPalette = true;
+    this.dirtyPaletteData = true;
 };
 
 // The __colorSpace__ and __returnColorAs__ attributes get passed through to the Palette's Color object
@@ -296,10 +298,10 @@ S.precision = function (item) {
     if (item > 50) item = 50;
 
     this.precision = item;
-    this.dirtyPalette = true;
+    this.dirtyPaletteData = true;
 };
 
-// __stops__ - Do nothing. The stops array needs to be kept private, its values set only via the `recalculate` function, which happens whenever the `dirtyPalette` attribute is set to true.
+// __stops__ - Do nothing. The stops array needs to be kept private, its values set only via the `recalculateStopColors` function, which happens whenever the `dirtyPalette` attribute is set to true.
 S.stops = λnull;
 
 
@@ -318,41 +320,45 @@ P.getReturnColorAs = function () {
     return RGB;
 };
 
-// `recalculate` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
-P.recalculate = function () {
+// `recalculateStopColors` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
+P.recalculateStopColors = function () {
 
-    this.dirtyPalette = false;
+    if (this.dirtyPalette) {
 
-    const { colors, stops, factory } = this;
+        this.dirtyPalette = false;
+        this.dirtyPaletteData = true;
 
-    stops.fill(BLANK);
+        const { colors, stops, factory } = this;
 
-    const { colorSpace } = factory;
+        stops.fill(BLANK);
 
-    const colorKeys = _keys(colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+        const { colorSpace } = factory;
 
-    let currentKey = colorKeys[0],
-        nextKey, currentVals, nextVals, diff, i, iz, j;
+        const colorKeys = _keys(colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
 
-    const [b, c, d, a] = colors[`${currentKey} `];
+        let currentKey = colorKeys[0],
+            nextKey, currentVals, nextVals, diff, i, iz, j;
 
-    stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
+        const [b, c, d, a] = colors[`${currentKey} `];
 
-    for (i = 0, iz = colorKeys.length - 1; i < iz; i++) {
+        stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
 
-        currentKey = colorKeys[i];
-        nextKey = colorKeys[i + 1];
-        currentVals = colors[`${currentKey} `];
-        nextVals = colors[`${nextKey} `];
+        for (i = 0, iz = colorKeys.length - 1; i < iz; i++) {
 
-        factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
-        factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
+            currentKey = colorKeys[i];
+            nextKey = colorKeys[i + 1];
+            currentVals = colors[`${currentKey} `];
+            nextVals = colors[`${nextKey} `];
 
-        diff = nextKey - currentKey;
+            factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
+            factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
 
-        for (j = currentKey + 1; j <= nextKey; j++) {
+            diff = nextKey - currentKey;
 
-            stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
+            for (j = currentKey + 1; j <= nextKey; j++) {
+
+                stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
+            }
         }
     }
 };
@@ -396,23 +402,30 @@ P.removeColor = function (index) {
     }
 };
 
-// `addStopsToGradient` - complete the construction of the Canvas API CanvasGradient object
-P.addStopsToGradient = function (gradient, start, end, cycle) {
+// `getStopData` - retrieve memoised gradient data, or generate it
+P.getStopData = function (gradient, start, end, cycle) {
 
-    // It's at this point that we apply the easing function
+    // Option 0: in case of errors, return transparent black
+    if (!gradient) return BLANK;
 
-    const { stops, easing, easingFunction, precision } = this;
+    const workstoreName = `${this.name}-data`;
 
-    const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+    const { stops } = this;
 
-    let spread, offset, i, iz, item, n;
+    if (this.dirtyPaletteData) {
 
-    if (gradient) {
+        this.dirtyPaletteData = false;
 
         if (!xta(start, end)) {
             start = 0;
             end = 999;
         }
+
+        const { easing, easingFunction, precision } = this;
+
+        const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+
+        let spread, offset, i, iz, item, n;
 
         let engine = easingFunction;
         if (easing != FUNCTION && easeEngines[easing]) engine = easeEngines[easing];
@@ -421,14 +434,12 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
         const precisionTest = (!precision || (easing == LINEAR && colorSpace == RGB)) ? false : true;
 
-        // Option 1 start == end, cycle irrelevant
-        if (start == end) return stops[start] || BLANK;
+        const data = [];
 
         // Option 2: start < end, cycle irrelevant
-        else if (start < end) {
+        if (start < end) {
 
-            gradient.addColorStop(0, stops[start]);
-            gradient.addColorStop(1, stops[end]);
+            data.push(0, stops[start]);
 
             spread = end - start;
 
@@ -446,7 +457,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                     offset = engine(offset);
 
-                    if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[i]);
+                    if (offset > 0 && offset < 1) data.push(offset, stops[i]);
                 }
             }
             else {
@@ -465,19 +476,19 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
                             else if (offset < 0) offset += 1;
                         }
 
-                        if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
                     }
                 }
             }
+            data.push(1, stops[end]);
         }
 
         else {
-            // Option 3: start > end, cycle = true
 
+            // Option 3: start > end, cycle = true
             if (cycle) {
 
-                gradient.addColorStop(0, stops[start]);
-                gradient.addColorStop(1, stops[end]);
+                data.push(0, stops[start]);
 
                 n = 999 - start;
                 spread = n + end;
@@ -492,7 +503,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                         offset = engine(i / spread);
 
-                        if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
                     }
                 }
                 else {
@@ -510,16 +521,16 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
                         if (offset > 1) offset -= 1;
                         else if (offset < 0) offset += 1;
 
-                        if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
                     }
                 }
+                data.push(1, stops[end]);
             }
 
             // Option 4: start > end, cycle = false
             else {
 
-                gradient.addColorStop(0, stops[start]);
-                gradient.addColorStop(1, stops[end]);
+                data.push(0, stops[start]);
 
                 spread = start - end;
 
@@ -531,7 +542,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                             offset = engine(1 - ((i - end) / spread));
 
-                            if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[i]);
+                            if (offset > 0 && offset < 1) data.push(offset, stops[i]);
                         }
                     }
                 }
@@ -545,17 +556,45 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                             offset = 1 - ((item - end) / spread);
 
-                            if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                            if (offset > 0 && offset < 1) data.push(offset, stops[item]);
                         }
                     }
                 }
+                data.push(1, stops[end]);
             }
         }
-        return gradient;
+        _freeze(data);
+        setWorkstoreItem(workstoreName, data);
     }
 
-    // No gradient: no colors
-    else return BLANK;
+    // Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient
+    if (start == end) return stops[start] || BLANK;
+
+    // check to see if data has already been memoized and is suitable for return
+    return getWorkstoreItem(workstoreName) || BLANK;
+};
+
+// `addStopsToGradient` - complete the construction of the Canvas API CanvasGradient object
+P.addStopsToGradient = function (gradient, start, end, cycle) {
+
+    this.recalculateStopColors();
+
+    const data = this.getStopData(gradient, start, end, cycle);
+
+    if (data.substring) return data;
+
+    for (let i = 0, iz = data.length; i < iz; i += 2) {
+
+        gradient.addColorStop(data[i], data[i + 1]);
+    }
+
+    return gradient;
+};
+
+// `updateData` - used by code elsewhere to tell the palette to update its stop data
+P.updateData = function () {
+
+    this.dirtyPaletteData = true;
 };
 
 

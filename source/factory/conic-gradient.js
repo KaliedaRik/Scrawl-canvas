@@ -7,11 +7,6 @@
 // ConicGradients can be applied to an entity in two different ways, depending on the entity's `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags:
 // + __Cell-locked__ ConicGradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient
 // + __Entity-locked__ ConicGradients display their entire color range on the entity, move with the entity and even rotate with the entity.
-//
-// __TO NOTE: _this is an experimental technology; most browsers do not (yet) support conic gradients for canvases, only in CSS.___ In these browsers, the gradient will return a solid, transparent color. To see the effect, enable the appropriate flags in the browser:
-// + Chrome browsers< - from version 86: this feature is behind the #new-canvas-2d-api preferences. To change preferences in Chrome, visit chrome://flags
-// + Firefox browsers - From version 86: this feature is behind the canvas.createConicGradient.enabled preferences. To change preferences in Firefox, visit about:config
-// + Other browsers - currently no signals about support. See the MDN createConicGradient() page for further details
 
 
 // #### Demos:

@@ -9,6 +9,8 @@ import { seededRandomNumberGenerator } from '../core/random-seed.js';
 
 import { correctAngle, doCreate, easeEngines, isa_fn } from '../core/utilities.js';
 
+import { getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from '../core/workstore.js';
+
 import { makeAnimation } from './animation.js';
 
 import { releaseCell, requestCell } from './cell-fragment.js';
@@ -21,7 +23,7 @@ import { makeColor } from './color.js';
 
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
-import { _abs, _ceil, _entries, _exp, _floor, _freeze, _isArray, _keys, _max, _min, _now, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _ceil, _entries, _exp, _floor, _freeze, _isArray, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
@@ -72,39 +74,14 @@ const FilterEngine = function () {
 const P = FilterEngine.prototype = doCreate();
 P.type = T_FILTER_ENGINE;
 
-let choke = 1000;
-export const setFilterMemoizationChoke = function (val) {
-
-    if (val.toFixed && !isNaN(val) && val >= 200 && val <= 10000) choke = val;
-};
-
 P.action = function (packet) {
 
     const { identifier, filters, image } = packet;
+    const { actions, theBigActionsObject } = this;
+    let i, iz, actData, a;
 
-    const { workstoreLastAccessed, workstore, actions, theBigActionsObject } = this;
-
-    const workstoreKeys = _keys(workstore),
-        workstoreChoke = _now() - choke;
-
-    let i, iz, s, actData, a;
-
-    for (i = 0, iz = workstoreKeys.length, s; i < iz; i++) {
-
-        s = workstoreKeys[i];
-
-        if (workstoreLastAccessed[s] < workstoreChoke) {
-
-            delete workstore[s];
-            delete workstoreLastAccessed[s];
-        }
-    }
-
-    if (identifier && workstore[identifier]) {
-
-        workstoreLastAccessed[identifier] = _now();
-        return workstore[identifier];
-    }
+    const itemInWorkstore = getWorkstoreItem(identifier);
+    if (itemInWorkstore) return itemInWorkstore;
 
     actions.length = 0;
 
@@ -127,11 +104,7 @@ P.action = function (packet) {
             if (a) a.call(this, actData);
         }
 
-        if (identifier) {
-
-            workstore[identifier] = this.cache.work;
-            workstoreLastAccessed[identifier] = _now();
-        }
+        if (identifier) setWorkstoreItem(identifier, this.cache.work);
 
         return this.cache.work;
     }
@@ -140,10 +113,6 @@ P.action = function (packet) {
 
 
 // ### Permanent variables
-
-// The filter engine maintains a semi-permanent storage space - the __workstore__ - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.
-P.workstore = {};
-P.workstoreLastAccessed = {};
 
 // ColorSpaceIndices are used by the reducePalette filter. Hoping to expand this to other filters to allow a wider use of OKLAB/OKLCH color spaces.
 P.colorSpaceIndices = function () {
@@ -207,7 +176,7 @@ P.getAlphaData = function (image) {
 // `buildImageGrid` creates an Array of Arrays which contain the indexes of each pixel in the image channel Arrays
 P.buildImageGrid = function (image) {
 
-    const { cache, workstore, workstoreLastAccessed } = this;
+    const { cache } = this;
 
     if (!image) image = cache.source;
 
@@ -215,11 +184,10 @@ P.buildImageGrid = function (image) {
 
     if (width && height) {
 
-        const name = `grid-${width}-${height}`;
-        if (workstore[name]) {
-            workstoreLastAccessed[name] = _now();
-            return workstore[name];
-        }
+        const name = `grid-${width}-${height}`,
+            itemInWorkstore = getWorkstoreItem(name);
+
+        if (itemInWorkstore) return itemInWorkstore;
 
         const grid = [];
 
@@ -237,26 +205,12 @@ P.buildImageGrid = function (image) {
             }
             grid.push(_freeze(row));
         }
-        workstore[name] = _freeze(grid);
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
+
+        _freeze(grid);
+        setWorkstoreItem(name, grid);
+        return grid;
     }
     return false;
-};
-
-// `getOrAddWorkstore` creates an Array which can be populated by swirl-related coordinates
-P.getOrAddWorkstore = function (name) {
-
-    const { workstore, workstoreLastAccessed } = this;
-
-    if (workstore[name]) {
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
-    }
-
-    workstore[name] = [];
-    workstoreLastAccessed[name] = _now();
-    return workstore[name];
 };
 
 P.getRandomNumbers = function (items = {}) {
@@ -268,14 +222,10 @@ P.getRandomNumbers = function (items = {}) {
         type = RANDOM,
     } = items;
 
-    const name = `random-${seed}-${length}-${type}`;
+    const name = `random-${seed}-${length}-${type}`,
+        itemInWorkstore = getWorkstoreItem(name);
 
-    const { workstore, workstoreLastAccessed } = this;
-
-    if (workstore[name]) {
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
-    }
+    if (itemInWorkstore) return itemInWorkstore;
 
     const vals = requestArray();
 
@@ -347,17 +297,16 @@ P.getRandomNumbers = function (items = {}) {
         }
     }
 
-    workstore[name] = new Float32Array(vals);
-    workstoreLastAccessed[name] = _now();
-
+    const valsArray = new Float32Array(vals);
     releaseArray(vals);
 
-    return workstore[name];
+    setWorkstoreItem(name, valsArray);
+    return valsArray;
 };
 
 P.buildImageCoordinateLookup = function (image) {
 
-    const { cache, workstore, workstoreLastAccessed } = this;
+    const { cache } = this;
 
     if (!image) image = cache.source;
 
@@ -365,12 +314,10 @@ P.buildImageCoordinateLookup = function (image) {
 
     if (width && height) {
 
-        const name = `coords-lookup-${width}-${height}`;
+        const name = `coords-lookup-${width}-${height}`,
+            itemInWorkstore = getWorkstoreItem(name);
 
-        if (workstore[name]) {
-            workstoreLastAccessed[name] = _now();
-            return workstore[name];
-        }
+        if (itemInWorkstore) return itemInWorkstore;
 
         const lookup = []
 
@@ -381,9 +328,10 @@ P.buildImageCoordinateLookup = function (image) {
                 lookup.push(_freeze([x, y]));
             }
         }
-        workstore[name] = _freeze(lookup);
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
+
+        _freeze(lookup);
+        setWorkstoreItem(name, lookup);
+        return lookup;
     }
     return false;
 };
@@ -391,7 +339,7 @@ P.buildImageCoordinateLookup = function (image) {
 // `buildAlphaTileSets` - creates a record of which pixels belong to which tile - used for manipulating alpha channel values. Resulting object will be cached in the store
 P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, image) {
 
-    const { cache, workstore, workstoreLastAccessed } = this;
+    const { cache } = this;
 
     if (!image) image = cache.source;
 
@@ -424,12 +372,10 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
         if (offsetY < 0) offsetY = 0;
         if (offsetY >= aHeight) offsetY = aHeight - 1;
 
-        const name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`;
+        const name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`,
+            itemInWorkstore = getWorkstoreItem(name);
 
-        if (workstore[name]) {
-            workstoreLastAccessed[name] = _now();
-            return workstore[name];
-        }
+        if (itemInWorkstore) return itemInWorkstore;
 
         const tiles = [];
 
@@ -480,9 +426,10 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                 tiles.push(_freeze([].concat(hold)));
             }
         }
-        workstore[name] = _freeze(tiles);
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
+
+        _freeze(tiles);
+        setWorkstoreItem(name, tiles);
+        return tiles;
     }
     return false;
 };
@@ -490,7 +437,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
 // `buildImageTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
 P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image) {
 
-    const { cache, workstore, workstoreLastAccessed } = this;
+    const { cache } = this;
 
     if (!image) image = cache.source;
 
@@ -512,12 +459,10 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
         if (offsetY < 0) offsetY = 0;
         if (offsetY >= tileHeight) offsetY = tileHeight - 1;
 
-        const name = `simple-tileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`;
+        const name = `simple-tileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`,
+            itemInWorkstore = getWorkstoreItem(name);
 
-        if (workstore[name]) {
-            workstoreLastAccessed[name] = _now();
-            return workstore[name];
-        }
+        if (itemInWorkstore) return itemInWorkstore;
 
         const tiles = [];
 
@@ -542,8 +487,9 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
                 if (hold.length) tiles.push(_freeze(hold));
             }
         }
-        workstore[name] = _freeze(tiles);
-        workstoreLastAccessed[name] = _now();
+
+        _freeze(tiles);
+        setWorkstoreItem(name, tiles);
         return tiles;
     }
     return false;
@@ -553,7 +499,7 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
 // + Used by the `tile` filter, but separated out as the data it generates may have uses elsewhere
 P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed, image) {
 
-    const { cache, workstore, workstoreLastAccessed } = this;
+    const { cache } = this;
 
     if (!image) image = cache.source;
     const { width:iWidth, height:iHeight } = image;
@@ -610,27 +556,18 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         if (req == POINTS_ARRAY) name += `-${pointVals.join(ARG_SPLITTER)}`;
         else if (req == RANDOM_POINTS) name += `-${pointVals}-${seed}`;
 
-        // To save time, previous invocations of the function store their end result - an Array of Arrays containing the index position of each pixel in the source image, assigned to each tile.
-        if (workstore[name]) {
+        const itemInWorkstore = getWorkstoreItem(name);
 
-            workstoreLastAccessed[name] = _now();
-            return workstore[name];
-        }
+        if (itemInWorkstore) return itemInWorkstore;
 
-        // Returning an empty array to the tile filter results in the filter taking no action beyond copying the input image data into the output image data.
-        if (req == RECT_GRID && tileW === 1 && tileH === 1) {
-
-            workstore[name] = [];
-            workstoreLastAccessed[name] = _now();
-            return [];
-        }
+        if (req == RECT_GRID && tileW === 1 && tileH === 1) return getOrAddWorkstoreItem(name);
 
         const coord = requestCoordinate(),
             origin = [offX, offY],
             test = [0, 0];
 
         let tiles = [],
-            points = [];
+            points;
 
         const referencePoints = [],
             neighbourPoints = [];
@@ -655,38 +592,34 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             case RECT_GRID :
 
                 pointsName = `rect-grid-points-${iWidth}-${iHeight}-${tileW}-${tileH}-${offX}-${offY}`;
+                points = getWorkstoreItem(pointsName);
 
-                if (workstore[pointsName]) {
+                if (!points) {
 
-                    workstoreLastAccessed[pointsName] = _now();
-                    points = workstore[pointsName];
-                }
-                else {
+                    const newPoints = [];
 
                     // Generates a set of initial points in an overlarge grid (for square tiles)
                     for (y = offY - (iHeight * 2) + halfH, yz = offY + (iHeight * 2) + halfH; y < yz; y += tileH) {
 
                         for (x = offX - (iWidth * 2) + halfW, xz = offX + (iWidth * 2) + halfW; x < xz; x += tileW) {
 
-                            points.push(x, y);
+                            newPoints.push(x, y);
                         }
                     }
-                    workstoreLastAccessed[pointsName] = _now();
-                    workstore[pointsName] = _freeze(points);
-                    points = workstore[pointsName];
+
+                    _freeze(newPoints);
+                    points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
                 break;
 
             case HEX_GRID :
 
                 pointsName = `hex-grid-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}`;
+                points = getWorkstoreItem(pointsName);
 
-                if (workstore[pointsName]) {
+                if (!points) {
 
-                    workstoreLastAccessed[pointsName] = _now();
-                    points = workstore[pointsName];
-                }
-                else {
+                    const newPoints = [];
 
                     // Generates a set of initial points in an overlarge grid (for hexagonal tiles)
                     counter = 0;
@@ -696,13 +629,13 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
                         for (x = offX - (iWidth * 2) + tileR + hexOffset, xz = offX + (iWidth * 2) + tileR; x < xz; x += doubleR) {
 
-                            points.push(x, y);
+                            newPoints.push(x, y);
                         }
                         counter++;
                     }
-                    workstoreLastAccessed[pointsName] = _now();
-                    workstore[pointsName] = _freeze(points);
-                    points = workstore[pointsName];
+
+                    _freeze(newPoints);
+                    points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
                 tileW = doubleR * 2;
                 tileH = hexDown * 2;
@@ -711,13 +644,11 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             case RANDOM_POINTS :
 
                 pointsName = `random-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}-${points}-${seed}`;
+                points = getWorkstoreItem(pointsName);
 
-                if (workstore[pointsName]) {
+                if (!points) {
 
-                    workstoreLastAccessed[pointsName] = _now();
-                    points = workstore[pointsName];
-                }
-                else {
+                    const newPoints = [];
 
                     // Generates a set of initial random points withing the given constraints
                     const rnd = this.getRandomNumbers({
@@ -731,11 +662,11 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         coord.zero().add([rnd[++rndCursor], rnd[++rndCursor]]).rotate(rnd[++rndCursor] * 360).rotate(ang).scalarMultiply(tileR);
 
                         [x, y] = coord;
-                        points.push(_round(x), _round(y));
+                        newPoints.push(_round(x), _round(y));
                     }
-                    workstoreLastAccessed[pointsName] = _now();
-                    workstore[pointsName] = _freeze(points);
-                    points = workstore[pointsName];
+
+                    _freeze(newPoints);
+                    points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
                 tileW = tileR;
                 tileH = tileR;
@@ -744,20 +675,15 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             case POINTS_ARRAY :
 
                 pointsName = `defined-points-${iWidth}-${iHeight}-${tileR}-${pointVals}`;
+                points = getWorkstoreItem(pointsName);
 
-                if (workstore[pointsName]) {
+                if (!points) {
 
-                    workstoreLastAccessed[pointsName] = _now();
-                    points = workstore[pointsName];
-                }
-                // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
-                else {
+                    // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
+                    const newPoints = [...pointVals];
 
-                    points.push(...pointVals);
-
-                    workstoreLastAccessed[pointsName] = _now();
-                    workstore[pointsName] = _freeze(points);
-                    points = workstore[pointsName];
+                    _freeze(newPoints);
+                    points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
 
                 tileW = tileR;
@@ -850,9 +776,9 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         // Filter the tiles Array to remove undefined indexes, then stash the result in the workstore (for future quick-serve) and return the array.
         tiles = tiles.filter(t => t != null);
 
-        workstore[name] = _freeze(tiles);
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
+        _freeze(tiles);
+        setWorkstoreItem(name, tiles);
+        return tiles;
     }
     return [];
 };
@@ -860,19 +786,15 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
 P.buildHorizontalBlur = function (grid, radius) {
 
-    const { workstore, workstoreLastAccessed } = this;
-
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
     const gridHeight = grid.length,
         gridWidth = grid[0].length;
 
-    const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`;
+    const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`,
+        itemInWorkstore = getWorkstoreItem(name);
 
-    if (workstore[name]) {
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
-    }
+    if (itemInWorkstore) return itemInWorkstore;
 
     const horizontalBlur = [];
 
@@ -891,27 +813,24 @@ P.buildHorizontalBlur = function (grid, radius) {
             horizontalBlur[(y * gridWidth) + x] = _freeze(cellsToProcess);
         }
     }
-    workstore[name] = _freeze(horizontalBlur);
-    workstoreLastAccessed[name] = _now();
-    return workstore[name];
+
+    _freeze(horizontalBlur);
+    setWorkstoreItem(name, horizontalBlur);
+    return horizontalBlur;
 };
 
 // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
 P.buildVerticalBlur = function (grid, radius) {
-
-    const { workstore, workstoreLastAccessed } = this;
 
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
     const gridHeight = grid.length,
         gridWidth = grid[0].length;
 
-    const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`;
+    const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`,
+        itemInWorkstore = getWorkstoreItem(name);
 
-    if (workstore[name]) {
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
-    }
+    if (itemInWorkstore) return itemInWorkstore;
 
     const verticalBlur = [];
 
@@ -930,15 +849,16 @@ P.buildVerticalBlur = function (grid, radius) {
             verticalBlur[(y * gridWidth) + x] = _freeze(cellsToProcess);
         }
     }
-    workstore[name] = _freeze(verticalBlur);
-    workstoreLastAccessed[name] = _now();
-    return workstore[name];
+
+    _freeze(verticalBlur);
+    setWorkstoreItem(name, verticalBlur);
+    return verticalBlur;
 };
 
 // `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
 P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
 
-    const { cache, workstore, workstoreLastAccessed } = this;
+    const { cache } = this;
 
     if (!image) image = cache.source;
 
@@ -953,12 +873,10 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
     if (mY == null || mY < 0) mY = 0;
     else if (mY >= mHeight) mY = mHeight - 1;
 
-    const name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+    const name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`,
+        itemInWorkstore = getWorkstoreItem(name);
 
-    if (workstore[name]) {
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
-    }
+    if (itemInWorkstore) return itemInWorkstore;
 
     const dataLength = data.length,
         cellsTemplate = [],
@@ -993,9 +911,10 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
             grid.push(_freeze(cell));
         }
     }
-    workstore[name] = _freeze(grid);
-    workstoreLastAccessed[name] = _now();
-    return workstore[name];
+
+    _freeze(grid);
+    setWorkstoreItem(name, grid);
+    return grid;
 };
 
 // `checkChannelLevelsParameters` - divide each channel into discrete sequences of pixels
@@ -1126,11 +1045,11 @@ P.processResults = function (store, incoming, ratio) {
 // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
 P.getGradientData = function (gradient) {
 
-    const { workstore, workstoreLastAccessed } = this;
-
     const name = `gradient-data-${gradient.name}`;
 
-    if (!workstore[name] || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
+    const itemInWorkstore = getWorkstoreItem(name);
+
+    if (!itemInWorkstore || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
 
         const mycell = requestCell();
 
@@ -1138,8 +1057,6 @@ P.getGradientData = function (gradient) {
 
         element.width = 256;
         element.height = 1;
-
-        gradient.palette.recalculate();
 
         const G = engine.createLinearGradient(0, 0, 255, 0);
 
@@ -1152,14 +1069,10 @@ P.getGradientData = function (gradient) {
 
         releaseCell(mycell);
 
-        workstore[name] = data;
+        return setAndReturnWorkstoreItem(name, data);
     }
 
-    if (workstore[name]) {
-        workstoreLastAccessed[name] = _now();
-        return workstore[name];
-    }
-    return [];
+    return itemInWorkstore || [];
 };
 
 P.transferDataUnchanged = function (oData, iData, len) {
@@ -4822,7 +4735,7 @@ P.theBigActionsObject = _freeze({
 
                     const swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
 
-                    const swirlCoords = this.getOrAddWorkstore(swirlName);
+                    const swirlCoords = getOrAddWorkstoreItem(swirlName);
 
                     if (!swirlCoords.length) {
 
