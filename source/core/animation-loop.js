@@ -41,7 +41,7 @@ import { getDoAnimation, getResortBatchAnimations, setDoAnimation, setResortBatc
 
 import { releaseArray, requestArray } from '../factory/array-pool.js';
 
-import { _floor } from './shared-vars.js';
+import { _floor, _now } from './shared-vars.js';
 
 
 // Local constants
@@ -109,7 +109,19 @@ const animationLoop = () => {
 
     for (let i = 0, iz = animate_sorted.length; i < iz; i++) {
 
-        animate_sorted[i].fn();
+        const a = animate_sorted[i],
+            now = _now();
+
+        if (a.chokedAnimation) {
+
+            // Warning: magic number! `825` seems to allow the frame rate to reach the max frame rate; setting it to anything higher means the frame rate never reaches the max frame rate.
+            if (a.lastRun + (825 / a.maxFrameRate) < now) {
+
+                a.fn();
+                a.lastRun = now;
+            }
+        }
+        else a.fn();
     }
 
     if (getDoAnimation()) window.requestAnimationFrame(animationLoop);

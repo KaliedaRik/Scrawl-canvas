@@ -32,6 +32,20 @@
     <div id="scaling-label" class="pink label">Scaling</div>
     <button class="pink controlItem" id="scaling" value="0">Add scaling</button>
 
+    <div class="green label">Max frames/second</div>
+    <div class="green">
+      <select class="controlItem" id="maxFrameRate">
+        <option value="120">120</option>
+        <option value="90">90</option>
+        <option value="60">60</option>
+        <option value="45">45</option>
+        <option value="30">30</option>
+        <option value="15">15</option>
+        <option value="5">5</option>
+        <option value="1">1</option>
+      </select>
+    </div>
+
   </div>
 
   <canvas 
@@ -49,6 +63,10 @@
       <li>Create and animate a Wheel entity, using delta and deltaConstraint objects</li>
       <li>Check that reverse and loop actions work as expected</li>
       <li>Check that scaling animation can be added to and deleted from the delta object</li>
+    </ul>
+    <p>Additionally:</p>
+    <ul>
+      <li>Change the frame rate; check that the displayed screen refresh frame rate does not exceed this value</li>
     </ul>
     <p>setDeltaValues() actions not yet tested: 'newString', 'update', 'reverse', 'add', 'multiply'</p>
     <p><b>Touch test:</b> not required</p>
