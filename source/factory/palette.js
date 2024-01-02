@@ -206,7 +206,7 @@ S.colors = function (item) {
             }
         });
         this.colors = newCols;
-        this.markAsDirty();
+        this.dirtyPalette = true;
     }
 };
 
@@ -241,7 +241,7 @@ P.setEasingHelper = function (item) {
         this.easing = LINEAR;
         this.easingFunction = λfirstArg;
     }
-    this.markAsDirty();
+    this.dirtyPaletteData = true;
 };
 
 // The __colorSpace__ and __returnColorAs__ attributes get passed through to the Palette's Color object
@@ -273,7 +273,7 @@ S.colorSpace = function (item) {
                 this.colors[key].length = 0
                 this.colors[key].push(...this.factory[itm]);
             }
-            this.markAsDirty();
+            this.dirtyPalette = true;
         }
     }
 }
@@ -288,7 +288,7 @@ S.returnColorAs = function (item) {
 
         returnColorAs: item,
     });
-    this.markAsDirty();
+    this.dirtyPalette = true;
 }
 
 // __precision__ - a positive integer Number value between 0 and 50. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
@@ -299,7 +299,7 @@ S.precision = function (item) {
     if (item > 50) item = 50;
 
     this.precision = item;
-    this.markAsDirty();
+    this.dirtyPaletteData = true;
 };
 
 // __stops__ - Do nothing. The stops array needs to be kept private, its values set only via the `recalculateStopColors` function, which happens whenever the `dirtyPalette` attribute is set to true.
@@ -307,12 +307,6 @@ S.stops = λnull;
 
 
 // #### Prototype functions
-
-P.markAsDirty = function () {
-
-    this.dirtyPaletteData = true;
-    this.dirtyPalette = true;
-};
 
 // `getColorSpace` - returns the color factory's current colorSpace value
 P.getColorSpace = function () {
@@ -333,6 +327,7 @@ P.recalculateStopColors = function () {
     if (this.dirtyPalette) {
 
         this.dirtyPalette = false;
+        this.dirtyPaletteData = true;
 
         const { colors, stops, factory } = this;
 
@@ -387,7 +382,6 @@ P.updateColor = function (index, color) {
             index += SPACE;
             this.colors[index] = [...f[colorSpace]];
             this.dirtyPalette = true;
-            this.dirtyPaletteData = true;
         }
     }
 };
@@ -405,7 +399,6 @@ P.removeColor = function (index) {
             index += SPACE;
             delete this.colors[index];
             this.dirtyPalette = true;
-            this.dirtyPaletteData = true;
         }
     }
 };
@@ -597,6 +590,12 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
     }
 
     return gradient;
+};
+
+// `updateData` - used by code elsewhere to tell the palette to update its stop data
+P.updateData = function () {
+
+    this.dirtyPaletteData = true;
 };
 
 

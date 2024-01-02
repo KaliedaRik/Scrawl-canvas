@@ -1051,17 +1051,12 @@ P.getGradientData = function (gradient) {
 
     if (!itemInWorkstore || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
 
-        const palette = gradient.palette;
-
         const mycell = requestCell();
 
         const {engine, element} = mycell;
 
         element.width = 256;
         element.height = 1;
-
-        palette.dirtyPaletteData = true;
-        if (palette.dirtyPalette) palette.recalculateStopColors();
 
         const G = engine.createLinearGradient(0, 0, 255, 0);
 

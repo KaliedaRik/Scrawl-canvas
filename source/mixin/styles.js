@@ -265,15 +265,16 @@ export default function (P = Ωempty) {
 
         if(item.type == T_PALETTE) {
 
+            item.dirtyPalette = true;
+            item.dirtyPaletteData = true;
             this.palette = item;
-            this.dirtyPalette = true;
         }
     };
 
 // `paletteStart` - argument must be a positive integer Number in the range 0 - 999
     S.paletteStart = function (item) {
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             this.paletteStart = item;
 
@@ -281,14 +282,14 @@ export default function (P = Ωempty) {
 
                 this.paletteStart = (item > 500) ? 999 : 0;
             }
-            this.dirtyPalette = true;
+            this.palette.updateData();
         }
     };
     D.paletteStart = function (item) {
 
         let p;
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             p = this.paletteStart + item;
 
@@ -299,7 +300,7 @@ export default function (P = Ωempty) {
             }
 
             this.paletteStart = p;
-            this.dirtyPalette = true;
+            this.palette.updateData();
         }
     };
 
@@ -307,12 +308,12 @@ export default function (P = Ωempty) {
 // `paletteEnd` - argument must be a positive integer Number in the range 0 - 999
     S.paletteEnd = function (item) {
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             this.paletteEnd = item;
 
             if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
-            this.dirtyPalette = true;
+            this.palette.updateData();
         }
     };
 
@@ -320,7 +321,7 @@ export default function (P = Ωempty) {
 
         let p;
 
-        if (item.toFixed) {
+        if (item.toFixed && this.palette) {
 
             p = this.paletteEnd + item;
 
@@ -331,14 +332,17 @@ export default function (P = Ωempty) {
             }
 
             this.paletteEnd = p;
-            this.dirtyPalette = true;
+            this.palette.updateData();
         }
     };
 
     S.cyclePalette = function (item) {
 
-        this.cyclePalette = !!item;
-        this.dirtyPalette = true;
+        if (this.palette) {
+
+            this.cyclePalette = !!item;
+            this.palette.updateData();
+        }
     };
 
 // `colors` - We can pass through an array of palette color arrays to the Palette object by setting it on the gradient-type styles object. Each palette array is in the form `[Number, String]` where:
@@ -354,7 +358,10 @@ export default function (P = Ωempty) {
 // + Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)
     S.easing = function (item) {
 
-        if (this.palette) this.palette.set({ easing: item });
+        if (this.palette) {
+
+            this.palette.set({ easing: item });
+        }
     };
     S.easingFunction = S.easing;
 
@@ -582,20 +589,13 @@ export default function (P = Ωempty) {
 // `getData` - Every styles object (Gradient, RadialGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
     P.getData = function (entity, cell) {
 
-        // Step 1: see if the palette is dirty, from having colors added/deleted/changed
-        if(this.palette && this.dirtyPalette) {
-
-            this.dirtyPalette = false;
-            this.palette.markAsDirty();
-        }
-
-        // Step 2: recalculate current start and end points
+        // Step 1: recalculate current start and end points
         this.cleanStyle(entity, cell);
 
-        // Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
+        // Step 2: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
         this.finalizeCoordinates(entity);
 
-        // Step 4: create, populate and return gradient/pattern object
+        // Step 3: create, populate and return gradient/pattern object
         return this.buildStyle(cell);
     };
 

@@ -206,8 +206,6 @@ export default function (P = Ωempty) {
 
                 const {element, engine, width, height, colorEngine, gradient, choke, gradientLastUpdated } = this;
 
-                const palette = gradient.palette;
-
                 // Update the Canvas element's dimensions - this will also clear the canvas display
                 element.width = width;
                 element.height = height;
@@ -226,10 +224,6 @@ export default function (P = Ωempty) {
 
                     this.gradientLastUpdated = now;
                 }
-
-                palette.dirtyPaletteData = true;
-
-                if (palette.dirtyPalette) palette.recalculateStopColors();
 
                 const lg = colorEngine.createLinearGradient(0, 0, 255, 0);
 
