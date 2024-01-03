@@ -43,6 +43,9 @@ const Animation = function (items = Ωempty) {
     this.onRun = items.onRun || λnull;
     this.onHalt = items.onHalt || λnull;
     this.onKill = items.onKill || λnull;
+    this.maxFrameRate = items.maxFrameRate || 60;
+    this.lastRun = 0;
+    this.chokedAnimation = true;
 
     this.register();
 
@@ -73,6 +76,9 @@ const defaultAttributes = {
 // + Higher order Animations will be processed after lower order Animations.
 // + Animations with the same `order` value will be processed in the order in which they were defined in code.
     order: 1,
+
+// __maxFrameRate__ - positive integer Number. A frames-per-second choke to prevent animation running too fast.
+    maxFrameRate: 60,
 
 // __fn__ - the main function that the Animation object will run on each RequestAnimationFrame tick. This function __must return a Promise__.
     fn: null,

@@ -683,6 +683,7 @@ interface AnimationFactoryDeltaInputs extends BaseMixinDeltaInputs {}
 
 interface AnimationFactoryInputs extends BaseMixinInputs, AnimationFactoryDeltaInputs {
     order?: number;
+    maxFrameRate?: number;
     fn?: DefaultInputFunction;
     onRun?: DefaultInputFunction;
     onHalt?: DefaultInputFunction;
@@ -2183,6 +2184,7 @@ interface RenderFactoryInputs extends BaseMixinInputs, RenderFactoryDeltaInputs 
     afterShow?: DefaultInputFunction;
     commence?: DefaultInputFunction;
     error?: DefaultInputFunction;
+    maxFrameRate?: number;
     onHalt?: DefaultInputFunction;
     onKill?: DefaultInputFunction;
     onRun?: DefaultInputFunction;
