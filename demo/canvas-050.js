@@ -1,5 +1,5 @@
 // # Demo Canvas 050
-// Manipulate artefact delta animation values
+// Manipulate artefact delta animation values; test animation maxFrameRate
 
 // [Run code](../../demo/canvas-050.html)
 import * as scrawl from '../source/scrawl.js'
