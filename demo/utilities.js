@@ -1,8 +1,3 @@
-// import {
-//     library as L,
-//     addNativeListener,
-//     importDomImage,
-// } from '../source/scrawl.js';
 import * as scrawl from '../source/scrawl.js';
 const L = scrawl.library;
 
