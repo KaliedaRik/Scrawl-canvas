@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Filters 011</title>
+  <title>Demo DOM 020</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -16,13 +16,18 @@
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
+
+    #reference-color button {
+      color: black;
+      background-color: transparent;
+      text-shadow: 0 0 6px white;
+    }
   </style>
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 011</h1>
-  <h2>Parameters for: chromakey filter</h2>
-  <h3>Where red represents the background color -<br />only shows through where pixels have been removed by the filter</h3>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 020</h1>
+  <h2>Using the EyeDropper API</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
@@ -34,7 +39,9 @@
     <div class="blue"><input class="controlItem" id="opaqueAt" type="range" value="0.39" min="0" max="1" step="0.01" /></div>
 
     <div class="green label">Reference color</div>
-    <div class="green"><input class="controlItem" id="reference" type="color" value="#be81df" /></div>
+    <div id="reference-color">
+      <button>Select color using Eye Dropper API</button>
+    </div>
 
     <div class="lavender label">Opacity</div>
     <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
@@ -46,7 +53,11 @@
     width="400" 
     height="400"
     data-scrawl-canvas
-  ></canvas>
+  >
+    <div id="my-image-store">
+      <img id="iris" src="img/iris.png" class="flowers" />
+    </div>
+  </canvas>
 
   <p id="reportmessage"></p>
 
@@ -56,19 +67,15 @@
     <ul>
       <li>Create a test Picture entity</li>
       <li>Create a chromakey filter and apply it to the test entity</li>
-      <li>Update filter attributes and observe the effect they have on the entity</li>
+      <li>Update filter attributes using the Eye Dropper API and check the results</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>
 
-    <p><a href="../docs/demo/filters-011.html">Annotated code</a></p>
+    <p><a href="../docs/demo/dom-020.html">Annotated code</a></p>
   </div>
 
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
-  </div>
-
-  <script src="filters-011.js" type="module"></script>
+  <script src="dom-020.js" type="module"></script>
 
 </body>
 
