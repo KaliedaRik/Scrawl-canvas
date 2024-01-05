@@ -1,4 +1,4 @@
-// # Demo Screencapture 001
+// # Demo DOM 019
 // Screen Capture API - apply a filter to a browser web page
 
 // [Run code](../../demo/dom-019.html)

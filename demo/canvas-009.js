@@ -36,7 +36,7 @@ ga(function() {
     myTracker.set('campaignKeyword', 'Scrawl-canvas demo');
 
     // Uncomment the next line to suppress tracker packets (so they don't show up in the console)
-    // myTracker.set('sendHitTask', null);
+    myTracker.set('sendHitTask', null);
 });
 
 
@@ -92,8 +92,6 @@ canvas.buildCell({
 
     shown: false,
     useAsPattern: true,
-
-    // willReadFrequently: false,
 });
 
 canvas.base.set({
@@ -149,10 +147,13 @@ makeBlock({
     fillStyle: name('cell-pattern'),
     strokeStyle: name('leaves-pattern'),
 
+    // To be aware: adding shadows to entitys using patterns for their fill and/or stroke styles can lead to a serious decrease in frame rate
+    /* 
     shadowOffsetX: 5,
     shadowOffsetY: 5,
     shadowBlur: 3,
     shadowColor: 'black',
+    */
 
     // Include an anchor (href) link which can be tied to user interaction (in this case, mouse clicks on the canvas element) through events defined further down in this script.
 

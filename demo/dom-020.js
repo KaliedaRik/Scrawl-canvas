@@ -1,7 +1,7 @@
-// # Demo Filters 011
-// Filter parameters: chromakey
+// # Demo DOM 020
+// Using the EyeDropper API
 
-// [Run code](../../demo/filters-011.html)
+// [Run code](../../demo/dom-020.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
@@ -10,19 +10,54 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
+canvas.base.set({
+    compileOrder: 1,
+});
+
 scrawl.importDomImage('.flowers');
+
+
+// Create the background
+const checkerboard = canvas.buildCell({
+    name: 'checkerboard',
+    width: 16,
+    height: 16,
+    backgroundColor: '#444',
+    compileOrder: 0,
+    cleared: false,
+    compiled: false,
+    // shown: false,
+    useAsPattern: true,
+});
+
+scrawl.makeBlock({
+    name: 'checkerboard-block-1',
+    group: 'checkerboard',
+    dimensions: ['50%', '50%'],
+    fillStyle: '#bbb',
+}).clone({
+    name: 'checkerboard-block-2',
+    start: ['50%', '50%'],
+});
+
+checkerboard.clear();
+checkerboard.compile();
+
+scrawl.makePicture({
+    name: 'checkerboard-image',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
+    fillStyle: 'checkerboard',
+});
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
-
     name: 'chromakey',
     method: 'chromakey',
-
     red: 190,
     green: 129,
     blue: 223,
-
     opaqueAt: 0.39,
     transparentAt: 0.32,
 });
@@ -30,19 +65,10 @@ const myFilter = scrawl.makeFilter({
 
 // Create the target entity
 const piccy = scrawl.makePicture({
-
     name: 'base-piccy',
-
     asset: 'iris',
-
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
     filters: ['chromakey'],
 });
 
