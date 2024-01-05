@@ -4,13 +4,17 @@
 // [Run code](../../demo/filters-014.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
 
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
+
+
+// Create the background
+addCheckerboardBackground(canvas, 'demo-filters-014');
 
 
 // Create the filter

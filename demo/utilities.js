@@ -1,9 +1,10 @@
-import {
-    library as L,
-    addNativeListener,
-    importDomImage,
-} from '../source/scrawl.js';
-
+// import {
+//     library as L,
+//     addNativeListener,
+//     importDomImage,
+// } from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
+const L = scrawl.library;
 
 // Function to display frames-per-second data, and other information relevant to the demo
 const reportSpeed = function (output = '', xtra = () => '') {
@@ -398,14 +399,14 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
 
     if (!Array.isArray(targets)) targets = [targets];
 
-    addNativeListener(['dragenter', 'dragover', 'dragleave'], (e) => {
+    scrawl.addNativeListener(['dragenter', 'dragover', 'dragleave'], (e) => {
 
         e.preventDefault();
         e.stopPropagation();
 
     }, wrappers.map(w => w.domElement));
 
-    addNativeListener('drop', (e) => {
+    scrawl.addNativeListener('drop', (e) => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -438,7 +439,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
                 img.id = name;
                 store.appendChild(img);
 
-                importDomImage(`#${name}`);
+                scrawl.importDomImage(`#${name}`);
 
                 // Update our Picture entity's asset attribute so it displays the new image
                 targets.forEach(target => {
@@ -511,6 +512,43 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
     };
 };
 
+const addCheckerboardBackground = (canvas, namespace) => {
+
+    // Namespace boilerplate
+    const name = (item) => `${namespace}-${item}`;
+
+    // Create the background
+    const checkerboard = canvas.buildCell({
+        name: name('checkerboard-background-cell'),
+        dimensions: [16, 16],
+        backgroundColor: '#999',
+        cleared: false,
+        compiled: false,
+        shown: false,
+        useAsPattern: true,
+    });
+
+    scrawl.makeBlock({
+        name: name('checkerboard-background-block-1'),
+        group: name('checkerboard-background-cell'),
+        dimensions: ['50%', '50%'],
+        fillStyle: '#bbb',
+    }).clone({
+        name: name('checkerboard-background-block-2'),
+        start: ['50%', '50%'],
+    });
+
+    checkerboard.clear();
+    checkerboard.compile();
+
+    scrawl.makeBlock({
+        name: name('checkerboard-background'),
+        group: canvas.get('baseName'),
+        dimensions: ['100%', '100%'],
+        fillStyle: name('checkerboard-background-cell'),
+    });
+};
+
 export {
     reportSpeed,
     reportFullLibrary,
@@ -521,5 +559,6 @@ export {
     killStyle,
     killTicker,
 
+    addCheckerboardBackground,
     addImageDragAndDrop,
 }

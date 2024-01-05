@@ -4,51 +4,17 @@
 // [Run code](../../demo/dom-020.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
 
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.base.set({
-    compileOrder: 1,
-});
-
 scrawl.importDomImage('.flowers');
 
 
 // Create the background
-const checkerboard = canvas.buildCell({
-    name: 'checkerboard',
-    width: 16,
-    height: 16,
-    backgroundColor: '#444',
-    compileOrder: 0,
-    cleared: false,
-    compiled: false,
-    // shown: false,
-    useAsPattern: true,
-});
-
-scrawl.makeBlock({
-    name: 'checkerboard-block-1',
-    group: 'checkerboard',
-    dimensions: ['50%', '50%'],
-    fillStyle: '#bbb',
-}).clone({
-    name: 'checkerboard-block-2',
-    start: ['50%', '50%'],
-});
-
-checkerboard.clear();
-checkerboard.compile();
-
-scrawl.makePicture({
-    name: 'checkerboard-image',
-    dimensions: ['100%', '100%'],
-    copyDimensions: ['100%', '100%'],
-    fillStyle: 'checkerboard',
-});
+addCheckerboardBackground(canvas, 'demo-dom-020');
 
 
 // Create the filter
