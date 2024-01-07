@@ -15,7 +15,7 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
+import { doCreate, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
 

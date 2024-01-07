@@ -202,8 +202,6 @@ S.hold = function (item) {
 
 // #### Prototype functions
 // The `build` function builds the &lt;button> element and adds it to the DOM
-//
-// Scrawl-canvas generated buttons are kept in hidden &lt;nav> elements - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs. This is done allow buttons to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
 P.build = function () {
 
     if (this.domElement && this.hold) this.hold.removeChild(this.domElement);

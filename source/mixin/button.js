@@ -10,7 +10,6 @@ import { canvas } from '../core/library.js';
 import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeButton } from '../factory/button.js';
-import { scrawlNavigationHold } from '../core/document.js';
 
 import { AUTOFOCUS, BLUR_ACTION, DESCRIPTION, CLICK_ACTION, DISABLED, ELEMENT_NAME, ELEMENT_TYPE, ELEMENT_VALUE, FOCUS_ACTION, FORM, FORM_ACTION, FORM_ENCTYPE, FORM_METHOD, FORM_NOVALIDATE, FORM_TARGET, POPOVER_TARGET, POPOVER_TARGETACTION, T_CANVAS,  T_CELL } from '../core/shared-vars.js';
 
@@ -175,10 +174,6 @@ export default function (P = Ωempty) {
 // #### Prototype functions
 
 // The `buildButton` function triggers the (re)build of the &lt;a> element and adds it to the DOM
-//
-// Scrawl-canvas generated button elements are kept in hidden &lt;nav> elements (alongside anchor links) - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs.
-//
-// This is done to allow buttons to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
     P.buildButton = function (items) {
 
         if (isa_obj(items)) {
@@ -213,7 +208,7 @@ export default function (P = Ωempty) {
         }
         this.dirtyButtonHold = true;
 
-        return scrawlNavigationHold;
+        return null;
     }
 
 // `rebuildButton` - triggers the Button object's `build` function

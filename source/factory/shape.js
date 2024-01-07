@@ -41,7 +41,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
+import { doCreate, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
