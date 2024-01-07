@@ -66,6 +66,7 @@ scrawl.makePhrase({
     fillStyle: 'yellow',
 
     underlineStyle: 'yellow',
+    underlineWidth: 4,
 
     onEnter: function () {
 

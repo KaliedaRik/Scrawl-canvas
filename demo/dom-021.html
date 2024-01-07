@@ -55,7 +55,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 021</h1>
-  <h2>Use canvas elements in popover content</h2>
+  <h2>Popover API - use canvas elements in popover content</h2>
   <p>See this <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API/Using">MDN web docs article</a> for information on how to implement a popover effect in HTML and CSS.</p>
 
   <nav>
@@ -188,7 +188,8 @@
 
     <ul>
       <li>This demo uses a popover containing just the canvas element. As such, it is our responsibility to include a programmatic close button (as an entity on the canvas) for the popover.</li>
-      <li>There may be a way to include a close &lt;button> element alongside the &lt;canvas> element, positioning the button over the canvas so that it is always visible and interactive, to which we can add a "beforetoggle" event listener to programmatically close the popover.</li>
+      <li>There may be a way to include a close &lt;button> element alongside the &lt;canvas> element in the DOM markup, positioning the button over the canvas so that it is always visible and interactive, to which we can add a "beforetoggle" event listener to programmatically close the popover.</li>
+      <li>For this demo, we instead use a graphical "close button" set of entitys, one of which includes a `button` attribute which inserts the entity into the browser's tabIndex list and closes the popover when user clicks on it, or tab navigates to it and presses the `return` key.</li>
     </ul>
 
     <p><a href="../docs/demo/dom-021.html">Annotated code</a></p>

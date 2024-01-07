@@ -168,7 +168,7 @@ export default function (P = Ωempty) {
     P.buttonSetHelper = function(key, val) {
 
         if (!this.button) this.buildButton();
-        if (this.button) this.button.setters[key](val);
+        if (this.button) this.button.set({ [key]: val });
     }
 
 

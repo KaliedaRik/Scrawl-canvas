@@ -1,5 +1,5 @@
 // # Demo DOM 021
-// Use canvas elements in popover content
+// Popover API - use canvas elements in popover content
 
 // [Run code](../../demo/dom-021.html)
 import * as scrawl from '../source/scrawl.js';
@@ -37,19 +37,14 @@ const loader = () => {
 // A convenience function to add the `reduceMotionAction` and `noPreferenceMotionAction` attributes to a canvas. Takes an Object argument containing the following attributes:
 // + `fixed` - a group containing artefacts that display when the user requests reduced motion, or an Array of such groups
 // + `animated` - a group containing artefacts that display when the user give no preference about reduced motion, or an Array of such groups
-// + `animation` - the animation object
-// + `commence` - a function that handles required animation actions at the start of each Display cycle
 export const reducedMotionFunctions = (items) => {
 
-    const {animation, commence } = items;
-    let {fixed, animated, halt } = items;
+    let {fixed, animated } = items;
 
-    if (!(fixed && animated && animation && commence)) return {};
+    if (!(fixed && animated)) return {};
 
     if (!Array.isArray(fixed)) fixed = [fixed];
     if (!Array.isArray(animated)) animated = [animated];
-
-    if (halt == null) halt = () => {};
 
     return {
 
@@ -57,13 +52,11 @@ export const reducedMotionFunctions = (items) => {
 
             fixed.forEach(a => a.setArtefacts({ visibility: true }));
             animated.forEach(a => a.setArtefacts({ visibility: false }));
-            animation.set({ commence: halt });
         },
         noPreferenceMotionAction: () => {
 
             fixed.forEach(a => a.setArtefacts({ visibility: false }));
             animated.forEach(a => a.setArtefacts({ visibility: true }));
-            animation.set({ commence });
         },
     }
 };
@@ -74,12 +67,17 @@ const canvas = scrawl.library.canvas.mycanvas,
     base = canvas.get('baseName');
 
 
+// Get a handle on the popover element
+const popover = document.querySelector('#mypopover');
+
+
 // Load image assets
 const assets = loader();
-console.log(assets);
 
 
-// Build display
+// #### Build display
+
+// Groups that don't display when user has reducedMotion set
 const animGroup = scrawl.makeGroup({
     name: 'animated-group',
     host: base,
@@ -90,12 +88,36 @@ const dragGroup = scrawl.makeGroup({
     host: base,
 });
 
+// Group that only displays when user has reducedMotion set
 const staticGroup = scrawl.makeGroup({
     name: 'static-group',
     host: base,
 });
 
+// Group for entitys that always display
+const topGroup = scrawl.makeGroup({
+    name: 'static-group',
+    host: base,
+    order: 1,
+});
 
+
+// Picture entity
+// + Contains a non-interactive image of the popover display, for prefersReducedMotion users
+// + Image will update in line with canvas size/shape
+const placeholder = scrawl.makePicture({
+    name: 'placeholder-image',
+    group: staticGroup,
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
+    asset: assets.placeholder,
+});
+
+
+// Arrow shape entity
+// + Will change scale and rotation depending on the canvas size/shape
 const arrow = scrawl.makeShape({
     name: 'arrow',
     group: animGroup,
@@ -113,6 +135,9 @@ const arrow = scrawl.makeShape({
     method: 'fillThenDraw',
 });
 
+
+// Draggable phrase entitys
+// + Will update their text values depending on the canvas shape
 const shapeLabel = scrawl.makePhrase({
     name: 'shape-label',
     group: dragGroup,
@@ -148,15 +173,19 @@ const sizeLabel = shapeLabel.clone({
 
 
 // Close button
-scrawl.makeRectangle({
+// + The rectangle entity includes a button attribute
+// + Users navigating with keyboard tabs will be able to tab to the button
+// + When clicked, the popover will close
+const closeButton = scrawl.makeRectangle({
 
     name: 'close-button',
-    group: base,
-    rectangleWidth: 200,
+    group: topGroup,
+    rectangleWidth: 100,
     rectangleHeight: 40,
     radius: 6,
-    start: ['98%', '2%'],
+    start: ['right', 'top'],
     handle: ['right', 'top'],
+    offset: [-8, 8],
     method: 'fillThenDraw',
     fillStyle: 'white',
     strokeStyle: 'orange',
@@ -173,51 +202,51 @@ scrawl.makeRectangle({
         this.set({ fillStyle: 'white'});
     },
     button: {
-        name: 'close-me',
-        elementName: 'close-me',
+        name: 'close-el',
+        elementName: 'close-el',
         description: 'Close',
         popoverTarget: 'mypopover',
         popoverTargetAction: 'hide',
-        autofocus: true,
         focusAction: true,
         blurAction: true,
     },
 
+    onUp: function () {
 // @ts-expect-error
-    onUp: this.clickButton,
+        this.button.click();
+    },
 });
 
-// scrawl.makePhrase({
+scrawl.makePhrase({
+    name: 'close-button-label',
+    group: topGroup,
+    text: 'Close',
+    width: 100,
+    pivot: 'close-button',
+    lockTo: 'pivot',
+    handle: ['right', 'top'],
+    offsetY: 10,
+    justify: 'center',
+    font: '1.5rem Arial, sans-serif',
+    lineHeight: 1,
+    fillStyle: 'black',
+    method: 'fill',
+});
 
-//     name: 'close-button-label',
-//     group: animationGroup,
-//     text: 'Close',
-//     width: 200,
-//     start: ['98%', '2%'],
-//     handle: ['right', 'top'],
-//     justify: 'center',
-//     font: '1rem Arial, sans-serif',
-//     lineHeight: 1,
-//     fillStyle: 'black',
-//     method: 'fill',
 
-//     onEnter: function () {
-//         canvas.set({ css: { cursor: 'pointer' }});
-// // @ts-expect-error
-//         this.set({ showBoundingBox: true});
-//     },
-//     onLeave: function () {
-//         canvas.set({ css: { cursor: 'auto' }});
-// // @ts-expect-error
-//         this.set({ showBoundingBox: false});
-//     },
-// });
+// Popover event listener
+// + When the popover opens we want the close button to take focus
+scrawl.addNativeListener('beforetoggle', (e) => {
+    if (e.newState == 'open') closeButton.set({ buttonAutofocus: true });
+}, popover);
 
 
 // #### User interaction
 scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
 scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElement);
 
+
+// Drag zone for the phrase size and shape labels
 scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: dragGroup,
@@ -368,26 +397,13 @@ canvas.set({
 });
 
 
-const placeholder = scrawl.makePicture({
-    name: 'placeholder-image',
-    group: staticGroup,
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-    dimensions: ['100%', '100%'],
-    copyDimensions: ['100%', '100%'],
-    asset: assets.placeholder,
-});
-
-
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const commence = () => {};
-
-const animation = scrawl.makeRender({
+scrawl.makeRender({
     name: 'demo-animation',
     target: canvas,
     afterShow: report,
@@ -398,12 +414,9 @@ const animation = scrawl.makeRender({
 const reducedMotion = reducedMotionFunctions({
     fixed: staticGroup,
     animated: [animGroup, dragGroup],
-    commence,
-    animation,
 });
 
 canvas.set({ ...reducedMotion });
-
 
 
 // #### Development and testing

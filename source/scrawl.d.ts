@@ -1884,9 +1884,11 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
     letterSpacing?: number;
     lineHeight?: number;
     overlinePosition?: number;
+    overlineWidth?: number;
     sizeValue?: number;
     textPathPosition?: number;
     underlinePosition?: number;
+    underlineWidth?: number;
 }
 
 interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, PhraseFactoryDeltaInputs {
@@ -1898,6 +1900,8 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     font?: string;
     highlightStyle?: string;
     justify?: PhraseJustifyValues;
+    noOverlineGlyphs?: string;
+    noUnderlineGlyphs?: string;
     overlineStyle?: string;
     sectionClassMarker?: string;
     showBoundingBox?: boolean;

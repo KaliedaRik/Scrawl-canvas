@@ -207,7 +207,6 @@ const Canvas = function (items = Ωempty) {
 
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
-        // ariaLabel.textContent = this.label;
         this.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
         el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
@@ -215,7 +214,6 @@ const Canvas = function (items = Ωempty) {
 
         const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
-        // ariaDescription.textContent = this.description;
         this.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
