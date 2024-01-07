@@ -38,7 +38,7 @@ const myFilter = scrawl.makeFilter({
 
 // Create the target entity
 const piccy = scrawl.makePicture({
-    
+
     name: 'base-piccy',
     asset: 'iris',
     dimensions: ['100%', '100%'],
@@ -97,7 +97,7 @@ async function sampleColorFromScreen(abort) {
     try {
 
         const result = await dropper.open({signal: abort.signal});
-        
+
         const color = result.sRGBHex;
 
         myFilter.set({
@@ -109,7 +109,7 @@ async function sampleColorFromScreen(abort) {
         abort.abort();
         refButton.removeAttribute('disabled');
 
-    } catch (e) { 
+    } catch (e) {
 
         abort.abort();
         refButton.removeAttribute('disabled');

@@ -580,6 +580,9 @@ P.prepareStamp = function() {
 
     // Specifically for Loom entitys
     if (this.dirtyImageSubscribers) this.updateImageSubscribers();
+
+    // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+    this.prepareStampTabsHelper();
 };
 
 // `preparePasteObject` - internal function

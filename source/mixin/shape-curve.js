@@ -423,6 +423,9 @@ P.factoryKill = function () {
             this.updatePositionSubscribers();
             this.updateControlPathSubscribers();
         }
+
+        // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+        this.prepareStampTabsHelper();
     };
 
 // `cleanControlLock` - internal helper function - called by `prepareStamp`

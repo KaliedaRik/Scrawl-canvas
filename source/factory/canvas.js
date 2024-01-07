@@ -84,12 +84,15 @@ const Canvas = function (items = Ωempty) {
 
     if (!items.label) items.label = `${this.name} canvas element`;
 
+    // Sets up the canvas shape/size action functions
     this.initializeDisplayShapeActions();
 
+    // Sets up the user preferences action functions
     this.initializeAccessibility();
 
     this.set(items);
 
+    // Question: why are we invoking `cleanDimensions` here? See if it can be removed
     this.cleanDimensions();
 
     const el = this.domElement;
@@ -166,7 +169,15 @@ const Canvas = function (items = Ωempty) {
         rootElementsAdd(this.name);
 
         // ##### Accessibility
-        // if (!el.getAttribute('role')) el.setAttribute('role', 'img');
+        // The `title`, `role`, `label` and `description` values can be set by passing the kv pairs to the constructor function, or in a subsequent `set()` invocation. However, it's also possible to set these directly on the HTML &lt;canvas> element, as follows:
+        // + &lt;canvas title="some title text">
+        // + &lt;canvas role="some role value">
+        // + &lt;canvas data-label="some label text">
+        // + &lt;canvas data-description="some description text">
+        if (el.getAttribute('role')) this.role = el.getAttribute('role');
+        if (el.getAttribute('title')) this.title = el.getAttribute('title');
+        if (ds.label) this.label = ds.label;
+        if (ds.description) this.description = ds.description;
 
         const navigation = document.createElement(NAV);
         navigation.id = `${this.name}-navigation`;
@@ -196,7 +207,7 @@ const Canvas = function (items = Ωempty) {
 
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
-        ariaLabel.textContent = this.label;
+        // ariaLabel.textContent = this.label;
         this.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
         el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
@@ -204,7 +215,7 @@ const Canvas = function (items = Ωempty) {
 
         const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
-        ariaDescription.textContent = this.description;
+        // ariaDescription.textContent = this.description;
         this.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);

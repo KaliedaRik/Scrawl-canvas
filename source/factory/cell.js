@@ -67,6 +67,7 @@ import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
 import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 import cascadeMix from '../mixin/cascade.js';
 import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
@@ -151,6 +152,7 @@ pivotMix(P);
 mimicMix(P);
 pathMix(P);
 anchorMix(P);
+buttonMix(P);
 cascadeMix(P);
 patternMix(P);
 filterMix(P);
@@ -1223,6 +1225,9 @@ P.prepareStamp = function () {
         this.dirtyAssetSubscribers = false;
         this.notifySubscribers();
     }
+
+    // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects in the DOM
+    this.prepareStampTabsHelper();
 };
 
 // `cleanPathObject` - Calculate the Cell's __Path2D object__

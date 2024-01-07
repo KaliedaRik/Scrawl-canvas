@@ -148,12 +148,10 @@ makeBlock({
     strokeStyle: name('leaves-pattern'),
 
     // To be aware: adding shadows to entitys using patterns for their fill and/or stroke styles can lead to a serious decrease in frame rate
-    /* 
     shadowOffsetX: 5,
     shadowOffsetY: 5,
     shadowBlur: 3,
     shadowColor: 'black',
-    */
 
     // Include an anchor (href) link which can be tied to user interaction (in this case, mouse clicks on the canvas element) through events defined further down in this script.
 

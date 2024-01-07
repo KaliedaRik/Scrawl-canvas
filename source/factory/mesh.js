@@ -39,6 +39,7 @@ import { currentGroup } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 
 import { _atan2, _ceil, _isArray, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
@@ -88,6 +89,7 @@ P.isAsset = false;
 baseMix(P);
 deltaMix(P);
 anchorMix(P);
+buttonMix(P);
 
 
 // #### Mesh attributes
@@ -546,6 +548,9 @@ P.prepareStamp = function() {
             if (this.sourceIsVideoOrSprite) this.dirtyInput = true;
         }
     }
+
+    // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+    this.prepareStampTabsHelper();
 };
 
 // `setSourceDimension` - internal function called by `prepareStamp`.

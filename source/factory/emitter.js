@@ -507,6 +507,9 @@ P.prepareStamp = function () {
             this.generatorChoke = now;
         }
     }
+
+    // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+    this.prepareStampTabsHelper();
 };
 
 // `addParticles` - internal function called by `prepareStamp` ... if you are not a fan of overly-complex functions, look away now.

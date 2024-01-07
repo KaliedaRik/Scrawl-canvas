@@ -1,13 +1,7 @@
 // # Anchor factory
 // In Scrawl-canvas, an Anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file.
 //
-// Scrawl-canvas uses the [Anchor mixin](../mixin/anchor.html) to add anchor functionality to artefacts - in particular canvas entitys.
-//
-// This gives us a interactive canvas containing dynamic, clickable regions.
-//
-// Note that while anchors are primarily for generating URL links to (external site) web pages, they can also be used to trigger any other desired action. This can be achieved by setting the anchor object's __clickAction__ attribute to a function. For instance:
-// + We can define a clickAction which emits a Google Analytics tracker message before performing the URL navigation (see demo Canvas-009)
-// + We can suppress the click action (via 'preventDefault') and instead action code supplied by a third party library - though there's usually better ways to achieve this via other Scrawl-canvas functionalities, for instance by using Scrawl-canvas enhanced event listeners or artefact functions (onEnter, onLeave, onDown, onUp).
+// Scrawl-canvas uses the [Anchor mixin](../mixin/anchor.html) to add anchor functionality to artefacts - in particular canvas entitys. This (alongside Button objects) gives us a interactive canvas containing dynamic, clickable regions.
 //
 // NOTE - generating an anchor will have an impact on the DOM document code, as an (off-viewport) &lt;a> element will be added to it.
 //
@@ -66,10 +60,7 @@ const defaultAttributes = {
 // __description__ - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. __Always include a description__ for accessibility.
     description: ZERO_STR,
 
-// The following attributes are detailed in [MDN's &lt;a> reference page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)
-// + They are (most of) the DOM element's attributes: __download__, __href__, __hreflang__, __ping__, __referrerpolicy__, __rel__, __target__, __anchorType__.
-// + The HTML Anchor element `type` attribute is stored in the Scrawl-canvas Anchor object using the key __anchorType__.
-// + Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.
+// The following attributes are detailed in [MDN's &lt;a> reference page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a).
     download: ZERO_STR,
     href: ZERO_STR,
     hreflang: ZERO_STR,
@@ -160,7 +151,7 @@ S.hold = function (item) {
 // The artefact with which an anchor object is associated maps these attributes to itself as follows:
 // ```
 // anchor.description     ~~> artefact.anchorDescription
-// anchor.type            ~~> artefact.anchorType
+// anchor.anchorType      ~~> artefact.anchorType
 // anchor.target          ~~> artefact.anchorTarget
 // anchor.rel             ~~> artefact.anchorRel
 // anchor.referrerPolicy  ~~> artefact.anchorReferrerPolicy
@@ -175,7 +166,7 @@ S.hold = function (item) {
 //
 //     anchor: {
 //         description: 'value',
-//         type: 'value',
+//         anchorType: 'value',
 //         target: 'value',
 //         rel: 'value',
 //         referrerPolicy: 'value',
@@ -228,16 +219,16 @@ S.target = function (item) {
     if (this.domElement) this.update(TARGET);
 };
 
-S.anchorType = function (item) {
-
-    this.anchorType = item;
-    if (this.domElement) this.update(TYPE);
-};
-
 // These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element's attribute key:
 // + `anchor.description -> a.textContent` - this is the text between the &lt;a> element's opening and closing tags
 // + `anchor.clickAction -> a.onclick` - a function that returns an string which is added to the DOM element's 'onclick' attribute
 //
+S.anchorType = function (item) {
+
+    this.anchorType = item;
+    if (this.domElement) this.domElement.type = item;
+};
+
 S.description = function (item) {
 
     this.description = item;

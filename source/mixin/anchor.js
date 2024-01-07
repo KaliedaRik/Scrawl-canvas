@@ -63,6 +63,7 @@ export default function (P = Ωempty) {
 // artefact.anchorDownload          ~~>  anchor.download
 // artefact.anchorFocusAction       ~~>  anchor.focusAction
 // artefact.anchorBlurAction        ~~>  anchor.blurAction
+// artefact.anchorClickAction       ~~>  anchor.clickAction
 // ```
 
 // __anchorDescription__
@@ -185,6 +186,13 @@ export default function (P = Ωempty) {
 
         if (!this.anchor) this.buildAnchor();
         if (this.anchor) this.anchor.setters.blurAction(item);
+    };
+
+// __anchorClickAction__
+    S.anchorClickAction = function (item) {
+
+        if (!this.anchor) this.buildAnchor();
+        if (this.anchor) this.anchor.setters.clickAction(item);
     };
 
 // The artefact's factory and `set` functions' argument object can include a single __anchor__ attribute, whose value should be an object containing anchor key:value pairs

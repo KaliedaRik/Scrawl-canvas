@@ -32,6 +32,7 @@ import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
 import anchorMix from './anchor.js';
+import buttonMix from './button.js';
 
 import { _isArray, _round, _entries, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../core/shared-vars.js'
 
@@ -53,6 +54,7 @@ export default function (P = Ωempty) {
     mimicMix(P);
     pathMix(P);
     anchorMix(P);
+    buttonMix(P);
 
 
 // #### Shared attributes
@@ -813,6 +815,9 @@ export default function (P = Ωempty) {
         if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
         if (this.dirtyPathObject) this.cleanPathObject();
+
+        // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+        this.prepareStampTabsHelper();
     };
 
 // `stamp` - builds a set of Strings which can then be applied to the DOM wrapper's element's `style` attribute.
