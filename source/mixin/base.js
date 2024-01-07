@@ -508,6 +508,19 @@ export default function (P = Ωempty) {
                             });
                         }
 
+                        // Same thing as anchors for artefact buttons
+                        if (update.button && obj.button) {
+
+                            obj.button.packetFunctions.forEach(item => {
+
+                                obj.button[item] = update.button[item];
+                                this.actionPacketFunctions(obj.button, item)
+
+                                obj.button.build();
+                            });
+                        }
+
+
                         // Specific to Phrase entitys, which doesn't include a simple way to set or update glyphStyle objects
                         if (update.glyphStyles && obj.glyphStyles) {
 

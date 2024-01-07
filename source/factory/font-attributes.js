@@ -49,7 +49,6 @@ baseMix(P);
 
 
 // #### FontAttributes attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 // __font__ - pseudo-attribute String which gets broken down into its component parts.

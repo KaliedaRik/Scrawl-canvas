@@ -54,7 +54,6 @@ baseMix(P);
 
 
 // #### Button attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 // __host__ - Every button will belong to exactly one Artefact.

@@ -159,7 +159,6 @@ baseMix(P);
 
 
 // #### Color attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 

@@ -84,7 +84,6 @@ baseMix(P);
 
 
 // #### World attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
     // x, y and z components of __gravity__, measured in meters/secondSquared (used in `gravity` force calculations)

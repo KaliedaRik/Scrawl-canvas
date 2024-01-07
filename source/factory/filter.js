@@ -167,7 +167,6 @@ baseMix(P);
 
 
 // #### Filter attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + ___Note:__ unlike other Scrawl-canvas factory functions, the Filter factory does not set all its default attributes as part of its constructors. The reason for this is that these attributes are often specific to just one or a few filter actions or methods; not setting these defaults help save some object memory.
 const defaultAttributes = {
 

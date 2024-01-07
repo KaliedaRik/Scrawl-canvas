@@ -93,8 +93,6 @@ buttonMix(P);
 
 
 // #### Mesh attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 const defaultAttributes = {
 
 // __net__ - A Mesh entity requires a Net entity, set to generate a weak or strong net, to supply Particle objects to act as its mapping coordinates.

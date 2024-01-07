@@ -51,7 +51,6 @@ baseMix(P);
 
 
 // #### Anchor attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 // __host__ - Every anchor will belong to exactly one Artefact.

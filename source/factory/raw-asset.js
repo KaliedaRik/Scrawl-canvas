@@ -85,9 +85,6 @@ assetMix(P);
 
 
 // #### RawAsset attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
-// + The __element__ and __engine__ attributes are excluded from the defaults object
 const defaultAttributes = {
 
     // __keytypes__ - a Javascript object made up of `key:String` attributes. Used as part of the factory when generating assets which use user-defined attributes that need to be Scrawl-canvas Quaternions, Vectors (like gravity) or Coordinates.
