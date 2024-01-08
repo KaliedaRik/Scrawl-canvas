@@ -31,7 +31,7 @@ const myvideo = scrawl.makePicture({
     copyHeight: '100%',
 });
 
-const initialVideoStart = scrawl.addListener('up', () => {
+const initialVideoStart = scrawl.addNativeListener(['mouseup', 'touchend', 'keyup'], () => {
 
     myvideo.set({
 

@@ -272,6 +272,22 @@ export default function (P = Ωempty) {
         if (this.anchor) this.anchor.click();
     };
 
+    P.prepareStampTabsHelper = function () {
+
+// `dirtyAnchorHold` - if the entity has an Anchor object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildAnchor__ function.
+        if (this.anchor && this.dirtyAnchorHold) {
+
+            this.dirtyAnchorHold = false;
+            this.buildAnchor(this.anchor);
+        }
+
+// `dirtyButtonHold` - if the entity has a Button object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildButton__ function.
+        if (this.button && this.dirtyButtonHold) {
+
+            this.dirtyButtonHold = false;
+            this.buildButton(this.button);
+        }
+    };
 // Return the prototype
     return P;
 }

@@ -961,7 +961,7 @@ P.calculateTextPositions = function (mytext) {
     let fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen;
 
     const fontAttributes = this.fontAttributes,
-        glyphAttributes = {...fontAttributes};
+        glyphAttributes = Object.create(fontAttributes);
 
     const sectionStyles = this.sectionStyles;
 
@@ -978,9 +978,7 @@ P.calculateTextPositions = function (mytext) {
         justify = this.justify;
 
     fontAttributes.updateMetadata(scale, lineHeight, host);
-    glyphAttributes.scale = fontAttributes.scale;
-    glyphAttributes.lineHeight = fontAttributes.lineHeight;
-    glyphAttributes.host = fontAttributes.host;
+    glyphAttributes.updateMetadata(scale, lineHeight, host);
 
     const defaultFont = fontAttributes.getFontString(),
         defaultFillStyle = makeStyle(state.fillStyle),

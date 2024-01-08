@@ -225,6 +225,10 @@ export default function (P = Ωempty) {
         if (this.button) this.button.click();
     };
 
+
+// `prepareStampTabsHelper` - this function is defined in the `mixin/anchor.js` file, though the function's action involves both Anchor and Button objects
+
+
 // Return the prototype
     return P;
 }
