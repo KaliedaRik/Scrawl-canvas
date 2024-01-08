@@ -207,13 +207,14 @@ const closeButton = scrawl.makeRectangle({
         description: 'Close',
         popoverTarget: 'mypopover',
         popoverTargetAction: 'hide',
+        disabled: true,
         focusAction: true,
         blurAction: true,
     },
 
     onUp: function () {
 // @ts-expect-error
-        this.button.click();
+        this.clickButton();
     },
 });
 
@@ -236,8 +237,16 @@ scrawl.makePhrase({
 
 // Popover event listener
 // + When the popover opens we want the close button to take focus
+// + When the popover closes, we need to disable the button to take it out of the tabbing order
 scrawl.addNativeListener('beforetoggle', (e) => {
-    if (e.newState == 'open') closeButton.set({ buttonAutofocus: true });
+
+    if (e.newState == 'open') closeButton.set({
+        buttonAutofocus: true,
+        buttonDisabled: false,
+    });
+
+    else closeButton.set({ buttonDisabled: true });
+
 }, popover);
 
 

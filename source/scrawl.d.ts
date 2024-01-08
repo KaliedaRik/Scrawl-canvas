@@ -818,7 +818,7 @@ interface ButtonFactoryDeltaInputs extends BaseMixinDeltaInputs {}
 interface ButtonFactoryInputs extends BaseMixinInputs, ButtonFactoryDeltaInputs {
     autofocus?: boolean;
     blurAction?: boolean;
-    clickAction?: () => string;
+    clickAction?: DefaultOutputFunction;
     description?: string;
     disabled?: boolean;
     elementName?: string;

@@ -21,7 +21,7 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     const defaultAttributes = {
 
-// __anchor__ - a handle to the anchor object. When creating or setting an artefact this can be supplied in the argument object as a Javascript object containing the data required to create the anchor.
+// __button__ - a handle to the button object. When creating or setting an artefact this can be supplied in the argument object as a Javascript object containing the data required to create the button.
         button: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);

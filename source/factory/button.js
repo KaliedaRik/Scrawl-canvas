@@ -77,27 +77,7 @@ const defaultAttributes = {
     elementType: BUTTON,
     elementValue: ZERO_STR,
 
-
-// The __clickAction__ attribute is a ___function which returns a string command___ which in turn gets attached to the anchor DOM element's __onclick__ attribute. Invoking the result is handled entirely by the browser (as is normal).
-
-// ##### Example usage
-//
-// This __doesn't work!__ The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the button:
-// ```
-// button: {
-//     elementName: 'do-something-fun',
-//     description: 'Close'
-//     clickAction: function () { console.log('Close button clicked') },
-// }
-// ```
-// This __works as expected__ - the function returns a string which can then be attached to the &lt;a> DOM element's _onclick_ attribute:
-// ```
-// button: {
-//     elementName: 'do-something-fun',
-//     description: 'Close'
-//     clickAction: function () { return `console.log('Close button clicked')` },
-// },
-// ```
+// __clickAction__ - function - actions to be performed when user tabs to the hidden button element and presses the keyboard return button. Function cannot take any arguments.
     clickAction: null,
 
 // We can instruct the button to add event listeners for focus and blur events using the __focusAction__ and __blurAction__ Boolean flags. When set to true, the ___focus___ event listener will invoke the host entity's `onEnter` function; the ___blur___ event listener invokes the `onLeave` function. Default is to ignore these events
@@ -226,7 +206,7 @@ P.build = function () {
     if (this.elementType) btn.setAttribute(TYPE, this.elementType);
     else btn.setAttribute(TYPE, BUTTON);
 
-    if (this.clickAction && isa_fn(this.clickAction)) btn.setAttribute(ONCLICK, this.clickAction());
+    if (this.clickAction && isa_fn(this.clickAction)) btn.addEventListener('click', this.clickAction);
 
     if (this.description) btn.textContent = this.description;
 

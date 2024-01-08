@@ -46,7 +46,21 @@ const initialVideoStart = scrawl.addListener('up', () => {
 
 
 // canvas-based buttons
-scrawl.makePhrase({
+const playPauseAction = function () {
+
+    if (myvideo.get('video_paused')) {
+
+        playPause.set({ text: 'PAUSE' });
+        myvideo.videoPlay();
+    }
+    else {
+
+        playPause.set({ text: 'PLAY' });
+        myvideo.videoPause();
+    }
+};
+
+const playPause = scrawl.makePhrase({
 
     name: name('test-button-play-pause'),
     order: 2,
@@ -98,29 +112,34 @@ scrawl.makePhrase({
         });
     },
 
-    onUp: function () {
+    button: {
 
-        if (myvideo.get('video_paused')) {
-
-// @ts-expect-error
-            this.set({
-                text: 'PAUSE',
-            });
-
-            myvideo.videoPlay();
-        }
-        else {
-
-// @ts-expect-error
-            this.set({
-                text: 'PLAY',
-            });
-
-            myvideo.videoPause();
-        }
+        name: 'play-pause-button',
+        elementName: 'play-pause-button-el',
+        description: 'Play | Pause',
+        focusAction: true,
+        blurAction: true,
+        clickAction: playPauseAction,
     },
 
-}).clone({
+    onUp: playPauseAction,
+});
+
+const listenMuteAction = function () {
+
+    if (myvideo.get('video_muted')) {
+
+        listenMute.set({ text: 'MUTE' });
+        myvideo.set({ video_muted: false });
+    }
+    else {
+
+        listenMute.set({ text: 'LISTEN' });
+        myvideo.set({ video_muted: true });
+    }
+};
+
+const listenMute = playPause.clone({
 
     name: name('test-button-listen-mute'),
 
@@ -128,31 +147,17 @@ scrawl.makePhrase({
 
     startX: '25%',
 
-    onUp: function () {
+    button: {
 
-        if (myvideo.get('video_muted')) {
-
-// @ts-expect-error
-            this.set({
-                text: 'MUTE',
-            });
-
-            myvideo.set({
-                video_muted: false,
-            });
-        }
-        else {
-
-// @ts-expect-error
-            this.set({
-                text: 'LISTEN',
-            });
-
-            myvideo.set({
-                video_muted: true,
-            });
-        }
+        name: 'listen-mute-button',
+        elementName: 'listen-mute-button-el',
+        description: 'Listen | Mute',
+        focusAction: true,
+        blurAction: true,
+        clickAction: listenMuteAction,
     },
+
+    onUp: listenMuteAction,
 });
 
 // Turn the swans pink
