@@ -341,7 +341,7 @@ export default function (P = Ωempty) {
             const b = _parse(this.button.saveAsPacket(items))[3];
             copy.button = b;
         }
-        
+
         return copy;
     }
 
