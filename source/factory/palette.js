@@ -59,7 +59,7 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../core/utilities.js';
 
-import { getWorkstoreItem, setWorkstoreItem } from '../core/workstore.js';
+import { getWorkstoreItem, setWorkstoreItem, checkForWorkstoreItem } from '../core/workstore.js';
 
 import { makeColor } from './color.js';
 
@@ -411,7 +411,7 @@ P.getStopData = function (gradient, start, end, cycle) {
 
     const { stops } = this;
 
-    if (this.dirtyPaletteData) {
+    if (this.dirtyPaletteData || !checkForWorkstoreItem()) {
 
         this.dirtyPaletteData = false;
 

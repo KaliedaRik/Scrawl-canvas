@@ -377,7 +377,7 @@ export const importMediaStream = function (items = Ωempty) {
             })
             .catch (err => {
 
-                console.log(err.message);
+                console.log(err);
                 resolve(vid);
             });
         }

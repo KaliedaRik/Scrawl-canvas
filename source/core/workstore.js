@@ -23,6 +23,9 @@ export const setFilterMemoizationChoke = (val) => {
     if (val.toFixed && !isNaN(val) && val >= 200 && val <= 10000) lifetimeLength = val;
 };
 
+// `checkForWorkstoreItem` - returns a boolean: true if item exists in workstore
+export const checkForWorkstoreItem = (identifier) => !!workstore[identifier];
+
 // `getWorkstoreItem`, `setWorkstoreItem` - retrieve, or set, the value stored at the identifier key
 export const getWorkstoreItem = (identifier) => {
 
