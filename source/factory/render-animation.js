@@ -171,7 +171,6 @@ baseMix(P);
 
 
 // #### RenderAnimation attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 // __order__ - positive integer Number. Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations.

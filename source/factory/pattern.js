@@ -15,7 +15,7 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
+import { doCreate, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
 
@@ -55,11 +55,7 @@ assetConsumerMix(P);
 
 
 // #### Pattern attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
-// + Attributes defined in the [assetConsumer mixin](../mixin/assetConsumer.html): __asset, spriteTrack, imageSource, spriteSource, videoSource, source__.
-const defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
+// No additional attributes required beyond those supplied by the mixins
 
 
 // #### Packet management

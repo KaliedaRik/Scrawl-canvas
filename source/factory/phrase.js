@@ -168,15 +168,6 @@ P.midInitActions = function () {
 
 
 // #### Phrase attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, calculateOrder, stampOrder, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
-// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
-// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
-// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
-// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
-// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 const defaultAttributes = {
 
 // __text__ - the text String to be displayed by the Phrase
@@ -970,7 +961,7 @@ P.calculateTextPositions = function (mytext) {
     let fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen;
 
     const fontAttributes = this.fontAttributes,
-        glyphAttributes = fontAttributes.clone({});
+        glyphAttributes = Object.create(fontAttributes);
 
     const sectionStyles = this.sectionStyles;
 

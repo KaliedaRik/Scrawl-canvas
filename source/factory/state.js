@@ -46,7 +46,6 @@ baseMix(P);
 
 
 // #### State attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 P.defs = {
 
 // ##### Fills and Strokes

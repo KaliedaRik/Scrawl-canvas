@@ -36,6 +36,7 @@ import { currentGroup } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 
 import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
@@ -85,11 +86,10 @@ P.isAsset = false;
 baseMix(P);
 deltaMix(P);
 anchorMix(P);
+buttonMix(P);
 
 
 // #### Loom attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 const defaultAttributes = {
 
 // __fromPath__, __toPath__ - A Loom entity uses 2 Shape paths to construct a frame between which the image will be redrawn. These attributes can be set using the Shapes' name-String, or the Shape objects themselves
@@ -757,6 +757,9 @@ P.prepareStamp = function() {
         }
         else this.dirtyPathData = true;
     }
+
+    // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+    this.prepareStampTabsHelper();
 };
 
 // `setSourceDimension` - internal function called by `prepareStamp`.

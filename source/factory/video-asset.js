@@ -101,9 +101,6 @@ assetMix(P);
 
 
 // #### VideoAsset attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
-//
 // No additional attributes required beyond those supplied by the mixins
 
 
@@ -380,7 +377,7 @@ export const importMediaStream = function (items = Ωempty) {
             })
             .catch (err => {
 
-                console.log(err.message);
+                console.log(err);
                 resolve(vid);
             });
         }

@@ -49,10 +49,6 @@ stylesMix(P);
 
 
 // #### Gradient attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [styles mixin](../mixin/styles.html): __start, end, palette, paletteStart, paletteEnd, cyclePalette__.
-// + Attributes defined in the [Palette factory](./palette.html): __colors, cyclic__.
-//
 // No additional attributes are defined in this file.
 
 // #### Packet management

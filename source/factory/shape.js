@@ -41,7 +41,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
+import { doCreate, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
@@ -73,20 +73,7 @@ shapeMix(P);
 
 
 // #### Shape attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, calculateOrder, stampOrder, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
-// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
-// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
-// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
-// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
-// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-// + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-//
-// No additional attributes defined here.
-const defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
+// No additional attributes required beyond those supplied by the mixins
 
 
 // #### Packet management

@@ -35,6 +35,7 @@ interface AnchorMixinDeltaInputs {}
 interface AnchorMixinInputs {
     anchor?: AnchorFactoryInputs;
     anchorBlurAction?: boolean;
+    anchorClickAction?: () => string;
     anchorDescription?: string;
     anchorDownload?: string;
     anchorFocusAction?: boolean;
@@ -163,6 +164,36 @@ interface BaseInstance {
 
 
 
+// Button mixin
+// -------------------------------------
+interface ButtonMixinDeltaInputs {}
+
+interface ButtonMixinInputs {
+    button?: ButtonFactoryInputs;
+    buttonAutofocus?: boolean;
+    buttonBlurAction?: boolean;
+    buttonClickAction?: () => string;
+    buttonDescription?: string;
+    buttonDisabled?: boolean;
+    buttonElementName?: string;
+    buttonElementType?: string;
+    buttonElementValue?: string;
+    buttonFocusAction?: boolean;
+    buttonForm?: string;
+    buttonFormAction?: string;
+    buttonFormEnctype?: string;
+    buttonFormMethod?: string;
+    buttonFormNoValidate?: boolean;
+    buttonFormTarget?: string;
+    buttonPopoverTarget?: string;
+    buttonPopoverTargetAction?: string;
+}
+
+interface ButtonMixinFunctions {
+    clickButton?: () => void;
+}
+
+
 // Cascade mixin
 // -------------------------------------
 interface CascadeMixinDeltaInputs {}
@@ -247,13 +278,13 @@ interface DisplayShapeMixinFunctions {
 
 // Dom mixin
 // -------------------------------------
-interface DomMixinDeltaInputs extends PositionMixinDeltaInputs, DeltaMixinDeltaInputs, PivotMixinDeltaInputs, MimicMixinDeltaInputs, PathMixinDeltaInputs, AnchorMixinDeltaInputs {
+interface DomMixinDeltaInputs extends PositionMixinDeltaInputs, DeltaMixinDeltaInputs, PivotMixinDeltaInputs, MimicMixinDeltaInputs, PathMixinDeltaInputs, AnchorMixinDeltaInputs, ButtonMixinDeltaInputs {
     offsetZ?: number;
     pitch?: number;
     yaw?: number;
 }
 
-interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMixinInputs, MimicMixinInputs, PathMixinInputs, AnchorMixinInputs {
+interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMixinInputs, MimicMixinInputs, PathMixinInputs, AnchorMixinInputs, ButtonMixinInputs {
     activePadding?: number;
     checkForResize?: boolean;
     classes?: string;
@@ -272,7 +303,7 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
     trackHere?: string;
 }
 
-interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions {}
+interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions {}
 
 
 // Entity mixin
@@ -281,9 +312,9 @@ type MethodValues = 'draw' | 'fill' | 'drawAndFill' | 'fillAndDraw' | 'drawThenF
 
 type WindingValues = 'nonzero' | 'evenodd';
 
-interface EntityMixinDeltaInputs extends PositionMixinDeltaInputs, PivotMixinDeltaInputs, MimicMixinDeltaInputs, PathMixinDeltaInputs, AnchorMixinDeltaInputs, FilterMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {}
+interface EntityMixinDeltaInputs extends PositionMixinDeltaInputs, PivotMixinDeltaInputs, MimicMixinDeltaInputs, PathMixinDeltaInputs, AnchorMixinDeltaInputs, ButtonMixinDeltaInputs, FilterMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {}
 
-interface EntityMixinInputs extends PositionMixinInputs, PivotMixinInputs, MimicMixinInputs, PathMixinInputs, AnchorMixinInputs, FilterMixinInputs, DeltaMixinInputs, StateFactoryInputs {
+interface EntityMixinInputs extends PositionMixinInputs, PivotMixinInputs, MimicMixinInputs, PathMixinInputs, AnchorMixinInputs, ButtonMixinInputs, FilterMixinInputs, DeltaMixinInputs, StateFactoryInputs {
 
     flipReverse?: boolean;
     flipUpend?: boolean;
@@ -299,7 +330,7 @@ interface EntityMixinInputs extends PositionMixinInputs, PivotMixinInputs, Mimic
     winding?: WindingValues;
 }
 
-interface EntityMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, FilterMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {}
+interface EntityMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, FilterMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {}
 
 
 
@@ -780,6 +811,36 @@ interface BlockInstance extends BlockFactoryInputs, BlockFactoryFunctions {}
 
 
 
+// ButtonInstance factory
+// -------------------------------------
+interface ButtonFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+
+interface ButtonFactoryInputs extends BaseMixinInputs, ButtonFactoryDeltaInputs {
+    autofocus?: boolean;
+    blurAction?: boolean;
+    clickAction?: DefaultOutputFunction;
+    description?: string;
+    disabled?: boolean;
+    elementName?: string;
+    elementType?: string;
+    elementValue?: string;
+    focusAction?: boolean;
+    form?: string;
+    formAction?: string;
+    formEnctype?: string;
+    formMethod?: string;
+    formNoValidate?: boolean;
+    formTarget?: string;
+    popoverTarget?: string;
+    popoverTargetAction?: string;
+}
+
+interface ButtonFactoryFunctions extends BaseMixinFunctions {}
+
+interface ButtonInstance extends ButtonFactoryInputs, ButtonFactoryFunctions {}
+
+
+
 // CanvasInstance factory
 // -------------------------------------
 type CanvasPositionValues = 'relative' | 'absolute';
@@ -847,13 +908,13 @@ interface CanvasInstance extends CanvasFactoryInputs, CanvasFactoryFunctions {
 
 // CellInstance factory
 // -------------------------------------
-interface CellFactoryDeltaInputs extends BaseMixinDeltaInputs, PositionMixinDeltaInputs, DeltaMixinDeltaInputs, PivotMixinDeltaInputs, MimicMixinDeltaInputs, PathMixinDeltaInputs, AnchorMixinDeltaInputs, CascadeMixinDeltaInputs, AssetMixinDeltaInputs, PatternMixinDeltaInputs, FilterMixinDeltaInputs {
+interface CellFactoryDeltaInputs extends BaseMixinDeltaInputs, PositionMixinDeltaInputs, DeltaMixinDeltaInputs, PivotMixinDeltaInputs, MimicMixinDeltaInputs, PathMixinDeltaInputs, AnchorMixinDeltaInputs, ButtonMixinDeltaInputs, CascadeMixinDeltaInputs, AssetMixinDeltaInputs, PatternMixinDeltaInputs, FilterMixinDeltaInputs {
     alpha?: number;
     clearAlpha?: number;
     scale?: number;
 }
 
-interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaMixinInputs, PivotMixinInputs, MimicMixinInputs, PathMixinInputs, AnchorMixinInputs, CascadeMixinInputs, AssetMixinInputs, PatternMixinInputs, FilterMixinInputs, CellFactoryDeltaInputs {
+interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaMixinInputs, PivotMixinInputs, MimicMixinInputs, PathMixinInputs, AnchorMixinInputs, ButtonMixinInputs, CascadeMixinInputs, AssetMixinInputs, PatternMixinInputs, FilterMixinInputs, CellFactoryDeltaInputs {
     backgroundColor?: string;
     cleared?: boolean;
     compiled?: boolean;
@@ -879,7 +940,7 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     canvasColorSpace?: CanvasColorSpaceValues;
 }
 
-interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
+interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
     clear: () => void;
     compile: () => void;
     render: () => void;
@@ -1509,7 +1570,7 @@ interface LineSpiralInstance extends LineSpiralFactoryInputs, LineSpiralFactoryF
 
 // LoomInstance factory
 // -------------------------------------
-interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {
+interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaInputs, ButtonMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {
     fromPathEnd?: number;
     fromPathStart?: number;
     interferenceFactor?: number;
@@ -1518,7 +1579,7 @@ interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaI
     toPathStart?: number;
 }
 
-interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMixinInputs, StateFactoryInputs, LoomFactoryDeltaInputs {
+interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, ButtonMixinInputs, DeltaMixinInputs, StateFactoryInputs, LoomFactoryDeltaInputs {
     boundingBoxColor?: string;
     constantPathSpeed?: boolean;
     delta?: LoomFactoryDeltaInputs;
@@ -1547,7 +1608,7 @@ interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMix
 
 interface LoomSaveInputs extends LoomFactoryInputs, SaveInputs {}
 
-interface LoomFactoryFunctions extends BaseMixinFunctions, AnchorMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {
+interface LoomFactoryFunctions extends BaseMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {
     checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
     clone: (item?: LoomFactoryInputs) => LoomInstance;
     getBoundingBox: () => number[];
@@ -1565,12 +1626,12 @@ interface LoomInstance extends LoomFactoryInputs, LoomFactoryFunctions {}
 
 // MeshInstance factory
 // -------------------------------------
-interface MeshFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {
+interface MeshFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaInputs, ButtonMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {
     interferenceFactor?: number;
     interferenceLoops?: number;
 }
 
-interface MeshFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMixinInputs, StateFactoryInputs, MeshFactoryDeltaInputs {
+interface MeshFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, ButtonMixinInputs, DeltaMixinInputs, StateFactoryInputs, MeshFactoryDeltaInputs {
     net?: NetInstance | string;
     isHorizontalCopy?: boolean;
     source?: PictureInstance | string;
@@ -1593,7 +1654,7 @@ interface MeshFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMix
 
 interface MeshSaveInputs extends MeshFactoryInputs, SaveInputs {}
 
-interface MeshFactoryFunctions extends BaseMixinFunctions, AnchorMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {
+interface MeshFactoryFunctions extends BaseMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {
     clone: (item?: MeshFactoryInputs) => MeshInstance;
     saveAsPacket: (item?: MeshSaveInputs | boolean) => string;
     set: (item?: MeshFactoryInputs) => MeshInstance;
@@ -1823,9 +1884,11 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
     letterSpacing?: number;
     lineHeight?: number;
     overlinePosition?: number;
+    overlineWidth?: number;
     sizeValue?: number;
     textPathPosition?: number;
     underlinePosition?: number;
+    underlineWidth?: number;
 }
 
 interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, PhraseFactoryDeltaInputs {
@@ -1837,6 +1900,8 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     font?: string;
     highlightStyle?: string;
     justify?: PhraseJustifyValues;
+    noOverlineGlyphs?: string;
+    noUnderlineGlyphs?: string;
     overlineStyle?: string;
     sectionClassMarker?: string;
     showBoundingBox?: boolean;

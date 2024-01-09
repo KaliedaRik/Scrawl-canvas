@@ -84,12 +84,15 @@ const Canvas = function (items = Ωempty) {
 
     if (!items.label) items.label = `${this.name} canvas element`;
 
+    // Sets up the canvas shape/size action functions
     this.initializeDisplayShapeActions();
 
+    // Sets up the user preferences action functions
     this.initializeAccessibility();
 
     this.set(items);
 
+    // Question: why are we invoking `cleanDimensions` here? See if it can be removed
     this.cleanDimensions();
 
     const el = this.domElement;
@@ -166,7 +169,15 @@ const Canvas = function (items = Ωempty) {
         rootElementsAdd(this.name);
 
         // ##### Accessibility
-        // if (!el.getAttribute('role')) el.setAttribute('role', 'img');
+        // The `title`, `role`, `label` and `description` values can be set by passing the kv pairs to the constructor function, or in a subsequent `set()` invocation. However, it's also possible to set these directly on the HTML &lt;canvas> element, as follows:
+        // + &lt;canvas title="some title text">
+        // + &lt;canvas role="some role value">
+        // + &lt;canvas data-label="some label text">
+        // + &lt;canvas data-description="some description text">
+        if (el.getAttribute('role')) this.role = el.getAttribute('role');
+        if (el.getAttribute('title')) this.title = el.getAttribute('title');
+        if (ds.label) this.label = ds.label;
+        if (ds.description) this.description = ds.description;
 
         const navigation = document.createElement(NAV);
         navigation.id = `${this.name}-navigation`;
@@ -196,7 +207,6 @@ const Canvas = function (items = Ωempty) {
 
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
-        ariaLabel.textContent = this.label;
         this.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
         el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
@@ -204,7 +214,6 @@ const Canvas = function (items = Ωempty) {
 
         const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
-        ariaDescription.textContent = this.description;
         this.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
@@ -241,15 +250,6 @@ displayMix(P);
 
 
 // #### Canvas attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
-// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
-// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
-// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
-// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
-// + Attributes defined in the [display mixin](../mixin/displayShape.html): __breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape__.
 const defaultAttributes = {
 
 // __position__ - the CSS position value for the &lt;canvas> element. This value will be set to `absolute` when the element is an artefact associated with a Stack; `relative` in other cases.

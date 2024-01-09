@@ -46,9 +46,6 @@ stylesMix(P);
 
 
 // #### ConicGradient attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [styles mixin](../mixin/styles.html): __start, end, palette, paletteStart, paletteEnd, cyclePalette__.
-// + Attributes defined in the [Palette factory](./palette.html): __colors, cyclic__.
 const defaultAttributes = {
 
 // ConicGradients calculate their gradients as a sweep of color around the `start` (`startX` and `startY`) coordinate. The __startAngle__ attribute - measured in degrees, not radians - represents the angle at which the color stop 0 occurs.

@@ -47,8 +47,6 @@ assetMix(P);
 
 
 // #### ImageAsset attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 const defaultAttributes = {
 
 // __intrinsicDimensions__ - Javascript object which defines the intrinsic dimensions of each image contributing to an &lt;img> element's `srcset` attribute. Can also be set in Javascript code:

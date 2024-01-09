@@ -10,7 +10,6 @@ import { canvas } from '../core/library.js';
 import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
-import { scrawlNavigationHold } from '../core/document.js';
 
 import { DESCRIPTION, DOWNLOAD, HREF, HREFLANG, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TARGET, TYPE, ZERO_STR } from '../core/shared-vars.js';
 
@@ -63,6 +62,7 @@ export default function (P = Ωempty) {
 // artefact.anchorDownload          ~~>  anchor.download
 // artefact.anchorFocusAction       ~~>  anchor.focusAction
 // artefact.anchorBlurAction        ~~>  anchor.blurAction
+// artefact.anchorClickAction       ~~>  anchor.clickAction
 // ```
 
 // __anchorDescription__
@@ -187,6 +187,13 @@ export default function (P = Ωempty) {
         if (this.anchor) this.anchor.setters.blurAction(item);
     };
 
+// __anchorClickAction__
+    S.anchorClickAction = function (item) {
+
+        if (!this.anchor) this.buildAnchor();
+        if (this.anchor) this.anchor.setters.clickAction(item);
+    };
+
 // The artefact's factory and `set` functions' argument object can include a single __anchor__ attribute, whose value should be an object containing anchor key:value pairs
 // ```
 // artefact.set({
@@ -214,10 +221,6 @@ export default function (P = Ωempty) {
 // #### Prototype functions
 
 // The `buildAnchor` function triggers the (re)build of the &lt;a> element and adds it to the DOM
-//
-// Scrawl-canvas generated anchor links are kept in hidden &lt;nav> elements - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs.
-//
-// This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
     P.buildAnchor = function (items) {
 
         if (isa_obj(items)) {
@@ -252,7 +255,7 @@ export default function (P = Ωempty) {
         }
         this.dirtyAnchorHold = true;
 
-        return scrawlNavigationHold;
+        return null;
     }
 
 // `rebuildAnchor` - triggers the Anchor object's `build` function
@@ -269,6 +272,22 @@ export default function (P = Ωempty) {
         if (this.anchor) this.anchor.click();
     };
 
+    P.prepareStampTabsHelper = function () {
+
+// `dirtyAnchorHold` - if the entity has an Anchor object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildAnchor__ function.
+        if (this.anchor && this.dirtyAnchorHold) {
+
+            this.dirtyAnchorHold = false;
+            this.buildAnchor(this.anchor);
+        }
+
+// `dirtyButtonHold` - if the entity has a Button object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildButton__ function.
+        if (this.button && this.dirtyButtonHold) {
+
+            this.dirtyButtonHold = false;
+            this.buildButton(this.button);
+        }
+    };
 // Return the prototype
     return P;
 }

@@ -128,16 +128,6 @@ displayMix(P);
 
 
 // #### Stack attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, calculateOrder, stampOrder, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
-// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
-// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
-// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
-// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
-// + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
-// + Attributes defined in the [display mixin](../mixin/displayShape.html): __breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape__.
 const defaultAttributes = {
 
 // __position__, __perspective__ - while most of the Stack wrapper's DOM element's attributes are handled through CSS, Scrawl-canvas takes control of some positioning-related attributes. Most of these are defined in the [dom mixin](../mixin/dom.html) - but the position and perspective attributes are managed in this module

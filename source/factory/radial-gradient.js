@@ -47,9 +47,6 @@ stylesMix(P);
 
 
 // #### RadialGradient attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [styles mixin](../mixin/styles.html): __start, end, palette, paletteStart, paletteEnd, cyclePalette__.
-// + Attributes defined in the [Palette factory](./palette.html): __colors, cyclic__.
 const defaultAttributes = {
 
 // RadialGradients calculate their gradients spanning between two circles, whose sizes are determined by the `startRadius` and `endRadius` attributes. Values can be:
