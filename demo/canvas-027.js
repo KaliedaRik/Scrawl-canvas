@@ -72,10 +72,12 @@ const playPause = scrawl.makePhrase({
 
     startX: '75%',
     handleX: 'center',
-    startY: '90%',
+    startY: 'bottom',
+    handleY: 'bottom',
 
     letterSpacing: 2,
     underlinePosition: 0.75,
+    lineHeight: 1,
 
     fillStyle: 'yellow',
 
@@ -114,11 +116,9 @@ const playPause = scrawl.makePhrase({
 
     button: {
 
-        name: 'play-pause-button',
-        elementName: 'play-pause-button-el',
+        name: name('play-pause-button'),
+        elementName: name('play-pause-button-el'),
         description: 'Play | Pause',
-        focusAction: true,
-        blurAction: true,
         clickAction: playPauseAction,
     },
 
@@ -149,11 +149,9 @@ const listenMute = playPause.clone({
 
     button: {
 
-        name: 'listen-mute-button',
-        elementName: 'listen-mute-button-el',
+        name: name('listen-mute-button'),
+        elementName: name('listen-mute-button-el'),
         description: 'Listen | Mute',
-        focusAction: true,
-        blurAction: true,
         clickAction: listenMuteAction,
     },
 
@@ -238,9 +236,6 @@ scrawl.makePicture({
         name: name('wikipedia-swan-link'),
         href: 'https://en.wikipedia.org/wiki/Swan',
         description: 'Link to the Wikipedia article on swans',
-
-        focusAction: true,
-        blurAction: true,
     },
 
     checkHitIgnoreTransparency: true,
@@ -340,12 +335,9 @@ const mygoose = scrawl.makeBlock({
     },
 
     anchor: {
-        name: name('wikipedia-goose-link'),
+        name: name('wikipedia-goose-link-1'),
         href: 'https://en.wikipedia.org/wiki/Goose',
-        description: 'Link to the Wikipedia article on geese',
-
-        focusAction: true,
-        blurAction: true,
+        description: 'First link to the Wikipedia article on geese',
     },
 });
 
@@ -399,12 +391,12 @@ mygoose.clone({
     width: '22%',
     height: '16%',
 
-    onUp: function () {
-
-        mygoose.clickAnchor();
+    // It's generally not a good idea to share &lt;a> anchor link elements between interactive artefacts. However, be aware that repeating a link may not be the best user experience for those users accessing the web page with assistive technologies.
+    anchor: {
+        name: name('wikipedia-goose-link-2'),
+        href: 'https://en.wikipedia.org/wiki/Goose',
+        description: 'Second link to the Wikipedia article on geese',
     },
-
-    anchor: null,
 });
 
 myLocalTweenFactory(

@@ -364,6 +364,9 @@ export default function (P = Ωempty) {
         // If the artefact has an anchor, it needs to be removed
         if (this.anchor) this.demolishAnchor();
 
+        // If the artefact has a button, it needs to be removed
+        if (this.button) this.demolishButton();
+
         // Remove from other artefacts
         _values(artefact).forEach(val => {
 

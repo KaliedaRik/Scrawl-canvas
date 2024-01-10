@@ -36,7 +36,7 @@ export default function (P = Ωempty) {
 
 
 // #### Kill management
-// `demolishAnchor` - Note that a `handlePacketAnchor` function is also defined in the [position](./position.html) mixin, to manage the surrounding kill functionality.
+// `demolishButton` - Note that Button objects use the `handlePacketAnchor` function defined in the [position](./position.html) mixin, to manage the surrounding kill functionality.
     P.demolishButton = function () {
 
         if (this.button) this.button.demolish();
@@ -132,15 +132,12 @@ export default function (P = Ωempty) {
     S.buttonElementValue = function (item) { return this.buttonSetHelper(ELEMENT_VALUE, item); };
 
 // __buttonFocusAction__
-    G.buttonFocusAction = function () { return this.buttonGetHelper(FOCUS_ACTION); };
     S.buttonFocusAction = function (item) { return this.buttonSetHelper(FOCUS_ACTION, item); };
 
 // __buttonBlurAction__
-    G.buttonBlurAction = function () { return this.buttonGetHelper(BLUR_ACTION); };
     S.buttonBlurAction = function (item) { return this.buttonSetHelper(BLUR_ACTION, item); };
 
 // __buttonClickAction__
-    G.buttonClickAction = function () { return this.buttonGetHelper(CLICK_ACTION); };
     S.buttonClickAction = function (item) { return this.buttonSetHelper(CLICK_ACTION, item); };
 
 // __button__
@@ -156,6 +153,7 @@ export default function (P = Ωempty) {
         if (!this.button) this.buildButton(items);
         else this.button.set(items);
     };
+
 
 // Internal helper functions
     P.buttonGetHelper = function(key) {
@@ -180,7 +178,7 @@ export default function (P = Ωempty) {
 
             if (this.button) this.button.demolish();
 
-            if (!items.buttonName) items.buttonName = `${this.name}-button`;
+            if (!items.name) items.name = `${this.name}-button`;
             if (!items.description) items.description = `Button for ${this.name} ${this.type}`;
 
             items.host = this;
@@ -190,7 +188,7 @@ export default function (P = Ωempty) {
         }
     };
 
-// `getButtonHold` - internal function. Locate the current DOM hold element allocated for hosting &lt;a> elements.
+// `getButtonHold` - internal function. Locate the current DOM hold element allocated for hosting &lt;button> elements.
     P.getButtonHold = function () {
 
         const entityHost = this.currentHost;

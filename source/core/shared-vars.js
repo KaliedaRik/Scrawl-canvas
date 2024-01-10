@@ -85,6 +85,7 @@ export const ADD_TEXT_TRACK = 'addTextTrack';
 export const ALL = 'all';
 export const ALPHA_TO_CHANNELS = 'alpha-to-channels';
 export const ANCHOR = 'anchor';
+export const ANCHORTYPE = 'anchorType';
 export const ANIMATION = 'animation';
 export const ANIMATIONTICKERS = 'animationtickers';
 export const ANONYMOUS = 'anonymous';

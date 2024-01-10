@@ -81,15 +81,15 @@ const defaultAttributes = {
     clickAction: null,
 
 // We can instruct the button to add event listeners for focus and blur events using the __focusAction__ and __blurAction__ Boolean flags. When set to true, the ___focus___ event listener will invoke the host entity's `onEnter` function; the ___blur___ event listener invokes the `onLeave` function. Default is to ignore these events
-    focusAction: false,
-    blurAction: false,
+    focusAction: true,
+    blurAction: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
-P.packetObjects = pushUnique(P.packetExclusions, ['host']);
+P.packetObjects = pushUnique(P.packetObjects, ['host']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 
 
@@ -147,7 +147,7 @@ S.host = function (item) {
     if (h && h.name) this.host = h;
 };
 
-// Used internally - do not set directly! A reference to the hidden DOM hold &lt;div> element where the anchors &lt;a> element is kept.
+// Used internally - do not set directly! A reference to the hidden DOM hold &lt;div> element where the &lt;button> element is kept.
 S.hold = function (item) {
 
     if (isa_dom(item)) {
@@ -184,38 +184,54 @@ S.hold = function (item) {
 // The `build` function builds the &lt;button> element and adds it to the DOM
 P.build = function () {
 
-    if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
+    const { hold, host } = this;
 
-    const btn = document.createElement(BUTTON);
+    if (host && hold) {
 
-    btn.id = this.name;
+        const { autofocus, blurAction, clickAction, description, disabled, elementName, elementType, elementValue, focusAction, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, name, popoverTarget, popoverTargetAction } = this;
 
-    if (this.autofocus) btn.setAttribute(AUTOFOCUS, ZERO_STR);
-    if (this.disabled) btn.setAttribute(DISABLED, ZERO_STR);
-    if (this.form) btn.setAttribute(FORM, this.form);
-    if (this.formAction) btn.setAttribute(_FORMACTION, this.formAction);
-    if (this.formEnctype) btn.setAttribute(_FORMENCTYPE, this.formEnctype);
-    if (this.formMethod) btn.setAttribute(_FORMMETHOD, this.formMethod);
-    if (this.formNoValidate) btn.setAttribute(_FORMNOVALIDATE, ZERO_STR);
-    if (this.formTarget) btn.setAttribute(TARGET, this.formTarget);
-    if (this.elementName) btn.setAttribute(NAME, this.elementName);
-    if (this.popoverTarget) btn.setAttribute(_POPOVERTARGET, this.popoverTarget);
-    if (this.popoverTargetAction) btn.setAttribute(_POPOVERTARGETACTION, this.popoverTargetAction);
-    if (this.elementValue != null) btn.setAttribute(VALUE, this.elementValue);
+        let btn = this.domElement;
 
-    if (this.elementType) btn.setAttribute(TYPE, this.elementType);
-    else btn.setAttribute(TYPE, BUTTON);
+        if (btn) {
 
-    if (this.clickAction && isa_fn(this.clickAction)) btn.addEventListener('click', this.clickAction);
+            if (clickAction) btn.removeEventListener(CLICK, clickAction, false);
+            if (focusAction) btn.removeEventListener(FOCUS, () => host.onEnter(), false);
+            if (blurAction) btn.removeEventListener(BLUR, () => host.onLeave(), false);
 
-    if (this.description) btn.textContent = this.description;
+            hold.removeChild(btn);
+        }
 
-    if (this.focusAction) btn.addEventListener(FOCUS, () => this.host.onEnter(), false);
-    if (this.blurAction) btn.addEventListener(BLUR, () => this.host.onLeave(), false);
+        btn = document.createElement(BUTTON);
 
-    this.domElement = btn;
+        btn.id = name;
 
-    if (this.hold) this.hold.appendChild(btn);
+        if (autofocus) btn.setAttribute(AUTOFOCUS, ZERO_STR);
+        if (disabled) btn.setAttribute(DISABLED, ZERO_STR);
+        if (form) btn.setAttribute(FORM, form);
+        if (formAction) btn.setAttribute(_FORMACTION, formAction);
+        if (formEnctype) btn.setAttribute(_FORMENCTYPE, formEnctype);
+        if (formMethod) btn.setAttribute(_FORMMETHOD, formMethod);
+        if (formNoValidate) btn.setAttribute(_FORMNOVALIDATE, ZERO_STR);
+        if (formTarget) btn.setAttribute(TARGET, formTarget);
+        if (elementName) btn.setAttribute(NAME, elementName);
+        if (popoverTarget) btn.setAttribute(_POPOVERTARGET, popoverTarget);
+        if (popoverTargetAction) btn.setAttribute(_POPOVERTARGETACTION, popoverTargetAction);
+        if (elementValue != null) btn.setAttribute(VALUE, elementValue);
+
+        if (elementType) btn.setAttribute(TYPE, elementType);
+        else btn.setAttribute(TYPE, BUTTON);
+
+        if (clickAction && isa_fn(clickAction)) btn.addEventListener(CLICK, clickAction, false);
+
+        if (description) btn.textContent = description;
+
+        if (focusAction) btn.addEventListener(FOCUS, () => host.onEnter(), false);
+        if (blurAction) btn.addEventListener(BLUR, () => host.onLeave(), false);
+
+        this.domElement = btn;
+
+        hold.appendChild(btn);
+    }
 };
 
 

@@ -20,7 +20,7 @@ import { doCreate, isa_dom, isa_fn, mergeOver, pushUnique, Ωempty } from '../co
 
 import baseMix from '../mixin/base.js';
 
-import { _A, ANCHOR, BLUR, CLICK, DOWNLOAD, FOCUS, HREF, HREFLANG, ONCLICK, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, TYPE, ZERO_STR } from '../core/shared-vars.js';
+import { _A, _keys, ANCHOR, BLUR, CLICK, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, ONCLICK, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Anchor constructor
@@ -31,8 +31,6 @@ const Anchor = function (items = Ωempty) {
 
     this.set(this.defs);
     this.set(items);
-
-    this.build();
 
     return this;
 };
@@ -59,6 +57,9 @@ const defaultAttributes = {
 // __description__ - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. __Always include a description__ for accessibility.
     description: ZERO_STR,
 
+// __disabled__ - When set to true, will prevent the anchor &lt;a> element from being added to the &lt;canvas> element's &lt;nav> div on the next build cycle.
+    disabled: false,
+
 // The following attributes are detailed in [MDN's &lt;a> reference page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a).
     download: ZERO_STR,
     href: ZERO_STR,
@@ -69,42 +70,19 @@ const defaultAttributes = {
     target: '_blank',
     anchorType: ZERO_STR,
 
-// The __clickAction__ attribute is a ___function which returns a string command___ which in turn gets attached to the anchor DOM element's __onclick__ attribute. Invoking the result is handled entirely by the browser (as is normal).
-
-// ##### Example usage
-//
-// This __doesn't work!__ The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the anchor (although navigation will still occur - the wikipedia page will open in a new browser tab):
-// ```
-// anchor: {
-//     name: 'wikipedia-box-link',
-//     href: 'https://en.wikipedia.org/wiki/Box',
-//     description: 'Link to the Wikipedia article on boxes (opens in new tab)',
-//
-//     clickAction: function () { console.log('box clicked') },
-// }
-// ```
-// This __works as expected__ - the function returns a string which can then be attached to the &lt;a> DOM element's _onclick_ attribute:
-// ```
-// anchor: {
-//     name: 'wikipedia-box-link',
-//     href: 'https://en.wikipedia.org/wiki/Box',
-//     description: 'Link to the Wikipedia article on boxes (opens in new tab)',
-//
-//     clickAction: function () { return `console.log('box clicked')` },
-// },
-// ```
+// __clickAction__ - function - actions to be performed when user tabs to the hidden &lt;a> element and presses the keyboard return button. Function cannot take any arguments.
     clickAction: null,
 
-// We can instruct the anchor to add event listeners for focus and blur events using the __focusAction__ and __blurAction__ Boolean flags. When set to true, the ___focus___ event listener will invoke the host entity's `onEnter` function; the ___blur___ event listener invokes the `onLeave` function. Default is to ignore these events
-    focusAction: false,
-    blurAction: false,
+// We can instruct the anchor to add event listeners for focus and blur events using the __focusAction__ and __blurAction__ Boolean flags. When set to true, the ___focus___ event listener will invoke the host entity's `onEnter` function; the ___blur___ event listener invokes the `onLeave` function.
+    focusAction: true,
+    blurAction: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
-P.packetObjects = pushUnique(P.packetExclusions, ['host']);
+P.packetObjects = pushUnique(P.packetObjects, ['host']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 
 
@@ -122,6 +100,36 @@ P.demolish = function () {
 
 
 // #### Get, Set, deltaSet
+P.set = function (items = Ωempty) {
+
+    let i, key, val, fn;
+
+    const keys = _keys(items),
+        keysLen = keys.length;
+
+    if (keysLen) {
+
+        const setters = this.setters,
+            defs = this.defs;
+
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            val = items[key];
+
+            if (key && key != NAME && val != null) {
+
+                fn = setters[key];
+
+                if (fn) fn.call(this, val);
+                else if (typeof defs[key] != UNDEF) this[key] = val;
+            }
+        }
+        this.build();
+    }
+    return this;
+};
+
 const S = P.setters;
 
 // Value should be the artefact object, or its name-String
@@ -149,137 +157,64 @@ S.hold = function (item) {
 //
 // The artefact with which an anchor object is associated maps these attributes to itself as follows:
 // ```
-// anchor.description     ~~> artefact.anchorDescription
 // anchor.anchorType      ~~> artefact.anchorType
-// anchor.target          ~~> artefact.anchorTarget
-// anchor.rel             ~~> artefact.anchorRel
-// anchor.referrerPolicy  ~~> artefact.anchorReferrerPolicy
-// anchor.ping            ~~> artefact.anchorPing
-// anchor.hreflang        ~~> artefact.anchorHreflang
-// anchor.href            ~~> artefact.anchorHref
+// anchor.description     ~~> artefact.anchorDescription
 // anchor.download        ~~> artefact.anchorDownload
+// anchor.href            ~~> artefact.anchorHref
+// anchor.hreflang        ~~> artefact.anchorHreflang
+// anchor.ping            ~~> artefact.anchorPing
+// anchor.referrerPolicy  ~~> artefact.anchorReferrerPolicy
+// anchor.rel             ~~> artefact.anchorRel
+// anchor.target          ~~> artefact.anchorTarget
 // ```
-// One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an 'anchor' attribute:
-// ```
-// artefact.set({
-//
-//     anchor: {
-//         description: 'value',
-//         anchorType: 'value',
-//         target: 'value',
-//         rel: 'value',
-//         referrerPolicy: 'value',
-//         ping: 'value',
-//         hreflang: 'value',
-//         href: 'value',
-//         download: 'value',
-//     },
-// });
-// ```
-S.download = function (item) {
-
-    this.download = item;
-    if (this.domElement) this.update(DOWNLOAD);
-};
-
-S.href = function (item) {
-
-    this.href = item;
-    if (this.domElement) this.update(HREF);
-};
-
-S.hreflang = function (item) {
-
-    this.hreflang = item;
-    if (this.domElement) this.update(HREFLANG);
-};
-
-S.ping = function (item) {
-
-    this.ping = item;
-    if (this.domElement) this.update(PING);
-};
-
-S.referrerpolicy = function (item) {
-
-    this.referrerpolicy = item;
-    if (this.domElement) this.update(REFERRERPOLICY);
-};
-
-S.rel = function (item) {
-
-    this.rel = item;
-    if (this.domElement) this.update(REL);
-};
-
-S.target = function (item) {
-
-    this.target = item;
-    if (this.domElement) this.update(TARGET);
-};
-
-// These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element's attribute key:
-// + `anchor.description -> a.textContent` - this is the text between the &lt;a> element's opening and closing tags
-// + `anchor.clickAction -> a.onclick` - a function that returns an string which is added to the DOM element's 'onclick' attribute
-//
-S.anchorType = function (item) {
-
-    this.anchorType = item;
-    if (this.domElement) this.domElement.type = item;
-};
-
-S.description = function (item) {
-
-    this.description = item;
-    if (this.domElement) this.domElement.textContent = item;
-};
-
-S.clickAction = function (item) {
-
-    if (isa_fn(item)) {
-
-        this.clickAction = item;
-        if (this.domElement) this.domElement.setAttribute(ONCLICK, item());
-    }
-};
+// One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an 'anchor' attribute.
 
 
 // #### Prototype functions
 // The `build` function builds the &lt;a> element and adds it to the DOM
 P.build = function () {
 
-    if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
+    const { hold, host } = this;
 
-    const link = document.createElement(_A);
+    if (host && hold) {
 
-    link.id = this.name;
+        const { anchorType, blurAction, clickAction, description, download, focusAction, href, hreflang, name, ping, referrerpolicy, rel, target } = this;
 
-    if (this.download) link.setAttribute(DOWNLOAD, this.download);
-    if (this.href) link.setAttribute(HREF, this.href);
-    if (this.hreflang) link.setAttribute(HREFLANG, this.hreflang);
-    if (this.ping) link.setAttribute(PING, this.ping);
-    if (this.referrerpolicy) link.setAttribute(REFERRERPOLICY, this.referrerpolicy);
-    if (this.rel) link.setAttribute(REL, this.rel);
-    if (this.target) link.setAttribute(TARGET, this.target);
-    if (this.anchorType) link.setAttribute(TYPE, this.anchorType);
+        let link = this.domElement;
 
-    if (this.clickAction && isa_fn(this.clickAction)) link.setAttribute(ONCLICK, this.clickAction());
+        if (link) {
 
-    if (this.description) link.textContent = this.description;
+            if (clickAction) link.removeEventListener(CLICK, clickAction, false);
+            if (focusAction) link.removeEventListener(FOCUS, () => host.onEnter(), false);
+            if (blurAction) link.removeEventListener(BLUR, () => host.onLeave(), false);
 
-    if (this.focusAction) link.addEventListener(FOCUS, () => this.host.onEnter(), false);
-    if (this.blurAction) link.addEventListener(BLUR, () => this.host.onLeave(), false);
+            hold.removeChild(link);
+        }
 
-    this.domElement = link;
+        link = document.createElement(_A);
 
-    if (this.hold) this.hold.appendChild(link);
-};
+        link.id = name;
 
+        if (download) link.setAttribute(DOWNLOAD, download);
+        if (href) link.setAttribute(HREF, href);
+        if (hreflang) link.setAttribute(HREFLANG, hreflang);
+        if (ping) link.setAttribute(PING, ping);
+        if (referrerpolicy) link.setAttribute(REFERRERPOLICY, referrerpolicy);
+        if (rel) link.setAttribute(REL, rel);
+        if (target) link.setAttribute(TARGET, target);
+        if (anchorType) link.setAttribute(TYPE, anchorType);
 
-// Internal function - update the DOM element attribute
-P.update = function (item) {
+        if (clickAction && isa_fn(clickAction)) link.addEventListener(CLICK, clickAction, false);
 
-    if (this.domElement) this.domElement.setAttribute(item, this[item]);
+        if (description) link.textContent = description;
+
+        if (focusAction) link.addEventListener(FOCUS, () => host.onEnter(), false);
+        if (blurAction) link.addEventListener(BLUR, () => host.onLeave(), false);
+
+        this.domElement = link;
+
+        hold.appendChild(link);
+    }
 };
 
 
