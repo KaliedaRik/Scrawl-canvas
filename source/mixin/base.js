@@ -586,7 +586,7 @@ export default function (P = Ωempty) {
 
         const myName = this.name;
 
-        let myPacket, myTicker, myAnchor, myButton, myFontAttributes;
+        let myPacket, myTicker, myAnchor, myButton;
 
         this.name = items.name || ZERO_STR;
 

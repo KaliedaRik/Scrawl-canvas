@@ -11,7 +11,7 @@ import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 
-import { ANCHORTYPE, DESCRIPTION, DOWNLOAD, HREF, HREFLANG, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TARGET, TYPE, ZERO_STR } from '../core/shared-vars.js';
+import { ANCHORTYPE, BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TARGET } from '../core/shared-vars.js';
 
 
 // #### Export function

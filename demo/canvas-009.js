@@ -166,6 +166,7 @@ makeBlock({
         // This function gets invoked by an event listener added to the &lt;a> link element in the DOM. `this` refers to the element, not the SC anchor wrapper or the Block entity object. The `myTracker` object is not recognised by the link element (the object's scope is local to this module), so instead we fire the `ga` analytics object directly as that lives in the global space - see line 19 above.
         clickAction: function () {
 
+// @ts-expect-error
             ga('demoCanvasTracker.send', 'event', 'Outbound link', 'click', this.href);
         },
     },

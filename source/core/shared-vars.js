@@ -347,7 +347,6 @@ export const OBLIQUE = 'oblique';
 export const OFFSET = 'offset';
 export const OKLAB = 'OKLAB';
 export const OKLCH = 'OKLCH';
-export const ONCLICK = 'onclick';
 export const ORDERED = 'ordered';
 export const OVAL = 'oval';
 export const OVERLAY = 'overlay';

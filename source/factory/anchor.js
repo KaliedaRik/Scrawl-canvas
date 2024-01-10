@@ -20,7 +20,7 @@ import { doCreate, isa_dom, isa_fn, mergeOver, pushUnique, Ωempty } from '../co
 
 import baseMix from '../mixin/base.js';
 
-import { _A, _keys, ANCHOR, BLUR, CLICK, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, ONCLICK, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../core/shared-vars.js';
+import { _A, _keys, ANCHOR, BLUR, CLICK, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Anchor constructor
