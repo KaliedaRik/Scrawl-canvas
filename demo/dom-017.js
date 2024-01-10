@@ -107,8 +107,6 @@ const buildSquareCanvas = (namespace) => {
                 name: name('wikipedia-link'),
                 href: 'https://en.wikipedia.org/wiki/Square',
                 description: 'Link to the Wikipedia article on squares (opens in new tab)',
-                focusAction: true,
-                blurAction: true,
             },
 // @ts-expect-error
             onEnter: function () { this.set({ lineWidth: 6 }) },
@@ -207,8 +205,6 @@ const buildCircleCanvas = (namespace) => {
                 name: name('wikipedia-link'),
                 href: 'https://en.wikipedia.org/wiki/Circle',
                 description: 'Link to the Wikipedia article on circles (opens in new tab)',
-                focusAction: true,
-                blurAction: true,
             },
 // @ts-expect-error
             onEnter: function () { this.set({ lineWidth: 6 }) },

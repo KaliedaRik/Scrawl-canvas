@@ -208,8 +208,6 @@ const closeButton = scrawl.makeRectangle({
         popoverTarget: 'mypopover',
         popoverTargetAction: 'hide',
         disabled: true,
-        focusAction: true,
-        blurAction: true,
     },
 
     onUp: function () {
