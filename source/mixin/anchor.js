@@ -153,7 +153,6 @@ export default function (P = Ωempty) {
 // The `buildAnchor` function triggers the (re)build of the &lt;a> element and adds it to the DOM
     P.buildAnchor = function (items) {
 
-console.log(this.name, 'buildAnchor')
         if (isa_obj(items)) {
 
             if (this.anchor) this.anchor.demolish();

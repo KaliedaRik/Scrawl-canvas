@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -625,6 +645,9 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">onRun</span> = items.<span class="hljs-property">onRun</span> || λ<span class="hljs-literal">null</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">onHalt</span> = items.<span class="hljs-property">onHalt</span> || λ<span class="hljs-literal">null</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">onKill</span> = items.<span class="hljs-property">onKill</span> || λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">maxFrameRate</span> = items.<span class="hljs-property">maxFrameRate</span> || <span class="hljs-number">60</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastRun</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">chokedAnimation</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
@@ -678,9 +701,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="animation-attributes">Animation attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-</ul>
 
             </div>
             
@@ -714,11 +734,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><strong>fn</strong> - the main function that the Animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
+              <p><strong>maxFrameRate</strong> - positive integer Number. A frames-per-second choke to prevent animation running too fast.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fn</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">maxFrameRate</span>: <span class="hljs-number">60</span>,</pre></div></div>
             
         </li>
         
@@ -728,6 +748,21 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p><strong>fn</strong> - the main function that the Animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fn</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>The Animation object supports some <strong>animation hook functions</strong>:</p>
 <ul>
@@ -745,11 +780,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>delay</strong> - by default, Animation objects will start running as soon as they are created. To prevent this happening the constructor argument can take a non-retained <code>delay</code> Boolean flag which, when set to true, will prevent the Animation object from adding itself to the Scrawl-canvas animation loop. The animation can be started at any subsequent time by invoking its <code>run</code> function.</p>
 
@@ -761,11 +796,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>This functionality is disabled for Animation objects</p>
@@ -783,11 +818,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>This functionality is disabled for Animation objects</p>
@@ -799,28 +834,14 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>Kill functionality is managed as one of the Animation object’s hook functions - see below</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>No additional getter or setter functionality required</p>
+              <h4 id="kill-management">Kill management</h4>
+<p>Kill functionality is managed as one of the Animation object’s hook functions - see below</p>
 
             </div>
             
@@ -833,7 +854,8 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>No additional getter or setter functionality required</p>
 
             </div>
             
@@ -845,6 +867,19 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
               
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>run</code> - start the animation, if it is not already running</p>
 
@@ -863,11 +898,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - returns true if animation is running; false otherwise</p>
 
@@ -881,11 +916,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>halt</code> - stop the animation, if it is already running</p>
 
@@ -901,11 +936,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>kill</code> - stop the animation if it is already running, and remove it from the Scrawl-canvas library</p>
 
@@ -924,11 +959,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeAnimation</span>({

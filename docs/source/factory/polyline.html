@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -701,18 +721,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="polyline-attributes">Polyline attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, calculateOrder, stampOrder, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
-<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
-</ul>
 
             </div>
             
@@ -1251,8 +1259,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updatePathSubscribers</span>();
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updatePositionSubscribers</span>();
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updatePositionSubscribers</span>();</pre></div></div>
             
         </li>
         
@@ -1262,6 +1269,22 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hiddenDomElements.js</code> file - handles updates to anchor and button objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -1276,11 +1299,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>getPathParts</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1303,11 +1326,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>buildLine</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1330,11 +1353,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>buildCurve</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1364,11 +1387,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>cleanCoordinate</code> - internal helper function - called by <code>cleanPinsArray</code></p>
 
@@ -1386,11 +1409,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>cleanPinsArray</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1480,11 +1503,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Calculate the local offset</p>
 
@@ -1507,11 +1530,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>makePolylinePath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
@@ -1529,11 +1552,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <ol>
 <li>go through the pins array and get current values for each, pushed into currentPins array</li>
@@ -1548,11 +1571,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <ol start="2">
 <li>build the line</li>
@@ -1629,11 +1652,11 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
 <ul>
@@ -1648,11 +1671,11 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
@@ -1671,11 +1694,11 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -1684,11 +1707,11 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h5 id="makepolyline">makePolyline</h5>
 <p>Accepts argument with attributes:</p>

@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -621,7 +641,7 @@
 
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { getIgnorePixelRatio, getPixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
+<span class="hljs-keyword">import</span> { getIgnorePixelRatio, getPixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/user-interaction.js&quot;</span>;
 
 <span class="hljs-keyword">import</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./group.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.js&#x27;</span>;
@@ -640,13 +660,15 @@
 <span class="hljs-keyword">import</span> pivotMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/pivot.js&#x27;</span>;
 <span class="hljs-keyword">import</span> mimicMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/mimic.js&#x27;</span>;
 <span class="hljs-keyword">import</span> pathMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/path.js&#x27;</span>;
+<span class="hljs-keyword">import</span> hiddenElementsMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/hiddenDomElements.js&#x27;</span>;
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;
+<span class="hljs-keyword">import</span> buttonMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/button.js&#x27;</span>;
 <span class="hljs-keyword">import</span> cascadeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/cascade.js&#x27;</span>;
 <span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;
 <span class="hljs-keyword">import</span> patternMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/pattern.js&#x27;</span>;
 <span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _round, _trunc, _values, _2D, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CELL</span>, <span class="hljs-variable constant_">CONTAIN</span>, <span class="hljs-variable constant_">COVER</span>, <span class="hljs-variable constant_">DIMENSIONS</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">HEIGHT</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>, <span class="hljs-variable constant_">NEVER</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SMOOTH_FONT</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">TRANSPARENT_VALS</span>, <span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span>, <span class="hljs-variable constant_">WIDTH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _round, _trunc, _values, _2D, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CELL</span>, <span class="hljs-variable constant_">CONTAIN</span>, <span class="hljs-variable constant_">COVER</span>, <span class="hljs-variable constant_">DIMENSIONS</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">HEIGHT</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>, <span class="hljs-variable constant_">NEVER</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SMOOTH_FONT</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">SRGB</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">TRANSPARENT_VALS</span>, <span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span>, <span class="hljs-variable constant_">WIDTH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -670,13 +692,15 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeCascade</span>();
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_canvas</span>(items.<span class="hljs-property">element</span>)) {
+    <span class="hljs-keyword">let</span> mycanvas = items.<span class="hljs-property">element</span>;
+    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">element</span>;
 
-        <span class="hljs-keyword">const</span> mycanvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_canvas</span>(mycanvas)) {
+
+        mycanvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>);
         mycanvas.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
         mycanvas.<span class="hljs-property">width</span> = <span class="hljs-number">300</span>;
         mycanvas.<span class="hljs-property">height</span> = <span class="hljs-number">150</span>;
-        items.<span class="hljs-property">element</span> = mycanvas;
     }</pre></div></div>
             
         </li>
@@ -692,11 +716,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">installElement</span>(items.<span class="hljs-property">element</span>, items.<span class="hljs-property">willReadFrequently</span>);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">installElement</span>(mycanvas, items.<span class="hljs-property">canvasColorSpace</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">setStateFromEngine</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>);
 
@@ -745,19 +769,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
-<ul>
-<li><a href="../mixin/base.html">base</a></li>
-<li><a href="../mixin/asset.html">asset</a> - goes above position mixin because asset objects use the kill function defined in this mixin, but Cells need to follow the position mixin formula (which includes a call to the factoryKill function)</li>
-<li><a href="../mixin/position.html">position</a></li>
-<li><a href="../mixin/delta.html">delta</a></li>
-<li><a href="../mixin/pivot.html">pivot</a></li>
-<li><a href="../mixin/mimic.html">mimic</a></li>
-<li><a href="../mixin/path.html">path</a></li>
-<li><a href="../mixin/anchor.html">anchor</a></li>
-<li><a href="../mixin/cascade.html">cascade</a></li>
-<li><a href="../mixin/pattern.html">pattern</a></li>
-<li><a href="../mixin/filter.html">filter</a></li>
-</ul>
 
             </div>
             
@@ -769,7 +780,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
 <span class="hljs-title function_">pivotMix</span>(P);
 <span class="hljs-title function_">mimicMix</span>(P);
 <span class="hljs-title function_">pathMix</span>(P);
+<span class="hljs-title function_">hiddenElementsMix</span>(P);
 <span class="hljs-title function_">anchorMix</span>(P);
+<span class="hljs-title function_">buttonMix</span>(P);
 <span class="hljs-title function_">cascadeMix</span>(P);
 <span class="hljs-title function_">patternMix</span>(P);
 <span class="hljs-title function_">filterMix</span>(P);</pre></div></div>
@@ -784,19 +797,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="cell-attributes">Cell attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/cascade.html">cascade mixin</a>: <strong>groups</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/pattern.html">pattern mixin</a>: <strong>repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/asset.html">asset mixin</a>: <strong>source, subscribers</strong>.</li>
-</ul>
 
             </div>
             
@@ -1053,6 +1053,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">includeInCascadeEventActions</span>: <span class="hljs-literal">false</span>,
+
+    <span class="hljs-attr">willReadFrequently</span>: <span class="hljs-literal">true</span>,
 };
 P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
@@ -1644,11 +1646,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity, cell</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity, mycell</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkSource</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalDimensions</span>[<span class="hljs-number">0</span>], <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalDimensions</span>[<span class="hljs-number">1</span>]);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildStyle</span>(cell);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildStyle</span>(mycell);
 };</pre></div></div>
             
         </li>
@@ -1856,11 +1858,12 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">installElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">element, willReadFrequently = <span class="hljs-literal">true</span></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">installElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">element, colorSpace = SRGB</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span> = element;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>.<span class="hljs-title function_">getContext</span>(_2D, {
-        willReadFrequently,
+        <span class="hljs-attr">willReadFrequently</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">willReadFrequently</span>,
+        colorSpace,
     });
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> = <span class="hljs-title function_">makeState</span>({
@@ -2614,8 +2617,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAssetSubscribers</span> = <span class="hljs-literal">false</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
-    }
-};</pre></div></div>
+    }</pre></div></div>
             
         </li>
         
@@ -2625,6 +2627,22 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               
               <div class="sswrap ">
                 <a class="ss" href="#section-72">&#x00a7;</a>
+              </div>
+              <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hiddenDomElements.js</code> file - handles updates to anchor and button objects in the DOM</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - Calculate the Cell’s <strong>Path2D object</strong></p>
 
@@ -2654,11 +2672,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>updateHere</code> - Internal function - get the Cell to update its .here information</p>
 
@@ -2744,11 +2762,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>checkEngineScale</code>
 DPR is detected in the <code>core/events.js</code> file, but mainly handled here</p>
@@ -2779,11 +2797,11 @@ DPR is detected in the <code>core/events.js</code> file, but mainly handled here
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

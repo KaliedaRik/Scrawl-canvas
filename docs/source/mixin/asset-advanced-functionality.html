@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -997,9 +1017,7 @@
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">false</span>;
 
-                <span class="hljs-keyword">const</span> {element, engine, width, height, colorEngine, gradient, choke, gradientLastUpdated } = <span class="hljs-variable language_">this</span>;
-
-                <span class="hljs-keyword">const</span> palette = gradient.<span class="hljs-property">palette</span>;</pre></div></div>
+                <span class="hljs-keyword">const</span> {element, engine, width, height, colorEngine, gradient, choke, gradientLastUpdated } = <span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
@@ -1028,10 +1046,9 @@
                 <span class="hljs-keyword">if</span> (gradientLastUpdated + choke &lt; now) {
 
                     gradient.<span class="hljs-title function_">updateByDelta</span>();
+
                     <span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientLastUpdated</span> = now;
                 }
-
-                <span class="hljs-keyword">if</span> (palette.<span class="hljs-property">dirtyPalette</span>) palette.<span class="hljs-title function_">recalculate</span>();
 
                 <span class="hljs-keyword">const</span> lg = colorEngine.<span class="hljs-title function_">createLinearGradient</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);
 
