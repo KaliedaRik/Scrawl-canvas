@@ -472,7 +472,7 @@ export default function (P = Ωempty) {
 // `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-// `prepareStampTabsHelper` is defined in the `mixin/anchor.js` file - handles updates to anchor and button objects
+// `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 

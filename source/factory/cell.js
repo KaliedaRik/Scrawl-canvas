@@ -133,19 +133,6 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [asset](../mixin/asset.html) - goes above position mixin because asset objects use the kill function defined in this mixin, but Cells need to follow the position mixin formula (which includes a call to the factoryKill function)
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [hiddenDomElements](../mixin/hiddenDomElements.html)
-// + [anchor](../mixin/anchor.html)
-// + [button](../mixin/button.html)
-// + [cascade](../mixin/cascade.html)
-// + [pattern](../mixin/pattern.html)
-// + [filter](../mixin/filter.html)
 baseMix(P);
 cellMix(P);
 assetMix(P);
@@ -1219,7 +1206,7 @@ P.prepareStamp = function () {
         this.notifySubscribers();
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/anchor.js` file - handles updates to anchor and button objects in the DOM
+    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects in the DOM
     this.prepareStampTabsHelper();
 };
 
