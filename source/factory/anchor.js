@@ -14,9 +14,9 @@
 
 
 // #### Imports
-import { artefact, constructors } from '../core/library.js';
+import { constructors } from '../core/library.js';
 
-import { doCreate, isa_dom, isa_fn, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 

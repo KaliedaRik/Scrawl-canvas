@@ -54,7 +54,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -189,6 +189,7 @@ const Canvas = function (items = Ωempty) {
         navigation.style.padding = PX0;
         navigation.style.margin = PX0;
         navigation.style.overflow = HIDDEN;
+        navigation.setAttribute(ARIA_LIVE, POLITE);
         this.navigation = navigation;
         el.appendChild(navigation);
 
@@ -713,12 +714,33 @@ P.show = function(){
     domShow();
     if (this.dirtyAria) this.cleanAria();
 
-    // Handle Anchor and Button DOM element ordering within the &lt;nav> element
-    if (this.dirtyNavigationTabOrder) {
+    if (this.dirtyNavigationTabOrder) this.reorderNavElements();
+};
 
-        this.dirtyNavigationTabOrder = false;
-        console.log(this.name, 'NEED TO REORDER ANCHOR/BUTTON ELEMENTS IN NAV');
+// `reorderNavElements` - Handle Anchor and Button DOM element ordering within the &lt;nav> element
+P.reorderNavElements = function () {
+
+    this.dirtyNavigationTabOrder = false;
+
+    const elArray = [],
+        navEl = this.navigation;
+
+    while (navEl.firstChild) {
+
+        elArray.push(navEl.removeChild(navEl.firstChild));
     }
+
+    elArray.sort((a, b) => {
+
+        const A = parseInt(a.getAttribute(DATA_TAB_ORDER), 10);
+        const B = parseInt(b.getAttribute(DATA_TAB_ORDER), 10);
+
+        if (A < B) return -1;
+        if (A > B) return 1;
+        return 0;
+    });
+
+    elArray.forEach(e => navEl.appendChild(e));
 };
 
 // `render` - orchestrate a single Display cycle - clear, then compile, then show.

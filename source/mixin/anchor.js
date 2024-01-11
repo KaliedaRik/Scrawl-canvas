@@ -5,13 +5,11 @@
 
 
 // #### Imports
-import { canvas } from '../core/library.js';
-
 import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 
-import { ANCHORTYPE, BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DISABLED, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TAB_ORDER, TARGET } from '../core/shared-vars.js';
+import { ANCHORTYPE, BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DISABLED, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, TAB_ORDER, TARGET } from '../core/shared-vars.js';
 
 
 // #### Export function

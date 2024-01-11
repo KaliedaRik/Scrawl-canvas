@@ -701,6 +701,7 @@ interface AnchorFactoryInputs extends BaseMixinInputs, AnchorFactoryDeltaInputs 
     ping?: string;
     referrerPolicy?: string;
     rel?: string;
+    tabOrder?: number;
     target?: string;
     type?: string;
 }
@@ -836,6 +837,7 @@ interface ButtonFactoryInputs extends BaseMixinInputs, ButtonFactoryDeltaInputs 
     formTarget?: string;
     popoverTarget?: string;
     popoverTargetAction?: string;
+    tabOrder?: number;
 }
 
 interface ButtonFactoryFunctions extends BaseMixinFunctions {}
