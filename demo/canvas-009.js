@@ -163,15 +163,12 @@ makeBlock({
 
         // The clickAction attribute captures both Scrawl-canvas trigger clicks and also non-mouse 'clicks' on the anchor element hidden at the top of the web page, for example using the keyboard (tab, return) or other assistive technology.
 
-        // The function returns a string which Scrawl-canvas will add to the anchor's 'onclick' attribute when it creates the anchor element dynamically and adds it to the DOM.
+        // This function gets invoked by an event listener added to the &lt;a> link element in the DOM. `this` refers to the element, not the SC anchor wrapper or the Block entity object. The `myTracker` object is not recognised by the link element (the object's scope is local to this module), so instead we fire the `ga` analytics object directly as that lives in the global space - see line 19 above.
         clickAction: function () {
 
-            return `ga('demoCanvasTracker.send', 'event', 'Outbound link', 'click', '${this.href}')`;
+// @ts-expect-error
+            ga('demoCanvasTracker.send', 'event', 'Outbound link', 'click', this.href);
         },
-
-        // Include focus and blur actions, which will trigger the onEnter and onLeave functions (below) for visitors using non-mouse/touch navigation (for example: keyboard tabbing)
-        focusAction: true,
-        blurAction: true,
     },
 
     // Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas> element. Note that 'this' refers to the entity object, meaning the functions can be safely cloned into other entitys.

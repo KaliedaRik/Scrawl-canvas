@@ -27,6 +27,7 @@ import deltaMix from '../mixin/delta.js';
 import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
@@ -39,18 +40,12 @@ export default function (P = Ωempty) {
 
 
 // #### Mixins
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [anchor](../mixin/anchor.html)
-// + [filter](../mixin/filter.html)
     positionMix(P);
     deltaMix(P);
     pivotMix(P);
     mimicMix(P);
     pathMix(P);
+    hiddenElementsMix(P);
     anchorMix(P);
     buttonMix(P);
     filterMix(P);
@@ -477,7 +472,7 @@ export default function (P = Ωempty) {
 // `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-// `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+// `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 

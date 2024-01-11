@@ -14,13 +14,13 @@
 
 
 // #### Imports
-import { artefact, constructors } from '../core/library.js';
+import { constructors } from '../core/library.js';
 
-import { doCreate, isa_dom, isa_fn, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _A, ANCHOR, BLUR, CLICK, DOWNLOAD, FOCUS, HREF, HREFLANG, ONCLICK, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, TYPE, ZERO_STR } from '../core/shared-vars.js';
+import { _A, _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Anchor constructor
@@ -30,9 +30,14 @@ const Anchor = function (items = Ωempty) {
     this.register();
 
     this.set(this.defs);
+
+    this.host = items.host;
+    this.controller = items.controller;
+    this.hold = items.hold;
+
     this.set(items);
 
-    this.build();
+    this.dirtyAnchor = true;
 
     return this;
 };
@@ -59,6 +64,12 @@ const defaultAttributes = {
 // __description__ - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. __Always include a description__ for accessibility.
     description: ZERO_STR,
 
+// __disabled__ - When set to true, will prevent the anchor &lt;a> element from being added to the &lt;canvas> element's &lt;nav> element on the next build cycle.
+    disabled: false,
+
+// __tabOrder__ - All hidden Anchor &lt;a> elements have a default tabOrder attribute value of 0. SC does not touch this attribute. Instead, to order Anchor (and Button) DOM elements within the host &lt;canvas> element's &lt;nav> element we set a `data-tab-order` attribute with the tabOrder value, which the Canvas wrapper can then use to reorder the elements as part of the Display cycle.
+    tabOrder: 0,
+
 // The following attributes are detailed in [MDN's &lt;a> reference page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a).
     download: ZERO_STR,
     href: ZERO_STR,
@@ -69,42 +80,19 @@ const defaultAttributes = {
     target: '_blank',
     anchorType: ZERO_STR,
 
-// The __clickAction__ attribute is a ___function which returns a string command___ which in turn gets attached to the anchor DOM element's __onclick__ attribute. Invoking the result is handled entirely by the browser (as is normal).
-
-// ##### Example usage
-//
-// This __doesn't work!__ The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the anchor (although navigation will still occur - the wikipedia page will open in a new browser tab):
-// ```
-// anchor: {
-//     name: 'wikipedia-box-link',
-//     href: 'https://en.wikipedia.org/wiki/Box',
-//     description: 'Link to the Wikipedia article on boxes (opens in new tab)',
-//
-//     clickAction: function () { console.log('box clicked') },
-// }
-// ```
-// This __works as expected__ - the function returns a string which can then be attached to the &lt;a> DOM element's _onclick_ attribute:
-// ```
-// anchor: {
-//     name: 'wikipedia-box-link',
-//     href: 'https://en.wikipedia.org/wiki/Box',
-//     description: 'Link to the Wikipedia article on boxes (opens in new tab)',
-//
-//     clickAction: function () { return `console.log('box clicked')` },
-// },
-// ```
+// __clickAction__ - function - actions to be performed when user tabs to the hidden &lt;a> element and presses the keyboard return button. Function cannot take any arguments.
     clickAction: null,
 
-// We can instruct the anchor to add event listeners for focus and blur events using the __focusAction__ and __blurAction__ Boolean flags. When set to true, the ___focus___ event listener will invoke the host entity's `onEnter` function; the ___blur___ event listener invokes the `onLeave` function. Default is to ignore these events
-    focusAction: false,
-    blurAction: false,
+// We can instruct the anchor to add event listeners for focus and blur events using the __focusAction__ and __blurAction__ Boolean flags. When set to true, the ___focus___ event listener will invoke the host entity's `onEnter` function; the ___blur___ event listener invokes the `onLeave` function.
+    focusAction: true,
+    blurAction: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
-P.packetObjects = pushUnique(P.packetExclusions, ['host']);
+P.packetObjects = pushUnique(P.packetObjects, ['host']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 
 
@@ -115,132 +103,67 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 // #### Kill management
 P.demolish = function () {
 
-    if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
+    const { host, controller, domElement, hold, clickAction, focusAction, blurAction } = this;
+
+    if (domElement && clickAction) domElement.removeEventListener(CLICK, clickAction, false);
+    if (host && domElement && focusAction) domElement.removeEventListener(FOCUS, () => host.onEnter(), false);
+    if (host && domElement && blurAction) domElement.removeEventListener(BLUR, () => host.onLeave(), false);
+
+    if (hold && domElement) hold.removeChild(domElement);
+
+    if (controller) controller.dirtyNavigationTabOrder = true;
+
+    if (host) host.anchor = null;
 
     this.deregister();
 };
 
 
 // #### Get, Set, deltaSet
-const S = P.setters;
-
-// Value should be the artefact object, or its name-String
-S.host = function (item) {
-
-    const h = (item.substring) ? artefact[item] : item;
-
-    if (h && h.name) this.host = h;
-};
-
-// Used internally - do not set directly! A reference to the hidden DOM hold &lt;div> elemenbt where the anchors &lt;a> element is kept.
-S.hold = function (item) {
-
-    if (isa_dom(item)) {
-
-        if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
-
-        this.hold = item;
-
-        if (this.domElement) this.hold.appendChild(this.domElement);
-    }
-};
-
-// While the Scrawl-canvas anchor object keeps copies of all of its &lt;a> DOM element's attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the `anchor.update()` helper function.
+// While the Scrawl-canvas anchor object keeps copies of all of its &lt;a> DOM element's attributes locally, they also need to be updated on that element.
 //
 // The artefact with which an anchor object is associated maps these attributes to itself as follows:
 // ```
-// anchor.description     ~~> artefact.anchorDescription
 // anchor.anchorType      ~~> artefact.anchorType
-// anchor.target          ~~> artefact.anchorTarget
-// anchor.rel             ~~> artefact.anchorRel
-// anchor.referrerPolicy  ~~> artefact.anchorReferrerPolicy
-// anchor.ping            ~~> artefact.anchorPing
-// anchor.hreflang        ~~> artefact.anchorHreflang
-// anchor.href            ~~> artefact.anchorHref
+// anchor.description     ~~> artefact.anchorDescription
 // anchor.download        ~~> artefact.anchorDownload
+// anchor.href            ~~> artefact.anchorHref
+// anchor.hreflang        ~~> artefact.anchorHreflang
+// anchor.ping            ~~> artefact.anchorPing
+// anchor.referrerPolicy  ~~> artefact.anchorReferrerPolicy
+// anchor.rel             ~~> artefact.anchorRel
+// anchor.tabOrder        ~~> artefact.anchorTabOrder
+// anchor.target          ~~> artefact.anchorTarget
 // ```
-// One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an 'anchor' attribute:
-// ```
-// artefact.set({
-//
-//     anchor: {
-//         description: 'value',
-//         anchorType: 'value',
-//         target: 'value',
-//         rel: 'value',
-//         referrerPolicy: 'value',
-//         ping: 'value',
-//         hreflang: 'value',
-//         href: 'value',
-//         download: 'value',
-//     },
-// });
-// ```
-S.download = function (item) {
+// One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an 'anchor' attribute.
+P.set = function (items = Ωempty) {
 
-    this.download = item;
-    if (this.domElement) this.update(DOWNLOAD);
-};
+    let i, key, val, fn;
 
-S.href = function (item) {
+    const keys = _keys(items),
+        keysLen = keys.length;
 
-    this.href = item;
-    if (this.domElement) this.update(HREF);
-};
+    if (keysLen) {
 
-S.hreflang = function (item) {
+        const setters = this.setters,
+            defs = this.defs;
 
-    this.hreflang = item;
-    if (this.domElement) this.update(HREFLANG);
-};
+        for (i = 0; i < keysLen; i++) {
 
-S.ping = function (item) {
+            key = keys[i];
+            val = items[key];
 
-    this.ping = item;
-    if (this.domElement) this.update(PING);
-};
+            if (key && key != NAME && val != null) {
 
-S.referrerpolicy = function (item) {
+                fn = setters[key];
 
-    this.referrerpolicy = item;
-    if (this.domElement) this.update(REFERRERPOLICY);
-};
-
-S.rel = function (item) {
-
-    this.rel = item;
-    if (this.domElement) this.update(REL);
-};
-
-S.target = function (item) {
-
-    this.target = item;
-    if (this.domElement) this.update(TARGET);
-};
-
-// These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element's attribute key:
-// + `anchor.description -> a.textContent` - this is the text between the &lt;a> element's opening and closing tags
-// + `anchor.clickAction -> a.onclick` - a function that returns an string which is added to the DOM element's 'onclick' attribute
-//
-S.anchorType = function (item) {
-
-    this.anchorType = item;
-    if (this.domElement) this.domElement.type = item;
-};
-
-S.description = function (item) {
-
-    this.description = item;
-    if (this.domElement) this.domElement.textContent = item;
-};
-
-S.clickAction = function (item) {
-
-    if (isa_fn(item)) {
-
-        this.clickAction = item;
-        if (this.domElement) this.domElement.setAttribute(ONCLICK, item());
+                if (fn) fn.call(this, val);
+                else if (typeof defs[key] != UNDEF) this[key] = val;
+            }
+        }
+        this.dirtyAnchor = true;
     }
+    return this;
 };
 
 
@@ -248,39 +171,76 @@ S.clickAction = function (item) {
 // The `build` function builds the &lt;a> element and adds it to the DOM
 P.build = function () {
 
-    if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
+    const { host } = this;
 
-    const link = document.createElement(_A);
+    if (host) {
 
-    link.id = this.name;
+        if (!this.controller) this.controller = host.getCanvasWrapper();
+        if (!this.hold) this.hold = host.getCanvasNavElement();
 
-    if (this.download) link.setAttribute(DOWNLOAD, this.download);
-    if (this.href) link.setAttribute(HREF, this.href);
-    if (this.hreflang) link.setAttribute(HREFLANG, this.hreflang);
-    if (this.ping) link.setAttribute(PING, this.ping);
-    if (this.referrerpolicy) link.setAttribute(REFERRERPOLICY, this.referrerpolicy);
-    if (this.rel) link.setAttribute(REL, this.rel);
-    if (this.target) link.setAttribute(TARGET, this.target);
-    if (this.anchorType) link.setAttribute(TYPE, this.anchorType);
+        const { hold, controller } = this;
 
-    if (this.clickAction && isa_fn(this.clickAction)) link.setAttribute(ONCLICK, this.clickAction());
+        if (hold && controller) {
 
-    if (this.description) link.textContent = this.description;
+            const { anchorType, blurAction, clickAction, description, disabled, download, focusAction, href, hreflang, name, ping, referrerpolicy, rel, tabOrder, target } = this;
 
-    if (this.focusAction) link.addEventListener(FOCUS, () => this.host.onEnter(), false);
-    if (this.blurAction) link.addEventListener(BLUR, () => this.host.onLeave(), false);
+            let link = this.domElement;
 
-    this.domElement = link;
+            if (link) {
 
-    if (this.hold) this.hold.appendChild(link);
+                if (clickAction) link.removeEventListener(CLICK, clickAction, false);
+                if (focusAction) link.removeEventListener(FOCUS, () => host.onEnter(), false);
+                if (blurAction) link.removeEventListener(BLUR, () => host.onLeave(), false);
+
+                hold.removeChild(link);
+                this.domElement = null;
+            }
+
+            controller.dirtyNavigationTabOrder = true;
+
+            if (!disabled) {
+
+                link = document.createElement(_A);
+
+                link.id = name;
+
+                if (download) link.setAttribute(DOWNLOAD, download);
+                if (href) link.setAttribute(HREF, href);
+                if (hreflang) link.setAttribute(HREFLANG, hreflang);
+                if (ping) link.setAttribute(PING, ping);
+                if (referrerpolicy) link.setAttribute(REFERRERPOLICY, referrerpolicy);
+                if (rel) link.setAttribute(REL, rel);
+                if (target) link.setAttribute(TARGET, target);
+                if (anchorType) link.setAttribute(TYPE, anchorType);
+
+                link.setAttribute(DATA_TAB_ORDER, tabOrder);
+
+                if (clickAction && isa_fn(clickAction)) link.addEventListener(CLICK, clickAction, false);
+
+                if (description) link.textContent = description;
+
+                if (focusAction) link.addEventListener(FOCUS, () => host.onEnter(), false);
+                if (blurAction) link.addEventListener(BLUR, () => host.onLeave(), false);
+
+                this.domElement = link;
+
+                hold.appendChild(link);
+            }
+        }
+
+    }
 };
 
 
-// Internal function - update the DOM element attribute
-P.update = function (item) {
+// `rebuild` - called as part of the Display cycle
+P.rebuild = function () {
 
-    if (this.domElement) this.domElement.setAttribute(item, this[item]);
-};
+    if (this.dirtyAnchor) {
+
+        this.build();
+        this.dirtyAnchor = false;
+    }
+}
 
 
 // To action a user `click` on an artifact with an associated anchor object, we generate a DOM MouseEvent originating from the anchor element which the browser can act on in the usual manner (browser/device dependent)

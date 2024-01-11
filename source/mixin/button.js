@@ -5,13 +5,11 @@
 
 
 // #### Imports
-import { canvas } from '../core/library.js';
-
 import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeButton } from '../factory/button.js';
 
-import { AUTOFOCUS, BLUR_ACTION, DESCRIPTION, CLICK_ACTION, DISABLED, ELEMENT_NAME, ELEMENT_TYPE, ELEMENT_VALUE, FOCUS_ACTION, FORM, FORM_ACTION, FORM_ENCTYPE, FORM_METHOD, FORM_NOVALIDATE, FORM_TARGET, POPOVER_TARGET, POPOVER_TARGETACTION, T_CANVAS,  T_CELL } from '../core/shared-vars.js';
+import { AUTOFOCUS, BLUR_ACTION, DESCRIPTION, CLICK_ACTION, DISABLED, ELEMENT_NAME, ELEMENT_TYPE, ELEMENT_VALUE, FOCUS_ACTION, FORM, FORM_ACTION, FORM_ENCTYPE, FORM_METHOD, FORM_NOVALIDATE, FORM_TARGET, NAME, POPOVER_TARGET, POPOVER_TARGETACTION, TAB_ORDER } from '../core/shared-vars.js';
 
 
 // #### Export function
@@ -36,7 +34,7 @@ export default function (P = Ωempty) {
 
 
 // #### Kill management
-// `demolishAnchor` - Note that a `handlePacketAnchor` function is also defined in the [position](./position.html) mixin, to manage the surrounding kill functionality.
+// `demolishButton` - Note that Button objects use the `handlePacketAnchor` function defined in the [position](./position.html) mixin, to manage the surrounding kill functionality.
     P.demolishButton = function () {
 
         if (this.button) this.button.demolish();
@@ -50,22 +48,24 @@ export default function (P = Ωempty) {
 // The following attributes (which largely map to [HTML button attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button)) can be included in the argument object passed to the artefact's factory and `set` functions, or passed as a String to the `get` function:
 // ```
 // artefact.buttonAutofocus       ~~>  button.autofocus       boolean - default: false
+// artefact.buttonBlurAction      ~~>  button.blurAction      boolean - default: false
+// artefact.buttonClickAction     ~~>  button.clickAction     function - returns onclick string
 // artefact.buttonDescription     ~~>  button.description     string - default: ''
 // artefact.buttonDisabled        ~~>  button.disabled        boolean - default: false
+// artefact.buttonElementName     ~~>  button.elementName     string - default: null
+// artefact.buttonElementType     ~~>  button.elementType     string[5] - default: 'button'
+// artefact.buttonElementValue    ~~>  button.elementValue    string - default: null
+// artefact.buttonFocusAction     ~~>  button.focusAction     boolean - default: false
 // artefact.buttonForm            ~~>  button.form            string (id of &lt;form> element) - default: null
 // artefact.buttonFormAction      ~~>  button.formAction      string (URL of processing API's endpoint) - default: null
 // artefact.buttonFormEnctype     ~~>  button.formEnctype     string[1] - default: null
 // artefact.buttonFormMethod      ~~>  button.formMethod      string[2] - default: null
 // artefact.buttonFormNoValidate  ~~>  button.formNoValidate  boolean - default: false
 // artefact.buttonFormTarget      ~~>  button.formTarget      string[3] - default: null
-// artefact.buttonElementName     ~~>  button.elementName     string - default: null
+// artefact.buttonName            ~~>  button.name            string - default: null
 // artefact.buttonPopoverTarget   ~~>  button.popoverTarget   string (id of popover element) - default: null
 // artefact.buttonPopoverTargetAction   ~~>  button.popoverTargetAction   string[4] - default: null
-// artefact.buttonElementType     ~~>  button.elementType     string[5] - default: 'button'
-// artefact.buttonElementValue    ~~>  button.elementValue    string - default: null
-// artefact.buttonFocusAction     ~~>  button.focusAction     boolean - default: false
-// artefact.buttonBlurAction      ~~>  button.blurAction      boolean - default: false
-// artefact.buttonClickAction     ~~>  button.clickAction     function - returns onclick string
+// artefact.buttonTabOrder        ~~>  button.tabOrder        number - default: 0
 //
 // [1] - 'application/x-www-form-urlencoded', 'multipart/form-data', 'text/plain'
 // [2] - 'post', 'get', 'dialog'
@@ -75,6 +75,9 @@ export default function (P = Ωempty) {
 //
 // ```
 //
+// __buttonName__
+    G.buttonName = function () { return this.buttonGetHelper(NAME); };
+
 // __buttonAutofocus__
     G.buttonAutofocus = function () { return this.buttonGetHelper(AUTOFOCUS); };
     S.buttonAutofocus = function (item) { return this.buttonSetHelper(AUTOFOCUS, item); };
@@ -86,6 +89,10 @@ export default function (P = Ωempty) {
 // __buttonDisabled__
     G.buttonDisabled = function () { return this.buttonGetHelper(DISABLED); };
     S.buttonDisabled = function (item) { return this.buttonSetHelper(DISABLED, item); };
+
+// __buttonTabOrder__
+    G.buttonTabOrder = function () { return this.buttonGetHelper(TAB_ORDER); };
+    S.buttonTabOrder = function (item) { return this.buttonSetHelper(TAB_ORDER, item); };
 
 // __buttonForm__
     G.buttonForm = function () { return this.buttonGetHelper(FORM); };
@@ -132,15 +139,12 @@ export default function (P = Ωempty) {
     S.buttonElementValue = function (item) { return this.buttonSetHelper(ELEMENT_VALUE, item); };
 
 // __buttonFocusAction__
-    G.buttonFocusAction = function () { return this.buttonGetHelper(FOCUS_ACTION); };
     S.buttonFocusAction = function (item) { return this.buttonSetHelper(FOCUS_ACTION, item); };
 
 // __buttonBlurAction__
-    G.buttonBlurAction = function () { return this.buttonGetHelper(BLUR_ACTION); };
     S.buttonBlurAction = function (item) { return this.buttonSetHelper(BLUR_ACTION, item); };
 
 // __buttonClickAction__
-    G.buttonClickAction = function () { return this.buttonGetHelper(CLICK_ACTION); };
     S.buttonClickAction = function (item) { return this.buttonSetHelper(CLICK_ACTION, item); };
 
 // __button__
@@ -156,6 +160,7 @@ export default function (P = Ωempty) {
         if (!this.button) this.buildButton(items);
         else this.button.set(items);
     };
+
 
 // Internal helper functions
     P.buttonGetHelper = function(key) {
@@ -184,37 +189,17 @@ export default function (P = Ωempty) {
             if (!items.description) items.description = `Button for ${this.name} ${this.type}`;
 
             items.host = this;
-            items.hold = this.getButtonHold();
+            items.controller = this.getCanvasWrapper();
+            items.hold = this.getCanvasNavElement();
 
             this.button = makeButton(items);
         }
     };
 
-// `getButtonHold` - internal function. Locate the current DOM hold element allocated for hosting &lt;a> elements.
-    P.getButtonHold = function () {
-
-        const entityHost = this.currentHost;
-
-        if (entityHost) {
-
-            if (entityHost.type === T_CANVAS) return entityHost.navigation;
-
-            if (entityHost.type === T_CELL) {
-
-                const cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
-
-                if (cellHost && cellHost.type === T_CANVAS) return cellHost.navigation;
-            }
-        }
-        this.dirtyButtonHold = true;
-
-        return null;
-    }
-
 // `rebuildButton` - triggers the Button object's `build` function
     P.rebuildButton = function () {
 
-        if (this.button) this.button.build();
+        if (this.button) this.button.rebuild();
     };
 
 
@@ -224,11 +209,4 @@ export default function (P = Ωempty) {
 
         if (this.button) this.button.click();
     };
-
-
-// `prepareStampTabsHelper` - this function is defined in the `mixin/anchor.js` file, though the function's action involves both Anchor and Button objects
-
-
-// Return the prototype
-    return P;
 }

@@ -4,8 +4,9 @@
 
 // HELPERS
 // =====================================
-type DefaultInputFunction = (item?: any) => void; 
-type DefaultOutputFunction = (item?: any) => void; 
+type DefaultInputFunction = (item?: any) => void;
+type DefaultOutputFunction = (item?: any) => void;
+type DefaultStringOutputFunction = (item?: any) => string;
 
 interface CommonObjectInput {
     [index: string]: any;
@@ -35,13 +36,14 @@ interface AnchorMixinDeltaInputs {}
 interface AnchorMixinInputs {
     anchor?: AnchorFactoryInputs;
     anchorBlurAction?: boolean;
-    anchorClickAction?: () => string;
+    anchorClickAction?: DefaultOutputFunction;
     anchorDescription?: string;
     anchorDownload?: string;
     anchorFocusAction?: boolean;
     anchorHref?: string;
     anchorHreflang?: string;
     anchorPing?: string;
+    anchorName?: string;
     anchorReferrerPolicy?: string;
     anchorRel?: string;
     anchorTarget?: string;
@@ -172,7 +174,7 @@ interface ButtonMixinInputs {
     button?: ButtonFactoryInputs;
     buttonAutofocus?: boolean;
     buttonBlurAction?: boolean;
-    buttonClickAction?: () => string;
+    buttonClickAction?: DefaultOutputFunction;
     buttonDescription?: string;
     buttonDisabled?: boolean;
     buttonElementName?: string;
@@ -185,6 +187,7 @@ interface ButtonMixinInputs {
     buttonFormMethod?: string;
     buttonFormNoValidate?: boolean;
     buttonFormTarget?: string;
+    buttonName?: string;
     buttonPopoverTarget?: string;
     buttonPopoverTargetAction?: string;
 }
@@ -689,7 +692,7 @@ interface AnchorFactoryDeltaInputs extends BaseMixinDeltaInputs {}
 
 interface AnchorFactoryInputs extends BaseMixinInputs, AnchorFactoryDeltaInputs {
     blurAction?: boolean;
-    clickAction?: () => string;
+    clickAction?: DefaultOutputFunction;
     description?: string;
     download?: string;
     focusAction?: boolean;
@@ -698,6 +701,7 @@ interface AnchorFactoryInputs extends BaseMixinInputs, AnchorFactoryDeltaInputs 
     ping?: string;
     referrerPolicy?: string;
     rel?: string;
+    tabOrder?: number;
     target?: string;
     type?: string;
 }
@@ -833,6 +837,7 @@ interface ButtonFactoryInputs extends BaseMixinInputs, ButtonFactoryDeltaInputs 
     formTarget?: string;
     popoverTarget?: string;
     popoverTargetAction?: string;
+    tabOrder?: number;
 }
 
 interface ButtonFactoryFunctions extends BaseMixinFunctions {}
@@ -1019,10 +1024,10 @@ interface ColorFactoryFunctions extends BaseMixinFunctions {
     clone: (item?: ColorFactoryInputs) => ColorInstance;
     convertRGBtoHex: (red: number, green: number, blue: number) => string;
     extractRGBfromColor: (item: string) => number[];
-    generateRandomColor: () => string;
-    getCurrentColor: () => string;
-    getMaximumColor: () => string;
-    getMinimumColor: () => string;
+    generateRandomColor: DefaultStringOutputFunction;
+    getCurrentColor: DefaultStringOutputFunction;
+    getMaximumColor: DefaultStringOutputFunction;
+    getMinimumColor: DefaultStringOutputFunction;
     getRangeColor: (item: number, internalGradientBuild?: boolean) => string;
     saveAsPacket: (item?: ColorSaveInputs | boolean) => string;
     set: (item?: ColorFactoryInputs) => ColorInstance;

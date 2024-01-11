@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -778,17 +798,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="emitter-attributes">Emitter attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, calculateOrder, stampOrder, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
-<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
-</ul>
 
             </div>
             
@@ -1594,8 +1603,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">generatorChoke</span> = now;
         }
-    }
-};</pre></div></div>
+    }</pre></div></div>
             
         </li>
         
@@ -1605,6 +1613,22 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
               
               <div class="sswrap ">
                 <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hiddenDomElements.js</code> file - handles updates to anchor and button objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>addParticles</code> - internal function called by <code>prepareStamp</code> … if you are not a fan of overly-complex functions, look away now.</p>
 <p>We can add particles to an emitter in a number of different ways, determined by the setting of two flag attributes on the emitter. The flags are actioned in the following order:</p>
@@ -1628,11 +1652,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>internal helper functions, used when creating the particle</p>
 
@@ -1653,11 +1677,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>The emitter object retains details of the initial values required for eachg particle it generates</p>
 
@@ -1671,11 +1695,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>Use an artefact’s current area location to determine where the particle will be generated</p>
 
@@ -1755,11 +1779,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>Use an Shape-based entity’s path to determine where the particle will be generated</p>
 
@@ -1820,11 +1844,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>TODO: documentation</p>
 
@@ -1909,11 +1933,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>TODO: documentation</p>
 
@@ -1989,11 +2013,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Generate the particle using the emitter’s start coordinate, or a reference artifact’s coordinate</p>
 
@@ -2041,11 +2065,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - overwriters the functionality defined in the entity.js mixin</p>
 
@@ -2066,11 +2090,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter’s animation.</p>
 
@@ -2089,11 +2113,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>Perform canvas drawing before the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -2110,11 +2134,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>Perform further canvas drawing after the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -2144,11 +2168,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>checkHit</code> - overwrites the function defined in mixin/position.js</p>
 <ul>
@@ -2202,11 +2226,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({

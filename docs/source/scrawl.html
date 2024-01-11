@@ -115,20 +115,25 @@ THE SOFTWARE.</p>
     addNativeListener,
     removeNativeListener,
     makeAnimationObserver,
-    getPixelRatio,
-    setPixelRatioChangeAction,
-    getIgnorePixelRatio,
-    setIgnorePixelRatio,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/events.js&#x27;</span>;
 <span class="hljs-keyword">export</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/library.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/random-seed.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeSnippet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/snippets.js&#x27;</span>;
+<span class="hljs-keyword">export</span> {
+    setFilterMemoizationChoke,
+    setWorkstoreLifetimeLength,
+    setWorkstorePurgeChoke,
+ } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/workstore.js&#x27;</span>;
 <span class="hljs-keyword">export</span> {
     currentCorePosition,
     startCoreListeners,
     stopCoreListeners,
     getTouchActionChoke,
     setTouchActionChoke,
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/user-interaction.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/system-flags.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeAction } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/action.js&#x27;</span>;
@@ -152,7 +157,6 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/element.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/emitter.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeFilter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filter.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { setFilterMemoizationChoke } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filter-engine.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeForce } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particle-force.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/gradient.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeGrid } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/grid.js&#x27;</span>;

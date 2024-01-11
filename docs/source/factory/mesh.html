@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -611,7 +631,9 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/delta.js&#x27;</span>;
+<span class="hljs-keyword">import</span> hiddenElementsMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/hiddenDomElements.js&#x27;</span>;
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;
+<span class="hljs-keyword">import</span> buttonMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/button.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { _atan2, _ceil, _isArray, _keys, _max, _min, _parse, _piHalf, _sqrt, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">STATE_KEYS</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">T_MESH</span>, <span class="hljs-variable constant_">T_NET</span>, <span class="hljs-variable constant_">T_PICTURE</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
@@ -693,7 +715,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
 <span class="hljs-title function_">deltaMix</span>(P);
-<span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
+<span class="hljs-title function_">hiddenElementsMix</span>(P);
+<span class="hljs-title function_">anchorMix</span>(P);
+<span class="hljs-title function_">buttonMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -705,10 +729,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mesh-attributes">Mesh attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-</ul>
 
             </div>
             
@@ -1537,8 +1557,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceIsVideoOrSprite</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">true</span>;
         }
-    }
-};</pre></div></div>
+    }</pre></div></div>
             
         </li>
         
@@ -1548,6 +1567,22 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
               
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hiddenDomElements.js</code> file - handles updates to anchor and button objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>setSourceDimension</code> - internal function called by <code>prepareStamp</code>.</p>
 <ul>
@@ -1639,11 +1674,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Sanity check - the particle system, when it breaks down, can create some massive dimension values!</p>
 
@@ -1726,11 +1761,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - Simple stamping is entirely synchronous</p>
 <ul>
@@ -1758,11 +1793,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - All entity stamping, except for simple stamps, goes through this function, which needs to return a Promise which will resolve in due course.</p>
 <ul>
@@ -1806,11 +1841,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 
@@ -1819,11 +1854,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -1875,11 +1910,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -1974,11 +2009,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug</p>
 <ul>
@@ -2027,11 +2062,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2054,11 +2089,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Mesh entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2068,11 +2103,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2086,11 +2121,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2104,11 +2139,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2124,11 +2159,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2144,11 +2179,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2163,11 +2198,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2182,11 +2217,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2223,11 +2258,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>none</code>, <code>clip</code></p>
 
@@ -2239,11 +2274,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Mesh entity onto a canvas cell.</p>
 
@@ -2252,11 +2287,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2271,11 +2306,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2313,11 +2348,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2326,11 +2361,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -2396,28 +2431,14 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-62">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> myMesh = scrawl.<span class="hljs-title function_">makeMesh</span>({
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,
+              <h4 id="factory">Factory</h4>
+<pre><code><span class="hljs-keyword">let</span> myMesh = scrawl.<span class="hljs-title function_">makeMesh</span>({
 </code></pre>
 
             </div>
@@ -2431,8 +2452,7 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">net</span>: <span class="hljs-string">&#x27;test-net&#x27;</span>,
-<span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,
+              <pre><code><span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,
 </code></pre>
 
             </div>
@@ -2446,9 +2466,8 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-<span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-<span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
+              <pre><code><span class="hljs-attr">net</span>: <span class="hljs-string">&#x27;test-net&#x27;</span>,
+<span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,
 </code></pre>
 
             </div>
@@ -2462,7 +2481,9 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+              <pre><code><span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+<span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+<span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
 </code></pre>
 
             </div>
@@ -2475,6 +2496,20 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               
               <div class="sswrap ">
                 <a class="ss" href="#section-67">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span> }) },
 <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span> }) },

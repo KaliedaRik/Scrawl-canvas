@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -808,9 +828,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="color-attributes">Color attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-</ul>
 
             </div>
             
@@ -954,7 +971,12 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>The <strong>easing</strong> and <strong>easingFunction</strong> attributes affect the <code>getRangeColor</code> function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1</p>
+              <p>color(‘???’, …) for the various color strings.</p>
+<ul>
+<li><strong>To note:</strong> do not mix-and-match color strings from different predefined color spaces! SC only reserves one set of arrays for all these strings.</li>
+<li>Internally, SC converts each color() string to RGB (sRGB) values for further manipulation</li>
+</ul>
+<p>The <strong>easing</strong> and <strong>easingFunction</strong> attributes affect the <code>getRangeColor</code> function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1</p>
 
             </div>
             
@@ -2408,8 +2430,25 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
         oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoOKLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
         oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
-    }
-    <span class="hljs-keyword">else</span> {
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
+              </div>
+              <p>This captures everything else, including CSS <code>color()</code> strings, named colors, hex colors, etc</p>
+<ul>
+<li>All these colors get processed as RGB colors</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> {
 
         [b, c, d, a] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorFromCanvas</span>(color);
 
@@ -2428,11 +2467,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>extractRGBfromColor</code> - takes a color string and returns it’s RGB equivalent channel values:</p>
 
@@ -2480,11 +2519,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>convertRGBtoHex</code> - takes 3 rgb color values (range 0-255) and returns a #hex string:</p>
 
@@ -2510,11 +2549,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>getColorFromCanvas</code> - internal helper function</p>
 
@@ -2545,11 +2584,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h4 id="color-space-conversions">Color space conversions</h4>
 <p>The following functionality has been lifted/adapted from <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a></p>
@@ -2559,11 +2598,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>convertRGBtoHSL</code> - internal helper function</p>
 
@@ -2603,11 +2642,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>convertHSLtoRGB</code> - internal helper function</p>
 
@@ -2632,11 +2671,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>convertRGBtoHWB</code> - internal helper function</p>
 
@@ -2659,11 +2698,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>convertRGBHtoHWB</code> - internal helper function</p>
 
@@ -2684,11 +2723,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>convertHWBtoRGB</code> - internal helper function</p>
 
@@ -2718,11 +2757,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>multiplyMatrices</code> - internal helper function</p>
 <ul>
@@ -2760,11 +2799,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>convertRGBtoXYZ</code> - internal helper function</p>
 
@@ -2828,11 +2867,11 @@ P.<span class="hljs-property">convertRGBtoOKLAB</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>convertXYZtoRGB</code> - internal helper function</p>
 
@@ -2873,11 +2912,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>convertXYZtoLAB</code> - internal helper function</p>
 
@@ -2908,11 +2947,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><code>convertLABtoXYZ</code> - internal helper function</p>
 
@@ -2949,11 +2988,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><code>convertLABtoLCH</code> - internal helper function</p>
 
@@ -2973,11 +3012,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>convertLCHtoLAB</code> - internal helper function</p>
 
@@ -2995,11 +3034,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><code>convertXYZtoOKLAB</code> - internal helper function</p>
 
@@ -3030,11 +3069,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><code>convertOKLABtoXYZ</code> - internal helper function</p>
 
@@ -3065,11 +3104,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p><code>convertOKLABtoOKLCH</code> - internal helper function</p>
 
@@ -3089,11 +3128,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p><code>convertOKLCHtoOKLAB</code> - internal helper function</p>
 
@@ -3111,11 +3150,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-86">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <h4 id="color-blending">Color blending</h4>
 <p>The following functions are used by the Blend filter</p>
@@ -3129,11 +3168,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-87">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p><code>calculateColorBlend</code> - internal helper function</p>
 
@@ -3150,11 +3189,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-88">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-88">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p><code>calculateHueBlend</code> - internal helper function</p>
 
@@ -3171,11 +3210,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-89">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-89">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <p><code>calculateSaturationBlend</code> - internal helper function</p>
 
@@ -3192,11 +3231,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-90">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-90">&#x00a7;</a>
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <p><code>calculateLuminosityBlend</code> - internal helper function</p>
 
@@ -3213,19 +3252,18 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-91">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-91">&#x00a7;</a>
+                <a class="ss" href="#section-92">&#x00a7;</a>
               </div>
               <h4 id="browser-color-space-support">Browser color space support</h4>
 <p>We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element’s engine, stamp a pixel, then check to see if the pixel is black (space not supported)</p>
 <ul>
-<li>We check for HWB, LAB andf LCH color space support</li>
+<li>We check for HWB, LAB, LCH, OKLAB, OKLCH, P3 color space support</li>
 <li>We assume that the browser always supports RGB and HSL  color spaces</li>
 <li>We don’t check for XYZ color space support because it is not part of the <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4 specification</a></li>
-<li>We don’t check for OKLAB, OKLCH support at this time (Nov 2022)</li>
 </ul>
 
             </div>
@@ -3235,6 +3273,7 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
 <span class="hljs-keyword">let</span> supportsLCH = <span class="hljs-literal">false</span>;
 <span class="hljs-keyword">let</span> supportsOKLAB = <span class="hljs-literal">false</span>;
 <span class="hljs-keyword">let</span> supportsOKLCH = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> supportsP3 = <span class="hljs-literal">false</span>;
 
 <span class="hljs-keyword">const</span> browserChecker = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -3247,11 +3286,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-92">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-92">&#x00a7;</a>
+                <a class="ss" href="#section-93">&#x00a7;</a>
               </div>
               <p>Test for HWB support</p>
 
@@ -3271,11 +3310,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-93">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-93">&#x00a7;</a>
+                <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
               <p>Firefox (v96.0.1) fails silently when setting engine to unsupported color, leaving engine value unchanged, which in turn leaves our test rgb values unchanged, thus giving us a false positive for the test</p>
 <ul>
@@ -3290,11 +3329,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-94">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-94">&#x00a7;</a>
+                <a class="ss" href="#section-95">&#x00a7;</a>
               </div>
               <p>Test for LAB support</p>
 
@@ -3315,11 +3354,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-95">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-95">&#x00a7;</a>
+                <a class="ss" href="#section-96">&#x00a7;</a>
               </div>
               <p>Firefox safety net</p>
 
@@ -3331,11 +3370,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-96">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-96">&#x00a7;</a>
+                <a class="ss" href="#section-97">&#x00a7;</a>
               </div>
               <p>Test for LCH support</p>
 
@@ -3356,11 +3395,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-97">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-97">&#x00a7;</a>
+                <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
               <p>Firefox safety net</p>
 
@@ -3372,21 +3411,17 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-98">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-98">&#x00a7;</a>
+                <a class="ss" href="#section-99">&#x00a7;</a>
               </div>
               <p>Test for OKLAB support</p>
-<ul>
-<li>Assume no browser supports OKLAB. Safari’s implementation is incomplete (Nov 2022)</li>
-</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;oklab(59.686% 0.1009 0.1192)&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;oklab(59.686% 0.1009 0.1192)&#x27;</span>;
     engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
     engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
 
@@ -3401,11 +3436,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-99">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-99">&#x00a7;</a>
+                <a class="ss" href="#section-100">&#x00a7;</a>
               </div>
               <p>Firefox safety net</p>
 
@@ -3417,21 +3452,17 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-100">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-100">&#x00a7;</a>
+                <a class="ss" href="#section-101">&#x00a7;</a>
               </div>
               <p>Test for OKLCH support</p>
-<ul>
-<li>Assume no browser supports OKLCH. Safari’s implementation is incomplete (Nov 2022)</li>
-</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;oklch(59.686% 0.15619 49.7694)&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;oklch(59.686% 0.15619 49.7694)&#x27;</span>;
     engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
     engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
 
@@ -3446,17 +3477,58 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-101">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-101">&#x00a7;</a>
+                <a class="ss" href="#section-102">&#x00a7;</a>
               </div>
               <p>Firefox safety net</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsOKLCH &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsOKLCH = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-103">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-103">&#x00a7;</a>
+              </div>
+              <p>Test for display-p3 support</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;color(display-p3 0 1 0)&#x27;</span>;
+    engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">if</span> (image &amp;&amp; image.<span class="hljs-property">data</span>) {
+
+        [r, g, b] = image.<span class="hljs-property">data</span>;
+    }
+    <span class="hljs-keyword">if</span> (r || g || b) supportsP3 = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-104">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-104">&#x00a7;</a>
+              </div>
+              <p>Firefox safety net</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsP3 &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsP3 = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;
 };
 <span class="hljs-title function_">browserChecker</span>();</pre></div></div>
@@ -3464,11 +3536,11 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-102">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-102">&#x00a7;</a>
+                <a class="ss" href="#section-105">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeColor</span>({

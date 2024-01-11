@@ -66,6 +66,7 @@ import deltaMix from '../mixin/delta.js';
 import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import cascadeMix from '../mixin/cascade.js';
@@ -132,17 +133,6 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [asset](../mixin/asset.html) - goes above position mixin because asset objects use the kill function defined in this mixin, but Cells need to follow the position mixin formula (which includes a call to the factoryKill function)
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [anchor](../mixin/anchor.html)
-// + [cascade](../mixin/cascade.html)
-// + [pattern](../mixin/pattern.html)
-// + [filter](../mixin/filter.html)
 baseMix(P);
 cellMix(P);
 assetMix(P);
@@ -151,6 +141,7 @@ deltaMix(P);
 pivotMix(P);
 mimicMix(P);
 pathMix(P);
+hiddenElementsMix(P);
 anchorMix(P);
 buttonMix(P);
 cascadeMix(P);
@@ -1215,7 +1206,7 @@ P.prepareStamp = function () {
         this.notifySubscribers();
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects in the DOM
+    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects in the DOM
     this.prepareStampTabsHelper();
 };
 

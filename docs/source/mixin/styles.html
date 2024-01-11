@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -1086,7 +1106,11 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">palette</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
 
-        <span class="hljs-keyword">if</span>(item.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PALETTE</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span> = item;
+        <span class="hljs-keyword">if</span>(item.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PALETTE</span>) {
+
+            item.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span> = item;
+        }
     };</pre></div></div>
             
         </li>
@@ -1104,18 +1128,22 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">paletteStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span> = item;
 
-            <span class="hljs-keyword">if</span>(item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span> = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">if</span>(item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span> = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
+            }
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">updateData</span>();
         }
     };
     D.<span class="hljs-property">paletteStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-keyword">let</span> p;
 
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) {
 
             p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span> + item;
 
@@ -1126,6 +1154,7 @@
             }
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span> = p;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">updateData</span>();
         }
     };</pre></div></div>
             
@@ -1144,11 +1173,12 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">paletteEnd</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span> = item;
 
             <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span> = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">updateData</span>();
         }
     };
 
@@ -1156,7 +1186,7 @@
 
         <span class="hljs-keyword">let</span> p;
 
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) {
 
             p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span> + item;
 
@@ -1167,6 +1197,16 @@
             }
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span> = p;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">updateData</span>();
+        }
+    };
+
+    S.<span class="hljs-property">cyclePalette</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclePalette</span> = !!item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">updateData</span>();
         }
     };</pre></div></div>
             
@@ -1211,7 +1251,10 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">easing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">easing</span>: item });
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">easing</span>: item });
+        }
     };
     S.<span class="hljs-property">easingFunction</span> = S.<span class="hljs-property">easing</span>;</pre></div></div>
             
@@ -1588,11 +1631,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
-              <p>Step 1: see if the palette is dirty, from having colors added/deleted/changed</p>
+              <p>Step 1: recalculate current start and end points</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-property">dirtyPalette</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">recalculate</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStyle</span>(entity, cell);</pre></div></div>
             
         </li>
         
@@ -1603,11 +1646,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
-              <p>Step 2: recalculate current start and end points</p>
+              <p>Step 2: finalize the coordinates to use for creating the gradient in relation to the current entity’s position and requirements on the canvas</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStyle</span>(entity, cell);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">finalizeCoordinates</span>(entity);</pre></div></div>
             
         </li>
         
@@ -1618,22 +1661,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
-              <p>Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity’s position and requirements on the canvas</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">finalizeCoordinates</span>(entity);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
-              </div>
-              <p>Step 4: create, populate and return gradient/pattern object</p>
+              <p>Step 3: create, populate and return gradient/pattern object</p>
 
             </div>
             
@@ -1643,11 +1671,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>cleanStyle</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function. The style has to be cleaned every time it is applied to a Cell’s engine because it can never know which Cell is invoking it, or for which entity it is to be used.</p>
 
@@ -1680,11 +1708,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>cleanPosition</code> - internal function invoked as part of the gradient-type object’s <code>cleanStyle</code> function.</p>
 
@@ -1710,11 +1738,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>finalizeCoordinates</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function.</p>
 
@@ -1744,11 +1772,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>cleanRadius</code> - overwritten by the RadialGradient factory</p>
 
@@ -1759,11 +1787,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>buildStyle</code> - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here</p>
 
@@ -1777,35 +1805,30 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
-              <p><code>addStopsToGradient</code> - internal function, called by the <code>buildStyle</code> function (which is overwritten by the Gradient and RadialGradient factories)</p>
+              <p><code>addStopsToGradient</code> - internal function, called by the <code>buildStyle</code> function (which is overwritten by the various gradient factories)</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">addStopsToGradient</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, start, stop, cycle</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) {
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
-
-            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">addStopsToGradient</span>(gradient, start, stop, cycle);
-        }
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">addStopsToGradient</span>(gradient, start, stop, cycle);
         <span class="hljs-keyword">return</span> gradient;
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-51">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <h4 id="gradients-and-color-stops">Gradients and color stops</h4>
 <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> uses a rather convoluted way to add color data to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> interface object:</p>
@@ -1852,11 +1875,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
 <ul>
@@ -1880,11 +1903,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
 <ul>

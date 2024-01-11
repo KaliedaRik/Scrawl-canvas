@@ -5,13 +5,11 @@
 
 
 // #### Imports
-import { canvas } from '../core/library.js';
-
 import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 
-import { DESCRIPTION, DOWNLOAD, HREF, HREFLANG, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TARGET, TYPE, ZERO_STR } from '../core/shared-vars.js';
+import { ANCHORTYPE, BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DISABLED, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, TAB_ORDER, TARGET } from '../core/shared-vars.js';
 
 
 // #### Export function
@@ -43,172 +41,90 @@ export default function (P = Ωempty) {
     };
 
 
-
 // #### Get, Set, deltaSet
     const G = P.getters,
         S = P.setters;
 
-
 // The following attributes (which largely map to [HTML anchor attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)) can be included in the argument object passed to the artefact's factory and `set` functions, or passed as a String to the `get` function:
 // ```
+// artefact.anchorBlurAction        ~~>  anchor.blurAction      boolean - default: true
+// artefact.anchorClickAction       ~~>  anchor.clickAction     function - returns onclick string
 // artefact.anchorDescription       ~~>  anchor.description
-// artefact.anchorType              ~~>  anchor.type
-// artefact.anchorTarget            ~~>  anchor.target
-// artefact.anchorRel               ~~>  anchor.rel
-// artefact.anchorReferrerPolicy    ~~>  anchor.referrerPolicy
-// artefact.anchorPing              ~~>  anchor.ping
-// artefact.anchorHreflang          ~~>  anchor.hreflang
-// artefact.anchorHref              ~~>  anchor.href
+// artefact.anchorDisabled          ~~>  anchor.disabled        boolean: - default: false
 // artefact.anchorDownload          ~~>  anchor.download
-// artefact.anchorFocusAction       ~~>  anchor.focusAction
-// artefact.anchorBlurAction        ~~>  anchor.blurAction
-// artefact.anchorClickAction       ~~>  anchor.clickAction
+// artefact.anchorFocusAction       ~~>  anchor.focusAction     boolean - default: true
+// artefact.anchorHref              ~~>  anchor.href
+// artefact.anchorHreflang          ~~>  anchor.hreflang
+// artefact.anchorName              ~~>  anchor.name
+// artefact.anchorPing              ~~>  anchor.ping
+// artefact.anchorReferrerPolicy    ~~>  anchor.referrerPolicy
+// artefact.anchorRel               ~~>  anchor.rel
+// artefact.anchorTabOrder          ~~>  anchor.tabOrder         number - default: 0
+// artefact.anchorTarget            ~~>  anchor.target
+// artefact.anchorType              ~~>  anchor.type
 // ```
 
+// __anchorName__
+    G.anchorName = function () { return this.anchorGetHelper(NAME); };
+
 // __anchorDescription__
-    G.anchorDescription = function () {
-
-        if (this.anchor) return this.anchor.get(DESCRIPTION);
-        return ZERO_STR;
-    };
-    S.anchorDescription = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.description(item);
-    };
+    G.anchorDescription = function () { return this.anchorGetHelper(DESCRIPTION); };
+    S.anchorDescription = function (item) { return this.anchorSetHelper(DESCRIPTION, item); };
 
 // __anchorType__
-    G.anchorType = function () {
-
-        if (this.anchor) return this.anchor.get(TYPE);
-        return ZERO_STR;
-    };
-    S.anchorType = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.anchorType(item);
-    };
+    G.anchorType = function () { return this.anchorGetHelper(ANCHORTYPE); };
+    S.anchorType = function (item) { return this.anchorSetHelper(ANCHORTYPE, item); };
 
 // __anchorTarget__
-    G.anchorTarget = function () {
+    G.anchorTarget = function () { return this.anchorGetHelper(TARGET); };
+    S.anchorTarget = function (item) { return this.anchorSetHelper(TARGET, item); };
 
-        if (this.anchor) return this.anchor.get(TARGET);
-        return ZERO_STR;
-    };
-    S.anchorTarget = function (item) {
+// __anchorTabOrder__
+    G.anchorTabOrder = function () { return this.anchorGetHelper(TAB_ORDER); };
+    S.anchorTabOrder = function (item) { return this.anchorSetHelper(TAB_ORDER, item); };
 
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.target(item);
-    };
+// __anchorDisabled__
+    G.anchorDisabled = function () { return this.anchorGetHelper(DISABLED); };
+    S.anchorDisabled = function (item) { return this.anchorSetHelper(DISABLED, item); };
 
 // __anchorRel__
-    G.anchorRel = function () {
-
-        if (this.anchor) return this.anchor.get(REL);
-        return ZERO_STR;
-    };
-    S.anchorRel = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.rel(item);
-    };
+    G.anchorRel = function () { return this.anchorGetHelper(REL); };
+    S.anchorRel = function (item) { return this.anchorSetHelper(REL, item); };
 
 // __anchorReferrerPolicy__
-    G.anchorReferrerPolicy = function () {
-
-        if (this.anchor) return this.anchor.get(REFERRERPOLICY);
-        return ZERO_STR;
-    };
-    S.anchorReferrerPolicy = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.referrerpolicy(item);
-    };
+    G.anchorReferrerPolicy = function () { return this.anchorGetHelper(REFERRERPOLICY); };
+    S.anchorReferrerPolicy = function (item) { return this.anchorSetHelper(REFERRERPOLICY, item); };
 
 // __anchorPing__
-    G.anchorPing = function () {
-
-        if (this.anchor) return this.anchor.get(PING);
-        return ZERO_STR;
-    };
-    S.anchorPing = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.ping(item);
-    };
+    G.anchorPing = function () { return this.anchorGetHelper(PING); };
+    S.anchorPing = function (item) { return this.anchorSetHelper(PING, item); };
 
 // __anchorHreflang__
-    G.anchorHreflang = function () {
-
-        if (this.anchor) return this.anchor.get(HREFLANG);
-        return ZERO_STR;
-    };
-    S.anchorHreflang = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.hreflang(item);
-    };
+    G.anchorHreflang = function () { return this.anchorGetHelper(HREFLANG); };
+    S.anchorHreflang = function (item) { return this.anchorSetHelper(HREFLANG, item); };
 
 // __anchorHref__
-    G.anchorHref = function () {
-
-        if (this.anchor) return this.anchor.get(HREF);
-        return ZERO_STR;
-    };
-    S.anchorHref = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.href(item);
-    };
+    G.anchorHref = function () { return this.anchorGetHelper(HREF); };
+    S.anchorHref = function (item) { return this.anchorSetHelper(HREF, item); };
 
 // __anchorDownload__
-    G.anchorDownload = function () {
-
-        if (this.anchor) return this.anchor.get(DOWNLOAD);
-        return ZERO_STR;
-    };
-    S.anchorDownload = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.download(item);
-    };
+    G.anchorDownload = function () { return this.anchorGetHelper(DOWNLOAD); };
+    S.anchorDownload = function (item) { return this.anchorSetHelper(DOWNLOAD, item); };
 
 // __anchorFocusAction__
-    S.anchorFocusAction = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.focusAction(item);
-    };
+    S.anchorFocusAction = function (item) { return this.anchorSetHelper(FOCUS_ACTION, item); };
 
 // __anchorBlurAction__
-    S.anchorBlurAction = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.blurAction(item);
-    };
+    S.anchorBlurAction = function (item) { return this.anchorSetHelper(BLUR_ACTION, item); };
 
 // __anchorClickAction__
-    S.anchorClickAction = function (item) {
-
-        if (!this.anchor) this.buildAnchor();
-        if (this.anchor) this.anchor.setters.clickAction(item);
-    };
+    S.anchorClickAction = function (item) { return this.anchorSetHelper(CLICK_ACTION, item); };
 
 // The artefact's factory and `set` functions' argument object can include a single __anchor__ attribute, whose value should be an object containing anchor key:value pairs
 // ```
 // artefact.set({
 //
-//     anchor: {
-//         description: 'value',
-//         type: 'value',
-//         target: 'value',
-//         rel: 'value',
-//         referrerPolicy: 'value',
-//         ping: 'value',
-//         hreflang: 'value',
-//         href: 'value',
-//         download: 'value',
-//     },
+//     anchor: { ... },
 // });
 // ```
     S.anchor = function (items) {
@@ -216,6 +132,20 @@ export default function (P = Ωempty) {
         if (!this.anchor) this.buildAnchor(items);
         else this.anchor.set(items);
     };
+
+
+// Internal helper functions
+    P.anchorGetHelper = function(key) {
+
+        if (this.anchor) return this.anchor.get(key);
+        return null;
+    }
+
+    P.anchorSetHelper = function(key, val) {
+
+        if (!this.anchor) this.buildAnchor();
+        if (this.anchor) this.anchor.set({ [key]: val });
+    }
 
 
 // #### Prototype functions
@@ -227,43 +157,22 @@ export default function (P = Ωempty) {
 
             if (this.anchor) this.anchor.demolish();
 
-            if (!items.name) items.name = `${this.name}-anchor`;
+            if (!items.anchorName) items.anchorName = `${this.name}-anchor`;
             if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
 
             items.host = this;
-            items.hold = this.getAnchorHold();
+            items.controller = this.getCanvasWrapper();
+            items.hold = this.getCanvasNavElement();
 
             this.anchor = makeAnchor(items);
         }
     };
 
-// `getAnchorHold` - internal function. Locate the current DOM hold element allocated for hosting &lt;a> elements.
-    P.getAnchorHold = function () {
-
-        const entityHost = this.currentHost;
-
-        if (entityHost) {
-
-            if (entityHost.type === T_CANVAS) return entityHost.navigation;
-
-            if (entityHost.type === T_CELL) {
-
-                const cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
-
-                if (cellHost && cellHost.type === T_CANVAS) return cellHost.navigation;
-            }
-        }
-        this.dirtyAnchorHold = true;
-
-        return null;
-    }
-
 // `rebuildAnchor` - triggers the Anchor object's `build` function
     P.rebuildAnchor = function () {
 
-        if (this.anchor) this.anchor.build();
+        if (this.anchor) this.anchor.rebuild();
     };
-
 
 
 // `clickAnchor` - function to pass a user click (or whatever event has been set up) on the artefact through to the anchor object, for action.
@@ -271,23 +180,4 @@ export default function (P = Ωempty) {
 
         if (this.anchor) this.anchor.click();
     };
-
-    P.prepareStampTabsHelper = function () {
-
-// `dirtyAnchorHold` - if the entity has an Anchor object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildAnchor__ function.
-        if (this.anchor && this.dirtyAnchorHold) {
-
-            this.dirtyAnchorHold = false;
-            this.buildAnchor(this.anchor);
-        }
-
-// `dirtyButtonHold` - if the entity has a Button object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildButton__ function.
-        if (this.button && this.dirtyButtonHold) {
-
-            this.dirtyButtonHold = false;
-            this.buildButton(this.button);
-        }
-    };
-// Return the prototype
-    return P;
 }

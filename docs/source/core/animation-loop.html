@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -592,7 +612,7 @@
 
 <span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/array-pool.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _floor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _floor, _now } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -705,11 +725,10 @@
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = animate_sorted.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-        animate_sorted[i].<span class="hljs-title function_">fn</span>();
-    }
+        <span class="hljs-keyword">const</span> a = animate_sorted[i],
+            now = <span class="hljs-title function_">_now</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">getDoAnimation</span>()) <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">requestAnimationFrame</span>(animationLoop);
-};</pre></div></div>
+        <span class="hljs-keyword">if</span> (a.<span class="hljs-property">chokedAnimation</span>) {</pre></div></div>
             
         </li>
         
@@ -719,6 +738,31 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Warning: magic number! <code>825</code> seems to allow the frame rate to reach the max frame rate; setting it to anything higher means the frame rate never reaches the max frame rate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (a.<span class="hljs-property">lastRun</span> + (<span class="hljs-number">825</span> / a.<span class="hljs-property">maxFrameRate</span>) &lt; now) {
+
+                a.<span class="hljs-title function_">fn</span>();
+                a.<span class="hljs-property">lastRun</span> = now;
+            }
+        }
+        <span class="hljs-keyword">else</span> a.<span class="hljs-title function_">fn</span>();
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">getDoAnimation</span>()) <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">requestAnimationFrame</span>(animationLoop);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (modules and scrawl object). Start the RAF function running</p>
 
@@ -733,11 +777,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (modules and scrawl object). Halt the RAF function</p>
 
