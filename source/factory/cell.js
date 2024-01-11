@@ -66,6 +66,7 @@ import deltaMix from '../mixin/delta.js';
 import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import cascadeMix from '../mixin/cascade.js';
@@ -139,7 +140,9 @@ P.isAsset = true;
 // + [pivot](../mixin/pivot.html)
 // + [mimic](../mixin/mimic.html)
 // + [path](../mixin/path.html)
+// + [hiddenDomElements](../mixin/hiddenDomElements.html)
 // + [anchor](../mixin/anchor.html)
+// + [button](../mixin/button.html)
 // + [cascade](../mixin/cascade.html)
 // + [pattern](../mixin/pattern.html)
 // + [filter](../mixin/filter.html)
@@ -151,6 +154,7 @@ deltaMix(P);
 pivotMix(P);
 mimicMix(P);
 pathMix(P);
+hiddenElementsMix(P);
 anchorMix(P);
 buttonMix(P);
 cascadeMix(P);
@@ -1215,7 +1219,7 @@ P.prepareStamp = function () {
         this.notifySubscribers();
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects in the DOM
+    // `prepareStampTabsHelper` is defined in the `mixin/anchor.js` file - handles updates to anchor and button objects in the DOM
     this.prepareStampTabsHelper();
 };
 

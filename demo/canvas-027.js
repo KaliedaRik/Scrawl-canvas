@@ -120,6 +120,7 @@ const playPause = scrawl.makePhrase({
         elementName: name('play-pause-button-el'),
         description: 'Play | Pause',
         clickAction: playPauseAction,
+        tabOrder: 0,
     },
 
     onUp: playPauseAction,
@@ -153,6 +154,7 @@ const listenMute = playPause.clone({
         elementName: name('listen-mute-button-el'),
         description: 'Listen | Mute',
         clickAction: listenMuteAction,
+        tabOrder: 1,
     },
 
     onUp: listenMuteAction,
@@ -236,6 +238,7 @@ scrawl.makePicture({
         name: name('wikipedia-swan-link'),
         href: 'https://en.wikipedia.org/wiki/Swan',
         description: 'Link to the Wikipedia article on swans',
+        tabOrder: 2,
     },
 
     checkHitIgnoreTransparency: true,
@@ -338,6 +341,7 @@ const mygoose = scrawl.makeBlock({
         name: name('wikipedia-goose-link-1'),
         href: 'https://en.wikipedia.org/wiki/Goose',
         description: 'First link to the Wikipedia article on geese',
+        tabOrder: 3,
     },
 });
 
@@ -366,6 +370,7 @@ scrawl.makeAction({
         this.targets[0].set({
 
             visibility: true,
+            anchorDisabled: false,
         });
     },
 
@@ -379,6 +384,7 @@ scrawl.makeAction({
         this.targets[0].set({
 
             visibility: false,
+            anchorDisabled: true,
         });
     },
 });
@@ -396,6 +402,7 @@ mygoose.clone({
         name: name('wikipedia-goose-link-2'),
         href: 'https://en.wikipedia.org/wiki/Goose',
         description: 'Second link to the Wikipedia article on geese',
+        tabOrder: 4,
     },
 });
 

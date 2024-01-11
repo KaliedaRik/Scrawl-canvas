@@ -31,6 +31,8 @@ import deltaMix from './delta.js';
 import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
+// Question: do DOM elements really need additional anchors and buttons?
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 
@@ -42,17 +44,12 @@ export default function (P = Ωempty) {
 
 
 // #### Mixins
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [anchor](../mixin/anchor.html)
     positionMix(P);
     deltaMix(P);
     pivotMix(P);
     mimicMix(P);
     pathMix(P);
+    hiddenElementsMix(P);
     anchorMix(P);
     buttonMix(P);
 
@@ -816,7 +813,7 @@ export default function (P = Ωempty) {
 
         if (this.dirtyPathObject) this.cleanPathObject();
 
-        // `prepareStampTabsHelper` is defined in the `mixin/positions.js` file - handles updates to anchor and button objects
+        // `prepareStampTabsHelper` is defined in the `mixin/anchor.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 

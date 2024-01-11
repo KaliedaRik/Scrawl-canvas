@@ -11,7 +11,7 @@ import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 
-import { ANCHORTYPE, BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TARGET } from '../core/shared-vars.js';
+import { ANCHORTYPE, BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DISABLED, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TAB_ORDER, TARGET } from '../core/shared-vars.js';
 
 
 // #### Export function
@@ -49,22 +49,25 @@ export default function (P = Ωempty) {
 
 // The following attributes (which largely map to [HTML anchor attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)) can be included in the argument object passed to the artefact's factory and `set` functions, or passed as a String to the `get` function:
 // ```
-// artefact.anchorBlurAction        ~~>  anchor.blurAction
-// artefact.anchorBlurAction        ~~>  anchor.blurAction      boolean - default: false
-// artefact.anchorClickAction       ~~>  anchor.clickAction
+// artefact.anchorBlurAction        ~~>  anchor.blurAction      boolean - default: true
 // artefact.anchorClickAction       ~~>  anchor.clickAction     function - returns onclick string
 // artefact.anchorDescription       ~~>  anchor.description
+// artefact.anchorDisabled          ~~>  anchor.disabled        boolean: - default: false
 // artefact.anchorDownload          ~~>  anchor.download
-// artefact.anchorFocusAction       ~~>  anchor.focusAction
-// artefact.anchorFocusAction       ~~>  anchor.focusAction     boolean - default: false
+// artefact.anchorFocusAction       ~~>  anchor.focusAction     boolean - default: true
 // artefact.anchorHref              ~~>  anchor.href
 // artefact.anchorHreflang          ~~>  anchor.hreflang
+// artefact.anchorName              ~~>  anchor.name
 // artefact.anchorPing              ~~>  anchor.ping
 // artefact.anchorReferrerPolicy    ~~>  anchor.referrerPolicy
 // artefact.anchorRel               ~~>  anchor.rel
+// artefact.anchorTabOrder          ~~>  anchor.tabOrder         number - default: 0
 // artefact.anchorTarget            ~~>  anchor.target
 // artefact.anchorType              ~~>  anchor.type
 // ```
+
+// __anchorName__
+    G.anchorName = function () { return this.anchorGetHelper(NAME); };
 
 // __anchorDescription__
     G.anchorDescription = function () { return this.anchorGetHelper(DESCRIPTION); };
@@ -77,6 +80,14 @@ export default function (P = Ωempty) {
 // __anchorTarget__
     G.anchorTarget = function () { return this.anchorGetHelper(TARGET); };
     S.anchorTarget = function (item) { return this.anchorSetHelper(TARGET, item); };
+
+// __anchorTabOrder__
+    G.anchorTabOrder = function () { return this.anchorGetHelper(TAB_ORDER); };
+    S.anchorTabOrder = function (item) { return this.anchorSetHelper(TAB_ORDER, item); };
+
+// __anchorDisabled__
+    G.anchorDisabled = function () { return this.anchorGetHelper(DISABLED); };
+    S.anchorDisabled = function (item) { return this.anchorSetHelper(DISABLED, item); };
 
 // __anchorRel__
     G.anchorRel = function () { return this.anchorGetHelper(REL); };
@@ -144,6 +155,7 @@ export default function (P = Ωempty) {
 // The `buildAnchor` function triggers the (re)build of the &lt;a> element and adds it to the DOM
     P.buildAnchor = function (items) {
 
+console.log(this.name, 'buildAnchor')
         if (isa_obj(items)) {
 
             if (this.anchor) this.anchor.demolish();
@@ -152,39 +164,18 @@ export default function (P = Ωempty) {
             if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
 
             items.host = this;
-            items.hold = this.getAnchorHold();
+            items.controller = this.getCanvasWrapper();
+            items.hold = this.getCanvasNavElement();
 
             this.anchor = makeAnchor(items);
         }
     };
 
-// `getAnchorHold` - internal function. Locate the current DOM hold element allocated for hosting &lt;a> elements.
-    P.getAnchorHold = function () {
-
-        const entityHost = this.currentHost;
-
-        if (entityHost) {
-
-            if (entityHost.type === T_CANVAS) return entityHost.navigation;
-
-            if (entityHost.type === T_CELL) {
-
-                const cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
-
-                if (cellHost && cellHost.type === T_CANVAS) return cellHost.navigation;
-            }
-        }
-        this.dirtyAnchorHold = true;
-
-        return null;
-    }
-
 // `rebuildAnchor` - triggers the Anchor object's `build` function
     P.rebuildAnchor = function () {
 
-        if (this.anchor) this.anchor.build();
+        if (this.anchor) this.anchor.rebuild();
     };
-
 
 
 // `clickAnchor` - function to pass a user click (or whatever event has been set up) on the artefact through to the anchor object, for action.
@@ -192,24 +183,4 @@ export default function (P = Ωempty) {
 
         if (this.anchor) this.anchor.click();
     };
-
-
-    P.prepareStampTabsHelper = function () {
-
-// `dirtyAnchorHold` - if the entity has an Anchor object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildAnchor__ function.
-        if (this.anchor && this.dirtyAnchorHold) {
-
-            this.dirtyAnchorHold = false;
-            this.buildAnchor(this.anchor);
-        }
-
-// `dirtyButtonHold` - if the entity has a Button object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildButton__ function.
-        if (this.button && this.dirtyButtonHold) {
-
-            this.dirtyButtonHold = false;
-            this.buildButton(this.button);
-        }
-    };
-// Return the prototype
-    return P;
 }

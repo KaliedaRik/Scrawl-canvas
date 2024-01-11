@@ -192,6 +192,8 @@ const Canvas = function (items = Ωempty) {
         this.navigation = navigation;
         el.appendChild(navigation);
 
+        this.dirtyNavigationTabOrder = true;
+
         const textHold = document.createElement(DIV);
         textHold.id = `${this.name}-text-hold`;
         textHold.style.width = PX0;
@@ -710,6 +712,13 @@ P.show = function(){
     // Handle DOM-related positioning and display requirements, including ARIA updates
     domShow();
     if (this.dirtyAria) this.cleanAria();
+
+    // Handle Anchor and Button DOM element ordering within the &lt;nav> element
+    if (this.dirtyNavigationTabOrder) {
+
+        this.dirtyNavigationTabOrder = false;
+        console.log(this.name, 'NEED TO REORDER ANCHOR/BUTTON ELEMENTS IN NAV');
+    }
 };
 
 // `render` - orchestrate a single Display cycle - clear, then compile, then show.

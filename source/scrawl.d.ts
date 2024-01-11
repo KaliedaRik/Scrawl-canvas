@@ -43,6 +43,7 @@ interface AnchorMixinInputs {
     anchorHref?: string;
     anchorHreflang?: string;
     anchorPing?: string;
+    anchorName?: string;
     anchorReferrerPolicy?: string;
     anchorRel?: string;
     anchorTarget?: string;
@@ -186,6 +187,7 @@ interface ButtonMixinInputs {
     buttonFormMethod?: string;
     buttonFormNoValidate?: boolean;
     buttonFormTarget?: string;
+    buttonName?: string;
     buttonPopoverTarget?: string;
     buttonPopoverTargetAction?: string;
 }
