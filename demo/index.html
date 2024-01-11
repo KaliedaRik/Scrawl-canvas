@@ -122,7 +122,7 @@
 
 <body>
   <main>
-    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.12.0</span></h1>
+    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.12.0)</span></h1>
 
     <p>The Scrawl-canvas library has been developed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 
@@ -160,14 +160,14 @@
       <li>They can take <strong>Color</strong>, <strong>Gradient</strong>, <strong>RadialGradient</strong>, and <strong>ConicGradient</strong> styles for both their fill and stroke styling.</li>
       <ul>
         <li>All gradient styles can be bound to their containing cell, or to particular entitys.</li>
-        <li>Entitys can accept all legitimate CSS color strings &ndash; rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklch(), oklab() &ndash; for their fillStyle, strokeStyle and shadowColor input.</li>
+        <li>Entitys can accept all legitimate CSS color strings &ndash; rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklch(), oklab(), color() &ndash; for their fillStyle, strokeStyle and shadowColor input.</li>
         <li>Color factories (and thus gradient styles) can work with RGB, HSL, HWB, LAB, LCH, OKLAB and OKLCH <strong>color spaces</strong> internally, and export CSS color strings for each of those spaces; Color factories support <strong>color ranges</strong>. This extends to gradients, which can spread colors defined in any supported color space.</li> 
-        <li>Color factories, and gradient styles, can have easing algorithms applied to them &ndash; <strong>non-linear gradients</strong>.</li>
+        <li>Color factories, and gradient styles, can have easing algorithms applied to them &ndash; <strong>eased linear gradients</strong>.</li>
       </ul>
       <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as required.</li>
       <li>Entitys can also act as <strong>clipping zones</strong> for subsequent drawing activities.</li>
       <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements (with a <strong>srcset</strong> attribute), or image files.</li>
-      <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>.</li>
+      <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>. Video can accept <strong>media streams</strong> (such as device cameras) and <strong>screen capture streams</strong> as input for displaying in a canvas.</li>
       <li>Scrawl-canvas includes a <strong>NoiseAsset</strong> asset (for Perlin, Simplex, Worley, etc, noise generation), alongside an <strong>RdAsset</strong> reaction-diffusion asset (for more organic patterns).</li>
       <li>Third-party image/video asset generators (for example <a href="https://developers.google.com/mediapipe">MediaPipe</a>, <a href="https://www.tensorflow.org/">TensorFlow</a>, <a href="https://airbnb.io/lottie/#/">Lottie</a>) can be accommodated using the <strong>RawAsset</strong> asset.</li>
     </ul>
@@ -637,7 +637,7 @@
         <li>gradient, and displacement, mapping.</li>
     </ul>
 
-    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays.</p>
+    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays. Entitys can be used to filter the display behind them (stencil filters).</p>
 
     <p><strong>Filters can be animated</strong> using Scrawl-canvas tween functionality.</p>
 
