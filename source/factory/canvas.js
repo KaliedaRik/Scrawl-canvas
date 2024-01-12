@@ -54,7 +54,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -298,6 +298,9 @@ const defaultAttributes = {
 
     role: IMG,
 
+// __navigationAriaLive__ - the ARIA-live attribute applied to the &lt;nav> element added to the &lt;canvas> element. Accepted string values are: 'off', 'polite' (default), 'assertive'.
+    navigationAriaLive: POLITE,
+
 // #### Canvas Color space
 // Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'`` (default); `'display-p3'`.
     canvasColorSpace: SRGB,
@@ -394,6 +397,16 @@ S.role = function (item) {
 
     this.role = item;
     this.dirtyAria = true;
+};
+
+// `navigationAriaLive` - String
+S.navigationAriaLive = function (item) {
+
+    if (item.substring && ARIA_LIVE_VALUES.includes(item)) {
+
+        this.navigationAriaLive = item;
+        this.dirtyAria = true;
+    }
 };
 
 // ##### Get and set base cell attributes
@@ -974,6 +987,7 @@ P.cleanAria = function () {
     this.domElement.setAttribute(ROLE, this.role);
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
+    this.navigation.setAttribute(ARIA_LIVE, this.navigationAriaLive);
 };
 
 

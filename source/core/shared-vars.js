@@ -95,6 +95,7 @@ export const ARIA_DESCRIBEDBY = 'aria-describedby';
 export const ARIA_HIDDEN = 'aria-hidden';
 export const ARIA_LABELLEDBY = 'aria-labelledby';
 export const ARIA_LIVE = 'aria-live';
+export const ARIA_LIVE_VALUES = _freeze(['assertive', 'polite', 'off']);
 export const ASSET = 'asset';
 export const ASSET_IMPORT_REGEX = /.*\/(.*?)\./;
 export const AUTO = 'auto';

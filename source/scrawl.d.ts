@@ -871,6 +871,7 @@ interface CanvasFactoryInputs extends BaseMixinInputs, DomMixinInputs, DisplaySh
     label?: string;
     description?: string;
     role?: string;
+    navigationAriaLive?: string;
     canvasColorSpace?: CanvasColorSpaceValues;
     backgroundColor?: string;
     composite?: GlobalCompositeOperationValues;
