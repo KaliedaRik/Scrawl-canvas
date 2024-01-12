@@ -197,7 +197,7 @@ P.build = function () {
 
             let btn = this.domElement;
 
-            if (btn) {
+            if (btn && hold && document.querySelector(`${this.name}`)) {
 
                 if (clickAction) btn.removeEventListener(CLICK, clickAction, false);
                 if (focusAction) btn.removeEventListener(FOCUS, () => host.onEnter(), false);
