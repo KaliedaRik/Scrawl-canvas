@@ -955,7 +955,7 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
 
             <span class="hljs-keyword">let</span> btn = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-            <span class="hljs-keyword">if</span> (btn) {
+            <span class="hljs-keyword">if</span> (btn &amp;&amp; hold &amp;&amp; <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>`</span>)) {
 
                 <span class="hljs-keyword">if</span> (clickAction) btn.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">CLICK</span>, clickAction, <span class="hljs-literal">false</span>);
                 <span class="hljs-keyword">if</span> (focusAction) btn.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
