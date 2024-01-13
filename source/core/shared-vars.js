@@ -198,7 +198,6 @@ export const DOWN = 'down';
 export const DOWNLOAD = 'download';
 export const DROP = 'drop';
 export const ELEMENT = 'element';
-export const ELEMENT_NAME = 'elementName';
 export const ELEMENT_TYPE = 'elementType';
 export const ELEMENT_VALUE = 'elementValue';
 export const EM = 'em';

@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 
