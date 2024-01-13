@@ -169,7 +169,7 @@ scrawl.addNativeListener('toggle', (e) => {
     }
 
     else {
-        closeButton.set({ 
+        closeButton.set({
             buttonDisabled: true,
         });
     }
