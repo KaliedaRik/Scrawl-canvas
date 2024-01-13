@@ -38,7 +38,9 @@ import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 
 import { _atan2, _ceil, _isArray, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
@@ -48,6 +50,8 @@ const Mesh = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
+
+    this.modifyConstructorInputForAnchorButton(items);
 
     this.set(this.defs);
 
@@ -87,12 +91,12 @@ P.isAsset = false;
 // #### Mixins
 baseMix(P);
 deltaMix(P);
+hiddenElementsMix(P);
 anchorMix(P);
+buttonMix(P);
 
 
 // #### Mesh attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 const defaultAttributes = {
 
 // __net__ - A Mesh entity requires a Net entity, set to generate a weak or strong net, to supply Particle objects to act as its mapping coordinates.
@@ -546,6 +550,9 @@ P.prepareStamp = function() {
             if (this.sourceIsVideoOrSprite) this.dirtyInput = true;
         }
     }
+
+    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    this.prepareStampTabsHelper();
 };
 
 // `setSourceDimension` - internal function called by `prepareStamp`.

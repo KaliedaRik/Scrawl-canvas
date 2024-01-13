@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.11.0 - 23 December 2023
+// #### Version 8.12.0 - 12 January 2024
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -48,20 +48,25 @@ export {
     addNativeListener,
     removeNativeListener,
     makeAnimationObserver,
-    getPixelRatio,
-    setPixelRatioChangeAction,
-    getIgnorePixelRatio,
-    setIgnorePixelRatio,
 } from './core/events.js';
 export * as library from './core/library.js';
 export { seededRandomNumberGenerator } from './core/random-seed.js';
 export { makeSnippet } from './core/snippets.js';
+export {
+    setFilterMemoizationChoke,
+    setWorkstoreLifetimeLength,
+    setWorkstorePurgeChoke,
+ } from './core/workstore.js';
 export {
     currentCorePosition,
     startCoreListeners,
     stopCoreListeners,
     getTouchActionChoke,
     setTouchActionChoke,
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 } from './core/user-interaction.js';
 export { forceUpdate } from './core/system-flags.js';
 export { makeAction } from './factory/action.js';
@@ -85,7 +90,6 @@ export { makeDragZone } from './factory/drag-zone.js';
 export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
 export { makeFilter } from './factory/filter.js';
-export { setFilterMemoizationChoke } from './factory/filter-engine.js';
 export { makeForce } from './factory/particle-force.js';
 export { makeGradient } from './factory/gradient.js';
 export { makeGrid } from './factory/grid.js';
@@ -148,6 +152,7 @@ export {
     importDomVideo,
     importVideo,
     importMediaStream,
+    importScreenCapture,
 } from './factory/video-asset.js';
 export { makeWheel } from './factory/wheel.js';
 export { makeWorld } from './factory/particle-world.js';

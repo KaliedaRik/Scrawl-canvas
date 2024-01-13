@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -586,7 +606,9 @@
 <span class="hljs-keyword">import</span> pivotMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/pivot.js&#x27;</span>;
 <span class="hljs-keyword">import</span> mimicMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/mimic.js&#x27;</span>;
 <span class="hljs-keyword">import</span> pathMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/path.js&#x27;</span>;
+<span class="hljs-keyword">import</span> hiddenElementsMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/hiddenDomElements.js&#x27;</span>;
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;
+<span class="hljs-keyword">import</span> buttonMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/button.js&#x27;</span>;
 <span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { _floor, _keys, _parse, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONZERO</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_KEYS</span>,  <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
@@ -616,15 +638,6 @@
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
-<ul>
-<li><a href="../mixin/position.html">position</a></li>
-<li><a href="../mixin/delta.html">delta</a></li>
-<li><a href="../mixin/pivot.html">pivot</a></li>
-<li><a href="../mixin/mimic.html">mimic</a></li>
-<li><a href="../mixin/path.html">path</a></li>
-<li><a href="../mixin/anchor.html">anchor</a></li>
-<li><a href="../mixin/filter.html">filter</a></li>
-</ul>
 
             </div>
             
@@ -633,7 +646,9 @@
     <span class="hljs-title function_">pivotMix</span>(P);
     <span class="hljs-title function_">mimicMix</span>(P);
     <span class="hljs-title function_">pathMix</span>(P);
+    <span class="hljs-title function_">hiddenElementsMix</span>(P);
     <span class="hljs-title function_">anchorMix</span>(P);
+    <span class="hljs-title function_">buttonMix</span>(P);
     <span class="hljs-title function_">filterMix</span>(P);</pre></div></div>
             
         </li>
@@ -1252,6 +1267,8 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">entityInit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">modifyConstructorInputForAnchorButton</span>(items);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
@@ -1536,9 +1553,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
-              <p>The <code>dirtyFilters</code> flag is checked and handled by the <strong>filteredStamp</strong> function.</p>
+              <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hiddenDomElements.js</code> file - handles updates to anchor and button objects</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
+    };</pre></div></div>
             
         </li>
         
@@ -1549,16 +1569,9 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
-              <p><code>dirtyAnchorHold</code> - if the entity has an Anchor object, and any updates have been made to its data, it needs to be rebuilt by invoking the <strong>buildAnchor</strong> function.</p>
+              <p>The <code>dirtyFilters</code> flag is checked and handled by the <strong>filteredStamp</strong> function.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchorHold</span>) {
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchorHold</span> = <span class="hljs-literal">false</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildAnchor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>);
-        }
-    };</pre></div></div>
             
         </li>
         

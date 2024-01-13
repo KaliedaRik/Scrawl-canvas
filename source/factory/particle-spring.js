@@ -68,7 +68,6 @@ baseMix(P);
 
 
 // #### Spring attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
     // __particleFrom__, __particleTo__ - String name of a Particle, or the Particle object itself. These attributes hold references to the Particle objects involved in this constraint.

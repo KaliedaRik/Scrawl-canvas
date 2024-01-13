@@ -310,6 +310,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-057.html">
+                  ./demo/canvas-057.js
+                </a>
+              
+                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -342,6 +347,11 @@
                 
                 <a class="source" href="canvas-064.html">
                   ./demo/canvas-064.js
+                </a>
+              
+                
+                <a class="source" href="canvas-065.html">
+                  ./demo/canvas-065.js
                 </a>
               
                 
@@ -437,6 +447,21 @@
                 
                 <a class="source" href="dom-018.html">
                   ./demo/dom-018.js
+                </a>
+              
+                
+                <a class="source" href="dom-019.html">
+                  ./demo/dom-019.js
+                </a>
+              
+                
+                <a class="source" href="dom-020.html">
+                  ./demo/dom-020.js
+                </a>
+              
+                
+                <a class="source" href="dom-021.html">
+                  ./demo/dom-021.js
                 </a>
               
                 
@@ -941,12 +966,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Uncomment the next line to suppress tracker packets (so they don’t show up in the console)
-myTracker.set(‘sendHitTask’, null);</p>
+              <p>Uncomment the next line to suppress tracker packets (so they don’t show up in the console)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;sendHitTask&#x27;</span>, <span class="hljs-literal">null</span>);
+});</pre></div></div>
             
         </li>
         
@@ -1068,22 +1093,8 @@ myTracker.set(‘sendHitTask’, null);</p>
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
 
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>willReadFrequently: false,</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>});
+    <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
+});
 
 canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
 
@@ -1093,11 +1104,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Create a Block entity to display in the new Cell pattern</p>
 
@@ -1129,11 +1140,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Main canvas display - create Block entitys which will use the patterns defined above</p>
 
@@ -1159,9 +1170,22 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-pattern&#x27;</span>),
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;leaves-pattern&#x27;</span>),
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;leaves-pattern&#x27;</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>To be aware: adding shadows to entitys using patterns for their fill and/or stroke styles can lead to a serious decrease in frame rate</p>
 
-    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">5</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">5</span>,
     <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">5</span>,
     <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,</pre></div></div>
@@ -1219,14 +1243,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>The function returns a string which Scrawl-canvas will add to the anchor’s ‘onclick’ attribute when it creates the anchor element dynamically and adds it to the DOM.</p>
+              <p>This function gets invoked by an event listener added to the &lt;a&gt; link element in the DOM. <code>this</code> refers to the element, not the SC anchor wrapper or the Block entity object. The <code>myTracker</code> object is not recognised by the link element (the object’s scope is local to this module), so instead we fire the <code>ga</code> analytics object directly as that lives in the global space - see line 19 above.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-            <span class="hljs-keyword">return</span> <span class="hljs-string">`ga(&#x27;demoCanvasTracker.send&#x27;, &#x27;event&#x27;, &#x27;Outbound link&#x27;, &#x27;click&#x27;, &#x27;<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.href}</span>&#x27;)`</span>;
-        },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1237,12 +1258,12 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p>Include focus and blur actions, which will trigger the onEnter and onLeave functions (below) for visitors using non-mouse/touch navigation (for example: keyboard tabbing)</p>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">focusAction</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">blurAction</span>: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;demoCanvasTracker.send&#x27;</span>, <span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Outbound link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>);
+        },
     },</pre></div></div>
             
         </li>

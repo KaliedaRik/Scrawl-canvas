@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -594,7 +614,7 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _isArray, _max, _min, _PC, _Q, <span class="hljs-variable constant_">BOLD</span>, <span class="hljs-variable constant_">BOLDER</span>, <span class="hljs-variable constant_">CAP</span>, <span class="hljs-variable constant_">CH</span>, <span class="hljs-variable constant_">CM</span>, <span class="hljs-variable constant_">CONDENSED</span>, <span class="hljs-variable constant_">DEFAULT_SIZE</span>, <span class="hljs-variable constant_">EM</span>, <span class="hljs-variable constant_">EX</span>, <span class="hljs-variable constant_">EXPANDED</span>, <span class="hljs-variable constant_">EXTRA_CONDENSED</span>, <span class="hljs-variable constant_">EXTRA_EXPANDED</span>, <span class="hljs-variable constant_">FONT_ATTRIBUTE</span>, <span class="hljs-variable constant_">IC</span>, <span class="hljs-variable constant_">IN</span>, <span class="hljs-variable constant_">ITALIC</span>, <span class="hljs-variable constant_">LARGE</span>, <span class="hljs-variable constant_">LARGER</span>, <span class="hljs-variable constant_">LH</span>, <span class="hljs-variable constant_">LIGHTER</span>, <span class="hljs-variable constant_">MEDIUM</span>, <span class="hljs-variable constant_">MM</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OBLIQUE</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">PT</span>, <span class="hljs-variable constant_">PX</span>, <span class="hljs-variable constant_">REM</span>, <span class="hljs-variable constant_">RFS_ARRAY_1</span>, <span class="hljs-variable constant_">RFS_ARRAY_2</span>, <span class="hljs-variable constant_">RLH</span>, <span class="hljs-variable constant_">SANS_SERIF</span>, <span class="hljs-variable constant_">SEMI_CONDENSED</span>, <span class="hljs-variable constant_">SEMI_EXPANDED</span>, <span class="hljs-variable constant_">SIZE_SUFFIX</span>, <span class="hljs-variable constant_">SMALL</span>, <span class="hljs-variable constant_">SMALL_CAPS</span>, <span class="hljs-variable constant_">SMALLER</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">STOP</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_FONT_ATTRIBUTES</span>, <span class="hljs-variable constant_">ULTRA_CONDENSED</span>, <span class="hljs-variable constant_">ULTRA_EXPANDED</span>, <span class="hljs-variable constant_">VB</span>, <span class="hljs-variable constant_">VH</span>, <span class="hljs-variable constant_">VI</span>, <span class="hljs-variable constant_">VMAX</span>, <span class="hljs-variable constant_">VMIN</span>, <span class="hljs-variable constant_">VW</span>, <span class="hljs-variable constant_">X_LARGE</span>, <span class="hljs-variable constant_">X_SMALL</span>, <span class="hljs-variable constant_">XX_LARGE</span>, <span class="hljs-variable constant_">XX_SMALL</span>, <span class="hljs-variable constant_">XXX_LARGE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _isArray, _max, _min, _PC, _Q, <span class="hljs-variable constant_">BOLD</span>, <span class="hljs-variable constant_">BOLDER</span>, <span class="hljs-variable constant_">CAP</span>, <span class="hljs-variable constant_">CH</span>, <span class="hljs-variable constant_">CM</span>, <span class="hljs-variable constant_">DEFAULT_SIZE</span>, <span class="hljs-variable constant_">EM</span>, <span class="hljs-variable constant_">EX</span>, <span class="hljs-variable constant_">FONT_ATTRIBUTE</span>, <span class="hljs-variable constant_">IC</span>, <span class="hljs-variable constant_">IN</span>, <span class="hljs-variable constant_">ITALIC</span>, <span class="hljs-variable constant_">LARGE</span>, <span class="hljs-variable constant_">LARGER</span>, <span class="hljs-variable constant_">LH</span>, <span class="hljs-variable constant_">LIGHTER</span>, <span class="hljs-variable constant_">MEDIUM</span>, <span class="hljs-variable constant_">MM</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OBLIQUE</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">PT</span>, <span class="hljs-variable constant_">PX</span>, <span class="hljs-variable constant_">REM</span>, <span class="hljs-variable constant_">RFS_ARRAY_1</span>, <span class="hljs-variable constant_">RFS_ARRAY_2</span>, <span class="hljs-variable constant_">RLH</span>, <span class="hljs-variable constant_">SANS_SERIF</span>, <span class="hljs-variable constant_">SIZE_SUFFIX</span>, <span class="hljs-variable constant_">SMALL</span>, <span class="hljs-variable constant_">SMALL_CAPS</span>, <span class="hljs-variable constant_">SMALLER</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">STOP</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_FONT_ATTRIBUTES</span>, <span class="hljs-variable constant_">VB</span>, <span class="hljs-variable constant_">VH</span>, <span class="hljs-variable constant_">VI</span>, <span class="hljs-variable constant_">VMAX</span>, <span class="hljs-variable constant_">VMIN</span>, <span class="hljs-variable constant_">VW</span>, <span class="hljs-variable constant_">X_LARGE</span>, <span class="hljs-variable constant_">X_SMALL</span>, <span class="hljs-variable constant_">XX_LARGE</span>, <span class="hljs-variable constant_">XX_SMALL</span>, <span class="hljs-variable constant_">XXX_LARGE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -660,9 +680,6 @@ P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_"
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="fontattributes-attributes">FontAttributes attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-</ul>
 
             </div>
             
@@ -711,7 +728,10 @@ P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_"
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p><em>font-variant</em> - saved in the <strong>variant</strong> String attribute - the standard indicates that canvas context engine should only recognise <code>normal</code> and <code>small-caps</code> values. Do not use other possibilities (<em>font-variant-caps, font-variant-numeric, font-variant-ligatures, font-variant-east-asian, font-variant-alternates</em>) in font strings; scrawl-canvas will remove and/or ignore them when it parses the font string.</p>
+              <p><em>font-variant</em> - saved in the <strong>variant</strong> String attribute - NOTE: this attribute has been deprecated and should not be used!</p>
+<ul>
+<li>The standard indicates that canvas context engine should only recognise <code>normal</code> and <code>small-caps</code> values. Do not use other possibilities (<em>font-variant-caps, font-variant-numeric, font-variant-ligatures, font-variant-east-asian, font-variant-alternates</em>) in font strings; scrawl-canvas will remove and/or ignore them when it parses the font string.</li>
+</ul>
 
             </div>
             
@@ -743,24 +763,6 @@ P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_"
               
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p><strong>font-stretch</strong> - saved in the <strong>stretch</strong> String attribute acceptable values are: <code>normal</code>, <code>semi-condensed</code>, <code>condensed</code>, <code>extra-condensed</code>, <code>ultra-condensed</code>, <code>semi-expanded</code>, <code>expanded</code>, <code>extra-expanded</code>, <code>ultra-expanded</code>. Browser support for these values by the &lt;canvas&gt; element’s context engine is, for the most part, non-existant.</p>
-<ul>
-<li>To explicitly use a condensed or stretched font design, reference the font face directly in the <code>family</code> or font strings.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stretch</span>: <span class="hljs-variable constant_">NORMAL</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><em>font-size</em> - broken into two parts and saved in the <strong>sizeValue</strong> Number and <strong>sizeMetric</strong> String, each of which can be set separately. The W3C HTML Canvas 2D Context Recommendation states: <em>“with the ‘font-size’ component converted to CSS pixels”</em>. However, Scrawl-canvas makes every effort to respect and interpret non-px-based font-size requests.</p>
 <ul>
@@ -819,11 +821,11 @@ P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_"
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>font-family</strong> - any part of the font string that comes after the above declarations.</p>
 <ul>
@@ -841,15 +843,29 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional clone functionality required
+P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional clone functionality required
-P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -862,8 +878,8 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
             
@@ -876,20 +892,6 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
@@ -900,11 +902,11 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>size</strong> - pseudo-attribute</p>
 <ul>
@@ -921,11 +923,11 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <ul>
 <li>setter breaks the fontSize String into <strong>sizeValue</strong> and <strong>sizeMetric</strong> values</li>
@@ -1019,11 +1021,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>font</strong> - pseudo-attribute which calls various functions to break down the font String into its constituent parts</p>
 
@@ -1036,7 +1038,6 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         S.<span class="hljs-property">style</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
         S.<span class="hljs-property">variant</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
         S.<span class="hljs-property">weight</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
-        S.<span class="hljs-property">stretch</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
         S.<span class="hljs-property">size</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
         S.<span class="hljs-property">family</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
     }
@@ -1045,11 +1046,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>style</strong></p>
 
@@ -1075,11 +1076,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>variant</strong></p>
 
@@ -1104,11 +1105,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>weight</strong></p>
 
@@ -1123,11 +1124,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Handling direct entry of numbers</p>
 
@@ -1143,11 +1144,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Putting spaces around the number should help identify it as a Weight value within the font string the string</p>
 
@@ -1166,11 +1167,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Also need to capture instances where a number value has been directly set with no other font attributes around it</p>
 
@@ -1190,47 +1191,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p><strong>stretch</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">stretch</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
-
-        <span class="hljs-keyword">let</span> v = <span class="hljs-variable constant_">NORMAL</span>;
-
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">CONDENSED</span>)) ? <span class="hljs-variable constant_">CONDENSED</span> : v;
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">SEMI_CONDENSED</span>)) ? <span class="hljs-variable constant_">SEMI_CONDENSED</span> : v;
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">EXTRA_CONDENSED</span>)) ? <span class="hljs-variable constant_">EXTRA_CONDENSED</span> : v;
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">ULTRA_CONDENSED</span>)) ? <span class="hljs-variable constant_">ULTRA_CONDENSED</span> : v;
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">EXPANDED</span>)) ? <span class="hljs-variable constant_">EXPANDED</span> : v;
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">SEMI_EXPANDED</span>)) ? <span class="hljs-variable constant_">SEMI_EXPANDED</span> : v;
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">EXTRA_EXPANDED</span>)) ? <span class="hljs-variable constant_">EXTRA_EXPANDED</span> : v;
-        v = (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">ULTRA_EXPANDED</span>)) ? <span class="hljs-variable constant_">ULTRA_EXPANDED</span> : v;
-
-        <span class="hljs-keyword">if</span> (v != <span class="hljs-variable language_">this</span>.<span class="hljs-property">stretch</span>) {
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">stretch</span> = v;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
-        }
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>family</strong></p>
 
@@ -1276,11 +1241,11 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-30">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1476,11 +1441,11 @@ P.<span class="hljs-property">calculateSize</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-31">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>buildFont</code> - internal function</p>
 <ul>
@@ -1498,7 +1463,6 @@ P.<span class="hljs-property">calculateSize</span> = <span class="hljs-keyword">
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">style</span> != <span class="hljs-variable constant_">NORMAL</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.style}</span> `</span>;
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">variant</span> != <span class="hljs-variable constant_">NORMAL</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.variant}</span> `</span>;
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">weight</span> != <span class="hljs-variable constant_">NORMAL</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.weight}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stretch</span> != <span class="hljs-variable constant_">NORMAL</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.stretch}</span> `</span>;
 
     font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.calculateSize()}</span> `</span>;
 
@@ -1507,11 +1471,11 @@ P.<span class="hljs-property">calculateSize</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-32">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Temper the font string. Submit it to a canvas context engine to see what it makes of it</p>
 
@@ -1530,11 +1494,11 @@ P.<span class="hljs-property">calculateSize</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-33">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>update</code> - <code>sets</code> items, then calls <code>buildFont</code></p>
 
@@ -1549,11 +1513,11 @@ P.<span class="hljs-property">calculateSize</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-34">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

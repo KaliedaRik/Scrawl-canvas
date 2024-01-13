@@ -31,7 +31,7 @@ const myvideo = scrawl.makePicture({
     copyHeight: '100%',
 });
 
-const initialVideoStart = scrawl.addListener('up', () => {
+const initialVideoStart = scrawl.addNativeListener(['mouseup', 'touchend', 'keyup'], () => {
 
     myvideo.set({
 
@@ -46,9 +46,23 @@ const initialVideoStart = scrawl.addListener('up', () => {
 
 
 // canvas-based buttons
-scrawl.makePhrase({
+const playPauseAction = function () {
 
-    name: name('test-button-play-pause'),
+    if (myvideo.get('video_paused')) {
+
+        playPause.set({ text: 'PAUSE' });
+        myvideo.videoPlay();
+    }
+    else {
+
+        playPause.set({ text: 'PLAY' });
+        myvideo.videoPause();
+    }
+};
+
+const playPause = scrawl.makePhrase({
+
+    name: name('play-pause-button'),
     order: 2,
 
     text: 'PLAY',
@@ -58,14 +72,17 @@ scrawl.makePhrase({
 
     startX: '75%',
     handleX: 'center',
-    startY: '90%',
+    startY: 'bottom',
+    handleY: 'bottom',
 
     letterSpacing: 2,
     underlinePosition: 0.75,
+    lineHeight: 1,
 
     fillStyle: 'yellow',
 
     underlineStyle: 'yellow',
+    underlineWidth: 4,
 
     onEnter: function () {
 
@@ -97,61 +114,48 @@ scrawl.makePhrase({
         });
     },
 
-    onUp: function () {
+    button: {
 
-        if (myvideo.get('video_paused')) {
-
-// @ts-expect-error
-            this.set({
-                text: 'PAUSE',
-            });
-
-            myvideo.videoPlay();
-        }
-        else {
-
-// @ts-expect-error
-            this.set({
-                text: 'PLAY',
-            });
-
-            myvideo.videoPause();
-        }
+        name: name('play-pause-el'),
+        description: 'Play | Pause',
+        clickAction: playPauseAction,
+        tabOrder: 0,
     },
 
-}).clone({
+    onUp: playPauseAction,
+});
 
-    name: name('test-button-listen-mute'),
+const listenMuteAction = function () {
+
+    if (myvideo.get('video_muted')) {
+
+        listenMute.set({ text: 'MUTE' });
+        myvideo.set({ video_muted: false });
+    }
+    else {
+
+        listenMute.set({ text: 'LISTEN' });
+        myvideo.set({ video_muted: true });
+    }
+};
+
+const listenMute = playPause.clone({
+
+    name: name('listen-mute-button'),
 
     text: 'LISTEN',
 
     startX: '25%',
 
-    onUp: function () {
+    button: {
 
-        if (myvideo.get('video_muted')) {
-
-// @ts-expect-error
-            this.set({
-                text: 'MUTE',
-            });
-
-            myvideo.set({
-                video_muted: false,
-            });
-        }
-        else {
-
-// @ts-expect-error
-            this.set({
-                text: 'LISTEN',
-            });
-
-            myvideo.set({
-                video_muted: true,
-            });
-        }
+        name: name('listen-mute-el'),
+        description: 'Listen | Mute',
+        clickAction: listenMuteAction,
+        tabOrder: 1,
     },
+
+    onUp: listenMuteAction,
 });
 
 // Turn the swans pink
@@ -232,9 +236,7 @@ scrawl.makePicture({
         name: name('wikipedia-swan-link'),
         href: 'https://en.wikipedia.org/wiki/Swan',
         description: 'Link to the Wikipedia article on swans',
-
-        focusAction: true,
-        blurAction: true,
+        tabOrder: 2,
     },
 
     checkHitIgnoreTransparency: true,
@@ -334,12 +336,10 @@ const mygoose = scrawl.makeBlock({
     },
 
     anchor: {
-        name: name('wikipedia-goose-link'),
+        name: name('wikipedia-goose-link-1'),
         href: 'https://en.wikipedia.org/wiki/Goose',
-        description: 'Link to the Wikipedia article on geese',
-
-        focusAction: true,
-        blurAction: true,
+        description: 'First link to the Wikipedia article on geese',
+        tabOrder: 3,
     },
 });
 
@@ -368,6 +368,7 @@ scrawl.makeAction({
         this.targets[0].set({
 
             visibility: true,
+            anchorDisabled: false,
         });
     },
 
@@ -381,6 +382,7 @@ scrawl.makeAction({
         this.targets[0].set({
 
             visibility: false,
+            anchorDisabled: true,
         });
     },
 });
@@ -393,12 +395,13 @@ mygoose.clone({
     width: '22%',
     height: '16%',
 
-    onUp: function () {
-
-        mygoose.clickAnchor();
+    // It's generally not a good idea to share &lt;a> anchor link elements between interactive artefacts. However, be aware that repeating a link may not be the best user experience for those users accessing the web page with assistive technologies.
+    anchor: {
+        name: name('wikipedia-goose-link-2'),
+        href: 'https://en.wikipedia.org/wiki/Goose',
+        description: 'Second link to the Wikipedia article on geese',
+        tabOrder: 4,
     },
-
-    anchor: null,
 });
 
 myLocalTweenFactory(

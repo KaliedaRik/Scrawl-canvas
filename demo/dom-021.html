@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 021</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    /* Buttons to trigger popover display */
+    nav {
+      display: flex;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+    nav button {
+      font: 2rem arial, sans-serif;
+      padding: 0.5rem 1rem;
+    }
+
+    /* The popover component */
+    .popover-container {
+      position: absolute;
+      top: -5000px;
+    }
+
+    #mypopover {
+      width: 70%;
+      height: 70vh;
+      margin: auto;
+      padding: 0;
+      border-color: orange;
+    }
+    #mypopover::backdrop {
+      backdrop-filter: blur(3px);
+    }
+
+    .testinfo {
+      margin: 1rem 0;
+    }
+
+    #reportmessage {
+      font-family: monospace;
+      font-size: 80%;
+      min-height: 2em;
+      width: 80%;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #8d8;
+      padding: 0.5em 1em;
+      margin: 0 auto 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 021</h1>
+  <h2>Popover API - use canvas elements in popover content</h2>
+  <p>See this <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API/Using">MDN web docs article</a> for information on how to implement a popover effect in HTML and CSS.</p>
+
+  <nav>
+    <button popovertarget="mypopover">Toggle popover</button>
+  </nav>
+
+  <div class="popover-container">
+    <div id="mypopover" popover>
+      <canvas 
+        id="mycanvas" 
+        data-scrawl-canvas
+        data-is-responsive="true" 
+        data-base-background-color="darkslategray"
+        data-label="Interactive canvas-based popup element"
+        data-description="To dismiss the popover, click the keyboard escape button"
+      ></canvas>
+    </div>
+  </div>
+
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ante metus dictum at tempor commodo ullamcorper. Bibendum ut tristique et egestas. Velit dignissim sodales ut eu sem integer. Aliquam ut porttitor leo a. In metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim. Et magnis dis parturient montes nascetur ridiculus. Nibh tortor id aliquet lectus. Turpis tincidunt id aliquet risus feugiat in. Sodales neque sodales ut etiam. Nisl pretium fusce id velit ut tortor pretium. Lorem mollis aliquam ut porttitor. Sollicitudin aliquam ultrices sagittis orci a. Tempus egestas sed sed risus pretium quam vulputate dignissim. Varius morbi enim nunc faucibus a pellentesque. Morbi tempus iaculis urna id volutpat lacus. Nibh venenatis cras sed felis eget velit aliquet. Id velit ut tortor pretium. In fermentum et sollicitudin ac orci phasellus egestas.</p>
+
+  <p>Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Suspendisse in est ante in nibh mauris cursus mattis. Risus pretium quam vulputate dignissim suspendisse in est. Leo vel orci porta non pulvinar. Placerat orci nulla pellentesque dignissim enim sit. Nulla aliquet enim tortor at auctor urna nunc id. Rhoncus est pellentesque elit ullamcorper dignissim cras tincidunt. Etiam non quam lacus suspendisse faucibus interdum posuere lorem. A erat nam at lectus urna duis convallis. Elementum pulvinar etiam non quam lacus suspendisse faucibus interdum. Purus viverra accumsan in nisl nisi. Auctor urna nunc id cursus metus. Urna id volutpat lacus laoreet non curabitur. Sit amet risus nullam eget felis eget nunc lobortis mattis. Libero nunc consequat interdum varius sit amet mattis vulputate enim. Eu nisl nunc mi ipsum.</p>
+
+  <p id="reportmessage"></p>
+
+  <p>Quam vulputate dignissim suspendisse in est ante in nibh. Sed augue lacus viverra vitae congue eu. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Sed vulputate mi sit amet mauris commodo quis imperdiet. Mauris in aliquam sem fringilla ut morbi tincidunt augue interdum. Sit amet purus gravida quis blandit turpis cursus in. Maecenas ultricies mi eget mauris pharetra et ultrices. Sodales neque sodales ut etiam sit amet nisl purus. Sagittis orci a scelerisque purus semper. A diam maecenas sed enim ut sem viverra aliquet. Lorem ipsum dolor sit amet. Eget nunc scelerisque viverra mauris in aliquam sem. Praesent tristique magna sit amet purus gravida quis blandit. Enim facilisis gravida neque convallis. Nec ullamcorper sit amet risus nullam. Senectus et netus et malesuada fames ac. Gravida neque convallis a cras semper auctor neque. Blandit massa enim nec dui nunc mattis.</p>
+
+  <nav>
+    <button popovertarget="mypopover">Toggle popover</button>
+  </nav>
+
+  <p>Turpis egestas sed tempus urna et pharetra. Facilisis volutpat est velit egestas dui id. Ornare arcu odio ut sem nulla. Mauris a diam maecenas sed. Est ullamcorper eget nulla facilisi. Sed adipiscing diam donec adipiscing tristique risus nec feugiat in. Nibh sed pulvinar proin gravida hendrerit lectus a. Id volutpat lacus laoreet non curabitur. Feugiat nisl pretium fusce id. Lectus mauris ultrices eros in cursus turpis massa. Aliquam etiam erat velit scelerisque. Venenatis cras sed felis eget velit aliquet sagittis id consectetur. Suspendisse ultrices gravida dictum fusce ut placerat orci nulla.</p>
+
+  <p>Tempus egestas sed sed risus pretium. Bibendum enim facilisis gravida neque. Sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu. Ut faucibus pulvinar elementum integer enim neque volutpat ac tincidunt. Sed tempus urna et pharetra pharetra. In fermentum posuere urna nec tincidunt praesent semper. Nibh mauris cursus mattis molestie a iaculis at. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in. Magna ac placerat vestibulum lectus mauris ultrices eros. Orci nulla pellentesque dignissim enim sit amet venenatis. Sit amet massa vitae tortor condimentum lacinia quis vel. Venenatis tellus in metus vulputate eu scelerisque felis imperdiet. Tincidunt arcu non sodales neque sodales ut. Fermentum leo vel orci porta non pulvinar. Etiam dignissim diam quis enim lobortis scelerisque fermentum dui. Id interdum velit laoreet id donec. Enim ut sem viverra aliquet eget sit amet. Vitae justo eget magna fermentum iaculis eu. Et egestas quis ipsum suspendisse ultrices gravida dictum fusce. Id diam maecenas ultricies mi eget.</p>
+
+  <p>Ut consequat semper viverra nam libero justo laoreet sit. Cras fermentum odio eu feugiat pretium nibh. Elementum sagittis vitae et leo duis ut diam quam. Nulla pharetra diam sit amet nisl. Nam libero justo laoreet sit amet cursus. Libero id faucibus nisl tincidunt eget nullam non. Congue eu consequat ac felis. Quam nulla porttitor massa id neque. Aenean et tortor at risus. Ut lectus arcu bibendum at varius vel pharetra vel. Euismod quis viverra nibh cras pulvinar mattis. Proin sed libero enim sed faucibus turpis in eu. Nunc sed id semper risus in hendrerit gravida rutrum quisque. Velit ut tortor pretium viverra. Consequat id porta nibh venenatis cras sed felis. Massa sed elementum tempus egestas sed sed risus pretium. Convallis aenean et tortor at risus. A scelerisque purus semper eget duis. Eget gravida cum sociis natoque penatibus et.</p>
+
+  <p>Urna molestie at elementum eu facilisis. Vel facilisis volutpat est velit. Adipiscing elit pellentesque habitant morbi tristique senectus. At ultrices mi tempus imperdiet nulla. Hendrerit dolor magna eget est lorem ipsum dolor sit. Id cursus metus aliquam eleifend mi in nulla posuere. Amet consectetur adipiscing elit ut aliquam. Lacus viverra vitae congue eu consequat ac felis donec. Vitae tempus quam pellentesque nec nam aliquam. Massa ultricies mi quis hendrerit dolor magna. Malesuada bibendum arcu vitae elementum curabitur vitae nunc. Egestas sed tempus urna et. Neque convallis a cras semper. Sit amet volutpat consequat mauris. Sem nulla pharetra diam sit amet nisl suscipit adipiscing. Ornare aenean euismod elementum nisi quis eleifend quam adipiscing. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula.</p>
+
+  <p>Et pharetra pharetra massa massa. Sit amet nisl suscipit adipiscing bibendum. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum. Nulla facilisi cras fermentum odio eu feugiat pretium nibh. Accumsan tortor posuere ac ut consequat semper viverra nam libero. Nunc sed blandit libero volutpat sed. Id donec ultrices tincidunt arcu. Placerat in egestas erat imperdiet sed euismod. Sit amet massa vitae tortor. Nunc aliquet bibendum enim facilisis gravida neque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper.</p>
+
+  <nav>
+    <button popovertarget="mypopover">Toggle popover</button>
+  </nav>
+
+  <p>Tellus integer feugiat scelerisque varius morbi enim nunc faucibus. Integer enim neque volutpat ac tincidunt. Rhoncus aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium. Sed risus pretium quam vulputate dignissim. Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et. Odio morbi quis commodo odio aenean sed. Lorem dolor sed viverra ipsum nunc aliquet bibendum enim facilisis. Morbi non arcu risus quis varius. Diam quam nulla porttitor massa id neque aliquam. Semper quis lectus nulla at volutpat. Malesuada fames ac turpis egestas integer eget aliquet nibh. Pellentesque eu tincidunt tortor aliquam. Posuere urna nec tincidunt praesent semper feugiat nibh. Viverra nibh cras pulvinar mattis nunc sed blandit libero. Aliquam sem fringilla ut morbi tincidunt augue interdum velit. Scelerisque felis imperdiet proin fermentum leo vel orci. Ut pharetra sit amet aliquam id diam maecenas. Mauris cursus mattis molestie a.</p>
+
+  <p>Id porta nibh venenatis cras sed felis eget velit. Condimentum id venenatis a condimentum vitae. Egestas diam in arcu cursus euismod. Eget duis at tellus at. Pellentesque elit ullamcorper dignissim cras tincidunt lobortis feugiat. Sed pulvinar proin gravida hendrerit lectus a. Nisi quis eleifend quam adipiscing vitae proin. Enim lobortis scelerisque fermentum dui faucibus in ornare. Nisl suscipit adipiscing bibendum est ultricies integer quis. Lacus suspendisse faucibus interdum posuere lorem. Quam id leo in vitae. Erat nam at lectus urna. Molestie ac feugiat sed lectus vestibulum mattis ullamcorper velit. Enim sit amet venenatis urna cursus eget. Quisque non tellus orci ac auctor augue mauris augue neque. Ultricies integer quis auctor elit.</p>
+
+  <p>Elementum eu facilisis sed odio. Scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada. Adipiscing elit duis tristique sollicitudin nibh sit amet. Consectetur libero id faucibus nisl tincidunt eget. Proin sagittis nisl rhoncus mattis. Ipsum faucibus vitae aliquet nec ullamcorper. Non enim praesent elementum facilisis leo vel. Praesent tristique magna sit amet purus gravida quis blandit turpis. Ullamcorper morbi tincidunt ornare massa eget. Amet nisl purus in mollis nunc sed id semper. Enim sed faucibus turpis in eu mi bibendum. Quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus. At quis risus sed vulputate odio ut enim. Sed cras ornare arcu dui vivamus arcu felis bibendum ut. Dictum fusce ut placerat orci nulla pellentesque dignissim enim sit.</p>
+
+  <nav>
+    <button popovertarget="mypopover">Toggle popover</button>
+  </nav>
+
+  <p>Massa sed elementum tempus egestas. Eget est lorem ipsum dolor sit. In tellus integer feugiat scelerisque varius morbi enim nunc faucibus. Cras fermentum odio eu feugiat pretium nibh ipsum consequat. Lobortis mattis aliquam faucibus purus in. Ultrices dui sapien eget mi proin. Pellentesque pulvinar pellentesque habitant morbi tristique senectus. Cras pulvinar mattis nunc sed blandit. Id volutpat lacus laoreet non curabitur gravida. Neque aliquam vestibulum morbi blandit. Urna neque viverra justo nec ultrices dui sapien eget.</p>
+
+  <p>Pellentesque adipiscing commodo elit at. In aliquam sem fringilla ut morbi tincidunt augue. Suspendisse ultrices gravida dictum fusce. Adipiscing bibendum est ultricies integer quis auctor elit sed vulputate. Mauris augue neque gravida in fermentum et. Facilisis volutpat est velit egestas dui id ornare. Porta lorem mollis aliquam ut porttitor leo a. Vestibulum rhoncus est pellentesque elit ullamcorper. Elit at imperdiet dui accumsan sit. Nulla porttitor massa id neque aliquam vestibulum morbi. Imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque. Quis blandit turpis cursus in hac habitasse platea. Aliquam nulla facilisi cras fermentum odio. A lacus vestibulum sed arcu non odio euismod. Auctor elit sed vulputate mi sit amet.</p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a popover div element containing a canvas element with interactive entitys including a navigable close button:</li>
+      <ul>
+        <li>The popover should appear whenever the user clicks the "toggle popover" button.</li>
+        <li>The canvas should fill the popover when it appears, without creating any scrollbars.</li>
+        <li>The page should be blurred while the popover is open.</li>
+      </ul>
+      <li>The popover and the canvas should be responsive, updating the canvas display as the browser size changes.</li>
+      <li>The draggable entitys on the canvas should be interactive (draggable).</li>
+      <li>The popover should close when the user:</li>
+      <ul>
+        <li>Clicks or taps on the popover's canvas-based close button.</li>
+        <li>Tab-navigates to the entity close button and presses the return key.</li>
+        <li>Presses the keyboard ESC key.</li>
+        <li>Clicks or taps anywhere outside the popover.</li>
+      </ul>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <h4>To be aware</h4>
+
+    <ul>
+      <li>This demo uses a popover containing just the canvas element. As such, it is our responsibility to include a programmatic close button (as an entity on the canvas) for the popover.</li>
+      <li>There may be a way to include a close &lt;button> element alongside the &lt;canvas> element in the DOM markup, positioning the button over the canvas so that it is always visible and interactive, to which we can add a "beforetoggle" event listener to programmatically close the popover.</li>
+      <li>For this demo, we instead use a graphical "close button" set of entitys, one of which includes a `button` attribute which inserts the entity into the browser's tabIndex list and closes the popover when user clicks on it, or tab navigates to it and presses the `return` key.</li>
+    </ul>
+
+    <p><a href="../docs/demo/dom-021.html">Annotated code</a></p>
+  </div>
+
+  <p>Dignissim enim sit amet venenatis urna. Est lorem ipsum dolor sit. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget. Sed blandit libero volutpat sed. Sit amet nulla facilisi morbi. Et malesuada fames ac turpis egestas. Quis enim lobortis scelerisque fermentum dui faucibus. Morbi quis commodo odio aenean sed adipiscing diam. Mattis enim ut tellus elementum sagittis vitae. Mi quis hendrerit dolor magna. Eu augue ut lectus arcu. Vitae tempus quam pellentesque nec. Dolor sit amet consectetur adipiscing elit. Sagittis nisl rhoncus mattis rhoncus urna. Aliquam purus sit amet luctus venenatis lectus. Nunc non blandit massa enim nec dui nunc mattis. Non sodales neque sodales ut etiam sit amet nisl purus. Enim tortor at auctor urna nunc id cursus metus aliquam. Sed faucibus turpis in eu mi. Dapibus ultrices in iaculis nunc sed.</p>
+
+  <p>Purus ut faucibus pulvinar elementum. In cursus turpis massa tincidunt dui ut. Consequat mauris nunc congue nisi vitae suscipit. Iaculis nunc sed augue lacus. Tristique risus nec feugiat in fermentum. Donec ac odio tempor orci dapibus ultrices. Sed lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Id porta nibh venenatis cras sed felis eget velit. Tempor orci dapibus ultrices in iaculis. Sed felis eget velit aliquet sagittis id. Vitae nunc sed velit dignissim sodales ut eu. Non nisi est sit amet facilisis magna etiam tempor orci. In vitae turpis massa sed. Felis donec et odio pellentesque diam. Sit amet mauris commodo quis imperdiet massa tincidunt nunc. Eget felis eget nunc lobortis mattis aliquam. Sed felis eget velit aliquet sagittis. Bibendum arcu vitae elementum curabitur vitae nunc sed velit. Risus nullam eget felis eget nunc.</p>
+
+  <nav>
+    <button popovertarget="mypopover">Toggle popover</button>
+  </nav>
+
+  <script src="dom-021.js" type="module"></script>
+
+</body>
+
+</html>

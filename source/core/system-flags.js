@@ -1,4 +1,5 @@
 // # System flags
+// These are placed in their own file here to help eliminate circular dependencies
 
 
 let trackMouse = false;
@@ -44,7 +45,6 @@ export const setDoAnimation = (val) => doAnimation = val;
 let rootElementsSort = true;
 export const getRootElementsSort = () => rootElementsSort;
 export const setRootElementsSort = (val) => rootElementsSort = val;
-
 
 export const forceUpdate = function () {
 

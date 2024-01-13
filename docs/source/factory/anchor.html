@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -546,13 +566,7 @@
               </div>
               <h1 id="anchor-factory">Anchor factory</h1>
 <p>In Scrawl-canvas, an Anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file.</p>
-<p>Scrawl-canvas uses the <a href="../mixin/anchor.html">Anchor mixin</a> to add anchor functionality to artefacts - in particular canvas entitys.</p>
-<p>This gives us a interactive canvas containing dynamic, clickable regions.</p>
-<p>Note that while anchors are primarily for generating URL links to (external site) web pages, they can also be used to trigger any other desired action. This can be achieved by setting the anchor object’s <strong>clickAction</strong> attribute to a function. For instance:</p>
-<ul>
-<li>We can define a clickAction which emits a Google Analytics tracker message before performing the URL navigation (see demo Canvas-009)</li>
-<li>We can suppress the click action (via ‘preventDefault’) and instead action code supplied by a third party library - though there’s usually better ways to achieve this via other Scrawl-canvas functionalities, for instance by using Scrawl-canvas enhanced event listeners or artefact functions (onEnter, onLeave, onDown, onUp).</li>
-</ul>
+<p>Scrawl-canvas uses the <a href="../mixin/anchor.html">Anchor mixin</a> to add anchor functionality to artefacts - in particular canvas entitys. This (alongside Button objects) gives us a interactive canvas containing dynamic, clickable regions.</p>
 <p>NOTE - generating an anchor will have an impact on the DOM document code, as an (off-viewport) &lt;a&gt; element will be added to it.</p>
 <p>The <strong>makeAnchor</strong> function is not exposed to the ‘scrawl’ object, thus objects can only be created indirectly. Anchors can be saved, cloned and killed as part of wider save/kill/clone functionality.</p>
 
@@ -588,13 +602,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, isa_dom, isa_fn, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _A, <span class="hljs-variable constant_">ANCHOR</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CLICK</span>, <span class="hljs-variable constant_">DOWNLOAD</span>, <span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-variable constant_">HREF</span>, <span class="hljs-variable constant_">HREFLANG</span>, <span class="hljs-variable constant_">ONCLICK</span>, <span class="hljs-variable constant_">PING</span>, <span class="hljs-variable constant_">REFERRERPOLICY</span>, <span class="hljs-variable constant_">REL</span>, <span class="hljs-variable constant_">T_ANCHOR</span>, <span class="hljs-variable constant_">TARGET</span>, <span class="hljs-variable constant_">TYPE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _A, _keys, <span class="hljs-variable constant_">ANCHOR</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CLICK</span>, <span class="hljs-variable constant_">DATA_TAB_ORDER</span>, <span class="hljs-variable constant_">DOWNLOAD</span>, <span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-variable constant_">HREF</span>, <span class="hljs-variable constant_">HREFLANG</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PING</span>, <span class="hljs-variable constant_">REFERRERPOLICY</span>, <span class="hljs-variable constant_">REL</span>, <span class="hljs-variable constant_">T_ANCHOR</span>, <span class="hljs-variable constant_">TARGET</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">TYPE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -615,9 +629,14 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = items.<span class="hljs-property">host</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">controller</span> = items.<span class="hljs-property">controller</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span> = items.<span class="hljs-property">hold</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">build</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchor</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -666,9 +685,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="anchor-attributes">Anchor attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-</ul>
 
             </div>
             
@@ -713,12 +729,37 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>The following attributes are detailed in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">MDN’s &lt;a&gt; reference page</a></p>
-<ul>
-<li>They are (most of) the DOM element’s attributes: <strong>download</strong>, <strong>href</strong>, <strong>hreflang</strong>, <strong>ping</strong>, <strong>referrerpolicy</strong>, <strong>rel</strong>, <strong>target</strong>, <strong>anchorType</strong>.</li>
-<li>The HTML Anchor element <code>type</code> attribute is stored in the Scrawl-canvas Anchor object using the key <strong>anchorType</strong>.</li>
-<li>Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.</li>
-</ul>
+              <p><strong>disabled</strong> - When set to true, will prevent the anchor &lt;a&gt; element from being added to the &lt;canvas&gt; element’s &lt;nav&gt; element on the next build cycle.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">disabled</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p><strong>tabOrder</strong> - All hidden Anchor &lt;a&gt; elements have a default tabOrder attribute value of 0. SC does not touch this attribute. Instead, to order Anchor (and Button) DOM elements within the host &lt;canvas&gt; element’s &lt;nav&gt; element we set a <code>data-tab-order</code> attribute with the tabOrder value, which the Canvas wrapper can then use to reorder the elements as part of the Display cycle.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">tabOrder</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>The following attributes are detailed in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">MDN’s &lt;a&gt; reference page</a>.</p>
 
             </div>
             
@@ -734,66 +775,17 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>The <strong>clickAction</strong> attribute is a <em><strong>function which returns a string command</strong></em> which in turn gets attached to the anchor DOM element’s <strong>onclick</strong> attribute. Invoking the result is handled entirely by the browser (as is normal).</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <h5 id="example-usage">Example usage</h5>
-<p>This <strong>doesn’t work!</strong> The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the anchor (although navigation will still occur - the wikipedia page will open in a new browser tab):</p>
-<pre><code><span class="hljs-attr">anchor</span>: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-box-link&#x27;</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Box&#x27;</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on boxes (opens in new tab)&#x27;</span>,
-
-    <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;box clicked&#x27;</span>) },
-}
-</code></pre>
-<p>This <strong>works as expected</strong> - the function returns a string which can then be attached to the &lt;a&gt; DOM element’s <em>onclick</em> attribute:</p>
-<pre><code><span class="hljs-attr">anchor</span>: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-box-link&#x27;</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Box&#x27;</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on boxes (opens in new tab)&#x27;</span>,
-
-    <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log(&#x27;box clicked&#x27;)`</span> },
-},
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">clickAction</span>: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>We can instruct the anchor to add event listeners for focus and blur events using the <strong>focusAction</strong> and <strong>blurAction</strong> Boolean flags. When set to true, the <em><strong>focus</strong></em> event listener will invoke the host entity’s <code>onEnter</code> function; the <em><strong>blur</strong></em> event listener invokes the <code>onLeave</code> function. Default is to ignore these events</p>
+              <p><strong>clickAction</strong> - function - actions to be performed when user tabs to the hidden &lt;a&gt; element and presses the keyboard return button. Function cannot take any arguments.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">focusAction</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">blurAction</span>: <span class="hljs-literal">false</span>,
-};
-P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">clickAction</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -804,13 +796,14 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <p>We can instruct the anchor to add event listeners for focus and blur events using the <strong>focusAction</strong> and <strong>blurAction</strong> Boolean flags. When set to true, the <em><strong>focus</strong></em> event listener will invoke the host entity’s <code>onEnter</code> function; the <em><strong>blur</strong></em> event listener invokes the <code>onLeave</code> function.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;domElement&#x27;</span>]);
-P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;host&#x27;</span>]);
-P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;clickAction&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">focusAction</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">blurAction</span>: <span class="hljs-literal">true</span>,
+};
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -821,10 +814,13 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h2 id="packet-management">Packet management</h2>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;domElement&#x27;</span>]);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;host&#x27;</span>]);
+P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;clickAction&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -835,16 +831,10 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">demolish</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>.<span class="hljs-title function_">removeChild</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
-};</pre></div></div>
             
         </li>
         
@@ -855,11 +845,26 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">demolish</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> { host, controller, domElement, hold, clickAction, focusAction, blurAction } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">if</span> (domElement &amp;&amp; clickAction) domElement.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">CLICK</span>, clickAction, <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (host &amp;&amp; domElement &amp;&amp; focusAction) domElement.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (host &amp;&amp; domElement &amp;&amp; blurAction) domElement.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">BLUR</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onLeave</span>(), <span class="hljs-literal">false</span>);
+
+    <span class="hljs-keyword">if</span> (hold &amp;&amp; domElement) hold.<span class="hljs-title function_">removeChild</span>(domElement);
+
+    <span class="hljs-keyword">if</span> (controller) controller.<span class="hljs-property">dirtyNavigationTabOrder</span> = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (host) host.<span class="hljs-property">anchor</span> = <span class="hljs-literal">null</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
+};</pre></div></div>
             
         </li>
         
@@ -870,15 +875,52 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>Value should be the artefact object, or its name-String</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>While the Scrawl-canvas anchor object keeps copies of all of its &lt;a&gt; DOM element’s attributes locally, they also need to be updated on that element.</p>
+<p>The artefact with which an anchor object is associated maps these attributes to itself as follows:</p>
+<pre><code>anchor.<span class="hljs-property">anchorType</span>      ~~&gt; artefact.<span class="hljs-property">anchorType</span>
+anchor.<span class="hljs-property">description</span>     ~~&gt; artefact.<span class="hljs-property">anchorDescription</span>
+anchor.<span class="hljs-property">download</span>        ~~&gt; artefact.<span class="hljs-property">anchorDownload</span>
+anchor.<span class="hljs-property">href</span>            ~~&gt; artefact.<span class="hljs-property">anchorHref</span>
+anchor.<span class="hljs-property">hreflang</span>        ~~&gt; artefact.<span class="hljs-property">anchorHreflang</span>
+anchor.<span class="hljs-property">ping</span>            ~~&gt; artefact.<span class="hljs-property">anchorPing</span>
+anchor.<span class="hljs-property">referrerPolicy</span>  ~~&gt; artefact.<span class="hljs-property">anchorReferrerPolicy</span>
+anchor.<span class="hljs-property">rel</span>             ~~&gt; artefact.<span class="hljs-property">anchorRel</span>
+anchor.<span class="hljs-property">tabOrder</span>        ~~&gt; artefact.<span class="hljs-property">anchorTabOrder</span>
+anchor.<span class="hljs-property">target</span>          ~~&gt; artefact.<span class="hljs-property">anchorTarget</span>
+</code></pre>
+<p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">host</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> h = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
+    <span class="hljs-keyword">let</span> i, key, val, fn;
 
-    <span class="hljs-keyword">if</span> (h &amp;&amp; h.<span class="hljs-property">name</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = h;
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(items),
+        keysLen = keys.<span class="hljs-property">length</span>;
+
+    <span class="hljs-keyword">if</span> (keysLen) {
+
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
+            defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+
+            key = keys[i];
+            val = items[key];
+
+            <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-variable constant_">NAME</span> &amp;&amp; val != <span class="hljs-literal">null</span>) {
+
+                fn = setters[key];
+
+                <span class="hljs-keyword">if</span> (fn) fn.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, val);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-variable constant_">UNDEF</span>) <span class="hljs-variable language_">this</span>[key] = val;
+            }
+        }
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchor</span> = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -890,19 +932,69 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>Used internally - do not set directly! A reference to the hidden DOM hold &lt;div&gt; elemenbt where the anchors &lt;a&gt; element is kept.</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
+<p>The <code>build</code> function builds the &lt;a&gt; element and adds it to the DOM</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">hold</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">build</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(item)) {
+    <span class="hljs-keyword">const</span> { host } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>.<span class="hljs-title function_">removeChild</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
+    <span class="hljs-keyword">if</span> (host) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span> = item;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">controller</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">controller</span> = host.<span class="hljs-title function_">getCanvasWrapper</span>();
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span> = host.<span class="hljs-title function_">getCanvasNavElement</span>();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>.<span class="hljs-title function_">appendChild</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
+        <span class="hljs-keyword">const</span> { hold, controller } = <span class="hljs-variable language_">this</span>;
+
+        <span class="hljs-keyword">if</span> (hold &amp;&amp; controller) {
+
+            <span class="hljs-keyword">const</span> { anchorType, blurAction, clickAction, description, disabled, download, focusAction, href, hreflang, name, ping, referrerpolicy, rel, tabOrder, target } = <span class="hljs-variable language_">this</span>;
+
+            <span class="hljs-keyword">let</span> link = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
+
+            <span class="hljs-keyword">if</span> (link) {
+
+                <span class="hljs-keyword">if</span> (clickAction) link.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">CLICK</span>, clickAction, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">if</span> (focusAction) link.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">if</span> (blurAction) link.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">BLUR</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onLeave</span>(), <span class="hljs-literal">false</span>);
+
+                hold.<span class="hljs-title function_">removeChild</span>(link);
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = <span class="hljs-literal">null</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (!disabled) {
+
+                link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(_A);
+
+                link.<span class="hljs-property">id</span> = name;
+
+                <span class="hljs-keyword">if</span> (download) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DOWNLOAD</span>, download);
+                <span class="hljs-keyword">if</span> (href) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">HREF</span>, href);
+                <span class="hljs-keyword">if</span> (hreflang) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">HREFLANG</span>, hreflang);
+                <span class="hljs-keyword">if</span> (ping) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">PING</span>, ping);
+                <span class="hljs-keyword">if</span> (referrerpolicy) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">REFERRERPOLICY</span>, referrerpolicy);
+                <span class="hljs-keyword">if</span> (rel) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">REL</span>, rel);
+                <span class="hljs-keyword">if</span> (target) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">TARGET</span>, target);
+                <span class="hljs-keyword">if</span> (anchorType) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">TYPE</span>, anchorType);
+
+                link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_TAB_ORDER</span>, tabOrder);
+
+                <span class="hljs-keyword">if</span> (clickAction &amp;&amp; <span class="hljs-title function_">isa_fn</span>(clickAction)) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">CLICK</span>, clickAction, <span class="hljs-literal">false</span>);
+
+                <span class="hljs-keyword">if</span> (description) link.<span class="hljs-property">textContent</span> = description;
+
+                <span class="hljs-keyword">if</span> (focusAction) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">if</span> (blurAction) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">BLUR</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onLeave</span>(), <span class="hljs-literal">false</span>);
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = link;
+
+                hold.<span class="hljs-title function_">appendChild</span>(link);
+            }
+            controller.<span class="hljs-property">dirtyNavigationTabOrder</span> = <span class="hljs-literal">true</span>;
+        }
+
     }
 };</pre></div></div>
             
@@ -915,84 +1007,18 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>While the Scrawl-canvas anchor object keeps copies of all of its &lt;a&gt; DOM element’s attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the <code>anchor.update()</code> helper function.</p>
-<p>The artefact with which an anchor object is associated maps these attributes to itself as follows:</p>
-<pre><code>anchor.<span class="hljs-property">description</span>     ~~&gt; artefact.<span class="hljs-property">anchorDescription</span>
-anchor.<span class="hljs-property">type</span>            ~~&gt; artefact.<span class="hljs-property">anchorType</span>
-anchor.<span class="hljs-property">target</span>          ~~&gt; artefact.<span class="hljs-property">anchorTarget</span>
-anchor.<span class="hljs-property">rel</span>             ~~&gt; artefact.<span class="hljs-property">anchorRel</span>
-anchor.<span class="hljs-property">referrerPolicy</span>  ~~&gt; artefact.<span class="hljs-property">anchorReferrerPolicy</span>
-anchor.<span class="hljs-property">ping</span>            ~~&gt; artefact.<span class="hljs-property">anchorPing</span>
-anchor.<span class="hljs-property">hreflang</span>        ~~&gt; artefact.<span class="hljs-property">anchorHreflang</span>
-anchor.<span class="hljs-property">href</span>            ~~&gt; artefact.<span class="hljs-property">anchorHref</span>
-anchor.<span class="hljs-property">download</span>        ~~&gt; artefact.<span class="hljs-property">anchorDownload</span>
-</code></pre>
-<p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute:</p>
-<pre><code>artefact.<span class="hljs-title function_">set</span>({
-
-    <span class="hljs-attr">anchor</span>: {
-        <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">target</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">rel</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">referrerPolicy</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">ping</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">hreflang</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-        <span class="hljs-attr">download</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
-    },
-});
-</code></pre>
+              <p><code>rebuild</code> - called as part of the Display cycle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">download</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">rebuild</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">DOWNLOAD</span>);
-};
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchor</span>) {
 
-S.<span class="hljs-property">href</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">HREF</span>);
-};
-
-S.<span class="hljs-property">hreflang</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">HREFLANG</span>);
-};
-
-S.<span class="hljs-property">ping</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">PING</span>);
-};
-
-S.<span class="hljs-property">referrerpolicy</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">REFERRERPOLICY</span>);
-};
-
-S.<span class="hljs-property">rel</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">REL</span>);
-};
-
-S.<span class="hljs-property">target</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">TARGET</span>);
-};
-
-S.<span class="hljs-property">anchorType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">TYPE</span>);
-};</pre></div></div>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">build</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchor</span> = <span class="hljs-literal">false</span>;
+    }
+}</pre></div></div>
             
         </li>
         
@@ -1002,101 +1028,6 @@ S.<span class="hljs-property">anchorType</span> = <span class="hljs-keyword">fun
               
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element’s attribute key:</p>
-<ul>
-<li><code>anchor.description -&gt; a.textContent</code> - this is the text between the &lt;a&gt; element’s opening and closing tags</li>
-<li><code>anchor.clickAction -&gt; a.onclick</code> - a function that returns an string which is added to the DOM element’s ‘onclick’ attribute</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">description</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">description</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-property">textContent</span> = item;
-};
-
-S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span> = item;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">ONCLICK</span>, <span class="hljs-title function_">item</span>());
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-<p>The <code>build</code> function builds the &lt;a&gt; element and adds it to the DOM</p>
-<p>Scrawl-canvas generated anchor links are kept in hidden &lt;nav&gt; elements - either the Canvas object’s nav, or the Scrawl-canvas default nav (referenced by <em>scrawlNavigationHold</em>) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body&gt; element when it first runs.</p>
-<p>This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">build</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>.<span class="hljs-title function_">removeChild</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
-
-    <span class="hljs-keyword">const</span> link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(_A);
-
-    link.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DOWNLOAD</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">HREF</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">HREFLANG</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">PING</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">REFERRERPOLICY</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">REL</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">TARGET</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">TYPE</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span>);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span> &amp;&amp; <span class="hljs-title function_">isa_fn</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span>)) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">ONCLICK</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAction</span>());
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">description</span>) link.<span class="hljs-property">textContent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">description</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">focusAction</span>) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">blurAction</span>) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">BLUR</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-title function_">onLeave</span>(), <span class="hljs-literal">false</span>);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = link;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>.<span class="hljs-title function_">appendChild</span>(link);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>Internal function - update the DOM element attribute</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(item, <span class="hljs-variable language_">this</span>[item]);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>To action a user <code>click</code> on an artifact with an associated anchor object, we generate a DOM MouseEvent originating from the anchor element which the browser can act on in the usual manner (browser/device dependent)</p>
 
@@ -1115,11 +1046,11 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-25">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>This choke mechanism is intended to prevent “Maximum call stack size exceeded” errors occurring</p>
 <ul>
@@ -1141,11 +1072,11 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-26">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>To create an anchor, include an anchor definition object in any artefact object’s factory argument:</p>

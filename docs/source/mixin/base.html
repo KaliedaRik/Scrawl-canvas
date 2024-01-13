@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -1450,6 +1470,30 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
+              <p>Same thing as anchors for artefact buttons</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span> (update.<span class="hljs-property">button</span> &amp;&amp; obj.<span class="hljs-property">button</span>) {
+
+                            obj.<span class="hljs-property">button</span>.<span class="hljs-property">packetFunctions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+                                obj.<span class="hljs-property">button</span>[item] = update.<span class="hljs-property">button</span>[item];
+                                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacketFunctions</span>(obj.<span class="hljs-property">button</span>, item)
+
+                                obj.<span class="hljs-property">button</span>.<span class="hljs-title function_">build</span>();
+                            });
+                        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
               <p>Specific to Phrase entitys, which doesn’t include a simple way to set or update glyphStyle objects</p>
 
             </div>
@@ -1477,11 +1521,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>actionPacketFunctions</code> - internal helper function - creates functions from Strings</p>
 
@@ -1507,11 +1551,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.</p>
 
@@ -1531,11 +1575,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>Most Scrawl-canvas factory objects can be copied using the <strong>clone</strong> function. The result will be an exact copy of the original, additionally set with values supplied in the argument object.</p>
@@ -1550,11 +1594,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>clone</code></p>
 
@@ -1564,18 +1608,18 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
         <span class="hljs-keyword">const</span> myName = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
-        <span class="hljs-keyword">let</span> myPacket, myTicker;
+        <span class="hljs-keyword">let</span> myPacket, myTicker, myAnchor, myButton;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = items.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">ZERO_STR</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Tickers are specific to Tween and Action objects</p>
 
@@ -1592,17 +1636,48 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Everything else</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> myPacket = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">saveAsPacket</span>();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p>Anchors and Buttons are SC artefacts in their own right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>) {
+
+                myAnchor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>;
+                <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) {
+
+                myButton = <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>;
+                <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>;
+            }
+
+            myPacket = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">saveAsPacket</span>();
+
+            <span class="hljs-keyword">if</span> (myAnchor) <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span> = myAnchor;
+            <span class="hljs-keyword">if</span> (myButton) <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span> = myButton;
+        }
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = myName;
 
@@ -1623,11 +1698,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>postCloneAction</code> - overwritten by a variety of mixins and factories</p>
 
@@ -1641,11 +1716,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1654,11 +1729,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>kill</code> - overwritten by various mixins and factories</p>
 
@@ -1672,11 +1747,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>makeName</code> - If the developer doesn’t supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.</p>
@@ -1694,11 +1769,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>register</code> - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function’s type value.</p>
 <ul>
@@ -1735,11 +1810,11 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>deregister</code> - Reverse what register() does</p>
 

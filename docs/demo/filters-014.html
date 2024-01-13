@@ -310,6 +310,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-057.html">
+                  ./demo/canvas-057.js
+                </a>
+              
+                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -342,6 +347,11 @@
                 
                 <a class="source" href="canvas-064.html">
                   ./demo/canvas-064.js
+                </a>
+              
+                
+                <a class="source" href="canvas-065.html">
+                  ./demo/canvas-065.js
                 </a>
               
                 
@@ -437,6 +447,21 @@
                 
                 <a class="source" href="dom-018.html">
                   ./demo/dom-018.js
+                </a>
+              
+                
+                <a class="source" href="dom-019.html">
+                  ./demo/dom-019.js
+                </a>
+              
+                
+                <a class="source" href="dom-020.html">
+                  ./demo/dom-020.js
+                </a>
+              
+                
+                <a class="source" href="dom-021.html">
+                  ./demo/dom-021.js
                 </a>
               
                 
@@ -854,7 +879,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -882,6 +907,21 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Create the background</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addCheckerboardBackground</span>(canvas, <span class="hljs-string">&#x27;demo-filters-014&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
               <p>Create the filter</p>
 
             </div>
@@ -903,11 +943,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Create the target entity</p>
 
@@ -933,11 +973,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -949,11 +989,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -965,11 +1005,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -985,11 +1025,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality</p>
@@ -1023,21 +1063,6 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> a0 = <span class="hljs-built_in">parseInt</span>(alpha_0.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-11">
             <div class="annotation">
               
@@ -1048,7 +1073,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        a1 = <span class="hljs-built_in">parseInt</span>(alpha_1.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> a0 = <span class="hljs-built_in">parseInt</span>(alpha_0.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),</pre></div></div>
             
         </li>
         
@@ -1063,7 +1088,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        a2 = <span class="hljs-built_in">parseInt</span>(alpha_2.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        a1 = <span class="hljs-built_in">parseInt</span>(alpha_1.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),</pre></div></div>
             
         </li>
         
@@ -1073,6 +1098,21 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        a2 = <span class="hljs-built_in">parseInt</span>(alpha_2.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1089,11 +1129,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Setup form</p>
 
@@ -1114,21 +1154,6 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>tile_width.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-16">
             <div class="annotation">
               
@@ -1139,7 +1164,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>tile_width.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
             
         </li>
         
@@ -1154,7 +1179,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>gutter_width.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
             
         </li>
         
@@ -1169,7 +1194,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>gutter_height.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>gutter_width.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
             
         </li>
         
@@ -1184,7 +1209,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>offset_x.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>gutter_height.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
             
         </li>
         
@@ -1199,7 +1224,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>offset_y.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>offset_x.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1214,7 +1239,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>offset_y.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1229,7 +1254,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>alpha_0.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1244,7 +1269,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>alpha_1.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>alpha_0.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;</pre></div></div>
             
         </li>
         
@@ -1259,7 +1284,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>alpha_2.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>alpha_1.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1274,7 +1299,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>alpha_3.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>alpha_2.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;</pre></div></div>
             
         </li>
         
@@ -1285,11 +1310,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>alpha_3.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1299,6 +1324,21 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

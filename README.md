@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.11.0 - 23 December 2023` 
+Version: `8.12.0 - 12 January 2024` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -58,7 +58,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.11.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-11-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-11-0.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.12.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-12-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-12-0.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -106,7 +106,7 @@ Alternatively, a zip package of the v8.11.0 files can be downloaded from this li
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.11.0';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.12.0';
     [...]
 </script>
 ```
@@ -183,6 +183,9 @@ Running the following command on the command line will recreate the minified fil
 ```sh
 $> yarn build
 ```
+
+### Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=KaliedaRik/Scrawl-canvas&type=Date)](https://star-history.com/#KaliedaRik/Scrawl-canvas&Date)
 
 
 ### Development team

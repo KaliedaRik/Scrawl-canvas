@@ -107,8 +107,6 @@ tweenMix(P);
 
 
 // #### Tween attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [tween mixin](../mixin/tween.html): __order__, __ticker__, __targets__, __time__, __action__, __reverseOnCycleEnd__, __reversed__.
 const defaultAttributes = {
 
 // __definitions__ - Array of objects defining the animations to be performed by the Tween. Object attributes include:

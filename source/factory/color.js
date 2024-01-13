@@ -83,6 +83,7 @@ const OKLabtoLMS = _freeze([
     _freeze([ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ])
 ]);
 
+
 // Local dedicated canvas
 const element = document.createElement(CANVAS);
 element.width = 1;
@@ -158,7 +159,6 @@ baseMix(P);
 
 
 // #### Color attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 
@@ -206,6 +206,10 @@ const defaultAttributes = {
     oklch_max: null,
     oklch_min: null,
 
+// color('???', ...) for the various color strings.
+// + __To note:__ do not mix-and-match color strings from different predefined color spaces! SC only reserves one set of arrays for all these strings.
+// + Internally, SC converts each color() string to RGB (sRGB) values for further manipulation
+//
 // The __easing__ and __easingFunction__ attributes affect the `getRangeColor` function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1
     easing: LINEAR,
     easingFunction: null,
@@ -1079,6 +1083,8 @@ P.convert = function (color, suffix = ZERO_STR) {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     }
+    // This captures everything else, including CSS `color()` strings, named colors, hex colors, etc
+    // + All these colors get processed as RGB colors
     else {
 
         [b, c, d, a] = this.getColorFromCanvas(color);
@@ -1584,15 +1590,15 @@ P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
 
 // #### Browser color space support
 // We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element's engine, stamp a pixel, then check to see if the pixel is black (space not supported)
-// + We check for HWB, LAB andf LCH color space support
+// + We check for HWB, LAB, LCH, OKLAB, OKLCH, P3 color space support
 // + We assume that the browser always supports RGB and HSL  color spaces
 // + We don't check for XYZ color space support because it is not part of the [CSS Color Module Level 4 specification](https://www.w3.org/TR/css-color-4/)
-// + We don't check for OKLAB, OKLCH support at this time (Nov 2022)
 let supportsHWB = false;
 let supportsLAB = false;
 let supportsLCH = false;
 let supportsOKLAB = false;
 let supportsOKLCH = false;
+let supportsP3 = false;
 
 const browserChecker = function () {
 
@@ -1654,8 +1660,6 @@ const browserChecker = function () {
     else col = engine.fillStyle;
 
     // Test for OKLAB support
-    // + Assume no browser supports OKLAB. Safari's implementation is incomplete (Nov 2022)
-
     engine.fillStyle = 'oklab(59.686% 0.1009 0.1192)';
     engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
@@ -1673,8 +1677,6 @@ const browserChecker = function () {
     else col = engine.fillStyle;
 
     // Test for OKLCH support
-    // + Assume no browser supports OKLCH. Safari's implementation is incomplete (Nov 2022)
-
     engine.fillStyle = 'oklch(59.686% 0.15619 49.7694)';
     engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
@@ -1689,6 +1691,23 @@ const browserChecker = function () {
 
     // Firefox safety net
     if (supportsOKLCH && col === engine.fillStyle) supportsOKLCH = false;
+    else col = engine.fillStyle;
+
+    // Test for display-p3 support
+    engine.fillStyle = 'color(display-p3 0 1 0)';
+    engine.clearRect(0, 0, 1, 1);
+    engine.fillRect(0, 0, 1, 1);
+
+    image = engine.getImageData(0, 0, 1, 1);
+
+    if (image && image.data) {
+
+        [r, g, b] = image.data;
+    }
+    if (r || g || b) supportsP3 = true;
+
+    // Firefox safety net
+    if (supportsP3 && col === engine.fillStyle) supportsP3 = false;
     else col = engine.fillStyle;
 };
 browserChecker();

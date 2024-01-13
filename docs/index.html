@@ -19,7 +19,7 @@
 </head>
 
 <body>
-  <h1>Scrawl-canvas documentation (for version 8.11.0)</h1>
+  <h1>Scrawl-canvas documentation (for version 8.12.0)</h1>
 
   <h3>Scrawl-canvas modules</h3>
 
@@ -96,6 +96,12 @@
       <li>setTouchActionChoke</li>
       <li>startCoreListeners</li>
       <li>stopCoreListeners</li>
+    </ul>
+    <ul>
+      <li>getPixelRatio</li>
+      <li>getIgnorePixelRatio</li>
+      <li>setIgnorePixelRatio</li>
+      <li>setPixelRatioChangeAction</li>
     </ul>
     <li><a href="source/mixin/base.html">mixin/base.js</a></li>
     <li><a href="source/mixin/delta.html">mixin/delta.js</a></li>
@@ -283,6 +289,7 @@
     <ul>
       <li>importDomVideo</li>
       <li>importMediaStream</li>
+      <li>importScreenCapture</li>
       <li>importVideo</li>
     </ul>
     <li><em>Note that Cells can also be used as assets</em></li>
@@ -323,9 +330,6 @@
       <li>makeFilter</li>
     </ul>
     <li><a href="source/factory/filter-engine.html">factory/filter-engine.js</a></li>
-    <ul>
-      <li>setFilterMemoizationChoke</li>
-    </ul>
   </ul>
 
   <h4>Particles and Physics</h4>
@@ -386,10 +390,13 @@
     </ul>
   </ul>
 
-  <h4>Anchors</h4>
+  <h4>Keyboard navigation (hidden DOM elements)</h4>
   <ul>
     <li><a href="source/mixin/anchor.html">mixin/anchor.js</a></li>
     <li><a href="source/factory/anchor.html">factory/anchor.js</a></li>
+    <li><a href="source/mixin/button.html">mixin/button.js</a></li>
+    <li><a href="source/factory/button.html">factory/button.js</a></li>
+    <li><a href="source/mixin/hiddenDomElements.html">mixin/hiddenDomElements.js</a></li>
   </ul>
 
   <h4>User interaction</h4>
@@ -428,6 +435,12 @@
     <li><a href="source/core/shared-vars.html">core/shared-vars.js</a></li>
     <li><a href="source/core/system-flags.html">core/system-flags.js</a></li>
     <li><a href="source/core/utilities.html">core/utilities.js</a></li>
+    <li><a href="source/core/workstore.html">core/workstore.js</a></li>
+    <ul>
+      <li>setFilterMemoizationChoke</li>
+      <li>setWorkstoreLifetimeLength</li>
+      <li>setWorkstorePurgeChoke</li>
+    </ul>
     <li><a href="source/factory/array-pool.html">factory/array-pool.js</a></li>
     <li><a href="source/factory/font-attributes.html">factory/font-attributes.js</a></li>
     <li><a href="source/factory/state.html">factory/state.js</a></li>
@@ -506,13 +519,14 @@
     <li><a href="demo/canvas-047.html">Canvas-047</a> Easing functions for Color and Tween factories</li>
     <li><a href="demo/canvas-048.html">Canvas-048</a> Display a filtered media stream</li>
     <li><a href="demo/canvas-049.html">Canvas-049</a> Conic gradients</li>
-    <li><a href="demo/canvas-050.html">Canvas-050</a> Manipulate artefact delta animation values</li>
+    <li><a href="demo/canvas-050.html">Canvas-050</a> Manipulate artefact delta animation values; test animation maxFrameRate</li>
     <li><a href="demo/canvas-051.html">Canvas-051</a> Line Spirals</li>
     <li><a href="demo/canvas-052.html">Canvas-052</a> Create and use a RawAsset object to modify an image asset</li>
     <li><a href="demo/canvas-053.html">Canvas-053</a> Display output from a Reaction-Diffusion asset</li>
     <li><a href="demo/canvas-054.html">Canvas-054</a> Animated contour lines: map a complex gradient to NoiseAsset output</li>
     <li><a href="demo/canvas-055.html">Canvas-055</a> Crescent entity functionality</li>
     <li><a href="demo/canvas-056.html">Canvas-056</a> Seeded random number generator; point on path</li>
+    <li><a href="demo/canvas-057.html">Canvas-057</a> CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz</li>
     <li><a href="demo/canvas-058.html">Canvas-058</a> Image smoothing</li>
     <li><a href="demo/canvas-059.html">Canvas-059</a> CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()</li>
     <li><a href="demo/canvas-060.html">Canvas-060</a> Noise asset functionality</li>
@@ -520,6 +534,7 @@
     <li><a href="demo/canvas-062.html">Canvas-062</a> Group and ungroup entitys; create a bespoke drag-drop UX</li>
     <li><a href="demo/canvas-063.html">Canvas-063</a> Semi-accessible Minimap; multiple drag zones</li>
     <li><a href="demo/canvas-064.html">Canvas-064</a> Animation object: gradient along a line</li>
+    <li><a href="demo/canvas-065.html">Canvas-065</a> Wide Gamut 2D Graphics using HTML Canvas</li>
   </ul>
 
   <h4>Filters demos</h4>
@@ -712,6 +727,9 @@
     <li><a href="demo/dom-016.html">DOM-016</a> Determine the displayed shape of the visible stack; react to changes in the displayed shape</li>
     <li><a href="demo/dom-017.html">DOM-017</a> Testing getCanvas(), getStack() functionality</li>
     <li><a href="demo/dom-018.html">DOM-018</a> Fullscreen API functionality</li>
+    <li><a href="demo/dom-019.html">DOM-019</a> Screen Capture API - apply a filter to a browser web page</li>
+    <li><a href="demo/dom-020.html">DOM-020</a> Using the EyeDropper API</li>
+    <li><a href="demo/dom-021.html">DOM-021</a> Popover API - use canvas elements in popover content</li>
   </ul>
 
   <h4>Experiments with third party libraries</h4>

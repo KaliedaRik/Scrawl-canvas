@@ -1,5 +1,5 @@
 // # Demo Canvas 050
-// Manipulate artefact delta animation values
+// Manipulate artefact delta animation values; test animation maxFrameRate
 
 // [Run code](../../demo/canvas-050.html)
 import * as scrawl from '../source/scrawl.js'
@@ -148,9 +148,10 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+const animation = scrawl.makeRender({
 
     name: 'demo-animation',
+    maxFrameRate: 120,
     target: canvas,
     afterShow: report,
 });
@@ -219,11 +220,29 @@ scrawl.addNativeListener('click', (e) => {
 
 }, '#scaling');
 
+// Setup form observer functionality
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: animation,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        maxFrameRate: ['maxFrameRate', 'int'],
+    },
+});
+
 // @ts-expect-error
 document.querySelector('#scaling').value = '0';
 document.querySelector('#scaling').innerHTML = 'Add scaling';
 // @ts-expect-error
 document.querySelector('#constraintAction').value = 'reverse';
+// @ts-expect-error
+document.querySelector('#maxFrameRate').value = '120';
 
 
 // #### Development and testing

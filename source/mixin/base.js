@@ -508,6 +508,19 @@ export default function (P = Ωempty) {
                             });
                         }
 
+                        // Same thing as anchors for artefact buttons
+                        if (update.button && obj.button) {
+
+                            obj.button.packetFunctions.forEach(item => {
+
+                                obj.button[item] = update.button[item];
+                                this.actionPacketFunctions(obj.button, item)
+
+                                obj.button.build();
+                            });
+                        }
+
+
                         // Specific to Phrase entitys, which doesn't include a simple way to set or update glyphStyle objects
                         if (update.glyphStyles && obj.glyphStyles) {
 
@@ -573,7 +586,7 @@ export default function (P = Ωempty) {
 
         const myName = this.name;
 
-        let myPacket, myTicker;
+        let myPacket, myTicker, myAnchor, myButton;
 
         this.name = items.name || ZERO_STR;
 
@@ -587,7 +600,26 @@ export default function (P = Ωempty) {
         }
 
         // Everything else
-        else myPacket = this.saveAsPacket();
+        else {
+
+            // Anchors and Buttons are SC artefacts in their own right
+            if (this.anchor) {
+
+                myAnchor = this.anchor;
+                delete this.anchor;
+            }
+
+            if (this.button) {
+
+                myButton = this.button;
+                delete this.button;
+            }
+
+            myPacket = this.saveAsPacket();
+
+            if (myAnchor) this.anchor = myAnchor;
+            if (myButton) this.button = myButton;
+        }
 
         this.name = myName;
 

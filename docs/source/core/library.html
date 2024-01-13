@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -577,7 +597,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> version = <span class="hljs-string">&#x27;8.11.0&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> version = <span class="hljs-string">&#x27;8.12.0&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -980,14 +1000,7 @@
     <span class="hljs-string">&#x27;/UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span> },
 
     <span class="hljs-string">&#x27;OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span> },
-    <span class="hljs-string">&#x27;/OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> },
-
-    <span class="hljs-string">&#x27;SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;small-caps&#x27;</span> },
-    <span class="hljs-string">&#x27;/SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
-
-    <span class="hljs-string">&#x27;HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
-    <span class="hljs-string">&#x27;/HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
-};</pre></div></div>
+    <span class="hljs-string">&#x27;/OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> },</pre></div></div>
             
         </li>
         
@@ -997,6 +1010,26 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>Warning: font-variant functionality has been deprecated in SC and should be avoided!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;small-caps&#x27;</span> },
+    <span class="hljs-string">&#x27;/SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
+
+    <span class="hljs-string">&#x27;HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
+    <span class="hljs-string">&#x27;/HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>All <strong>makeXXX</strong> factory functions get added as references to the <strong>constructors</strong> section of the library - used mainly as part of Scrawl-canvas cloning functionality.</p>
 

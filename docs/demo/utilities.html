@@ -310,6 +310,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-057.html">
+                  ./demo/canvas-057.js
+                </a>
+              
+                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -342,6 +347,11 @@
                 
                 <a class="source" href="canvas-064.html">
                   ./demo/canvas-064.js
+                </a>
+              
+                
+                <a class="source" href="canvas-065.html">
+                  ./demo/canvas-065.js
                 </a>
               
                 
@@ -437,6 +447,21 @@
                 
                 <a class="source" href="dom-018.html">
                   ./demo/dom-018.js
+                </a>
+              
+                
+                <a class="source" href="dom-019.html">
+                  ./demo/dom-019.js
+                </a>
+              
+                
+                <a class="source" href="dom-020.html">
+                  ./demo/dom-020.js
+                </a>
+              
+                
+                <a class="source" href="dom-021.html">
+                  ./demo/dom-021.js
                 </a>
               
                 
@@ -843,11 +868,8 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    library <span class="hljs-keyword">as</span> L,
-    addNativeListener,
-    importDomImage,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+<span class="hljs-keyword">const</span> L = scrawl.<span class="hljs-property">library</span>;</pre></div></div>
             
         </li>
         
@@ -1323,14 +1345,14 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(targets)) targets = [targets];
 
-    <span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;dragenter&#x27;</span>, <span class="hljs-string">&#x27;dragover&#x27;</span>, <span class="hljs-string">&#x27;dragleave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+    scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;dragenter&#x27;</span>, <span class="hljs-string">&#x27;dragover&#x27;</span>, <span class="hljs-string">&#x27;dragleave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-title function_">stopPropagation</span>();
 
     }, wrappers.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">w</span> =&gt;</span> w.<span class="hljs-property">domElement</span>));
 
-    <span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;drop&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+    scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;drop&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-title function_">stopPropagation</span>();
@@ -1399,7 +1421,7 @@
                 img.<span class="hljs-property">id</span> = name;
                 store.<span class="hljs-title function_">appendChild</span>(img);
 
-                <span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${name}</span>`</span>);</pre></div></div>
+                scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${name}</span>`</span>);</pre></div></div>
             
         </li>
         
@@ -1498,6 +1520,67 @@
     };
 };
 
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">addCheckerboardBackground</span> = (<span class="hljs-params">canvas, namespace</span>) =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Namespace boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">item</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${item}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Create the background</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> checkerboard = canvas.<span class="hljs-title function_">buildCell</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;checkerboard-background-cell&#x27;</span>),
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">16</span>, <span class="hljs-number">16</span>],
+        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#999&#x27;</span>,
+        <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">compiled</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
+    });
+
+    scrawl.<span class="hljs-title function_">makeBlock</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;checkerboard-background-block-1&#x27;</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;checkerboard-background-cell&#x27;</span>),
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;#bbb&#x27;</span>,
+    }).<span class="hljs-title function_">clone</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;checkerboard-background-block-2&#x27;</span>),
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+    });
+
+    checkerboard.<span class="hljs-title function_">clear</span>();
+    checkerboard.<span class="hljs-title function_">compile</span>();
+
+    scrawl.<span class="hljs-title function_">makeBlock</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;checkerboard-background&#x27;</span>),
+        <span class="hljs-attr">group</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;checkerboard-background-cell&#x27;</span>),
+    });
+};
+
 <span class="hljs-keyword">export</span> {
     reportSpeed,
     reportFullLibrary,
@@ -1508,6 +1591,7 @@
     killStyle,
     killTicker,
 
+    addCheckerboardBackground,
     addImageDragAndDrop,
 }</pre></div></div>
             

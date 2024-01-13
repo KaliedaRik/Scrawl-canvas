@@ -85,6 +85,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/workstore.html">
+                  ./source/core/workstore.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -112,6 +117,11 @@
                 
                 <a class="source" href="block.html">
                   ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="button.html">
+                  ./source/factory/button.js
                 </a>
               
                 
@@ -440,6 +450,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/cascade.html">
                   ./source/mixin/cascade.js
                 </a>
@@ -472,6 +487,11 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hiddenDomElements.html">
+                  ./source/mixin/hiddenDomElements.js
                 </a>
               
                 
@@ -729,18 +749,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="picture-attributes">Picture attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, calculateOrder, stampOrder, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
-<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a>: <strong>asset, spriteTrack, imageSource, spriteSource, videoSource, source</strong>.</li>
-</ul>
 
             </div>
             
@@ -1538,8 +1546,7 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateImageSubscribers</span>();
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateImageSubscribers</span>();</pre></div></div>
             
         </li>
         
@@ -1549,6 +1556,22 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
               
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hiddenDomElements.js</code> file - handles updates to anchor and button objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>preparePasteObject</code> - internal function</p>
 <ul>
@@ -1581,11 +1604,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - internal function</p>
 <ul>
@@ -1615,11 +1638,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 
@@ -1628,11 +1651,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -1646,11 +1669,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1665,11 +1688,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1695,11 +1718,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -1727,11 +1750,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -1750,11 +1773,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -1773,11 +1796,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>checkHitReturn</code> - overwrites mixin/position.js function</p>
 
@@ -1825,11 +1848,11 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);

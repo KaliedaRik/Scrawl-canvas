@@ -310,6 +310,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-057.html">
+                  ./demo/canvas-057.js
+                </a>
+              
+                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -342,6 +347,11 @@
                 
                 <a class="source" href="canvas-064.html">
                   ./demo/canvas-064.js
+                </a>
+              
+                
+                <a class="source" href="canvas-065.html">
+                  ./demo/canvas-065.js
                 </a>
               
                 
@@ -437,6 +447,21 @@
                 
                 <a class="source" href="dom-018.html">
                   ./demo/dom-018.js
+                </a>
+              
+                
+                <a class="source" href="dom-019.html">
+                  ./demo/dom-019.js
+                </a>
+              
+                
+                <a class="source" href="dom-020.html">
+                  ./demo/dom-020.js
+                </a>
+              
+                
+                <a class="source" href="dom-021.html">
+                  ./demo/dom-021.js
                 </a>
               
                 
@@ -835,7 +860,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-canvas-050">Demo Canvas 050</h1>
-<p>Manipulate artefact delta animation values</p>
+<p>Manipulate artefact delta animation values; test animation maxFrameRate</p>
 
             </div>
             
@@ -1056,9 +1081,10 @@ scrawl.<span class="hljs-title function_">makePolyline</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> animation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">maxFrameRate</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1147,12 +1173,24 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Setup form observer functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scaling&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scaling&#x27;</span>).<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&#x27;Add scaling&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeUpdater</span>({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: animation,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+        <span class="hljs-attr">maxFrameRate</span>: [<span class="hljs-string">&#x27;maxFrameRate&#x27;</span>, <span class="hljs-string">&#x27;int&#x27;</span>],
+    },
+});</pre></div></div>
             
         </li>
         
@@ -1167,7 +1205,8 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#constraintAction&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;reverse&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scaling&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scaling&#x27;</span>).<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&#x27;Add scaling&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1177,6 +1216,36 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#constraintAction&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;reverse&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#maxFrameRate&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;120&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

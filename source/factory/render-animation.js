@@ -83,6 +83,10 @@ const RenderAnimation = function (items = Ωempty) {
     this.onHalt = items.onHalt || λnull;
     this.onKill = items.onKill || λnull;
 
+    this.maxFrameRate = items.maxFrameRate || 60;
+    this.lastRun = 0;
+    this.chokedAnimation = true;
+
     // These attributes are specific to RenderAnimation
     this.target = target;
 
@@ -167,11 +171,13 @@ baseMix(P);
 
 
 // #### RenderAnimation attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 // __order__ - positive integer Number. Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations.
     order: 1,
+
+// __maxFrameRate__ - positive integer Number. A frames-per-second choke to prevent animation running too fast.
+    maxFrameRate: 60,
 
 // __onRun__, __onHalt__, __onKill__
 //

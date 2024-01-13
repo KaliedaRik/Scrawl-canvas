@@ -47,7 +47,7 @@ import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } 
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
+import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
@@ -66,13 +66,15 @@ import deltaMix from '../mixin/delta.js';
 import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 import cascadeMix from '../mixin/cascade.js';
 import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
+import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Cell constructor
@@ -85,21 +87,25 @@ const Cell = function (items = Ωempty) {
     this.initializePositions();
     this.initializeCascade();
 
-    if (!isa_canvas(items.element)) {
+    this.modifyConstructorInputForAnchorButton(items);
 
-        const mycanvas = document.createElement(CANVAS);
+    let mycanvas = items.element;
+    delete items.element;
+
+    if (!isa_canvas(mycanvas)) {
+
+        mycanvas = document.createElement(CANVAS);
         mycanvas.id = this.name;
         mycanvas.width = 300;
         mycanvas.height = 150;
-        items.element = mycanvas;
     }
 
     // The `willReadFrequently` argument attribute is not retained by the cell, but is used during the Cell element's construction. Defaults to `true`
-    this.installElement(items.element, items.willReadFrequently);
-
     this.set(this.defs);
 
     this.set(items);
+
+    this.installElement(mycanvas, items.canvasColorSpace);
 
     this.state.setStateFromEngine(this.engine);
 
@@ -129,17 +135,6 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [asset](../mixin/asset.html) - goes above position mixin because asset objects use the kill function defined in this mixin, but Cells need to follow the position mixin formula (which includes a call to the factoryKill function)
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [anchor](../mixin/anchor.html)
-// + [cascade](../mixin/cascade.html)
-// + [pattern](../mixin/pattern.html)
-// + [filter](../mixin/filter.html)
 baseMix(P);
 cellMix(P);
 assetMix(P);
@@ -148,24 +143,15 @@ deltaMix(P);
 pivotMix(P);
 mimicMix(P);
 pathMix(P);
+hiddenElementsMix(P);
 anchorMix(P);
+buttonMix(P);
 cascadeMix(P);
 patternMix(P);
 filterMix(P);
 
 
 // #### Cell attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
-// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
-// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
-// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
-// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-// + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
-// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
-// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 const defaultAttributes = {
 
 // The following booleans determine whether a Cell canvas will, clear, compile and/or show itself as part of the Display cycle.
@@ -224,6 +210,8 @@ const defaultAttributes = {
 
 // __includeInCascadeEventActions__ - if a non-base Cell has its `shown` flag set to true, then it is automatically included in CascadeEventActions functionality. In situations where we don't want the Cell to _directly_ appear in the canvas, but do want to include it in CascadeEventActions, then we can set this flag to `true`
     includeInCascadeEventActions: false,
+
+    willReadFrequently: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -567,11 +555,11 @@ P.checkSource = function (width, height) {
 };
 
 // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
-P.getData = function (entity, cell) {
+P.getData = function (entity, mycell) {
 
     this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 
-    return this.buildStyle(cell);
+    return this.buildStyle(mycell);
 };
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
@@ -707,11 +695,12 @@ P.subscribeAction = function (sub = {}) {
 };
 
 // `installElement` - internal function, used by the constructor
-P.installElement = function (element, willReadFrequently = true) {
+P.installElement = function (element, colorSpace = SRGB) {
 
     this.element = element;
     this.engine = this.element.getContext(_2D, {
-        willReadFrequently,
+        willReadFrequently: this.willReadFrequently,
+        colorSpace,
     });
 
     this.state = makeState({
@@ -1218,6 +1207,9 @@ P.prepareStamp = function () {
         this.dirtyAssetSubscribers = false;
         this.notifySubscribers();
     }
+
+    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects in the DOM
+    this.prepareStampTabsHelper();
 };
 
 // `cleanPathObject` - Calculate the Cell's __Path2D object__
@@ -1340,7 +1332,6 @@ const checkEngineScale = function (engine) {
     }
     return 1;
 };
-
 
 
 // #### Factory

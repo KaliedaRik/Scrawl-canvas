@@ -23,7 +23,7 @@ import { releaseCell, requestCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _isArray, _max, _min, _PC, _Q, BOLD, BOLDER, CAP, CH, CM, CONDENSED, DEFAULT_SIZE, EM, EX, EXPANDED, EXTRA_CONDENSED, EXTRA_EXPANDED, FONT_ATTRIBUTE, IC, IN, ITALIC, LARGE, LARGER, LH, LIGHTER, MEDIUM, MM, NORMAL, OBLIQUE, PC, PT, PX, REM, RFS_ARRAY_1, RFS_ARRAY_2, RLH, SANS_SERIF, SEMI_CONDENSED, SEMI_EXPANDED, SIZE_SUFFIX, SMALL, SMALL_CAPS, SMALLER, SPACE, STOP, T_CELL, T_FONT_ATTRIBUTES, ULTRA_CONDENSED, ULTRA_EXPANDED, VB, VH, VI, VMAX, VMIN, VW, X_LARGE, X_SMALL, XX_LARGE, XX_SMALL, XXX_LARGE, ZERO_STR } from '../core/shared-vars.js';
+import { _isArray, _max, _min, _PC, _Q, BOLD, BOLDER, CAP, CH, CM, DEFAULT_SIZE, EM, EX, FONT_ATTRIBUTE, IC, IN, ITALIC, LARGE, LARGER, LH, LIGHTER, MEDIUM, MM, NORMAL, OBLIQUE, PC, PT, PX, REM, RFS_ARRAY_1, RFS_ARRAY_2, RLH, SANS_SERIF, SIZE_SUFFIX, SMALL, SMALL_CAPS, SMALLER, SPACE, STOP, T_CELL, T_FONT_ATTRIBUTES, VB, VH, VI, VMAX, VMIN, VW, X_LARGE, X_SMALL, XX_LARGE, XX_SMALL, XXX_LARGE, ZERO_STR } from '../core/shared-vars.js';
 
 
 
@@ -49,7 +49,6 @@ baseMix(P);
 
 
 // #### FontAttributes attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 const defaultAttributes = {
 
 // __font__ - pseudo-attribute String which gets broken down into its component parts.
@@ -60,17 +59,14 @@ const defaultAttributes = {
     style: NORMAL,
 
 
-// _font-variant_ - saved in the __variant__ String attribute - the standard indicates that canvas context engine should only recognise `normal` and `small-caps` values. Do not use other possibilities (_font-variant-caps, font-variant-numeric, font-variant-ligatures, font-variant-east-asian, font-variant-alternates_) in font strings; scrawl-canvas will remove and/or ignore them when it parses the font string.
+// _font-variant_ - saved in the __variant__ String attribute - NOTE: this attribute has been deprecated and should not be used!
+// + The standard indicates that canvas context engine should only recognise `normal` and `small-caps` values. Do not use other possibilities (_font-variant-caps, font-variant-numeric, font-variant-ligatures, font-variant-east-asian, font-variant-alternates_) in font strings; scrawl-canvas will remove and/or ignore them when it parses the font string.
     variant: NORMAL,
 
 
 // _font-weight_ - saved in the __weight__ String attribute - acceptable values are: `normal`, `bold`, `lighter`, `bolder`; or a number (100. 200, 300, ... 900). Bold is generally the equivalent of 700, and normal is 400; lighter/bolder are values relative to the &lt;canvas> element's computed font weight. Note that browser handling of font weight requirements by their respective canvas context engines is not entirely standards compliant - for instance Safari browsers will generally ignore weight assertions in font strings.
 // + To explicitly use a light, bold or heavy font design, reference the font face directly in the `family` or font strings.
     weight: NORMAL,
-
-// __font-stretch__ - saved in the __stretch__ String attribute acceptable values are: `normal`, `semi-condensed`, `condensed`, `extra-condensed`, `ultra-condensed`, `semi-expanded`, `expanded`, `extra-expanded`, `ultra-expanded`. Browser support for these values by the &lt;canvas> element's context engine is, for the most part, non-existant.
-// + To explicitly use a condensed or stretched font design, reference the font face directly in the `family` or font strings.
-    stretch: NORMAL,
 
 
 // _font-size_ - broken into two parts and saved in the __sizeValue__ Number and __sizeMetric__ String, each of which can be set separately. The W3C HTML Canvas 2D Context Recommendation states: _"with the 'font-size' component converted to CSS pixels"_. However, Scrawl-canvas makes every effort to respect and interpret non-px-based font-size requests.
@@ -244,7 +240,6 @@ S.font = function (item) {
         S.style.call(this, item);
         S.variant.call(this, item);
         S.weight.call(this, item);
-        S.stretch.call(this, item);
         S.size.call(this, item);
         S.family.call(this, item);
     }
@@ -318,30 +313,6 @@ S.weight = function (item) {
         if (v != this.weight) {
 
             this.weight = v;
-            this.dirtyFont = true;
-        }
-    }
-};
-
-// __stretch__
-S.stretch = function (item) {
-
-    if (xt(item)) {
-
-        let v = NORMAL;
-
-        v = (item.includes(CONDENSED)) ? CONDENSED : v;
-        v = (item.includes(SEMI_CONDENSED)) ? SEMI_CONDENSED : v;
-        v = (item.includes(EXTRA_CONDENSED)) ? EXTRA_CONDENSED : v;
-        v = (item.includes(ULTRA_CONDENSED)) ? ULTRA_CONDENSED : v;
-        v = (item.includes(EXPANDED)) ? EXPANDED : v;
-        v = (item.includes(SEMI_EXPANDED)) ? SEMI_EXPANDED : v;
-        v = (item.includes(EXTRA_EXPANDED)) ? EXTRA_EXPANDED : v;
-        v = (item.includes(ULTRA_EXPANDED)) ? ULTRA_EXPANDED : v;
-
-        if (v != this.stretch) {
-
-            this.stretch = v;
             this.dirtyFont = true;
         }
     }
@@ -585,7 +556,6 @@ P.buildFont = function () {
     if (this.style != NORMAL) font += `${this.style} `;
     if (this.variant != NORMAL) font += `${this.variant} `;
     if (this.weight != NORMAL) font += `${this.weight} `;
-    if (this.stretch != NORMAL) font += `${this.stretch} `;
 
     font += `${this.calculateSize()} `;
 

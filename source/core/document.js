@@ -9,7 +9,7 @@ import { artefact } from "./library.js";
 
 import { pushUnique, Ωempty } from "./utilities.js";
 
-import { getPixelRatio, getIgnorePixelRatio } from "./events.js";
+import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 
 import { releaseArray, requestArray } from '../factory/array-pool.js';
 
@@ -225,11 +225,3 @@ scrawlCanvasHold.style.top = '-5000px';
 scrawlCanvasHold.style.left = '-5000px';
 scrawlCanvasHold.id = 'Scrawl-ARIA-default-hold';
 document.body.appendChild(scrawlCanvasHold);
-
-// Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav> elements that get embedded in the Canvas Shadow DOM. These are used to store &lt;a> links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers). Should that &lt;nav> element fail to be created, then those &lt;a> links will be added to this element.
-export const scrawlNavigationHold = document.createElement('nav');
-scrawlNavigationHold.style.position = 'absolute';
-scrawlNavigationHold.style.top = '-5000px';
-scrawlNavigationHold.style.left = '-5000px';
-scrawlNavigationHold.id = 'Scrawl-navigation-default-hold';
-document.body.prepend(scrawlNavigationHold);

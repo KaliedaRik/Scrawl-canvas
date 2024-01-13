@@ -327,6 +327,7 @@ export default function (P = Ωempty) {
         return result;
     };
 
+    // handles both anchor and button objects
     P.handlePacketAnchor = function (copy, items) {
 
         if (this.anchor) {
@@ -334,6 +335,13 @@ export default function (P = Ωempty) {
             const a = _parse(this.anchor.saveAsPacket(items))[3];
             copy.anchor = a;
         }
+
+        if (this.button) {
+
+            const b = _parse(this.button.saveAsPacket(items))[3];
+            copy.button = b;
+        }
+
         return copy;
     }
 
@@ -355,6 +363,9 @@ export default function (P = Ωempty) {
 
         // If the artefact has an anchor, it needs to be removed
         if (this.anchor) this.demolishAnchor();
+
+        // If the artefact has a button, it needs to be removed
+        if (this.button) this.demolishButton();
 
         // Remove from other artefacts
         _values(artefact).forEach(val => {

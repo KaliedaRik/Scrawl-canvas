@@ -407,9 +407,6 @@ const linkFactory = function (scrawl, items, canvas, linkTextGroup, colors) {
             name,
             href,
             description: text,
-
-            focusAction: true,
-            blurAction: true,
         },
 
     });

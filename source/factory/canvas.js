@@ -43,7 +43,7 @@ import { rootElementsAdd, rootElementsRemove } from "../core/document-root-eleme
 
 import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { uiSubscribedElements } from '../core/user-interaction.js';
+import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
@@ -54,7 +54,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -84,12 +84,15 @@ const Canvas = function (items = Ωempty) {
 
     if (!items.label) items.label = `${this.name} canvas element`;
 
+    // Sets up the canvas shape/size action functions
     this.initializeDisplayShapeActions();
 
+    // Sets up the user preferences action functions
     this.initializeAccessibility();
 
     this.set(items);
 
+    // Question: why are we invoking `cleanDimensions` here? See if it can be removed
     this.cleanDimensions();
 
     const el = this.domElement;
@@ -97,7 +100,12 @@ const Canvas = function (items = Ωempty) {
     if (!el) this.cleanDimensions();
     else {
 
-        this.engine = this.domElement.getContext(_2D);
+        const ds = el.dataset;
+
+        this.useDisplayP3WhereAvailable = ds.canvasColorSpace == DISPLAY_P3 || items.canvasColorSpace == DISPLAY_P3;
+        this.canvasColorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
+
+        this.engine = this.domElement.getContext(_2D, { colorSpace: this.canvasColorSpace });
 
         this.state = makeState({
             engine: this.engine
@@ -111,8 +119,6 @@ const Canvas = function (items = Ωempty) {
 
         let baseWidth = this.currentDimensions[0],
             baseHeight = this.currentDimensions[1];
-
-        const ds = el.dataset;
 
         if (ds.isResponsive) {
 
@@ -151,6 +157,7 @@ const Canvas = function (items = Ωempty) {
             host: this.name,
             controller: this,
             order: 10,
+            canvasColorSpace: this.canvasColorSpace,
         };
 
         if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);
@@ -162,7 +169,15 @@ const Canvas = function (items = Ωempty) {
         rootElementsAdd(this.name);
 
         // ##### Accessibility
-        // if (!el.getAttribute('role')) el.setAttribute('role', 'img');
+        // The `title`, `role`, `label` and `description` values can be set by passing the kv pairs to the constructor function, or in a subsequent `set()` invocation. However, it's also possible to set these directly on the HTML &lt;canvas> element, as follows:
+        // + &lt;canvas title="some title text">
+        // + &lt;canvas role="some role value">
+        // + &lt;canvas data-label="some label text">
+        // + &lt;canvas data-description="some description text">
+        if (el.getAttribute('role')) this.role = el.getAttribute('role');
+        if (el.getAttribute('title')) this.title = el.getAttribute('title');
+        if (ds.label) this.label = ds.label;
+        if (ds.description) this.description = ds.description;
 
         const navigation = document.createElement(NAV);
         navigation.id = `${this.name}-navigation`;
@@ -174,8 +189,11 @@ const Canvas = function (items = Ωempty) {
         navigation.style.padding = PX0;
         navigation.style.margin = PX0;
         navigation.style.overflow = HIDDEN;
+        navigation.setAttribute(ARIA_LIVE, POLITE);
         this.navigation = navigation;
         el.appendChild(navigation);
+
+        this.dirtyNavigationTabOrder = true;
 
         const textHold = document.createElement(DIV);
         textHold.id = `${this.name}-text-hold`;
@@ -192,7 +210,6 @@ const Canvas = function (items = Ωempty) {
 
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
-        ariaLabel.textContent = this.label;
         this.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
         el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
@@ -200,7 +217,6 @@ const Canvas = function (items = Ωempty) {
 
         const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
-        ariaDescription.textContent = this.description;
         this.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
@@ -237,15 +253,6 @@ displayMix(P);
 
 
 // #### Canvas attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
-// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
-// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
-// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
-// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
-// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
-// + Attributes defined in the [display mixin](../mixin/displayShape.html): __breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape__.
 const defaultAttributes = {
 
 // __position__ - the CSS position value for the &lt;canvas> element. This value will be set to `absolute` when the element is an artefact associated with a Stack; `relative` in other cases.
@@ -290,6 +297,13 @@ const defaultAttributes = {
     description: ZERO_STR,
 
     role: IMG,
+
+// __navigationAriaLive__ - the ARIA-live attribute applied to the &lt;nav> element added to the &lt;canvas> element. Accepted string values are: 'off', 'polite' (default), 'assertive'.
+    navigationAriaLive: POLITE,
+
+// #### Canvas Color space
+// Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'`` (default); `'display-p3'`.
+    canvasColorSpace: SRGB,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -383,6 +397,16 @@ S.role = function (item) {
 
     this.role = item;
     this.dirtyAria = true;
+};
+
+// `navigationAriaLive` - String
+S.navigationAriaLive = function (item) {
+
+    if (item.substring && ARIA_LIVE_VALUES.includes(item)) {
+
+        this.navigationAriaLive = item;
+        this.dirtyAria = true;
+    }
 };
 
 // ##### Get and set base cell attributes
@@ -558,7 +582,7 @@ P.updateCells = function (items = Ωempty) {
 // `buildCell` - create a Cell wrapper (wrapping a &lt;canvas> element not attached to the DOM) and add it to this Canvas wrapper's complement of Cells
 P.buildCell = function (items = Ωempty) {
 
-    const host = items.host || false;
+    const host = items.host || null;
 
     if (!host) items.host = this.base.name;
 
@@ -587,7 +611,7 @@ P.cleanDimensionsAdditionalActions = function () {
 // `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.addCell = function (item) {
 
-    item = (item.substring) ? item : item.name || false;
+    item = (item.substring) ? item : item.name || null;
 
     if (item) {
 
@@ -612,7 +636,7 @@ P.addCell = function (item) {
 // `removeCell` - remove a Cell object from the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.removeCell = function (item) {
 
-    item = (item.substring) ? item : item.name || false;
+    item = (item.substring) ? item : item.name || null;
 
     if (item) {
 
@@ -702,6 +726,34 @@ P.show = function(){
     // Handle DOM-related positioning and display requirements, including ARIA updates
     domShow();
     if (this.dirtyAria) this.cleanAria();
+
+    if (this.dirtyNavigationTabOrder) this.reorderNavElements();
+};
+
+// `reorderNavElements` - Handle Anchor and Button DOM element ordering within the &lt;nav> element
+P.reorderNavElements = function () {
+
+    this.dirtyNavigationTabOrder = false;
+
+    const elArray = [],
+        navEl = this.navigation;
+
+    while (navEl.firstChild) {
+
+        elArray.push(navEl.removeChild(navEl.firstChild));
+    }
+
+    elArray.sort((a, b) => {
+
+        const A = parseInt(a.getAttribute(DATA_TAB_ORDER), 10);
+        const B = parseInt(b.getAttribute(DATA_TAB_ORDER), 10);
+
+        if (A < B) return -1;
+        if (A > B) return 1;
+        return 0;
+    });
+
+    elArray.forEach(e => navEl.appendChild(e));
 };
 
 // `render` - orchestrate a single Display cycle - clear, then compile, then show.
@@ -935,7 +987,8 @@ P.cleanAria = function () {
     this.domElement.setAttribute(ROLE, this.role);
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
-}
+    this.navigation.setAttribute(ARIA_LIVE, this.navigationAriaLive);
+};
 
 
 // #### Factory
@@ -988,7 +1041,7 @@ const addInitialCanvasElement = function (el) {
         group: mygroup,
         host: mygroup,
         position: position,
-        setInitialDimensions: true
+        setInitialDimensions: true,
     });
 };
 
@@ -1128,4 +1181,12 @@ export const addCanvas = function (items = Ωempty) {
     mycanvas.set(items);
 
     return mycanvas;
+};
+
+// Wide gamut colors helper
+const getCanvasColorSpace = (useP3) => {
+
+    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
+    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
+    return SRGB;
 };

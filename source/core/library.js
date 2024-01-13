@@ -9,7 +9,7 @@
 
 
 // Current version
-export const version = '8.11.0';
+export const version = '8.12.0';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -191,6 +191,7 @@ export const sectionClasses = {
     'OVERLINE': { overline: true },
     '/OVERLINE': { overline: false },
 
+    // Warning: font-variant functionality has been deprecated in SC and should be avoided!
     'SMALL-CAPS': { variant: 'small-caps' },
     '/SMALL-CAPS': { variant: 'normal' },
 

@@ -122,12 +122,6 @@ export default function (P = Ωempty) {
         this.dirtyFilterIdentifier = true;
     };
 
-    // `midInitActions` - internal constructor helper function
-    P.midInitActions = function (items) {
-
-        this.set(items);
-    };
-
     // `shapeInit` - internal constructor helper function
     P.shapeInit = function (items) {
 
@@ -397,6 +391,9 @@ export default function (P = Ωempty) {
         if (this.dirtyPathObject) this.cleanPathObject();
 
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+
+        // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+        this.prepareStampTabsHelper();
     };
 
     // `cleanDimensions` - internal helper function called by `prepareStamp`

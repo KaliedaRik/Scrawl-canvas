@@ -48,8 +48,6 @@ assetMix(P);
 
 
 // #### SpriteAsset attributes
-// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 const defaultAttributes = {
 
 // __manifest__ - TODO - documentation

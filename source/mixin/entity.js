@@ -27,7 +27,9 @@ import deltaMix from '../mixin/delta.js';
 import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
 
 import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../core/shared-vars.js';
@@ -38,19 +40,14 @@ export default function (P = Ωempty) {
 
 
 // #### Mixins
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [anchor](../mixin/anchor.html)
-// + [filter](../mixin/filter.html)
     positionMix(P);
     deltaMix(P);
     pivotMix(P);
     mimicMix(P);
     pathMix(P);
+    hiddenElementsMix(P);
     anchorMix(P);
+    buttonMix(P);
     filterMix(P);
 
 
@@ -380,6 +377,8 @@ export default function (P = Ωempty) {
 // `entityInit` - internal function, called by all entity factory constructors
     P.entityInit = function (items = Ωempty) {
 
+        this.modifyConstructorInputForAnchorButton(items);
+
         this.makeName(items.name);
         this.register();
         this.initializePositions();
@@ -475,15 +474,11 @@ export default function (P = Ωempty) {
 // `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-// The `dirtyFilters` flag is checked and handled by the __filteredStamp__ function.
-
-// `dirtyAnchorHold` - if the entity has an Anchor object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildAnchor__ function.
-        if (this.anchor && this.dirtyAnchorHold) {
-
-            this.dirtyAnchorHold = false;
-            this.buildAnchor(this.anchor);
-        }
+// `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+        this.prepareStampTabsHelper();
     };
+
+// The `dirtyFilters` flag is checked and handled by the __filteredStamp__ function.
 
 // `cleanPathObject` - ___this function will be overwritten by every entity Factory___, to meet their individual requirements.
 // + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.

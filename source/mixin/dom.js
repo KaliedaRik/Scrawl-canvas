@@ -31,7 +31,10 @@ import deltaMix from './delta.js';
 import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
+// Question: do DOM elements really need additional anchors and buttons?
+import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from './anchor.js';
+import buttonMix from './button.js';
 
 import { _isArray, _round, _entries, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../core/shared-vars.js'
 
@@ -41,18 +44,14 @@ export default function (P = Ωempty) {
 
 
 // #### Mixins
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [anchor](../mixin/anchor.html)
     positionMix(P);
     deltaMix(P);
     pivotMix(P);
     mimicMix(P);
     pathMix(P);
+    hiddenElementsMix(P);
     anchorMix(P);
+    buttonMix(P);
 
 
 // #### Shared attributes
@@ -342,6 +341,8 @@ export default function (P = Ωempty) {
 // + Used by factory constructors to help wrap DOM elements in a Stack, Canvas or Element wrapper
 // + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
     P.initializeDomLayout = function (items) {
+
+        this.modifyConstructorInputForAnchorButton(items);
 
         const el = items.domElement;
 
@@ -813,6 +814,9 @@ export default function (P = Ωempty) {
         if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
         if (this.dirtyPathObject) this.cleanPathObject();
+
+        // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+        this.prepareStampTabsHelper();
     };
 
 // `stamp` - builds a set of Strings which can then be applied to the DOM wrapper's element's `style` attribute.
@@ -1065,7 +1069,8 @@ export default function (P = Ωempty) {
         this.colorSchemeActions();
         this.reducedTransparencyActions();
         this.reducedDataActions();
-    }
+    };
+
 
 // `apply`
 // + I really don't like this functionality - see if we can purge it from the code base?

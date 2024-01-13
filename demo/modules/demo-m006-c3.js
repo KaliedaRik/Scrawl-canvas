@@ -156,8 +156,6 @@ export default function (items) {
             name: name('arrow-anchor'),
             href: 'https://en.wikipedia.org/wiki/Arrow',
             description: 'Wikipedia article on arrows',
-            focusAction: true,
-            blurAction: true,
         },
     }).clone({
         name: name('label-link'),
@@ -176,8 +174,6 @@ export default function (items) {
             name: name('label-anchor'),
             href: 'https://en.wikipedia.org/wiki/Label',
             description: 'Wikipedia article on labels',
-            focusAction: true,
-            blurAction: true,
         },
     });
 

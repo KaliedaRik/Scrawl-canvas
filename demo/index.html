@@ -122,7 +122,7 @@
 
 <body>
   <main>
-    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.11.0</span></h1>
+    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.12.0)</span></h1>
 
     <p>The Scrawl-canvas library has been developed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 
@@ -160,14 +160,14 @@
       <li>They can take <strong>Color</strong>, <strong>Gradient</strong>, <strong>RadialGradient</strong>, and <strong>ConicGradient</strong> styles for both their fill and stroke styling.</li>
       <ul>
         <li>All gradient styles can be bound to their containing cell, or to particular entitys.</li>
-        <li>Entitys can accept all legitimate CSS color strings &ndash; rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklch(), oklab() &ndash; for their fillStyle, strokeStyle and shadowColor input.</li>
+        <li>Entitys can accept all legitimate CSS color strings &ndash; rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklch(), oklab(), color() &ndash; for their fillStyle, strokeStyle and shadowColor input.</li>
         <li>Color factories (and thus gradient styles) can work with RGB, HSL, HWB, LAB, LCH, OKLAB and OKLCH <strong>color spaces</strong> internally, and export CSS color strings for each of those spaces; Color factories support <strong>color ranges</strong>. This extends to gradients, which can spread colors defined in any supported color space.</li> 
-        <li>Color factories, and gradient styles, can have easing algorithms applied to them &ndash; <strong>non-linear gradients</strong>.</li>
+        <li>Color factories, and gradient styles, can have easing algorithms applied to them &ndash; <strong>eased linear gradients</strong>.</li>
       </ul>
       <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as required.</li>
       <li>Entitys can also act as <strong>clipping zones</strong> for subsequent drawing activities.</li>
       <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements (with a <strong>srcset</strong> attribute), or image files.</li>
-      <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>.</li>
+      <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>. Video can accept <strong>media streams</strong> (such as device cameras) and <strong>screen capture streams</strong> as input for displaying in a canvas.</li>
       <li>Scrawl-canvas includes a <strong>NoiseAsset</strong> asset (for Perlin, Simplex, Worley, etc, noise generation), alongside an <strong>RdAsset</strong> reaction-diffusion asset (for more organic patterns).</li>
       <li>Third-party image/video asset generators (for example <a href="https://developers.google.com/mediapipe">MediaPipe</a>, <a href="https://www.tensorflow.org/">TensorFlow</a>, <a href="https://airbnb.io/lottie/#/">Lottie</a>) can be accommodated using the <strong>RawAsset</strong> asset.</li>
     </ul>
@@ -236,6 +236,8 @@
       <div>
         <a href="canvas-009.html">Canvas 009</a>
         Pattern styles; Entity web link anchors; Dynamic accessibility
+        <br /><span class="responsive">Anchor links</span>
+        <br /><span class="responsive">Analytics</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-010.webp" /></div>
@@ -364,6 +366,7 @@
         <a href="canvas-027.html">Canvas 027</a>
         Video control and manipulation; chroma-based hit zone
         <br /><span class="responsive">Responsive canvas</span>
+        <br /><span class="responsive">Anchor links</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-028.webp" /></div>
@@ -517,7 +520,7 @@
       <div class="no-padding"><img src="thumbs/canvas-050.webp" /></div>
       <div>
         <a href="canvas-050.html">Canvas 050</a>
-        Manipulate artefact delta animation values
+        Manipulate artefact delta animation values; test animation maxFrameRate
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-051.webp" /></div>
@@ -531,6 +534,7 @@
         <a href="canvas-052.html">Canvas 052</a>
         Create and use a RawAsset object to modify an image asset
         <br /><span class="responsive">Responsive canvas</span>
+        <br /><span class="responsive">Record video</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-053.webp" /></div>
@@ -558,6 +562,12 @@
         <a href="canvas-056.html">Canvas 056</a>
         Seeded random number generator; point on path
         <br /><span class="responsive">Drag zones</span>
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-057.webp" /></div>
+      <div>
+        <a href="canvas-057.html">Canvas 057</a>
+        CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-058.webp" /></div>
@@ -606,6 +616,12 @@
         <br /><span class="responsive">Responsive canvas</span>
         <br /><span class="responsive">Drag zones</span>
       </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-065.png" /></div>
+      <div>
+        <a href="canvas-065.html">Canvas 065</a>
+        Wide Gamut 2D Graphics using HTML Canvas
+      </div>
     </div>
 
     <h2>Filters functionality tests</h2>
@@ -621,7 +637,7 @@
         <li>gradient, and displacement, mapping.</li>
     </ul>
 
-    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays.</p>
+    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays. Entitys can be used to filter the display behind them (stencil filters).</p>
 
     <p><strong>Filters can be animated</strong> using Scrawl-canvas tween functionality.</p>
 
@@ -1054,6 +1070,7 @@
       <div>
         <a href="dom-006.html">DOM 006</a>
         Tween actions on a DOM element; tracking tween and ticker activity (analytics)
+        <br /><span class="responsive">Analytics</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/dom-007.webp" /></div>
@@ -1130,7 +1147,27 @@
       <div class="no-padding"><img src="thumbs/dom-018.webp" /></div>
       <div>
         <a href="dom-018.html">DOM-018</a>
-        Fullscreen API functionality
+        <b>Fullscreen API</b> functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/dom-019.webp" /></div>
+      <div>
+        <a href="dom-019.html">DOM-019</a>
+        <b>Screen Capture API</b> - apply a filter to a browser web page
+      </div>
+
+      <div class="no-padding"><img src="thumbs/dom-020.webp" /></div>
+      <div>
+        <a href="dom-020.html">DOM-020</a>
+        Using the <b>EyeDropper API</b>
+      </div>
+
+      <div class="no-padding"><img src="thumbs/dom-021.webp" /></div>
+      <div>
+        <a href="dom-021.html">DOM-021</a>
+        <b>Popover API</b> - use canvas elements in popover content
+        <br /><span class="responsive">Drag zones</span>
+        <br /><span class="responsive">Button tabbing</span>
       </div>
     </div>
 
@@ -1247,6 +1284,7 @@
         <a href="snippets-005.html">Snippets 005</a>
         Create a responsive, interactive and accessible before/after slider infographic
         <br /><span class="responsive">Responsive canvas</span>
+        <br /><span class="responsive">Anchor links</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/snippets-006.webp" /></div>
