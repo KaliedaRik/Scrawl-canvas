@@ -714,7 +714,6 @@ artefact.<span class="hljs-property">buttonBlurAction</span>      ~~&gt;  button
 artefact.<span class="hljs-property">buttonClickAction</span>     ~~&gt;  button.<span class="hljs-property">clickAction</span>     <span class="hljs-keyword">function</span> - returns onclick string
 artefact.<span class="hljs-property">buttonDescription</span>     ~~&gt;  button.<span class="hljs-property">description</span>     string - <span class="hljs-attr">default</span>: <span class="hljs-string">&#x27;&#x27;</span>
 artefact.<span class="hljs-property">buttonDisabled</span>        ~~&gt;  button.<span class="hljs-property">disabled</span>        boolean - <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>
-artefact.<span class="hljs-property">buttonElementName</span>     ~~&gt;  button.<span class="hljs-property">elementName</span>     string - <span class="hljs-attr">default</span>: <span class="hljs-literal">null</span>
 artefact.<span class="hljs-property">buttonElementType</span>     ~~&gt;  button.<span class="hljs-property">elementType</span>     string[<span class="hljs-number">5</span>] - <span class="hljs-attr">default</span>: <span class="hljs-string">&#x27;button&#x27;</span>
 artefact.<span class="hljs-property">buttonElementValue</span>    ~~&gt;  button.<span class="hljs-property">elementValue</span>    string - <span class="hljs-attr">default</span>: <span class="hljs-literal">null</span>
 artefact.<span class="hljs-property">buttonFocusAction</span>     ~~&gt;  button.<span class="hljs-property">focusAction</span>     boolean - <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>
@@ -756,7 +755,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonAutofocus</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">AUTOFOCUS</span>); };
-    S.<span class="hljs-property">buttonAutofocus</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">AUTOFOCUS</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonAutofocus</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">AUTOFOCUS</span>, item); };</pre></div></div>
             
         </li>
         
@@ -772,7 +771,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonDescription</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">DESCRIPTION</span>); };
-    S.<span class="hljs-property">buttonDescription</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">DESCRIPTION</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonDescription</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">DESCRIPTION</span>, item); };</pre></div></div>
             
         </li>
         
@@ -788,7 +787,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonDisabled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">DISABLED</span>); };
-    S.<span class="hljs-property">buttonDisabled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">DISABLED</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonDisabled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">DISABLED</span>, item); };</pre></div></div>
             
         </li>
         
@@ -804,7 +803,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonTabOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">TAB_ORDER</span>); };
-    S.<span class="hljs-property">buttonTabOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">TAB_ORDER</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonTabOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">TAB_ORDER</span>, item); };</pre></div></div>
             
         </li>
         
@@ -820,7 +819,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonForm</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">FORM</span>); };
-    S.<span class="hljs-property">buttonForm</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonForm</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM</span>, item); };</pre></div></div>
             
         </li>
         
@@ -836,7 +835,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonFormAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">FORM_ACTION</span>); };
-    S.<span class="hljs-property">buttonFormAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_ACTION</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonFormAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_ACTION</span>, item); };</pre></div></div>
             
         </li>
         
@@ -852,7 +851,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonFormEnctype</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">FORM_ENCTYPE</span>); };
-    S.<span class="hljs-property">buttonFormEnctype</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_ENCTYPE</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonFormEnctype</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_ENCTYPE</span>, item); };</pre></div></div>
             
         </li>
         
@@ -868,7 +867,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonFormMethod</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">FORM_METHOD</span>); };
-    S.<span class="hljs-property">buttonFormMethod</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_METHOD</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonFormMethod</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_METHOD</span>, item); };</pre></div></div>
             
         </li>
         
@@ -884,7 +883,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonFormNoValidate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">FORM_NOVALIDATE</span>); };
-    S.<span class="hljs-property">buttonFormNoValidate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_NOVALIDATE</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonFormNoValidate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_NOVALIDATE</span>, item); };</pre></div></div>
             
         </li>
         
@@ -900,7 +899,7 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
             </div>
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonFormTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">FORM_TARGET</span>); };
-    S.<span class="hljs-property">buttonFormTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_TARGET</span>, item); };</pre></div></div>
+    S.<span class="hljs-property">buttonFormTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FORM_TARGET</span>, item); };</pre></div></div>
             
         </li>
         
@@ -911,12 +910,12 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p><strong>buttonElementName</strong></p>
+              <p><strong>buttonPopoverTarget</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonElementName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">ELEMENT_NAME</span>); };
-    S.<span class="hljs-property">buttonElementName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">ELEMENT_NAME</span>, item); };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonPopoverTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGET</span>); };
+    S.<span class="hljs-property">buttonPopoverTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGET</span>, item); };</pre></div></div>
             
         </li>
         
@@ -927,12 +926,12 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p><strong>buttonPopoverTarget</strong></p>
+              <p><strong>buttonPopoverTargetAction</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonPopoverTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGET</span>); };
-    S.<span class="hljs-property">buttonPopoverTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGET</span>, item); };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonPopoverTargetAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGETACTION</span>); };
+    S.<span class="hljs-property">buttonPopoverTargetAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGETACTION</span>, item); };</pre></div></div>
             
         </li>
         
@@ -943,12 +942,12 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p><strong>buttonPopoverTargetAction</strong></p>
+              <p><strong>buttonElementType</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonPopoverTargetAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGETACTION</span>); };
-    S.<span class="hljs-property">buttonPopoverTargetAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">POPOVER_TARGETACTION</span>, item); };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonElementType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">ELEMENT_TYPE</span>); };
+    S.<span class="hljs-property">buttonElementType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">ELEMENT_TYPE</span>, item); };</pre></div></div>
             
         </li>
         
@@ -959,12 +958,12 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p><strong>buttonElementType</strong></p>
+              <p><strong>buttonElementValue</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonElementType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">ELEMENT_TYPE</span>); };
-    S.<span class="hljs-property">buttonElementType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">ELEMENT_TYPE</span>, item); };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonElementValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">ELEMENT_VALUE</span>); };
+    S.<span class="hljs-property">buttonElementValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">ELEMENT_VALUE</span>, item); };</pre></div></div>
             
         </li>
         
@@ -975,12 +974,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><strong>buttonElementValue</strong></p>
+              <p><strong>buttonFocusAction</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">buttonElementValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonGetHelper</span>(<span class="hljs-variable constant_">ELEMENT_VALUE</span>); };
-    S.<span class="hljs-property">buttonElementValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">ELEMENT_VALUE</span>, item); };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">buttonFocusAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FOCUS_ACTION</span>, item); };</pre></div></div>
             
         </li>
         
@@ -991,11 +989,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p><strong>buttonFocusAction</strong></p>
+              <p><strong>buttonBlurAction</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">buttonFocusAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">FOCUS_ACTION</span>, item); };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">buttonBlurAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">BLUR_ACTION</span>, item); };</pre></div></div>
             
         </li>
         
@@ -1006,11 +1004,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p><strong>buttonBlurAction</strong></p>
+              <p><strong>buttonClickAction</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">buttonBlurAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">BLUR_ACTION</span>, item); };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">buttonClickAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">CLICK_ACTION</span>, item); };</pre></div></div>
             
         </li>
         
@@ -1020,21 +1018,6 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p><strong>buttonClickAction</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">buttonClickAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buttonSetHelper</span>(<span class="hljs-variable constant_">CLICK_ACTION</span>, item); };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>button</strong>
 The artefact’s factory and <code>set</code> functions’ argument object can include a single <strong>button</strong> attribute, whose value should be an object containing button key:value pairs</p>
@@ -1055,11 +1038,11 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Internal helper functions</p>
 
@@ -1073,9 +1056,22 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
 
     P.<span class="hljs-property">buttonSetHelper</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">key, val</span>) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildButton</span>();
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildButton</span>({ [key]: val });
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>.<span class="hljs-title function_">set</span>({ [key]: val });
     }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
             
         </li>
         
@@ -1086,9 +1082,23 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p>The <code>buildButton</code> function triggers the (re)build of the &lt;a&gt; element and adds it to the DOM</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">buildButton</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>.<span class="hljs-title function_">demolish</span>();
+
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">buttonName</span>) items.<span class="hljs-property">buttonName</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-button`</span>;
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">description</span>) items.<span class="hljs-property">description</span> = <span class="hljs-string">`Button for <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>;
+
+        items.<span class="hljs-property">host</span> = <span class="hljs-variable language_">this</span>;
+        items.<span class="hljs-property">controller</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCanvasWrapper</span>();
+        items.<span class="hljs-property">hold</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCanvasNavElement</span>();
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span> = <span class="hljs-title function_">makeButton</span>(items);
+    };</pre></div></div>
             
         </li>
         
@@ -1098,36 +1108,6 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
               
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>The <code>buildButton</code> function triggers the (re)build of the &lt;a&gt; element and adds it to the DOM</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">buildButton</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(items)) {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>.<span class="hljs-title function_">demolish</span>();
-
-            <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">buttonName</span>) items.<span class="hljs-property">buttonName</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-button`</span>;
-            <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">description</span>) items.<span class="hljs-property">description</span> = <span class="hljs-string">`Button for <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>;
-
-            items.<span class="hljs-property">host</span> = <span class="hljs-variable language_">this</span>;
-            items.<span class="hljs-property">controller</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCanvasWrapper</span>();
-            items.<span class="hljs-property">hold</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCanvasNavElement</span>();
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span> = <span class="hljs-title function_">makeButton</span>(items);
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>rebuildButton</code> - triggers the Button object’s <code>build</code> function</p>
 
@@ -1141,11 +1121,11 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>clickButton</code> - function to pass a user click (or whatever event has been set up) on the artefact through to the button object, for action.</p>
 

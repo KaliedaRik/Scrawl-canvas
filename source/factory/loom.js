@@ -50,6 +50,8 @@ const Loom = function (items = Ωempty) {
 
     this.state = makeState(Ωempty);
 
+    this.modifyConstructorInputForAnchorButton(items);
+
     this.set(this.defs);
 
     if (!items.group) items.group = currentGroup;

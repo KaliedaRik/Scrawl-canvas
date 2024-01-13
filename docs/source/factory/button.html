@@ -763,7 +763,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">formMethod</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">formNoValidate</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">formTarget</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
-    <span class="hljs-attr">elementName</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">popoverTarget</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">popoverTargetAction</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">elementType</span>: <span class="hljs-variable constant_">BUTTON</span>,
@@ -877,7 +876,6 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 <pre><code>button.<span class="hljs-property">autofocus</span>           ~~&gt;  artefact.<span class="hljs-property">buttonAutofocus</span>            (autofocus)
 button.<span class="hljs-property">description</span>         ~~&gt;  artefact.<span class="hljs-property">buttonDescription</span>          ()
 button.<span class="hljs-property">disabled</span>            ~~&gt;  artefact.<span class="hljs-property">buttonDisabled</span>             (disabled)
-button.<span class="hljs-property">elementName</span>         ~~&gt;  artefact.<span class="hljs-property">buttonElementName</span>          (name)
 button.<span class="hljs-property">elementType</span>         ~~&gt;  artefact.<span class="hljs-property">buttonElementType</span>          (type)
 button.<span class="hljs-property">elementValue</span>        ~~&gt;  artefact.<span class="hljs-property">buttonElementValue</span>         (value)
 button.<span class="hljs-property">form</span>                ~~&gt;  artefact.<span class="hljs-property">buttonForm</span>                 (form)
@@ -951,17 +949,18 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
 
         <span class="hljs-keyword">if</span> (hold &amp;&amp; controller) {
 
-            <span class="hljs-keyword">const</span> { autofocus, blurAction, clickAction, description, disabled, elementName, elementType, elementValue, focusAction, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, name, popoverTarget, popoverTargetAction, tabOrder } = <span class="hljs-variable language_">this</span>;
+            <span class="hljs-keyword">const</span> { autofocus, blurAction, clickAction, description, disabled, elementType, elementValue, focusAction, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, name, popoverTarget, popoverTargetAction, tabOrder } = <span class="hljs-variable language_">this</span>;
 
             <span class="hljs-keyword">let</span> btn = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-            <span class="hljs-keyword">if</span> (btn &amp;&amp; hold &amp;&amp; <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>`</span>)) {
+            <span class="hljs-keyword">if</span> (btn &amp;&amp; hold) {
 
                 <span class="hljs-keyword">if</span> (clickAction) btn.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">CLICK</span>, clickAction, <span class="hljs-literal">false</span>);
                 <span class="hljs-keyword">if</span> (focusAction) btn.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
                 <span class="hljs-keyword">if</span> (blurAction) btn.<span class="hljs-title function_">removeEventListener</span>(<span class="hljs-variable constant_">BLUR</span>, <span class="hljs-function">() =&gt;</span> host.<span class="hljs-title function_">onLeave</span>(), <span class="hljs-literal">false</span>);
 
                 hold.<span class="hljs-title function_">removeChild</span>(btn);
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = <span class="hljs-literal">null</span>;
             }
 
             <span class="hljs-keyword">if</span> (!disabled) {
@@ -978,7 +977,6 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
                 <span class="hljs-keyword">if</span> (formMethod) btn.<span class="hljs-title function_">setAttribute</span>(_FORMMETHOD, formMethod);
                 <span class="hljs-keyword">if</span> (formNoValidate) btn.<span class="hljs-title function_">setAttribute</span>(_FORMNOVALIDATE, <span class="hljs-variable constant_">ZERO_STR</span>);
                 <span class="hljs-keyword">if</span> (formTarget) btn.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">TARGET</span>, formTarget);
-                <span class="hljs-keyword">if</span> (elementName) btn.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">NAME</span>, elementName);
                 <span class="hljs-keyword">if</span> (popoverTarget) btn.<span class="hljs-title function_">setAttribute</span>(_POPOVERTARGET, popoverTarget);
                 <span class="hljs-keyword">if</span> (popoverTargetAction) btn.<span class="hljs-title function_">setAttribute</span>(_POPOVERTARGETACTION, popoverTargetAction);
                 <span class="hljs-keyword">if</span> (elementValue != <span class="hljs-literal">null</span>) btn.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">VALUE</span>, elementValue);
@@ -998,9 +996,8 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = btn;
 
                 hold.<span class="hljs-title function_">appendChild</span>(btn);
-
-                host.<span class="hljs-property">dirtyNavigationTabOrder</span> = <span class="hljs-literal">true</span>;
             }
+            controller.<span class="hljs-property">dirtyNavigationTabOrder</span> = <span class="hljs-literal">true</span>;
         }
 
     }
@@ -1106,7 +1103,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-comment">// Define the button object&#x27;s attributes</span>
     <span class="hljs-attr">button</span>: {
-        <span class="hljs-attr">elementName</span>: <span class="hljs-string">&#x27;close-button&#x27;</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;close-button&#x27;</span>,
         <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Close&#x27;</span>,
         <span class="hljs-attr">popoverTarget</span>: <span class="hljs-string">&#x27;mypopover&#x27;</span>,
         <span class="hljs-attr">popoverTargetAction</span>: <span class="hljs-string">&#x27;hide&#x27;</span>,

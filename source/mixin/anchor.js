@@ -61,7 +61,7 @@ export default function (P = Ωempty) {
 // artefact.anchorRel               ~~>  anchor.rel
 // artefact.anchorTabOrder          ~~>  anchor.tabOrder         number - default: 0
 // artefact.anchorTarget            ~~>  anchor.target
-// artefact.anchorType              ~~>  anchor.type
+// artefact.anchorType              ~~>  anchor.anchorType
 // ```
 
 // __anchorName__
@@ -69,56 +69,56 @@ export default function (P = Ωempty) {
 
 // __anchorDescription__
     G.anchorDescription = function () { return this.anchorGetHelper(DESCRIPTION); };
-    S.anchorDescription = function (item) { return this.anchorSetHelper(DESCRIPTION, item); };
+    S.anchorDescription = function (item) { this.anchorSetHelper(DESCRIPTION, item); };
 
 // __anchorType__
     G.anchorType = function () { return this.anchorGetHelper(ANCHORTYPE); };
-    S.anchorType = function (item) { return this.anchorSetHelper(ANCHORTYPE, item); };
+    S.anchorType = function (item) { this.anchorSetHelper(ANCHORTYPE, item); };
 
 // __anchorTarget__
     G.anchorTarget = function () { return this.anchorGetHelper(TARGET); };
-    S.anchorTarget = function (item) { return this.anchorSetHelper(TARGET, item); };
+    S.anchorTarget = function (item) { this.anchorSetHelper(TARGET, item); };
 
 // __anchorTabOrder__
     G.anchorTabOrder = function () { return this.anchorGetHelper(TAB_ORDER); };
-    S.anchorTabOrder = function (item) { return this.anchorSetHelper(TAB_ORDER, item); };
+    S.anchorTabOrder = function (item) { this.anchorSetHelper(TAB_ORDER, item); };
 
 // __anchorDisabled__
     G.anchorDisabled = function () { return this.anchorGetHelper(DISABLED); };
-    S.anchorDisabled = function (item) { return this.anchorSetHelper(DISABLED, item); };
+    S.anchorDisabled = function (item) { this.anchorSetHelper(DISABLED, item); };
 
 // __anchorRel__
     G.anchorRel = function () { return this.anchorGetHelper(REL); };
-    S.anchorRel = function (item) { return this.anchorSetHelper(REL, item); };
+    S.anchorRel = function (item) { this.anchorSetHelper(REL, item); };
 
 // __anchorReferrerPolicy__
     G.anchorReferrerPolicy = function () { return this.anchorGetHelper(REFERRERPOLICY); };
-    S.anchorReferrerPolicy = function (item) { return this.anchorSetHelper(REFERRERPOLICY, item); };
+    S.anchorReferrerPolicy = function (item) { this.anchorSetHelper(REFERRERPOLICY, item); };
 
 // __anchorPing__
     G.anchorPing = function () { return this.anchorGetHelper(PING); };
-    S.anchorPing = function (item) { return this.anchorSetHelper(PING, item); };
+    S.anchorPing = function (item) { this.anchorSetHelper(PING, item); };
 
 // __anchorHreflang__
     G.anchorHreflang = function () { return this.anchorGetHelper(HREFLANG); };
-    S.anchorHreflang = function (item) { return this.anchorSetHelper(HREFLANG, item); };
+    S.anchorHreflang = function (item) { this.anchorSetHelper(HREFLANG, item); };
 
 // __anchorHref__
     G.anchorHref = function () { return this.anchorGetHelper(HREF); };
-    S.anchorHref = function (item) { return this.anchorSetHelper(HREF, item); };
+    S.anchorHref = function (item) { this.anchorSetHelper(HREF, item); };
 
 // __anchorDownload__
     G.anchorDownload = function () { return this.anchorGetHelper(DOWNLOAD); };
-    S.anchorDownload = function (item) { return this.anchorSetHelper(DOWNLOAD, item); };
+    S.anchorDownload = function (item) { this.anchorSetHelper(DOWNLOAD, item); };
 
 // __anchorFocusAction__
-    S.anchorFocusAction = function (item) { return this.anchorSetHelper(FOCUS_ACTION, item); };
+    S.anchorFocusAction = function (item) { this.anchorSetHelper(FOCUS_ACTION, item); };
 
 // __anchorBlurAction__
-    S.anchorBlurAction = function (item) { return this.anchorSetHelper(BLUR_ACTION, item); };
+    S.anchorBlurAction = function (item) { this.anchorSetHelper(BLUR_ACTION, item); };
 
 // __anchorClickAction__
-    S.anchorClickAction = function (item) { return this.anchorSetHelper(CLICK_ACTION, item); };
+    S.anchorClickAction = function (item) { this.anchorSetHelper(CLICK_ACTION, item); };
 
 // The artefact's factory and `set` functions' argument object can include a single __anchor__ attribute, whose value should be an object containing anchor key:value pairs
 // ```
@@ -143,7 +143,7 @@ export default function (P = Ωempty) {
 
     P.anchorSetHelper = function(key, val) {
 
-        if (!this.anchor) this.buildAnchor();
+        if (!this.anchor) this.buildAnchor({ [key]: val });
         if (this.anchor) this.anchor.set({ [key]: val });
     }
 
@@ -151,21 +151,18 @@ export default function (P = Ωempty) {
 // #### Prototype functions
 
 // The `buildAnchor` function triggers the (re)build of the &lt;a> element and adds it to the DOM
-    P.buildAnchor = function (items) {
+    P.buildAnchor = function (items = {}) {
 
-        if (isa_obj(items)) {
+        if (this.anchor) this.anchor.demolish();
 
-            if (this.anchor) this.anchor.demolish();
+        if (!items.anchorName) items.anchorName = `${this.name}-anchor`;
+        if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
 
-            if (!items.anchorName) items.anchorName = `${this.name}-anchor`;
-            if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
+        items.host = this;
+        items.controller = this.getCanvasWrapper();
+        items.hold = this.getCanvasNavElement();
 
-            items.host = this;
-            items.controller = this.getCanvasWrapper();
-            items.hold = this.getCanvasNavElement();
-
-            this.anchor = makeAnchor(items);
-        }
+        this.anchor = makeAnchor(items);
     };
 
 // `rebuildAnchor` - triggers the Anchor object's `build` function

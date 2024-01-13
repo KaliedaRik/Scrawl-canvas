@@ -377,6 +377,8 @@ export default function (P = Ωempty) {
 // `entityInit` - internal function, called by all entity factory constructors
     P.entityInit = function (items = Ωempty) {
 
+        this.modifyConstructorInputForAnchorButton(items);
+
         this.makeName(items.name);
         this.register();
         this.initializePositions();

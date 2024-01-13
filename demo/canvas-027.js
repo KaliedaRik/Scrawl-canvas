@@ -62,7 +62,7 @@ const playPauseAction = function () {
 
 const playPause = scrawl.makePhrase({
 
-    name: name('test-button-play-pause'),
+    name: name('play-pause-button'),
     order: 2,
 
     text: 'PLAY',
@@ -116,8 +116,7 @@ const playPause = scrawl.makePhrase({
 
     button: {
 
-        name: name('play-pause-button'),
-        elementName: name('play-pause-button-el'),
+        name: name('play-pause-el'),
         description: 'Play | Pause',
         clickAction: playPauseAction,
         tabOrder: 0,
@@ -142,7 +141,7 @@ const listenMuteAction = function () {
 
 const listenMute = playPause.clone({
 
-    name: name('test-button-listen-mute'),
+    name: name('listen-mute-button'),
 
     text: 'LISTEN',
 
@@ -150,8 +149,7 @@ const listenMute = playPause.clone({
 
     button: {
 
-        name: name('listen-mute-button'),
-        elementName: name('listen-mute-button-el'),
+        name: name('listen-mute-el'),
         description: 'Listen | Mute',
         clickAction: listenMuteAction,
         tabOrder: 1,

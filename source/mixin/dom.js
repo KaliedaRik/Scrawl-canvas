@@ -342,6 +342,8 @@ export default function (P = Ωempty) {
 // + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
     P.initializeDomLayout = function (items) {
 
+        this.modifyConstructorInputForAnchorButton(items);
+
         const el = items.domElement;
 
         if (el) {

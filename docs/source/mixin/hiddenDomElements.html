@@ -585,7 +585,7 @@
 
 <span class="hljs-keyword">import</span> { Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _keys, <span class="hljs-variable constant_">ANCHOR_ATTRIBUTES</span>, <span class="hljs-variable constant_">BUTTON_ATTRIBUTES</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -750,6 +750,226 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">rebuildAnchor</span>();
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">rebuildButton</span>();
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p><code>modifyConstructorInputForAnchorButton</code> - internal function. Called by various <code>prepareStamp</code> functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">modifyConstructorInputForAnchorButton</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(items);
+
+        <span class="hljs-keyword">let</span> anchorFlag = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = <span class="hljs-variable constant_">ANCHOR_ATTRIBUTES</span>.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+            <span class="hljs-keyword">if</span> (keys.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">ANCHOR_ATTRIBUTES</span>[i])) {
+
+                anchorFlag = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+
+        <span class="hljs-keyword">let</span> buttonFlag = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = <span class="hljs-variable constant_">BUTTON_ATTRIBUTES</span>.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+            <span class="hljs-keyword">if</span> (keys.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">BUTTON_ATTRIBUTES</span>[i])) {
+
+                buttonFlag = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (anchorFlag) {
+
+            <span class="hljs-keyword">const</span> a = items.<span class="hljs-property">anchor</span> || {};
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorHref</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">href</span> = items.<span class="hljs-property">anchorHref</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorHref</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorName</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">name</span> = items.<span class="hljs-property">anchorName</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorName</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorDescription</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">description</span> = items.<span class="hljs-property">anchorDescription</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorDescription</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorType</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">anchorType</span> = items.<span class="hljs-property">anchorType</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorType</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorTarget</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">target</span> = items.<span class="hljs-property">anchorTarget</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorTarget</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorTabOrder</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">tabOrder</span> = items.<span class="hljs-property">anchorTabOrder</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorTabOrder</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorDisabled</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">disabled</span> = items.<span class="hljs-property">anchorDisabled</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorDisabled</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorRel</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">rel</span> = items.<span class="hljs-property">anchorRel</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorRel</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorReferrerPolicy</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">referrerPolicy</span> = items.<span class="hljs-property">anchorReferrerPolicy</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorReferrerPolicy</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorPing</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">ping</span> = items.<span class="hljs-property">anchorPing</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorPing</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorHreflang</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">hrefLang</span> = items.<span class="hljs-property">anchorHreflang</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorHreflang</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorDownload</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">download</span> = items.<span class="hljs-property">anchorDownload</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorDownload</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorFocusAction</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">focusAction</span> = items.<span class="hljs-property">anchorFocusAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorFocusAction</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorBlurAction</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">blurAction</span> = items.<span class="hljs-property">anchorBlurAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorBlurAction</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchorClickAction</span> != <span class="hljs-literal">null</span>) {
+                a.<span class="hljs-property">clickAction</span> = items.<span class="hljs-property">anchorClickAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">anchorClickAction</span>;
+            }
+            items.<span class="hljs-property">anchor</span> = a;
+        }
+
+        <span class="hljs-keyword">if</span> (buttonFlag) {
+
+            <span class="hljs-keyword">const</span> b = items.<span class="hljs-property">button</span> || {};
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonName</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">name</span> = items.<span class="hljs-property">buttonName</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonName</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonAutofocus</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">autofocus</span> = items.<span class="hljs-property">buttonAutofocus</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonAutofocus</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonDescription</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">description</span> = items.<span class="hljs-property">buttonDescription</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonDescription</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonDisabled</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">disabled</span> = items.<span class="hljs-property">buttonDisabled</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonDisabled</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonTabOrder</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">tabOrder</span> = items.<span class="hljs-property">buttonTabOrder</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonTabOrder</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonForm</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">form</span> = items.<span class="hljs-property">buttonForm</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonForm</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonFormAction</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">formAction</span> = items.<span class="hljs-property">buttonFormAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonFormAction</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonFormEnctype</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">formEncType</span> = items.<span class="hljs-property">buttonFormEnctype</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonFormEnctype</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonFormMethod</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">formMethod</span> = items.<span class="hljs-property">buttonFormMethod</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonFormMethod</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonFormNoValidate</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">formNoValidate</span> = items.<span class="hljs-property">buttonFormNoValidate</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonFormNoValidate</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonFormTarget</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">formTarget</span> = items.<span class="hljs-property">buttonFormTarget</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonFormTarget</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonElementName</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">elementName</span> = items.<span class="hljs-property">buttonElementName</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonElementName</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonPopoverTarget</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">popoverTarget</span> = items.<span class="hljs-property">buttonPopoverTarget</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonPopoverTarget</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonPopoverTargetAction</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">popoverTargetAction</span> = items.<span class="hljs-property">buttonPopoverTargetAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonPopoverTargetAction</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonElementType</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">elementType</span> = items.<span class="hljs-property">buttonElementType</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonElementType</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonElementValue</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">elementValue</span> = items.<span class="hljs-property">buttonElementValue</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonElementValue</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonFocusAction</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">focusAction</span> = items.<span class="hljs-property">buttonFocusAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonFocusAction</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonBlurAction</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">blurAction</span> = items.<span class="hljs-property">buttonBlurAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonBlurAction</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">buttonClickAction</span> != <span class="hljs-literal">null</span>) {
+                b.<span class="hljs-property">clickAction</span> = items.<span class="hljs-property">buttonClickAction</span>;
+                <span class="hljs-keyword">delete</span> items.<span class="hljs-property">buttonClickAction</span>;
+            }
+            items.<span class="hljs-property">button</span> = b;
+        }
     };
 }</pre></div></div>
             

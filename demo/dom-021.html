@@ -9,6 +9,7 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+    /* Buttons to trigger popover display */
     nav {
       display: flex;
       margin-bottom: 1rem;
@@ -17,6 +18,12 @@
     nav button {
       font: 2rem arial, sans-serif;
       padding: 0.5rem 1rem;
+    }
+
+    /* The popover component */
+    .popover-container {
+      position: absolute;
+      top: -5000px;
     }
 
     #mypopover {
@@ -28,10 +35,6 @@
     }
     #mypopover::backdrop {
       backdrop-filter: blur(3px);
-    }
-
-    .do-not-display {
-      height: 0;
     }
 
     .testinfo {
@@ -62,63 +65,17 @@
     <button popovertarget="mypopover">Toggle popover</button>
   </nav>
 
-  <div id="mypopover" popover>
-    <canvas 
-      id="mycanvas" 
-      data-scrawl-canvas
-      data-is-responsive="true" 
-      data-base-background-color="darkslategray"
-      data-label="Interactive canvas-based popup element"
-      data-description="To dismiss the popover, click the keyboard escape button"
-      data-manifest='{
-        "class": "popover-asset",
-        "banner": "popover-static-image-banner",
-        "landscape": "popover-static-image-landscape",
-        "rectangular": "popover-static-image-rectangular",
-        "portrait": "popover-static-image-portrait",
-        "skyscraper": "popover-static-image-skyscraper",
-        "placeholder": "popover-placeholder-image"
-      }'
-    >
-      <img 
-        id="popover-placeholder-image"
-        class="popover-asset"
-        src="img/demo-m006-c3-img.webp" 
-        alt="Placeholder image for the popover canvas"
-      />
-      <div class="do-not-display">
-        <img 
-          id="popover-static-image-skyscraper"
-          class="popover-asset"
-          src="img/demo-m006-c3-img-skyscraper.webp" 
-          alt="Skyscraper shape form of the placeholder image for the popover canvas" 
-        />
-        <img 
-          id="popover-static-image-portrait"
-          class="popover-asset"
-          src="img/demo-m006-c3-img-portrait.webp" 
-          alt="Portrait shape form of the placeholder image for the popover canvas" 
-        />
-        <img 
-          id="popover-static-image-rectangular"
-          class="popover-asset"
-          src="img/demo-m006-c3-img-rectangular.webp" 
-          alt="Rectangular shape form of the placeholder image for the popover canvas" 
-        />
-        <img 
-          id="popover-static-image-landscape"
-          class="popover-asset"
-          src="img/demo-m006-c3-img-landscape.webp" 
-          alt="Landscape shape form of the placeholder image for the popover canvas" 
-        />
-        <img 
-          id="popover-static-image-banner"
-          class="popover-asset"
-          src="img/demo-m006-c3-img-banner.webp" 
-          alt="Banner shape form of the placeholder image for the popover canvas" 
-        />
-      </div>
-    </canvas>
+  <div class="popover-container">
+    <div id="mypopover" popover>
+      <canvas 
+        id="mycanvas" 
+        data-scrawl-canvas
+        data-is-responsive="true" 
+        data-base-background-color="darkslategray"
+        data-label="Interactive canvas-based popup element"
+        data-description="To dismiss the popover, click the keyboard escape button"
+      ></canvas>
+    </div>
   </div>
 
   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ante metus dictum at tempor commodo ullamcorper. Bibendum ut tristique et egestas. Velit dignissim sodales ut eu sem integer. Aliquam ut porttitor leo a. In metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim. Et magnis dis parturient montes nascetur ridiculus. Nibh tortor id aliquet lectus. Turpis tincidunt id aliquet risus feugiat in. Sodales neque sodales ut etiam. Nisl pretium fusce id velit ut tortor pretium. Lorem mollis aliquam ut porttitor. Sollicitudin aliquam ultrices sagittis orci a. Tempus egestas sed sed risus pretium quam vulputate dignissim. Varius morbi enim nunc faucibus a pellentesque. Morbi tempus iaculis urna id volutpat lacus. Nibh venenatis cras sed felis eget velit aliquet. Id velit ut tortor pretium. In fermentum et sollicitudin ac orci phasellus egestas.</p>

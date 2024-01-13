@@ -82,7 +82,6 @@ const defaultAttributes = {
     formMethod: ZERO_STR,
     formNoValidate: false,
     formTarget: ZERO_STR,
-    elementName: ZERO_STR,
     popoverTarget: ZERO_STR,
     popoverTargetAction: ZERO_STR,
     elementType: BUTTON,
@@ -133,7 +132,6 @@ P.demolish = function () {
 // button.autofocus           ~~>  artefact.buttonAutofocus            (autofocus)
 // button.description         ~~>  artefact.buttonDescription          ()
 // button.disabled            ~~>  artefact.buttonDisabled             (disabled)
-// button.elementName         ~~>  artefact.buttonElementName          (name)
 // button.elementType         ~~>  artefact.buttonElementType          (type)
 // button.elementValue        ~~>  artefact.buttonElementValue         (value)
 // button.form                ~~>  artefact.buttonForm                 (form)
@@ -193,17 +191,18 @@ P.build = function () {
 
         if (hold && controller) {
 
-            const { autofocus, blurAction, clickAction, description, disabled, elementName, elementType, elementValue, focusAction, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, name, popoverTarget, popoverTargetAction, tabOrder } = this;
+            const { autofocus, blurAction, clickAction, description, disabled, elementType, elementValue, focusAction, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, name, popoverTarget, popoverTargetAction, tabOrder } = this;
 
             let btn = this.domElement;
 
-            if (btn && hold && document.querySelector(`${this.name}`)) {
+            if (btn && hold) {
 
                 if (clickAction) btn.removeEventListener(CLICK, clickAction, false);
                 if (focusAction) btn.removeEventListener(FOCUS, () => host.onEnter(), false);
                 if (blurAction) btn.removeEventListener(BLUR, () => host.onLeave(), false);
 
                 hold.removeChild(btn);
+                this.domElement = null;
             }
 
             if (!disabled) {
@@ -220,7 +219,6 @@ P.build = function () {
                 if (formMethod) btn.setAttribute(_FORMMETHOD, formMethod);
                 if (formNoValidate) btn.setAttribute(_FORMNOVALIDATE, ZERO_STR);
                 if (formTarget) btn.setAttribute(TARGET, formTarget);
-                if (elementName) btn.setAttribute(NAME, elementName);
                 if (popoverTarget) btn.setAttribute(_POPOVERTARGET, popoverTarget);
                 if (popoverTargetAction) btn.setAttribute(_POPOVERTARGETACTION, popoverTargetAction);
                 if (elementValue != null) btn.setAttribute(VALUE, elementValue);
@@ -240,9 +238,8 @@ P.build = function () {
                 this.domElement = btn;
 
                 hold.appendChild(btn);
-
-                host.dirtyNavigationTabOrder = true;
             }
+            controller.dirtyNavigationTabOrder = true;
         }
 
     }
@@ -305,7 +302,7 @@ P.click = function () {
 //
 //     // Define the button object's attributes
 //     button: {
-//         elementName: 'close-button',
+//         name: 'close-button',
 //         description: 'Close',
 //         popoverTarget: 'mypopover',
 //         popoverTargetAction: 'hide',

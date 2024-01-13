@@ -1664,13 +1664,13 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>) {
 
                 myAnchor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span> = <span class="hljs-literal">null</span>;
+                <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>;
             }
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>) {
 
                 myButton = <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span> = <span class="hljs-literal">null</span>;
+                <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">button</span>;
             }
 
             myPacket = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">saveAsPacket</span>();

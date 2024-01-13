@@ -87,6 +87,8 @@ const Cell = function (items = Ωempty) {
     this.initializePositions();
     this.initializeCascade();
 
+    this.modifyConstructorInputForAnchorButton(items);
+
     let mycanvas = items.element;
     delete items.element;
 

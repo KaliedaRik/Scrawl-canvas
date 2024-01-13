@@ -890,87 +890,6 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="utility-functions">Utility functions</h4>
-<p>Can be exported from their own file and imported here - see <a href="./modules-006.html">Demo modules-006</a> for a working demo of this practice</p>
-<p><strong>Asset loader</strong>
-Use the loader to get data out of the HTML &lt;canvas&gt; element’s <code>data-manifest</code> attribute.</p>
-<ul>
-<li>Manifests are not part of the Scrawl-canvas system; we’re just using it here as a convenient way to associate images with various canvas shapes (for those users who prefer reduced motion or are using non-visual methods to read the web page).</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">loader</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> assets = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">asset</span>;
-
-    <span class="hljs-keyword">const</span> manifest = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(canvas.<span class="hljs-property">domElement</span>.<span class="hljs-property">dataset</span>.<span class="hljs-property">manifest</span>);
-
-    scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`.<span class="hljs-subst">${manifest.<span class="hljs-keyword">class</span>}</span>`</span>);
-
-    <span class="hljs-keyword">const</span> result = {};
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(manifest)) {
-
-        <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">&#x27;class&#x27;</span>) {
-
-            result[key] = assets[value];
-        }
-    }
-    <span class="hljs-keyword">return</span> result;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p><strong>Reduce motion functionality</strong>
-A convenience function to add the <code>reduceMotionAction</code> and <code>noPreferenceMotionAction</code> attributes to a canvas. Takes an Object argument containing the following attributes:</p>
-<ul>
-<li><code>fixed</code> - a group containing artefacts that display when the user requests reduced motion, or an Array of such groups</li>
-<li><code>animated</code> - a group containing artefacts that display when the user give no preference about reduced motion, or an Array of such groups</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">reducedMotionFunctions</span> = (<span class="hljs-params">items</span>) =&gt; {
-
-    <span class="hljs-keyword">let</span> {fixed, animated } = items;
-
-    <span class="hljs-keyword">if</span> (!(fixed &amp;&amp; animated)) <span class="hljs-keyword">return</span> {};
-
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(fixed)) fixed = [fixed];
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(animated)) animated = [animated];
-
-    <span class="hljs-keyword">return</span> {
-
-        <span class="hljs-attr">reduceMotionAction</span>: <span class="hljs-function">() =&gt;</span> {
-
-            fixed.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> }));
-            animated.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> }));
-        },
-        <span class="hljs-attr">noPreferenceMotionAction</span>: <span class="hljs-function">() =&gt;</span> {
-
-            fixed.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> }));
-            animated.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> }));
-        },
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -981,11 +900,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-6">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Get a handle on the popover element</p>
 
@@ -996,126 +915,43 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-7">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>Load image assets</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> assets = <span class="hljs-title function_">loader</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="build-display">Build display</h4>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Groups that don’t display when user has reducedMotion set</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> animGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;animated-group&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> dragGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-drag-group&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">host</span>: base,
 });
 
-<span class="hljs-keyword">const</span> dragGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;drag-group&#x27;</span>,
+<span class="hljs-keyword">const</span> closeButtonGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-close-button-group&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">host</span>: base,
+});
+
+<span class="hljs-keyword">const</span> backgroundGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-background-group&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">host</span>: base,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Group that only displays when user has reducedMotion set</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> staticGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: base,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>Group for entitys that always display</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> topGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: base,
-    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>Picture entity</p>
-<ul>
-<li>Contains a non-interactive image of the popover display, for prefersReducedMotion users</li>
-<li>Image will update in line with canvas size/shape</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> placeholder = scrawl.<span class="hljs-title function_">makePicture</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;placeholder-image&#x27;</span>,
-    <span class="hljs-attr">group</span>: staticGroup,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">asset</span>: assets.<span class="hljs-property">placeholder</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Arrow shape entity</p>
 <ul>
@@ -1126,7 +962,7 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arrow = scrawl.<span class="hljs-title function_">makeShape</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;arrow&#x27;</span>,
-    <span class="hljs-attr">group</span>: animGroup,
+    <span class="hljs-attr">group</span>: backgroundGroup,
     <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">&#x27;M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z&#x27;</span>,
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -1144,11 +980,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-14">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Draggable phrase entitys</p>
 <ul>
@@ -1160,6 +996,7 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> shapeLabel = scrawl.<span class="hljs-title function_">makePhrase</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-label&#x27;</span>,
     <span class="hljs-attr">group</span>: dragGroup,
+    <span class="hljs-attr">bringToFrontOnDrag</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Canvas shape: ???&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;25%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
@@ -1178,11 +1015,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-15">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1196,11 +1033,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-16">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1219,11 +1056,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-17">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Close button</p>
 <ul>
@@ -1237,7 +1074,7 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> closeButton = scrawl.<span class="hljs-title function_">makeRectangle</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;close-button&#x27;</span>,
-    <span class="hljs-attr">group</span>: topGroup,
+    <span class="hljs-attr">group</span>: closeButtonGroup,
     <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-number">100</span>,
     <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-number">40</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">6</span>,
@@ -1255,11 +1092,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-18">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1273,11 +1110,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-19">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1287,7 +1124,6 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
     },
     <span class="hljs-attr">button</span>: {
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;close-el&#x27;</span>,
-        <span class="hljs-attr">elementName</span>: <span class="hljs-string">&#x27;close-el&#x27;</span>,
         <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Close&#x27;</span>,
         <span class="hljs-attr">popoverTarget</span>: <span class="hljs-string">&#x27;mypopover&#x27;</span>,
         <span class="hljs-attr">popoverTargetAction</span>: <span class="hljs-string">&#x27;hide&#x27;</span>,
@@ -1299,11 +1135,11 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
         </li>
         
         
-        <li id="section-20">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1315,7 +1151,7 @@ A convenience function to add the <code>reduceMotionAction</code> and <code>noPr
 
 scrawl.<span class="hljs-title function_">makePhrase</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;close-button-label&#x27;</span>,
-    <span class="hljs-attr">group</span>: topGroup,
+    <span class="hljs-attr">group</span>: closeButtonGroup,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Close&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">100</span>,
     <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;close-button&#x27;</span>,
@@ -1332,39 +1168,60 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-21">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Popover event listener</p>
 <ul>
-<li>When the popover opens we want the close button to take focus</li>
-<li>When the popover closes, we need to disable the button to take it out of the tabbing order</li>
+<li>When the popover opens we want the close button to take focus (this is browser dependent - sometimes user will need to tab to the button to focus it).</li>
+<li>When the popover closes, we need to disable the button to take it out of the tabbing order.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;beforetoggle&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;toggle&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">newState</span> == <span class="hljs-string">&#x27;open&#x27;</span>) closeButton.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">buttonAutofocus</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">buttonDisabled</span>: <span class="hljs-literal">false</span>,
-    });
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">newState</span> == <span class="hljs-string">&#x27;open&#x27;</span>) {
+        closeButton.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">buttonDisabled</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">buttonAutofocus</span>: <span class="hljs-literal">true</span>,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>The canvas gets resized by the browser but in the popover context this doesn’t get picked up (until the user interacts with the web page, for example by moving the mouse cursor). So we need to manually invoke the canvas wrapper’s reaction to the change ourselves.</p>
 
-    <span class="hljs-keyword">else</span> closeButton.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">buttonDisabled</span>: <span class="hljs-literal">true</span> });
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">apply</span>();
+    }
+
+    <span class="hljs-keyword">else</span> {
+        closeButton.<span class="hljs-title function_">set</span>({ 
+            <span class="hljs-attr">buttonDisabled</span>: <span class="hljs-literal">true</span>,
+        });
+    }
 
 }, popover);</pre></div></div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -1376,11 +1233,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-23">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Drag zone for the phrase size and shape labels</p>
 
@@ -1396,11 +1253,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-24">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="responsiveness">Responsiveness</h4>
 
@@ -1428,9 +1285,6 @@ canvas.<span class="hljs-title function_">set</span>({
         sizeLabel.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;75%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
         });
-        placeholder.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">asset</span>: assets.<span class="hljs-property">banner</span>,
-        })
         arrow.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>,
         });
@@ -1444,9 +1298,6 @@ canvas.<span class="hljs-title function_">set</span>({
         sizeLabel.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;75%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
         });
-        placeholder.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">asset</span>: assets.<span class="hljs-property">landscape</span>,
-        })
         arrow.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">roll</span>: -<span class="hljs-number">112.5</span>,
         });
@@ -1460,9 +1311,6 @@ canvas.<span class="hljs-title function_">set</span>({
         sizeLabel.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;70%&#x27;</span>, <span class="hljs-string">&#x27;65%&#x27;</span>],
         });
-        placeholder.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">asset</span>: assets.<span class="hljs-property">rectangular</span>,
-        })
         arrow.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">roll</span>: -<span class="hljs-number">135</span>,
         });
@@ -1476,9 +1324,6 @@ canvas.<span class="hljs-title function_">set</span>({
         sizeLabel.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;75%&#x27;</span>],
         });
-        placeholder.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">asset</span>: assets.<span class="hljs-property">portrait</span>,
-        })
         arrow.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">roll</span>: -<span class="hljs-number">157.5</span>,
         });
@@ -1492,9 +1337,6 @@ canvas.<span class="hljs-title function_">set</span>({
         sizeLabel.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;75%&#x27;</span>],
         });
-        placeholder.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">asset</span>: assets.<span class="hljs-property">skyscraper</span>,
-        })
         arrow.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">roll</span>: -<span class="hljs-number">180</span>,
         });
@@ -1549,11 +1391,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1565,11 +1407,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1584,31 +1426,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <h4 id="accessibility---reduced-motion-preference">Accessibility - reduced-motion preference</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> reducedMotion = <span class="hljs-title function_">reducedMotionFunctions</span>({
-    <span class="hljs-attr">fixed</span>: staticGroup,
-    <span class="hljs-attr">animated</span>: [animGroup, dragGroup],
-});
-
-canvas.<span class="hljs-title function_">set</span>({ ...reducedMotion });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

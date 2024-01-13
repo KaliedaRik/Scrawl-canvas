@@ -7,61 +7,6 @@ import * as scrawl from '../source/scrawl.js';
 import { reportSpeed } from './utilities.js';
 
 
-// #### Utility functions
-// Can be exported from their own file and imported here - see [Demo modules-006](./modules-006.html) for a working demo of this practice
-//
-// __Asset loader__
-// Use the loader to get data out of the HTML &lt;canvas> element's `data-manifest` attribute.
-// + Manifests are not part of the Scrawl-canvas system; we're just using it here as a convenient way to associate images with various canvas shapes (for those users who prefer reduced motion or are using non-visual methods to read the web page).
-const loader = () => {
-
-    const assets = scrawl.library.asset;
-
-    const manifest = JSON.parse(canvas.domElement.dataset.manifest);
-
-    scrawl.importDomImage(`.${manifest.class}`);
-
-    const result = {};
-
-    for (const [key, value] of Object.entries(manifest)) {
-
-        if (key !== 'class') {
-
-            result[key] = assets[value];
-        }
-    }
-    return result;
-};
-
-// __Reduce motion functionality__
-// A convenience function to add the `reduceMotionAction` and `noPreferenceMotionAction` attributes to a canvas. Takes an Object argument containing the following attributes:
-// + `fixed` - a group containing artefacts that display when the user requests reduced motion, or an Array of such groups
-// + `animated` - a group containing artefacts that display when the user give no preference about reduced motion, or an Array of such groups
-export const reducedMotionFunctions = (items) => {
-
-    let {fixed, animated } = items;
-
-    if (!(fixed && animated)) return {};
-
-    if (!Array.isArray(fixed)) fixed = [fixed];
-    if (!Array.isArray(animated)) animated = [animated];
-
-    return {
-
-        reduceMotionAction: () => {
-
-            fixed.forEach(a => a.setArtefacts({ visibility: true }));
-            animated.forEach(a => a.setArtefacts({ visibility: false }));
-        },
-        noPreferenceMotionAction: () => {
-
-            fixed.forEach(a => a.setArtefacts({ visibility: false }));
-            animated.forEach(a => a.setArtefacts({ visibility: true }));
-        },
-    }
-};
-
-
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas,
     base = canvas.get('baseName');
@@ -71,56 +16,31 @@ const canvas = scrawl.library.canvas.mycanvas,
 const popover = document.querySelector('#mypopover');
 
 
-// Load image assets
-const assets = loader();
-
-
 // #### Build display
 
-// Groups that don't display when user has reducedMotion set
-const animGroup = scrawl.makeGroup({
-    name: 'animated-group',
-    host: base,
-});
-
 const dragGroup = scrawl.makeGroup({
-    name: 'drag-group',
-    host: base,
-});
-
-// Group that only displays when user has reducedMotion set
-const staticGroup = scrawl.makeGroup({
-    name: 'static-group',
-    host: base,
-});
-
-// Group for entitys that always display
-const topGroup = scrawl.makeGroup({
-    name: 'static-group',
-    host: base,
+    name: 'my-drag-group',
     order: 1,
+    host: base,
 });
 
-
-// Picture entity
-// + Contains a non-interactive image of the popover display, for prefersReducedMotion users
-// + Image will update in line with canvas size/shape
-const placeholder = scrawl.makePicture({
-    name: 'placeholder-image',
-    group: staticGroup,
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-    dimensions: ['100%', '100%'],
-    copyDimensions: ['100%', '100%'],
-    asset: assets.placeholder,
+const closeButtonGroup = scrawl.makeGroup({
+    name: 'my-close-button-group',
+    order: 2,
+    host: base,
 });
 
+const backgroundGroup = scrawl.makeGroup({
+    name: 'my-background-group',
+    order: 0,
+    host: base,
+});
 
 // Arrow shape entity
 // + Will change scale and rotation depending on the canvas size/shape
 const arrow = scrawl.makeShape({
     name: 'arrow',
-    group: animGroup,
+    group: backgroundGroup,
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -141,6 +61,7 @@ const arrow = scrawl.makeShape({
 const shapeLabel = scrawl.makePhrase({
     name: 'shape-label',
     group: dragGroup,
+    bringToFrontOnDrag: false,
     text: 'Canvas shape: ???',
     width: 200,
     start: ['25%', '50%'],
@@ -179,7 +100,7 @@ const sizeLabel = shapeLabel.clone({
 const closeButton = scrawl.makeRectangle({
 
     name: 'close-button',
-    group: topGroup,
+    group: closeButtonGroup,
     rectangleWidth: 100,
     rectangleHeight: 40,
     radius: 6,
@@ -203,7 +124,6 @@ const closeButton = scrawl.makeRectangle({
     },
     button: {
         name: 'close-el',
-        elementName: 'close-el',
         description: 'Close',
         popoverTarget: 'mypopover',
         popoverTargetAction: 'hide',
@@ -218,7 +138,7 @@ const closeButton = scrawl.makeRectangle({
 
 scrawl.makePhrase({
     name: 'close-button-label',
-    group: topGroup,
+    group: closeButtonGroup,
     text: 'Close',
     width: 100,
     pivot: 'close-button',
@@ -234,16 +154,25 @@ scrawl.makePhrase({
 
 
 // Popover event listener
-// + When the popover opens we want the close button to take focus
-// + When the popover closes, we need to disable the button to take it out of the tabbing order
-scrawl.addNativeListener('beforetoggle', (e) => {
+// + When the popover opens we want the close button to take focus (this is browser dependent - sometimes user will need to tab to the button to focus it).
+// + When the popover closes, we need to disable the button to take it out of the tabbing order.
+scrawl.addNativeListener('toggle', (e) => {
 
-    if (e.newState == 'open') closeButton.set({
-        buttonAutofocus: true,
-        buttonDisabled: false,
-    });
+    if (e.newState == 'open') {
+        closeButton.set({
+            buttonDisabled: false,
+            buttonAutofocus: true,
+        });
 
-    else closeButton.set({ buttonDisabled: true });
+        // The canvas gets resized by the browser but in the popover context this doesn't get picked up (until the user interacts with the web page, for example by moving the mouse cursor). So we need to manually invoke the canvas wrapper's reaction to the change ourselves.
+        canvas.apply();
+    }
+
+    else {
+        closeButton.set({ 
+            buttonDisabled: true,
+        });
+    }
 
 }, popover);
 
@@ -285,9 +214,6 @@ canvas.set({
         sizeLabel.set({
             start: ['75%', '50%'],
         });
-        placeholder.set({
-            asset: assets.banner,
-        })
         arrow.set({
             roll: -90,
         });
@@ -301,9 +227,6 @@ canvas.set({
         sizeLabel.set({
             start: ['75%', '50%'],
         });
-        placeholder.set({
-            asset: assets.landscape,
-        })
         arrow.set({
             roll: -112.5,
         });
@@ -317,9 +240,6 @@ canvas.set({
         sizeLabel.set({
             start: ['70%', '65%'],
         });
-        placeholder.set({
-            asset: assets.rectangular,
-        })
         arrow.set({
             roll: -135,
         });
@@ -333,9 +253,6 @@ canvas.set({
         sizeLabel.set({
             start: ['50%', '75%'],
         });
-        placeholder.set({
-            asset: assets.portrait,
-        })
         arrow.set({
             roll: -157.5,
         });
@@ -349,9 +266,6 @@ canvas.set({
         sizeLabel.set({
             start: ['50%', '75%'],
         });
-        placeholder.set({
-            asset: assets.skyscraper,
-        })
         arrow.set({
             roll: -180,
         });
@@ -415,15 +329,6 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
-
-
-// #### Accessibility - reduced-motion preference
-const reducedMotion = reducedMotionFunctions({
-    fixed: staticGroup,
-    animated: [animGroup, dragGroup],
-});
-
-canvas.set({ ...reducedMotion });
 
 
 // #### Development and testing

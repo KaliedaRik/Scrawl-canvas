@@ -51,6 +51,8 @@ const Mesh = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
 
+    this.modifyConstructorInputForAnchorButton(items);
+
     this.set(this.defs);
 
     this.state = makeState();

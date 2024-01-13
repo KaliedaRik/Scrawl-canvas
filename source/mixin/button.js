@@ -52,7 +52,6 @@ export default function (P = Ωempty) {
 // artefact.buttonClickAction     ~~>  button.clickAction     function - returns onclick string
 // artefact.buttonDescription     ~~>  button.description     string - default: ''
 // artefact.buttonDisabled        ~~>  button.disabled        boolean - default: false
-// artefact.buttonElementName     ~~>  button.elementName     string - default: null
 // artefact.buttonElementType     ~~>  button.elementType     string[5] - default: 'button'
 // artefact.buttonElementValue    ~~>  button.elementValue    string - default: null
 // artefact.buttonFocusAction     ~~>  button.focusAction     boolean - default: false
@@ -80,72 +79,68 @@ export default function (P = Ωempty) {
 
 // __buttonAutofocus__
     G.buttonAutofocus = function () { return this.buttonGetHelper(AUTOFOCUS); };
-    S.buttonAutofocus = function (item) { return this.buttonSetHelper(AUTOFOCUS, item); };
+    S.buttonAutofocus = function (item) { this.buttonSetHelper(AUTOFOCUS, item); };
 
 // __buttonDescription__
     G.buttonDescription = function () { return this.buttonGetHelper(DESCRIPTION); };
-    S.buttonDescription = function (item) { return this.buttonSetHelper(DESCRIPTION, item); };
+    S.buttonDescription = function (item) { this.buttonSetHelper(DESCRIPTION, item); };
 
 // __buttonDisabled__
     G.buttonDisabled = function () { return this.buttonGetHelper(DISABLED); };
-    S.buttonDisabled = function (item) { return this.buttonSetHelper(DISABLED, item); };
+    S.buttonDisabled = function (item) { this.buttonSetHelper(DISABLED, item); };
 
 // __buttonTabOrder__
     G.buttonTabOrder = function () { return this.buttonGetHelper(TAB_ORDER); };
-    S.buttonTabOrder = function (item) { return this.buttonSetHelper(TAB_ORDER, item); };
+    S.buttonTabOrder = function (item) { this.buttonSetHelper(TAB_ORDER, item); };
 
 // __buttonForm__
     G.buttonForm = function () { return this.buttonGetHelper(FORM); };
-    S.buttonForm = function (item) { return this.buttonSetHelper(FORM, item); };
+    S.buttonForm = function (item) { this.buttonSetHelper(FORM, item); };
 
 // __buttonFormAction__
     G.buttonFormAction = function () { return this.buttonGetHelper(FORM_ACTION); };
-    S.buttonFormAction = function (item) { return this.buttonSetHelper(FORM_ACTION, item); };
+    S.buttonFormAction = function (item) { this.buttonSetHelper(FORM_ACTION, item); };
 
 // __buttonFormEnctype__
     G.buttonFormEnctype = function () { return this.buttonGetHelper(FORM_ENCTYPE); };
-    S.buttonFormEnctype = function (item) { return this.buttonSetHelper(FORM_ENCTYPE, item); };
+    S.buttonFormEnctype = function (item) { this.buttonSetHelper(FORM_ENCTYPE, item); };
 
 // __buttonFormMethod__
     G.buttonFormMethod = function () { return this.buttonGetHelper(FORM_METHOD); };
-    S.buttonFormMethod = function (item) { return this.buttonSetHelper(FORM_METHOD, item); };
+    S.buttonFormMethod = function (item) { this.buttonSetHelper(FORM_METHOD, item); };
 
 // __buttonFormNoValidate__
     G.buttonFormNoValidate = function () { return this.buttonGetHelper(FORM_NOVALIDATE); };
-    S.buttonFormNoValidate = function (item) { return this.buttonSetHelper(FORM_NOVALIDATE, item); };
+    S.buttonFormNoValidate = function (item) { this.buttonSetHelper(FORM_NOVALIDATE, item); };
 
 // __buttonFormTarget__
     G.buttonFormTarget = function () { return this.buttonGetHelper(FORM_TARGET); };
-    S.buttonFormTarget = function (item) { return this.buttonSetHelper(FORM_TARGET, item); };
-
-// __buttonElementName__
-    G.buttonElementName = function () { return this.buttonGetHelper(ELEMENT_NAME); };
-    S.buttonElementName = function (item) { return this.buttonSetHelper(ELEMENT_NAME, item); };
+    S.buttonFormTarget = function (item) { this.buttonSetHelper(FORM_TARGET, item); };
 
 // __buttonPopoverTarget__
     G.buttonPopoverTarget = function () { return this.buttonGetHelper(POPOVER_TARGET); };
-    S.buttonPopoverTarget = function (item) { return this.buttonSetHelper(POPOVER_TARGET, item); };
+    S.buttonPopoverTarget = function (item) { this.buttonSetHelper(POPOVER_TARGET, item); };
 
 // __buttonPopoverTargetAction__
     G.buttonPopoverTargetAction = function () { return this.buttonGetHelper(POPOVER_TARGETACTION); };
-    S.buttonPopoverTargetAction = function (item) { return this.buttonSetHelper(POPOVER_TARGETACTION, item); };
+    S.buttonPopoverTargetAction = function (item) { this.buttonSetHelper(POPOVER_TARGETACTION, item); };
 
 // __buttonElementType__
     G.buttonElementType = function () { return this.buttonGetHelper(ELEMENT_TYPE); };
-    S.buttonElementType = function (item) { return this.buttonSetHelper(ELEMENT_TYPE, item); };
+    S.buttonElementType = function (item) { this.buttonSetHelper(ELEMENT_TYPE, item); };
 
 // __buttonElementValue__
     G.buttonElementValue = function () { return this.buttonGetHelper(ELEMENT_VALUE); };
-    S.buttonElementValue = function (item) { return this.buttonSetHelper(ELEMENT_VALUE, item); };
+    S.buttonElementValue = function (item) { this.buttonSetHelper(ELEMENT_VALUE, item); };
 
 // __buttonFocusAction__
-    S.buttonFocusAction = function (item) { return this.buttonSetHelper(FOCUS_ACTION, item); };
+    S.buttonFocusAction = function (item) { this.buttonSetHelper(FOCUS_ACTION, item); };
 
 // __buttonBlurAction__
-    S.buttonBlurAction = function (item) { return this.buttonSetHelper(BLUR_ACTION, item); };
+    S.buttonBlurAction = function (item) { this.buttonSetHelper(BLUR_ACTION, item); };
 
 // __buttonClickAction__
-    S.buttonClickAction = function (item) { return this.buttonSetHelper(CLICK_ACTION, item); };
+    S.buttonClickAction = function (item) { this.buttonSetHelper(CLICK_ACTION, item); };
 
 // __button__
 // The artefact's factory and `set` functions' argument object can include a single __button__ attribute, whose value should be an object containing button key:value pairs
@@ -171,7 +166,7 @@ export default function (P = Ωempty) {
 
     P.buttonSetHelper = function(key, val) {
 
-        if (!this.button) this.buildButton();
+        if (!this.button) this.buildButton({ [key]: val });
         if (this.button) this.button.set({ [key]: val });
     }
 
@@ -179,21 +174,18 @@ export default function (P = Ωempty) {
 // #### Prototype functions
 
 // The `buildButton` function triggers the (re)build of the &lt;a> element and adds it to the DOM
-    P.buildButton = function (items) {
+    P.buildButton = function (items = {}) {
 
-        if (isa_obj(items)) {
+        if (this.button) this.button.demolish();
 
-            if (this.button) this.button.demolish();
+        if (!items.buttonName) items.buttonName = `${this.name}-button`;
+        if (!items.description) items.description = `Button for ${this.name} ${this.type}`;
 
-            if (!items.buttonName) items.buttonName = `${this.name}-button`;
-            if (!items.description) items.description = `Button for ${this.name} ${this.type}`;
+        items.host = this;
+        items.controller = this.getCanvasWrapper();
+        items.hold = this.getCanvasNavElement();
 
-            items.host = this;
-            items.controller = this.getCanvasWrapper();
-            items.hold = this.getCanvasNavElement();
-
-            this.button = makeButton(items);
-        }
+        this.button = makeButton(items);
     };
 
 // `rebuildButton` - triggers the Button object's `build` function

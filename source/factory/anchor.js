@@ -196,8 +196,6 @@ P.build = function () {
                 this.domElement = null;
             }
 
-            controller.dirtyNavigationTabOrder = true;
-
             if (!disabled) {
 
                 link = document.createElement(_A);
@@ -226,6 +224,7 @@ P.build = function () {
 
                 hold.appendChild(link);
             }
+            controller.dirtyNavigationTabOrder = true;
         }
 
     }

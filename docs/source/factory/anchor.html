@@ -964,8 +964,6 @@ anchor.<span class="hljs-property">target</span>          ~~&gt; artefact.<span 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = <span class="hljs-literal">null</span>;
             }
 
-            controller.<span class="hljs-property">dirtyNavigationTabOrder</span> = <span class="hljs-literal">true</span>;
-
             <span class="hljs-keyword">if</span> (!disabled) {
 
                 link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(_A);
@@ -994,6 +992,7 @@ anchor.<span class="hljs-property">target</span>          ~~&gt; artefact.<span 
 
                 hold.<span class="hljs-title function_">appendChild</span>(link);
             }
+            controller.<span class="hljs-property">dirtyNavigationTabOrder</span> = <span class="hljs-literal">true</span>;
         }
 
     }

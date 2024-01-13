@@ -1368,6 +1368,8 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">initializeDomLayout</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">modifyConstructorInputForAnchorButton</span>(items);
+
         <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>;
 
         <span class="hljs-keyword">if</span> (el) {

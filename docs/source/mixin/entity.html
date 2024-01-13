@@ -1267,6 +1267,8 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">entityInit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">modifyConstructorInputForAnchorButton</span>(items);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
