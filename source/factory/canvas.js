@@ -54,7 +54,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -190,6 +190,7 @@ const Canvas = function (items = Ωempty) {
         navigation.style.margin = PX0;
         navigation.style.overflow = HIDDEN;
         navigation.setAttribute(ARIA_LIVE, POLITE);
+        navigation.setAttribute(ARIA_BUSY, 'false');
         this.navigation = navigation;
         el.appendChild(navigation);
 
@@ -205,6 +206,7 @@ const Canvas = function (items = Ωempty) {
         textHold.style.padding = PX0;
         textHold.style.margin = PX0;
         textHold.style.overflow = HIDDEN;
+        textHold.setAttribute(ARIA_LIVE, POLITE);
         this.textHold = textHold;
         el.appendChild(textHold);
 
@@ -738,6 +740,8 @@ P.reorderNavElements = function () {
     const elArray = [],
         navEl = this.navigation;
 
+    navEl.setAttribute(ARIA_BUSY, 'true');
+
     while (navEl.firstChild) {
 
         elArray.push(navEl.removeChild(navEl.firstChild));
@@ -754,6 +758,8 @@ P.reorderNavElements = function () {
     });
 
     elArray.forEach(e => navEl.appendChild(e));
+
+    navEl.setAttribute(ARIA_BUSY, 'false');
 };
 
 // `render` - orchestrate a single Display cycle - clear, then compile, then show.
