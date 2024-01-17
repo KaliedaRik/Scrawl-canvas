@@ -92,6 +92,7 @@ export const ANIMATIONTICKERS = 'animationtickers';
 export const ANONYMOUS = 'anonymous';
 export const AREA_ALPHA = 'area-alpha';
 export const ARG_SPLITTER = ',';
+export const ARIA_BUSY = 'aria-busy';
 export const ARIA_DESCRIBEDBY = 'aria-describedby';
 export const ARIA_HIDDEN = 'aria-hidden';
 export const ARIA_LABELLEDBY = 'aria-labelledby';
