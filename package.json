@@ -46,7 +46,7 @@
     "browser-sync": "^2.29.3",
     "docco": "^0.9.1",
     "eslint": "^8.56.0",
-    "knip": "^3.13.0",
+    "knip": "^4.0.2",
     "rollup": "^4.9.1",
     "typescript": "^5.3.2"
   },
