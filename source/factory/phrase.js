@@ -179,7 +179,7 @@ const defaultAttributes = {
 
 // __exposeText__ - Boolean accessibility feature
 // + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element.
-// + The element - a &lt;div> - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
+// + The element - a &lt;div> - is added as a child to the &lt;canvas> element's textHold &lt;div> element.
     exposeText: true,
 
 // __lineHeight__ - a positive float Number multiplier applied to the font height to add space between lines of text
@@ -187,6 +187,9 @@ const defaultAttributes = {
 
 // __letterSpacing__ - a positive float Number representing a set number of pixels to place between each glyph (letter). Can be overridden for letter ranges using styling objects
     letterSpacing: 0,
+
+// __wordSpacing__ - a positive float Number representing a set number of pixels to place between each word (set of non-treatAsBreakGlyphs letters)
+    wordSpacing: 0,
 
 // __justify__ - String value to indicate how the text should justify itself within its dimensions box.
 // + Permitted values are: `left` (default), `center`, `right`, `full` (for 'justified' text).
@@ -230,7 +233,7 @@ const defaultAttributes = {
 // + `DEFAULTS` - remove all inline glyph styling from this point on
 // + `b`, `/b`, `strong`, `/strong`, `BOLD`, `/BOLD`  - add/remove bold styling
 // + `i`, `/i`, `em`, `/em`, `ITALIC`, `/ITALIC` - add/remove italic styling
-// + (Deprecated!) `SMALL-CAPS`, `/SMALL-CAPS` - add/remove small-caps styling
+// + `SMALL-CAPS`, `/SMALL-CAPS` - add/remove small-caps styling
 // + `HIGHLIGHT`, `/HIGHLIGHT` - add/remove glyph background highlight
 // + `u`, `/u`, `UNDERLINE`, `/UNDERLINE` - add/remove glyph underline
 // + `OVERLINE`, `/OVERLINE` - add/remove glyph overline
@@ -260,8 +263,11 @@ const defaultAttributes = {
 // ##### Bounding box
 // The bounding box represents the Phrase entity's collision detection ___hit area___. It contains all of the entity's text, including line spacing.
 
-// __boundingBoxColor__
-    boundingBoxColor: HALFTRANS,
+// __boundingBoxStyle__, __boundingBoxColor__ (deprecated)
+    boundingBoxStyle: HALFTRANS,
+
+// __boundingBoxLineWidth__ - number representing the lineWidth for the bounding box
+    boundingBoxLineWidth: 1,
 
 // __showBoundingBox__ - Boolean flag indicating whether the Phrase entity's bounding box should be displayed
     showBoundingBox: false,
@@ -287,8 +293,18 @@ const defaultAttributes = {
 // __textPathDirection__ - String with values `ltr` or `rtl` - affects how the text glyphs will arrange themselves along the path.
     textPathDirection: LTR,
 
-// __treatWordAsGlyph__ - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: false.
+// ##### Text layout
+// __treatWordAsGlyph__ - Boolean flag - when true, Scrawl-canvas will treat each word (set of non-treatAsBreakGlyphs letters) in the text as if they are a glyph/letter; default: false.
     treatWordAsGlyph: false,
+
+// __breakOnlyOnBreakGlyphs__ - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: true.
+    breakOnlyOnBreakGlyphs: true,
+
+// __treatAsBreakGlyphs__ - string Array - a list of glyphs to treat as breaking spaces.
+    treatAsBreakGlyphs: ['\u0009', '\u000B', '\u000C', '\u1680', '\u2000', '\u2001', '\u2002', '\u2003', '\u2004', '\u2005', '\u2006', '\u2007', '\u2008', '\u2009', '\u200A', '\u205F', '\u3000'],
+
+// __isVerticalText__ - Boolean flag - when true, Scrawl-canvas (attempt to) stack glyphs vertically, respecting glyph heights (if possible)
+    isVerticalText: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -325,6 +341,22 @@ const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
+// __boundingBoxStyle__
+G.boundingBoxStyle = function () {
+
+    return this.boundingBoxStyle;
+};
+S.boundingBoxStyle = function (item) {
+
+    if (item != null) {
+
+        if (styles[item]) this.boundingBoxStyle = styles[item].name;
+        else if (item.substring) this.boundingBoxStyle = item;
+    };
+};
+// _Deprecated_
+G.boundingBoxColor = G.boundingBoxStyle;
+S.boundingBoxColor = S.boundingBoxStyle;
 
 // __handle__
 S.handleX = function (coord) {
@@ -491,6 +523,25 @@ D.letterSpacing = function (item) {
     this.dirtyFilterIdentifier = true;
 };
 
+// __wordSpacing__
+S.wordSpacing = function (item) {
+
+    this.letterSpacing = ensurePositiveFloat(item, 3);
+
+    this.dirtyPathObject = true;
+    this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
+};
+D.wordSpacing = function (item) {
+
+    this.letterSpacing += ensureFloat(item, 3);
+    if (this.letterSpacing < 0) this.letterSpacing = 0;
+
+    this.dirtyPathObject = true;
+    this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
+};
+
 // __overlinePosition__
 S.overlinePosition = function (item) {
 
@@ -507,6 +558,34 @@ D.overlinePosition = function (item) {
     this.dirtyPathObject = true;
     this.dirtyText = true;
     this.dirtyFilterIdentifier = true;
+};
+
+// __overlineWidth__
+S.overlineWidth = function (item) {
+
+    this.overlineWidth = ensureFloat(item, 3);
+
+    this.dirtyPathObject = true;
+    this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
+};
+D.overlineWidth = function (item) {
+
+    this.overlineWidth += ensureFloat(item, 3);
+
+    this.dirtyPathObject = true;
+    this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
+};
+
+// __overlineStyle__
+S.overlineStyle = function (item) {
+
+    if (item != null) {
+
+        if (styles[item]) this.overlineStyle = styles[item].name;
+        else if (item.substring) this.overlineStyle = item;
+    };
 };
 
 // __noOverlineGlyphs__
@@ -531,6 +610,34 @@ D.underlinePosition = function (item) {
     this.dirtyPathObject = true;
     this.dirtyText = true;
     this.dirtyFilterIdentifier = true;
+};
+
+// __underlineWidth__
+S.underlineWidth = function (item) {
+
+    this.underlineWidth = ensureFloat(item, 3);
+
+    this.dirtyPathObject = true;
+    this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
+};
+D.underlineWidth = function (item) {
+
+    this.underlineWidth += ensureFloat(item, 3);
+
+    this.dirtyPathObject = true;
+    this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
+};
+
+// __underlineStyle__
+S.underlineStyle = function (item) {
+
+    if (item != null) {
+
+        if (styles[item]) this.underlineStyle = styles[item].name;
+        else if (item.substring) this.underlineStyle = item;
+    };
 };
 
 // __noUnderlineGlyphs__
@@ -583,13 +690,13 @@ D.textPathPosition = function (item) {
 // + Thus Phrase entitys hide these from the developer, instead giving them functions to get/set/update fonts which align more closely with CSS standards.
 // + Note that the Canvas API only supports a subset of possible CSS font-related values, and that the level of support for even these will vary between browsers/devices. The Phrase entity will do work to ensure the font strings passed to the Canvas API CanvasRenderingContext2D engine will be valid (thus avoiding unnecessary runtime errors), but this may not be the same as a developer specifies in their code.
 
-// __font__ - the desired CSS font (`get` returns the actual font String being used)
+// __fontString__ - the desired CSS font (`get` returns the actual font String being used)
 // + The font String is not retained. Rather we break it down into its constituent parts, and rebuild the font String when needed.
-G.font = function () {
+G.fontString = function () {
 
     return this.fontAttributes.getFontString();
 };
-S.font = function (item) {
+S.fontString = function (item) {
 
     this.fontAttributes.set({font: item});
 
@@ -597,13 +704,16 @@ S.font = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.font = G.fontString;
+S.font = S.fontString;
 
-// __style__ - CSS `font-style` String
-G.style = function () {
+// __fontStyle__ - CSS `font-style` String
+G.fontStyle = function () {
 
     return this.fontAttributes.get(STYLE);
 };
-S.style = function (item) {
+S.fontStyle = function (item) {
 
     this.fontAttributes.set({style: item});
 
@@ -611,13 +721,16 @@ S.style = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.style = G.fontStyle;
+S.style = S.fontStyle;
 
-// __variant__ - CSS `font-variant` String
-G.variant = function () {
+// __fontVariant__ - CSS `font-variant` String
+G.fontVariant = function () {
 
     return this.fontAttributes.get(VARIANT);
 };
-S.variant = function (item) {
+S.fontVariant = function (item) {
 
     this.fontAttributes.set({variant: item});
 
@@ -625,13 +738,16 @@ S.variant = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.variant = G.fontVariant;
+S.variant = S.fontVariant;
 
-// __weight__ - CSS `font-weight` String
-G.weight = function () {
+// __fontWeight__ - CSS `font-weight` String
+G.fontWeight = function () {
 
     return this.fontAttributes.get(WEIGHT);
 };
-S.weight = function (item) {
+S.fontWeight = function (item) {
 
     this.fontAttributes.set({weight: item});
 
@@ -639,13 +755,16 @@ S.weight = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.weight = G.fontWeight;
+S.weight = S.fontWeight;
 
-// __size__ - CSS `font-size` String
-G.size = function () {
+// __fontSize__ - CSS `font-size` String
+G.fontSize = function () {
 
     return this.fontAttributes.get(SIZE);
 };
-S.size = function (item) {
+S.fontSize = function (item) {
 
     this.fontAttributes.set({size: item});
 
@@ -653,13 +772,16 @@ S.size = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.size = G.fontSize;
+S.size = S.fontSize;
 
-// __sizeValue__ - the Number part of the font's size value
-G.sizeValue = function () {
+// __fontSizeValue__ - the Number part of the font's size value
+G.fontSizeValue = function () {
 
     return this.fontAttributes.get(SIZE_VALUE);
 };
-S.sizeValue = function (item) {
+S.fontSizeValue = function (item) {
 
     this.fontAttributes.set({sizeValue: item});
 
@@ -667,7 +789,7 @@ S.sizeValue = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
-D.sizeValue = function (item) {
+D.fontSizeValue = function (item) {
 
     this.fontAttributes.deltaSet({sizeValue: item});
 
@@ -675,13 +797,17 @@ D.sizeValue = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.sizeValue = G.fontSizeValue;
+S.sizeValue = S.fontSizeValue;
+D.sizeValue = D.fontSizeValue;
 
-// __sizeMetric__ - the String metric part of the font's size value
-G.sizeMetric = function () {
+// __fontSizeMetric__ - the String metric part of the font's size value
+G.fontSizeMetric = function () {
 
     return this.fontAttributes.get(SIZE_METRIC);
 };
-S.sizeMetric = function (item) {
+S.fontSizeMetric = function (item) {
 
     this.fontAttributes.set({sizeMetric: item});
 
@@ -689,13 +815,16 @@ S.sizeMetric = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.sizeMetric = G.fontSizeMetric;
+S.sizeMetric = S.fontSizeMetric;
 
-// __family__ - CSS `font-family` String
-G.family = function () {
+// __fontFamily__ - CSS `font-family` String
+G.fontFamily = function () {
 
     return this.fontAttributes.get(FAMILY);
 };
-S.family = function (item) {
+S.fontFamily = function (item) {
 
     this.fontAttributes.set({family: item});
 
@@ -703,6 +832,9 @@ S.family = function (item) {
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
 };
+// _Deprecated_
+G.family = G.fontFamily;
+S.family = S.fontFamily;
 
 
 // #### Prototype functions
@@ -1657,7 +1789,7 @@ P.stamper = {
 P.drawBoundingBox = function (engine) {
 
     engine.save();
-    engine.strokeStyle = this.boundingBoxColor;
+    engine.strokeStyle = this.boundingBoxStyle;
     engine.lineWidth = 1;
     engine.globalCompositeOperation = SOURCE_OVER;
     engine.globalAlpha = 1;

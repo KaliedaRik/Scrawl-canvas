@@ -1878,13 +1878,11 @@ type PhraseVariant = 'normal' | 'small-caps';
 
 type PhraseWeight = 'normal' | 'bold' | 'lighter' | 'bolder' | number;
 
-type PhraseStretch = 'normal' | 'semi-condensed' | 'condensed' | 'extra-condensed' | 'ultra-condensed' | 'semi-expanded' | 'expanded' | 'extra-expanded' | 'ultra-expanded';
-
 type PhraseSize = 'xx-small' | 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'xx-large' | 'xxx-large' | 'smaller' | 'larger' | string;
 
 type PhraseSizeMetric = 'em' | 'rem' | 'lh' | 'rlh' | 'ex' | 'cap' | 'ch' | 'ic' | '%'| 'vw' | 'vh' | 'vmax' | 'vmin' | 'vi' | 'vb' | 'in' | 'cm' | 'mm' | 'Q' | 'pc' | 'pt' | 'px';
 
-type PhaseFamily = 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui' | 'math' | 'emoji' | 'fangsong' | string;
+type PhraseFamily = 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui' | 'math' | 'emoji' | 'fangsong' | string;
 
 interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
     letterSpacing?: number;
@@ -1899,30 +1897,43 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
 
 interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, PhraseFactoryDeltaInputs {
     addTextPathRoll?: boolean;
-    boundingBoxColor?: string;
+    boundingBoxColor?: string;                          // deprecated
+    boundingBoxStyle?: StylesInstance | string;
+    breakOnlyOnBreakGlyphs?: boolean;
     delta?: PhraseFactoryDeltaInputs;
     exposeText?: boolean;
-    family?: PhaseFamily;
-    font?: string;
+    family?: PhraseFamily;                              // deprecated
+    font?: string;                                      // deprecated
+    fontFamily?: PhraseFamily;
+    fontSize?: PhraseSize;
+    fontSizeMetric?: PhraseSizeMetric;
+    fontSizeValue?: number;
+    fontString?: string;
+    fontStyle?: PhraseStyle;
+    fontVariant?: PhraseVariant;
+    fornWeight?: PhraseWeight;
     highlightStyle?: string;
+    isVerticalText?: boolean;
     justify?: PhraseJustifyValues;
     noOverlineGlyphs?: string;
     noUnderlineGlyphs?: string;
     overlineStyle?: string;
     sectionClassMarker?: string;
     showBoundingBox?: boolean;
-    size?: PhraseSize;
-    sizeMetric?: PhraseSizeMetric;
-    stretch?: PhraseStretch;
-    style?: PhraseStyle;
+    size?: PhraseSize;                                  // deprecated
+    sizeMetric?: PhraseSizeMetric;                      // deprecated
+    sizeValue?: number;                                 
+    style?: PhraseStyle;                                // deprecated
     text?: string;
     textPath?: ShapeInstance | string;
     textPathDirection?: PhraseTextPathDirection;
     textPathLoop?: boolean;
+    treatAsBreakGlyphs?: string[];
     treatWordAsGlyph?: boolean;
     underlineStyle?: string;
-    variant?: PhraseVariant;
-    weight?: PhraseWeight;
+    variant?: PhraseVariant;                            // deprecated
+    weight?: PhraseWeight;                              // deprecated
+    wordSpacing?: number;
 }
 
 interface PhraseSaveInputs extends PhraseFactoryInputs, SaveInputs {}
