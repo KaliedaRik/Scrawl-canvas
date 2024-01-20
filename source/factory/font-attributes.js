@@ -30,7 +30,7 @@ import { _isArray, _max, _min, _PC, _Q, BOLD, BOLDER, CAP, CH, CM, DEFAULT_SIZE,
 // #### FontAttributes constructor
 const FontAttributes = function (items = Ωempty) {
 
-    this.makeName(items.name);
+    // this.makeName(items.name);
     this.set(this.defs);
     this.set(items);
 

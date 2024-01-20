@@ -52,17 +52,17 @@ scrawl.makePhrase({
     name: 'loader-text-1',
     group: textGroup,
 
-    weight: 'bold',
+    fontWeight: 'bold',
 
     text: 'Loading',
-    size: '50px',
+    fontSize: '50px',
     justify: 'center',
 
     textPath: 'loader-track',
     handleY: '120%',
 
     delta: {
-      textPathPosition: -0.002
+        textPathPosition: -0.002
     },
 
 }).clone({

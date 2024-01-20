@@ -19,7 +19,7 @@ canvas.setBase({
 scrawl.makeGroup({
 
     name: 'pin-group',
-    host: canvas.base.name,
+    host: canvas.base,
 });
 
 const pinArray = [];
@@ -66,7 +66,7 @@ const reportLength = scrawl.makePhrase({
     name: 'report-length',
     text: '',
     fillStyle: 'white',
-    font: '2em Arial, sans-serif',
+    fontString: '2em Arial, sans-serif',
     start: ['center', 10],
     handleX: 'center',
     method: 'none',

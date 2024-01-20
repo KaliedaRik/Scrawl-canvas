@@ -77,7 +77,7 @@ scrawl.makePhrase({
 
     text: 'Hello',
 
-    font: '130px bold sans-serif',
+    fontString: '130px bold sans-serif',
 
     lineWidth: 8,
     method: 'draw',
@@ -92,7 +92,7 @@ scrawl.makePhrase({
     text: 'World!',
     method: 'fill',
     start: [350, 10],
-    size: '70px',
+    fontSize: '70px',
     roll: 5,
 });
 

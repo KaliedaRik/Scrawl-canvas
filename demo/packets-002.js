@@ -115,7 +115,7 @@ let myphrase = scrawl.makePhrase({
     name: 'phrase-tester',
 
     text: 'H&epsilon;§BOLD§lj§/BOLD§&ouml;!',
-    font: '40px Garamond, serif',
+    fontString: '40px Garamond, serif',
 
     width: 120,
     startX: 250,

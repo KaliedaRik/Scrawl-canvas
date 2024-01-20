@@ -67,8 +67,8 @@ const playPause = scrawl.makePhrase({
 
     text: 'PLAY',
 
-    family: 'sans-serif',
-    size: '2rem',
+    fontFamily: 'sans-serif',
+    fontSize: '2rem',
 
     startX: '75%',
     handleX: 'center',
@@ -446,9 +446,9 @@ const vtPhrase = scrawl.makePhrase({
 
     name: name('test-video-time-phrase'),
 
-    family: 'monospace',
-    size: '1em',
-    weight: 700,
+    fontFamily: 'monospace',
+    fontSize: '1em',
+    fontWeight: 700,
 
     startX: '1%',
     startY: '4%',

@@ -66,8 +66,8 @@ scrawl.makePhrase({
     textPathPosition: 0.06,
     handleY: 'bottom',
 
-    size: '50px',
-    family: '"Brush Script MT", "Brush Script Std", "Lucida Calligraphy", "Lucida Handwriting", "Apple Chancery", cursive',
+    fontSize: '50px',
+    fontFamily: '"Brush Script MT", "Brush Script Std", "Lucida Calligraphy", "Lucida Handwriting", "Apple Chancery", cursive',
 
     justify: 'center',
     lineHeight: 0,

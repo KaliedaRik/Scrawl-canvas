@@ -18,7 +18,7 @@ const spinFactory = function (name, radius, order, duration, clockwise) {
 
     scrawl.makeGroup({
         name: `${name}-group`,
-        host: canvas.base.name,
+        host: canvas.base,
         order,
     });
 
@@ -82,7 +82,7 @@ scrawl.makePhrase({
   name: 'painting-details',
   text: `Songbird and flowering camellia §GRAY§(1910 - 1930)
 §ITALIC§Ohara Koson (Japanese, 1877-1945)`,
-  font: '15px Arial, sans-serif',
+  fontString: '15px Arial, sans-serif',
   start: ['10%', '72%'],
   width: '80%',
   globalAlpha: 0,

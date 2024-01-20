@@ -1911,7 +1911,7 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     fontString?: string;
     fontStyle?: PhraseStyle;
     fontVariant?: PhraseVariant;
-    fornWeight?: PhraseWeight;
+    fontWeight?: PhraseWeight;
     highlightStyle?: string;
     isVerticalText?: boolean;
     justify?: PhraseJustifyValues;

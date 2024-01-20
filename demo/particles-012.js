@@ -172,7 +172,7 @@ scrawl.makePhrase({
     name: 'phrase1',
 
     text: 'HELLO',
-    font: '30px sans-serif',
+    fontString: '30px sans-serif',
 
     particle: 'test-net-7-1',
     lockTo: 'particle',

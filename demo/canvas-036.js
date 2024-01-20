@@ -8,7 +8,8 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas,
+    base = canvas.base;
 
 
 // Create a Cell on the canvas
@@ -101,7 +102,7 @@ const cell3 = canvas.buildCell({
 const myGroup = scrawl.makeGroup({
 
     name: 'target-group',
-    host: canvas.base.name,
+    host: base,
 });
 
 scrawl.makeBlock({
@@ -128,7 +129,7 @@ scrawl.makeBlock({
     name: 'block-2',
     dimensions: [120, 100],
     handle: ['left', 'top'],
-    startY: '80%',
+    startY: '60%',
 
     roll: 30,
 
@@ -235,7 +236,7 @@ scrawl.makePhrase({
     group: 'cell-1',
 
     text: 'Cell 1',
-    font: '20px sans-serif',
+    fontString: '20px sans-serif',
     fillStyle: 'red',
 
     start: [5, 5],
@@ -301,7 +302,7 @@ scrawl.makeWheel({
 }).clone({
 
     name: 'wheel-3',
-    group: canvas.base.name,
+    group: base,
 
     strokeStyle: 'green',
 
@@ -314,7 +315,7 @@ scrawl.makeBlock({
 
     name: 'mimic-block',
 
-    group: canvas.base.name,
+    group: base,
 
     fillStyle: 'yellow',
     strokeStyle: 'green',
@@ -351,13 +352,13 @@ scrawl.makeBlock({
 const report = reportSpeed('#reportmessage', function () {
 
     // __Warning: directly accessing current- attributes is dangerous. Directly setting current- attributes is fatal!__
-    return `Canvas dimensions: ${canvas.currentDimensions.join(', ')}
-Base dimensions: ${canvas.base.currentDimensions.join(', ')}
-Cell 1 dimensions: ${cell1.currentDimensions.join(', ')}
-Cell 2 dimensions: ${cell2.currentDimensions.join(', ')}
-Cell 3 dimensions: ${cell3.currentDimensions.join(', ')}
-Cell 4 dimensions: ${cell4.currentDimensions.join(', ')}
-Cell 5 dimensions: ${cell5.currentDimensions.join(', ')}`;
+    return `    Canvas dimensions: ${canvas.currentDimensions.join(', ')}
+    Base dimensions: ${base.currentDimensions.join(', ')}
+    Cell 1 dimensions: ${cell1.currentDimensions.join(', ')}
+    Cell 2 dimensions: ${cell2.currentDimensions.join(', ')}
+    Cell 3 dimensions: ${cell3.currentDimensions.join(', ')}
+    Cell 4 dimensions: ${cell4.currentDimensions.join(', ')}
+    Cell 5 dimensions: ${cell5.currentDimensions.join(', ')}`;
 });
 
 

@@ -33,7 +33,7 @@ const text = scrawl.makePhrase({
 
     name: 'demo-text',
     text: 'Hello world',
-    font: 'bold 70px sans-serif',
+    fontString: 'bold 70px sans-serif',
     start: ['center', 'center'],
     handle: ['center', 'center'],
     lineHeight: 0.5,

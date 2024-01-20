@@ -20,7 +20,7 @@ const mytext = scrawl.makePhrase({
     handle: ['center', 'center'],
 
     text: `Canvas display shape: undetermined`,
-    size: '40px',
+    fontSize: '40px',
     justify: 'center',
 
     fillStyle: 'black',
@@ -79,19 +79,19 @@ canvas.set({
 
     actionLargestArea: () => {
         mytext.set({
-            size: '40px',
+            fontSize: '40px',
         });
     },
 
     actionRegularArea: () => {
         mytext.set({
-            size: '28px',
+            fontSize: '28px',
         });
     },
 
     actionSmallestArea: () => {
         mytext.set({
-            size: '16px',
+            fontSize: '16px',
         });
     },
 });
@@ -113,13 +113,13 @@ canvas.setActionLandscapeShape(() => {
 
 canvas.setActionLargerArea(() => {
     mytext.set({
-        size: '34px',
+        fontSize: '34px',
     });
 });
 
 canvas.setActionSmallerArea(() => {
     mytext.set({
-        size: '22px',
+        fontSize: '22px',
     });
 });
 

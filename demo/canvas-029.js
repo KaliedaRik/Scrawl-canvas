@@ -72,7 +72,7 @@ scrawl.makePhrase({
     order: 1,
 
     text: 'Test phrase',
-    font: 'bold 46px Garamond, serif',
+    fontString: 'bold 46px Garamond, serif',
 
     startX: '5%',
     startY: '5%',
@@ -110,7 +110,7 @@ scrawl.makePhrase({
 
     name: name('test-phrase-5'),
 
-    font: '46px cursive',
+    fontString: '46px cursive',
 
     roll: 90,
     scale: 0.8,
@@ -137,7 +137,7 @@ scrawl.makePhrase({
 
     // Test to see if we can load a webfont from a remote server and see it show up in the canvas element
     // + If the test fails then the phrase will display as 46pt sans-serif
-    font: '46px "Mountains of Christmas"',
+    fontString: '46px "Mountains of Christmas"',
 
     startX: '0%',
     startY: '10%',
@@ -165,7 +165,7 @@ scrawl.makePhrase({
 
     text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 
-    font: '18px Garamond, serif',
+    fontString: '18px Garamond, serif',
     lineHeight: 1,
 
     width: '35%',

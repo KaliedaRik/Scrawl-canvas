@@ -62,7 +62,7 @@ const updateLabelsAndWorm = function (asset) {
                     handle: ['center', 'center'],
                     width: 20,
                     justify: 'center',
-                    font: '10px Arial',
+                    fontString: '10px Arial',
                 }));
             });
         }

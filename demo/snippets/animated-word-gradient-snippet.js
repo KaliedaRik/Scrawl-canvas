@@ -65,7 +65,7 @@ export default function (scrawl, el) {
         // The snippet will take details of its font family and size from the DOM element's computed styles
         // + Note that Firefox does not supply a font string; font details are broken up into their constituent parts and need to be reconstructed. The code below will not pick up bold fonts:
         const backgroundColor = compStyles.backgroundColor || '#f2f2f2',
-            font = compStyles.font || `${(compStyles.fontStyle != 'normal') ? compStyles.fontStyle + ' ' : ''}${(compStyles.fontVariant != 'normal') ? compStyles.fontVariant + ' ' : ''}${compStyles.fontSize} ${compStyles.fontFamily}` || '20px sans-serif';
+            fontString = compStyles.font || `${(compStyles.fontStyle != 'normal') ? compStyles.fontStyle + ' ' : ''}${(compStyles.fontVariant != 'normal') ? compStyles.fontVariant + ' ' : ''}${compStyles.fontSize} ${compStyles.fontFamily}` || '20px sans-serif';
 
         const text = el.innerText;
 
@@ -103,7 +103,7 @@ export default function (scrawl, el) {
         scrawl.makePhrase({
             name: `${name}-text`,
             group,
-            font,
+            fontString,
             text,
             fillStyle: `${name}-gradient`,
 

@@ -325,7 +325,7 @@ const c3Phrase = scrawl.makePhrase({
     group: name3('serif-cell'),
 
     text: 'HELLO!',
-    font: 'bold 120px serif',
+    fontString: 'bold 120px serif',
     lineHeight: 1,
 });
 

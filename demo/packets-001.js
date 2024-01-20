@@ -187,7 +187,7 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "shadowOffsetY":0,
 //         "shadowBlur":0,
 //         "shadowColor":"rgb(0 0 0 / 0)",
-//         "font":"12px sans-serif",
+//         "fontString":"12px sans-serif",
 //         "textAlign":"start",
 //         "textBaseline":"alphabetic"
 //     }

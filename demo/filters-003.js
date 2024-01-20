@@ -90,7 +90,7 @@ scrawl.makePhrase({
     name: 'brightness-label',
     text: 'Brightness',
 
-    font: '30px sans-serif',
+    fontString: '30px sans-serif',
     width: '45%',
 
     fillStyle: 'white',

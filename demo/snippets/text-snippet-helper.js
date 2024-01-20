@@ -175,11 +175,11 @@ export const getSnippetData = (snippet, scrawl) => {
             localFontSize = parseFloat(fontSize);
 
         phrase.set({
-            style: fontStyle,
-            variant: fontVariant,
-            weight: fontWeight,
-            size: fontSize,
-            family: fontFamily,
+            fontStyle: fontStyle,
+            fontVariant: fontVariant,
+            fontWeight: fontWeight,
+            fontSize: fontSize,
+            fontFamily: fontFamily,
             lineHeight: (localLineHeight / localFontSize) * lineheightAdjuster,
             width: '100%',
             text: processText(el.innerHTML),
@@ -224,11 +224,11 @@ export const getSnippetData = (snippet, scrawl) => {
                 localFontSize = parseFloat(fontSize);
 
             textGroup.setArtefacts({
-                style: fontStyle,
-                variant: fontVariant,
-                weight: fontWeight,
-                size: fontSize,
-                family: fontFamily,
+                fontStyle: fontStyle,
+                fontVariant: fontVariant,
+                fontWeight: fontWeight,
+                fontSize: fontSize,
+                fontFamily: fontFamily,
                 lineHeight: (localLineHeight / localFontSize) * lineheightAdjuster,
                 startY: Math.round(localFontSize * yOffset),
                 underlineWidth: Math.round(localFontSize * underlineWidth) || 1,

@@ -77,7 +77,7 @@ const build = function (items) {
 
             startY: '3%',
 
-            font: '1.5rem Roboto, Arial, sans-serif',
+            fontString: '1.5rem Roboto, Arial, sans-serif',
 
             fillStyle: 'black',
         });
@@ -104,7 +104,7 @@ const build = function (items) {
             startX: '1%',
             startY: '12%',
 
-            font: '0.9rem Roboto, Arial, sans-serif',
+            fontString: '0.9rem Roboto, Arial, sans-serif',
 
             fillStyle: 'darkred',
         });

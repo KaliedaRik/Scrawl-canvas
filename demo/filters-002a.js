@@ -64,7 +64,7 @@ scrawl.makeFilter({
 const originals = scrawl.makeGroup({
 
     name: 'originals',
-    host: canvas.base.name,
+    host: canvas.base,
 });
 
 scrawl.makePicture({
@@ -156,7 +156,7 @@ scrawl.makePicture({
 const cache = scrawl.makeGroup({
 
     name: 'cache',
-    host: canvas.base.name,
+    host: canvas.base,
 });
 
 const createCachePictures = () => {
@@ -187,7 +187,7 @@ const createCachePictures = () => {
 const addLabels = () => {
 
     // The Phrase entitys can go in the canvas element's default Group. To make sure they display correctly (after the Picture entitys have been stamped) we'll set the default Group's order attribute to a higher value
-    groups[canvas.base.name].set({
+    canvas.get('baseGroup').set({
         order: 1,
     });
 
@@ -196,7 +196,7 @@ const addLabels = () => {
         name: 'red-label',
         text: 'Red',
 
-        font: '20px sans-serif',
+        fontString: '20px sans-serif',
 
         fillStyle: 'white',
         lineWidth: 4,
