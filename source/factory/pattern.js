@@ -17,9 +17,9 @@ import { constructors, entity } from '../core/library.js';
 
 import { doCreate, pushUnique, isa_obj, Ωempty } from '../helper/utilities.js';
 
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from '../asset-management/video-asset.js';
 
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './image-asset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from '../asset-management/image-asset.js';
 
 import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';

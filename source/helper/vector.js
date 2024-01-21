@@ -5,9 +5,9 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_number, isa_obj, xt, xta, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_number, isa_obj, xt, xta, Ωempty } from './utilities.js';
 
-import { _atan2, _cos, _isArray, _sin, _sqrt, _stringify, T_VECTOR } from '../helper/shared-vars.js';
+import { _atan2, _cos, _isArray, _sin, _sqrt, _stringify, T_VECTOR } from './shared-vars.js';
 
 
 // #### Vector constructor

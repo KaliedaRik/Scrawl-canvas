@@ -42,9 +42,9 @@ import { artefact, constructors } from '../core/library.js';
 
 import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../helper/utilities.js';
 
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from '../asset-management/video-asset.js';
 
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './image-asset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from '../asset-management/image-asset.js';
 
 import { makeCoordinate } from '../helper/coordinate.js';
 

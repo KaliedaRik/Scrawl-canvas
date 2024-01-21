@@ -32,7 +32,7 @@ import { filterEngine } from '../helper/filter-engine.js';
 
 import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
-import { importDomImage } from './image-asset.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 

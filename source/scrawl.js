@@ -100,7 +100,7 @@ export {
     createImageFromCell,
     createImageFromGroup,
     createImageFromEntity,
-} from './factory/image-asset.js';
+} from './asset-management/image-asset.js';
 export { makeKeyboardZone } from './factory/keyboard-zone.js';
 export { makeLabel } from './factory/label.js';
 export { makeLine } from './factory/line.js';
@@ -111,7 +111,7 @@ export { makeNet } from './factory/net.js';
 export {
     makeNoise,
     makeNoiseAsset,
-} from './factory/noise-asset.js';
+} from './asset-management/noise-asset.js';
 export {
     observeAndUpdate,
     makeUpdater
@@ -128,13 +128,13 @@ export {
     releaseQuaternion,
 } from './helper/quaternion.js';
 export { makeRadialGradient } from './factory/radial-gradient.js';
-export { makeRawAsset } from './factory/raw-asset.js';
-export { makeReactionDiffusionAsset } from './factory/reaction-diffusion-asset.js';
+export { makeRawAsset } from './asset-management/raw-asset.js';
+export { makeReactionDiffusionAsset } from './asset-management/reaction-diffusion-asset.js';
 export { makeRectangle } from './factory/rectangle.js';
 export { makeRender } from './factory/render-animation.js';
 export { makeShape } from './factory/shape.js';
 export { makeSpiral } from './factory/spiral.js';
-export { importSprite } from './factory/sprite-asset.js';
+export { importSprite } from './asset-management/sprite-asset.js';
 export { makeSpring } from './factory/particle-spring.js';
 export {
     addStack,
@@ -154,6 +154,6 @@ export {
     importVideo,
     importMediaStream,
     importScreenCapture,
-} from './factory/video-asset.js';
+} from './asset-management/video-asset.js';
 export { makeWheel } from './factory/wheel.js';
 export { makeWorld } from './factory/particle-world.js';

@@ -19,7 +19,7 @@ import { makeState } from '../factory/state.js';
 import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import { filterEngine } from '../helper/filter-engine.js';
-import { importDomImage } from '../factory/image-asset.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
 
 import positionMix from '../mixin/position.js';

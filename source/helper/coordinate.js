@@ -5,9 +5,9 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { xt } from '../helper/utilities.js';
+import { xt } from './utilities.js';
 
-import { _atan2, _cos, _create, _hypot, _isArray, _seal, _setPrototypeOf, _sin, T_COORDINATE, T_QUATERNION, T_VECTOR } from '../helper/shared-vars.js';
+import { _atan2, _cos, _create, _hypot, _isArray, _seal, _setPrototypeOf, _sin, T_COORDINATE, T_QUATERNION, T_VECTOR } from './shared-vars.js';
 
 
 // #### Coordinate constructor
