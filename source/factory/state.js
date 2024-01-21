@@ -19,7 +19,7 @@ import { doCreate, isa_obj, xt, xtGet, λnull, Ωempty } from '../helper/utiliti
 
 import baseMix from '../mixin/base.js';
 
-import { _HSL, _keys, _RGB, AUTO, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NAME, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
+import { _HSL, _keys, _RGB, AUTO, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NAME, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_LABEL, T_PHRASE, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
 
 
 import { makeColor } from './color.js';
@@ -287,15 +287,15 @@ S.shadowColor = function (item) {
 };
 
 // Actively ignore any attempts to set the following attributes
-S.direction = λnull;
-S.fontKerning = λnull;
-S.fontStretch = λnull;
-S.fontVariantCaps = λnull;
-S.letterSpacing = λnull;
-S.textAlign = λnull;
-S.textBaseline = λnull;
-S.textRendering = λnull;
-S.wordSpacing = λnull;
+// S.direction = λnull;
+// S.fontKerning = λnull;
+// S.fontStretch = λnull;
+// S.fontVariantCaps = λnull;
+// S.letterSpacing = λnull;
+// S.textAlign = λnull;
+// S.textBaseline = λnull;
+// S.textRendering = λnull;
+// S.wordSpacing = λnull;
 
 
 // #### Prototype functions
@@ -397,15 +397,15 @@ P.getChanges = function (ent, engineState) {
     }
 
     // 'font'
-    if (ent.type == T_PHRASE) {
+    if ([T_PHRASE, T_LABEL].includes(ent.type)) {
 
-        for (i = 0, iz = STATE_TEXT_KEYS.length; i < iz; i++) {
+        for (i = 0, iz = STATE_LABEL_KEYS.length; i < iz; i++) {
 
-            k = STATE_TEXT_KEYS[i];
+            k = STATE_LABEL_KEYS[i];
             desired = getItem(this, k);
             current = getItem(engineState, k);
 
-            if (current !== desired) result[k] = desired
+            if (current !== desired) result[k] = desired;
         }
     }
     return result;

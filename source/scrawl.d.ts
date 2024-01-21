@@ -1518,6 +1518,48 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 
 
 
+// LabelInstance factory
+// -------------------------------------
+interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+    letterSpacing?: string | number;
+    wordSpacing?: string | number;
+    underlineWidth?: number;
+    underlineOffset?: number;
+}
+
+interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFactoryDeltaInputs {
+    font?: string;
+    text?: string;
+
+    includeUnderline?: boolean;
+    underlineStyle?: StylesInstance | string;
+
+    direction?: string;
+    fontKerning?: string;
+    fontStretch?: string;
+    fontVariantCaps?: string;
+    textAlign?: string;
+    textBaseline?: string;
+    textRendering?: string;
+
+    delta?: LabelFactoryDeltaInputs;
+}
+
+interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
+
+interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+    clone: (item?: LabelFactoryInputs) => LabelInstance;
+    saveAsPacket: (item?: LabelSaveInputs | boolean) => string;
+    set: (item?: LabelFactoryInputs) => LabelInstance;
+    setDelta: (item?: LabelFactoryDeltaInputs) => LabelInstance;
+    simpleStamp: (host: CellInstance, items?: LabelFactoryInputs) => void;
+}
+
+interface LabelInstance extends LabelFactoryInputs, LabelFactoryFunctions {}
+
+
+
+
 // LineInstance factory
 // -------------------------------------
 interface LineFactoryDeltaInputs extends BaseMixinDeltaInputs, ShapeCurveMixinDeltaInputs {}
@@ -2461,7 +2503,7 @@ interface StateFactoryDeltaInputs {
 }
 
 interface StateFactoryInputs {
-    fillStyle?: any;
+    fillStyle?: StylesInstance | string;
     filter?: string;
     font?: string;
     globalCompositeOperation?: GlobalCompositeOperationValues;
@@ -2471,7 +2513,7 @@ interface StateFactoryInputs {
     lineDash?: number[];
     lineJoin?: LineJoinValues;
     shadowColor?: string;
-    strokeStyle?: any;
+    strokeStyle?: StylesInstance | string;
 }
 
 interface StateFactoryFunctions extends BaseMixinFunctions {}
@@ -2986,6 +3028,7 @@ export function makeForce(items: ForceFactoryInputs): ForceInstance;
 export function makeGradient(items: GradientFactoryInputs): GradientInstance;
 export function makeGrid(items: GridFactoryInputs): GridInstance;
 export function makeGroup(items: GroupFactoryInputs): GroupInstance;
+export function makeLabel(items: LabelFactoryInputs): LabelInstance;
 export function makeLine(items: LineFactoryInputs): LineInstance;
 export function makeLineSpiral(items: LineSpiralFactoryInputs): LineSpiralInstance;
 export function makeLoom(items: LoomFactoryInputs): LoomInstance;

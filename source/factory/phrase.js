@@ -1022,7 +1022,7 @@ P.buildText = function () {
 
 P.getCanvasTextHold = function (item) {
 
-    if (item && item.type == T_CELL && item.controller && item.controller.type == T_CANVAS && item.controller.textHold) return item.controller;
+    if (item?.type == T_CELL && item?.controller?.type == T_CANVAS && item?.controller?.textHold) return item.controller;
 
     if (item && item.type == T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
 

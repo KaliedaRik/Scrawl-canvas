@@ -9,7 +9,8 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas,
-    base = canvas.base;
+    base = canvas.base,
+    baseGroup = canvas.get('baseGroup');
 
 
 // Create a Cell on the canvas
@@ -302,7 +303,7 @@ scrawl.makeWheel({
 }).clone({
 
     name: 'wheel-3',
-    group: base,
+    group: baseGroup,
 
     strokeStyle: 'green',
 
@@ -315,7 +316,7 @@ scrawl.makeBlock({
 
     name: 'mimic-block',
 
-    group: base,
+    group: baseGroup,
 
     fillStyle: 'yellow',
     strokeStyle: 'green',

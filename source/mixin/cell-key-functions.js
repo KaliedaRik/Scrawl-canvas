@@ -205,6 +205,42 @@ export default function (P = Ωempty) {
             }
             else engine.strokeStyle = item.getData(entity, layer);
         },
+
+        direction: function (item, engine) {
+            engine.direction = item;
+        },
+
+        fontKerning: function (item, engine) {
+            engine.fontKerning = item;
+        },
+
+        fontStretch: function (item, engine) {
+            engine.fontStretch = item;
+        },
+
+        fontVariantCaps: function (item, engine) {
+            engine.fontVariantCaps = item;
+        },
+
+        letterSpacing: function (item, engine) {
+            engine.letterSpacing = item;
+        },
+
+        textAlign: function (item, engine) {
+            engine.textAlign = item;
+        },
+
+        textBaseline: function (item, engine) {
+            engine.textBaseline = item;
+        },
+
+        textRendering: function (item, engine) {
+            engine.textRendering = item;
+        },
+
+        wordSpacing: function (item, engine) {
+            engine.wordSpacing = item;
+        },
     });
 
     // The following functions are used as part of entity object `stamp` functionality - specifically for those with a __method__ whose appearance is affected by shadows, and for the `clear` method
