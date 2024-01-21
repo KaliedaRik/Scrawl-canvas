@@ -21,7 +21,7 @@ import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } fro
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../helper/coordinate.js';
 
-import { makePalette } from '../factory/palette.js';
+import { makePalette } from '../helper/palette.js';
 
 import { _isArray, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
 

@@ -75,7 +75,7 @@ import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { makeFontAttributes } from './font-attributes.js';
+import { makeFontAttributes } from '../helper/font-attributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

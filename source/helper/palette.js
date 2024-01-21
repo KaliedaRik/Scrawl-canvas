@@ -57,15 +57,15 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from './utilities.js';
 
-import { getWorkstoreItem, setWorkstoreItem, checkForWorkstoreItem } from '../helper/workstore.js';
+import { getWorkstoreItem, setWorkstoreItem, checkForWorkstoreItem } from './workstore.js';
 
-import { makeColor } from './color.js';
+import { makeColor } from '../factory/color.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _entries, _floor, _freeze, _isArray, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+import { _assign, _entries, _floor, _freeze, _isArray, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from './shared-vars.js';
 
 
 // #### Palette constructor
