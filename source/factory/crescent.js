@@ -16,16 +16,16 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, xta, xto, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, xta, xto, Ωempty } from '../helper/utilities.js';
 
-import { releaseCoordinate, requestCoordinate } from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _radian, DESTINATION_OUT, ENTITY, T_CRESCENT } from '../core/shared-vars.js';
+import { _radian, DESTINATION_OUT, ENTITY, T_CRESCENT } from '../helper/shared-vars.js';
 
 
 // #### Crescent constructor
@@ -48,8 +48,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
 

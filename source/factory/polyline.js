@@ -35,16 +35,16 @@
 // #### Imports
 import { artefact, constructors, particle } from '../core/library.js';
 
-import { addStrings, correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../helper/utilities.js';
 
-import { makeCoordinate } from '../factory/coordinate.js';
+import { makeCoordinate } from '../helper/coordinate.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PINS, PIVOT, POLYLINE, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../core/shared-vars.js';
+import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PINS, PIVOT, POLYLINE, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // #### Polyline constructor
@@ -69,8 +69,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
 baseMix(P);
 shapeMix(P);
 

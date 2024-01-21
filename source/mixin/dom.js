@@ -14,17 +14,17 @@
 // #### Imports
 import { artefact } from '../core/library.js';
 
-import { setMouseChanged } from '../core/system-flags.js';
+import { setMouseChanged } from '../helper/system-flags.js';
 
-import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 
-import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../factory/quaternion.js';
+import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../helper/quaternion.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import positionMix from './position.js';
 import deltaMix from './delta.js';
@@ -36,7 +36,7 @@ import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 
-import { _isArray, _round, _entries, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../core/shared-vars.js'
+import { _isArray, _round, _entries, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // #### Export function

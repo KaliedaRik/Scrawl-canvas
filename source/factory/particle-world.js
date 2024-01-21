@@ -30,15 +30,15 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_fn, mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, xt, Ωempty } from '../helper/utilities.js';
 
-import { makeQuaternion } from './quaternion.js';
-import { makeVector } from './vector.js';
-import { makeCoordinate } from './coordinate.js';
+import { makeQuaternion } from '../helper/quaternion.js';
+import { makeVector } from '../helper/vector.js';
+import { makeCoordinate } from '../helper/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _entries, T_COORDINATE, T_QUATERNION, T_VECTOR, T_WORLD, WORLD } from '../core/shared-vars.js';
+import { _entries, T_COORDINATE, T_QUATERNION, T_VECTOR, T_WORLD, WORLD } from '../helper/shared-vars.js';
 
 
 // #### World constructor

@@ -9,11 +9,11 @@
 
 import { artefact } from "../core/library.js";
 
-import { mergeDiscard, λnull, Ωempty } from "../core/utilities.js";
+import { mergeDiscard, λnull, Ωempty } from "../helper/utilities.js";
 
 import { addNativeListener, removeNativeListener } from "../core/events.js";
 
-import { $BODY, _keys, ACCEPTED_WRAPPERS, KEY_DOWN, KEY_UP, KEYBOARD_GROUPS, NONE, T_ESCAPE, T_TAB } from '../core/shared-vars.js';
+import { $BODY, _keys, ACCEPTED_WRAPPERS, KEY_DOWN, KEY_UP, KEYBOARD_GROUPS, NONE, T_ESCAPE, T_TAB } from '../helper/shared-vars.js';
 
 
 // Local constants

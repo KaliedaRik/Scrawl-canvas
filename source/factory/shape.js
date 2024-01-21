@@ -41,12 +41,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, Ωempty } from '../core/utilities.js';
+import { doCreate, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { T_SHAPE, ENTITY } from '../core/shared-vars.js';
+import { T_SHAPE, ENTITY } from '../helper/shared-vars.js';
 
 
 // #### Shape constructor
@@ -66,8 +66,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
 baseMix(P);
 shapeMix(P);
 

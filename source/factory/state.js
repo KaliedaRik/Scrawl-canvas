@@ -15,11 +15,11 @@
 // #### Imports
 import { constructors, entity, styles } from '../core/library.js';
 
-import { doCreate, isa_obj, xt, xtGet, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_obj, xt, xtGet, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _HSL, _keys, _RGB, AUTO, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NAME, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../core/shared-vars.js';
+import { _HSL, _keys, _RGB, AUTO, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NAME, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
 
 
 import { makeColor } from './color.js';

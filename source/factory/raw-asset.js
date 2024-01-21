@@ -18,16 +18,16 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_fn, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { makeQuaternion } from './quaternion.js';
-import { makeVector } from './vector.js';
-import { makeCoordinate } from './coordinate.js';
+import { makeQuaternion } from '../helper/quaternion.js';
+import { makeVector } from '../helper/vector.js';
+import { makeCoordinate } from '../helper/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _2D, _entries, ASSET, CANVAS, T_COORDINATE, T_QUATERNION, T_RAW_ASSET, T_VECTOR } from '../core/shared-vars.js';
+import { _2D, _entries, ASSET, CANVAS, T_COORDINATE, T_QUATERNION, T_RAW_ASSET, T_VECTOR } from '../helper/shared-vars.js';
 
 
 // #### RawAsset constructor

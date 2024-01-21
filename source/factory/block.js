@@ -19,9 +19,9 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { doCreate, Ωempty } from '../core/utilities.js';
+import { doCreate, Ωempty } from '../helper/utilities.js';
 
-import { ENTITY, T_BLOCK } from '../core/shared-vars.js';
+import { ENTITY, T_BLOCK } from '../helper/shared-vars.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -50,8 +50,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
 

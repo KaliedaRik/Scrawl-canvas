@@ -69,18 +69,18 @@ import { artefact, cell, cellnames, constructors, sectionClasses, styles, styles
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { addStrings, doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import { makeFontAttributes } from './font-attributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -156,8 +156,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
 
@@ -352,7 +350,7 @@ S.boundingBoxStyle = function (item) {
 
         if (styles[item]) this.boundingBoxStyle = styles[item].name;
         else if (item.substring) this.boundingBoxStyle = item;
-    };
+    }
 };
 // _Deprecated_
 G.boundingBoxColor = G.boundingBoxStyle;
@@ -585,7 +583,7 @@ S.overlineStyle = function (item) {
 
         if (styles[item]) this.overlineStyle = styles[item].name;
         else if (item.substring) this.overlineStyle = item;
-    };
+    }
 };
 
 // __noOverlineGlyphs__
@@ -637,7 +635,7 @@ S.underlineStyle = function (item) {
 
         if (styles[item]) this.underlineStyle = styles[item].name;
         else if (item.substring) this.underlineStyle = item;
-    };
+    }
 };
 
 // __noUnderlineGlyphs__

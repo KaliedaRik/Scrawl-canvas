@@ -3,14 +3,14 @@
 
 
 // #### Imports
-import { doCreate, λnull, λthis } from '../core/utilities.js';
+import { doCreate, λnull, λthis } from './utilities.js';
 
-import { makeState } from './state.js';
+import { makeState } from '../factory/state.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 
-import { _2D, CANVAS, SRGB, T_CELLFRAGMENT } from '../core/shared-vars.js';
+import { _2D, CANVAS, SRGB, T_CELLFRAGMENT } from './shared-vars.js';
 
 
 // #### CellFragment constructor

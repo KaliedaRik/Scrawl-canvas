@@ -22,18 +22,18 @@
 // #### Imports
 import { artefact, artefactnames, constructors, entity, particle, world } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 import { makeSpring } from './particle-spring.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../helper/vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _floor, _isArray, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../core/shared-vars.js';
+import { _floor, _isArray, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../helper/shared-vars.js';
 
 
 // #### Net constructor

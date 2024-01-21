@@ -8,14 +8,14 @@
 // ## Imports
 import { artefact, unstackedelement } from "./library.js";
 
-import { isa_boolean, isa_dom, isa_obj } from "./utilities.js";
+import { isa_boolean, isa_dom, isa_obj } from "../helper/utilities.js";
 
 import { makeAnimationObserver } from './events.js';
 
 import { makeRender } from "../factory/render-animation.js";
 import { makeUnstackedElement } from "../factory/unstacked-element.js";
 
-import { _computed, NON_SNIPPET_ELEMENTS } from './shared-vars.js';
+import { _computed, NON_SNIPPET_ELEMENTS } from '../helper/shared-vars.js';
 
 
 // TODO - documentation

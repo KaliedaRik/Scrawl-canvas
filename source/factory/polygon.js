@@ -41,16 +41,16 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../helper/vector.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Polygon constructor
@@ -70,8 +70,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
 baseMix(P);
 shapeMix(P);
 

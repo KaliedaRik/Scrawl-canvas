@@ -24,22 +24,22 @@
 // #### Imports
 import { artefact, cell, constructors, entity, group } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { filterEngine } from './filter-engine.js';
+import { filterEngine } from '../helper/filter-engine.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import { importDomImage } from './image-asset.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../core/shared-vars.js';
+import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
 
 
 // #### Group constructor

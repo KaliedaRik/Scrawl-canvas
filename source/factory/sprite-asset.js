@@ -15,12 +15,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { $JSON, _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE, T_SPRITE, ZERO_STR } from '../core/shared-vars.js';
+import { $JSON, _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE, T_SPRITE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### SpriteAsset constructor
@@ -41,8 +41,6 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [asset](../mixin/asset.html)
 baseMix(P);
 assetMix(P);
 

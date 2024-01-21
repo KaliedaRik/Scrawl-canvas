@@ -35,7 +35,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { _create, _seal, _setPrototypeOf, T_PARTICLE_HISTORY } from '../core/shared-vars.js';
+import { _create, _seal, _setPrototypeOf, T_PARTICLE_HISTORY } from '../helper/shared-vars.js';
 
 
 // #### ParticleHistory constructor

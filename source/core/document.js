@@ -7,13 +7,13 @@
 // #### Imports
 import { artefact } from "./library.js";
 
-import { pushUnique, Ωempty } from "./utilities.js";
+import { pushUnique, Ωempty } from "../helper/utilities.js";
 
 import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from './shared-vars.js';
+import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### DOM element updates

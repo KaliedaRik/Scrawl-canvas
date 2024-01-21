@@ -8,11 +8,11 @@ import * as library from '../core/library.js';
 
 import { animationtickers } from '../core/library.js';
 
-import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } from '../core/utilities.js';
+import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { FUNCTION, PC, TARGET_SECTIONS, UNKNOWN, UNNAMED, ZERO_STR } from '../core/shared-vars.js';
+import { FUNCTION, PC, TARGET_SECTIONS, UNKNOWN, UNNAMED, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Helper function

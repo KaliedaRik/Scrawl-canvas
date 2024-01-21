@@ -16,12 +16,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { _radian, BLANK, STYLES, T_CONIC_GRADIENT } from '../core/shared-vars.js';
+import { _radian, BLANK, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
 
 
 // #### ConicGradient constructor

@@ -41,14 +41,14 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _floor, _freeze, ENTITY, SPIRAL, T_SPIRAL, ZERO_PATH } from '../core/shared-vars.js';
+import { _floor, _freeze, ENTITY, SPIRAL, T_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -91,8 +91,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
 baseMix(P);
 shapeMix(P);
 

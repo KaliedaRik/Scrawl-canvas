@@ -17,12 +17,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../core/shared-vars.js';
+import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../helper/shared-vars.js';
 
 
 // #### RadialGradient constructor

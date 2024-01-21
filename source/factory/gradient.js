@@ -18,12 +18,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { BLANK, STYLES, T_GRADIENT } from '../core/shared-vars.js';
+import { BLANK, STYLES, T_GRADIENT } from '../helper/shared-vars.js';
 
 
 // #### Gradient constructor

@@ -23,18 +23,18 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { seededRandomNumberGenerator } from '../core/random-seed.js';
+import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 
-import { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { $X, _abs, _floor, _freeze, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../core/shared-vars.js';
+import { $X, _abs, _floor, _freeze, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../helper/shared-vars.js';
 
 
 // #### NoiseAsset constructor
@@ -72,10 +72,6 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [asset](../mixin/asset.html)
-// + [assetAdvancedFunctionality](../mixin/assetAdvancedFunctionality.html)
-// + [pattern](../mixin/pattern.html)
 baseMix(P);
 assetMix(P);
 assetAdvancedMix(P);

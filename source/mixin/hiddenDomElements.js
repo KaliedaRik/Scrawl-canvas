@@ -4,9 +4,9 @@
 // #### Imports
 import { canvas } from '../core/library.js';
 
-import { Ωempty } from '../core/utilities.js';
+import { Ωempty } from '../helper/utilities.js';
 
-import { _keys, ANCHOR_ATTRIBUTES, BUTTON_ATTRIBUTES, T_CANVAS, T_CELL } from '../core/shared-vars.js';
+import { _keys, ANCHOR_ATTRIBUTES, BUTTON_ATTRIBUTES, T_CANVAS, T_CELL } from '../helper/shared-vars.js';
 
 
 // #### Export function

@@ -10,15 +10,15 @@
 
 
 // #### Imports
-import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
+import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { makeState } from '../factory/state.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
-import { filterEngine } from '../factory/filter-engine.js';
+import { filterEngine } from '../helper/filter-engine.js';
 import { importDomImage } from '../factory/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
 
@@ -32,7 +32,7 @@ import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
 
-import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function

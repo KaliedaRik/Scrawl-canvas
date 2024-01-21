@@ -7,9 +7,9 @@
 
 
 // #### Imports
-import { isa_fn, isa_number, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { isa_fn, isa_number, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _entries, BANNER, LANDSCAPE, LARGER, LARGEST, PORTRAIT, RECTANGLE, REGULAR, SKYSCRAPER, SMALLER, SMALLEST, ZERO_STR } from '../core/shared-vars.js';
+import { _entries, BANNER, LANDSCAPE, LARGER, LARGEST, PORTRAIT, RECTANGLE, REGULAR, SKYSCRAPER, SMALLER, SMALLEST, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function

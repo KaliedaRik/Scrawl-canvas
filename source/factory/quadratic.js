@@ -41,15 +41,15 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
-import { makeCoordinate } from './coordinate.js';
+import { makeCoordinate } from '../helper/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 import curveMix from '../mixin/shape-curve.js';
 
-import { CONTROL, CONTROL_PARTICLE, CONTROL_PATH, CONTROL_PIVOT, ENTITY, PATH, QUADRATIC, T_QUADRATIC, ZERO_PATH, ZERO_STR } from '../core/shared-vars.js';
+import { CONTROL, CONTROL_PARTICLE, CONTROL_PATH, CONTROL_PIVOT, ENTITY, PATH, QUADRATIC, T_QUADRATIC, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Quadratic constructor
@@ -77,9 +77,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
-// + [shapeCurve](../mixin/shapeCurve.html)
 baseMix(P);
 shapeMix(P);
 curveMix(P);

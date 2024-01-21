@@ -14,12 +14,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _freeze, _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../core/shared-vars.js';
+import { _freeze, _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants

@@ -8,13 +8,13 @@
 
 
 // #### Imports
-import { artefact } from "./library.js";
+import { artefact } from "../core/library.js";
 
 import { getRootElementsSort, setRootElementsSort } from './system-flags.js';
 
 import { pushUnique, removeItem } from './utilities.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from './array-pool.js';
 
 import { _floor } from './shared-vars.js';
 

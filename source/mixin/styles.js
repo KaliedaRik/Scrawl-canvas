@@ -16,14 +16,14 @@
 // #### Imports
 import { entity, styles, stylesnames } from '../core/library.js';
 
-import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../core/utilities.js';
+import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
-import { makeCoordinate } from '../factory/coordinate.js';
+import { makeCoordinate } from '../helper/coordinate.js';
 
 import { makePalette } from '../factory/palette.js';
 
-import { _isArray, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../core/shared-vars.js';
+import { _isArray, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 
 // Create an animation to handle automated delta gradient animation

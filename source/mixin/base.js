@@ -16,9 +16,9 @@
 // #### Imports
 import * as library from '../core/library.js';
 
-import { addStrings, generateUniqueString, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { addStrings, generateUniqueString, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _entries, _isArray, _keys, _parse, _string, ARG_SPLITTER, BAD_PACKET_CHECK, HAS_PACKET_CHECK, NAME, NATIVE_CODE, PACKET_DIVIDER, TYPE_EXCLUSIONS, UNDEF, ZERO_STR } from '../core/shared-vars.js'
+import { _entries, _isArray, _keys, _parse, _string, ARG_SPLITTER, BAD_PACKET_CHECK, HAS_PACKET_CHECK, NAME, NATIVE_CODE, PACKET_DIVIDER, TYPE_EXCLUSIONS, UNDEF, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // #### Export function

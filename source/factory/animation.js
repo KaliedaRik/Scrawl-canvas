@@ -23,15 +23,15 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, xt, λnull, λpromise, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, xt, λnull, λpromise, λthis, Ωempty } from '../helper/utilities.js';
 
-import { forceUpdate } from '../core/system-flags.js';
+import { forceUpdate } from '../helper/system-flags.js';
 
 import { animateAdd, animateIncludes, animateRemove } from '../core/animation-loop.js';
 
 import baseMix from '../mixin/base.js';
 
-import { ANIMATION, T_ANIMATION } from '../core/shared-vars.js';
+import { ANIMATION, T_ANIMATION } from '../helper/shared-vars.js';
 
 
 // #### Animation constructor

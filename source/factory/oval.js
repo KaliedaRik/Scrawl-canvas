@@ -41,12 +41,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { ENTITY, OVAL, RADIUS_X, RADIUS_XY, RADIUS_Y, T_OVAL, ZERO_PATH } from '../core/shared-vars.js';
+import { ENTITY, OVAL, RADIUS_X, RADIUS_XY, RADIUS_Y, T_OVAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // #### Oval constructor
@@ -66,8 +66,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
 baseMix(P);
 shapeMix(P);
 

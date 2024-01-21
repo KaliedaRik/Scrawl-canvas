@@ -15,7 +15,7 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { doCreate, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
+import { doCreate, pushUnique, isa_obj, Ωempty } from '../helper/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
 
@@ -25,7 +25,7 @@ import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../core/shared-vars.js';
+import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Pattern constructor

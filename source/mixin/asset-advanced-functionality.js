@@ -3,11 +3,11 @@
 
 
 // #### Imports
-import { mergeOver, Ωempty } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from '../factory/gradient.js';
 
-import { _floor, _now, _2D, CANVAS, PC100 } from '../core/shared-vars.js';
+import { _floor, _now, _2D, CANVAS, PC100 } from '../helper/shared-vars.js';
 
 
 // #### Export function

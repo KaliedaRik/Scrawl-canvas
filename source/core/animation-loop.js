@@ -35,13 +35,13 @@
 // #### Imports
 import { animation } from "./library.js";
 
-import { pushUnique, removeItem } from './utilities.js';
+import { pushUnique, removeItem } from '../helper/utilities.js';
 
-import { getDoAnimation, getResortBatchAnimations, setDoAnimation, setResortBatchAnimations } from './system-flags.js';
+import { getDoAnimation, getResortBatchAnimations, setDoAnimation, setResortBatchAnimations } from '../helper/system-flags.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _floor, _now } from './shared-vars.js';
+import { _floor, _now } from '../helper/shared-vars.js';
 
 
 // Local constants

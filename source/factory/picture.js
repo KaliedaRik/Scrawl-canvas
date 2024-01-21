@@ -40,19 +40,19 @@
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 
-import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../helper/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
 
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './image-asset.js';
 
-import { makeCoordinate } from './coordinate.js';
+import { makeCoordinate } from '../helper/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../core/shared-vars.js';
+import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Picture constructor
@@ -100,9 +100,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
-// + [assetConsumer](../mixin/assetConsumer.html)
 baseMix(P);
 entityMix(P);
 assetConsumerMix(P);

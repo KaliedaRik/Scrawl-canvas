@@ -53,15 +53,15 @@
 // #### Imports
 import { animation, animationtickers, constructors, tween } from '../core/library.js';
 
-import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, xtGet, Ωempty } from '../core/utilities.js';
+import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, xtGet, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _floor, _isArray, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../core/shared-vars.js';
+import { _floor, _isArray, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../helper/shared-vars.js';
 
 
 // #### Ticker constructor

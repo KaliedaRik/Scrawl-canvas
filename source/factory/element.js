@@ -35,7 +35,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_dom, removeItem, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_dom, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { uiSubscribedElements } from '../core/user-interaction.js';
 
@@ -44,7 +44,7 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
-import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../core/shared-vars.js';
+import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../helper/shared-vars.js';
 
 
 // #### Element constructor
@@ -96,8 +96,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [dom](../mixin/dom.html)
 baseMix(P);
 domMix(P);
 

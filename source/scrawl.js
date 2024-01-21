@@ -50,13 +50,13 @@ export {
     makeAnimationObserver,
 } from './core/events.js';
 export * as library from './core/library.js';
-export { seededRandomNumberGenerator } from './core/random-seed.js';
+export { seededRandomNumberGenerator } from './helper/random-seed.js';
 export { makeSnippet } from './core/snippets.js';
 export {
     setFilterMemoizationChoke,
     setWorkstoreLifetimeLength,
     setWorkstorePurgeChoke,
- } from './core/workstore.js';
+ } from './helper/workstore.js';
 export {
     currentCorePosition,
     startCoreListeners,
@@ -68,7 +68,7 @@ export {
     getIgnorePixelRatio,
     setIgnorePixelRatio,
 } from './core/user-interaction.js';
-export { forceUpdate } from './core/system-flags.js';
+export { forceUpdate } from './helper/system-flags.js';
 export { makeAction } from './factory/action.js';
 export { makeAnimation } from './factory/animation.js';
 export { makeBlock } from './factory/block.js';
@@ -84,7 +84,7 @@ export { makeConicGradient } from './factory/conic-gradient.js';
 export {
     requestCoordinate,
     releaseCoordinate,
-} from './factory/coordinate.js';
+} from './helper/coordinate.js';
 export { makeCrescent } from './factory/crescent.js';
 export { makeDragZone } from './factory/drag-zone.js';
 export { makeElement } from './factory/element.js';
@@ -102,6 +102,7 @@ export {
     createImageFromEntity,
 } from './factory/image-asset.js';
 export { makeKeyboardZone } from './factory/keyboard-zone.js';
+export { makeLabel } from './factory/label.js';
 export { makeLine } from './factory/line.js';
 export { makeLineSpiral } from './factory/line-spiral.js';
 export { makeLoom } from './factory/loom.js';
@@ -125,7 +126,7 @@ export { makeQuadratic } from './factory/quadratic.js';
 export {
     requestQuaternion,
     releaseQuaternion,
-} from './factory/quaternion.js';
+} from './helper/quaternion.js';
 export { makeRadialGradient } from './factory/radial-gradient.js';
 export { makeRawAsset } from './factory/raw-asset.js';
 export { makeReactionDiffusionAsset } from './factory/reaction-diffusion-asset.js';
@@ -147,7 +148,7 @@ export { makeTween } from './factory/tween.js';
 export {
     requestVector,
     releaseVector,
-} from './factory/vector.js';
+} from './helper/vector.js';
 export {
     importDomVideo,
     importVideo,

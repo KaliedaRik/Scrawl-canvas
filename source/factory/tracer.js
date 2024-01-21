@@ -20,17 +20,17 @@
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../helper/vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _piDouble, BLACK, ENTITY, T_TRACER } from '../core/shared-vars.js';
+import { _isArray, _piDouble, BLACK, ENTITY, T_TRACER } from '../helper/shared-vars.js';
 
 
 // #### Tracer constructor

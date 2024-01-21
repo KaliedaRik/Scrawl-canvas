@@ -11,7 +11,6 @@ import { reportSpeed } from './utilities.js';
 // Create some convenience shortcut variables to various sections of the Scrawl-canvas library
 const canvas = scrawl.library.canvas.mycanvas,
     filters = scrawl.library.filter,
-    groups = scrawl.library.group,
     entitys = scrawl.library.entity;
 
 

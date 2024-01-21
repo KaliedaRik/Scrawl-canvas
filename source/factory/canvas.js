@@ -39,22 +39,22 @@ import {
 
 import { domShow, scrawlCanvasHold } from '../core/document.js';
 
-import { rootElementsAdd, rootElementsRemove } from "../core/document-root-elements.js";
+import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-elements.js";
 
-import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -246,9 +246,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [dom](../mixin/dom.html)
-// + [display](../mixin/displayShape.html)
 baseMix(P);
 domMix(P);
 displayMix(P);

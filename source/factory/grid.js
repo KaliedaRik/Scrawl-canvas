@@ -21,14 +21,14 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../core/shared-vars.js';
+import { _isArray, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../helper/shared-vars.js';
 
 
 // #### Grid constructor
@@ -86,8 +86,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
 

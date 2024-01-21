@@ -24,15 +24,15 @@
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -42,7 +42,7 @@ import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _atan2, _ceil, _isArray, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _ceil, _isArray, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Mesh constructor

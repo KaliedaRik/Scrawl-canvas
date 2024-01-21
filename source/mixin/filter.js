@@ -10,13 +10,13 @@
 // #### Imports
 import { asset, filter, styles } from '../core/library.js';
 
-import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function

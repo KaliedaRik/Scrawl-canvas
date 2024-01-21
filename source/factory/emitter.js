@@ -27,24 +27,24 @@
 // #### Imports
 import { artefact, constructors, world } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 
 import { releaseParticle, requestParticle } from './particle.js';
 
-import { releaseCell,  requestCell } from './cell-fragment.js';
+import { releaseCell,  requestCell } from '../helper/cell-fragment.js';
 
-import { makeVector, releaseVector, requestVector } from './vector.js';
+import { makeVector, releaseVector, requestVector } from '../helper/vector.js';
 
-import { releaseCoordinate, requestCoordinate } from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
 
 import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _now, _floor, _random, _piDouble, _abs, _tick, _isArray, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../core/shared-vars.js';
+import { _now, _floor, _random, _piDouble, _abs, _tick, _isArray, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../helper/shared-vars.js';
 
 
 // #### Emitter constructor

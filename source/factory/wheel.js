@@ -19,12 +19,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, isa_number, mergeOver, xt, xto, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_number, mergeOver, xt, xto, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _radian, DIMENSIONS, ENTITY, PC, T_WHEEL } from '../core/shared-vars.js';
+import { _radian, DIMENSIONS, ENTITY, PC, T_WHEEL } from '../helper/shared-vars.js';
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
 const ensureFloat = (val, precision) => {
@@ -58,8 +58,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
 

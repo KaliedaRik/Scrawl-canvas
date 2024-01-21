@@ -5,9 +5,9 @@
 
 
 // #### Imports
-import { _atan2, _cos, _max, _min, _pow, _seal, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _cos, _max, _min, _pow, _seal, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from './shared-vars.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from './array-pool.js';
 
 
 // We only use one pathCalcObject, but treat it like a pool of such objects for resetting to defaults

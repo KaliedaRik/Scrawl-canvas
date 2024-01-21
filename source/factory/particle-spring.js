@@ -30,13 +30,13 @@
 // #### Imports
 import { constructors, particle } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../helper/vector.js';
 
 import baseMix from '../mixin/base.js';
 
-import { SPRING, T_PARTICLE, T_SPRING } from '../core/shared-vars.js';
+import { SPRING, T_PARTICLE, T_SPRING } from '../helper/shared-vars.js';
 
 
 // #### Spring constructor

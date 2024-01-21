@@ -546,6 +546,7 @@ export const T_GRADIENT = 'Gradient';
 export const T_GRID = 'Grid';
 export const T_GROUP = 'Group';
 export const T_IMAGE = 'Image';
+export const T_LABEL = 'Label';
 export const T_LINE = 'Line';
 export const T_LINE_SPIRAL = 'LineSpiral';
 export const T_LOOM = 'Loom';

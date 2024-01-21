@@ -61,11 +61,11 @@
 
 import * as library from "../core/library.js";
 
-import { isa_fn, xt, xta, λnull, Ωempty } from "../core/utilities.js";
+import { isa_fn, xt, xta, λnull, Ωempty } from "../helper/utilities.js";
 
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "../core/events.js";
 
-import { _ceil, _floor, _round, FALSE, T_GROUP, TRUE } from '../core/shared-vars.js';
+import { _ceil, _floor, _round, FALSE, T_GROUP, TRUE } from '../helper/shared-vars.js';
 
 
 // __observeAndUpdate__ - exported function

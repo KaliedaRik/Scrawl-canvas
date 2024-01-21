@@ -41,14 +41,14 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { releaseCoordinate, requestCoordinate } from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { ENTITY, LINE_SPIRAL, T_LINE_SPIRAL, ZERO_PATH } from '../core/shared-vars.js';
+import { ENTITY, LINE_SPIRAL, T_LINE_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // #### LineSpiral constructor
@@ -68,8 +68,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
 baseMix(P);
 shapeMix(P);
 

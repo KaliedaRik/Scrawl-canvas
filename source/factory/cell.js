@@ -43,7 +43,7 @@
 // #### Imports
 import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
@@ -52,12 +52,12 @@ import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js"
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 
-import { makeCoordinate, releaseCoordinate, requestCoordinate } from './coordinate.js';
+import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
 
-import { filterEngine } from './filter-engine.js';
+import { filterEngine } from '../helper/filter-engine.js';
 import { importDomImage } from './image-asset.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
@@ -74,7 +74,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
+import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Cell constructor

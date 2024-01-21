@@ -11,18 +11,18 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { seededRandomNumberGenerator } from '../core/random-seed.js';
+import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 
-import { constrain, doCreate, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { constrain, doCreate, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../helper/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, RD_SETTINGS_PREF_VALS, T_RD_ASSET, WHITE, ZERO_STR } from '../core/shared-vars.js';
+import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, RD_SETTINGS_PREF_VALS, T_RD_ASSET, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### RdAsset constructor
@@ -59,10 +59,6 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [asset](../mixin/asset.html)
-// + [assetAdvancedFunctionality](../mixin/assetAdvancedFunctionality.html)
-// + [pattern](../mixin/pattern.html)
 baseMix(P);
 assetMix(P);
 assetAdvancedMix(P);
