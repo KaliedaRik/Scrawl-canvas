@@ -30,7 +30,7 @@ import { scrawlCanvasHold } from '../core/document.js';
 
 import { filterEngine } from '../helper/filter-engine.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { importDomImage } from '../asset-management/image-asset.js';
 

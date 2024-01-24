@@ -12,7 +12,7 @@ import { asset, filter, styles } from '../core/library.js';
 
 import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 

@@ -25,7 +25,7 @@ import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 
-import { releaseVector, requestVector } from '../helper/vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

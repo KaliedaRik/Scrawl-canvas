@@ -25,9 +25,9 @@ const lorem = scrawl.makeLabel({
     start: ['center', 'center'],
     handle: ['center', 'center'],
 
-    text: 'Hello 😀 World!',
+    text: 'Say hello 😀 to my great font!',
 
-    font: "3rem sans-serif",
+    font: "1rem sans-serif",
 
     fillStyle: 'red',
 });
@@ -103,9 +103,16 @@ scrawl.makeUpdater({
         upend: ['flipUpend', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
 
-        letterSpacing: ['letterSpacing', 'float'],
-        lineHeight: ['lineHeight', 'float'],
         font: ['font', 'raw'],
+        fontKernning: ['fontKernning', 'raw'],
+        fontStretch: ['fontStretch', 'raw'],
+        fontVariantCaps: ['fontVariantCaps', 'raw'],
+        wordSpacing: ['wordSpacing', 'float'],
+        letterSpacing: ['letterSpacing', 'float'],
+        textRendering: ['textRendering', 'raw'],
+        direction: ['direction', 'raw'],
+        textAlign: ['textAlign', 'raw'],
+        textBaseline: ['textBaseline', 'raw'],
     },
 });
 
@@ -135,6 +142,7 @@ document.querySelector('#start_yString').options.selectedIndex = 1;
 document.querySelector('#handle_xString').options.selectedIndex = 1;
 // @ts-expect-error
 document.querySelector('#handle_yString').options.selectedIndex = 1;
+
 // @ts-expect-error
 document.querySelector('#roll').value = 0;
 // @ts-expect-error
@@ -143,12 +151,27 @@ document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
+
 // @ts-expect-error
-document.querySelector('#lineHeight').value = 1.5;
+document.querySelector('#wordSpacing').value = 0;
 // @ts-expect-error
 document.querySelector('#letterSpacing').value = 0;
 // @ts-expect-error
 document.querySelector('#font').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#fontKernning').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#fontStretch').options.selectedIndex = 4;
+// @ts-expect-error
+document.querySelector('#fontVariantCaps').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#textRendering').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#direction').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#textAlign').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#textBaseline').options.selectedIndex = 0;
 
 
 // #### Development and testing

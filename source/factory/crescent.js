@@ -18,9 +18,9 @@ import { constructors } from '../core/library.js';
 
 import { addStrings, doCreate, mergeOver, xta, xto, Ωempty } from '../helper/utilities.js';
 
-import { releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

@@ -20,9 +20,9 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, isa_fn, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { makeQuaternion } from '../helper/quaternion.js';
-import { makeVector } from '../helper/vector.js';
-import { makeCoordinate } from '../helper/coordinate.js';
+import { makeQuaternion } from '../untracked-factory/quaternion.js';
+import { makeVector } from '../untracked-factory/vector.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';

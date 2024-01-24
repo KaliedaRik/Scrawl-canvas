@@ -41,7 +41,7 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, isa_fn, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseVector, requestVector } from '../helper/vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 

@@ -81,12 +81,7 @@ export {
 export { makeCog } from './factory/cog.js';
 export { makeColor } from './factory/color.js';
 export { makeConicGradient } from './factory/conic-gradient.js';
-export {
-    requestCoordinate,
-    releaseCoordinate,
-} from './helper/coordinate.js';
 export { makeCrescent } from './factory/crescent.js';
-export { makeDragZone } from './factory/drag-zone.js';
 export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
 export { makeFilter } from './factory/filter.js';
@@ -101,7 +96,6 @@ export {
     createImageFromGroup,
     createImageFromEntity,
 } from './asset-management/image-asset.js';
-export { makeKeyboardZone } from './factory/keyboard-zone.js';
 export { makeLabel } from './factory/label.js';
 export { makeLine } from './factory/line.js';
 export { makeLineSpiral } from './factory/line-spiral.js';
@@ -112,10 +106,6 @@ export {
     makeNoise,
     makeNoiseAsset,
 } from './asset-management/noise-asset.js';
-export {
-    observeAndUpdate,
-    makeUpdater
-} from './factory/observe-update.js';
 export { makeOval } from './factory/oval.js';
 export { makePattern } from './factory/pattern.js';
 export { makePhrase } from './factory/phrase.js';
@@ -123,10 +113,6 @@ export { makePicture } from './factory/picture.js';
 export { makePolygon } from './factory/polygon.js';
 export { makePolyline } from './factory/polyline.js';
 export { makeQuadratic } from './factory/quadratic.js';
-export {
-    requestQuaternion,
-    releaseQuaternion,
-} from './helper/quaternion.js';
 export { makeRadialGradient } from './factory/radial-gradient.js';
 export { makeRawAsset } from './asset-management/raw-asset.js';
 export { makeReactionDiffusionAsset } from './asset-management/reaction-diffusion-asset.js';
@@ -146,10 +132,6 @@ export { makeTicker } from './factory/ticker.js';
 export { makeTracer } from './factory/tracer.js';
 export { makeTween } from './factory/tween.js';
 export {
-    requestVector,
-    releaseVector,
-} from './helper/vector.js';
-export {
     importDomVideo,
     importVideo,
     importMediaStream,
@@ -157,3 +139,22 @@ export {
 } from './asset-management/video-asset.js';
 export { makeWheel } from './factory/wheel.js';
 export { makeWorld } from './factory/particle-world.js';
+
+export {
+    requestCoordinate,
+    releaseCoordinate,
+} from './untracked-factory/coordinate.js';
+export { makeDragZone } from './untracked-factory/drag-zone.js';
+export { makeKeyboardZone } from './untracked-factory/keyboard-zone.js';
+export {
+    observeAndUpdate,
+    makeUpdater
+} from './untracked-factory/observe-update.js';
+export {
+    requestQuaternion,
+    releaseQuaternion,
+} from './untracked-factory/quaternion.js';
+export {
+    requestVector,
+    releaseVector,
+} from './untracked-factory/vector.js';

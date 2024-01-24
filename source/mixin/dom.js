@@ -22,9 +22,9 @@ import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition
 
 import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 
-import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../helper/quaternion.js';
+import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../untracked-factory/quaternion.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import positionMix from './position.js';
 import deltaMix from './delta.js';

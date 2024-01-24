@@ -13,9 +13,9 @@ import { getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, set
 
 import { makeAnimation } from '../factory/animation.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { releaseCoordinate, requestCoordinate } from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 

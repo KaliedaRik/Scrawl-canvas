@@ -130,9 +130,9 @@ import { addStrings, isa_boolean, isa_obj, mergeOver, pushUnique, xt, xta, xtGet
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
-import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
+import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { _keys, _isArray, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js'
 

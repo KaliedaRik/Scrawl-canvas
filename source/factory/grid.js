@@ -23,7 +23,7 @@ import { constructors, entity } from '../core/library.js';
 
 import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

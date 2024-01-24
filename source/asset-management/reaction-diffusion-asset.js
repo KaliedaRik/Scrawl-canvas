@@ -15,7 +15,7 @@ import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 
 import { constrain, doCreate, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';

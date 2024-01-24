@@ -42,7 +42,7 @@
 import { constructors } from '../core/library.js';
 import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { releaseVector, requestVector } from '../helper/vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 

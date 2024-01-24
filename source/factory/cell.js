@@ -52,12 +52,12 @@ import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js"
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 
-import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
+import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
 import { filterEngine } from '../helper/filter-engine.js';
 import { importDomImage } from '../asset-management/image-asset.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';

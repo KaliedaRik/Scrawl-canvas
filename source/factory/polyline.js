@@ -37,7 +37,7 @@ import { artefact, constructors, particle } from '../core/library.js';
 
 import { addStrings, correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../helper/utilities.js';
 
-import { makeCoordinate } from '../helper/coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 

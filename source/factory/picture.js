@@ -46,7 +46,7 @@ import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from '../ass
 
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from '../asset-management/image-asset.js';
 
-import { makeCoordinate } from '../helper/coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

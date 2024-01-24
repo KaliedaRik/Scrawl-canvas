@@ -508,7 +508,6 @@ export const STATE_LABEL_KEYS = _freeze(['direction', 'font', 'fontKerning', 'fo
 export const STATE_LINE_KEYS = _freeze(['lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit']);
 export const STATE_MAIN_KEYS = _freeze(['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY']);
 export const STATE_STYLE_KEYS = _freeze(['fillStyle', 'shadowColor', 'strokeStyle']);
-export const STATE_TEXT_KEYS = _freeze(['font']);
 export const STATIC = 'static';
 export const STEP_CHANNELS = 'step-channels';
 export const STOP = '.';

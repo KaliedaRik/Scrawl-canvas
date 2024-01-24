@@ -43,7 +43,7 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';

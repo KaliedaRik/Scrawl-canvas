@@ -9,7 +9,7 @@ import { artefact, particle } from '../core/library.js';
 
 import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { makeCoordinate } from '../helper/coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 

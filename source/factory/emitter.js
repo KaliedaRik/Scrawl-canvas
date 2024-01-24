@@ -33,11 +33,11 @@ import { currentGroup } from './canvas.js';
 
 import { releaseParticle, requestParticle } from './particle.js';
 
-import { releaseCell,  requestCell } from '../helper/cell-fragment.js';
+import { releaseCell,  requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { makeVector, releaseVector, requestVector } from '../helper/vector.js';
+import { makeVector, releaseVector, requestVector } from '../untracked-factory/vector.js';
 
-import { releaseCoordinate, requestCoordinate } from '../helper/coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
 import { makeColor } from './color.js';
 

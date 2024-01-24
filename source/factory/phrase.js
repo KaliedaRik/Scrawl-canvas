@@ -71,11 +71,11 @@ import { scrawlCanvasHold } from '../core/document.js';
 
 import { addStrings, doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { makeFontAttributes } from '../helper/font-attributes.js';
+import { makeFontAttributes } from '../untracked-factory/font-attributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

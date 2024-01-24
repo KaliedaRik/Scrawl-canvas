@@ -29,7 +29,7 @@ import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 
-import { releaseCell, requestCell } from '../helper/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { currentGroup } from './canvas.js';
 

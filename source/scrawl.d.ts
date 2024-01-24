@@ -1528,7 +1528,7 @@ interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelta
 }
 
 interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFactoryDeltaInputs {
-    font?: string;
+    fontString?: string;
     text?: string;
 
     includeUnderline?: boolean;
@@ -1541,6 +1541,12 @@ interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFa
     textAlign?: string;
     textBaseline?: string;
     textRendering?: string;
+
+    exposeText?: boolean;
+
+    showBoundingBox?: boolean;
+    boundingBoxStyle?: string;
+    boundingBoxLineWidth?: number;
 
     delta?: LabelFactoryDeltaInputs;
 }

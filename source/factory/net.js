@@ -28,7 +28,7 @@ import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 import { makeSpring } from './particle-spring.js';
 
-import { releaseVector, requestVector } from '../helper/vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
