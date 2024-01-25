@@ -7,6 +7,16 @@ import * as scrawl from '../source/scrawl.js';
 import { reportSpeed, killArtefact } from './utilities.js';
 
 
+// #### To be aware: fonts are loaded asynchronously!
+// Browsers tend to delay loading fonts until they are needed - hence FOUC. This means that Label entitys may not pick their correct dimensions when instantiated.
+// + While Labels will eventually display using the correct font once it has loaded, their measurements will not update.
+// + If this is important for a scene, we need to correct Label dimensions manually - `setTimeout` is one approach:
+// + `setTimeout(() => canvas.get('baseGroup').recalculateFonts(), 0);`
+// + Another approach is to load fonts dynamically - see the [Font Loading API documentation](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) on MDN for details.
+// + The approach used in this demo is to trigger the recalculation in the `makeRender` object using the `afterCreated` hook:
+// + `afterCreated: () => canvas.get('baseGroup').recalculateFonts(),`
+
+
 // #### Scene setup
 // Get a handle to the Canvas wrapper
 const canvas = scrawl.library.canvas.mycanvas;
@@ -22,8 +32,11 @@ scrawl.makeLabel({
 
     name: name('mylabel_fill'),
 
-    text: '|H&epsilon;lj&ouml;!',
     fontString: 'bold 2rem / 3 Garamond',
+
+    text: '|H&epsilon;lj&ouml;!',
+    accessibleText: `${name('mylabel_fill')} says: §`,
+    accessibleTextOrder: 0,
 
     start: ['14%', '28%'],
     handle: ['center', 'center'],
@@ -50,38 +63,51 @@ scrawl.makeLabel({
     name: name('mylabel_draw'),
     startX: '38%',
     method: 'draw',
+    accessibleText: `${name('mylabel_draw')} says: §`,
+    accessibleTextOrder: 2,
 
 }).clone({
 
     name: name('mylabel_drawAndFill'),
     startX: '84%',
     method: 'drawAndFill',
+    accessibleText: `${name('mylabel_drawAndFill')} says: §`,
+    accessibleTextOrder: 4,
 
 }).clone({
 
     name: name('mylabel_fillAndDraw'),
     startX: '62%',
     method: 'fillAndDraw',
-    sharedState: true
+    sharedState: true,
+    accessibleText: `${name('mylabel_fillAndDraw')} says: §`,
+    accessibleTextOrder: 6,
 
 }).clone({
 
     name: name('mylabel_drawThenFill'),
     startX: '14%',
     startY: '67%',
-    method: 'drawThenFill'
+    method: 'drawThenFill',
+    accessibleText: `§ from ${name('mylabel_drawThenFill')}`,
+    accessibleTextOrder: 5,
 
 }).clone({
 
     name: name('mylabel_fillThenDraw'),
     startX: '38%',
     method: 'fillThenDraw',
+    accessibleText: `${name('mylabel_fillThenDraw')} says: §`,
+    accessibleTextOrder: 3,
 
 }).clone({
 
     name: name('mylabel_clear'),
     startX: '62%',
-    method: 'clear'
+    method: 'clear',
+    accessibleText: `${name('mylabel_clear')} says: §`,
+    accessibleTextOrder: 1,
+    textIsAccessible: false,
 });
 
 
@@ -140,13 +166,19 @@ canvas.set({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
+
     const dragging = current();
-    return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}`;
+
+    let rep = '';
+    document.fonts.forEach(k => {
+        if (k.status == 'loaded') rep +=(`${k.family} ${k.weight} ${k.style}\n`)
+    })
+
+    return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}
+
+Loaded fonts:
+${rep}`;
 });
-
-
-// We have to tell the canvas to check UI for hovering states every Display cycle
-const commence = () => canvas.checkHover();
 
 
 // Create the Display cycle animation
@@ -154,8 +186,13 @@ scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
-    commence,
+
+    // We have to tell the canvas to check UI for hovering states every Display cycle
+    commence: () => canvas.checkHover(),
+
     afterShow: report,
+
+    afterCreated: () => canvas.get('baseGroup').recalculateFonts(),
 });
 
 
@@ -166,3 +203,7 @@ console.log(scrawl.library);
 console.log('Performing tests ...');
 killArtefact(canvas, name('mylabel_fill'), 4000);
 killArtefact(canvas, name('mylabel_fillAndDraw'), 6000);
+
+// Accessible text manipulation
+setTimeout(() => scrawl.library.artefact[name('mylabel_clear')].set({ textIsAccessible: true }), 8000);
+setTimeout(() => scrawl.library.artefact[name('mylabel_drawAndFill')].set({ textIsAccessible: false }), 10000);

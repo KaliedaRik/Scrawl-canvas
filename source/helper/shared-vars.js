@@ -178,6 +178,7 @@ export const DATA_TAB_ORDER = 'data-tab-order';
 export const DEF_HIGHLIGHT = 'rgb(250 218 94 / 0.4)';
 export const DEF_LINE_COLOR = 'rgb(250 0 0 / 1)';
 export const DEF_SECTION_MARKERS = '[§<>]';
+export const DEF_SECTION_PLACEHOLDER = '§';
 export const DEFAULT = 'default';
 export const DEFAULT_FONT = '12px sans-serif';
 export const DEFAULT_SEED = 'any_random_string_will_do';

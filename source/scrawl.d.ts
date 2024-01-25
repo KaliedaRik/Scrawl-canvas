@@ -1521,34 +1521,32 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 // LabelInstance factory
 // -------------------------------------
 interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+    boundingBoxLineWidth?: number;
     letterSpacing?: string | number;
-    wordSpacing?: string | number;
-    underlineWidth?: number;
     underlineOffset?: number;
+    underlineWidth?: number;
+    wordSpacing?: string | number;
 }
 
 interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFactoryDeltaInputs {
-    fontString?: string;
-    text?: string;
-
-    includeUnderline?: boolean;
-    underlineStyle?: StylesInstance | string;
-
+    accessibleText?: string;
+    accessibleTextOrder?: number;
+    accessibleTextPlaceholder?: string;
+    boundingBoxStyle?: string;
+    delta?: LabelFactoryDeltaInputs;
     direction?: string;
     fontKerning?: string;
     fontStretch?: string;
+    fontString?: string;
     fontVariantCaps?: string;
+    includeUnderline?: boolean;
+    showBoundingBox?: boolean;
+    text?: string;
     textAlign?: string;
     textBaseline?: string;
+    textIsAccessible?: boolean;
     textRendering?: string;
-
-    exposeText?: boolean;
-
-    showBoundingBox?: boolean;
-    boundingBoxStyle?: string;
-    boundingBoxLineWidth?: number;
-
-    delta?: LabelFactoryDeltaInputs;
+    underlineStyle?: StylesInstance | string;
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}

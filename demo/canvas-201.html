@@ -10,13 +10,6 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    .controls {
-      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
-    }
-    canvas {
-        border: 1px dotted green;
-    }
-
 /*
 Noto Sans Arabic (rtl) - is an unmodulated (“sans serif”) design for texts in the Middle Eastern Arabic script. It has multiple weights and widths, and 1,642 glyphs.
 لا يعرض أحد لتدخل تعسفي في حياته الخاصة أو أسرته أو مسكنه أو مراسلاته أو لحملات على شرفه وسمعته. ولكل شخص الحق في حماية القانون من مثل هذا التدخل أو تلك الحملات. لكل شخص الحق في حرية التفكير والضمير والدين. ويشمل هذا الحق حرية تغيير ديانته أو عقيدته، وحرية الإعراب عنهما بالتعليم والممارسة وإقامة الشعائر ومراعاتها سواء أكان ذلك سرا أم مع الجماعة. لكل شخص الحق في حرية الرأي والتعبير. ويشمل هذا الحق حرية اعتناق الآراء دون أي تدخل، واستقاء الأنباء والأفكار وتلقيها وإذاعتها بأية وسيلة كانت دون تقيد بالحدود الجغرافية. لكل شخص بصفته عضوا في المجتمع الحق في الضمانة الاجتماعية وفي أن تحقق بوساطة المجهود القومي والتعاون الدولي وبما يتفق ونظم كل دولة ومواردها الحقوق الاقتصادية والاجتماعية والتربوية التي لا غنى عنها لكرامته وللنمو الحر لشخصيته.
@@ -353,10 +346,23 @@ Noto Color Emoji (emoji)
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Create a Label entity</li>
+      <li>Clone the entity</li>
+      <li>Position the entitys on the canvas</li>
+      <li>Change the state of a subset of entitys sharing the same state object</li>
+      <li>Check the various drawing methods available to the entitys</li>
+      <li>Check that the entitys' dimensions update quickly once the font loads, as shown by their bounding boxes: all parts of the text should be inside the bounding box</li>
+      <li>Check drag-and-drop works as expected</li>
+  </ul>
+  <p>Accessibility</p>
+  <ul>
+      <li>Check that the canvas element's text hold &lt;div> is populated as expected, with entity text ordered in line with their accessibleTextOrder attribute values</li>
+      <li>Check that when entitys kill and resurrect themselves, the changes are reflected in the text hold</li>
+      <li>Check that when an entity's textIsAccessible attribute changes, the changes are reflected in the text hold, with correct ordering maintained</li>
+      <li>Check that the text hold's aria-busy attribute updates (from "false" to "true", then back to "false") when each change takes place</li>
     </ul>
 
-    <p><b>Touch test:</b> ?????</p>
+    <p><b>Touch test:</b> should work as expected - though flicking a label may lead to it moving beyond the canvas border and out of sight!</p>
 
     <p><a href="../docs/demo/canvas-201.html">Annotated code</a></p>
   </div>

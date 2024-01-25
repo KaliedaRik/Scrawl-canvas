@@ -69,7 +69,7 @@ const phrase = scrawl.makeLabel({
     name: 'particle-phrase-entity',
     text: 'Hello',
     fontString: 'bold 40px Garamond, serif',
-    exposeText: false,
+    textIsAccessible: false,
 // @ts-expect-error
 }).set(commonValues);
 

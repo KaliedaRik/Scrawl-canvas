@@ -1,6 +1,16 @@
 // # Label factory
 // TODO - documentation
 
+// #### To be aware: fonts are loaded asynchronously!
+// Browsers tend to delay loading fonts until they are needed - hence FOUC. This means that Label entitys may not pick their correct dimensions when instantiated.
+// + While Labels will eventually display using the correct font once it has loaded, their measurements will not update.
+// + If this is important for a scene, we need to correct Label dimensions manually - `setTimeout` is one approach:
+// + `setTimeout(() => canvas.get('baseGroup').recalculateFonts(), 0);`
+// + Another approach is to load fonts dynamically - see the [Font Loading API documentation](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) on MDN for details.
+// + A third approach is to trigger the recalculation in the `makeRender` object using the `afterCreated` hook:
+// + `afterCreated: () => canvas.get('baseGroup').recalculateFonts(),`
+
+
 // #### Demos:
 // + TODO - demos
 
@@ -15,7 +25,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _ceil, BLACK, DEFAULT_FONT, DESTINATION_OUT, ENTITY, MOUSE, PARTICLE, SOURCE_OVER, T_CANVAS, T_CELL, T_LABEL, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, ENTITY, MOUSE, PARTICLE, POLITE, SOURCE_OVER, T_CANVAS, T_CELL, T_LABEL, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -46,6 +56,10 @@ entityMix(P);
 const defaultAttributes = {
 
     text: ZERO_STR,
+    textIsAccessible: true,
+    accessibleText: DEF_SECTION_PLACEHOLDER,
+    accessibleTextPlaceholder: DEF_SECTION_PLACEHOLDER,
+    accessibleTextOrder: 0,
 
     fontString: DEFAULT_FONT,
 
@@ -57,6 +71,7 @@ const defaultAttributes = {
     showBoundingBox: false,
     boundingBoxStyle: BLACK,
     boundingBoxLineWidth: 1,
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -70,7 +85,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Kill management
-// No additional kill functionality required
+P.factoryKill = function () {
+
+    if (this.accessibleTextHold) this.accessibleTextHold.remove();
+
+    const hold = this.getCanvasTextHold(this.currentHost);
+    if (hold) hold.dirtyTextTabOrder = true;
+};
 
 
 // #### Get, Set, deltaSet
@@ -100,9 +121,13 @@ G.dimensions = function () {
 S.dimensions = λnull;
 D.dimensions = λnull;
 
-G.fontString = function () {
+G.rawFont = function () {
 
     return this.fontString;
+};
+G.defaultFont = function () {
+
+    return this.defaultFont;
 };
 S.fontString = function (item) {
 
@@ -113,9 +138,6 @@ S.fontString = function (item) {
     }
 };
 
-// Local helper element
-const textEntityConverter = document.createElement(TEXTAREA);
-
 G.rawText = function () {
 
     return this.rawText;
@@ -123,10 +145,47 @@ G.rawText = function () {
 S.text = function (item) {
 
     this.rawText = (item.substring) ? item : item.toString;
-    textEntityConverter.innerHTML = this.rawText;
-    this.text = textEntityConverter.value;
+    this.text = this.convertTextEntityCharacters(this.rawText);
 
+    this.dirtyText = true;
     this.dirtyFont = true;
+};
+
+G.accessibleText = function () {
+
+    return this.getAccessibleText();
+};
+S.accessibleText = function (item) {
+
+    if (item?.substring) {
+
+        this.accessibleText = item;
+        this.dirtyText = true;
+    }
+};
+
+S.accessibleTextPlaceholder = function (item) {
+
+    if (item?.substring) {
+
+        this.accessibleTextPlaceholder = item;
+        this.dirtyText = true;
+    }
+};
+
+S.accessibleTextOrder = function (item) {
+
+    if (item?.toFixed) {
+
+        this.accessibleTextOrder = item;
+        this.dirtyText = true;
+    }
+};
+
+S.textIsAccessible = function (item) {
+
+    this.textIsAccessible = !!item;
+    this.dirtyText = true;
 };
 
 G.direction = function () {
@@ -273,7 +332,8 @@ S.textRendering = function (item) {
 
 
 // #### Prototype functions
-
+// `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
+// + We also get basic text metrics at this point in time
 P.temperFont = function () {
 
     this.dirtyFont = false;
@@ -305,9 +365,94 @@ P.temperFont = function () {
     this.dimensions[1] = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
 
     this.dirtyPathObject = true;
+    this.dirtyDimensions = true;
 };
 
-// Calculate the Label entity's __Path2D object__
+// `convertTextEntityCharacters`, `textEntityConverter` - (not part of the Label prototype!) - a &lt;textarea> element not attached to the DOM which we can use to temper user-supplied text
+// + Tempering includes converting HTMLentity copy - such as changing `&epsilon;` to an &epsilon; letter
+const textEntityConverter = document.createElement(TEXTAREA);
+P.convertTextEntityCharacters = function (item) {
+
+    textEntityConverter.innerHTML = item;
+    return textEntityConverter.value;
+};
+
+// `recalculateFont` - force the entity to recalculate its dimensions without having to set anything.
+// + Can also be invoked via the entity's Group object's `recalculateFonts` function
+P.recalculateFont = function () {
+
+    this.dirtyFont = true;
+};
+
+
+// #### Accessibility functions
+// `getCanvasTextHold` - get a handle for the &lt;canvas> element's child text hold &lt;div>
+P.getCanvasTextHold = function (item) {
+
+    if (item?.type == T_CELL && item?.controller?.type == T_CANVAS && item?.controller?.textHold) return item.controller;
+
+    // For non-based Cells we have to make a recursive call to find the &lt;canvas> host
+    if (item && item.type == T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
+
+    return false;
+};
+
+P.updateAccessibleTextHold = function () {
+
+    this.dirtyText = false;
+
+    if (this.textIsAccessible) {
+
+        if (!this.accessibleTextHold) {
+
+            const myhold = document.createElement(DIV);
+            myhold.id = `${this.name}-text-hold`;
+            myhold.setAttribute(ARIA_LIVE, POLITE);
+            myhold.setAttribute(DATA_TAB_ORDER, this.accessibleTextOrder);
+            this.accessibleTextHold = myhold;
+            this.accessibleTextHoldAttached = false;
+        }
+
+        this.accessibleTextHold.textContent = this.getAccessibleText();
+
+        if (this.currentHost) {
+
+            const hold = this.getCanvasTextHold(this.currentHost);
+
+            if (hold && hold.textHold) {
+
+                if (!this.accessibleTextHoldAttached) {
+
+                    hold.textHold.appendChild(this.accessibleTextHold);
+                    this.accessibleTextHoldAttached = true;
+                }
+                hold.dirtyTextTabOrder = true;
+            }
+        }
+    }
+    else {
+
+        if (this.accessibleTextHold) {
+
+            this.accessibleTextHold.remove();
+            this.accessibleTextHold = null;
+            this.accessibleTextHoldAttached = false;
+
+            const hold = this.getCanvasTextHold(this.currentHost);
+            if (hold) hold.dirtyTextTabOrder = true;
+        }
+    }
+};
+
+P.getAccessibleText = function () {
+
+    const {accessibleText, accessibleTextPlaceholder, text} = this;
+    return accessibleText.replace(accessibleTextPlaceholder, text);
+};
+
+
+// #### Clean functions
+// `cleanPathObject` - calculate the Label entity's __Path2D object__
 P.cleanPathObject = function () {
 
     this.dirtyPathObject = false;
@@ -325,18 +470,16 @@ P.cleanPathObject = function () {
 
     p.rect(x, y, w, h);
 
-    if (this.temperedFont) {
+    if (this.temperedFont && this.state) {
 
         const {attributes, size, family} = this.temperedFont.groups;
-        this.currentFont = `${attributes} ${size * scale}px ${family}`;
+        this.defaultFont = `${attributes} ${size * scale}px ${family}`;
+        this.state.font = this.defaultFont;
     }
     else this.dirtyFont = true;
 };
 
-
-// #### Clean functions
-
-// `cleanDimensions` - calculate the artefact's __currentDimensions__ Array
+// `cleanDimensions` - calculate the entity's __currentDimensions__ Array
 P.cleanDimensions = function () {
 
     this.dirtyDimensions = false;
@@ -360,7 +503,7 @@ P.cleanDimensions = function () {
     this.dirtyFilterIdentifier = true;
 };
 
-// `cleanHandle` - calculate the artefact's __currentHandle__ Array
+// `cleanHandle` - calculate the entity's __currentHandle__ Array
 P.cleanHandle = function () {
 
     this.dirtyHandle = false;
@@ -377,6 +520,7 @@ P.cleanHandle = function () {
 P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
+    if (this.dirtyText) this.updateAccessibleTextHold();
     if (this.dirtyFont) this.temperFont();
 
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
@@ -405,7 +549,7 @@ P.prepareStamp = function() {
 
 
 // ##### Stamp methods
-
+// `stampPositioningHelper` - internal helper function
 P.stampPositioningHelper = function () {
 
     const handle = this.currentHandle,
@@ -422,12 +566,7 @@ P.draw = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
-    const oldFont = engine.font;
-    engine.font = this.currentFont;
-
     engine.strokeText(...pos);
-
-    engine.font = oldFont;
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
@@ -437,12 +576,7 @@ P.fill = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
-    const oldFont = engine.font;
-    engine.font = this.currentFont;
-
     engine.fillText(...pos);
-
-    engine.font = oldFont;
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
@@ -452,16 +586,11 @@ P.drawAndFill = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
-    const oldFont = engine.font;
-    engine.font = this.currentFont;
-
     engine.strokeText(...pos);
     engine.fillText(...pos);
     this.currentHost.clearShadow();
     engine.strokeText(...pos);
     engine.fillText(...pos);
-
-    engine.font = oldFont;
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
@@ -471,16 +600,11 @@ P.fillAndDraw = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
-    const oldFont = engine.font;
-    engine.font = this.currentFont;
-
     engine.fillText(...pos);
     engine.strokeText(...pos);
     this.currentHost.clearShadow();
     engine.fillText(...pos);
     engine.strokeText(...pos);
-
-    engine.font = oldFont;
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
@@ -490,13 +614,8 @@ P.drawThenFill = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
-    const oldFont = engine.font;
-    engine.font = this.currentFont;
-
     engine.strokeText(...pos);
     engine.fillText(...pos);
-
-    engine.font = oldFont;
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
@@ -506,13 +625,8 @@ P.fillThenDraw = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
-    const oldFont = engine.font;
-    engine.font = this.currentFont;
-
     engine.fillText(...pos);
     engine.strokeText(...pos);
-
-    engine.font = oldFont;
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
@@ -529,21 +643,15 @@ P.clear = function (engine) {
     const gco = engine.globalCompositeOperation;
     const pos = this.stampPositioningHelper();
 
-    const oldFont = engine.font;
-    engine.font = this.currentFont;
-
     engine.globalCompositeOperation = DESTINATION_OUT;
     engine.fillText(...pos);
-
     engine.globalCompositeOperation = gco;
-    engine.font = oldFont;
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
 
 // `none` - perform all the calculations required, but don't perform the final stamping
 P.none = function () {}
-
 
 // `drawBoundingBox` - internal helper function called by `regularStamp`
 P.drawBoundingBox = function (engine) {
@@ -558,15 +666,6 @@ P.drawBoundingBox = function (engine) {
     engine.shadowBlur = 0;
     engine.stroke(this.pathObject);
     engine.restore();
-};
-
-P.getCanvasTextHold = function (item) {
-
-    if (item?.type == T_CELL && item?.controller?.type == T_CANVAS && item?.controller?.textHold) return item.controller;
-
-    if (item && item.type == T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
-
-    return false;
 };
 
 

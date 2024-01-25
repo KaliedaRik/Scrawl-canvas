@@ -790,6 +790,20 @@ P.clearFiltersFromEntitys = function () {
     return this;
 };
 
+// `recalculateFonts` - gets Label and EnhancedLabel entitys in the Group to recalculate their font/text dimensions.
+P.recalculateFonts = function () {
+
+    let ent;
+
+    this.artefacts.forEach(name => {
+
+        ent = entity[name];
+
+        if (ent && ent.recalculateFont) ent.recalculateFont();
+    });
+    return this;
+};
+
 // #### Collision functionality
 // The `getArtefactAt` function checks to see if any of the Group object's artefacts are located at the supplied coordinates in the argument object.
 //

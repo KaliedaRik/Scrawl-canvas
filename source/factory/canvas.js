@@ -207,8 +207,11 @@ const Canvas = function (items = Ωempty) {
         textHold.style.margin = PX0;
         textHold.style.overflow = HIDDEN;
         textHold.setAttribute(ARIA_LIVE, POLITE);
+        textHold.setAttribute(ARIA_BUSY, 'false');
         this.textHold = textHold;
         el.appendChild(textHold);
+
+        this.dirtyTextTabOrder = true;
 
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
@@ -299,6 +302,9 @@ const defaultAttributes = {
 
 // __navigationAriaLive__ - the ARIA-live attribute applied to the &lt;nav> element added to the &lt;canvas> element. Accepted string values are: 'off', 'polite' (default), 'assertive'.
     navigationAriaLive: POLITE,
+
+// __textAriaLive__ - the ARIA-live attribute applied to the text hold's &lt;div> element added to the &lt;canvas> element. Accepted string values are: 'off', 'polite' (default), 'assertive'.
+    textAriaLive: POLITE,
 
 // #### Canvas Color space
 // Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'`` (default); `'display-p3'`.
@@ -404,6 +410,16 @@ S.navigationAriaLive = function (item) {
     if (item.substring && ARIA_LIVE_VALUES.includes(item)) {
 
         this.navigationAriaLive = item;
+        this.dirtyAria = true;
+    }
+};
+
+// `textAriaLive` - String
+S.textAriaLive = function (item) {
+
+    if (item.substring && ARIA_LIVE_VALUES.includes(item)) {
+
+        this.textAriaLive = item;
         this.dirtyAria = true;
     }
 };
@@ -727,6 +743,7 @@ P.show = function(){
     if (this.dirtyAria) this.cleanAria();
 
     if (this.dirtyNavigationTabOrder) this.reorderNavElements();
+    if (this.dirtyTextTabOrder) this.reorderTextElements();
 };
 
 // `reorderNavElements` - Handle Anchor and Button DOM element ordering within the &lt;nav> element
@@ -757,6 +774,36 @@ P.reorderNavElements = function () {
     elArray.forEach(e => navEl.appendChild(e));
 
     navEl.setAttribute(ARIA_BUSY, 'false');
+};
+
+// `reorderTextElements` - handle Label and EnhancedLabel (and Phrase) ordering withing the textHold's &lt;div> element
+P.reorderTextElements = function () {
+
+    this.dirtyTextTabOrder = false;
+
+    const elArray = [],
+        divEl = this.textHold;
+
+    divEl.setAttribute(ARIA_BUSY, 'true');
+
+    while (divEl.firstChild) {
+
+        elArray.push(divEl.removeChild(divEl.firstChild));
+    }
+
+    elArray.sort((a, b) => {
+
+        const A = parseInt(a.getAttribute(DATA_TAB_ORDER), 10);
+        const B = parseInt(b.getAttribute(DATA_TAB_ORDER), 10);
+
+        if (A < B) return -1;
+        if (A > B) return 1;
+        return 0;
+    });
+
+    elArray.forEach(e => divEl.appendChild(e));
+
+    divEl.setAttribute(ARIA_BUSY, 'false');
 };
 
 // `render` - orchestrate a single Display cycle - clear, then compile, then show.
@@ -991,6 +1038,7 @@ P.cleanAria = function () {
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
     this.navigation.setAttribute(ARIA_LIVE, this.navigationAriaLive);
+    this.textHold.setAttribute(ARIA_LIVE, this.textAriaLive);
 };
 
 
