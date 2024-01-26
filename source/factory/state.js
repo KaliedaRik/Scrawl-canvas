@@ -138,6 +138,21 @@ P.defs = {
 // __font__ - CSS compatible font string. Note that the canvas context engine will ignore a lot of the more esoteric values that can be included in the font string.
     font: DEFAULT_FONT,
 
+// __direction__ - string from `ltr` (default), `rtl`, `inherit`. Needs to be set appropriately for the font being used eg: Hebrew, Arabic require `rtl` direction. 
+    direction: LTR,
+
+// __fontKerning__ - string from `auto`, `normal` (default), `none`. Support across browsers varies by interpretation of the standard, if supported at all.
+    fontKerning: NORMAL,
+
+// __textRendering__ - string from `auto` (default), `optimizeSpeed`, `optimizeLegibility`, `geometricPrecision`. Support across browsers varies by interpretation of the standard, if supported at all.
+    textRendering: AUTO,
+
+// __letterSpacing__ - pixel string. Default is `0px`
+    letterSpacing: PX0,
+
+// __wordSpacing__ - pixel string. Default is `0px`
+    wordSpacing: PX0,
+
 
 // ##### CSS/SVG filters
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the entity as it is stamped on the canvas.
@@ -155,15 +170,10 @@ P.defs = {
 
 // ##### Other attributes
 // The following Canvas 2D engine attributes are actively ignored by Scrawl-canvas. For some, equivalent functionality has been coded up elsewhere in the library to manage similar/overlapping functionality provided by these attributes
-    direction: LTR,
-    fontKerning: NORMAL,
     fontStretch: NORMAL,
     fontVariantCaps: NORMAL,
-    letterSpacing: PX0,
     textAlign: LEFT,
     textBaseline: TOP,
-    textRendering: AUTO,
-    wordSpacing: PX0,
 };
 
 
@@ -287,15 +297,10 @@ S.shadowColor = function (item) {
 };
 
 // Actively ignore any attempts to set the following attributes
-// S.direction = λnull;
-// S.fontKerning = λnull;
 // S.fontStretch = λnull;
 // S.fontVariantCaps = λnull;
-// S.letterSpacing = λnull;
 // S.textAlign = λnull;
 // S.textBaseline = λnull;
-// S.textRendering = λnull;
-// S.wordSpacing = λnull;
 
 
 // #### Prototype functions
@@ -396,7 +401,7 @@ P.getChanges = function (ent, engineState) {
         else result[k] = desired;
     }
 
-    // 'font'
+    // 'font', 'direction', 'fontKerning', 'textRendering', 'letterSpacing', 'wordSpacing'
     if ([T_PHRASE, T_LABEL].includes(ent.type)) {
 
         for (i = 0, iz = STATE_LABEL_KEYS.length; i < iz; i++) {
@@ -426,24 +431,14 @@ P.setStateFromEngine = function (engine) {
     this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
 
     // Actively ignore the following attributes
-    engine.direction = LTR;
-    this.direction = LTR;
-    engine.fontKerning = NORMAL;
-    this.fontKerning = NORMAL;
     engine.fontStretch = NORMAL;
     this.fontStretch = NORMAL;
     engine.fontVariantCaps = NORMAL;
     this.fontVariantCaps = NORMAL;
-    engine.letterSpacing = PX0;
-    this.letterSpacing = PX0;
     engine.textAlign = LEFT;
     this.textAlign = LEFT;
     engine.textBaseline = TOP;
     this.textBaseline = TOP;
-    engine.textRendering = AUTO;
-    this.textRendering = AUTO;
-    engine.wordSpacing = PX0;
-    this.wordSpacing = PX0;
 
     return this;
 };

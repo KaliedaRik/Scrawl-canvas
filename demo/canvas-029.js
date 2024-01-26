@@ -1,5 +1,5 @@
 // # Demo Canvas 029
-// Phrase entitys and gradients
+// Image smoothing
 
 // [Run code](../../demo/canvas-029.html)
 import * as scrawl from '../source/scrawl.js'
@@ -8,354 +8,163 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-// Get a handle to the Canvas wrapper
 const canvas = scrawl.library.artefact.mycanvas;
 
-
-// Namespacing boilerplate
-const namespace = 'demo';
-const name = (n) => `${namespace}-${n}`;
+scrawl.importDomImage('.flowers');
 
 
-// Create Gradient
-const mygradient = scrawl.makeGradient({
-
-    name: name('gradient-1'),
-
-    endX: '100%',
-
-    paletteStart: 10,
-    paletteEnd: 990,
-
-    delta: {
-        paletteStart: -1,
-        paletteEnd: -1,
-    },
-
-    cyclePalette: true,
-    animateByDelta: true,
-
-    colors: [
-        [0, 'black'],
-        [19, 'red'],
-        [499, 'black'],
-        [549, 'yellow'],
-        [599, 'black'],
-        [979, 'aqua'],
-        [999, 'black'],
-    ],
+canvas.setBase({
+    compileOrder: 1,
 });
 
-scrawl.makeQuadratic({
+const textCell = canvas.buildCell({
 
-    name: name('my-quad'),
-
-    startX: '30%',
-    startY: '98%',
-
-    controlX: '60%',
-    controlY: '78%',
-
-    endX: '90%',
-    endY: '98%',
-
-    method: 'draw',
-
-    useAsPath: true,
+    name: 'text-cell',
+    dimensions: [100, 100],
+    shown: false,
 });
 
 
-// Create Phrase entitys
 scrawl.makePhrase({
 
-    name: name('test-phrase-1'),
-    order: 1,
+    name: 'hello-world-in-cell',
+    group: 'text-cell',
 
-    text: 'Test phrase',
-    fontString: 'bold 46px Garamond, serif',
+    text: 'Hello world!',
 
-    startX: '5%',
-    startY: '5%',
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
 
-    fillStyle: name('gradient-1'),
+    lineHeight: 0.8,
+});
 
-}).clone({
 
-    name: name('test-phrase-2'),
+scrawl.makePicture({
 
-    width: '40%',
+    name: 'flower',
+    asset: 'iris',
 
-    startX: '50%',
+    start: [3, 3],
+    dimensions: [297, 297],
 
-    justify: 'left',
+    copyStart: [200, 200],
+    copyDimensions: [50, 50],
 
-}).clone({
+    lineWidth: 6,
+    strokeStyle: 'gold',
 
-    name: name('test-phrase-3'),
-
-    startY: '30%',
-
-    flipUpend: true,
-
+    method: 'fillThenDraw',
 
 }).clone({
 
-    name: name('test-phrase-4'),
+    name: 'hello',
+    asset: 'text-cell',
 
-    startX: '5%',
+    start: [300, 300],
+    dimensions: [297, 297],
 
-    lockFillStyleToEntity: true,
-
-}).clone({
-
-    name: name('test-phrase-5'),
-
-    fontString: '46px cursive',
-
-    roll: 90,
-    scale: 0.8,
-
-    startX: '50%',
-    startY: '33%',
-
-    width: 'auto',
-
-}).clone({
-
-    name: name('test-phrase-6'),
-
-    startX: '43%',
-    startY: '75%',
-
-    lockFillStyleToEntity: false,
-
-    flipReverse: true,
-
-}).clone({
-
-    name: name('test-phrase-7'),
-
-    // Test to see if we can load a webfont from a remote server and see it show up in the canvas element
-    // + If the test fails then the phrase will display as 46pt sans-serif
-    fontString: '46px "Mountains of Christmas"',
-
-    startX: '0%',
-    startY: '10%',
-
-    flipReverse: false,
-    flipUpend: false,
-
-    roll: 0,
-    scale: 1,
-
-    textPath: name('my-quad'),
-
-    handleY: '50%',
-
-    lockFillStyleToEntity: true,
-
-    delta: {
-        textPathPosition: -0.005,
-    }
+    copyStart: [15, 15],
+    copyDimensions: [70, 70],
 });
 
 scrawl.makePhrase({
 
-    name: name('test-phrase-8'),
+    name: 'hello-world-in-base-1',
 
-    text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+    text: 'Hello world!',
 
-    fontString: '18px Garamond, serif',
-    lineHeight: 1,
+    start: ['25%', '60%'],
+    handle: ['center', 'center'],
 
-    width: '35%',
-
-    startX: '5%',
-    startY: '35%',
-
-    fillStyle: name('gradient-1'),
+    lineHeight: 0.8,
 
 }).clone({
 
-    name: name('test-phrase-9'),
+    name: 'hello-world-in-base-2',
+    startY: '70%',
+    scale: 2,
 
-    startX: '58%',
-    scale: 0.8,
-    letterSpacing: 3,
+}).clone({
 
-    lockFillStyleToEntity: true,
+    name: 'hello-world-in-base-3',
+    startY: '85%',
+    scale: 4.5,
+});
+
+scrawl.makePattern({
+
+    name: 'bunny-pattern',
+    imageSource: 'img/bunny.png',
+    matrixA: 3,
+    matrixD: 3,
 });
 
 scrawl.makeBlock({
 
-    name: name('top-block'),
+    name: 'pattern-block',
 
-    width: '100%',
-    height: 10,
+    start: [300, 3],
+    dimensions: [297, 297],
 
-    fillStyle: name('gradient-1'),
+    lineWidth: 6,
+    fillStyle: 'bunny-pattern',
+    strokeStyle: 'gold',
 
-    order: 0,
-
-}).clone({
-
-    name: name('left-block'),
-
-    height: '100%',
-    width: 10,
+    method: 'fillThenDraw',
 });
-
-const myGroup = scrawl.makeGroup({
-
-    name: name('text-group'),
-
-}).addArtefacts(
-    name('test-phrase-1'),
-    name('test-phrase-2'),
-    name('test-phrase-3'),
-    name('test-phrase-4'),
-    name('test-phrase-5'),
-    name('test-phrase-6'),
-    name('test-phrase-7'),
-    name('test-phrase-8'),
-    name('test-phrase-9'),
-);
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
 
-
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: name('animation'),
+    name: "demo-animation",
     target: canvas,
     afterShow: report,
 });
 
-
-// #### User interaction
-scrawl.addNativeListener('change', (e) => {
-
-    if (e && e.target) {
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        const value = e.target.value;
-
-        switch (value) {
-
-            case 'horizontal' :
-
-                mygradient.set({
-                    endX: '100%',
-                    endY: 0,
-                });
-                break;
-
-            case 'vertical' :
-
-                mygradient.set({
-                    endX: 0,
-                    endY: '100%',
-                });
-                break;
-
-            case 'diagonal' :
-
-                mygradient.set({
-                    endX: '100%',
-                    endY: '100%',
-                });
-                break;
-        }
-    }
-}, '#gradient');
-
-scrawl.addNativeListener('change', (e) => {
-
-    if (e && e.target) {
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        myGroup.setArtefacts({
-            justify: e.target.value,
-        });
-    }
-}, '#justify');
-
-// @ts-expect-error
-document.querySelector('#gradient').value = 'horizontal';
-// @ts-expect-error
-document.querySelector('#justify').value = 'left';
-
-
 // #### Development and testing
+// Setup form observer functionality
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: canvas.base.name,
+    targetLibrarySection: 'group',
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        imageSmoothingEnabled: ['imageSmoothingEnabled', 'boolean'],
+        imageSmoothingQuality: ['imageSmoothingQuality', 'raw'],
+    },
+});
+
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    if (e && e.target) {
+
+        const val = (e.target.value === '1') ? true : false;
+
+        canvas.set({ smoothFont: val });
+        canvas.setBase({ smoothFont: val });
+        textCell.set({ smoothFont: val });
+    }
+}, '#smoothFont')
+
+// @ts-expect-error
+document.querySelector('#smoothFont').options.selectedIndex = 1;
+// @ts-expect-error
+document.querySelector('#imageSmoothingEnabled').options.selectedIndex = 1;
+// @ts-expect-error
+document.querySelector('#imageSmoothingQuality').options.selectedIndex = 2;
+
+
 console.log(scrawl.library);
-
-
-// Text measurements
-//
-// To see forthcoming measurements, we need to go to chrome://flags and enable 'Experimental Web Platform Features'
-// + The eventual aim is to replace a whole stack of code in factory/phrase.js where we calculate font height etc
-// + At the moment Phrase entitys ignore font baselines; positioning is entirely from the top left corner of the text rectangle
-if ('fonts' in document) {
-
-    Promise.all([
-        document.fonts.load('18px Garamond'),
-        document.fonts.load('46px "Mountains of Christmas"')
-    ])
-    .then(() => {
-
-        const { engine } = canvas;
-
-        engine.save();
-
-        engine.font = '18px Garamond';
-        const garamond = engine.measureText('The quick brown fox jumps over the lazy dog');
-        console.log('garamond', garamond);
-
-        engine.font = '46px "Mountains of Christmas"';
-        const moc = engine.measureText('The quick brown fox jumps over the lazy dog');
-        console.log('moc', moc);
-
-        engine.restore();
-    })
-    .catch(e => console.log(e));
-}
-
-
-/*
-RESULTS - Chrome, with flag enabled
-
-garamond TextMetrics
-    actualBoundingBoxAscent: 12.33984375
-    actualBoundingBoxDescent: 3.9375
-    actualBoundingBoxLeft: -0.24609375
-    actualBoundingBoxRight: 328.376953125
-    advances: [
-        0, 10.9951171875, 19.9951171875, 27.984375, 32.484375, 41.484375, 50.484375, 55.4853515625, 63.474609375, 72.474609375, 76.974609375, 85.974609375, 91.96875, 100.96875, 113.9677734375, 122.9677734375, 127.4677734375, 133.4619140625, 142.4619140625, 151.4619140625, 155.9619140625, 160.962890625, 169.962890625, 183.9638671875, 192.9638671875, 199.96875, 204.46875, 213.46875, 222.46875, 230.4580078125, 236.4521484375, 240.9521484375, 245.953125, 254.953125, 262.9423828125, 267.4423828125, 272.443359375, 280.4326171875, 288.421875, 297.421875, 301.921875, 310.921875, 319.921875
-    ]
-    emHeightAscent: 13.5
-    emHeightDescent: 4.5
-    fontBoundingBoxAscent: 17
-    fontBoundingBoxDescent: 5
-    width: 328.921875
-
-
-RESULTS - Chrome, with flag disabled
-
-garamond TextMetrics
-    actualBoundingBoxAscent: 12.33984375
-    actualBoundingBoxDescent: 3.9375
-    actualBoundingBoxLeft: -0.24609375
-    actualBoundingBoxRight: 328.376953125
-    fontBoundingBoxAscent: 17
-    fontBoundingBoxDescent: 5
-    width: 328.921875
-
-*/

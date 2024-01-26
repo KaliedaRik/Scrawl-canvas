@@ -1539,6 +1539,7 @@ interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFa
     fontStretch?: string;
     fontString?: string;
     fontVariantCaps?: string;
+    fontVerticalOffset?: number;
     includeUnderline?: boolean;
     showBoundingBox?: boolean;
     text?: string;
@@ -1556,7 +1557,8 @@ interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions
     saveAsPacket: (item?: LabelSaveInputs | boolean) => string;
     set: (item?: LabelFactoryInputs) => LabelInstance;
     setDelta: (item?: LabelFactoryDeltaInputs) => LabelInstance;
-    simpleStamp: (host: CellInstance, items?: LabelFactoryInputs) => void;
+    simpleStamp: ((host: CellInstance, items?: LabelFactoryInputs) => void;)
+    recalculateFont: () => void;
 }
 
 interface LabelInstance extends LabelFactoryInputs, LabelFactoryFunctions {}

@@ -1,100 +1,150 @@
 // # Demo Canvas 017
-// Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
+// Gradients stress test
 
 // [Run code](../../demo/canvas-017.html)
-import {
-    library as L,
-    makePhrase,
-    makeRender,
-    makeWheel,
-    makeUpdater,
-} from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-// Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas,
+    styles = scrawl.library.styles;
+
+const [width, height] = canvas.get('dimensions');
 
 
-// Namespacing boilerplate
-const namespace = 'demo';
-const name = (n) => `${namespace}-${n}`;
+// Build and display the reaction-diffusion asset
 
+scrawl.makeGradient({
 
-// Create Phrase entity
-const lorem = makePhrase({
+    name: 'monochrome',
+    endX: '100%',
+    colors: [
+      [0, 'black'],
+      [999, 'white'],
+    ],
 
-    name: name('myPhrase'),
+}).clone({
 
-    startX: 300,
-    startY: 200,
-    handleX: '50%',
-    handleY: '50%',
-    width: '50%',
+    name: 'stepped-grays',
+    colors: [
+      [0, '#333'],
+      [199, '#333'],
+      [200, '#666'],
+      [399, '#666'],
+      [400, '#999'],
+      [599, '#999'],
+      [600, '#ccc'],
+      [799, '#ccc'],
+      [800, '#fff'],
+      [999, '#fff'],
+    ],
 
-    // To make the initial italic styling stick, we need to insert a soft hyphen
-    // + Yes, this is a bug
-    // + We have no plans to fix this issue in the near future
-    text: '&shy;§ITALIC§Lorem§/ITALIC§ ipsum §Red-Text§har varit <ITALIC>standard 😀</ITALIC> &auml;nda sedan §SMALL-CAPS§1500-talet§/SMALL-CAPS§, när-en-ok&aring;nd-§BOLD§bok§DEFAULTS§sättare-tog att antal 🤖 §BOLD§bok§/BOLD§stäver §OVERLINE§och <HIGHLIGHT>blandade§/OVERLINE§ dem</HIGHLIGHT> för §size-24§Red-Text§att§DEFAULTS§ g&ouml;ra, §Letter-spacing-10§ett 🎻 prov§UNDERLINE§exemplar</UNDERLINE>§/Letter-spacing-10§ §MONO§av en §BOLD§b&oacute;k.',
-    // Note also that the `SMALL-CAPS` styling has been deprecated and shouldn't be used. Included here only for testing the deprecated functionality
+}).clone({
 
-    fontString: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
+    name: 'red-gradient',
+    colors: [
+      [0, 'hsl(0 100% 40%)'],
+      [999, 'hsl(0 100% 100%)'],
+    ],
 
-    fillStyle: '#003399',
+}).clone({
 
-    method: 'fill',
-    showBoundingBox: true,
+    name: 'red-blue',
+    colors: [
+      [0, 'rgb(255 0 0)'],
+      [999, 'rgb(0 0 255)'],
+    ],
+    colorSpace: 'LAB',
+
+}).clone({
+
+    name: 'hue-gradient',
+    colors: [
+      [0, 'hwb(120 10% 10%)'],
+      [999, 'hwb(20 10% 10%)'],
+    ],
 });
 
+const grads = [
+    styles['monochrome'],
+    styles['stepped-grays'],
+    styles['red-gradient'],
+    styles['red-blue'],
+    styles['hue-gradient'],
+];
 
-// Add additional section classes directly to the library
-L.sectionClasses['Red-Text'] = { fill: 'red' };
-L.sectionClasses['size-24'] = { size: '24px' };
-L.sectionClasses['Letter-spacing-10'] = { space: 10 };
-L.sectionClasses['/Letter-spacing-10'] = { space: 0 };
-L.sectionClasses['MONO'] = { family: 'monospace' };
+const bespokeEasings = {
+
+    'user-steps': (val) => {
+
+        if (val < 0.2) return 0.1;
+        if (val < 0.4) return 0.3;
+        if (val < 0.6) return 0.5;
+        if (val < 0.8) return 0.7;
+        return 0.9;
+    },
+    'user-repeat': (val) => (val * 4) % 1,
+};
 
 
-// Add a pivoted Wheel entity
-makeWheel({
+const blockGroup = scrawl.makeGroup({
 
-    name: name('pin'),
-    method: 'fillAndDraw',
-    fillStyle: 'gold',
-    strokeStyle: 'darkblue',
-
-    radius: 5,
-    handleX: 'center',
-    handleY: 'center',
-
-    pivot: name('myPhrase'),
-    lockTo: 'pivot',
+    name: 'block-group',
+    host: canvas.base.name,
 });
+
+let counter = 0;
+const generateBlocks = (numRequired) => {
+
+    const maxWidth = width - 60;
+    const maxHeight = height - 60;
+
+    for (let i = 0; i < numRequired; i++) {
+
+        scrawl.makeBlock({
+
+            name: `b-${counter}`,
+            group: 'block-group',
+
+// @ts-expect-error
+            fillStyle: gradient.value,
+            lockFillStyleToEntity: true,
+
+// @ts-expect-error
+            method: method.value,
+
+            width: Math.floor(10 + (Math.random() * 50)),
+            height: Math.floor(10 + (Math.random() * 50)),
+            startX: Math.floor(30 + (Math.random() * maxWidth)),
+            startY: Math.floor(30 + (Math.random() * maxHeight)),
+
+            handle: ['center', 'center'],
+
+            delta: {
+                roll: 1 - (Math.random() * 2),
+            },
+        });
+
+        counter++;
+    }
+};
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const [startX, startY] = lorem.start;
-    const [handleX, handleY] = lorem.handle;
-    const width = lorem.dimensions[0];
-
-    const {roll, scale, lineHeight, letterSpacing, overlinePosition} = lorem;
-
-    return `    Start - x: ${startX}, y: ${startY}
-    Handle - x: ${handleX}, y: ${handleY}
-    Width: ${width}; Roll: ${roll}; Scale: ${scale}
-    Line height: ${lineHeight}; Letter spacing: ${letterSpacing}; Overline: ${overlinePosition}`;
+// @ts-expect-error
+    return `    Precision: ${precision.value}\n    Boxes: ${counter}`;
 });
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
-    name: name('animation'),
+    name: "demo-animation",
     target: canvas,
     afterShow: report,
 });
@@ -102,104 +152,70 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-makeUpdater({
+scrawl.addNativeListener(['change'], (e) => {
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+    e.preventDefault();
 
-    target: lorem,
+// @ts-expect-error
+    blockGroup.setArtefacts({ fillStyle: gradient.value });
 
-    useNativeListener: true,
-    preventDefault: true,
+}, '#colorStops');
 
-    updates: {
+scrawl.addNativeListener(['change'], (e) => {
 
-        absoluteWidth: ['width', 'round'],
+    e.preventDefault();
 
-        start_xPercent: ['startX', '%'],
-        start_xAbsolute: ['startX', 'round'],
-        start_xString: ['startX', 'raw'],
+// @ts-expect-error
+    blockGroup.setArtefacts({ method: method.value });
 
-        start_yPercent: ['startY', '%'],
-        start_yAbsolute: ['startY', 'round'],
-        start_yString: ['startY', 'raw'],
+}, '#method');
 
-        handle_xPercent: ['handleX', '%'],
-        handle_xAbsolute: ['handleX', 'round'],
-        handle_xString: ['handleX', 'raw'],
+scrawl.addNativeListener(['change'], (e) => {
 
-        handle_yPercent: ['handleY', '%'],
-        handle_yAbsolute: ['handleY', 'round'],
-        handle_yString: ['handleY', 'raw'],
+    e.preventDefault();
 
-        roll: ['roll', 'float'],
-        scale: ['scale', 'float'],
+// @ts-expect-error
+    const ease = (bespokeEasings[easing.value]) ? bespokeEasings[easing.value] : easing.value;
+    grads.forEach(g => g.set({ easing: ease}));
 
-        upend: ['flipUpend', 'boolean'],
-        reverse: ['flipReverse', 'boolean'],
+}, '#easing');
 
-        overline: ['overlinePosition', 'float'],
-        letterSpacing: ['letterSpacing', 'float'],
-        lineHeight: ['lineHeight', 'float'],
-        justify: ['justify', 'raw'],
-        family: ['fontFamily', 'raw'],
+scrawl.addNativeListener(['change'], (e) => {
 
-        size_string: ['fontSize', 'raw'],
-        size_px: ['fontSize', 'px'],
-    },
-});
+    e.preventDefault();
+
+// @ts-expect-error
+    const p = parseInt(precision.value, 10);
+    grads.forEach(g => g.set({ precision: p}));
+
+}, '#precision');
+
+scrawl.addNativeListener(['click'], () => {
+
+    generateBlocks(100);
+
+}, canvas.domElement);
 
 
 // Setup form
+const precision = document.querySelector('#precision'),
+    easing = document.querySelector('#easing'),
+    gradient = document.querySelector('#colorStops'),
+    method = document.querySelector('#method');
+
 // @ts-expect-error
-document.querySelector('#start_xPercent').value = 50;
+precision.value = 25;
 // @ts-expect-error
-document.querySelector('#start_yPercent').value = 50;
+easing.options.selectedIndex = 0;
 // @ts-expect-error
-document.querySelector('#handle_xPercent').value = 50;
+gradient.options.selectedIndex = 0;
 // @ts-expect-error
-document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#overline').value = 0.1;
-// @ts-expect-error
-document.querySelector('#absoluteWidth').value = 300;
-// @ts-expect-error
-document.querySelector('#lineHeight').value = 1.5;
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#justify').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#family').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#size_px').value = 16;
-// @ts-expect-error
-document.querySelector('#size_string').options.selectedIndex = 0;
+method.options.selectedIndex = 0;
+
+
+// Populate scene - because we're generating from DOM form element values, they need to be correctly initialized before we create any Block elements
+generateBlocks(100);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

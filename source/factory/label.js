@@ -25,11 +25,14 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _ceil, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, ENTITY, MOUSE, PARTICLE, POLITE, SOURCE_OVER, T_CANVAS, T_CELL, T_LABEL, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, ENTITY, LEFT, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
 const Label = function (items = Ωempty) {
+
+    this.letterSpaceValue = 0;
+    this.wordSpaceValue = 0;
 
     this.entityInit(items);
 
@@ -62,6 +65,7 @@ const defaultAttributes = {
     accessibleTextOrder: 0,
 
     fontString: DEFAULT_FONT,
+    fontVerticalOffset: 0,
 
     includeUnderline: false,
     underlineStyle: BLACK,
@@ -120,6 +124,19 @@ G.dimensions = function () {
 };
 S.dimensions = λnull;
 D.dimensions = λnull;
+
+S.scale = function (item) {
+
+    this.scale = item;
+    this.dirtyScale = true;
+    this.dirtyFont = true;
+};
+D.scale = function (item) {
+
+    this.scale += item;
+    this.dirtyScale = true;
+    this.dirtyFont = true;
+};
 
 G.rawFont = function () {
 
@@ -218,27 +235,13 @@ G.fontStretch = function () {
 
     return this.state.fontStretch;
 };
-S.fontStretch = function (item) {
-
-    if (item?.substring) {
-
-        this.state.fontStretch = item;
-        this.dirtyFont = true;
-    }
-};
+S.fontStretch = λnull;
 
 G.fontVariantCaps = function () {
 
     return this.state.fontVariantCaps;
 };
-S.fontVariantCaps = function (item) {
-
-    if (item?.substring) {
-
-        this.state.fontVariantCaps = item;
-        this.dirtyFont = true;
-    }
-};
+S.fontVariantCaps = λnull;
 
 G.letterSpacing = function () {
 
@@ -246,23 +249,15 @@ G.letterSpacing = function () {
 };
 D.letterSpacing = function (item) {
 
-    if (item?.toFixed)  item = `${item}px`;
-
-    if (item?.substring) {
-
-        this.state.letterSpacing = item;
-        this.dirtyFont = true;
-    }
+    if (!item?.toFixed)  item = parseFloat(item) || 0;
+    this.letterSpaceValue += item;
+    this.dirtyFont = true;
 };
 S.letterSpacing = function (item) {
 
-    if (item?.toFixed)  item = `${item}px`;
-
-    if (item?.substring) {
-
-        this.state.letterSpacing = item;
-        this.dirtyFont = true;
-    }
+    if (!item?.toFixed)  item = parseFloat(item) || 0;
+    this.letterSpaceValue = item;
+    this.dirtyFont = true;
 };
 
 G.wordSpacing = function () {
@@ -271,50 +266,28 @@ G.wordSpacing = function () {
 };
 D.wordSpacing = function (item) {
 
-    if (item?.toFixed)  item = `${item}px`;
-
-    if (item?.substring) {
-
-        this.state.wordSpacing = item;
-        this.dirtyFont = true;
-    }
+    if (!item?.toFixed)  item = parseFloat(item) || 0;
+    this.wordSpaceValue += item;
+    this.dirtyFont = true;
 };
 S.wordSpacing = function (item) {
 
-    if (item?.toFixed)  item = `${item}px`;
-
-    if (item?.substring) {
-
-        this.state.wordSpacing = item;
-        this.dirtyFont = true;
-    }
+    if (!item?.toFixed)  item = parseFloat(item) || 0;
+    this.wordSpaceValue = item;
+    this.dirtyFont = true;
 };
 
 G.textAlign = function () {
 
     return this.state.textAlign;
 };
-S.textAlign = function (item) {
-
-    if (item?.substring) {
-
-        this.state.textAlign = item;
-        this.dirtyFont = true;
-    }
-};
+S.textAlign = λnull;
 
 G.textBaseline = function () {
 
     return this.state.textBaseline;
 };
-S.textBaseline = function (item) {
-
-    if (item?.substring) {
-
-        this.state.textBaseline = item;
-        this.dirtyFont = true;
-    }
-};
+S.textBaseline = λnull;
 
 G.textRendering = function () {
 
@@ -338,24 +311,42 @@ P.temperFont = function () {
 
     this.dirtyFont = false;
 
-    const mycell = requestCell();
+    const scale = this.currentScale;
 
+    const mycell = requestCell();
     const { engine } = mycell;
 
     engine.font = this.fontString;
+
+    this.temperedFont = engine.font.match(/(?<attributes>.*?)(?<size>[0-9.]+)px (?<family>.*)/);
+
+    if (this.temperedFont && this.state) {
+
+        const {attributes, size, family} = this.temperedFont.groups;
+        this.defaultFont = `${attributes} ${size * scale}px ${family}`;
+        this.state.font = this.defaultFont;
+    }
+    else {
+
+        this.dirtyFont = true;
+        return false;
+    }
+
+    this.state.letterSpacing = `${this.letterSpaceValue * scale}px`;
+    this.state.wordSpacing = `${this.wordSpaceValue * scale}px`;
+
+    engine.font = this.state.font;
     engine.fontKerning = this.state.fontKerning;
     engine.fontStretch = this.state.fontStretch;
     engine.fontVariantCaps = this.state.fontVariantCaps;
-    engine.letterSpacing = this.state.letterSpacing;
     engine.textRendering = this.state.textRendering;
+    engine.letterSpacing = this.state.letterSpacing;
     engine.wordSpacing = this.state.wordSpacing;
     engine.direction = 'ltr';
     engine.textAlign = 'left';
     engine.textBaseline = 'top';
 
     this.metrics = engine.measureText(this.text);
-
-    this.temperedFont = engine.font.match(/(?<attributes>.*?)(?<size>[0-9.]+)px (?<family>.*)/);
 
     releaseCell(mycell);
 
@@ -366,6 +357,8 @@ P.temperFont = function () {
 
     this.dirtyPathObject = true;
     this.dirtyDimensions = true;
+
+    return true;
 };
 
 // `convertTextEntityCharacters`, `textEntityConverter` - (not part of the Label prototype!) - a &lt;textarea> element not attached to the DOM which we can use to temper user-supplied text
@@ -463,20 +456,10 @@ P.cleanPathObject = function () {
         dims = this.currentDimensions,
         scale = this.currentScale;
 
-    const x = -handle[0] * scale,
-        y = -handle[1] * scale,
-        w = dims[0] * scale,
-        h = dims[1] * scale;
+    const [x, y] = handle;
+    const [w, h] = dims;
 
-    p.rect(x, y, w, h);
-
-    if (this.temperedFont && this.state) {
-
-        const {attributes, size, family} = this.temperedFont.groups;
-        this.defaultFont = `${attributes} ${size * scale}px ${family}`;
-        this.state.font = this.defaultFont;
-    }
-    else this.dirtyFont = true;
+    p.rect(-x, -y, w, h);
 };
 
 // `cleanDimensions` - calculate the entity's __currentDimensions__ Array
@@ -496,22 +479,11 @@ P.cleanDimensions = function () {
     this.dirtyHandle = true;
     this.dirtyOffset = true;
 
-    if (oldW !== curDims[0] || oldH !== curDims[1]) this.dirtyPositionSubscribers = true;
+    if (oldW != curDims[0] || oldH != curDims[1]) this.dirtyPositionSubscribers = true;
 
     if (this.mimicked && this.mimicked.length) this.dirtyMimicDimensions = true;
 
     this.dirtyFilterIdentifier = true;
-};
-
-// `cleanHandle` - calculate the entity's __currentHandle__ Array
-P.cleanHandle = function () {
-
-    this.dirtyHandle = false;
-
-    this.cleanPosition(this.currentHandle, this.handle, this.currentDimensions);
-    this.dirtyStampHandlePositions = true;
-
-    if (this.mimicked && this.mimicked.length) this.dirtyMimicHandle = true;
 };
 
 
@@ -520,12 +492,12 @@ P.cleanHandle = function () {
 P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
-    if (this.dirtyText) this.updateAccessibleTextHold();
-    if (this.dirtyFont) this.temperFont();
 
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
     if (this.dirtyScale) this.cleanScale();
+    if (this.dirtyText) this.updateAccessibleTextHold();
+    if (this.dirtyFont) this.temperFont();
     if (this.dirtyDimensions) this.cleanDimensions();
     if (this.dirtyLock) this.cleanLock();
     if (this.dirtyStart) this.cleanStart();
@@ -555,8 +527,8 @@ P.stampPositioningHelper = function () {
     const handle = this.currentHandle,
         scale = this.currentScale,
         text = this.text,
-        x = -handle[0] * scale,
-        y = -handle[1] * scale;
+        x = -handle[0],
+        y = -handle[1] + (this.fontVerticalOffset * scale);
 
     return [text, x, y];
 }

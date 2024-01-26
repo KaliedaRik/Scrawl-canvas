@@ -9,44 +9,57 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
-  <!-- Test to include a Google Fonts webfont in the canvas -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mountains+of+Christmas:bold">
-  <style type="text/css">
-    #display-controls {
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      font-family: monospace;
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+    img {
+      display: none;
     }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 029</h1>
-  <h2>Phrase entitys and gradients</h2>
+  <h2>Image smoothing</h3>
 
-  <div id="display-controls">
-    <p>Select gradient direction: 
-      <select class="control-item" id="gradient">
-        <option value="horizontal">Horizontal</option>
-        <option value="diagonal">Diagonal</option>
-        <option value="vertical">Vertical</option>
+  <div class="controls">
+
+    <div class="yellow label">Image smoothing enabled</div>
+    <div class="yellow">
+      <select class="controlItem" id="imageSmoothingEnabled">
+        <option value="0">false</option>
+        <option value="1">true</option>
       </select>
-    </p>
-    <p>Select text justification: 
-      <select class="control-item" id="justify">
-        <option value="left">Left</option>
-        <option value="center">Center</option>
-        <option value="right">Right</option>
-        <option value="full">Full</option>
+    </div>
+
+    <div class="yellow label">Image smoothing quality</div>
+    <div class="yellow">
+      <select class="controlItem" id="imageSmoothingQuality">
+        <option value="low">low</option>
+        <option value="medium">medium</option>
+        <option value="high">high</option>
       </select>
-    </p>
+    </div>
+
+    <div class="pink label">CSS font smoothing</div>
+    <div class="pink">
+      <select class="controlItem" id="smoothFont">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
   </div>
+
   <canvas 
     id="mycanvas" 
     width="600" 
-    height="400"
+    height="600"
     data-scrawl-canvas
-    data-base-background-color="lightgray"
   ></canvas>
 
   <p id="reportmessage"></p>
@@ -54,20 +67,18 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create a linear gradient</li>
-      <li>Create several Phrase objects</li>
-      <li>Position some with relative coordinates</li>
-      <li>Create a Shape entity and position one of the phrases on it with 'path' (delta animated)</li>
-      <li>Check that the gradient appears as expected when it is vertical (top-bottom)</li>
-      <li>Check that the gradient appears as expected when it is horizontal (left-right)</li>
-      <li>Check that the gradient appears as expected for both cell-locked and entity-locked gradients</li>
+      <li>Create a Cell and populate it with text; import image</li>
+      <li>Create copy-scaled Picture entitys from the Cell and Image assets</li>
+      <li>Check the effects of changing the ImageSmoothingEnabled and imageSmoothingQuality attributes on the Picture entitys</li>
     </ul>
-    <p><b>Known issues:</b> this Demo is excessively slow in Webkit-based browsers (for instance: Safari); text out of place in Samsung browser (Phrase cloning width issues?)</p>
+    <p>Note that, in general, Scrawl-canvas avoids scaling the canvas when it stamps entitys onto it, preferring instead to pre-calculate scaling effects on entity dimensions etc. Smoothing is most likely to be an issue when scaling copied data from an asset, as may happen with Picture entitys and Pattern styles.</p>
 
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/canvas-029.html">Annotated code</a></p>
   </div>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
 
   <script src="canvas-029.js" type="module"></script>
 
