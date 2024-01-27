@@ -60,29 +60,26 @@ const playPauseAction = function () {
     }
 };
 
-const playPause = scrawl.makePhrase({
+const playPause = scrawl.makeLabel({
 
     name: name('play-pause-button'),
     order: 2,
 
     text: 'PLAY',
 
-    family: 'sans-serif',
-    size: '2rem',
+    fontString: '2rem sans-serif',
+    letterSpacing: 3,
+    
+    fillStyle: 'yellow',
 
     startX: '75%',
     handleX: 'center',
-    startY: 'bottom',
+    startY: '98%',
     handleY: 'bottom',
-
-    letterSpacing: 2,
-    underlinePosition: 0.75,
-    lineHeight: 1,
-
-    fillStyle: 'yellow',
 
     underlineStyle: 'yellow',
     underlineWidth: 4,
+    underlineOffset: 0.93,
 
     onEnter: function () {
 
@@ -92,12 +89,8 @@ const playPause = scrawl.makePhrase({
             }
         });
 
-        // '§UNDERLINE§' is a section class marker which makes subsequent letters underlined
-        // ___Note:___ - dynamic underlining is currently not triggering in Firefox browser
 // @ts-expect-error
-        this.set({
-            text: `§UNDERLINE§${this.text}`,
-        });
+        this.set({ includeUnderline: true });
     },
 
     onLeave: function () {
@@ -109,11 +102,11 @@ const playPause = scrawl.makePhrase({
         });
 
 // @ts-expect-error
-        this.set({
-            text: this.text.replace('§UNDERLINE§', ''),
-        });
+        this.set({ includeUnderline: false });
     },
 
+    // Accesibility
+    textIsAccessible: false,
     button: {
 
         name: name('play-pause-el'),
@@ -310,9 +303,7 @@ const mygoose = scrawl.makeBlock({
         });
 
 // @ts-expect-error
-        this.set({
-            method: 'draw',
-        });
+        this.set({ method: 'draw' });
     },
 
     onLeave: function () {
@@ -324,9 +315,7 @@ const mygoose = scrawl.makeBlock({
         });
 
 // @ts-expect-error
-        this.set({
-            method: 'none',
-        });
+        this.set({ method: 'none' });
     },
 
     onUp: function () {
@@ -442,19 +431,15 @@ const vtTime = vtBackground.clone({
     fillStyle: 'red',
 })
 
-const vtPhrase = scrawl.makePhrase({
+const vtLabel = scrawl.makeLabel({
 
     name: name('test-video-time-phrase'),
-
-    family: 'monospace',
-    size: '1em',
-    weight: 700,
-
-    startX: '1%',
-    startY: '4%',
-    width: '40%',
-
+    fontString: 'bold 1rem monospace',
+    start: [5, 20],
     fillStyle: 'yellow',
+
+    // Accesibility
+    accessibleText: 'Running time: §',
 });
 
 const videoTimeBar = function () {
@@ -475,7 +460,7 @@ const videoTimeBar = function () {
                 width: `${(currentVideoTime * 100) / videoDuration}%`,
             });
 
-            vtPhrase.set({
+            vtLabel.set({
 
                 text: ` ${currentVideoTime.toFixed(2)} / ${videoDuration.toFixed(2)}`,
             });

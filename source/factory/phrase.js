@@ -283,6 +283,8 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Clone management
+// No additional clone functionality required
+
 
 // #### Kill management
 P.factoryKill = function () {

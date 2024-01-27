@@ -21,7 +21,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _ceil, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, START, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _parse, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, START, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -76,7 +76,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-// No additional packet functionality required
+P.finalizePacketOut = function (copy, items) {
+
+    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
+    stateCopy.letterSpacing = this.letterSpaceValue;
+    stateCopy.wordSpacing = this.wordSpaceValue;
+    copy = mergeOver(copy, stateCopy);
+
+    copy = this.handlePacketAnchor(copy, items);
+
+    return copy;
+};
 
 
 // #### Clone management
@@ -491,7 +501,7 @@ P.cleanHandle = function () {
     const direction = state.direction || LTR;
 
     // horizontal
-    if (hx.toFixed) currentHandle[0] = dx;
+    if (hx.toFixed) currentHandle[0] = hx;
     else if (hx == LEFT) currentHandle[0] = 0;
     else if (hx == RIGHT) currentHandle[0] = dx;
     else if (hx == CENTER) currentHandle[0] = dx / 2;
@@ -501,7 +511,7 @@ P.cleanHandle = function () {
     else currentHandle[0] = (parseFloat(hx) / 100) * dx;
 
     // vertical
-    if (hy.toFixed) currentHandle[1] = dy;
+    if (hy.toFixed) currentHandle[1] = hy;
     else if (hy == TOP) currentHandle[1] = 0;
     else if (hy == BOTTOM) currentHandle[1] = dy;
     else if (hy == CENTER) currentHandle[1] = dy / 2;
