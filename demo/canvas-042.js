@@ -53,10 +53,10 @@ scrawl.makeWheel({
 // @ts-expect-error
 }).set(generics);
 
-scrawl.makePhrase({
-    name: 'phrase-clipper',
+scrawl.makeLabel({
+    name: 'label-clipper',
     text: 'HELLO!',
-    font: '50px arial, sans-serif',
+    fontString: '50px arial, sans-serif',
 // @ts-expect-error
 }).set(generics);
 

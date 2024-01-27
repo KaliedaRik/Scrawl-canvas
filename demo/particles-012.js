@@ -167,23 +167,22 @@ scrawl.makePicture({
     particle: 'test-net-11-9',
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
-    name: 'phrase1',
+    name: 'label1',
 
     text: 'HELLO',
-    font: '30px sans-serif',
+    fontString: '30px sans-serif',
 
     particle: 'test-net-7-1',
     lockTo: 'particle',
 
 }).clone({
 
-    name: 'phrase2',
+    name: 'label2',
     particle: 'test-net-9-15',
     handleX: 'right',
     handleY: 'bottom',
-    lineHeight: 0.7,
 });
 
 scrawl.makeStar({
@@ -290,138 +289,6 @@ scrawl.makeBezier({
     endControlParticle: 'test-net-13-9',
     endParticle: 'test-net-9-11',
 });
-
-// Temporarily removing particle-based entitys as they are too memory intensive and lead to Net entity devolving into chaos
-/*
-scrawl.makeTracer({
-
-    name: 'trace-1',
-
-    historyLength: 50,
-
-    particle: 'test-net-11-13',
-    lockTo: 'particle',
-
-    artefact: scrawl.makeWheel({
-
-        name: 'burn-1',
-
-        radius: 5,
-
-        handle: ['center', 'center'],
-
-        fillStyle: 'teal',
-        method: 'fill',
-        visibility: false,
-    }),
-
-    stampAction: function (artefact, particle, host) {
-
-        let history = particle.history,
-            len = history.length,
-            remaining, z, start;
-
-        history.forEach((p, index) => {
-
-            [remaining, z, ...start] = p;
-
-            artefact.simpleStamp(host, {
-                start,
-                scale: (len - index) / len,
-            });
-        });
-    },
-
-}).clone({
-
-    name: 'trace-2',
-    particle: 'test-net-11-14',
-    artefact: scrawl.library.entity['burn-1'].clone({ name: 'burn-2'}),
-
-}).clone({
-
-    name: 'trace-3',
-    particle: 'test-net-12-14',
-    artefact: scrawl.library.entity['burn-1'].clone({ name: 'burn-3'}),
-
-}).clone({
-
-    name: 'trace-4',
-    particle: 'test-net-12-13',
-    artefact: scrawl.library.entity['burn-1'].clone({ name: 'burn-4'}),
-});
-
-scrawl.makeEmitter({
-
-    name: 'emitter-1',
-    world: myWorld,
-
-    particle: 'test-net-12-2',
-    lockTo: 'particle',
-
-    historyLength: 50,
-
-    forces: ['gravity'],
-
-    generationRate: 10,
-    killAfterTime: 4,
-
-    rangeX: 20,
-    rangeFromX: -10,
-
-    rangeY: 20,
-    rangeFromY: -40,
-
-    rangeZ: -1,
-    rangeFromZ: -0.2,
-
-    fillMinimumColor: 'yellow',
-    fillMaximumColor: 'red',
-
-    stampAction: function (artefact, particle, host) {
-
-        let engine = host.engine,
-            history = particle.history,
-            len = history.length,
-            remaining, radius, alpha, x, y, z,
-            endRad = Math.PI * 2;
-
-        let colorFactory = this.fillColorFactory;
-
-        engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
-
-        if (len > 0) {
-
-            [remaining, z, x, y] = history[0];
-
-            alpha = remaining / 7;
-
-            if (alpha > 0) {
-
-                engine.globalAlpha = alpha;
-
-                history.forEach((p, index) => {
-
-                    [remaining, z, x, y] = p;
-                    radius = 2 * (1 + (z / 6));
-
-                    if (radius > 0) {
-
-                        engine.beginPath();
-                        engine.moveTo(x, y);
-                        engine.arc(x, y, radius, 0, endRad);
-                        engine.fillStyle = colorFactory.getRangeColor(1 - (index / len));
-                        // engine.fillStyle = colorFactory.get(1 - (index / len));
-                        engine.fill();
-                    }
-                });
-            }
-        }
-        engine.restore();
-    },
-});
-*/
 
 scrawl.makePolyline({
 

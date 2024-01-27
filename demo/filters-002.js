@@ -138,12 +138,12 @@ scrawl.makePicture({
     filters: ['invert'],
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'red-label',
     text: 'Red',
 
-    font: '20px sans-serif',
+    fontString: '20px sans-serif',
 
     fillStyle: 'white',
     lineWidth: 4,

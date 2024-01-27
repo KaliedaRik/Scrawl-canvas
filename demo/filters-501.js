@@ -29,14 +29,13 @@ const piccy = scrawl.makePicture({
     method: 'fill',
 });
 
-const text = scrawl.makePhrase({
+const text = scrawl.makeLabel({
 
     name: 'demo-text',
     text: 'Hello world',
-    font: 'bold 70px sans-serif',
+    fontString: 'bold 70px sans-serif',
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    lineHeight: 0.5,
     fillStyle: 'aliceblue',
     strokeStyle: 'red',
     lineWidth: 3,

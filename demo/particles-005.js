@@ -24,15 +24,14 @@ const dragItems = scrawl.makeGroup({
     order: 0,
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'hello',
     group: 'my-drag-items',
 
     text: 'HELLO!',
 
-    font: 'bold 100px sans-serif',
-    lineHeight: 0.8,
+    fontString: 'bold 100px sans-serif',
 
     startX: 70,
     startY: 200,

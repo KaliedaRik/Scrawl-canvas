@@ -231,13 +231,13 @@ scrawl.library.entity['block-2'].set({
 scrawl.addListener('move', () => canvas.here.active && canvas.cascadeEventAction('move'), canvas.domElement);
 
 // Add labels to Cells
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'label-1',
     group: 'cell-1',
 
     text: 'Cell 1',
-    font: '20px sans-serif',
+    fontString: '20px sans-serif',
     fillStyle: 'red',
 
     start: [5, 5],

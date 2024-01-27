@@ -196,12 +196,12 @@ const frameDragZone = scrawl.makeDragZone({
 
 
 // Add a label to the map Cell
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: "map-label",
     group: "map-cell",
     text: "Minimap (draggable)",
-    font: "16px Arial, sans-serif",
+    fontString: "16px Arial, sans-serif",
     start: ["center", 10],
     handle: ["center", 0]
 });

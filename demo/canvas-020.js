@@ -210,13 +210,13 @@ scrawl.makePicture({
 
 
 // Give the hold Picture entitys some labels
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: name('cell-phrase'),
     group: hold.base.name,
 
     text: 'Cell',
-    font: '15px Arial, sans-serif',
+    fontString: '15px Arial, sans-serif',
 
     startY: '85%',
     pivot: name('cell-image'),

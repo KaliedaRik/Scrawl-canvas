@@ -61,12 +61,12 @@ const snake = scrawl.makePolyline({
     method: 'none',
 });
 
-const reportLength = scrawl.makePhrase({
+const reportLength = scrawl.makeLabel({
 
     name: 'report-length',
     text: '',
     fillStyle: 'white',
-    font: '2em Arial, sans-serif',
+    fontString: '2rem Arial, sans-serif',
     start: ['center', 10],
     handleX: 'center',
     method: 'none',

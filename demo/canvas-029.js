@@ -25,7 +25,7 @@ const textCell = canvas.buildCell({
 });
 
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'hello-world-in-cell',
     group: 'text-cell',
@@ -34,8 +34,6 @@ scrawl.makePhrase({
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
-
-    lineHeight: 0.8,
 });
 
 
@@ -67,7 +65,7 @@ scrawl.makePicture({
     copyDimensions: [70, 70],
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'hello-world-in-base-1',
 
@@ -75,8 +73,6 @@ scrawl.makePhrase({
 
     start: ['25%', '60%'],
     handle: ['center', 'center'],
-
-    lineHeight: 0.8,
 
 }).clone({
 

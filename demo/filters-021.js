@@ -71,19 +71,18 @@ scrawl.makeWheel({
     method: 'fillThenDraw',
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'greeting-one',
 
     text: 'Hello',
 
-    font: '130px bold sans-serif',
+    fontString: 'bold 130px sans-serif',
 
     lineWidth: 8,
     method: 'draw',
 
     start: [210, 370],
-    width: 400,
     roll: -82,
 
 }).clone({
@@ -92,7 +91,7 @@ scrawl.makePhrase({
     text: 'World!',
     method: 'fill',
     start: [350, 10],
-    size: '70px',
+    scale: 0.55,
     roll: 5,
 });
 

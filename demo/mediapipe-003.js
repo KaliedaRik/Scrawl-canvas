@@ -56,13 +56,12 @@ const updateLabelsAndWorm = function (asset) {
 
             face.forEach((coord, index) => {
 
-                entitys.push(scrawl.makePhrase({
+                entitys.push(scrawl.makeLabel({
                     name: `label-${index}`,
                     text: `${index}`,
                     handle: ['center', 'center'],
-                    width: 20,
-                    justify: 'center',
-                    font: '10px Arial',
+                    fontString: '10px Arial',
+                    textIsAccessible: false,
                 }));
             });
         }

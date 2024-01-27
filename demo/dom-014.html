@@ -220,16 +220,14 @@
     const canvas = scrawl.library.canvas['my-scrawl-canvas'];
     const namespace = 'dom-014';
 
-    scrawl.makePhrase({
+    scrawl.makeLabel({
       name: `${namespace}-label`,
 
       start: ['center', 'center'],
       handle: ['center', 'center'],
-      width: '100%',
 
-      font: '4.5em bold Garamond, sans-serif',
+      fontString: 'bold 4.5rem Garamond, sans-serif',
       text: 'Hello, world!',
-      justify: 'center',
 
       fillStyle: 'lightblue',
       lineWidth: 2,

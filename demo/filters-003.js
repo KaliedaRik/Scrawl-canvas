@@ -85,13 +85,12 @@ scrawl.makePicture({
     filters: ['advancedbrightness'],
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'brightness-label',
     text: 'Brightness',
 
-    font: '30px sans-serif',
-    width: '45%',
+    fontString: '16px sans-serif',
 
     fillStyle: 'white',
     lineWidth: 4,
@@ -111,13 +110,13 @@ scrawl.makePhrase({
 }).clone({
 
     name: 'advanced-saturation-label',
-    text: 'Modulate channels + saturation',
+    text: 'Mod channels + saturation',
     pivot: 'advanced-saturation-picture',
 
 }).clone({
 
     name: 'advanced-brightness-label',
-    text: 'Modulate channels',
+    text: 'Mod channels',
     pivot: 'advanced-brightness-picture',
 })
 
