@@ -71,7 +71,6 @@ const defaultAttributes = {
     showBoundingBox: false,
     boundingBoxStyle: BLACK,
     boundingBoxLineWidth: 1,
-
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -307,7 +306,7 @@ P.temperFont = function () {
 
     this.dirtyFont = false;
 
-    const scale = this.currentScale;
+    const {state, currentScale, letterSpaceValue, wordSpaceValue} = this;
 
     const mycell = requestCell();
     const { engine } = mycell;
@@ -316,11 +315,11 @@ P.temperFont = function () {
 
     this.temperedFont = engine.font.match(/(?<attributes>.*?)(?<size>[0-9.]+)px (?<family>.*)/);
 
-    if (this.temperedFont && this.state) {
+    if (this.temperedFont && state) {
 
         const {attributes, size, family} = this.temperedFont.groups;
-        this.defaultFont = `${attributes} ${size * scale}px ${family}`;
-        this.state.font = this.defaultFont;
+        this.defaultFont = `${attributes} ${size * currentScale}px ${family}`;
+        state.font = this.defaultFont;
     }
     else {
 
@@ -328,19 +327,19 @@ P.temperFont = function () {
         return false;
     }
 
-    this.state.letterSpacing = `${this.letterSpaceValue * scale}px`;
-    this.state.wordSpacing = `${this.wordSpaceValue * scale}px`;
+    state.letterSpacing = `${letterSpaceValue * currentScale}px`;
+    state.wordSpacing = `${wordSpaceValue * currentScale}px`;
 
-    engine.font = this.state.font;
-    engine.fontKerning = this.state.fontKerning;
-    engine.fontStretch = this.state.fontStretch;
-    engine.fontVariantCaps = this.state.fontVariantCaps;
-    engine.textRendering = this.state.textRendering;
-    engine.letterSpacing = this.state.letterSpacing;
-    engine.wordSpacing = this.state.wordSpacing;
-    engine.direction = 'ltr';
-    engine.textAlign = 'left';
-    engine.textBaseline = 'top';
+    engine.font = state.font;
+    engine.fontKerning = state.fontKerning;
+    engine.fontStretch = state.fontStretch;
+    engine.fontVariantCaps = state.fontVariantCaps;
+    engine.textRendering = state.textRendering;
+    engine.letterSpacing = state.letterSpacing;
+    engine.wordSpacing = state.wordSpacing;
+    engine.direction = state.direction;
+    engine.textAlign = LEFT;
+    engine.textBaseline = TOP;
 
     this.metrics = engine.measureText(this.text);
 
@@ -481,82 +480,63 @@ P.cleanDimensions = function () {
     this.dirtyFilterIdentifier = true;
 };
 
-    P.cleanPosition = function (current, source, dimensions) {
+P.cleanHandle = function () {
 
-        for (let i = 0; i < 2; i++) {
+    this.dirtyHandle = false;
 
-            const s = source[i],
-                d = dimensions[i];
+    const { handle, currentHandle, currentDimensions, mimicked, state, metrics, fontVerticalOffset } = this;
 
-            if (s.toFixed) current[i] = s;
-            else if (s == LEFT || s == TOP) current[i] = 0;
-            else if (s == RIGHT || s == BOTTOM) current[i] = d;
-            else if (s == CENTER) current[i] = d / 2;
-            else current[i] = (parseFloat(s) / 100) * d;
+    const [hx, hy] = handle;
+    const [dx, dy] = currentDimensions;
+    const direction = state.direction || LTR;
+
+    // horizontal
+    if (hx.toFixed) currentHandle[0] = dx;
+    else if (hx == LEFT) currentHandle[0] = 0;
+    else if (hx == RIGHT) currentHandle[0] = dx;
+    else if (hx == CENTER) currentHandle[0] = dx / 2;
+    else if (hx == START) currentHandle[0] = (direction == LTR) ? 0 : dx;
+    else if (hx == END) currentHandle[0] = (direction == LTR) ? dx : 0;
+    else if (isNaN(parseFloat(hx))) currentHandle[0] = 0;
+    else currentHandle[0] = (parseFloat(hx) / 100) * dx;
+
+    // vertical
+    if (hy.toFixed) currentHandle[1] = dy;
+    else if (hy == TOP) currentHandle[1] = 0;
+    else if (hy == BOTTOM) currentHandle[1] = dy;
+    else if (hy == CENTER) currentHandle[1] = dy / 2;
+    else if (hy == MIDDLE) currentHandle[1] = dy / 2;
+    else if (hy == IDEOGRAPHIC) currentHandle[1] = dy;
+    else if (hy == HANGING) {
+
+        const {hangingBaseline} = metrics;
+
+        if (hangingBaseline != null) {
+
+                const ratio = _abs(hangingBaseline) / dy;
+                currentHandle[1] = (ratio * dy) + fontVerticalOffset;
         }
-        this.dirtyFilterIdentifier = true;
-    };
+        else currentHandle[1] = 0;
+    }
+    else if (hy == ALPHABETIC) {
 
+        const {alphabeticBaseline} = metrics;
 
-    P.cleanHandle = function () {
+        if (alphabeticBaseline != null) {
 
-        this.dirtyHandle = false;
-
-        const { handle, currentHandle, currentDimensions, mimicked, state, metrics, fontVerticalOffset } = this;
-
-        const [hx, hy] = handle;
-        const [dx, dy] = currentDimensions;
-        const direction = state.direction || LTR;
-
-        // horizontal
-        if (hx.toFixed) currentHandle[0] = dx;
-        else if (hx == LEFT) currentHandle[0] = 0;
-        else if (hx == RIGHT) currentHandle[0] = dx;
-        else if (hx == CENTER) currentHandle[0] = dx / 2;
-        else if (hx == START) currentHandle[0] = (direction == LTR) ? 0 : dx;
-        else if (hx == END) currentHandle[0] = (direction == LTR) ? dx : 0;
-        else if (isNaN(parseFloat(hx))) currentHandle[0] = 0;
-        else currentHandle[0] = (parseFloat(hx) / 100) * dx;
-
-console.log(dy, metrics);
-
-        // vertical
-        if (hy.toFixed) currentHandle[1] = dy;
-        else if (hy == TOP) currentHandle[1] = 0;
-        else if (hy == BOTTOM) currentHandle[1] = dy;
-        else if (hy == CENTER) currentHandle[1] = dy / 2;
-        else if (hy == MIDDLE) currentHandle[1] = dy / 2;
-        else if (hy == IDEOGRAPHIC) currentHandle[1] = dy;
-        else if (hy == HANGING) {
-
-            const {hangingBaseline} = metrics;
-
-            if (hangingBaseline != null) {
-
-                    const ratio = _abs(hangingBaseline) / dy;
-                    currentHandle[1] = (ratio * dy) + fontVerticalOffset;
-            }
-            else currentHandle[1] = 0;
+                const ratio = _abs(alphabeticBaseline) / dy;
+                currentHandle[1] = (ratio * dy) + fontVerticalOffset;
         }
-        else if (hy == ALPHABETIC) {
+        else currentHandle[1] = 0;
+    }
+    else if (isNaN(parseFloat(hy))) currentHandle[1] = 0;
+    else currentHandle[1] = (parseFloat(hy) / 100) * dy;
 
-            const {alphabeticBaseline} = metrics;
+    this.dirtyFilterIdentifier = true;
+    this.dirtyStampHandlePositions = true;
 
-            if (alphabeticBaseline != null) {
-
-                    const ratio = _abs(alphabeticBaseline) / dy;
-                    currentHandle[1] = (ratio * dy) + fontVerticalOffset;
-            }
-            else currentHandle[1] = 0;
-        }
-        else if (isNaN(parseFloat(hy))) currentHandle[1] = 0;
-        else currentHandle[1] = (parseFloat(hy) / 100) * dy;
-
-        this.dirtyFilterIdentifier = true;
-        this.dirtyStampHandlePositions = true;
-
-        if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
-    };
+    if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
+};
 
 
 // #### Display cycle functions
@@ -605,10 +585,61 @@ P.stampPositioningHelper = function () {
     return [text, x, y];
 }
 
+// `stampPositioningHelper` - internal helper function
+P.underlineEngine = function (engine, pos) {
+
+    const cell = requestCell(),
+        ctx = cell.engine,
+        el = cell.element,
+        p1 = 50,
+        p2 = 100;
+
+    const {state, currentDimensions, currentScale, underlineWidth, underlineOffset, underlineStyle} = this;
+
+    const [w, h] = currentDimensions;
+
+    const [text, x, y] = pos;
+
+    el.width = w + p2;
+    el.height = h + p2;
+
+    ctx.fillStyle = BLACK;
+    ctx.strokeStyle = BLACK;
+    ctx.font = state.font;
+    ctx.fontKerning = state.fontKerning;
+    ctx.fontStretch = state.fontStretch;
+    ctx.fontVariantCaps = state.fontVariantCaps;
+    ctx.textRendering = state.textRendering;
+    ctx.letterSpacing = state.letterSpacing;
+    ctx.wordSpacing = state.wordSpacing;
+    ctx.direction = state.direction;
+    ctx.textAlign = LEFT;
+    ctx.textBaseline = TOP;
+    ctx.lineWidth = state.lineWidth * currentScale;
+
+    ctx.strokeText(text, p1, p1);
+    ctx.fillText(text, p1, p1);
+
+    ctx.globalCompositeOperation = 'source-out';
+    ctx.fillStyle = underlineStyle;
+
+    let rectStart = underlineOffset * h;
+    if (rectStart < 0) rectStart = 0;
+    if (rectStart >= h) rectStart = h - 1;
+
+    ctx.fillRect(p1, rectStart + p1, w, underlineWidth * currentScale);
+
+    engine.drawImage(el, p1, p1, w, h, x, y, w, h);
+
+    releaseCell(cell);
+};
+
 // `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
 P.draw = function (engine) {
 
     const pos = this.stampPositioningHelper();
+
+    if (this.includeUnderline) this.underlineEngine(engine, pos);
 
     engine.strokeText(...pos);
 
@@ -620,6 +651,8 @@ P.fill = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
+    if (this.includeUnderline) this.underlineEngine(engine, pos);
+
     engine.fillText(...pos);
 
     if (this.showBoundingBox) this.drawBoundingBox(engine);
@@ -629,6 +662,8 @@ P.fill = function (engine) {
 P.drawAndFill = function (engine) {
 
     const pos = this.stampPositioningHelper();
+
+    if (this.includeUnderline) this.underlineEngine(engine, pos);
 
     engine.strokeText(...pos);
     engine.fillText(...pos);
@@ -644,6 +679,8 @@ P.fillAndDraw = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
+    if (this.includeUnderline) this.underlineEngine(engine, pos);
+
     engine.fillText(...pos);
     engine.strokeText(...pos);
     this.currentHost.clearShadow();
@@ -658,6 +695,8 @@ P.drawThenFill = function (engine) {
 
     const pos = this.stampPositioningHelper();
 
+    if (this.includeUnderline) this.underlineEngine(engine, pos);
+
     engine.strokeText(...pos);
     engine.fillText(...pos);
 
@@ -668,6 +707,8 @@ P.drawThenFill = function (engine) {
 P.fillThenDraw = function (engine) {
 
     const pos = this.stampPositioningHelper();
+
+    if (this.includeUnderline) this.underlineEngine(engine, pos);
 
     engine.fillText(...pos);
     engine.strokeText(...pos);

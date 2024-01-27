@@ -114,8 +114,8 @@ scrawl.makeUpdater({
         handleY: ['handleY', '%'],
         'handleX-string': ['handleX', 'raw'],
         'handleY-string': ['handleY', 'raw'],
-        offsetX: ['offsetX', 'integer'],
-        offsetY: ['offsetY', 'integer'],
+        offsetX: ['offsetX', 'int'],
+        offsetY: ['offsetY', 'int'],
 
         roll: ['roll', 'float'],
         scale: ['scale', 'float'],
