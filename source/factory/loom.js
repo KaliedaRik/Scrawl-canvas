@@ -15,11 +15,6 @@
 // + TODO: clone functionality not yet tested. A possible use case is to clome a Loom so they share the same Shape struts, but have different Picture sources and `from/toPathStart/End` cursor values - multiple images tracked and animated.
 
 
-// #### Demos:
-// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
-// + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-
-
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 

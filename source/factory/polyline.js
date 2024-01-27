@@ -27,11 +27,6 @@
 // + Animate an artefact along the path by either using the artefact's `delta` object, or triggering a Tween to perform the movement.
 
 
-// #### Demos:
-// + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
-// + [Canvas-032](../../demo/canvas-032.html) - Freehand drawing
-
-
 // #### Imports
 import { artefact, constructors, particle } from '../core/library.js';
 

@@ -8,13 +8,6 @@
 // TODO: ImageAssets don't support animated `.gif` images (or if they do, then its entirely a lucky accident). Tested image formats are `.jpg` and `.png`.
 
 
-// #### Demos:
-// + [Canvas-008](../../demo/canvas-008.html) - Picture entity position; manipulate copy attributes
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-// + [Canvas-025](../../demo/canvas-025.html) - Responsive images
-
-
 // #### Imports
 import { artefact, canvas, cell, constructors, group } from '../core/library.js';
 

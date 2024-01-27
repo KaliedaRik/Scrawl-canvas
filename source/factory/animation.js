@@ -14,12 +14,6 @@
 // NOTE that Animation objects do not take part in Scrawl-canvas's `packet` save-and-load functionality, as a result of which they cannot be cloned.
 
 
-// #### Demos:
-// + All the demos run some form of animation - mostly created via `scrawl.makeRender` - see the [RenderAnimation factory](./renderAnimation.html) for details
-// + [DOM-001](../../demo/dom-001.html) - Loading the scrawl-canvas library using a script tag in the HTML code
-// + [DOM-010](../../demo/dom-010.html) - Add and remove (kill) Scrawl-canvas stack elements programmatically
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

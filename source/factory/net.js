@@ -12,13 +12,6 @@
 // + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
 
 
-// #### Demos:
-// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
-// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-
-
 // #### Imports
 import { artefact, artefactnames, constructors, entity, particle, world } from '../core/library.js';
 

@@ -20,13 +20,6 @@
 // Canvas wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Canvas wrapper will remove its &lt;canvas> element from the DOM, alongside the additional elements added to the DOM during Canvas creation.
 
 
-// #### Demos:
-// + All canvas and packets demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
-// + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
-
-
 // #### Imports
 import {
     canvas as libCanvas,

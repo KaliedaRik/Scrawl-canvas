@@ -120,13 +120,6 @@
 // });
 // ```
 
-// #### Demos:
-// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Canvas-020](../../demo/canvas-020.html) - Testing createImageFromXXX functionality
-// + [Canvas-027](../../demo/canvas-027.html) - Video control and manipulation; chroma-based hit zone
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-// + [Filters-019](../../demo/filters-019.html) - Using a Noise asset with a displace filter
-
 
 // #### Imports
 import { cell, constructors, entity, group, styles } from '../core/library.js';

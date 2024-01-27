@@ -25,19 +25,6 @@
 // + Animate an artefact along the path by either using the artefact's `delta` object, or triggering a Tween to perform the movement.
 
 
-// #### Demos:
-// + [Canvas-011](../../demo/canvas-011.html) - Shape entity (make, clone, method); drag and drop shape entitys
-// + [Canvas-012](../../demo/canvas-012.html) - Shape entity position; shape entity as a path for other artefacts to follow
-// + [Canvas-013](../../demo/canvas-013.html) - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral
-// + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier entitys - control lock alternatives
-// + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
-// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
-// + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
-// + [Canvas-038](../../demo/canvas-038.html) - Responsive Shape-based entitys
-// + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-// + [Packets-004](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

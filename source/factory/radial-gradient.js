@@ -9,11 +9,6 @@
 // + __Entity-locked__ RadialGradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
-// #### Demos:
-// + [Canvas-004](../../demo/canvas-004.html) - Radial gradients
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

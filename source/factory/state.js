@@ -8,9 +8,6 @@
 // + State attributes can be updated directly on the Entity or Cell using those object's normal `set` and `deltaSet` functions.
 // + State objects will be saved, cloned and killed as part of the Cell or entity save/clone/kill functionality.
 
-// #### Demos:
-// + All Canvas demos make use of the State object.
-
 
 // #### Imports
 import { constructors, entity, styles } from '../core/library.js';

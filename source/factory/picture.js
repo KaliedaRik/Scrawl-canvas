@@ -27,16 +27,6 @@
 // + Pictures (but not their source assets) can be cloned, and killed.
 
 
-// #### Demos:
-// + [Canvas-008](../../demo/canvas-008.html) - Picture entity position; manipulate copy attributes
-// + [Canvas-010](../../demo/canvas-010.html) - Use video sources and media streams for Picture entitys
-// + [Canvas-021](../../demo/canvas-021.html) - Import and use spritesheets
-// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
-// + [Canvas-025](../../demo/canvas-025.html) - Responsive images
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
-
-
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 

@@ -1,7 +1,7 @@
-// # Demo Canvas 063
+// # Demo Canvas 059
 // Semi-accessible Minimap; multiple drag zones
 
-// [Run code](../../demo/filters-063.html)
+// [Run code](../../demo/filters-059.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';

@@ -31,15 +31,6 @@
 // Scrawl-canvas (partially) disables Cell wrapper `packet` functionality. ___Cell wrappers cannot be cloned.___ They can be killed, either using their `kill` function or by invoking their Canvas wrapper controller's `killCell` function.
 
 
-// #### Demos:
-// + All canvas and packets demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
-// + [Canvas-036](../../demo/canvas-036.html) - Cell artefact-like positional functionality
-// + [Canvas-039](../../demo/canvas-039.html) - Detecting mouse/pointer cursor movements across a non-base Cell
-// + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
-
-
 // #### Imports
 import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 

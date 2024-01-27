@@ -1,7 +1,7 @@
-// # Demo Canvas 062
+// # Demo Canvas 058
 // Group and ungroup entitys; create a bespoke drag-drop UX
 
-// [Run code](../../demo/filters-062.html)
+// [Run code](../../demo/filters-058.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';

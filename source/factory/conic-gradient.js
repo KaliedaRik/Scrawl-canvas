@@ -9,10 +9,6 @@
 // + __Entity-locked__ ConicGradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
-// #### Demos:
-// + [Canvas-049](../../demo/canvas-049.html) - Conic gradients
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

@@ -1,10 +1,6 @@
 // # Display shape mixin
 // This mixin defines additional attributes and functions for Stack and Canvas artefacts, in particular adding hooks for functions that will be automatically invoked when the artefact's dimensions update.
 
-// #### Demos:
-// + [Canvas-034](../../demo/canvas-034.html) - Determine the displayed shape of the visible canvas; react to changes in the displayed shape
-// + [DOM-016](../../demo/dom-016.html) - Determine the displayed shape of the visible stack; react to changes in the displayed shape
-
 
 // #### Imports
 import { isa_fn, isa_number, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';

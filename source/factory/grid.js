@@ -12,12 +12,6 @@
 // + Grids can be cloned, and killed.
 
 
-// #### Demos:
-// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
-// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
-
-
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 

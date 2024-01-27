@@ -18,10 +18,6 @@
 // + __noTarget__ - default: `false`. the `renderAnimation` factory function expects to receive a Canvas or Stack artefact (or an array of such artefacts) in the `target` attribute of its argument object. When no target attribute is supplied, the RenderAnimation object will operate across all Canvas and Stack elements on the page. If the target is not a Canvas or Stack, then set the `noTarget` attribute to `true`.
 
 
-// #### Demos:
-// + Most Demos use RenderAnimation for managing their Display cycle
-
-
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 

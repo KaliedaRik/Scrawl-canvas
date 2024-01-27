@@ -12,11 +12,6 @@
 // = [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
 
 
-// #### Demos:
-// + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-
-
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 

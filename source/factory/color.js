@@ -1,15 +1,5 @@
 // # Color factory
-
-// #### Demos:
-// While any entity using a color style will make use of color functionality, the following demos are most relevant for testing this functionality
-// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
-// + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
-// + [Canvas-047](../../demo/canvas-047.html) - Easing functions for Color and Tween factories
-// + [Canvas-059](../../demo/canvas-059.html) - CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lab(), lch(), oklab(), oklch()
-// + [Filters-027](../../demo/filters-027.html) - Parameters for: reducePalette filter
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-// + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
-// + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
+// TODO - documentation!
 
 
 // #### Imports

@@ -28,14 +28,6 @@
 // The Force factory uses the Base mixin, thus Force objects can be cloned and killed like other Scrawl-canvas objects. Force objects are stored in the `scrawl.library.force` section of the Scrawl-canvas library object.
 
 
-// #### Demos:
-// + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
-// + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
-// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

@@ -7,6 +7,8 @@
 // Additional, optional, attributes in the argument object
 // + `'none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'` - a set of objects containing `keyboard Key: function` attributes defining the group of actions to take when the user presses the associated key or key-combination.
 
+
+// #### Imports
 import { artefact } from "../core/library.js";
 
 import { mergeDiscard, λnull, Ωempty } from "../helper/utilities.js";

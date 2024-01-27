@@ -9,12 +9,6 @@
 // + __Entity-locked__ Gradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
-// #### Demos:
-// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

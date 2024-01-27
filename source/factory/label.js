@@ -11,10 +11,6 @@
 // + `afterCreated: () => canvas.get('baseGroup').recalculateFonts(),`
 
 
-// #### Demos:
-// + TODO - demos
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

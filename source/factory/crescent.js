@@ -9,9 +9,6 @@
 // + They can be animated directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Crescents can be cloned, and killed.
 
-// #### Demos:
-// + [Canvas-055](../../demo/canvas-055.html) - Crescent entity functionality
-
 
 // #### Imports
 import { constructors } from '../core/library.js';

@@ -16,11 +16,6 @@
 // + TODO: packet management, clone and kill functionality not yet tested. Much of the other functionality also lacks tests.
 
 
-// #### Demos:
-// + [Particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [Particles-016](../../demo/particles-016.html) - Mesh entitys
-
-
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 

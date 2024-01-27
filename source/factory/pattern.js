@@ -7,11 +7,6 @@
 // + Scrawl-canvas does not support the Canvas API `CanvasPattern.setTransform()` method - it appears to be based on the SVGMatrix interface, which was deprecated in the SVG2 standard.
 
 
-// #### Demos:
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Canvas-035](../../demo/canvas-035.html) - Pattern style functionality
-
-
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 

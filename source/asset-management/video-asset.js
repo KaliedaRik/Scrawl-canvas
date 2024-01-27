@@ -6,11 +6,6 @@
 // VideoAssets are used by [Picture](./picture.html) and [Grid](./grid.html) entitys, and [Pattern](./pattern.html) styles (though not recommended).
 
 
-// #### Demos:
-// + [Canvas-010](../../demo/canvas-010.html) - Use video sources and media streams for Picture entitys
-// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

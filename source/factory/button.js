@@ -10,10 +10,6 @@
 // The __makeButton__ function is not exposed to the 'scrawl' object, thus objects can only be created indirectly. Buttons can be saved, cloned and killed as part of wider save/kill/clone functionality.
 
 
-// #### Demos:
-// + [DOM-021](../../demo/dom-021.html) - Use canvas elements in popover content
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

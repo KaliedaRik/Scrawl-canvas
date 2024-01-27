@@ -45,15 +45,6 @@
 // ```
 
 
-// #### Demos:
-// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
-// + [Canvas-004](../../demo/canvas-004.html) - Radial gradients
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
-// + [Canvas-049](../../demo/canvas-049.html) - Conic gradients
-// + [Canvas-061](../../demo/canvas-061.html) - Gradients stress test
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

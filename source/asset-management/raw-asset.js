@@ -5,16 +5,6 @@
 // + Build complex displays from simpler building blocks - for instance by interpreting the output from a NoiseAsset object to process an image asset, allowing us to simulate impressionistic styles of painting.
 
 
-// #### Demos:
-// + [Canvas-052](../../demo/canvas-052.html) - Create and use a RawAsset object to modify an image asset
-// + [Delaunator-002](../../demo/delaunator-002.html) - Responsive Voronoi cells in a RawAsset wrapper
-// + [MediaPipe-001](../../demo/mediapipe-001.html) - MediaPipe Selfie Segmentation - model image output
-// + [MediaPipe-002](../../demo/mediapipe-002.html) - MediaPipe Face Mesh - model image output
-// + [MediaPipe-003](../../demo/mediapipe-003.html) - MediaPipe Face Mesh - working with the mesh coordinates
-// + [TensorFlow-001](../../demo/tensorflow-001.html) - Tensorflow tfjs-models / body-pix experiment - follow my eyes
-// + [TensorFlow-002](../../demo/tensorflow-002.html) - Tensorflow tfjs-models / body-pix experiment - model image output
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

@@ -1,4 +1,8 @@
 // # Phrase factory
+//
+// __THE PHRASE ENTITY IS DEPRECATED__ and will be removed from the library in a future update
+// + Use the new `Label` and `EnhancedLabel` entitys instead
+//
 // Phrase entitys are graphical text rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [CanvasRenderingContext2D interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - in particular the `fillRect`, `strokeRect`, `fillText` and `strokeText` methods.
 // + Positioning functionality for the Phrase is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
@@ -26,42 +30,6 @@
 // Phrase entitys fully support __text along a path__ at the Phrase, word and letter levels.
 //
 // Phrase entity text content is __accessible to assistive technologies__ such as screen readers, by default.
-
-
-// #### Demos:
-// + [Canvas-015](../../demo/canvas-015.html) - Phrase entity (make, clone, method, multiline)
-// + [Canvas-016](../../demo/canvas-016.html) - Phrase entity position and font attributes; Block mimic functionality
-// + [Canvas-017](../../demo/canvas-017.html) - Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
-// + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
-// + [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
-// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
-// + [Modules-001](../../demo/modules-001.html) - Scrawl-canvas modularized code - London crime charts
-
-// #### TODO:
-// The [CSS Font Loading API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) is beginning to stabilize across browsers, which means we can watch for font loads and then perform text measurements using the [TextMetrics interface](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)
-// + Currently we need to calculate font/text height using temporary DOM elements - this is both ugly and less than accurate
-// + Text metrics will give us much better height measurements, and also glyph width measurements (and thus advance values for eg text along a path)
-// + However progress with the enhanced TextMetrics is slower across browsers, meaning that any code we develop is likely to bloat the code base as we cannot (yet) afford to discard existing code.
-// + More details in Demo [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
-//
-// interface TextMetrics {
-//   // x-direction
-//   readonly attribute double width; // advance width
-//   readonly attribute double actualBoundingBoxLeft;
-//   readonly attribute double actualBoundingBoxRight;
-
-//   // y-direction
-//   readonly attribute double fontBoundingBoxAscent;
-//   readonly attribute double fontBoundingBoxDescent;
-//   readonly attribute double actualBoundingBoxAscent;
-//   readonly attribute double actualBoundingBoxDescent;
-//   readonly attribute double emHeightAscent;
-//   readonly attribute double emHeightDescent;
-//   readonly attribute double hangingBaseline;
-//   readonly attribute double alphabeticBaseline;
-//   readonly attribute double ideographicBaseline;
-// };
 
 
 // #### Imports

@@ -27,13 +27,6 @@
 // Stack wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Stack wrapper will remove its DOM element from the document - __including all Elements and Canvases that it contains__.
 
 
-// #### Demos:
-// + All stack demos include Stack wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
-// + [DOM-001](../../demo/dom-001.html) - Loading the scrawl-canvas library using a script tag in the HTML code
-// + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
-// + [DOM-010](../../demo/dom-010.html) - Add and remove (kill) Scrawl-canvas Stack elements programmatically
-
-
 // #### Imports
 import { artefact, constructors, group, purge, stack } from '../core/library.js';
 

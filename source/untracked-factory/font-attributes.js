@@ -1,4 +1,8 @@
 // # FontAttributes factory
+//
+// __THE FONTATTRIBUTES FACTORY IS DEPRECATED__ and will be removed from the library in a future update
+// + It is only used by the Phrase entity, which is also deprecated
+//
 // FontAttribute objects are used exclusively by [Phrase](./phrase.html) entitys. They hold data about the Phrase entity's current font
 // + The constructor uses naming functionality (from the [base](../mixin/base.html) mixin), but doesn't actually store FontAttribute instances in the [library](../core/library.html)
 // + Instead they are referenced directly from each Phrase instance.
@@ -8,10 +12,6 @@
 // The Phrase entity includes functionality to allow the getting and setting of FontAttribute attributes directly on the entity instance.
 //
 // Note that &lt;canvas> context engines will attempt to display [variable fonts](https://web.dev/variable-fonts/), but the added functionality of those fonts is, for the most part, ignored. Scrawl-canvas makes no overt attempts to overcome this limitation.
-
-
-// #### Demos:
-// + All Phrase-related demos use FontAttribute objects in the background. Developers should never need to deal with them directly
 
 
 // #### Imports
@@ -24,7 +24,6 @@ import { releaseCell, requestCell } from './cell-fragment.js';
 import baseMix from '../mixin/base.js';
 
 import { _isArray, _max, _min, _PC, _Q, BOLD, BOLDER, CAP, CH, CM, DEFAULT_SIZE, EM, EX, FONT_ATTRIBUTE, IC, IN, ITALIC, LARGE, LARGER, LH, LIGHTER, MEDIUM, MM, NORMAL, OBLIQUE, PC, PT, PX, REM, RFS_ARRAY_1, RFS_ARRAY_2, RLH, SANS_SERIF, SIZE_SUFFIX, SMALL, SMALL_CAPS, SMALLER, SPACE, STOP, T_CELL, T_FONT_ATTRIBUTES, VB, VH, VI, VMAX, VMIN, VW, X_LARGE, X_SMALL, XX_LARGE, XX_SMALL, XXX_LARGE, ZERO_STR } from '../helper/shared-vars.js';
-
 
 
 // #### FontAttributes constructor

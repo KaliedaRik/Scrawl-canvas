@@ -40,16 +40,6 @@
 // + Would be a Big Win if we can tether Ticker/Tween/Actions to progress while a video plays - opens up the world of ___interactive video___.
 
 
-// #### Demos:
-// + All Tween and Action-related Demos necessarily include Tickers
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-006](../../demo/canvas-006.html) - Canvas tween stress test
-// + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
-// + [DOM-005](../../demo/dom-005.html) - DOM tween stress test
-// + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
-
-
 // #### Imports
 import { animation, animationtickers, constructors, tween } from '../core/library.js';
 

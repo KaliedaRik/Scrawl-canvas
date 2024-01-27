@@ -15,10 +15,6 @@
 // + Worley - both euclidean and manhattan versions
 //
 // These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Canvas-060](../../demo/canvas-060.html) has been set up to allow for experimenting with these attributes
-//
-// #### Demos:
-// + [Canvas-044](../../demo/canvas-044.html) - Building more complex patterns
-// + [Canvas-060](../../demo/canvas-060.html) - Noise asset functionality
 
 
 // #### Imports

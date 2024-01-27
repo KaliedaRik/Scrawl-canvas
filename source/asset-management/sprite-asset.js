@@ -7,11 +7,6 @@
 // TODO: SpriteAssets don't support animated `.gif` images (or if they do, then its entirely a lucky accident). Tested image formats are `.jpg` and `.png`.
 
 
-// #### Demos:
-// + [Canvas-021](../../demo/canvas-021.html) - Import and use spritesheets
-// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 

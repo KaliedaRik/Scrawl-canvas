@@ -4,10 +4,6 @@
 // This factory was inspired by Jason Webb's [Reaction-Diffusion Playground](https://jasonwebb.github.io/reaction-diffusion-playground/)
 
 
-// #### Demos:
-// + [Canvas-053](../../demo/canvas-053.html) - Display output from a Reaction-Diffusion asset
-
-
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
