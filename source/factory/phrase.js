@@ -48,7 +48,7 @@ import { makeFontAttributes } from '../untracked-factory/font-attributes.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DATA_TAB_ORDER, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEF_SECTION_PLACEHOLDER, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -145,10 +145,13 @@ const defaultAttributes = {
 // + In addition to normal dimensional values, Phrase entitys will accept the String label __'auto'__ (default). When set to 'auto' the width will be calculated as the natural, single line text length.
     width: AUTO,
 
-// __exposeText__ - Boolean accessibility feature
-// + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element.
-// + The element - a &lt;div> - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
-    exposeText: true,
+// __textIsAccessible__ - Boolean accessibility feature. Note that `exposeText` has become a pseudo-attribute for `textIsAccessible`
+// + The Phrase entity now uses the functionality supplied by the Label entity to make its text content accessible. This introduces the new `accessibleText`, `accessibleTextPlaceholder` and `accessibleTextOrder` attributes.
+
+    textIsAccessible: true,
+    accessibleText: DEF_SECTION_PLACEHOLDER,
+    accessibleTextPlaceholder: DEF_SECTION_PLACEHOLDER,
+    accessibleTextOrder: 0,
 
 // __lineHeight__ - a positive float Number multiplier applied to the font height to add space between lines of text
     lineHeight: 1.15,
@@ -284,7 +287,10 @@ P.finalizePacketOut = function (copy, items) {
 // #### Kill management
 P.factoryKill = function () {
 
-    if (this.exposedTextHold) this.exposedTextHold.remove();
+    if (this.accessibleTextHold) this.accessibleTextHold.remove();
+
+    const hold = this.getCanvasTextHold(this.currentHost);
+    if (hold) hold.dirtyTextTabOrder = true;
 };
 
 
@@ -673,6 +679,58 @@ S.family = function (item) {
 };
 
 
+// #### Accessibility
+
+G.accessibleText = function () {
+
+    return this.getAccessibleText();
+};
+S.accessibleText = function (item) {
+
+    if (item?.substring) {
+
+        this.accessibleText = item;
+        this.dirtyText = true;
+        this.dirtyAccessibleText = true;
+    }
+};
+
+S.accessibleTextPlaceholder = function (item) {
+
+    if (item?.substring) {
+
+        this.accessibleTextPlaceholder = item;
+        this.dirtyText = true;
+        this.dirtyAccessibleText = true;
+    }
+};
+
+S.accessibleTextOrder = function (item) {
+
+    if (item?.toFixed) {
+
+        this.accessibleTextOrder = item;
+        this.dirtyText = true;
+        this.dirtyAccessibleText = true;
+    }
+};
+
+G.textIsAccessible = function (item) {
+
+    return this.textIsAccessible;
+};
+S.textIsAccessible = function (item) {
+
+    this.textIsAccessible = !!item;
+    this.dirtyText = true;
+    this.dirtyAccessibleText = true;
+};
+
+// Deprecated attribute mapped to equivalent
+G.exposeText = G.textIsAccessible;
+S.exposeText = S.textIsAccessible;
+
+
 // #### Prototype functions
 
 // `cleanDimensionsAdditionalActions` - local overwrite
@@ -775,6 +833,13 @@ P.getTextPath = function () {
     return path;
 };
 
+P.getAccessibleText = function () {
+
+    const {accessibleText, accessibleTextPlaceholder, text} = this;
+    return accessibleText.replace(accessibleTextPlaceholder, text);
+};
+
+
 // #### Display cycle functionality
 // Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.
 
@@ -828,33 +893,7 @@ P.buildText = function () {
 
         this.calculateTextPositions(t);
 
-        if (this.exposeText) {
-
-            if (!this.exposedTextHold) {
-
-                const myhold = document.createElement(DIV);
-                myhold.id = `${this.name}-text-hold`;
-                myhold.setAttribute(ARIA_LIVE, POLITE);
-                this.exposedTextHold = myhold;
-                this.exposedTextHoldAttached = false;
-            }
-
-            this.exposedTextHold.textContent = t;
-
-            if (!this.exposedTextHoldAttached) {
-
-                if (this.currentHost) {
-
-                    const hold = this.getCanvasTextHold(this.currentHost);
-
-                    if (hold && hold.textHold) {
-
-                        hold.textHold.appendChild(this.exposedTextHold);
-                        this.exposedTextHoldAttached = true;
-                    }
-                }
-            }
-        }
+        if (this.dirtyAccessibleText) this.updateAccessibleTextHold();
     }
 };
 
@@ -866,6 +905,54 @@ P.getCanvasTextHold = function (item) {
 
     return false;
 };
+
+P.updateAccessibleTextHold = function () {
+
+    this.dirtyAccessibleText = false;
+
+    if (this.textIsAccessible) {
+
+        if (!this.accessibleTextHold) {
+
+            const myhold = document.createElement(DIV);
+            myhold.id = `${this.name}-text-hold`;
+            myhold.setAttribute(ARIA_LIVE, POLITE);
+            myhold.setAttribute(DATA_TAB_ORDER, this.accessibleTextOrder);
+            this.accessibleTextHold = myhold;
+            this.accessibleTextHoldAttached = false;
+        }
+
+        this.accessibleTextHold.textContent = this.getAccessibleText();
+
+        if (this.currentHost) {
+
+            const hold = this.getCanvasTextHold(this.currentHost);
+
+            if (hold && hold.textHold) {
+
+                if (!this.accessibleTextHoldAttached) {
+
+                    hold.textHold.appendChild(this.accessibleTextHold);
+                    this.accessibleTextHoldAttached = true;
+                }
+                hold.dirtyTextTabOrder = true;
+            }
+        }
+    }
+    else {
+
+        if (this.accessibleTextHold) {
+
+            this.accessibleTextHold.remove();
+            this.accessibleTextHold = null;
+            this.accessibleTextHoldAttached = false;
+
+            const hold = this.getCanvasTextHold(this.currentHost);
+            if (hold) hold.dirtyTextTabOrder = true;
+        }
+    }
+};
+
 
 // `convertTextEntityCharacters` - internal function called by `buildText`
 // + To convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs

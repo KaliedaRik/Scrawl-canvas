@@ -47,37 +47,47 @@ makePhrase({
     showBoundingBox: true,
     boundingBoxColor: 'red',
 
+    accessibleText: 'Phrase saying: §',
+    accessibleTextOrder: 0,
+
 }).clone({
     name: name('myphrase_draw'),
     startX: '38%',
     method: 'draw',
+    accessibleTextOrder: 1,
 
 }).clone({
     name: name('myphrase_drawAndFill'),
     startX: '84%',
     method: 'drawAndFill',
+    accessibleTextOrder: 2,
 
 }).clone({
     name: name('myphrase_fillAndDraw'),
     startX: '62%',
     method: 'fillAndDraw',
+    accessibleTextOrder: 3,
     sharedState: true
 
 }).clone({
     name: name('myphrase_drawThenFill'),
     startX: '14%',
     startY: '67%',
-    method: 'drawThenFill'
+    method: 'drawThenFill',
+    accessibleTextOrder: 4,
 
 }).clone({
     name: name('myphrase_fillThenDraw'),
     startX: '38%',
     method: 'fillThenDraw',
+    accessibleText: '§ - says the phrase',
+    accessibleTextOrder: 5,
 
 }).clone({
     name: name('myphrase_clear'),
     startX: '62%',
-    method: 'clear'
+    method: 'clear',
+    accessibleTextOrder: 6,
 
 }).clone({
     name: name('myphrase_multiline'),
@@ -96,6 +106,9 @@ makePhrase({
     shadowOffsetX: 0,
     shadowOffsetY: 0,
     shadowBlur: 0,
+
+    accessibleText: 'Long phrase: §',
+    accessibleTextOrder: 7,
 });
 
 

@@ -1944,6 +1944,9 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
 }
 
 interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, PhraseFactoryDeltaInputs {
+    accessibleText?: string;
+    accessibleTextOrder?: number;
+    accessibleTextPlaceholder?: string;
     addTextPathRoll?: boolean;
     boundingBoxColor?: string;
     boundingBoxStyle?: StylesInstance | string;
@@ -1962,9 +1965,10 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     showBoundingBox?: boolean;
     size?: PhraseSize;
     sizeMetric?: PhraseSizeMetric;
-    sizeValue?: number;                                 
+    sizeValue?: number;
     style?: PhraseStyle;
     text?: string;
+    textIsAccessible?: boolean;
     textPath?: ShapeInstance | string;
     textPathDirection?: PhraseTextPathDirection;
     textPathLoop?: boolean;
