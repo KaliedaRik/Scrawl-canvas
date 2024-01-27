@@ -66,7 +66,7 @@ const reportLength = scrawl.makePhrase({
     name: 'report-length',
     text: '',
     fillStyle: 'white',
-    fontString: '2em Arial, sans-serif',
+    font: '2em Arial, sans-serif',
     start: ['center', 10],
     handleX: 'center',
     method: 'none',

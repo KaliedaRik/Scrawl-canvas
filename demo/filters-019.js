@@ -53,7 +53,7 @@ scrawl.makePhrase({
     name: 'edgeDetect-label',
     text: 'Edge detect',
 
-    fontString: '20px sans-serif',
+    font: '20px sans-serif',
 
     fillStyle: 'white',
     lineWidth: 4,

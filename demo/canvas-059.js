@@ -201,7 +201,7 @@ scrawl.makePhrase({
     name: "map-label",
     group: "map-cell",
     text: "Minimap (draggable)",
-    fontString: "16px Arial, sans-serif",
+    font: "16px Arial, sans-serif",
     start: ["center", 10],
     handle: ["center", 0]
 });

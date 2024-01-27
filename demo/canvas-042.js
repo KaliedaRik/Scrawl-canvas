@@ -56,7 +56,7 @@ scrawl.makeWheel({
 scrawl.makePhrase({
     name: 'phrase-clipper',
     text: 'HELLO!',
-    fontString: '50px arial, sans-serif',
+    font: '50px arial, sans-serif',
 // @ts-expect-error
 }).set(generics);
 

@@ -1557,7 +1557,7 @@ interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions
     saveAsPacket: (item?: LabelSaveInputs | boolean) => string;
     set: (item?: LabelFactoryInputs) => LabelInstance;
     setDelta: (item?: LabelFactoryDeltaInputs) => LabelInstance;
-    simpleStamp: ((host: CellInstance, items?: LabelFactoryInputs) => void;)
+    simpleStamp: (host: CellInstance, items?: LabelFactoryInputs) => void;
     recalculateFont: () => void;
 }
 
@@ -1945,21 +1945,13 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
 
 interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, PhraseFactoryDeltaInputs {
     addTextPathRoll?: boolean;
-    boundingBoxColor?: string;                          // deprecated
+    boundingBoxColor?: string;
     boundingBoxStyle?: StylesInstance | string;
     breakOnlyOnBreakGlyphs?: boolean;
     delta?: PhraseFactoryDeltaInputs;
     exposeText?: boolean;
-    family?: PhraseFamily;                              // deprecated
-    font?: string;                                      // deprecated
-    fontFamily?: PhraseFamily;
-    fontSize?: PhraseSize;
-    fontSizeMetric?: PhraseSizeMetric;
-    fontSizeValue?: number;
-    fontString?: string;
-    fontStyle?: PhraseStyle;
-    fontVariant?: PhraseVariant;
-    fontWeight?: PhraseWeight;
+    family?: PhraseFamily;
+    font?: string;
     highlightStyle?: string;
     isVerticalText?: boolean;
     justify?: PhraseJustifyValues;
@@ -1968,10 +1960,10 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     overlineStyle?: string;
     sectionClassMarker?: string;
     showBoundingBox?: boolean;
-    size?: PhraseSize;                                  // deprecated
-    sizeMetric?: PhraseSizeMetric;                      // deprecated
+    size?: PhraseSize;
+    sizeMetric?: PhraseSizeMetric;
     sizeValue?: number;                                 
-    style?: PhraseStyle;                                // deprecated
+    style?: PhraseStyle;
     text?: string;
     textPath?: ShapeInstance | string;
     textPathDirection?: PhraseTextPathDirection;
@@ -1979,8 +1971,8 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     treatAsBreakGlyphs?: string[];
     treatWordAsGlyph?: boolean;
     underlineStyle?: string;
-    variant?: PhraseVariant;                            // deprecated
-    weight?: PhraseWeight;                              // deprecated
+    variant?: PhraseVariant;
+    weight?: PhraseWeight;
     wordSpacing?: number;
 }
 

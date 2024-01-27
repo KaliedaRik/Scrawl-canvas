@@ -39,7 +39,7 @@ const lorem = makePhrase({
     width: '50%',
 
     text: 'Lorem ipsum har varit standard 😀 ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal 🤖 bokstäver och blandade dem för att göra ett 🎻 provexemplar av en bok.',
-    fontString: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
+    font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
     fillStyle: 'darkgreen',
 
@@ -115,8 +115,8 @@ const report = reportSpeed('#reportmessage', function () {
 
     const {roll, scale} = lorem;
 
-    const fontSize = lorem.get('fontSize'),
-        fontString = lorem.get('fontString');
+    const fontSize = lorem.get('size'),
+        fontString = lorem.get('font');
 
     return `    Start - x: ${startX}, y: ${startY}
     Handle - x: ${handleX}, y: ${handleY}
@@ -176,13 +176,13 @@ makeUpdater({
         upend: ['flipUpend', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
 
-        weight: ['fontWeight', 'raw'],
-        style: ['fontStyle', 'raw'],
-        variant: ['fontVariant', 'raw'],
-        family: ['fontFamily', 'raw'],
+        weight: ['weight', 'raw'],
+        style: ['style', 'raw'],
+        variant: ['variant', 'raw'],
+        family: ['family', 'raw'],
 
-        size_string: ['fontSize', 'raw'],
-        size_px: ['fontSize', 'px'],
+        size_string: ['size', 'raw'],
+        size_px: ['size', 'px'],
     },
 });
 

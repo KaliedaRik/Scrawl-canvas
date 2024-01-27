@@ -52,10 +52,10 @@ scrawl.makePhrase({
     name: 'loader-text-1',
     group: textGroup,
 
-    fontWeight: 'bold',
+    weight: 'bold',
 
     text: 'Loading',
-    fontSize: '50px',
+    size: '50px',
     justify: 'center',
 
     textPath: 'loader-track',

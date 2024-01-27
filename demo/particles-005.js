@@ -31,7 +31,7 @@ scrawl.makePhrase({
 
     text: 'HELLO!',
 
-    fontString: 'bold 100px sans-serif',
+    font: 'bold 100px sans-serif',
     lineHeight: 0.8,
 
     startX: 70,

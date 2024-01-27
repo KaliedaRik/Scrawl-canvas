@@ -30,7 +30,7 @@ makePhrase({
     name: name('myphrase_fill'),
 
     text: 'H&epsilon;lj&ouml;!',
-    fontString: 'bold 40px Garamond, serif',
+    font: 'bold 40px Garamond, serif',
 
     startX: '14%',
     startY: '28%',
@@ -89,8 +89,8 @@ makePhrase({
     width: 120,
     justify: 'center',
 
-    fontSize: '12px',
-    fontWeight: 'normal',
+    size: '12px',
+    weight: 'normal',
 
     startX: '84%',
     method: 'fill',

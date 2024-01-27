@@ -143,7 +143,7 @@ scrawl.makePhrase({
     name: 'red-label',
     text: 'Red',
 
-    fontString: '20px sans-serif',
+    font: '20px sans-serif',
 
     fillStyle: 'white',
     lineWidth: 4,

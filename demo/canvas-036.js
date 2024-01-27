@@ -237,7 +237,7 @@ scrawl.makePhrase({
     group: 'cell-1',
 
     text: 'Cell 1',
-    fontString: '20px sans-serif',
+    font: '20px sans-serif',
     fillStyle: 'red',
 
     start: [5, 5],
