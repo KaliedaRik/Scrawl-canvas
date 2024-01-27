@@ -715,7 +715,7 @@ S.accessibleTextOrder = function (item) {
     }
 };
 
-G.textIsAccessible = function (item) {
+G.textIsAccessible = function () {
 
     return this.textIsAccessible;
 };

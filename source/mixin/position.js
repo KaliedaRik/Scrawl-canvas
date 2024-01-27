@@ -1036,6 +1036,7 @@ export default function (P = Ωempty) {
             else if (s == LEFT || s == TOP) current[i] = 0;
             else if (s == RIGHT || s == BOTTOM) current[i] = d;
             else if (s == CENTER) current[i] = d / 2;
+            else if (isNaN(parseFloat(s))) current[i] = 0;
             else current[i] = (parseFloat(s) / 100) * d;
         }
         this.dirtyFilterIdentifier = true;

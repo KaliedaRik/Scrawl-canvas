@@ -415,57 +415,6 @@ Noto Color Emoji (emoji)
       </select>
     </div>
 
-    <div class="lavender label">Font stretch (not supported)</div>
-    <div class="lavender">
-      <select class="controlItem" id="fontStretch" disabled>
-        <option value="ultra-condensed">ultra-condensed</option>
-        <option value="extra-condensed">extra-condensed</option>
-        <option value="condensed">condensed</option>
-        <option value="semi-condensed">semi-condensed</option>
-        <option value="normal">normal</option>
-        <option value="semi-expanded">semi-expanded</option>
-        <option value="expanded">expanded</option>
-        <option value="extra-expanded">extra-expanded</option>
-        <option value="ultra-expanded">ultra-expanded</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Font variant caps (not supported)</div>
-    <div class="lavender">
-      <select class="controlItem" id="fontVariantCaps" disabled>
-        <option value="normal">normal</option>
-        <option value="small-caps">small-caps</option>
-        <option value="all-small-caps">all-small-caps</option>
-        <option value="petite-caps">petite-caps</option>
-        <option value="all-petite-caps">all-petite-caps</option>
-        <option value="unicase">unicase</option>
-        <option value="titling-caps">titling-caps</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Text align (not supported)</div>
-    <div class="lavender">
-      <select class="controlItem" id="textAlign" disabled>
-        <option value="left">left</option>
-        <option value="right">right</option>
-        <option value="center">center</option>
-        <option value="start">start</option>
-        <option value="end">end</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Text baseline (not supported)</div>
-    <div class="lavender">
-      <select class="controlItem" id="textBaseline" disabled>
-        <option value="top">top</option>
-        <option value="hanging">hanging</option>
-        <option value="middle">middle</option>
-        <option value="alphabetic">alphabetic</option>
-        <option value="ideographic">ideographic</option>
-        <option value="bottom">bottom</option>
-      </select>
-    </div>
-
     <div class="lavender label">Letter spacing</div>
     <div class="lavender">
       <input class="controlItem" id="letterSpacing" type="range" value="0" min="-10" max="20" step="1" />
@@ -505,6 +454,30 @@ Noto Color Emoji (emoji)
     <div class="green label">Handle Y (%)</div>
     <div class="green">
       <input class="controlItem" id="handleY" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="green label">Handle X (string)</div>
+    <div class="green">
+      <select class="controlItem" id="handleX-string">
+        <option value="left">left</option>
+        <option value="start">start</option>
+        <option value="center">center</option>
+        <option value="end">end</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+
+    <div class="green label">Handle Y (string)</div>
+    <div class="green">
+      <select class="controlItem" id="handleY-string">
+        <option value="top">top</option>
+        <option value="hanging">hanging</option>
+        <option value="middle">middle</option>
+        <option value="center">center</option>
+        <option value="alphabetic">alphabetic</option>
+        <option value="ideographic">ideographic</option>
+        <option value="bottom">bottom</option>
+      </select>
     </div>
 
     <div class="green label">Offset X (px)</div>

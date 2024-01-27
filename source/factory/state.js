@@ -135,7 +135,7 @@ P.defs = {
 // __font__ - CSS compatible font string. Note that the canvas context engine will ignore a lot of the more esoteric values that can be included in the font string.
     font: DEFAULT_FONT,
 
-// __direction__ - string from `ltr` (default), `rtl`, `inherit`. Needs to be set appropriately for the font being used eg: Hebrew, Arabic require `rtl` direction. 
+// __direction__ - string from `ltr` (default), `rtl`, `inherit`. Needs to be set appropriately for the font being used eg: Hebrew, Arabic require `rtl` direction.
     direction: LTR,
 
 // __fontKerning__ - string from `auto`, `normal` (default), `none`. Support across browsers varies by interpretation of the standard, if supported at all.

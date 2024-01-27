@@ -21,7 +21,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _ceil, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, ENTITY, LEFT, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, START, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -449,8 +449,7 @@ P.cleanPathObject = function () {
     const p = this.pathObject = new Path2D();
 
     const handle = this.currentHandle,
-        dims = this.currentDimensions,
-        scale = this.currentScale;
+        dims = this.currentDimensions;
 
     const [x, y] = handle;
     const [w, h] = dims;
@@ -481,6 +480,83 @@ P.cleanDimensions = function () {
 
     this.dirtyFilterIdentifier = true;
 };
+
+    P.cleanPosition = function (current, source, dimensions) {
+
+        for (let i = 0; i < 2; i++) {
+
+            const s = source[i],
+                d = dimensions[i];
+
+            if (s.toFixed) current[i] = s;
+            else if (s == LEFT || s == TOP) current[i] = 0;
+            else if (s == RIGHT || s == BOTTOM) current[i] = d;
+            else if (s == CENTER) current[i] = d / 2;
+            else current[i] = (parseFloat(s) / 100) * d;
+        }
+        this.dirtyFilterIdentifier = true;
+    };
+
+
+    P.cleanHandle = function () {
+
+        this.dirtyHandle = false;
+
+        const { handle, currentHandle, currentDimensions, mimicked, state, metrics, fontVerticalOffset } = this;
+
+        const [hx, hy] = handle;
+        const [dx, dy] = currentDimensions;
+        const direction = state.direction || LTR;
+
+        // horizontal
+        if (hx.toFixed) currentHandle[0] = dx;
+        else if (hx == LEFT) currentHandle[0] = 0;
+        else if (hx == RIGHT) currentHandle[0] = dx;
+        else if (hx == CENTER) currentHandle[0] = dx / 2;
+        else if (hx == START) currentHandle[0] = (direction == LTR) ? 0 : dx;
+        else if (hx == END) currentHandle[0] = (direction == LTR) ? dx : 0;
+        else if (isNaN(parseFloat(hx))) currentHandle[0] = 0;
+        else currentHandle[0] = (parseFloat(hx) / 100) * dx;
+
+console.log(dy, metrics);
+
+        // vertical
+        if (hy.toFixed) currentHandle[1] = dy;
+        else if (hy == TOP) currentHandle[1] = 0;
+        else if (hy == BOTTOM) currentHandle[1] = dy;
+        else if (hy == CENTER) currentHandle[1] = dy / 2;
+        else if (hy == MIDDLE) currentHandle[1] = dy / 2;
+        else if (hy == IDEOGRAPHIC) currentHandle[1] = dy;
+        else if (hy == HANGING) {
+
+            const {hangingBaseline} = metrics;
+
+            if (hangingBaseline != null) {
+
+                    const ratio = _abs(hangingBaseline) / dy;
+                    currentHandle[1] = (ratio * dy) + fontVerticalOffset;
+            }
+            else currentHandle[1] = 0;
+        }
+        else if (hy == ALPHABETIC) {
+
+            const {alphabeticBaseline} = metrics;
+
+            if (alphabeticBaseline != null) {
+
+                    const ratio = _abs(alphabeticBaseline) / dy;
+                    currentHandle[1] = (ratio * dy) + fontVerticalOffset;
+            }
+            else currentHandle[1] = 0;
+        }
+        else if (isNaN(parseFloat(hy))) currentHandle[1] = 0;
+        else currentHandle[1] = (parseFloat(hy) / 100) * dy;
+
+        this.dirtyFilterIdentifier = true;
+        this.dirtyStampHandlePositions = true;
+
+        if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
+    };
 
 
 // #### Display cycle functions

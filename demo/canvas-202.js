@@ -21,8 +21,8 @@ const mylabel = scrawl.makeLabel({
     name: name('my-label'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    fontString: '80px serif',
-    text: 'Hello world!',
+    fontString: '60px serif',
+    text: 'Long live the world!',
     method: 'drawThenFill',
     fillStyle: 'orange',
     strokeStyle: 'black',
@@ -112,6 +112,8 @@ scrawl.makeUpdater({
         startY: ['startY', '%'],
         handleX: ['handleX', '%'],
         handleY: ['handleY', '%'],
+        'handleX-string': ['handleX', 'raw'],
+        'handleY-string': ['handleY', 'raw'],
         offsetX: ['offsetX', 'integer'],
         offsetY: ['offsetY', 'integer'],
 
@@ -143,8 +145,8 @@ const updateFont = (event) => {
 
             case 'serif' :
                 mylabel.set({
-                    fontString: '80px serif',
-                    text: 'Hello world!',
+                    fontString: '60px serif',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -152,8 +154,8 @@ const updateFont = (event) => {
 
             case 'sans-serif' :
                 mylabel.set({
-                    fontString: '80px sans-serif',
-                    text: 'Hello world!',
+                    fontString: '60px sans-serif',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -161,8 +163,8 @@ const updateFont = (event) => {
 
             case 'monospace' :
                 mylabel.set({
-                    fontString: '80px monospace',
-                    text: 'Hello world!',
+                    fontString: '40px monospace',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -170,26 +172,26 @@ const updateFont = (event) => {
 
             case 'cursive' :
                 mylabel.set({
-                    fontString: '80px cursive',
-                    text: 'Hello world!',
+                    fontString: '60px cursive',
+                    text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 8,
+                    fontVerticalOffset: 5,
                 });
                 break;
 
             case 'fantasy' :
                 mylabel.set({
-                    fontString: '80px fantasy',
-                    text: 'Hello world!',
+                    fontString: '60px fantasy',
+                    text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 18,
+                    fontVerticalOffset: 14,
                 });
                 break;
 
             case 'garamond' :
                 mylabel.set({
-                    fontString: '80px Garamond',
-                    text: 'Hello world!',
+                    fontString: '60px Garamond',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -197,8 +199,8 @@ const updateFont = (event) => {
 
             case 'garamond-bold' :
                 mylabel.set({
-                    fontString: 'bold 80px Garamond',
-                    text: 'Hello world!',
+                    fontString: 'bold 60px Garamond',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -206,8 +208,8 @@ const updateFont = (event) => {
 
             case 'garamond-italic' :
                 mylabel.set({
-                    fontString: 'italic 80px Garamond',
-                    text: 'Hello world!',
+                    fontString: 'italic 60px Garamond',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -215,8 +217,8 @@ const updateFont = (event) => {
 
             case 'garamond-bolditalic' :
                 mylabel.set({
-                    fontString: 'bold italic 80px Garamond',
-                    text: 'Hello world!',
+                    fontString: 'bold italic 60px Garamond',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -224,8 +226,8 @@ const updateFont = (event) => {
 
             case 'roboto' :
                 mylabel.set({
-                    fontString: '80px "Roboto Sans"',
-                    text: 'Hello world!',
+                    fontString: '60px "Roboto Sans"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -233,8 +235,8 @@ const updateFont = (event) => {
 
             case 'roboto-bold' :
                 mylabel.set({
-                    fontString: 'bold 80px "Roboto Sans"',
-                    text: 'Hello world!',
+                    fontString: 'bold 60px "Roboto Sans"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -242,8 +244,8 @@ const updateFont = (event) => {
 
             case 'roboto-italic' :
                 mylabel.set({
-                    fontString: 'italic 80px "Roboto Sans"',
-                    text: 'Hello world!',
+                    fontString: 'italic 60px "Roboto Sans"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -251,8 +253,8 @@ const updateFont = (event) => {
 
             case 'roboto-bolditalic' :
                 mylabel.set({
-                    fontString: 'bold italic 80px "Roboto Sans"',
-                    text: 'Hello world!',
+                    fontString: 'bold italic 60px "Roboto Sans"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -260,8 +262,8 @@ const updateFont = (event) => {
 
             case 'roboto-serif' :
                 mylabel.set({
-                    fontString: '80px "Roboto Serif"',
-                    text: 'Hello world!',
+                    fontString: '50px "Roboto Serif"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -269,16 +271,16 @@ const updateFont = (event) => {
 
             case 'roboto-serif-bold' :
                 mylabel.set({
-                    fontString: 'bold 80px "Roboto Serif"',
-                    text: 'Hello world!',
+                    fontString: 'bold 50px "Roboto Serif"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                 });
                 break;
 
             case 'roboto-serif-italic' :
                 mylabel.set({
-                    fontString: 'italic 80px "Roboto Serif"',
-                    text: 'Hello world!',
+                    fontString: 'italic 50px "Roboto Serif"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -286,8 +288,8 @@ const updateFont = (event) => {
 
             case 'roboto-serif-bolditalic' :
                 mylabel.set({
-                    fontString: 'bold italic 80px "Roboto Serif"',
-                    text: 'Hello world!',
+                    fontString: 'bold italic 50px "Roboto Serif"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -295,8 +297,8 @@ const updateFont = (event) => {
 
             case 'roboto-mono' :
                 mylabel.set({
-                    fontString: '80px "Roboto Mono"',
-                    text: 'Hello world!',
+                    fontString: '45px "Roboto Mono"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -304,8 +306,8 @@ const updateFont = (event) => {
 
             case 'roboto-mono-bold' :
                 mylabel.set({
-                    fontString: 'bold 80px "Roboto Mono"',
-                    text: 'Hello world!',
+                    fontString: 'bold 45px "Roboto Mono"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -313,8 +315,8 @@ const updateFont = (event) => {
 
             case 'roboto-mono-italic' :
                 mylabel.set({
-                    fontString: 'italic 80px "Roboto Mono"',
-                    text: 'Hello world!',
+                    fontString: 'italic 45px "Roboto Mono"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -322,8 +324,8 @@ const updateFont = (event) => {
 
             case 'roboto-mono-bolditalic' :
                 mylabel.set({
-                    fontString: 'bold italic 80px "Roboto Mono"',
-                    text: 'Hello world!',
+                    fontString: 'bold italic 45px "Roboto Mono"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -503,7 +505,7 @@ const updateFont = (event) => {
             case 'bungee' :
                 mylabel.set({
                     fontString: '60px "Bungee"',
-                    text: 'Hello world!',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -511,8 +513,8 @@ const updateFont = (event) => {
 
             case 'bungee-spice' :
                 mylabel.set({
-                    fontString: '80px "Bungee Spice"',
-                    text: 'Hello world!',
+                    fontString: '60px "Bungee Spice"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -520,8 +522,8 @@ const updateFont = (event) => {
 
             case 'carter-one' :
                 mylabel.set({
-                    fontString: '80px "Carter One"',
-                    text: 'Hello world!',
+                    fontString: '60px "Carter One"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 5,
                 });
@@ -529,17 +531,17 @@ const updateFont = (event) => {
 
             case 'mountains-of-christmas' :
                 mylabel.set({
-                    fontString: '80px "Mountains Of Christmas"',
-                    text: 'Hello world!',
+                    fontString: '60px "Mountains Of Christmas"',
+                    text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 8,
+                    fontVerticalOffset: 6,
                 });
                 break;
 
             default:
                 mylabel.set({
                     fontString: '80px serif',
-                    text: 'Hello world!',
+                    text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
                 });
@@ -565,6 +567,10 @@ document.querySelector('#handleX').value = 50;
 // @ts-expect-error
 document.querySelector('#handleY').value = 50;
 // @ts-expect-error
+document.querySelector('#handleX-string').options.selectedIndex = 2;
+// @ts-expect-error
+document.querySelector('#handleY-string').options.selectedIndex = 3;
+// @ts-expect-error
 document.querySelector('#offsetX').value = 0;
 // @ts-expect-error
 document.querySelector('#offsetY').value = 0;
@@ -586,14 +592,6 @@ document.querySelector('#direction').options.selectedIndex = 0;
 document.querySelector('#fontKerning').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#textRendering').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#fontStretch').options.selectedIndex = 4;
-// @ts-expect-error
-document.querySelector('#fontVariantCaps').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#textAlign').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#textBaseline').options.selectedIndex = 0;
 
 
 // #### Development and testing
