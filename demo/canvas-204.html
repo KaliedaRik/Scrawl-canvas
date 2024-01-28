@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 204</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+/*
+EB Garamond (common alphabetic) - Serif, with regular, bold, italic and bolditalic versions
+*/
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 204</h1>
+  <h2>Label entity - gradients and patterns</h2>
+  <h3>Drag and drop the Label around the canvas</h3>
+
+  <div class="controls">
+
+    <div class="green label">Style</div>
+    <div class="green">
+      <select class="controlItem" id="fillStyle">
+        <option value="">default</option>
+        <option value="red">red</option>
+        <option value="demo-linear-gradient">gradient</option>
+        <option value="demo-water-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="green label">Lock style to entity</div>
+    <div class="green">
+      <select class="controlItem" id="lockFillStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Letter spacing</div>
+    <div class="lavender">
+      <input class="controlItem" id="letterSpacing" type="range" value="0" min="-10" max="20" step="1" />
+    </div>
+
+    <div class="lavender label">Word spacing</div>
+    <div class="lavender">
+      <input class="controlItem" id="wordSpacing" type="range" value="0" min="-20" max="50" step="1" />
+    </div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow">
+      <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow">
+      <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
+    </div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls">
+
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><b>Touch test:</b> ?????</p>
+
+    <p><a href="../docs/demo/canvas-204.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-204.js" type="module"></script>
+
+</body>
+
+</html>

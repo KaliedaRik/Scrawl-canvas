@@ -599,37 +599,49 @@ P.stampPositioningHelper = function () {
 // `stampPositioningHelper` - internal helper function
 P.underlineEngine = function (engine, pos) {
 
+    // Setup constants
+    const {
+        currentDimensions,
+        currentScale,
+        currentStampPosition,
+        state,
+        underlineGap,
+        underlineOffset,
+        underlineStyle,
+        underlineWidth,
+    } = this;
+
+    const [, x, y] = pos;
+    const [localWidth, localHeight] = currentDimensions;
+
+    const underlineStartY = y + (underlineOffset * localHeight);
+    const underlineDepth = underlineWidth * currentScale;
+
+    // Setup the temporary cell
     const mycell = requestCell(),
-        ctx = mycell.engine,
-        el = mycell.element,
-        p1 = 50,
-        p2 = 100;
+        canvasEl = engine.canvas;
 
-    const {state, currentStart, currentStampPosition, currentStampHandlePosition, currentDimensions, currentScale, underlineWidth, underlineOffset, underlineStyle, underlineGap} = this;
+    const { engine:ctx, element:el } = mycell;
 
-    const [w, h] = currentDimensions;
+    mycell.w = el.width = canvasEl.width;
+    mycell.h = el.height = canvasEl.height;
 
-    const [text, x, y] = pos;
+    mycell.rotateDestination(ctx, ...currentStampPosition, this);
 
-    // Manipulate the element
-    el.width = w + p2;
-    el.height = h + p2;
-
-    // Handle non-color styles eg gradients, patterns, other cells, etc.
-    const tempStart = [...currentStart],
-        tempStamp = [...currentStampPosition],
-        tempStampHandle = [...currentStampHandlePosition],
-        tempDims = [...currentDimensions];
-
-    // Gradients use entity vals to calculate positioning, but we're not in the real canvas here so we have to directly update some sensitive Label entity internal attributes
-    currentStart[0] = p1;
-    currentStart[1] = p1;
-    currentStampPosition[0] = p1 / currentScale;
-    currentStampPosition[1] = p1 / currentScale;
-    currentStampHandlePosition[0] = -p1 / currentScale;
-    currentStampHandlePosition[1] = -p1 / currentScale;
-    currentDimensions[0] /= currentScale;
-    currentDimensions[1] /= currentScale;
+    // Setup the underline context
+    ctx.fillStyle = BLACK;
+    ctx.strokeStyle = BLACK;
+    ctx.font = state.font;
+    ctx.fontKerning = state.fontKerning;
+    ctx.fontStretch = state.fontStretch;
+    ctx.fontVariantCaps = state.fontVariantCaps;
+    ctx.textRendering = state.textRendering;
+    ctx.letterSpacing = state.letterSpacing;
+    ctx.wordSpacing = state.wordSpacing;
+    ctx.direction = state.direction;
+    ctx.textAlign = LEFT;
+    ctx.textBaseline = TOP;
+    ctx.lineWidth = (underlineGap * 2) * currentScale;
 
     // Underlines can take their own styling, or use the fillStyle set on the Label entity
     let uStyle = underlineStyle;
@@ -645,48 +657,26 @@ P.underlineEngine = function (engine, pos) {
     }
     else uStyle = uStyle.getData(this, mycell);
 
-    // Once we have any styles data, undo the changes to the Label entity
-    currentStart[0] = tempStart[0];
-    currentStart[1] = tempStart[1];
-    currentStampPosition[0] = tempStamp[0];
-    currentStampPosition[1] = tempStamp[1];
-    currentStampHandlePosition[0] = tempStampHandle[0];
-    currentStampHandlePosition[1] = tempStampHandle[1];
-    currentDimensions[0] = tempDims[0];
-    currentDimensions[1] = tempDims[1];
-
     // Generate the underline
-    ctx.fillStyle = BLACK;
-    ctx.strokeStyle = BLACK;
-    ctx.font = state.font;
-    ctx.fontKerning = state.fontKerning;
-    ctx.fontStretch = state.fontStretch;
-    ctx.fontVariantCaps = state.fontVariantCaps;
-    ctx.textRendering = state.textRendering;
-    ctx.letterSpacing = state.letterSpacing;
-    ctx.wordSpacing = state.wordSpacing;
-    ctx.direction = state.direction;
-    ctx.textAlign = LEFT;
-    ctx.textBaseline = TOP;
-    ctx.lineWidth = (underlineGap * 2) * currentScale;
-
-    ctx.strokeText(text, p1, p1);
-    ctx.fillText(text, p1, p1);
+    ctx.strokeText(...pos);
+    ctx.fillText(...pos);
 
     ctx.globalCompositeOperation = 'source-out';
     ctx.fillStyle = uStyle;
 
-    const rectStart = underlineOffset * h;
+    ctx.fillRect(x, underlineStartY, localWidth, underlineDepth);
 
-    ctx.fillRect(p1, rectStart + p1, w, underlineWidth * currentScale);
+    // Copy the underline over to the real cell
+    engine.save();
+    engine.setTransform(1, 0, 0, 1, 0, 0);
+    engine.drawImage(el, 0, 0);
+    engine.restore();
 
-    // Paste the underline to the real cell, ready for the text to be stamped alongside it.
-    engine.drawImage(el, 0, 0, w + p2, h + p2, x - p1, y - p1, w + p2, h + p2);
-
+    // Release the temporary cell
     releaseCell(mycell);
 };
 
-// `drawBoundingBox` - internal helper function called by `regularStamp`
+// `drawBoundingBox` - internal helper function called by `method` functions
 // + Unlike the underline, the bounding box only supports color values. It's mainly used during development as a reference to get the font to fit inside its box
 // + No checks are made to exclude non-color-string styles!
 // + To add fancy borders and backgrounds to a Label entity, use a second entity (eg: Block, Rectangle) and set it to mimic the Label entity. Remember the second entity will need to calculate its positioning/dimensions after the Label, but stamp itself before the label. Use the `calculateOrder` and `stampOrder` attributes of the two entitys to make this happen.

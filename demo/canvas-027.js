@@ -69,7 +69,7 @@ const playPause = scrawl.makeLabel({
 
     fontString: '2rem sans-serif',
     letterSpacing: 3,
-    
+
     fillStyle: 'yellow',
 
     startX: '75%',
@@ -77,16 +77,14 @@ const playPause = scrawl.makeLabel({
     startY: '98%',
     handleY: 'bottom',
 
-    underlineStyle: 'yellow',
     underlineWidth: 4,
-    underlineOffset: 0.93,
+    underlineOffset: 0.96,
+    underlineGap: 0,
 
     onEnter: function () {
 
         canvas.set({
-            css: {
-                cursor: 'pointer',
-            }
+            css: { cursor: 'pointer' }
         });
 
 // @ts-expect-error
@@ -96,9 +94,7 @@ const playPause = scrawl.makeLabel({
     onLeave: function () {
 
         canvas.set({
-            css: {
-                cursor: 'auto',
-            }
+            css: { cursor: 'auto' }
         });
 
 // @ts-expect-error
@@ -208,14 +204,10 @@ scrawl.makePicture({
     onLeave: function () {
 
 // @ts-expect-error
-        this.set({
-            globalAlpha: 0.01,
-        });
+        this.set({ globalAlpha: 0.01 });
 
         canvas.set({
-            css: {
-                cursor: 'auto',
-            }
+            css: { cursor: 'auto' }
         });
     },
 
@@ -297,9 +289,7 @@ const mygoose = scrawl.makeBlock({
     onEnter: function () {
 
         canvas.set({
-            css: {
-                cursor: 'pointer',
-            }
+            css: { cursor: 'pointer' }
         });
 
 // @ts-expect-error
@@ -309,9 +299,7 @@ const mygoose = scrawl.makeBlock({
     onLeave: function () {
 
         canvas.set({
-            css: {
-                cursor: 'auto',
-            }
+            css: { cursor: 'auto' }
         });
 
 // @ts-expect-error
