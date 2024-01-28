@@ -438,8 +438,9 @@ const vtLabel = scrawl.makeLabel({
     start: [5, 20],
     fillStyle: 'yellow',
 
-    // Accesibility
-    accessibleText: 'Running time: §',
+    // Accesibility - this Label updates many times per second. Best to not include it in the DOM as it could ruin the web page experience for people using screen readers.
+    // + People will be more interested in seeing/hearing/reading any captions or subtitles included alongside the video.
+    textIsAccessible: false,
 });
 
 const videoTimeBar = function () {

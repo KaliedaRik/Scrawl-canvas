@@ -33,6 +33,26 @@
 
   <p id="reportmessage"></p>
 
+  <hr />
+  <p><b>To note:</b> All major browsers support playing video using the HTML &lt;video> element. For most uses (eg: background animation in a website banner; advert with an additional Call-To-Action button) this - or a third-party video solution - will be sufficient. We should only resort to displaying video in a &lt;canvas> element when we need to add additional functionality - in this demo we add keyboard-navigable controls and link areas to the video to make it more interesting/accessible.</p>
+
+  <p>Each browser implements the HTML &lt;video> element in their own way, with differences in how the video data (eg captions, subtitles) and controls look, and their accessibility. The MDN website has a series of articles on how to create a cross-browser video player. Remember that if we add a video to a canvas for any reason beyond decoration, then we will need to implement much of the functionality described in these articles ourselves:</p>
+
+  <ul>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/Media/Audio_and_video_delivery/cross_browser_video_player">Creating a cross-browser video player</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/Media/Audio_and_video_delivery/Video_player_styling_basics">Video player styling basics</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/Media/Audio_and_video_delivery/Adding_captions_and_subtitles_to_HTML5_video">Adding captions and subtitles to HTML video</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Learn/Accessibility/Multimedia">Accessible multimedia</a></li>
+  </ul>
+
+  <p>Further useful accessibility-related links:</p>
+
+  <ul>
+    <li><a href="https://w3c.github.io/webvtt/#api">W3C specification WebVTT - Web Video Text Tracks Format</a></li>
+    <li><a href="https://www.powermapper.com/tests/screen-readers/elements/">PowerMapper page for HTML elements and screen reader compatibility</a></li>
+  </ul>
+  <hr />
+
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
