@@ -3127,6 +3127,8 @@ export function stopCoreListeners(): void;
 
 export function forceUpdate(): void;
 
+export function recalculateFonts(item?: number): void;
+
 
 
 

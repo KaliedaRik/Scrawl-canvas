@@ -328,6 +328,7 @@ const c3Phrase = scrawl.makeLabel({
     fontString: 'bold 120px serif',
 });
 
+
 const canvasThreePostInitialization = function () {
 
     console.log('running canvasThreePostInitialization()');
@@ -436,6 +437,10 @@ scrawl.makeRender({
     noTarget: true,
     afterShow: report,
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### Development and testing

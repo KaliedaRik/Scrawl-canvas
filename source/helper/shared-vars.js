@@ -232,6 +232,7 @@ export const FLOOD = 'flood';
 export const FOCUS = 'focus';
 export const FOCUS_ACTION = 'focusAction';
 export const FONT_ATTRIBUTE = 'fontattribute';
+export const FONT_USERS = _freeze(['Label', 'EnhancedLabel']);
 export const FORCE = 'force';
 export const FORM = 'form';
 export const FORM_ACTION = 'formAction';

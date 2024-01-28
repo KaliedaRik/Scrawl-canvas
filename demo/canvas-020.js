@@ -159,7 +159,7 @@ const imageCapture = function () {
 scrawl.makePicture({
 
     name: name('cell-image'),
-    group: hold.base.name,
+    group: hold.get('baseGroup'),
 
     width: '13%',
     height: '76%',
@@ -213,7 +213,7 @@ scrawl.makePicture({
 scrawl.makeLabel({
 
     name: name('cell-phrase'),
-    group: hold.base.name,
+    group: hold.get('baseGroup'),
 
     text: 'Cell',
     fontString: '15px Arial, sans-serif',
@@ -272,6 +272,10 @@ scrawl.makeRender({
 });
 
 
+// Recalculate font dimensions
+scrawl.recalculateFonts();
+
+
 // #### User interaction
 // Event listeners
 const events = function () {
@@ -328,6 +332,7 @@ const events = function () {
     };
 }();
 scrawl.addNativeListener(['input'], events, '.controlItem');
+
 
 // Set the DOM input values
 // @ts-expect-error

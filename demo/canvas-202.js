@@ -29,7 +29,7 @@ const mylabel = scrawl.makeLabel({
     lineWidth: 4,
     showBoundingBox: true,
 });
-
+setTimeout(() => mylabel.recalculateFont(), 100);
 
 scrawl.makeWheel({
     name: name('pin'),
@@ -166,7 +166,7 @@ const updateFont = (event) => {
                     fontString: '40px monospace',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
+                    fontVerticalOffset: 1,
                 });
                 break;
 
@@ -444,7 +444,7 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Korean Serif"',
                     text: '모든 사람은 의견의',
                     direction: 'ltr',
-                    fontVerticalOffset: 4,
+                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -504,7 +504,7 @@ const updateFont = (event) => {
 
             case 'bungee' :
                 mylabel.set({
-                    fontString: '60px "Bungee"',
+                    fontString: '40px "Bungee"',
                     text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
@@ -513,7 +513,7 @@ const updateFont = (event) => {
 
             case 'bungee-spice' :
                 mylabel.set({
-                    fontString: '60px "Bungee Spice"',
+                    fontString: '40px "Bungee Spice"',
                     text: 'Long live the world!',
                     direction: 'ltr',
                     fontVerticalOffset: 0,
@@ -547,7 +547,7 @@ const updateFont = (event) => {
                 });
         }
 
-        setTimeout(() => mylabel.recalculateFont(), 50);
+        setTimeout(() => mylabel.recalculateFont(), 100);
     }
 };
 

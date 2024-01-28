@@ -11,8 +11,8 @@ import { reportSpeed } from './utilities.js';
 const canvas = scrawl.library.canvas.mycanvas;
 
 
-// Create the demo Phrase entity
-const mytext = scrawl.makePhrase({
+// Create the demo Label entity
+const mytext = scrawl.makeLabel({
 
     name: 'display-shape-text',
 
@@ -20,8 +20,7 @@ const mytext = scrawl.makePhrase({
     handle: ['center', 'center'],
 
     text: `Canvas display shape: undetermined`,
-    size: '40px',
-    justify: 'center',
+    fontString: '40px sans-serif',
 
     fillStyle: 'black',
 });
@@ -79,19 +78,19 @@ canvas.set({
 
     actionLargestArea: () => {
         mytext.set({
-            size: '40px',
+            fontString: '40px sans-serif',
         });
     },
 
     actionRegularArea: () => {
         mytext.set({
-            size: '28px',
+            fontString: '28px sans-serif',
         });
     },
 
     actionSmallestArea: () => {
         mytext.set({
-            size: '16px',
+            fontString: '16px sans-serif',
         });
     },
 });
@@ -113,13 +112,13 @@ canvas.setActionLandscapeShape(() => {
 
 canvas.setActionLargerArea(() => {
     mytext.set({
-        size: '34px',
+        fontString: '34px sans-serif',
     });
 });
 
 canvas.setActionSmallerArea(() => {
     mytext.set({
-        size: '22px',
+        fontString: '22px sans-serif',
     });
 });
 
@@ -136,6 +135,10 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### Development and testing

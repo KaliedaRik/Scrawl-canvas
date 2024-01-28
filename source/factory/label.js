@@ -3,13 +3,14 @@
 
 // #### To be aware: fonts are loaded asynchronously!
 // Browsers tend to delay loading fonts until they are needed - hence FOUC. This means that Label entitys may not pick their correct dimensions when instantiated.
-// + While Labels will eventually display using the correct font once it has loaded, their measurements will not update.
-// + If this is important for a scene, we need to correct Label dimensions manually - `setTimeout` is one approach:
-// + `setTimeout(() => canvas.get('baseGroup').recalculateFonts(), 0);`
-// + Another approach is to load fonts dynamically - see the [Font Loading API documentation](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) on MDN for details.
-// + A third approach is to trigger the recalculation in the `makeRender` object using the `afterCreated` hook:
-// + `afterCreated: () => canvas.get('baseGroup').recalculateFonts(),`
-
+// + For individual label entitys, this can be solved by including a line of boilerplate code after creating the label:
+// ```
+// const mylabel = scrawl.makeLabel({
+//     [...]
+// });
+// setTimeout(() => mylabel.recalculateFont(), 100);
+// ```
+// + Alternatively, use `scrawl.recalculateFonts()`. The function can take a delay argument number measuring milliseconds before the action triggers - default is 100ms. When triggered all Label entitys created up to that point in time will recalculate their font dimensions.
 
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames } from '../core/library.js';

@@ -118,7 +118,7 @@ scrawl.makeLabel({
     name: 'advanced-brightness-label',
     text: 'Mod channels',
     pivot: 'advanced-brightness-picture',
-})
+});
 
 
 // #### Scene animation
@@ -137,6 +137,10 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### User interaction

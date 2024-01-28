@@ -1,20 +1,10 @@
 // # Demo Canvas 201
-// Label entity (make, clone, method)
+// Label entity (make, clone, method); Label accessible text
 
 // [Run code](../../demo/canvas-201.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, killArtefact } from './utilities.js';
-
-
-// #### To be aware: fonts are loaded asynchronously!
-// Browsers tend to delay loading fonts until they are needed - hence FOUC. This means that Label entitys may not pick their correct dimensions when instantiated.
-// + While Labels will eventually display using the correct font once it has loaded, their measurements will not update.
-// + If this is important for a scene, we need to correct Label dimensions manually - `setTimeout` is one approach:
-// + `setTimeout(() => canvas.get('baseGroup').recalculateFonts(), 0);`
-// + Another approach is to load fonts dynamically - see the [Font Loading API documentation](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) on MDN for details.
-// + The approach used in this demo is to trigger the recalculation in the `makeRender` object using the `afterCreated` hook:
-// + `afterCreated: () => canvas.get('baseGroup').recalculateFonts(),`
 
 
 // #### Scene setup
@@ -186,14 +176,15 @@ scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
+    afterShow: report,
 
     // We have to tell the canvas to check UI for hovering states every Display cycle
     commence: () => canvas.checkHover(),
-
-    afterShow: report,
-
-    afterCreated: () => canvas.get('baseGroup').recalculateFonts(),
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### Development and testing

@@ -51,16 +51,8 @@ const mylabel = scrawl.makeLabel({
     underlineGap: 3,
     lockFillStyleToEntity: true,
 });
+setTimeout(() => mylabel.recalculateFont(), 100);
 
-
-scrawl.makeWheel({
-    name: name('pin'),
-    radius: 4,
-    handle: ['center', 'center'],
-    pivot: name('my-label'),
-    lockTo: 'pivot',
-    fillStyle: 'blue',
-})
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -567,8 +559,7 @@ const updateFont = (event) => {
                     fontVerticalOffset: 0,
                 });
         }
-
-        setTimeout(() => mylabel.recalculateFont(), 50);
+        setTimeout(() => mylabel.recalculateFont(), 100);
     }
 };
 

@@ -52,7 +52,7 @@ const mylabel = scrawl.makeLabel({
     underlineWidth: 3,
     underlineOffset: 0.77,
 });
-setTimeout(() => mylabel.recalculateFont(), 50);
+
 
 // #### User interaction
 // Make an object to hold functions we'll use for UI
@@ -93,6 +93,10 @@ scrawl.makeRender({
     commence: () => canvas.checkHover(),
     afterShow: report,
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### User interaction

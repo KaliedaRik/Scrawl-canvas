@@ -42,6 +42,7 @@ export {
     show,
     render,
 } from './core/display-cycle.js';
+export { recalculateFonts } from './core/document.js';
 export {
     addListener,
     removeListener,

@@ -319,6 +319,7 @@ scrawl.makeRender({
         originals.set({ visibility: false });
         createCachePictures();
         addLabels();
+        scrawl.recalculateFonts();
     },
 });
 

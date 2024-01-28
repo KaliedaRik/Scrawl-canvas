@@ -48,18 +48,20 @@ data.forEach((d, index) => {
         fillStyle: base,
     });
 
-    scrawl.makePhrase({
+    scrawl.makeLabel({
         name: `label-${label}-main`,
         text: label,
+        accessibleText: 'Color strings of type: §',
         startX: (blockWidth * index) + (index * 10) + 10,
         startY: '3%',
     });
 
-    scrawl.makePhrase({
+    scrawl.makeLabel({
         name: `label-${label}-top`,
         pivot: `${label}-top`,
         lockTo: 'pivot',
         text: top,
+        accessibleText: 'Color generated: §',
         fillStyle: 'black',
         roll: 53,
         order: 1,

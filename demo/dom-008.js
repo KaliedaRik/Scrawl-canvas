@@ -201,16 +201,14 @@ scrawl.makeBlock({
 
 // Add a label to each canvas using a Phrase entity
 scrawl
-  .makePhrase({
+  .makeLabel({
     name: "topface-label",
     group: top.base.name,
     start: ["center", "center"],
     handle: ["center", "center"],
     text: "TOP",
-    family: "sans-serif",
-    weight: "bold",
-    size: "3em",
-    lineHeight: 0,
+    accessibleText: "§ canvas element",
+    fontString: 'bold 3rem sans-serif',
     fillStyle: "yellow",
     lineWidth: 2,
     method: "fillThenDraw"
@@ -280,6 +278,9 @@ scrawl.makeRender({
     name: 'demo-animation-canvases',
     target: [top, bottom, left, right, front, back],
 });
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### Development and testing

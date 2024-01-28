@@ -222,7 +222,6 @@ scrawl.makeLabel({
 });
 
 
-
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
@@ -239,6 +238,10 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### User interaction

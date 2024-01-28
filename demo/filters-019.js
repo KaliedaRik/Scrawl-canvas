@@ -70,7 +70,7 @@ scrawl.makeLabel({
     text: 'Sharpen',
     pivot: 'sharpen-filter',
 
-})
+});
 
 
 // #### Scene animation
@@ -89,6 +89,10 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### User interaction

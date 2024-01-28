@@ -57,6 +57,10 @@ scrawl.makeRender({
 });
 
 
+// Recalculate font dimensions
+scrawl.recalculateFonts();
+
+
 // #### User interaction
 // No additional work required in the Javascript file to create the CSS filters; these are defined as Strings in the HTML select &lt;option> elements, and will be set on the target entitys as part of the form control user interaction below.
 //

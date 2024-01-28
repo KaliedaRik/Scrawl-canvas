@@ -133,14 +133,12 @@ scrawl.makePicture({
     start: getRandomPosition(),
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'phrase-entity-1',
     group: sceneLayer.name,
     text: 'Hello',
-    family: 'serif',
-    size: '40px',
-    lineHeight: 0,
+    fontString: '40px serif',
     start: getRandomPosition(),
     handle: ['center', 'center'],
     ...addControllerAttributes,
@@ -187,6 +185,10 @@ scrawl.makeRender({
     name: "demo-animation",
     afterShow: report,
 });
+
+
+// Recalculate font dimensions
+scrawl.recalculateFonts();
 
 
 // #### Development and testing

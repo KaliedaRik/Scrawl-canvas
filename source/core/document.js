@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { artefact } from "./library.js";
+import { artefact, entitynames, entity } from "./library.js";
 
 import { pushUnique, Ωempty } from "../helper/utilities.js";
 
@@ -13,7 +13,7 @@ import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from '../helper/shared-vars.js';
+import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, FONT_USERS, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### DOM element updates
@@ -225,3 +225,17 @@ scrawlCanvasHold.style.top = '-5000px';
 scrawlCanvasHold.style.left = '-5000px';
 scrawlCanvasHold.id = 'Scrawl-ARIA-default-hold';
 document.body.appendChild(scrawlCanvasHold);
+
+export const recalculateFonts = (delay = 100) => {
+
+    setTimeout(() => {
+
+        entitynames.forEach(name => {
+
+            const ent = entity[name];
+
+            if (FONT_USERS.includes(ent.type)) ent.recalculateFont();
+        });
+    }, delay);
+};
+
