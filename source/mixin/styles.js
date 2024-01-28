@@ -613,7 +613,7 @@ export default function (P = Ωempty) {
         }
         else {
 
-            dims = cell.currentDimensions;
+            dims = cell.currentDimensions || [cell.element.width, cell.element.height];
             w = dims[0];
             h = dims[1];
         }

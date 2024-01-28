@@ -386,9 +386,6 @@ Noto Color Emoji (emoji)
       </select>
     </div>
 
-    <div>&nbsp;</div>
-    <div>&nbsp;</div>
-
     <div class="pink label">Include underline</div>
     <div class="pink">
       <select class="controlItem" id="includeUnderline">
@@ -400,11 +397,16 @@ Noto Color Emoji (emoji)
     <div class="pink label">Underline style</div>
     <div class="pink">
       <select class="controlItem" id="underlineStyle">
-        <option value="black">black</option>
+        <option value="">default</option>
         <option value="red">red</option>
-        <option value="black">black</option>
-        <option value="red">red</option>
+        <option value="demo-linear-gradient">gradient</option>
+        <option value="demo-water-pattern">pattern</option>
       </select>
+    </div>
+
+    <div class="pink label">Underline gap</div>
+    <div class="pink">
+      <input class="controlItem" id="underlineGap" type="range" value="3" min="0" max="7" step="0.05" />
     </div>
 
     <div class="pink label">Underline width</div>

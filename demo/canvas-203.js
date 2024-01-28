@@ -17,6 +17,27 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
+scrawl.makeGradient({
+    name: name('linear-gradient'),
+    endX: '100%',
+
+    colors: [
+        [0, 'blue'],
+        [495, 'red'],
+        [500, 'yellow'],
+        [505, 'red'],
+        [999, 'green']
+    ],
+    colorSpace: 'OKLAB',
+    precision: 5,
+});
+
+scrawl.makePattern({
+
+    name: name('water-pattern'),
+    imageSource: 'img/water.png',
+});
+
 const mylabel = scrawl.makeLabel({
     name: name('my-label'),
     start: ['center', 'center'],
@@ -24,11 +45,11 @@ const mylabel = scrawl.makeLabel({
     fontString: '60px serif',
     text: 'Long live the world!',
 
-    lineWidth: 6,
     includeUnderline: true,
     underlineWidth: 2,
     underlineOffset: 0.9,
-    underlineStyle: 'black',
+    underlineGap: 3,
+    lockFillStyleToEntity: true,
 });
 
 
@@ -129,6 +150,7 @@ scrawl.makeUpdater({
         underlineStyle: ['underlineStyle', 'raw'],
         underlineWidth: ['underlineWidth', 'int'],
         underlineOffset: ['underlineOffset', 'float'],
+        underlineGap: ['underlineGap', 'float'],
     },
 });
 
@@ -589,6 +611,8 @@ document.querySelector('#underlineStyle').options.selectedIndex = 0;
 document.querySelector('#underlineWidth').value = 2;
 // @ts-expect-error
 document.querySelector('#underlineOffset').value = 0.9;
+// @ts-expect-error
+document.querySelector('#underlineGap').value = 3;
 
 
 // #### Development and testing

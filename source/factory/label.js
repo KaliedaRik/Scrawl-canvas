@@ -12,7 +12,7 @@
 
 
 // #### Imports
-import { constructors } from '../core/library.js';
+import { constructors, cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 
@@ -64,9 +64,10 @@ const defaultAttributes = {
     fontVerticalOffset: 0,
 
     includeUnderline: false,
-    underlineStyle: BLACK,
+    underlineStyle: ZERO_STR,
     underlineWidth: 1,
     underlineOffset: 0,
+    underlineGap: 3,
 
     showBoundingBox: false,
     boundingBoxStyle: BLACK,
@@ -598,21 +599,63 @@ P.stampPositioningHelper = function () {
 // `stampPositioningHelper` - internal helper function
 P.underlineEngine = function (engine, pos) {
 
-    const cell = requestCell(),
-        ctx = cell.engine,
-        el = cell.element,
+    const mycell = requestCell(),
+        ctx = mycell.engine,
+        el = mycell.element,
         p1 = 50,
         p2 = 100;
 
-    const {state, currentDimensions, currentScale, underlineWidth, underlineOffset, underlineStyle} = this;
+    const {state, currentStart, currentStampPosition, currentStampHandlePosition, currentDimensions, currentScale, underlineWidth, underlineOffset, underlineStyle, underlineGap} = this;
 
     const [w, h] = currentDimensions;
 
     const [text, x, y] = pos;
 
+    // Manipulate the element
     el.width = w + p2;
     el.height = h + p2;
 
+    // Handle non-color styles eg gradients, patterns, other cells, etc.
+    const tempStart = [...currentStart],
+        tempStamp = [...currentStampPosition],
+        tempStampHandle = [...currentStampHandlePosition],
+        tempDims = [...currentDimensions];
+
+    // Gradients use entity vals to calculate positioning, but we're not in the real canvas here so we have to directly update some sensitive Label entity internal attributes
+    currentStart[0] = p1;
+    currentStart[1] = p1;
+    currentStampPosition[0] = p1 / currentScale;
+    currentStampPosition[1] = p1 / currentScale;
+    currentStampHandlePosition[0] = -p1 / currentScale;
+    currentStampHandlePosition[1] = -p1 / currentScale;
+    currentDimensions[0] /= currentScale;
+    currentDimensions[1] /= currentScale;
+
+    // Underlines can take their own styling, or use the fillStyle set on the Label entity
+    let uStyle = underlineStyle;
+    if (!uStyle) uStyle = this.state.fillStyle;
+    if (uStyle.substring) {
+
+        let brokenStyle = null;
+
+        if (stylesnames.includes(uStyle)) brokenStyle = styles[uStyle];
+        else if (cellnames.includes(uStyle)) brokenStyle = cell[uStyle];
+
+        if (brokenStyle != null) uStyle = brokenStyle.getData(this, mycell);
+    }
+    else uStyle = uStyle.getData(this, mycell);
+
+    // Once we have any styles data, undo the changes to the Label entity
+    currentStart[0] = tempStart[0];
+    currentStart[1] = tempStart[1];
+    currentStampPosition[0] = tempStamp[0];
+    currentStampPosition[1] = tempStamp[1];
+    currentStampHandlePosition[0] = tempStampHandle[0];
+    currentStampHandlePosition[1] = tempStampHandle[1];
+    currentDimensions[0] = tempDims[0];
+    currentDimensions[1] = tempDims[1];
+
+    // Generate the underline
     ctx.fillStyle = BLACK;
     ctx.strokeStyle = BLACK;
     ctx.font = state.font;
@@ -625,23 +668,40 @@ P.underlineEngine = function (engine, pos) {
     ctx.direction = state.direction;
     ctx.textAlign = LEFT;
     ctx.textBaseline = TOP;
-    ctx.lineWidth = state.lineWidth * currentScale;
+    ctx.lineWidth = (underlineGap * 2) * currentScale;
 
     ctx.strokeText(text, p1, p1);
     ctx.fillText(text, p1, p1);
 
     ctx.globalCompositeOperation = 'source-out';
-    ctx.fillStyle = underlineStyle;
+    ctx.fillStyle = uStyle;
 
-    let rectStart = underlineOffset * h;
-    if (rectStart < 0) rectStart = 0;
-    if (rectStart >= h) rectStart = h - 1;
+    const rectStart = underlineOffset * h;
 
     ctx.fillRect(p1, rectStart + p1, w, underlineWidth * currentScale);
 
-    engine.drawImage(el, p1, p1, w, h, x, y, w, h);
+    // Paste the underline to the real cell, ready for the text to be stamped alongside it.
+    engine.drawImage(el, 0, 0, w + p2, h + p2, x - p1, y - p1, w + p2, h + p2);
 
-    releaseCell(cell);
+    releaseCell(mycell);
+};
+
+// `drawBoundingBox` - internal helper function called by `regularStamp`
+// + Unlike the underline, the bounding box only supports color values. It's mainly used during development as a reference to get the font to fit inside its box
+// + No checks are made to exclude non-color-string styles!
+// + To add fancy borders and backgrounds to a Label entity, use a second entity (eg: Block, Rectangle) and set it to mimic the Label entity. Remember the second entity will need to calculate its positioning/dimensions after the Label, but stamp itself before the label. Use the `calculateOrder` and `stampOrder` attributes of the two entitys to make this happen.
+P.drawBoundingBox = function (engine) {
+
+    engine.save();
+    engine.strokeStyle = this.boundingBoxStyle;
+    engine.lineWidth = this.boundingBoxLineWidth;
+    engine.globalCompositeOperation = SOURCE_OVER;
+    engine.globalAlpha = 1;
+    engine.shadowOffsetX = 0;
+    engine.shadowOffsetY = 0;
+    engine.shadowBlur = 0;
+    engine.stroke(this.pathObject);
+    engine.restore();
 };
 
 // `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
@@ -747,21 +807,6 @@ P.clear = function (engine) {
 
 // `none` - perform all the calculations required, but don't perform the final stamping
 P.none = function () {}
-
-// `drawBoundingBox` - internal helper function called by `regularStamp`
-P.drawBoundingBox = function (engine) {
-
-    engine.save();
-    engine.strokeStyle = this.boundingBoxStyle;
-    engine.lineWidth = this.boundingBoxLineWidth;
-    engine.globalCompositeOperation = SOURCE_OVER;
-    engine.globalAlpha = 1;
-    engine.shadowOffsetX = 0;
-    engine.shadowOffsetY = 0;
-    engine.shadowBlur = 0;
-    engine.stroke(this.pathObject);
-    engine.restore();
-};
 
 
 // #### Factory

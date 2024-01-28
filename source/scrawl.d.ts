@@ -1523,6 +1523,7 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
     boundingBoxLineWidth?: number;
     letterSpacing?: string | number;
+    underlineGap?: number;
     underlineOffset?: number;
     underlineWidth?: number;
     wordSpacing?: string | number;
