@@ -95,10 +95,6 @@ scrawl.makeRender({
 });
 
 
-// Recalculate font dimensions
-scrawl.recalculateFonts();
-
-
 // #### User interaction
 scrawl.makeUpdater({
 

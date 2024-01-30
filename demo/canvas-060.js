@@ -140,7 +140,7 @@ scrawl.makeAnimation({
 
         report();
     },
-})
+});
 
 
 // Recalculate font dimensions

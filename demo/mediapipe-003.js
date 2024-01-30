@@ -64,7 +64,6 @@ const updateLabelsAndWorm = function (asset) {
                     textIsAccessible: false,
                 }));
             });
-            scrawl.recalculateFonts();
         }
 
         // Update label coordinates with new mesh data

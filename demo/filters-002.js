@@ -240,10 +240,6 @@ scrawl.makeRender({
 });
 
 
-// Recalculate font dimensions
-scrawl.recalculateFonts();
-
-
 // #### User interaction
 const myFilters = [
     filter.red,

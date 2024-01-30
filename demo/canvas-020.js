@@ -272,10 +272,6 @@ scrawl.makeRender({
 });
 
 
-// Recalculate font dimensions
-scrawl.recalculateFonts();
-
-
 // #### User interaction
 // Event listeners
 const events = function () {

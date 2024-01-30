@@ -91,10 +91,6 @@ scrawl.makeRender({
 });
 
 
-// Recalculate font dimensions
-scrawl.recalculateFonts();
-
-
 // #### User interaction
 // Setup form observer functionality
 const myFilters = [

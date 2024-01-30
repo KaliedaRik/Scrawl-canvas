@@ -279,9 +279,5 @@ scrawl.makeRender({
     target: [top, bottom, left, right, front, back],
 });
 
-// Recalculate font dimensions
-scrawl.recalculateFonts();
-
-
 // #### Development and testing
 console.log(scrawl.library);

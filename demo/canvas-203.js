@@ -51,7 +51,6 @@ const mylabel = scrawl.makeLabel({
     underlineGap: 3,
     lockFillStyleToEntity: true,
 });
-setTimeout(() => mylabel.recalculateFont(), 100);
 
 
 // #### Scene animation
@@ -559,7 +558,6 @@ const updateFont = (event) => {
                     fontVerticalOffset: 0,
                 });
         }
-        setTimeout(() => mylabel.recalculateFont(), 100);
     }
 };
 

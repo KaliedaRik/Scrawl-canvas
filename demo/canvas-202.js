@@ -36,7 +36,6 @@ const mylabel = scrawl.makeLabel({
     lineWidth: 4,
     showBoundingBox: true,
 });
-setTimeout(() => mylabel.recalculateFont(), 100);
 
 scrawl.makeWheel({
     name: name('pin'),
@@ -46,6 +45,7 @@ scrawl.makeWheel({
     lockTo: 'pivot',
     fillStyle: 'blue',
 })
+
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -734,8 +734,6 @@ const updateFont = (event) => {
                 html.style.direction = 'ltr';
                 html.textContent = 'Long live the world!';
         }
-
-        setTimeout(() => mylabel.recalculateFont(), 100);
     }
 };
 

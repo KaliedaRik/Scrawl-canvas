@@ -139,10 +139,6 @@ scrawl.makeRender({
 });
 
 
-// Recalculate font dimensions
-scrawl.recalculateFonts();
-
-
 // #### User interaction
 scrawl.addNativeListener(['input', 'change'], () => {
 

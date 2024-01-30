@@ -1,16 +1,6 @@
 // # Label factory
 // TODO - documentation
 
-// #### To be aware: fonts are loaded asynchronously!
-// Browsers tend to delay loading fonts until they are needed - hence FOUC. This means that Label entitys may not pick their correct dimensions when instantiated.
-// + For individual label entitys, this can be solved by including a line of boilerplate code after creating the label:
-// ```
-// const mylabel = scrawl.makeLabel({
-//     [...]
-// });
-// setTimeout(() => mylabel.recalculateFont(), 100);
-// ```
-// + Alternatively, use `scrawl.recalculateFonts()`. The function can take a delay argument number measuring milliseconds before the action triggers - default is 100ms. When triggered all Label entitys created up to that point in time will recalculate their font dimensions.
 
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames } from '../core/library.js';
@@ -22,7 +12,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _ceil, _floor, _parse, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, START, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _floor, _parse, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, START, SYSTEM_FONTS, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -34,6 +24,7 @@ const Label = function (items = Ωempty) {
     this.entityInit(items);
 
     this.dirtyFont = true;
+    this.currentFontIsLoaded = false;
     if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
 
     return this;
@@ -140,12 +131,14 @@ S.scale = function (item) {
     this.scale = item;
     this.dirtyScale = true;
     this.dirtyFont = true;
+    this.currentFontIsLoaded = false;
 };
 D.scale = function (item) {
 
     this.scale += item;
     this.dirtyScale = true;
     this.dirtyFont = true;
+    this.currentFontIsLoaded = false;
 };
 
 G.rawFont = function () {
@@ -163,6 +156,7 @@ S.fontString = function (item) {
         this.fontString = item;
         this.dirtyFont = true;
         if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
+        this.currentFontIsLoaded = false;
     }
 };
 
@@ -177,6 +171,7 @@ S.text = function (item) {
 
     this.dirtyText = true;
     this.dirtyFont = true;
+    this.currentFontIsLoaded = false;
 };
 
 G.accessibleText = function () {
@@ -314,8 +309,23 @@ S.textRendering = function (item) {
 };
 
 
-
 // #### Prototype functions
+P.checkFontIsLoaded = function () {
+
+    const fonts = document.fonts;
+
+    const check = fonts.check(this.state.font);
+
+    if (check) {
+
+        this.currentFontIsLoaded = true;
+        return true;
+    }
+    this.dirtyFont = true;
+    return false;
+}
+
+
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
 // + We also get basic text metrics at this point in time
 P.temperFont = function () {
@@ -333,8 +343,16 @@ P.temperFont = function () {
 
     if (this.temperedFont && state) {
 
-        const {attributes, size, family} = this.temperedFont.groups;
-        this.defaultFont = `${attributes} ${size * currentScale}px ${family}`;
+        const groups = this.temperedFont.groups;
+        const {attributes, size, family} = groups;
+
+        const familyArray = family.split(','),
+            firstFamily = familyArray[0].trim();
+
+        groups.family = firstFamily;
+        groups.attributes = attributes.trim();
+
+        this.defaultFont = `${attributes} ${size * currentScale}px ${firstFamily}`;
         state.font = this.defaultFont;
     }
     else {
@@ -383,6 +401,7 @@ P.convertTextEntityCharacters = function (item) {
 
 // `recalculateFont` - force the entity to recalculate its dimensions without having to set anything.
 // + Can also be invoked via the entity's Group object's `recalculateFonts` function
+// + Can be invoked globally via the `scrawl.recalculateFonts` function
 P.recalculateFont = function () {
 
     this.dirtyFont = true;
@@ -561,55 +580,59 @@ P.cleanFontOffsets = function () {
     this.dirtyFontOffsets = false;
     this.fontVerticalOffset = 0;
 
-    const mycell = requestCell();
-    const { engine, element } = mycell;
-    const { currentDimensions, state, text } = this;
-    const [width, height] = currentDimensions;
-    const padding = 100;
+    if (this.checkFontIsLoaded()) {
 
-    const testWidth = width,
-        testHeight = height + (padding * 2);
+        const mycell = requestCell();
+        const { engine, element } = mycell;
+        const { currentDimensions, state, text } = this;
+        const [width, height] = currentDimensions;
+        const padding = 100;
 
-    mycell.w = element.width = testWidth;
-    mycell.h = element.height = testHeight;
+        const testWidth = width,
+            testHeight = height + (padding * 2);
 
-    engine.fillStyle = BLACK;
-    engine.strokeStyle = BLACK;
-    engine.font = state.font;
-    engine.fontKerning = state.fontKerning;
-    engine.fontStretch = state.fontStretch;
-    engine.fontVariantCaps = state.fontVariantCaps;
-    engine.textRendering = state.textRendering;
-    engine.letterSpacing = state.letterSpacing;
-    engine.wordSpacing = state.wordSpacing;
-    engine.direction = state.direction;
-    engine.textAlign = LEFT;
-    engine.textBaseline = TOP;
+        mycell.w = element.width = testWidth;
+        mycell.h = element.height = testHeight;
 
-    engine.fillText(text, 0, padding);
+        engine.fillStyle = BLACK;
+        engine.strokeStyle = BLACK;
+        engine.font = state.font;
+        engine.fontKerning = state.fontKerning;
+        engine.fontStretch = state.fontStretch;
+        engine.fontVariantCaps = state.fontVariantCaps;
+        engine.textRendering = state.textRendering;
+        engine.letterSpacing = state.letterSpacing;
+        engine.wordSpacing = state.wordSpacing;
+        engine.direction = state.direction;
+        engine.textAlign = LEFT;
+        engine.textBaseline = TOP;
 
-    const image = engine.getImageData(0, 0, testWidth, testHeight);
-    const { width:iWidth, data } = image;
+        engine.fillText(text, 0, padding);
 
-    let markTop = data.length;
+        const image = engine.getImageData(0, 0, testWidth, testHeight);
+        const { width:iWidth, data } = image;
 
-    for (let i = 3, iz = data.length; i < iz; i += 3) {
+        let markTop = data.length;
 
-        if (data[i]) {
+        for (let i = 3, iz = data.length; i < iz; i += 3) {
 
-            const mark = _floor(((i - 3) / 4) / iWidth);
+            if (data[i]) {
 
-            if (mark < markTop) markTop = mark;
+                const mark = _floor(((i - 3) / 4) / iWidth);
+
+                if (mark < markTop) markTop = mark;
+            }
         }
+
+        const offset = padding - markTop;
+
+        if (offset > 0) this.fontVerticalOffset = offset;
+        
+        releaseCell(mycell);
+
+        this.dirtyPathObject = true;
     }
-
-    const offset = padding - markTop;
-
-    if (offset > 0) this.fontVerticalOffset = offset;
-    
-    releaseCell(mycell);
-
-    this.dirtyPathObject = true;
+    else this.dirtyFontOffsets = true;
 };
 
 
@@ -759,83 +782,101 @@ P.drawBoundingBox = function (engine) {
 // `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
 P.draw = function (engine) {
 
-    const pos = this.stampPositioningHelper();
+    if (this.currentFontIsLoaded) {
 
-    if (this.includeUnderline) this.underlineEngine(engine, pos);
+        const pos = this.stampPositioningHelper();
 
-    engine.strokeText(...pos);
+        if (this.includeUnderline) this.underlineEngine(engine, pos);
 
-    if (this.showBoundingBox) this.drawBoundingBox(engine);
+        engine.strokeText(...pos);
+
+        if (this.showBoundingBox) this.drawBoundingBox(engine);
+    }
 };
 
 // `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
 P.fill = function (engine) {
 
-    const pos = this.stampPositioningHelper();
+    if (this.currentFontIsLoaded) {
 
-    if (this.includeUnderline) this.underlineEngine(engine, pos);
+        const pos = this.stampPositioningHelper();
 
-    engine.fillText(...pos);
+        if (this.includeUnderline) this.underlineEngine(engine, pos);
 
-    if (this.showBoundingBox) this.drawBoundingBox(engine);
+        engine.fillText(...pos);
+
+        if (this.showBoundingBox) this.drawBoundingBox(engine);
+    }
 };
 
 // `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
 P.drawAndFill = function (engine) {
 
-    const pos = this.stampPositioningHelper();
+    if (this.currentFontIsLoaded) {
 
-    if (this.includeUnderline) this.underlineEngine(engine, pos);
+        const pos = this.stampPositioningHelper();
 
-    engine.strokeText(...pos);
-    engine.fillText(...pos);
-    this.currentHost.clearShadow();
-    engine.strokeText(...pos);
-    engine.fillText(...pos);
+        if (this.includeUnderline) this.underlineEngine(engine, pos);
 
-    if (this.showBoundingBox) this.drawBoundingBox(engine);
+        engine.strokeText(...pos);
+        engine.fillText(...pos);
+        this.currentHost.clearShadow();
+        engine.strokeText(...pos);
+        engine.fillText(...pos);
+
+        if (this.showBoundingBox) this.drawBoundingBox(engine);
+    }
 };
 
 // `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
 P.fillAndDraw = function (engine) {
 
-    const pos = this.stampPositioningHelper();
+    if (this.currentFontIsLoaded) {
 
-    if (this.includeUnderline) this.underlineEngine(engine, pos);
+        const pos = this.stampPositioningHelper();
 
-    engine.fillText(...pos);
-    engine.strokeText(...pos);
-    this.currentHost.clearShadow();
-    engine.fillText(...pos);
-    engine.strokeText(...pos);
+        if (this.includeUnderline) this.underlineEngine(engine, pos);
 
-    if (this.showBoundingBox) this.drawBoundingBox(engine);
+        engine.fillText(...pos);
+        engine.strokeText(...pos);
+        this.currentHost.clearShadow();
+        engine.fillText(...pos);
+        engine.strokeText(...pos);
+
+        if (this.showBoundingBox) this.drawBoundingBox(engine);
+    }
 };
 
 // `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
 P.drawThenFill = function (engine) {
 
-    const pos = this.stampPositioningHelper();
+    if (this.currentFontIsLoaded) {
 
-    if (this.includeUnderline) this.underlineEngine(engine, pos);
+        const pos = this.stampPositioningHelper();
 
-    engine.strokeText(...pos);
-    engine.fillText(...pos);
+        if (this.includeUnderline) this.underlineEngine(engine, pos);
 
-    if (this.showBoundingBox) this.drawBoundingBox(engine);
+        engine.strokeText(...pos);
+        engine.fillText(...pos);
+
+        if (this.showBoundingBox) this.drawBoundingBox(engine);
+    }
 };
 
 // `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
 P.fillThenDraw = function (engine) {
 
-    const pos = this.stampPositioningHelper();
+    if (this.currentFontIsLoaded) {
 
-    if (this.includeUnderline) this.underlineEngine(engine, pos);
+        const pos = this.stampPositioningHelper();
 
-    engine.fillText(...pos);
-    engine.strokeText(...pos);
+        if (this.includeUnderline) this.underlineEngine(engine, pos);
 
-    if (this.showBoundingBox) this.drawBoundingBox(engine);
+        engine.fillText(...pos);
+        engine.strokeText(...pos);
+
+        if (this.showBoundingBox) this.drawBoundingBox(engine);
+    }
 };
 
 // `clip` - restrict drawing activities to the entity's enclosed area
@@ -847,14 +888,17 @@ P.clip = function (engine) {
 // `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
 P.clear = function (engine) {
 
-    const gco = engine.globalCompositeOperation;
-    const pos = this.stampPositioningHelper();
+    if (this.currentFontIsLoaded) {
 
-    engine.globalCompositeOperation = DESTINATION_OUT;
-    engine.fillText(...pos);
-    engine.globalCompositeOperation = gco;
+        const gco = engine.globalCompositeOperation;
+        const pos = this.stampPositioningHelper();
 
-    if (this.showBoundingBox) this.drawBoundingBox(engine);
+        engine.globalCompositeOperation = DESTINATION_OUT;
+        engine.fillText(...pos);
+        engine.globalCompositeOperation = gco;
+
+        if (this.showBoundingBox) this.drawBoundingBox(engine);
+    }
 };
 
 // `none` - perform all the calculations required, but don't perform the final stamping

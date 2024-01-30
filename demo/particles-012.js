@@ -341,10 +341,6 @@ scrawl.makeRender({
 });
 
 
-// Recalculate font dimensions
-scrawl.recalculateFonts();
-
-
 // #### User interaction
 // Make the Net Particles draggable
 // + KNOWN BUG - the particles are not draggable on first user mousedown, but are draggable afterwards
