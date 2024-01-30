@@ -11,6 +11,13 @@ import { reportSpeed } from './utilities.js';
 // Get a handle to the Canvas wrapper
 const canvas = scrawl.library.canvas.mycanvas;
 
+const html = document.querySelector('#text-in-html');
+// @ts-expect-error
+html.style.font = '60px serif';
+// @ts-expect-error
+html.style.direction = 'ltr';
+html.textContent = 'Long live the world!';
+
 
 // Namespacing boilerplate
 const namespace = 'demo';
@@ -148,8 +155,12 @@ const updateFont = (event) => {
                     fontString: '60px serif',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '60px serif';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'sans-serif' :
@@ -157,8 +168,12 @@ const updateFont = (event) => {
                     fontString: '60px sans-serif',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '60px sans-serif';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'monospace' :
@@ -166,8 +181,12 @@ const updateFont = (event) => {
                     fontString: '40px monospace',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 1,
                 });
+// @ts-expect-error
+                html.style.font = '40px monospace';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'cursive' :
@@ -175,8 +194,12 @@ const updateFont = (event) => {
                     fontString: '60px cursive',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 5,
                 });
+// @ts-expect-error
+                html.style.font = '60px cursive';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'fantasy' :
@@ -184,8 +207,12 @@ const updateFont = (event) => {
                     fontString: '60px fantasy',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 14,
                 });
+// @ts-expect-error
+                html.style.font = '60px fantasy';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'garamond' :
@@ -193,8 +220,12 @@ const updateFont = (event) => {
                     fontString: '60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '60px Garamond';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'garamond-bold' :
@@ -202,8 +233,12 @@ const updateFont = (event) => {
                     fontString: 'bold 60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'bold 60px Garamond';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'garamond-italic' :
@@ -211,8 +246,12 @@ const updateFont = (event) => {
                     fontString: 'italic 60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'italic 60px Garamond';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'garamond-bolditalic' :
@@ -220,8 +259,12 @@ const updateFont = (event) => {
                     fontString: 'bold italic 60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'bold italic 60px Garamond';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto' :
@@ -229,8 +272,12 @@ const updateFont = (event) => {
                     fontString: '60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '60px "Roboto Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-bold' :
@@ -238,8 +285,12 @@ const updateFont = (event) => {
                     fontString: 'bold 60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'bold 60px "Roboto Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-italic' :
@@ -247,8 +298,12 @@ const updateFont = (event) => {
                     fontString: 'italic 60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'italic 60px "Roboto Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-bolditalic' :
@@ -256,8 +311,12 @@ const updateFont = (event) => {
                     fontString: 'bold italic 60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'bold italic 60px "Roboto Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-serif' :
@@ -265,8 +324,12 @@ const updateFont = (event) => {
                     fontString: '50px "Roboto Serif"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Roboto Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-serif-bold' :
@@ -275,6 +338,11 @@ const updateFont = (event) => {
                     text: 'Long live the world!',
                     direction: 'ltr',
                 });
+// @ts-expect-error
+                html.style.font = 'bold 50px "Roboto Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-serif-italic' :
@@ -282,8 +350,12 @@ const updateFont = (event) => {
                     fontString: 'italic 50px "Roboto Serif"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'italic 50px "Roboto Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-serif-bolditalic' :
@@ -291,8 +363,12 @@ const updateFont = (event) => {
                     fontString: 'bold italic 50px "Roboto Serif"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'bold italic 50px "Roboto Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-mono' :
@@ -300,8 +376,12 @@ const updateFont = (event) => {
                     fontString: '45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '45px "Roboto Mono"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-mono-bold' :
@@ -309,8 +389,12 @@ const updateFont = (event) => {
                     fontString: 'bold 45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'bold 45px "Roboto Mono"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-mono-italic' :
@@ -318,8 +402,12 @@ const updateFont = (event) => {
                     fontString: 'italic 45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'italic 45px "Roboto Mono"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'roboto-mono-bolditalic' :
@@ -327,8 +415,12 @@ const updateFont = (event) => {
                     fontString: 'bold italic 45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = 'bold italic 45px "Roboto Mono"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'noto-arabic-sans' :
@@ -336,8 +428,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Arabic Sans"',
                     text: 'لا يعرض أحد لتدخل تعسفي',
                     direction: 'rtl',
-                    fontVerticalOffset: 15,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Arabic Sans"';
+// @ts-expect-error
+                html.style.direction = 'rtl';
+                html.textContent = 'لا يعرض أحد لتدخل تعسفي';
                 break;
 
             case 'noto-arabic-naskh' :
@@ -345,8 +441,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Arabic Naskh"',
                     text: 'لا يعرض أحد لتدخل تعسفي',
                     direction: 'rtl',
-                    fontVerticalOffset: 14,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Arabic Naskh"';
+// @ts-expect-error
+                html.style.direction = 'rtl';
+                html.textContent = 'لا يعرض أحد لتدخل تعسفي';
                 break;
 
             case 'noto-urdu-nastaliq' :
@@ -354,8 +454,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Urdu Nastaliq"',
                     text: 'ہر انسان کو آزادیٔ فکر،',
                     direction: 'rtl',
-                    fontVerticalOffset: 43,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Urdu Nastaliq"';
+// @ts-expect-error
+                html.style.direction = 'rtl';
+                html.textContent = 'ہر انسان کو آزادیٔ فکر،';
                 break;
 
             case 'noto-chinese-simple-sans' :
@@ -363,8 +467,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Chinese Simple Sans"',
                     text: '鉴于对人类家庭所有',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Chinese Simple Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = '鉴于对人类家庭所有';
                 break;
 
             case 'noto-chinese-simple-serif' :
@@ -372,8 +480,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Chinese Simple Serif"',
                     text: '鉴于对人类家庭所有',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Chinese Simple Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = '鉴于对人类家庭所有';
                 break;
 
             case 'noto-devangari-sans' :
@@ -381,8 +493,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Devangari Sans"',
                     text: 'प्रत्येक व्यक्ति को विचार और',
                     direction: 'ltr',
-                    fontVerticalOffset: 11,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Devangari Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'प्रत्येक व्यक्ति को विचार और';
                 break;
 
             case 'noto-devangari-serif' :
@@ -390,8 +506,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Devangari Serif"',
                     text: 'प्रत्येक व्यक्ति को विचार और',
                     direction: 'ltr',
-                    fontVerticalOffset: 16,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Devangari Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'प्रत्येक व्यक्ति को विचार और';
                 break;
 
             case 'noto-hebrew-sans' :
@@ -399,8 +519,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Hebrew Sans"',
                     text: 'כל אדם זכאי לחירות',
                     direction: 'rtl',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Hebrew Sans"';
+// @ts-expect-error
+                html.style.direction = 'rtl';
+                html.textContent = 'כל אדם זכאי לחירות';
                 break;
 
             case 'noto-hebrew-serif' :
@@ -408,8 +532,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Hebrew Serif"',
                     text: 'כל אדם זכאי לחירות',
                     direction: 'rtl',
-                    fontVerticalOffset: 6,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Hebrew Serif"';
+// @ts-expect-error
+                html.style.direction = 'rtl';
+                html.textContent = 'כל אדם זכאי לחירות';
                 break;
 
             case 'noto-japanese-sans' :
@@ -417,8 +545,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Japanese Sans"',
                     text: '人類社会のすべて',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Japanese Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = '人類社会のすべて';
                 break;
 
             case 'noto-japanese-serif' :
@@ -426,8 +558,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Japanese Serif"',
                     text: '人類社会のすべて',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Japanese Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = '人類社会のすべて';
                 break;
 
             case 'noto-korean-sans' :
@@ -435,8 +571,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Korean Sans"',
                     text: '모든 사람은 의견의',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Korean Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = '모든 사람은 의견의';
                 break;
 
             case 'noto-korean-serif' :
@@ -444,8 +584,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Korean Serif"',
                     text: '모든 사람은 의견의',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Korean Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = '모든 사람은 의견의';
                 break;
 
             case 'noto-mongolian-sans' :
@@ -453,8 +597,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Mongolian Sans"',
                     text: 'ᠬᠦᠮᠦᠨ ᠪᠦᠷ ᠲᠥᠷᠥᠵᠦ',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Mongolian Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'ᠬᠦᠮᠦᠨ ᠪᠦᠷ ᠲᠥᠷᠥᠵᠦ';
                 break;
 
             case 'noto-tai-le-sans' :
@@ -462,8 +610,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Tai Le Sans"',
                     text: 'ᥓᥣᥳ ᥞᥨᥛ ᥑᥤᥴ',
                     direction: 'ltr',
-                    fontVerticalOffset: 6,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Tai Le Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'ᥓᥣᥳ ᥞᥨᥛ ᥑᥤᥴ';
                 break;
 
             case 'noto-tai-tham-sans' :
@@ -471,8 +623,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Tai Tham Sans"',
                     text: 'ᨾᨶᩩᩔ᩼ᨴ᩠ᨦᩢᩉᩖᩣ᩠ᨿᨠᩮ᩠ᨯᩨᨾᩣᨾᩦ',
                     direction: 'ltr',
-                    fontVerticalOffset: 13,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Tai Tham Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'ᨾᨶᩩᩔ᩼ᨴ᩠ᨦᩢᩉᩖᩣ᩠ᨿᨠᩮ᩠ᨯᩨᨾᩣᨾᩦ';
                 break;
 
             case 'noto-thai-looped-sans' :
@@ -480,8 +636,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Thai Looped Sans"',
                     text: 'โดยที่การยอมรับศักดิ์ศ',
                     direction: 'ltr',
-                    fontVerticalOffset: 20,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Thai Looped Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'โดยที่การยอมรับศักดิ์ศ';
                 break;
 
             case 'noto-thai-serif' :
@@ -489,8 +649,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Thai Serif"',
                     text: 'โดยที่การยอมรับศักดิ์ศ',
                     direction: 'ltr',
-                    fontVerticalOffset: 20,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Thai Serif"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'โดยที่การยอมรับศักดิ์ศ';
                 break;
 
             case 'noto-tirhuta-sans' :
@@ -498,8 +662,12 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Tirhuta Sans"',
                     text: '𑒮𑒩𑓂𑒫𑒹 𑒧𑒰𑒢𑒫𑒰𑓁 𑒮𑓂𑒫𑒞𑒢𑓂𑒞𑓂𑒩𑒰𑓁',
                     direction: 'ltr',
-                    fontVerticalOffset: 15,
                 });
+// @ts-expect-error
+                html.style.font = '50px "Noto Tirhuta Sans"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = '𑒮𑒩𑓂𑒫𑒹 𑒧𑒰𑒢𑒫𑒰𑓁 𑒮𑓂𑒫𑒞𑒢𑓂𑒞𑓂𑒩𑒰𑓁';
                 break;
 
             case 'bungee' :
@@ -507,8 +675,12 @@ const updateFont = (event) => {
                     fontString: '40px "Bungee"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '40px "Bungee"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'bungee-spice' :
@@ -516,8 +688,12 @@ const updateFont = (event) => {
                     fontString: '40px "Bungee Spice"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '40px "Bungee Spice"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'carter-one' :
@@ -525,8 +701,12 @@ const updateFont = (event) => {
                     fontString: '60px "Carter One"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 5,
                 });
+// @ts-expect-error
+                html.style.font = '60px "Carter One"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             case 'mountains-of-christmas' :
@@ -534,17 +714,25 @@ const updateFont = (event) => {
                     fontString: '60px "Mountains Of Christmas"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 6,
                 });
+// @ts-expect-error
+                html.style.font = '60px "Mountains Of Christmas"';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
                 break;
 
             default:
                 mylabel.set({
-                    fontString: '80px serif',
+                    fontString: '60px serif',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
+// @ts-expect-error
+                html.style.font = '60px serif';
+// @ts-expect-error
+                html.style.direction = 'ltr';
+                html.textContent = 'Long live the world!';
         }
 
         setTimeout(() => mylabel.recalculateFont(), 100);

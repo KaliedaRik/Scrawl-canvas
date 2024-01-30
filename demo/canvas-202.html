@@ -13,6 +13,19 @@
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
+    #text-in-html {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      border: 1px dashed blue;
+      padding: 0;
+      height: 140px;
+    }
+    canvas {
+      margin: 0 auto;
+      border: 1px dashed red;
+    }
 
 /*
 Noto Sans Arabic (rtl) - is an unmodulated (“sans serif”) design for texts in the Middle Eastern Arabic script. It has multiple weights and widths, and 1,642 glyphs.
@@ -427,12 +440,16 @@ Noto Color Emoji (emoji)
 
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div>
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="140"
+      data-scrawl-canvas
+    ></canvas>
+    <p id="text-in-html" style="font: 60px serif"></p>
+  </div>
+
 
   <div class="controls">
 

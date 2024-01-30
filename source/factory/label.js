@@ -22,7 +22,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _abs, _ceil, _parse, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, START, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _floor, _parse, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DEFAULT_FONT, DESTINATION_OUT, DIV, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, POLITE, RIGHT, SOURCE_OVER, START, T_CANVAS, T_CELL, T_LABEL, TOP, TEXTAREA, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -34,6 +34,7 @@ const Label = function (items = Ωempty) {
     this.entityInit(items);
 
     this.dirtyFont = true;
+    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
 
     return this;
 };
@@ -63,6 +64,8 @@ const defaultAttributes = {
 
     fontString: DEFAULT_FONT,
     fontVerticalOffset: 0,
+
+    calculateFontOffsets: true,
 
     includeUnderline: false,
     underlineStyle: ZERO_STR,
@@ -159,6 +162,7 @@ S.fontString = function (item) {
 
         this.fontString = item;
         this.dirtyFont = true;
+        if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
     }
 };
 
@@ -382,6 +386,7 @@ P.convertTextEntityCharacters = function (item) {
 P.recalculateFont = function () {
 
     this.dirtyFont = true;
+    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
 };
 
 
@@ -551,6 +556,63 @@ P.cleanHandle = function () {
 };
 
 
+P.cleanFontOffsets = function () {
+
+    this.dirtyFontOffsets = false;
+    this.fontVerticalOffset = 0;
+
+    const mycell = requestCell();
+    const { engine, element } = mycell;
+    const { currentDimensions, state, text } = this;
+    const [width, height] = currentDimensions;
+    const padding = 100;
+
+    const testWidth = width,
+        testHeight = height + (padding * 2);
+
+    mycell.w = element.width = testWidth;
+    mycell.h = element.height = testHeight;
+
+    engine.fillStyle = BLACK;
+    engine.strokeStyle = BLACK;
+    engine.font = state.font;
+    engine.fontKerning = state.fontKerning;
+    engine.fontStretch = state.fontStretch;
+    engine.fontVariantCaps = state.fontVariantCaps;
+    engine.textRendering = state.textRendering;
+    engine.letterSpacing = state.letterSpacing;
+    engine.wordSpacing = state.wordSpacing;
+    engine.direction = state.direction;
+    engine.textAlign = LEFT;
+    engine.textBaseline = TOP;
+
+    engine.fillText(text, 0, padding);
+
+    const image = engine.getImageData(0, 0, testWidth, testHeight);
+    const { width:iWidth, data } = image;
+
+    let markTop = data.length;
+
+    for (let i = 3, iz = data.length; i < iz; i += 3) {
+
+        if (data[i]) {
+
+            const mark = _floor(((i - 3) / 4) / iWidth);
+
+            if (mark < markTop) markTop = mark;
+        }
+    }
+
+    const offset = padding - markTop;
+
+    if (offset > 0) this.fontVerticalOffset = offset;
+    
+    releaseCell(mycell);
+
+    this.dirtyPathObject = true;
+};
+
+
 // #### Display cycle functions
 
 P.prepareStamp = function() {
@@ -563,6 +625,7 @@ P.prepareStamp = function() {
     if (this.dirtyText) this.updateAccessibleTextHold();
     if (this.dirtyFont) this.temperFont();
     if (this.dirtyDimensions) this.cleanDimensions();
+    if (this.dirtyFontOffsets) this.cleanFontOffsets();
     if (this.dirtyLock) this.cleanLock();
     if (this.dirtyStart) this.cleanStart();
     if (this.dirtyOffset) this.cleanOffset();
@@ -588,11 +651,9 @@ P.prepareStamp = function() {
 // `stampPositioningHelper` - internal helper function
 P.stampPositioningHelper = function () {
 
-    const handle = this.currentHandle,
-        scale = this.currentScale,
-        text = this.text,
-        x = -handle[0],
-        y = -handle[1] + (this.fontVerticalOffset * scale);
+    const { currentHandle, currentScale, text, fontVerticalOffset } = this;
+    const x = -currentHandle[0],
+        y = -currentHandle[1] + fontVerticalOffset * currentScale;
 
     return [text, x, y];
 }

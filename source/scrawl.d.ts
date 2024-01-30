@@ -1534,6 +1534,7 @@ interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFa
     accessibleTextOrder?: number;
     accessibleTextPlaceholder?: string;
     boundingBoxStyle?: string;
+    calculateFontOffsets?: boolean;
     delta?: LabelFactoryDeltaInputs;
     direction?: string;
     fontKerning?: string;

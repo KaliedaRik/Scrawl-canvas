@@ -77,7 +77,7 @@ const build = function (items) {
 
             startY: '3%',
 
-            fontString: '1.5rem Roboto, Arial, sans-serif',
+            font: '1.5rem Roboto, Arial, sans-serif',
 
             fillStyle: 'black',
         });
@@ -93,13 +93,14 @@ const build = function (items) {
 
         subtitle.addSectionClass('RED', { fill: 'darkred' });
 
-        const yLabelTop = scrawl.makePhrase({
+        const yLabelTop = scrawl.makeLabel({
 
             name: name('y-top'),
             group: group,
             order: 1,
 
             text: '0',
+            accessibleText: 'To § crimes',
 
             startX: '1%',
             startY: '12%',
@@ -113,6 +114,7 @@ const build = function (items) {
 
             name: name('y-bottom'),
             startY: '92%',
+            accessibleText: 'From § crimes',
         });
 
         const xLabelLeft = yLabelTop.clone({
@@ -120,12 +122,14 @@ const build = function (items) {
             name: name('x-left'),
             startX: '10%',
             startY: '96%',
+            accessibleText: 'From year §',
         });
 
         const xLabelRight = xLabelLeft.clone({
 
             name: name('x-right'),
             startX: '89%',
+            accessibleText: 'To year §',
         });
 
         scrawl.makeLine({
