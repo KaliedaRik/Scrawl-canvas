@@ -15,23 +15,8 @@ EB Garamond (common alphabetic) - Serif, with regular, bold, italic and boldital
 */
     @font-face {
       font-family: "Garamond";
-      src: url("fonts/EBGaramond-Regular.ttf") format("opentype");
-    }
-    @font-face {
-      font-family: "Garamond";
       src: url("fonts/EBGaramond-Bold.ttf") format("opentype");
       font-weight: bold;
-    }
-    @font-face {
-      font-family: "Garamond";
-      src: url("fonts/EBGaramond-Italic.ttf") format("opentype");
-      font-style: italic;
-    }
-    @font-face {
-      font-family: "Garamond";
-      src: url("fonts/EBGaramond-BoldItalic.ttf") format("opentype");
-      font-weight: bold;
-      font-style: italic;
     }
   </style>
 </head>
@@ -73,6 +58,8 @@ EB Garamond (common alphabetic) - Serif, with regular, bold, italic and boldital
     </ul>
 
     <p><b>Touch test:</b> should work as expected - though flicking a label may lead to it moving beyond the canvas border and out of sight!</p>
+
+    <p><b>Known issue:</b> Safari-based browsers have problems interpreting font strings containing size measurements in anything other than 'px'</p>
 
     <p><a href="../docs/demo/canvas-201.html">Annotated code</a></p>
   </div>

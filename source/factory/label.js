@@ -1,5 +1,11 @@
 // # Label factory
-// TODO - documentation
+// TODO - document purpose and description
+
+// #### Fonts and browsers
+// Font rendering in the &lt;canvas> element, consistently across browsers, can be ... problematic. Of the major browsers, Safari is the one that seems to cause the most problems. In particular:
+// + While Safari can read fontString values like `italic 24px Garamond` to output italicised text, all attempts to use a value like `bold 24px Garamond` to output bold text will fail. Safari refuses to process fonts into a bold representation - except if the directly referenced font file itself is a bold font.
+// + Safari struggles with font sizes given in lengths other than 'px' - `24px Garamond` will generate text at 24px; `1.5rem Garamond` (where the CSS root font-size value has been set to 16px) generates text somewhere in the vicinity of 16px ... give or take.
+// + Safari will often place text lower down than expected - even outside the canvas! The browser's font-reading functionality will use different font file tables to determine where the text should be stamped on the screen.
 
 
 // #### Imports
@@ -312,6 +318,12 @@ S.textRendering = function (item) {
 // #### Prototype functions
 P.checkFontIsLoaded = function () {
 
+    if (SYSTEM_FONTS.includes(this.temperedFont?.groups?.family)) {
+
+        this.currentFontIsLoaded = true;
+        return true;
+    }
+
     const fonts = document.fonts;
 
     const check = fonts.check(this.state.font);
@@ -352,12 +364,15 @@ P.temperFont = function () {
         groups.family = firstFamily;
         groups.attributes = attributes.trim();
 
-        this.defaultFont = `${attributes} ${size * currentScale}px ${firstFamily}`;
+        const f = `${attributes} ${size * currentScale}px ${firstFamily}`;
+
+        this.defaultFont = f.trim();
         state.font = this.defaultFont;
     }
     else {
 
         this.dirtyFont = true;
+        releaseCell(mycell);
         return false;
     }
 
@@ -565,6 +580,17 @@ P.cleanHandle = function () {
         }
         else currentHandle[1] = 0;
     }
+    else if (hy == IDEOGRAPHIC) {
+
+        const {ideographicBaseline} = metrics;
+
+        if (ideographicBaseline != null) {
+
+                const ratio = _abs(ideographicBaseline) / dy;
+                currentHandle[1] = (ratio * dy) + fontVerticalOffset;
+        }
+        else currentHandle[1] = 0;
+    }
     else if (isNaN(parseFloat(hy))) currentHandle[1] = 0;
     else currentHandle[1] = (parseFloat(hy) / 100) * dy;
 
@@ -580,7 +606,7 @@ P.cleanFontOffsets = function () {
     this.dirtyFontOffsets = false;
     this.fontVerticalOffset = 0;
 
-    if (this.checkFontIsLoaded()) {
+    if (this.currentFontIsLoaded) {
 
         const mycell = requestCell();
         const { engine, element } = mycell;
@@ -648,6 +674,7 @@ P.prepareStamp = function() {
     if (this.dirtyText) this.updateAccessibleTextHold();
     if (this.dirtyFont) this.temperFont();
     if (this.dirtyDimensions) this.cleanDimensions();
+    if (!this.currentFontIsLoaded) this.checkFontIsLoaded();
     if (this.dirtyFontOffsets) this.cleanFontOffsets();
     if (this.dirtyLock) this.cleanLock();
     if (this.dirtyStart) this.cleanStart();
