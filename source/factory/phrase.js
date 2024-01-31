@@ -45,6 +45,7 @@ import { makeFontAttributes } from '../untracked-factory/font-attributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+import textMix from '../mixin/text.js';
 
 import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_LIVE, AUTO, BLACK, CENTER, CLASS_REGEX, CLIP, DATA_TAB_ORDER, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEF_SECTION_PLACEHOLDER, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, VARIANT, WEIGHT, ZERO_STR } from '../helper/shared-vars.js';
 
@@ -111,10 +112,9 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
+textMix(P);
 
 P.midInitActions = function () {
 
@@ -131,14 +131,6 @@ const defaultAttributes = {
 // __width__ - Number or String
 // + In addition to normal dimensional values, Phrase entitys will accept the String label __'auto'__ (default). When set to 'auto' the width will be calculated as the natural, single line text length.
     width: AUTO,
-
-// __textIsAccessible__ - Boolean accessibility feature. Note that `exposeText` has become a pseudo-attribute for `textIsAccessible`
-// + The Phrase entity now uses the functionality supplied by the Label entity to make its text content accessible. This introduces the new `accessibleText`, `accessibleTextPlaceholder` and `accessibleTextOrder` attributes.
-
-    textIsAccessible: true,
-    accessibleText: DEF_SECTION_PLACEHOLDER,
-    accessibleTextPlaceholder: DEF_SECTION_PLACEHOLDER,
-    accessibleTextOrder: 0,
 
 // __lineHeight__ - a positive float Number multiplier applied to the font height to add space between lines of text
     lineHeight: 1.15,
@@ -214,15 +206,6 @@ const defaultAttributes = {
 
 // __highlightStyle__
     highlightStyle: DEF_HIGHLIGHT,
-
-// ##### Bounding box
-// The bounding box represents the Phrase entity's collision detection ___hit area___. It contains all of the entity's text, including line spacing.
-
-// __boundingBoxColor__
-    boundingBoxColor: HALFTRANS,
-
-// __showBoundingBox__ - Boolean flag indicating whether the Phrase entity's bounding box should be displayed
-    showBoundingBox: false,
 
 // ##### Text along a path
 // Phrase entitys, alongside other artefacts, can use a [Shape entity](./shape.html) as a ___reference path___ to determine its location in the canvas display - achieved by setting the `path`, `pathPosition`, etc attributes as required.
@@ -669,41 +652,6 @@ S.family = function (item) {
 
 
 // #### Accessibility
-
-G.accessibleText = function () {
-
-    return this.getAccessibleText();
-};
-S.accessibleText = function (item) {
-
-    if (item?.substring) {
-
-        this.accessibleText = item;
-        this.dirtyText = true;
-        this.dirtyAccessibleText = true;
-    }
-};
-
-S.accessibleTextPlaceholder = function (item) {
-
-    if (item?.substring) {
-
-        this.accessibleTextPlaceholder = item;
-        this.dirtyText = true;
-        this.dirtyAccessibleText = true;
-    }
-};
-
-S.accessibleTextOrder = function (item) {
-
-    if (item?.toFixed) {
-
-        this.accessibleTextOrder = item;
-        this.dirtyText = true;
-        this.dirtyAccessibleText = true;
-    }
-};
-
 G.textIsAccessible = function () {
 
     return this.textIsAccessible;
@@ -718,6 +666,19 @@ S.textIsAccessible = function (item) {
 // Deprecated attribute mapped to equivalent
 G.exposeText = G.textIsAccessible;
 S.exposeText = S.textIsAccessible;
+
+G.boundingBoxStyle = function () {
+
+    return this.boundingBoxStyle;
+}
+S.boundingBoxStyle = function (item) {
+
+    this.boundingBoxStyle = item;
+}
+
+// Deprecated attribute mapped to equivalent
+G.boundingBoxColor = G.boundingBoxStyle;
+S.boundingBoxColor = S.boundingBoxStyle;
 
 
 // #### Prototype functions
@@ -822,13 +783,6 @@ P.getTextPath = function () {
     return path;
 };
 
-P.getAccessibleText = function () {
-
-    const {accessibleText, accessibleTextPlaceholder, text} = this;
-    return accessibleText.replace(accessibleTextPlaceholder, text);
-};
-
-
 // #### Display cycle functionality
 // Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.
 
@@ -882,66 +836,9 @@ P.buildText = function () {
 
         this.calculateTextPositions(t);
 
-        if (this.dirtyAccessibleText) this.updateAccessibleTextHold();
+        this.updateAccessibleTextHold();
     }
 };
-
-P.getCanvasTextHold = function (item) {
-
-    if (item && item.type == T_CELL && item.controller && item.controller.type == T_CANVAS && item.controller.textHold) return item.controller;
-
-    if (item && item.type == T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
-
-    return false;
-};
-
-P.updateAccessibleTextHold = function () {
-
-    this.dirtyAccessibleText = false;
-
-    if (this.textIsAccessible) {
-
-        if (!this.accessibleTextHold) {
-
-            const myhold = document.createElement(DIV);
-            myhold.id = `${this.name}-text-hold`;
-            myhold.setAttribute(ARIA_LIVE, POLITE);
-            myhold.setAttribute(DATA_TAB_ORDER, this.accessibleTextOrder);
-            this.accessibleTextHold = myhold;
-            this.accessibleTextHoldAttached = false;
-        }
-
-        this.accessibleTextHold.textContent = this.getAccessibleText();
-
-        if (this.currentHost) {
-
-            const hold = this.getCanvasTextHold(this.currentHost);
-
-            if (hold && hold.textHold) {
-
-                if (!this.accessibleTextHoldAttached) {
-
-                    hold.textHold.appendChild(this.accessibleTextHold);
-                    this.accessibleTextHoldAttached = true;
-                }
-                hold.dirtyTextTabOrder = true;
-            }
-        }
-    }
-    else {
-
-        if (this.accessibleTextHold) {
-
-            this.accessibleTextHold.remove();
-            this.accessibleTextHold = null;
-            this.accessibleTextHoldAttached = false;
-
-            const hold = this.getCanvasTextHold(this.currentHost);
-            if (hold) hold.dirtyTextTabOrder = true;
-        }
-    }
-};
-
 
 // `convertTextEntityCharacters` - internal function called by `buildText`
 // + To convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs
@@ -1523,7 +1420,7 @@ P.regularStamp = function () {
                 data = preStamper(currentHost, engine, this, pos[i]);
                 stamper[method](engine, this, data);
             }
-            if (this.showBoundingBox) this.drawBoundingBox(engine);
+            if (this.showBoundingBox) this.drawBoundingBox(currentHost);
         }
     }
 };
@@ -1707,21 +1604,6 @@ P.stamper = {
         engine.fillText(...data);
         engine.globalCompositeOperation = gco;
     },
-};
-
-// `drawBoundingBox` - internal helper function called by `regularStamp`
-P.drawBoundingBox = function (engine) {
-
-    engine.save();
-    engine.strokeStyle = this.boundingBoxColor;
-    engine.lineWidth = 1;
-    engine.globalCompositeOperation = SOURCE_OVER;
-    engine.globalAlpha = 1;
-    engine.shadowOffsetX = 0;
-    engine.shadowOffsetY = 0;
-    engine.shadowBlur = 0;
-    engine.stroke(this.pathObject);
-    engine.restore();
 };
 
 // `performRotation` - internal helper function called by `regularStamp`
