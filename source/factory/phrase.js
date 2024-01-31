@@ -35,8 +35,6 @@
 // #### Imports
 import { artefact, cell, cellnames, constructors, sectionClasses, styles, stylesnames } from '../core/library.js';
 
-import { scrawlCanvasHold } from '../core/document.js';
-
 import { addStrings, doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
@@ -53,17 +51,6 @@ import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_
 
 // Local constants
 const defaultTextForHeightMeasurements = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
-
-const fontHeightCalculator = document.createElement(DIV);
-fontHeightCalculator.style.padding = 0;
-fontHeightCalculator.style.border = 0;
-fontHeightCalculator.style.margin = 0;
-fontHeightCalculator.style.height = AUTO;
-fontHeightCalculator.style.lineHeight = 1;
-fontHeightCalculator.style.boxSizing = BORDER_BOX;
-fontHeightCalculator.innerHTML = defaultTextForHeightMeasurements;
-fontHeightCalculator.setAttribute(ARIA_HIDDEN, TRUE);
-scrawlCanvasHold.appendChild(fontHeightCalculator);
 
 const textEntityConverter = document.createElement(TEXTAREA);
 
@@ -1001,6 +988,14 @@ P.calculateTextPositions = function (mytext) {
     const self = this,
         host = (this.group && this.group.getHost) ? this.group.getHost() : false;
 
+    let fontHeightCalculator = null;
+    if (host) {
+
+        const controller = host.getController();
+
+        if (controller) fontHeightCalculator = controller.fontHeightCalculator;
+    }
+
     const textGlyphWidths = requestArray(),
         textLines = requestArray(),
         textLineWidths = requestArray(),
@@ -1196,9 +1191,13 @@ P.calculateTextPositions = function (mytext) {
         else {
 
             // browsers differ in the value thy return for this measurement
-            fontHeightCalculator.style.font = font;
-            item = fontHeightCalculator.clientHeight;
-            fontLibrary[font] = item;
+            if (fontHeightCalculator) {
+
+                fontHeightCalculator.style.font = font;
+                item = fontHeightCalculator.clientHeight;
+                fontLibrary[font] = item;
+            }
+            else fontLibrary[font] = 12;
         }
     });
     engine.restore();

@@ -18,8 +18,6 @@ import { artefact, cell, constructors, entity, group } from '../core/library.js'
 
 import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
-import { scrawlCanvasHold } from '../core/document.js';
-
 import { filterEngine } from '../helper/filter-engine.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
@@ -31,7 +29,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
+import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
 
 
 // #### Group constructor
@@ -502,7 +500,7 @@ P.applyFilters = function (myCell) {
 };
 
 
-// `stashAction` - internal function which creates an ImageAsset object (and, as determined by the setting of the Group's `stashOutputAsAsset` flag, an &lt;img> element which gets attached to the DOM document in the `scrawlCanvasHold` hidden &lt;div> element) from the Group's entity's output.
+// `stashAction` - internal function which creates an ImageAsset object (and, as determined by the setting of the Group's `stashOutputAsAsset` flag, an &lt;img> element which gets attached to the host &lt;canvas> element's `canvasHold` hidden &lt;div> element) from the Group's entity's output.
 //
 // NOTE: the `stashOutput` and `stashOutputAsAsset` flags are not Group object attributes. They are set on the group as a result of invoking the `scrawl.createImageFromGroup` function, and will be set to false as soon as the `Group.stashAction` function runs (in other words, stashing a Group's output is a one-off operation).
 P.stashAction = function (img) {
@@ -534,17 +532,26 @@ P.stashAction = function (img) {
 
             if (!this.stashedImage) {
 
-                const newimg = this.stashedImage = document.createElement('img');
+                const host = this.currentHost;
+                const control = (host) ? host.getController() : null;
 
-                newimg.id = stashId;
+                if (control) {
 
-                newimg.onload = function () {
+                    const that = this;
 
-                    scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${stashId}`);
-                };
+                    const newimg = document.createElement(IMG);
+                    newimg.id = stashId;
+                    newimg.alt = `A cached image of the ${this.name} Group of entitys`;
 
-                newimg.src = myElement.toDataURL();
+                    newimg.onload = function () {
+
+                        control.canvasHold.appendChild(newimg);
+                        that.stashedImage = newimg;
+                        importDomImage(`#${stashId}`);
+                    };
+
+                    newimg.src = myElement.toDataURL();
+                }
             }
             else this.stashedImage.src = myElement.toDataURL();
         }

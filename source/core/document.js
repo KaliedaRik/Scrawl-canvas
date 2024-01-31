@@ -210,22 +210,6 @@ export const domShow = function (singleArtefact = ZERO_STR) {
     }
 };
 
-// #### DOM Holding areas
-// `Exported handles` (to modules). During its initialization phase, Scrawl-canvas will add two hidden 'hold' elements at the top and bottom of the document body where it can add additional elements as-and-when required.
-
-// Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas> elements to inform non-visual website visitors about content in the canvas.
-export const scrawlCanvasHold = document.createElement('div');
-scrawlCanvasHold.style.padding = 0;
-scrawlCanvasHold.style.border = 0;
-scrawlCanvasHold.style.margin = 0;
-scrawlCanvasHold.style.width = '4500px';
-scrawlCanvasHold.style.boxSizing = 'border-box';
-scrawlCanvasHold.style.position = 'absolute';
-scrawlCanvasHold.style.top = '-5000px';
-scrawlCanvasHold.style.left = '-5000px';
-scrawlCanvasHold.id = 'Scrawl-ARIA-default-hold';
-document.body.appendChild(scrawlCanvasHold);
-
 export const recalculateFonts = (delay = 100) => {
 
     setTimeout(() => {

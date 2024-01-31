@@ -585,7 +585,7 @@ export default function (P = Ωempty) {
     };
 
 
-// `getData` - Every styles object (Gradient, RadialGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
+// `getData` - Every styles object (Gradient, RadialGradient, ConicGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
     P.getData = function (entity, cell) {
 
         // Step 1: recalculate current start and end points

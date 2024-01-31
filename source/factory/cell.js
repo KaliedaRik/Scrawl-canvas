@@ -36,8 +36,6 @@ import { artefact, asset, canvas, constructors, group } from '../core/library.js
 
 import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { scrawlCanvasHold } from '../core/document.js';
-
 import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
 
 import { makeGroup } from './group.js';
@@ -704,15 +702,18 @@ P.installElement = function (element, colorSpace = SRGB) {
 // `updateControllerCells` - internal function: ask the Cell's Canvas controller to review/update its cells data
 P.updateControllerCells = function () {
 
+    const controller = this.getController();
+    if (controller) controller.dirtyCells = true;
+};
+
+// `getController` - internal function: ask the Cell's Canvas controller to review/update its cells data
+P.getController = function () {
+
     const { controller, currentHost } = this;
 
-    if (controller) controller.dirtyCells = true;
-    else if (currentHost) {
-
-        const host = currentHost.getHost();
-
-        if (host) host.dirtyCells = true;
-    }
+    if (controller) return controller;
+    if (currentHost) return currentHost.getHost();
+    return null;
 };
 
 // `clear`
@@ -1034,17 +1035,25 @@ P.stashOutputAction = function () {
 
             if (!this.stashedImage) {
 
-                const newimg = this.stashedImage = document.createElement(IMG);
+                const control = this.getController();
 
-                newimg.id = stashId;
+                if (control) {
 
-                newimg.onload = function () {
+                    const that = this;
 
-                    scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${stashId}`);
-                };
+                    const newimg = document.createElement(IMG);
+                    newimg.id = stashId;
+                    newimg.alt = `A cached image of the ${this.name} Cell`;
 
-                newimg.src = sourcecanvas.toDataURL();
+                    newimg.onload = function () {
+
+                        control.canvasHold.appendChild(newimg);
+                        that.stashedImage = newimg;
+                        importDomImage(`#${stashId}`);
+                    };
+
+                    newimg.src = sourcecanvas.toDataURL();
+                }
             }
             else this.stashedImage.src = sourcecanvas.toDataURL();
 
@@ -1069,7 +1078,7 @@ P.getHost = function () {
     return false;
 };
 
-// `updateBaseHere` - Internal function - keeping the Canvas object's 'base' Cell's `.here` attribute up-to-date with accurate mouse/pointer/touch cursor data
+// `updateBaseHere` - Internal function called by a Canvas wrapper on its base Cell
 P.updateBaseHere = function (controllerHere, fit) {
 
     if (this.isBase) {

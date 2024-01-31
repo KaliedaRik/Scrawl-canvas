@@ -30,7 +30,7 @@ import {
     purge,
 } from '../core/library.js';
 
-import { domShow, scrawlCanvasHold } from '../core/document.js';
+import { domShow } from '../core/document.js';
 
 import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-elements.js";
 
@@ -47,7 +47,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../helper/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, AUTO, BORDER_BOX, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -206,19 +206,46 @@ const Canvas = function (items = Ωempty) {
 
         this.dirtyTextTabOrder = true;
 
+        const canvasHold = document.createElement('div');
+        canvasHold.id = `${this.name}-canvas-hold`;
+        canvasHold.style.width = PX0;
+        canvasHold.style.height = PX0;
+        canvasHold.style.maxWidth = PX0;
+        canvasHold.style.maxHeight = PX0;
+        canvasHold.style.border = PX0;
+        canvasHold.style.padding = PX0;
+        canvasHold.style.margin = PX0;
+        canvasHold.style.overflow = HIDDEN;
+        canvasHold.setAttribute(ARIA_LIVE, POLITE);
+        canvasHold.setAttribute(ARIA_BUSY, 'false');
+        this.canvasHold = canvasHold;
+        el.appendChild(canvasHold);
+
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
         this.ariaLabelElement = ariaLabel;
-        scrawlCanvasHold.appendChild(ariaLabel);
+        canvasHold.appendChild(ariaLabel);
         el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
         el.setAttribute(ARIA_LIVE, POLITE);
 
         const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
         this.ariaDescriptionElement = ariaDescription;
-        scrawlCanvasHold.appendChild(ariaDescription);
+        canvasHold.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
         el.setAttribute(ARIA_LIVE, POLITE);
+
+        const fontHeightCalculator = document.createElement(DIV);
+        fontHeightCalculator.style.border = PX0;
+        fontHeightCalculator.style.padding = PX0;
+        fontHeightCalculator.style.margin = PX0;
+        fontHeightCalculator.style.height = AUTO;
+        fontHeightCalculator.style.lineHeight = 1;
+        fontHeightCalculator.style.boxSizing = BORDER_BOX;
+        fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
+        fontHeightCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.fontHeightCalculator = fontHeightCalculator;
+        canvasHold.appendChild(fontHeightCalculator);
 
         this.cleanAria();
     }
