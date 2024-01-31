@@ -166,3 +166,7 @@ code {
 	border-left: 1em solid transparent;
 }
 
+#test-navigation {
+	display: flex;
+	justify-content: space-between;
+}
