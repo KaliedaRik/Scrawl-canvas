@@ -19,7 +19,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
-import { _abs, _ceil, _floor, _parse, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, START, SYSTEM_FONTS, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _floor, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, START, SYSTEM_FONTS, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -434,7 +434,6 @@ P.cleanHandle = function () {
     else if (hy == BOTTOM) currentHandle[1] = dy;
     else if (hy == CENTER) currentHandle[1] = dy / 2;
     else if (hy == MIDDLE) currentHandle[1] = dy / 2;
-    else if (hy == IDEOGRAPHIC) currentHandle[1] = dy;
     else if (hy == HANGING) {
 
         const {hangingBaseline} = metrics;
@@ -530,7 +529,7 @@ P.cleanFontOffsets = function () {
         const offset = padding - markTop;
 
         if (offset > 0) this.fontVerticalOffset = offset;
-        
+
         releaseCell(mycell);
 
         this.dirtyPathObject = true;
