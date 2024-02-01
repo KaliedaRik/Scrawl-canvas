@@ -221,21 +221,8 @@ const Canvas = function (items = Ωempty) {
         this.canvasHold = canvasHold;
         el.appendChild(canvasHold);
 
-        const ariaLabel = document.createElement(DIV);
-        ariaLabel.id = `${this.name}-ARIA-label`;
-        this.ariaLabelElement = ariaLabel;
-        canvasHold.appendChild(ariaLabel);
-        el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
-        el.setAttribute(ARIA_LIVE, POLITE);
-
-        const ariaDescription = document.createElement(DIV);
-        ariaDescription.id = `${this.name}-ARIA-description`;
-        this.ariaDescriptionElement = ariaDescription;
-        canvasHold.appendChild(ariaDescription);
-        el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
-        el.setAttribute(ARIA_LIVE, POLITE);
-
         const fontHeightCalculator = document.createElement(DIV);
+        fontHeightCalculator.id = `${this.name}-fontHeightCalculator`;
         fontHeightCalculator.style.border = PX0;
         fontHeightCalculator.style.padding = PX0;
         fontHeightCalculator.style.margin = PX0;
@@ -246,6 +233,51 @@ const Canvas = function (items = Ωempty) {
         fontHeightCalculator.setAttribute(ARIA_HIDDEN, TRUE);
         this.fontHeightCalculator = fontHeightCalculator;
         canvasHold.appendChild(fontHeightCalculator);
+
+        const ariaLabel = document.createElement(DIV);
+        ariaLabel.id = `${this.name}-ARIA-label`;
+        ariaLabel.style.width = PX0;
+        ariaLabel.style.height = PX0;
+        ariaLabel.style.maxWidth = PX0;
+        ariaLabel.style.maxHeight = PX0;
+        ariaLabel.style.border = PX0;
+        ariaLabel.style.padding = PX0;
+        ariaLabel.style.margin = PX0;
+        ariaLabel.style.overflow = HIDDEN;
+        ariaLabel.setAttribute(ARIA_LIVE, POLITE);
+        this.ariaLabelElement = ariaLabel;
+        el.insertAdjacentElement('afterend', ariaLabel);
+        el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
+
+        const ariaDescription = document.createElement(DIV);
+        ariaDescription.id = `${this.name}-ARIA-description`;
+        ariaDescription.style.width = PX0;
+        ariaDescription.style.height = PX0;
+        ariaDescription.style.maxWidth = PX0;
+        ariaDescription.style.maxHeight = PX0;
+        ariaDescription.style.border = PX0;
+        ariaDescription.style.padding = PX0;
+        ariaDescription.style.margin = PX0;
+        ariaDescription.style.overflow = HIDDEN;
+        ariaDescription.setAttribute(ARIA_LIVE, POLITE);
+        this.ariaDescriptionElement = ariaDescription;
+        el.insertAdjacentElement('afterend', ariaDescription);
+        el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
+
+        const fontSizeCalculator = document.createElement(DIV);
+        fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
+        fontSizeCalculator.style.width = PX0;
+        fontSizeCalculator.style.height = PX0;
+        fontSizeCalculator.style.maxWidth = PX0;
+        fontSizeCalculator.style.maxHeight = PX0;
+        fontSizeCalculator.style.border = PX0;
+        fontSizeCalculator.style.padding = PX0;
+        fontSizeCalculator.style.margin = PX0;
+        fontSizeCalculator.style.overflow = HIDDEN;
+        fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.fontSizeCalculator = fontSizeCalculator;
+        this.fontSizeCalculatorValues = getComputedStyle(fontSizeCalculator);
+        el.insertAdjacentElement('afterend', fontSizeCalculator);
 
         this.cleanAria();
     }
