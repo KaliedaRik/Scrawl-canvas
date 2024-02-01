@@ -222,4 +222,3 @@ export const recalculateFonts = (delay = 100) => {
         });
     }, delay);
 };
-

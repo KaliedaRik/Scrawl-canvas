@@ -293,19 +293,6 @@ const updateFont = (event) => {
                 html.textContent = 'Long live the world!';
                 break;
 
-            case 'roboto-bold-safari' :
-                mylabel.set({
-                    fontString: 'bold 60px "Roboto Sans Bold"',
-                    text: 'Long live the world!',
-                    direction: 'ltr',
-                });
-// @ts-expect-error
-                html.style.font = 'bold 60px "Roboto Sans Bold"';
-// @ts-expect-error
-                html.style.direction = 'ltr';
-                html.textContent = 'Long live the world!';
-                break;
-
             case 'roboto-italic' :
                 mylabel.set({
                     fontString: 'italic 60px "Roboto Sans"',

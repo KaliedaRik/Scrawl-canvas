@@ -22,7 +22,13 @@ scrawl.makeLabel({
 
     name: name('mylabel_fill'),
 
+    fontString: 'bold 2em / 3 Garamond',
+
+    // Alternative font strings, for testing
+    /*
+    fontString: 'bold 2.5vmax / 3 Garamond',
     fontString: 'bold 32px / 3 Garamond',
+    */
 
     text: '|H&epsilon;lj&ouml;!',
     accessibleText: `${name('mylabel_fill')} says: §`,

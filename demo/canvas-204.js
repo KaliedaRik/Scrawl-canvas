@@ -26,7 +26,7 @@ scrawl.makeGradient({
         [495, 'red'],
         [500, 'yellow'],
         [505, 'red'],
-        [999, 'green']
+        [999, 'green'],
     ],
     colorSpace: 'OKLAB',
     precision: 5,
