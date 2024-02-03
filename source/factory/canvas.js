@@ -413,6 +413,7 @@ P.factoryKill = function () {
     this.textHold.remove();
     this.ariaLabelElement.remove();
     this.ariaDescriptionElement.remove();
+    this.fontSizeCalculator.remove();
     this.domElement.remove();
 };
 

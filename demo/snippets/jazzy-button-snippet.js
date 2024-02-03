@@ -117,7 +117,7 @@ export default function (scrawl, el) {
             text: `Hello - ${setClickText()}`,
 
             // Use the font set on the DOM element via CSS
-            fontString,
+            font: fontString,
             fillStyle: color,
 
             handleY: '68%',

@@ -86,18 +86,15 @@ export default function (items) {
         method: 'fillThenDraw',
     });
 
-    const lineProgressLabel = scrawl.makePhrase({
+    const lineProgressLabel = scrawl.makeLabel({
         name: name('progress-label'),
         group: dragGroup,
-        width: 200,
         start: ['50%', '50%'],
         justify: 'center',
         handle: ['center', 'center'],
         fontString: '1em monospace',
-        lineHeight: 1,
         fillStyle: 'yellow',
-        boundingBoxColor: 'yellow',
-        lineWidth: 1,
+        boundingBoxStyle: 'yellow',
         method: 'fill',
 
         onEnter: function () {
@@ -122,17 +119,17 @@ export default function (items) {
         start: ['75%', '50%'],
     });
 
-    scrawl.makePhrase({
+    scrawl.makeLabel({
         name: name('arrow-link'),
         group: animGroup,
-        start: ['2%', '98%'],
+        start: ['left', 'bottom'],
         handle: ['left', 'bottom'],
-        fontString: '1.4em Arial, sans-serif',
+        offset: [20, -20],
+        fontString: '1.4em Arial',
         text: 'Arrows',
         fillStyle: 'white',
-        lineHeight: 1,
-        underlinePosition: 0.8,
-        underlineStyle: 'white',
+        underlineOffset: 0.8,
+        underlineWidth: 4,
         exposeText: false,
 
         onEnter: function () {
@@ -140,14 +137,14 @@ export default function (items) {
                 css: { cursor: 'pointer' },
                 title: 'https://en.wikipedia.org/wiki/Arrow',
             });
-            this.set({ text: `§UNDERLINE§${this.text}`});
+            this.set({ includeUnderline: true });
         },
         onLeave: function () {
             canvas.set({
                 css: { cursor: 'auto' },
                 title,
             });
-            this.set({ text: this.text.replace('§UNDERLINE§', '')});
+            this.set({ includeUnderline: false });
         },
         onUp: function () {
             this.clickAnchor();
@@ -159,8 +156,9 @@ export default function (items) {
         },
     }).clone({
         name: name('label-link'),
-        start: ['98%', '98%'],
+        start: ['right', 'bottom'],
         handle: ['right', 'bottom'],
+        offset: [-20, -20],
         text: 'Labels',
 
         onEnter: function () {
@@ -168,7 +166,7 @@ export default function (items) {
                 css: { cursor: 'pointer' },
                 title: 'https://en.wikipedia.org/wiki/Label',
             });
-            this.set({ text: `§UNDERLINE§${this.text}`});
+            this.set({ includeUnderline: true });
         },
         anchor: {
             name: name('label-anchor'),
