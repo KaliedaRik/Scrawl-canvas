@@ -478,19 +478,6 @@ const updateTextBasedEntitys = function () {
     })
 };
 
-// export const recalculateFonts = (delay = 100) => {
-
-//     setTimeout(() => {
-
-//         entitynames.forEach(name => {
-
-//             const ent = entity[name];
-
-//             if (FONT_USERS.includes(ent.type)) ent.recalculateFont();
-//         });
-//     }, delay);
-// };
-
 // Internal functions that get triggered when setting a DOM-based artefact's `trackHere` attribute. They add/remove an event listener to the artefact's domElement.
 export const addLocalMouseMoveListener = function (wrapper) {
 

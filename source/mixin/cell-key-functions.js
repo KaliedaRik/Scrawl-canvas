@@ -9,7 +9,7 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, NORMAL, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
+import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -215,11 +215,11 @@ export default function (P = Ωempty) {
         },
 
         fontStretch: function (item, engine) {
-            engine.fontStretch = NORMAL;
+            engine.fontStretch = item;
         },
 
         fontVariantCaps: function (item, engine) {
-            engine.fontVariantCaps = NORMAL;
+            engine.fontVariantCaps = item;
         },
 
         letterSpacing: function (item, engine) {

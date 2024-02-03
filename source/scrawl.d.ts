@@ -1539,6 +1539,10 @@ interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFa
     direction?: string;
     fontKerning?: string;
     fontStretch?: string;
+    fontSize?: string | number;
+    fontVariant?: string;
+    fontWeight?: string;
+    fontStyle?: string;
     fontString?: string;
     fontVariantCaps?: string;
     fontVerticalOffset?: number;

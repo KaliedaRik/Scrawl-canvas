@@ -45,6 +45,9 @@ const mylabel = scrawl.makeLabel({
     fontString: '60px serif',
     text: 'Long live the world!',
 
+    showBoundingBox: true,
+    boundingBoxStyle: '#f008',
+
     includeUnderline: true,
     underlineWidth: 2,
     underlineOffset: 0.9,

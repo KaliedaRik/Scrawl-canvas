@@ -1,12 +1,6 @@
 // # Label factory
 // TODO - document purpose and description
 
-// #### Fonts and browsers
-// Font rendering in the &lt;canvas> element, consistently across browsers, can be ... problematic. Of the major browsers, Safari is the one that seems to cause the most problems. In particular:
-// + While Safari can read fontString values like `italic 24px Garamond` to output italicised text, all attempts to use a value like `bold 24px Garamond` to output bold text will fail. Safari refuses to process fonts into a bold representation - except if the directly referenced font file itself is a bold font.
-// + Safari struggles with font sizes given in lengths other than 'px' - `24px Garamond` will generate text at 24px; `1.5rem Garamond` (where the CSS root font-size value has been set to 16px) generates text somewhere in the vicinity of 16px ... give or take.
-// + Safari will often place text lower down than expected - even outside the canvas! The browser's font-reading functionality will use different font file tables to determine where the text should be stamped on the screen.
-
 
 // #### Imports
 import { constructors } from '../core/library.js';
@@ -23,7 +17,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
-import { _abs, _ceil, _floor, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, START, SYSTEM_FONTS, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, SMALL_CAPS, START, SYSTEM_FONTS, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -36,7 +30,6 @@ const Label = function (items = Ωempty) {
 
     this.dirtyFont = true;
     this.currentFontIsLoaded = false;
-    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
 
     return this;
 };
@@ -63,8 +56,6 @@ const defaultAttributes = {
 
     fontString: DEFAULT_FONT,
     fontVerticalOffset: 0,
-
-    calculateFontOffsets: true,
 
     includeUnderline: false,
     underlineStyle: ZERO_STR,
@@ -153,42 +144,60 @@ S.fontString = function (item) {
 
         this.fontString = item;
         this.dirtyFont = true;
-        if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
         this.currentFontIsLoaded = false;
+        this.updateUsingFontString= true;
     }
 };
 
 S.fontSize = function (item) {
 
-    this.fontSize = item;
+    this.fontSize = (item.toFixed) ? `${item}px` : item.toLowerCase();
     this.dirtyFont = true;
-    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
-    this.updateUsingFontVariables = true;
+    this.updateUsingFontParts = true;
 }
 
 S.fontStyle = function (item) {
 
-    this.fontStyle = item;
-    this.dirtyFont = true;
-    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
-    this.updateUsingFontVariables = true;
+    if (item?.substring) {
+
+        this.fontStyle = item.toLowerCase();
+        this.dirtyFont = true;
+        this.updateUsingFontParts = true;
+    }
 }
 
+G.fontVariant = function () {
+
+    return this.fontVariant;
+};
 S.fontVariant = function (item) {
 
-    this.fontVariant = item;
-    this.dirtyFont = true;
-    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
-    this.updateUsingFontVariables = true;
-}
+    if (item?.substring) {
+
+        this.fontVariant = item.toLowerCase();
+        this.dirtyFont = true;
+        this.updateUsingFontParts = true;
+    }
+};
+G.fontVariantCaps = G.fontVariant;
+S.fontVariantCaps = S.fontVariant;
+
+S.fontStretch = function (item) {
+
+    if (item?.substring) {
+
+        this.fontStretch = item.toLowerCase();
+        this.dirtyFont = true;
+        this.updateUsingFontParts = true;
+    }
+};
 
 S.fontWeight = function (item) {
 
-    this.fontWeight = item;
+    this.fontWeight = (item.toFixed) ? `${item}` : item;
     this.dirtyFont = true;
-    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
-    this.updateUsingFontVariables = true;
-}
+    this.updateUsingFontParts = true;
+};
 
 G.rawText = function () {
 
@@ -229,18 +238,6 @@ S.fontKerning = function (item) {
         this.dirtyFont = true;
     }
 };
-
-G.fontStretch = function () {
-
-    return this.state.fontStretch;
-};
-S.fontStretch = λnull;
-
-G.fontVariantCaps = function () {
-
-    return this.state.fontVariantCaps;
-};
-S.fontVariantCaps = λnull;
 
 G.letterSpacing = function () {
 
@@ -324,7 +321,8 @@ P.entityInit = function (items = Ωempty) {
     this.onDown = λnull;
     this.onUp = λnull;
 
-    this.updateUsingFontVariables = false;
+    this.updateUsingFontParts = false;
+    this.updateUsingFontString = false;
 
     this.set(items);
 
@@ -336,24 +334,19 @@ P.entityInit = function (items = Ωempty) {
 
 P.checkFontIsLoaded = function () {
 
-    if (SYSTEM_FONTS.includes(this.temperedFont?.groups?.family)) {
+    const font = this.state.font;
 
-        this.currentFontIsLoaded = true;
-        return true;
+    if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;
+    else {
+
+        const fonts = document.fonts;
+
+        const check = fonts.check(font);
+
+        if (check) this.currentFontIsLoaded = true;
+        else this.dirtyFont = true;
     }
-
-    const fonts = document.fonts;
-
-    const check = fonts.check(this.state.font);
-
-    if (check) {
-
-        this.currentFontIsLoaded = true;
-        return true;
-    }
-    this.dirtyFont = true;
-    return false;
-}
+};
 
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
@@ -382,52 +375,110 @@ P.temperFont = function () {
             }
         }
 
-        if (!fontSizeCalculator) {
-
-            this.dirtyFont = true;
-            return false;
-        }
+        if (!fontSizeCalculator) this.dirtyFont = true;
         else {
 
-            const { currentScale, letterSpaceValue, wordSpaceValue } = this;
+            let fontSize = this.fontSize;
+            const { currentScale, letterSpaceValue, wordSpaceValue, fontStretch, fontStyle, fontWeight, fontVariant, fontString, updateUsingFontParts, updateUsingFontString } = this;
 
-            fontSizeCalculator.style.font = this.fontString;
+            // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
+            fontSizeCalculator.style.font = fontString;
 
-            if (this.updateUsingFontVariables) {
+            // On initial load `this.fontSize` will be empty or undefined
+            if (updateUsingFontString || fontSize == null || !fontSize) {
 
-                this.updateUsingFontVariables = false;
-                fontSizeCalculator.style.fontSize = this.fontSize;
-                fontSizeCalculator.style.fontStyle = this.fontStyle;
-                fontSizeCalculator.style.fontVariant = this.fontVariant;
-                fontSizeCalculator.style.fontWeight = this.fontWeight;
+                this.updateUsingFontString = false;
+                const foundSize = fontString.match(FONT_LENGTH_REGEX);
+
+                if (foundSize && foundSize[0]) fontSize = foundSize[0];
+
+                fontSizeCalculator.style.fontSize = fontSize;
+                this.fontSize = fontSize
             }
 
-            let fontWeight = fontSizeCalculatorValues.fontWeight,
-                fontVariant = fontSizeCalculatorValues.fontVariant,
-                fontStyle = fontSizeCalculatorValues.fontStyle;
+            // We only adjust if a part of the font string has been recently 'set'
+            if (updateUsingFontParts) {
 
-            const fontSizeString = fontSizeCalculatorValues.fontSize,
-                fontFamily = fontSizeCalculatorValues.fontFamily,
-                fontSizeValue = parseFloat(fontSizeString);
+                this.updateUsingFontParts = false;
+                fontSizeCalculator.style.fontStretch = fontStretch;
+                fontSizeCalculator.style.fontStyle = fontStyle;
+                fontSizeCalculator.style.fontVariant = fontVariant;
+                fontSizeCalculator.style.fontWeight = fontWeight;
+                fontSizeCalculator.style.fontSize = fontSize;
+            }
+            else if (currentScale != 1) fontSizeCalculator.style.fontSize = fontSize;
 
-            if (fontVariant != 'small-caps') fontVariant = '';
-            if (fontStyle != 'italic') fontStyle = '';
-            if (fontWeight == 400) fontWeight = '';
+            // Extract and manipulate data for font weight, variant and style
+            let elWeight = fontSizeCalculatorValues.fontWeight,
+                elVariant = fontSizeCalculatorValues.fontVariant,
+                elStretch = fontSizeCalculatorValues.fontStretch,
+                elStyle = fontSizeCalculatorValues.fontStyle;
 
-            this.fontSize = fontSizeString;
-            this.fontVariant = fontVariant;
-            this.fontStyle = fontStyle;
-            this.fontWeight = fontWeight;
+            // Update elWeight, if required
+            if (elWeight == 400) elWeight = NORMAL;
 
+            // Update elVariant, if required
+            elVariant = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
+
+            // Update elStyle, if required
+            elStyle = (elStyle == ITALIC || elStyle.includes(OBLIQUE)) ? elStyle : NORMAL;
+
+            // elStretch will always be a percent string, which canvas engines refuse to process
+            const stretchVal = parseFloat(elStretch);
+
+            if (!_isFinite(stretchVal)) elStretch = NORMAL;
+            else {
+
+                if (stretchVal <= 50) elStretch = 'ultra-condensed';
+                else if (stretchVal <= 62.5) elStretch = 'extra-condensed';
+                else if (stretchVal <= 75) elStretch = 'condensed';
+                else if (stretchVal <= 87.5) elStretch = 'semi-condensed';
+                else if (stretchVal >= 200) elStretch = 'ultra-expanded';
+                else if (stretchVal >= 150) elStretch = 'extra-expanded';
+                else if (stretchVal >= 125) elStretch = 'expanded';
+                else if (stretchVal >= 112.5) elStretch = 'semi-expanded';
+                else elStretch = NORMAL;
+            }
+
+            // Extract data for font family and size
+            const elSizeString = fontSizeCalculatorValues.fontSize,
+                elFamily = fontSizeCalculatorValues.fontFamily,
+                elSizeValue = parseFloat(elSizeString);
+
+            // Build the internal `defaultFont` string, and update Label `state` with it
             let f = '';
-            if (fontStyle) f += `${fontStyle} `;
-            if (fontVariant) f += `${fontVariant} `;
-            if (fontWeight) f += `${fontWeight} `;
-            f += `${fontSizeValue * currentScale}px ${fontFamily}`
+            if (elStyle == ITALIC || elStyle.includes(OBLIQUE)) f += `${elStyle} `;
+            if (elVariant == SMALL_CAPS) f += `${elVariant} `;
+            if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
+            f += `${elSizeValue * currentScale}px ${elFamily}`
 
             this.defaultFont = f;
             state.font = f;
 
+            // Rebuild the `fontString` string - attempting to minimise user input error
+            f = '';
+            if (elStretch != null && elStretch && elStretch != NORMAL) f += `${elStretch} `;
+            if (elStyle != null && elStyle && elStyle != NORMAL) f += `${elStyle} `;
+            if (elVariant != null && elVariant && elVariant != NORMAL) f += `${elVariant} `;
+            if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
+
+            if (fontSize) f += `${fontSize} `;
+            else f += `${elSizeValue}px `
+
+            f += `${elFamily}`;
+            this.fontString = f;
+
+            // Update `this` attributes
+            this.fontStretch = elStretch;
+            this.fontStyle = elStyle;
+            this.fontVariant = elVariant;
+            this.fontWeight = elWeight;
+
+            // Populate state for style, variant, stretch
+            state.fontVariantCaps = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
+            state.fontStretch = (FONT_STRETCH_VALS.includes(elStretch)) ? elStretch : NORMAL;
+
+            // Measure font metrics - according to the canvas engine
             const mycell = requestCell();
             const engine = mycell.engine;
 
@@ -447,20 +498,30 @@ P.temperFont = function () {
 
             this.metrics = engine.measureText(this.text);
 
-            const { actualBoundingBoxLeft, actualBoundingBoxRight, actualBoundingBoxAscent, actualBoundingBoxDescent} = this.metrics;
+            // Calculate Label dimensions
+            const { actualBoundingBoxLeft, actualBoundingBoxRight, actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxAscent, fontBoundingBoxDescent, alphabeticBaseline, hangingBaseline, ideographicBaseline} = this.metrics;
+
+            let fontHeight = fontBoundingBoxAscent + fontBoundingBoxDescent;
+            if (!_isFinite(fontHeight)) fontHeight = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
 
             this.dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
-            this.dimensions[1] = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
+            this.dimensions[1] = fontHeight;
+
+            // Setup text-specific handle offsets
+            this.alphabeticBaseline = -alphabeticBaseline;
+            this.hangingBaseline = -hangingBaseline;
+            this.ideographicBaseline = -ideographicBaseline;
+
+            // Setup font vertical offset
+            this.fontVerticalOffset = (_isFinite(fontBoundingBoxAscent) ? fontBoundingBoxAscent : actualBoundingBoxAscent) / currentScale;
+
+            // Clean up; set required dirty flags
+            releaseCell(mycell);
 
             this.dirtyPathObject = true;
             this.dirtyDimensions = true;
-
-            releaseCell(mycell);
-
-            return true;
         }
     }
-    return false;
 };
 
 
@@ -470,7 +531,6 @@ P.temperFont = function () {
 P.recalculateFont = function () {
 
     this.dirtyFont = true;
-    if (this.calculateFontOffsets) this.dirtyFontOffsets = true;
 };
 
 
@@ -519,7 +579,7 @@ P.cleanHandle = function () {
 
     this.dirtyHandle = false;
 
-    const { handle, currentHandle, currentDimensions, mimicked, state, metrics, fontVerticalOffset } = this;
+    const { handle, currentHandle, currentDimensions, mimicked, state, fontVerticalOffset, alphabeticBaseline, hangingBaseline, ideographicBaseline } = this;
 
     const [hx, hy] = handle;
     const [dx, dy] = currentDimensions;
@@ -532,7 +592,7 @@ P.cleanHandle = function () {
     else if (hx == CENTER) currentHandle[0] = dx / 2;
     else if (hx == START) currentHandle[0] = (direction == LTR) ? 0 : dx;
     else if (hx == END) currentHandle[0] = (direction == LTR) ? dx : 0;
-    else if (isNaN(parseFloat(hx))) currentHandle[0] = 0;
+    else if (!_isFinite(parseFloat(hx))) currentHandle[0] = 0;
     else currentHandle[0] = (parseFloat(hx) / 100) * dx;
 
     // vertical
@@ -543,105 +603,26 @@ P.cleanHandle = function () {
     else if (hy == MIDDLE) currentHandle[1] = dy / 2;
     else if (hy == HANGING) {
 
-        const {hangingBaseline} = metrics;
-
-        if (hangingBaseline != null) {
-
-                const ratio = _abs(hangingBaseline) / dy;
-                currentHandle[1] = (ratio * dy) + fontVerticalOffset;
-        }
+        if (_isFinite(hangingBaseline)) currentHandle[1] = hangingBaseline + fontVerticalOffset;
         else currentHandle[1] = 0;
     }
     else if (hy == ALPHABETIC) {
 
-        const {alphabeticBaseline} = metrics;
-
-        if (alphabeticBaseline != null) {
-
-                const ratio = _abs(alphabeticBaseline) / dy;
-                currentHandle[1] = (ratio * dy) + fontVerticalOffset;
-        }
+        if (_isFinite(alphabeticBaseline)) currentHandle[1] = alphabeticBaseline + fontVerticalOffset;
         else currentHandle[1] = 0;
     }
     else if (hy == IDEOGRAPHIC) {
 
-        const {ideographicBaseline} = metrics;
-
-        if (ideographicBaseline != null) {
-
-                const ratio = _abs(ideographicBaseline) / dy;
-                currentHandle[1] = (ratio * dy) + fontVerticalOffset;
-        }
+        if (_isFinite(ideographicBaseline)) currentHandle[1] = ideographicBaseline + fontVerticalOffset;
         else currentHandle[1] = 0;
     }
-    else if (isNaN(parseFloat(hy))) currentHandle[1] = 0;
+    else if (!_isFinite(parseFloat(hy))) currentHandle[1] = 0;
     else currentHandle[1] = (parseFloat(hy) / 100) * dy;
 
     this.dirtyFilterIdentifier = true;
     this.dirtyStampHandlePositions = true;
 
     if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
-};
-
-
-P.cleanFontOffsets = function () {
-
-    this.dirtyFontOffsets = false;
-    this.fontVerticalOffset = 0;
-
-    if (this.currentFontIsLoaded) {
-
-        const mycell = requestCell();
-        const { engine, element } = mycell;
-        const { currentDimensions, state, text } = this;
-        const [width, height] = currentDimensions;
-        const padding = 100;
-
-        const testWidth = width,
-            testHeight = height + (padding * 2);
-
-        mycell.w = element.width = testWidth;
-        mycell.h = element.height = testHeight;
-
-        engine.fillStyle = BLACK;
-        engine.strokeStyle = BLACK;
-        engine.font = state.font;
-        engine.fontKerning = state.fontKerning;
-        engine.fontStretch = state.fontStretch;
-        engine.fontVariantCaps = state.fontVariantCaps;
-        engine.textRendering = state.textRendering;
-        engine.letterSpacing = state.letterSpacing;
-        engine.wordSpacing = state.wordSpacing;
-        engine.direction = state.direction;
-        engine.textAlign = LEFT;
-        engine.textBaseline = TOP;
-
-        engine.fillText(text, 0, padding);
-
-        const image = engine.getImageData(0, 0, testWidth, testHeight);
-        const { width:iWidth, data } = image;
-
-        let markTop = data.length;
-
-        for (let i = 3, iz = data.length; i < iz; i += 3) {
-
-            if (data[i]) {
-
-                const mark = _floor(((i - 3) / 4) / iWidth);
-
-                if (mark < markTop) markTop = mark;
-            }
-        }
-
-        const offset = padding - markTop;
-
-        if (offset > 0) this.fontVerticalOffset = offset;
-
-        releaseCell(mycell);
-
-        this.dirtyPathObject = true;
-    }
-    else this.dirtyFontOffsets = true;
 };
 
 
@@ -658,7 +639,6 @@ P.prepareStamp = function() {
     if (this.dirtyFont) this.temperFont();
     if (this.dirtyDimensions) this.cleanDimensions();
     if (!this.currentFontIsLoaded) this.checkFontIsLoaded();
-    if (this.dirtyFontOffsets) this.cleanFontOffsets();
     if (this.dirtyLock) this.cleanLock();
     if (this.dirtyStart) this.cleanStart();
     if (this.dirtyOffset) this.cleanOffset();
@@ -935,5 +915,3 @@ export const makeLabel = function (items) {
 };
 
 constructors.Label = Label;
-
-// const allLengths = ['%', 'cap', 'ch', 'cm', 'cqb', 'cqh', 'cqi', 'cqmax', 'cqmin', 'cqw', 'dvb', 'dvh', 'dvi', 'dvmax', 'dvmin', 'dvw', 'em', 'ex', 'ic', 'in', 'lh', 'lvb', 'lvh', 'lvi', 'lvmax', 'lvmin', 'lvw', 'mm', 'pc', 'pt', 'px', 'Q', 'rcap', 'rch', 'rem', 'rex', 'ric', 'rlh', 'svb', 'svh', 'svi', 'svmax', 'svmin', 'svw', 'vb', 'vh', 'vi', 'vmax', 'vmin', 'vw'];
