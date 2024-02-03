@@ -283,6 +283,7 @@ S.returnColorAs = function (item) {
 // __precision__ - a positive integer Number value between 0 and 50. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
 S.precision = function (item) {
 
+    item = parseInt(item, 10);
     if (!_isFinite(item) || item < 0) item = 0;
     if (item > 50) item = 50;
 

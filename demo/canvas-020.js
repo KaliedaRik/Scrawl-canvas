@@ -115,8 +115,8 @@ const wheel2 = wheel1.clone({
 
 // Create the filter
 scrawl.makeFilter({
-    name: name('invert'),
-    method: 'invert',
+    name: name('myfilter'),
+    method: 'red',
 });
 
 
@@ -299,27 +299,27 @@ const events = function () {
             switch (currentTarget) {
 
                 case 'block1' :
-                    block1.addFilters(name('invert'));
+                    block1.addFilters(name('myfilter'));
                     break;
 
                 case 'block2' :
-                    block2.addFilters(name('invert'));
+                    block2.addFilters(name('myfilter'));
                     break;
 
                 case 'wheel1' :
-                    wheel1.addFilters(name('invert'));
+                    wheel1.addFilters(name('myfilter'));
                     break;
 
                 case 'wheel2' :
-                    wheel2.addFilters(name('invert'));
+                    wheel2.addFilters(name('myfilter'));
                     break;
 
                 case 'group' :
-                    group.addFilters(name('invert'));
+                    group.addFilters(name('myfilter'));
                     break;
 
                 case 'cell' :
-                    base.addFilters(name('invert'));
+                    base.addFilters(name('myfilter'));
                     break;
             }
 

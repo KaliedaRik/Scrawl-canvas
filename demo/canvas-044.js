@@ -263,6 +263,54 @@ scrawl.makeBlock({
 });
 
 
+// #### User interaction
+const setCursorTo = {
+
+    auto: () => {
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+    },
+    pointer: () => {
+        canvas.set({
+            css: {
+                cursor: 'grab',
+            },
+        });
+    },
+    grabbing: () => {
+        canvas.set({
+            css: {
+                cursor: 'grabbing',
+            },
+        });
+    },
+};
+
+// We can change the cursor for a subset of entitys declared on the canvas.base cell
+scrawl.makeGroup({
+    name: 'my-draggable-entitys',
+    host: canvas.base,
+    checkForEntityHover: true,
+    onEntityHover: setCursorTo.pointer,
+    onEntityNoHover: setCursorTo.auto,
+}).moveArtefactsIntoGroup('hex', 'egg', 'arrow', 'boring-block', 'tipsy-block');
+
+scrawl.makeDragZone({
+    zone: canvas,
+    collisionGroup: 'my-draggable-entitys',
+    endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
+    updateOnStart: setCursorTo.grabbing,
+    updateOnEnd: setCursorTo.pointer,
+});
+
+// canvas.set({
+// });
+
+
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
@@ -273,22 +321,10 @@ scrawl.makeRender({
 
     name: 'demo-animation',
     target: canvas,
+    commence: () => canvas.checkHover(),
     afterShow: report,
 });
 
-
-// #### User interaction
-// + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
-scrawl.makeGroup({
-    name: 'my-draggable-entitys',
-}).addArtefacts('hex', 'egg', 'arrow', 'boring-block', 'tipsy-block');
-
-scrawl.makeDragZone({
-    zone: canvas,
-    collisionGroup: 'my-draggable-entitys',
-    endOn: ['up', 'leave'],
-    preventTouchDefaultWhenDragging: true,
-});
 
 // #### Development and testing
 console.log(scrawl.library);

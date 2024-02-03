@@ -173,6 +173,32 @@ L.entity[name('wheel-fillAndDraw')].set({
 
 
 // #### User interaction
+// Make an object to hold functions we'll use for UI
+const setCursorTo = {
+
+    auto: () => {
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+    },
+    pointer: () => {
+        canvas.set({
+            css: {
+                cursor: 'grab',
+            },
+        });
+    },
+    grabbing: () => {
+        canvas.set({
+            css: {
+                cursor: 'grabbing',
+            },
+        });
+    },
+};
+
 // Create the drag-and-drop zone
 const current = makeDragZone({
 
@@ -180,6 +206,15 @@ const current = makeDragZone({
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
+    updateOnStart: setCursorTo.grabbing,
+    updateOnEnd: setCursorTo.pointer,
+});
+
+// Implement the hover check on the Canvas wrapper
+canvas.set({
+    checkForEntityHover: true,
+    onEntityHover: setCursorTo.pointer,
+    onEntityNoHover: setCursorTo.auto,
 });
 
 
@@ -196,6 +231,7 @@ makeRender({
 
     name: name('animation'),
     target: canvas,
+    commence: () => canvas.checkHover(),
     afterShow: report,
 });
 

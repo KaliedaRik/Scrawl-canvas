@@ -637,7 +637,7 @@ export default function (P = Ωempty) {
             else if (val == LEFT || val == TOP) current[i] = 0;
             else if (val == RIGHT || val == BOTTOM) current[i] = dim;
             else if (val == CENTER) current[i] = dim / 2;
-            else if (!_isFinite(val)) current[i] = 0;
+            else if (!_isFinite(parseFloat(val))) current[i] = 0;
             else current[i] = (parseFloat(val) / 100) * dim;
         }
     };

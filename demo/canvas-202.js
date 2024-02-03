@@ -137,6 +137,12 @@ scrawl.makeUpdater({
         fontKerning: ['fontKerning', 'raw'],
         textRendering: ['textRendering', 'raw'],
     },
+
+    callback: () => {
+        html.style.transform = `scale(${mylabel.get('scale')})`;
+        html.style.letterSpacing = mylabel.get('letterSpacing');
+        html.style.wordSpacing = mylabel.get('wordSpacing');
+    },
 });
 
 
