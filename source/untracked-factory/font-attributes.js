@@ -23,7 +23,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 
 import baseMix from '../mixin/base.js';
 
-import { _isArray, _max, _min, _PC, _Q, BOLD, BOLDER, CAP, CH, CM, DEFAULT_SIZE, EM, EX, FONT_ATTRIBUTE, IC, IN, ITALIC, LARGE, LARGER, LH, LIGHTER, MEDIUM, MM, NORMAL, OBLIQUE, PC, PT, PX, REM, RFS_ARRAY_1, RFS_ARRAY_2, RLH, SANS_SERIF, SIZE_SUFFIX, SMALL, SMALL_CAPS, SMALLER, SPACE, STOP, T_CELL, T_FONT_ATTRIBUTES, VB, VH, VI, VMAX, VMIN, VW, X_LARGE, X_SMALL, XX_LARGE, XX_SMALL, XXX_LARGE, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _max, _min, _PC, _Q, BOLD, BOLDER, CAP, CH, CM, DEFAULT_SIZE, EM, EX, FONT_ATTRIBUTE, IC, IN, ITALIC, LARGE, LARGER, LH, LIGHTER, MEDIUM, MM, NORMAL, OBLIQUE, PC, PT, PX, REM, RFS_ARRAY_1, RFS_ARRAY_2, RLH, SANS_SERIF, SIZE_SUFFIX, SMALL, SMALL_CAPS, SMALLER, SPACE, STOP, T_CELL, T_FONT_ATTRIBUTES, VB, VH, VI, VMAX, VMIN, VW, X_LARGE, X_SMALL, XX_LARGE, XX_SMALL, XXX_LARGE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 
@@ -410,7 +410,7 @@ P.calculateSize = function () {
             [parentSize, rootSize, viewportWidth, viewportHeight] = host.getComputedFontSizes();
         }
 
-        if (isNaN(sizeValue)) sizeValue = 12;
+        if (!_isFinite(sizeValue)) sizeValue = 12;
 
         let res = parentSize;
 

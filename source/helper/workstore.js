@@ -1,7 +1,7 @@
 // # Workstore
 
 import { makeAnimation } from '../factory/animation.js';
-import { _keys, _now } from './shared-vars.js';
+import { _isFinite, _keys, _now } from './shared-vars.js';
 
 
 // `workstore`, `workstoreLastAccessed` - Scrawl-canvas maintains a semi-permanent storage space for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last few seconds.
@@ -14,13 +14,13 @@ let lifetimeLength = 1000;
 // `setWorkstoreLifetimeLength`
 export const setWorkstoreLifetimeLength = (val) => {
 
-    if (val.toFixed && !isNaN(val) && val >= 200 && val <= 10000) lifetimeLength = val;
+    if (_isFinite(val) && val >= 200 && val <= 10000) lifetimeLength = val;
 };
 
 // `setFilterMemoizationChoke` - DEPRECATED in favour of `setWorkstoreLifetimeLength`
 export const setFilterMemoizationChoke = (val) => {
 
-    if (val.toFixed && !isNaN(val) && val >= 200 && val <= 10000) lifetimeLength = val;
+    if (_isFinite(val) && val >= 200 && val <= 10000) lifetimeLength = val;
 };
 
 // `checkForWorkstoreItem` - returns a boolean: true if item exists in workstore
@@ -76,7 +76,7 @@ let purgeLastPerformed = 0;
 // `setWorkstorePurgeChoke`
 export const setWorkstorePurgeChoke = (val) => {
 
-    if (val.toFixed && !isNaN(val) && val >= 10 && val <= 5000) purgeChoke = val;
+    if (_isFinite(val) && val >= 10 && val <= 5000) purgeChoke = val;
 };
 
 // `purgeWorkstore` - internal function

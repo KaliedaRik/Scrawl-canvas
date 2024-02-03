@@ -22,7 +22,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../helper/shared-vars.js';
 
 
 // #### Grid constructor
@@ -736,7 +736,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return [false];
 
-        if (!x.toFixed || !y.toFixed || isNaN(x) || isNaN(y)) return [false];
+        if (!_isFinite(x) || !_isFinite(y)) return [false];
 
         return [true, x, y];
     }

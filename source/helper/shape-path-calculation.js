@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { _atan2, _cos, _max, _min, _pow, _seal, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from './shared-vars.js';
+import { _atan2, _cos, _isFinite, _max, _min, _pow, _seal, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from './shared-vars.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 
@@ -438,14 +438,14 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         break;
 
                     case 'z' :
-                        if (isNaN(x)) x = 0;
-                        if (isNaN(y)) y = 0;
+                        if (!_isFinite(x)) x = 0;
+                        if (!_isFinite(y)) y = 0;
                         units[i] = [CLOSE, x, y];
                         break;
 
                     default :
-                        if (isNaN(x)) x = 0;
-                        if (isNaN(y)) y = 0;
+                        if (!_isFinite(x)) x = 0;
+                        if (!_isFinite(y)) y = 0;
                         units[i] = [UNKNOWN, x, y];
                 }
             }

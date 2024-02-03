@@ -75,11 +75,7 @@ scrawl.addNativeListener(
 
             const temp = e.target.value.split(',');
             a = [];
-
-            temp.forEach(t => {
-                const n = parseInt(t, 10);
-                if (n.toFixed && !isNaN(n)) a.push(n)
-            });
+            temp.forEach(t => isFinite(t) && a.push(t))
         }
 
         myFilter.set({

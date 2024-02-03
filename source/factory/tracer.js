@@ -25,7 +25,7 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _piDouble, BLACK, ENTITY, T_TRACER } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _piDouble, BLACK, ENTITY, T_TRACER } from '../helper/shared-vars.js';
 
 
 // #### Tracer constructor
@@ -213,7 +213,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return false;
 
-        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
         const v = requestVector(currentStampPosition).vectorSubtract(test);
 

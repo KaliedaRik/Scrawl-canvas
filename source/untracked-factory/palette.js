@@ -56,7 +56,7 @@ import { makeColor } from '../factory/color.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _entries, _floor, _freeze, _isArray, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+import { _assign, _entries, _floor, _freeze, _isArray, _isFinite, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
 
 
 // #### Palette constructor
@@ -283,8 +283,7 @@ S.returnColorAs = function (item) {
 // __precision__ - a positive integer Number value between 0 and 50. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
 S.precision = function (item) {
 
-    item = parseInt(item, 10);
-    if (isNaN(item) || item < 0) item = 0;
+    if (!_isFinite(item) || item < 0) item = 0;
     if (item > 50) item = 50;
 
     this.precision = item;

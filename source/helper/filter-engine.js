@@ -23,7 +23,7 @@ import { makeColor } from '../factory/color.js';
 
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
-import { _abs, _ceil, _entries, _exp, _floor, _freeze, _isArray, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _entries, _exp, _floor, _freeze, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from './shared-vars.js';
 
 
 // Local constants
@@ -347,12 +347,12 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
 
     if (iWidth && iHeight) {
 
-        tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
-        tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
-        gutterWidth = (gutterWidth.toFixed && !isNaN(gutterWidth)) ? gutterWidth : 1;
-        gutterHeight = (gutterHeight.toFixed && !isNaN(gutterHeight)) ? gutterHeight : 1;
-        offsetX = (offsetX.toFixed && !isNaN(offsetX)) ? offsetX : 0;
-        offsetY = (offsetY.toFixed && !isNaN(offsetY)) ? offsetY : 0;
+        tileWidth = (_isFinite(tileWidth)) ? tileWidth : 1;
+        tileHeight = (_isFinite(tileHeight)) ? tileHeight : 1;
+        gutterWidth = (_isFinite(gutterWidth)) ? gutterWidth : 1;
+        gutterHeight = (_isFinite(gutterHeight)) ? gutterHeight : 1;
+        offsetX = (_isFinite(offsetX)) ? offsetX : 0;
+        offsetY = (_isFinite(offsetY)) ? offsetY : 0;
 
         if (tileWidth < 1) tileWidth = 1;
         if (tileHeight < 1) tileHeight = 1;
@@ -445,10 +445,10 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
 
     if (iWidth && iHeight) {
 
-        tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
-        tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
-        offsetX = (offsetX.toFixed && !isNaN(offsetX)) ? offsetX : 0;
-        offsetY = (offsetY.toFixed && !isNaN(offsetY)) ? offsetY : 0;
+        tileWidth = (_isFinite(tileWidth)) ? tileWidth : 1;
+        tileHeight = (_isFinite(tileHeight)) ? tileHeight : 1;
+        offsetX = (_isFinite(offsetX)) ? offsetX : 0;
+        offsetY = (_isFinite(offsetY)) ? offsetY : 0;
 
         if (tileWidth < 1) tileWidth = 1;
         if (tileWidth >= iWidth) tileWidth = iWidth - 1;
@@ -521,36 +521,36 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         // + As an Array of Numbers, which represent user-defined points across the image. Pixel selection for each point is constrained by the supplied `tileRadius`, `offsetX` and `offsetY` arguments.
         if (pointVals.substring) req = pointVals;
         else if (_isArray(pointVals)) req = POINTS_ARRAY;
-        else if (pointVals.toFixed && !isNaN(pointVals)) req = RANDOM_POINTS;
+        else if (_isFinite(pointVals)) req = RANDOM_POINTS;
 
         if (req == UNSET) return [];
 
         // The `tileWidth`, `tileHeight`, `tileRadius`, `offsetX` and `offsetY` arguments can be supplied as absolute Number values (in px), or as a String % value relative to the source image dimensions.
         // + `tileRadius` is relative to the source image's width
         if (tileWidth.substring) tileW = _round((parseFloat(tileWidth) / 100) * iWidth);
-        else if (tileWidth.toFixed && !isNaN(tileWidth)) tileW = tileWidth;
+        else if (_isFinite(tileWidth)) tileW = tileWidth;
         if (tileW < 1) tileW = 1;
 
         if (tileHeight.substring) tileH = _round((parseFloat(tileHeight) / 100) * iHeight);
-        else if (tileHeight.toFixed && !isNaN(tileHeight)) tileH = tileHeight;
+        else if (_isFinite(tileHeight)) tileH = tileHeight;
         if (tileH < 1) tileH = 1;
 
         if (tileRadius.substring) tileR = _round((parseFloat(tileRadius) / 100) * iWidth);
-        else if (tileRadius.toFixed && !isNaN(tileRadius)) tileR = tileRadius;
+        else if (_isFinite(tileRadius)) tileR = tileRadius;
         if (tileR < 1) tileR = 1;
 
         if (offsetX.substring) offX = _round((parseFloat(offsetX) / 100) * iWidth);
-        else if (offsetX.toFixed && !isNaN(offsetX)) offX = offsetX;
+        else if (_isFinite(offsetX)) offX = offsetX;
         if (offX < 0) offX = 0;
         else if (offX >= iWidth) offX = iWidth - 1;
 
         if (offsetY.substring) offY = _round((parseFloat(offsetY) / 100) * iHeight);
-        else if (offsetY.toFixed && !isNaN(offsetY)) offY = offsetY;
+        else if (_isFinite(offsetY)) offY = offsetY;
         if (offY < 0) offY = 0;
         else if (offY >= iHeight) offY = iHeight - 1;
 
         // The `angle` argument is the rotation applied to the points (using the offset coordinate as the rotation point), measured in degrees.
-        if (angle.toFixed && !isNaN(angle)) ang = angle;
+        if (_isFinite(angle)) ang = angle;
 
         let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
         if (req == POINTS_ARRAY) name += `-${pointVals.join(ARG_SPLITTER)}`;
@@ -786,7 +786,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
 P.buildHorizontalBlur = function (grid, radius) {
 
-    if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
+    if (!_isFinite(radius)) radius = 0;
 
     const gridHeight = grid.length,
         gridWidth = grid[0].length;
@@ -822,7 +822,7 @@ P.buildHorizontalBlur = function (grid, radius) {
 // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
 P.buildVerticalBlur = function (grid, radius) {
 
-    if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
+    if (!_isFinite(radius)) radius = 0;
 
     const gridHeight = grid.length,
         gridWidth = grid[0].length;
@@ -925,7 +925,7 @@ P.checkChannelLevelsParameters = function (f) {
         if (v.toFixed) {
             if (v < 0) return [LOW_ARRAY];
             if (v > 255) return [HIGH_ARRAY];
-            if (isNaN(v)) return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
+            if (!_isFinite(v)) return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
             return [[0, 255, v]];
         }
 
@@ -2692,19 +2692,19 @@ P.theBigActionsObject = _freeze({
         } = requirements;
 
         let width = requirements.width;
-        if (isNaN(width) || width < 1) width = 3;
+        if (!_isFinite(width) || width < 1) width = 3;
         width = _floor(width);
 
         let height = requirements.height;
-        if (isNaN(height) || height < 1) height = 3;
+        if (!_isFinite(height) || height < 1) height = 3;
         height = _floor(height);
 
         let offsetX = requirements.offsetX;
-        if (isNaN(offsetX) || offsetX < 1) offsetX = 1;
+        if (!_isFinite(offsetX) || offsetX < 1) offsetX = 1;
         offsetX = _floor(offsetX);
 
         let offsetY = requirements.offsetY;
-        if (isNaN(offsetY) || offsetY < 1) offsetY = 1;
+        if (!_isFinite(offsetY) || offsetY < 1) offsetY = 1;
         offsetY = _floor(offsetY);
 
         const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
@@ -3574,11 +3574,11 @@ P.theBigActionsObject = _freeze({
         } = requirements;
 
         let width = requirements.width;
-        if (isNaN(width) || width < 1) width = 3;
+        if (!_isFinite(width) || width < 1) width = 3;
         width = _floor(width);
 
         let height = requirements.height;
-        if (isNaN(height) || height < 1) height = 3;
+        if (!_isFinite(height) || height < 1) height = 3;
         height = _floor(height);
 
         let weights = requirements.weights;

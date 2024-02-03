@@ -2,7 +2,7 @@
 // A ragtag collection of helper functions which other modules can import and use
 
 
-import { _cos, _create, _entries, _floor, _freeze, _isArray, _pi, _pow, _random, _sin, _sqrt, $CANVAS_ELEMENT, $OBJECT, BOOLEAN, BOTTOM, CENTER, FUNCTION, LEFT, MS, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
+import { _cos, _create, _entries, _floor, _freeze, _isArray, _isFinite, _pi, _pow, _random, _sin, _sqrt, $CANVAS_ELEMENT, $OBJECT, BOOLEAN, BOTTOM, CENTER, FUNCTION, LEFT, MS, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
 
 
 // #### Functions
@@ -82,7 +82,7 @@ export const convertTime = (item) => {
 
         let timeValue = parseFloat(item);
 
-        if (!isNaN(timeValue)) {
+        if (_isFinite(timeValue)) {
 
             switch (timeUnit) {
 
@@ -107,7 +107,7 @@ export const convertTime = (item) => {
 // __correctAngle__ makes sure any degree-based angle is in the range `0-360`
 export const correctAngle = (item) => {
 
-    if (!item.toFixed || isNaN(item)) return 0;
+    if (!_isFinite(item)) return 0;
 
     item = item % 360;
 
@@ -120,7 +120,7 @@ export const correctAngle = (item) => {
 // __correctForZero__ checks and corrects for minor deviations from zero (eNumbers)
 export const correctForZero = (item) => {
 
-    if (item.toFixed && !isNaN(item)) {
+    if (_isFinite(item)) {
 
         if (item < -0.000001) return item;
         if (item > 0.000001) return item;
@@ -182,7 +182,7 @@ export const isa_fn = item => (typeof item == FUNCTION) ? true : false;
 
 
 // __isa_number__ checks to make sure the argument is true number (excluding NaN)
-export const isa_number = item => (item != null && item.toFixed && !Number.isNaN(item)) ? true : false;
+export const isa_number = item => (_isFinite(item)) ? true : false;
 
 
 // __isa_obj__ checks to make sure the argument is a JavaScript Object

@@ -23,7 +23,7 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import { makePalette } from '../untracked-factory/palette.js';
 
-import { _isArray, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 
 // Create an animation to handle automated delta gradient animation
@@ -637,7 +637,7 @@ export default function (P = Ωempty) {
             else if (val == LEFT || val == TOP) current[i] = 0;
             else if (val == RIGHT || val == BOTTOM) current[i] = dim;
             else if (val == CENTER) current[i] = dim / 2;
-            else if (isNaN(parseFloat(val))) current[i] = 0;
+            else if (!_isFinite(val)) current[i] = 0;
             else current[i] = (parseFloat(val) / 100) * dim;
         }
     };

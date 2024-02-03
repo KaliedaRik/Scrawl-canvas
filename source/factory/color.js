@@ -11,7 +11,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -769,7 +769,7 @@ P.getAlphaValue = function (alpha) {
         else a = parseFloat(alpha);
     }
     // This test should capture alpha values of `none`
-    if (isNaN(a)) a = 1;
+    if (!_isFinite(a)) a = 1;
     else if (a > 1) a = 1;
     else if ( a < 0) a = 0;
 
@@ -788,7 +788,7 @@ P.getHueValue = function (hue) {
     else hue = parseFloat(hue);
 
     // We test and correct for the hue-related `none` value here
-    if (isNaN(hue)) return 0;
+    if (!_isFinite(hue)) return 0;
 
     return correctAngle(hue);
 };
@@ -1139,7 +1139,7 @@ P.convertRGBtoHex = function (red, green, blue) {
     if (green.substring) green = parseInt(green, 10);
     if (blue.substring) blue = parseInt(blue, 10);
 
-    if (!isNaN(red) && !isNaN(green) && !isNaN(blue)) {
+    if (_isFinite(red) && _isFinite(green) && _isFinite(blue)) {
 
         const r = (_0 + (red).toString(16)).slice(-2),
             g = (_0 + (green).toString(16)).slice(-2),

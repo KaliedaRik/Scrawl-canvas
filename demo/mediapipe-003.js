@@ -80,11 +80,11 @@ const updateLabelsAndWorm = function (asset) {
         });
 
         // Check for perilous user input
-        if (isNaN(wormStart)) wormStart = 0;
+        if (!Number.isFinite(wormStart)) wormStart = 0;
         if (wormStart < 0) wormStart = 0;
         if (wormStart > 468) wormStart = 468;
 
-        if (isNaN(wormEnd)) wormEnd = 0;
+        if (!Number.isFinite(wormEnd)) wormEnd = 0;
         if (wormEnd < 0) wormEnd = 0;
         if (wormEnd > 468) wormEnd = 468;
 

@@ -919,7 +919,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
 
         deltaAngle = parseFloat(val);
 
-        if (isNaN(deltaAngle)) deltaAngle = 0.5;
+        if (!Number.isFinite(deltaAngle)) deltaAngle = 0.5;
     };
 
     const setDeltaScale = () => {
@@ -928,7 +928,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
 
         deltaScale = parseFloat(val);
 
-        if (isNaN(deltaScale)) deltaScale = 0.5;
+        if (!Number.isFinite(deltaScale)) deltaScale = 0.5;
     };
 
     const setDeltaMove = () => {
@@ -937,7 +937,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
 
         deltaMove = parseInt(val, 10);
 
-        if (isNaN(deltaMove)) deltaMove = 1;
+        if (!Number.isFinite(deltaMove)) deltaMove = 1;
     };
 
 

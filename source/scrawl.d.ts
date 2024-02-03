@@ -598,6 +598,28 @@ interface StylesMixinFunctions {
 
 
 
+// Text mixin
+// -------------------------------------
+interface TextMixinDeltaInputs {
+    boundingBoxLineWidth?: number;
+}
+
+interface TextMixinInputs {
+    accessibleText?: string;
+    accessibleTextOrder?: number;
+    accessibleTextPlaceholder?: string;
+    boundingBoxStyle?: StylesInstance | string;
+    showBoundingBox?: boolean;
+    textIsAccessible?: boolean;
+}
+
+interface TextMixinFunctions {
+    getAccessibleText: () => string;
+    convertTextEntityCharacters: (item: string) => string;
+}
+
+
+
 // Tween mixin
 // -------------------------------------
 interface TweenMixinDeltaInputs {
@@ -1517,11 +1539,9 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 
 
 
-
 // LabelInstance factory
 // -------------------------------------
-interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
-    boundingBoxLineWidth?: number;
+interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
     letterSpacing?: string | number;
     underlineGap?: number;
     underlineOffset?: number;
@@ -1529,12 +1549,7 @@ interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelta
     wordSpacing?: string | number;
 }
 
-interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFactoryDeltaInputs {
-    accessibleText?: string;
-    accessibleTextOrder?: number;
-    accessibleTextPlaceholder?: string;
-    boundingBoxStyle?: string;
-    calculateFontOffsets?: boolean;
+interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelFactoryDeltaInputs {
     delta?: LabelFactoryDeltaInputs;
     direction?: string;
     fontKerning?: string;
@@ -1545,20 +1560,17 @@ interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, LabelFa
     fontStyle?: string;
     fontString?: string;
     fontVariantCaps?: string;
-    fontVerticalOffset?: number;
     includeUnderline?: boolean;
-    showBoundingBox?: boolean;
     text?: string;
     textAlign?: string;
     textBaseline?: string;
-    textIsAccessible?: boolean;
     textRendering?: string;
     underlineStyle?: StylesInstance | string;
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
 
-interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
     clone: (item?: LabelFactoryInputs) => LabelInstance;
     saveAsPacket: (item?: LabelSaveInputs | boolean) => string;
     set: (item?: LabelFactoryInputs) => LabelInstance;
@@ -1938,7 +1950,7 @@ type PhraseSizeMetric = 'em' | 'rem' | 'lh' | 'rlh' | 'ex' | 'cap' | 'ch' | 'ic'
 
 type PhraseFamily = 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui' | 'math' | 'emoji' | 'fangsong' | string;
 
-interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
     letterSpacing?: number;
     lineHeight?: number;
     overlinePosition?: number;
@@ -1949,13 +1961,9 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
     underlineWidth?: number;
 }
 
-interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, PhraseFactoryDeltaInputs {
-    accessibleText?: string;
-    accessibleTextOrder?: number;
-    accessibleTextPlaceholder?: string;
+interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, PhraseFactoryDeltaInputs {
     addTextPathRoll?: boolean;
     boundingBoxColor?: string;
-    boundingBoxStyle?: StylesInstance | string;
     breakOnlyOnBreakGlyphs?: boolean;
     delta?: PhraseFactoryDeltaInputs;
     exposeText?: boolean;
@@ -1968,13 +1976,11 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     noUnderlineGlyphs?: string;
     overlineStyle?: string;
     sectionClassMarker?: string;
-    showBoundingBox?: boolean;
     size?: PhraseSize;
     sizeMetric?: PhraseSizeMetric;
     sizeValue?: number;
     style?: PhraseStyle;
     text?: string;
-    textIsAccessible?: boolean;
     textPath?: ShapeInstance | string;
     textPathDirection?: PhraseTextPathDirection;
     textPathLoop?: boolean;
@@ -1988,7 +1994,7 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
 
 interface PhraseSaveInputs extends PhraseFactoryInputs, SaveInputs {}
 
-interface PhraseFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+interface PhraseFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
     addSectionClass: (label: string, obj: CommonObjectInput) => PhraseInstance;
     clone: (item?: PhraseFactoryInputs) => PhraseInstance;
     removeSectionClass: (label: string) => PhraseInstance;

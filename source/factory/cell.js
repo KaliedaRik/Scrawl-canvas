@@ -63,7 +63,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Cell constructor
@@ -996,19 +996,19 @@ P.stashOutputAction = function () {
         if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
 
             if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
-            if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
+            if (!_isFinite(stashWidth) || stashWidth <= 0) stashWidth = 1;
             if (stashWidth > cellWidth) stashWidth = cellWidth;
 
             if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
-            if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
+            if (!_isFinite(stashHeight) || stashHeight <= 0) stashHeight = 1;
             if (stashHeight > cellHeight) stashHeight = cellHeight;
 
             if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
-            if (isNaN(stashX) || stashX < 0) stashX = 0;
+            if (!_isFinite(stashX) || stashX < 0) stashX = 0;
             if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
 
             if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
-            if (isNaN(stashY) || stashY < 0) stashY = 0;
+            if (!_isFinite(stashY) || stashY < 0) stashY = 0;
             if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
         }
 

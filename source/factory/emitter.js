@@ -32,7 +32,7 @@ import { makeColor } from './color.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _now, _floor, _random, _piDouble, _abs, _tick, _isArray, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../helper/shared-vars.js';
+import { _abs, _floor, _isArray, _isFinite, _now, _piDouble, _random, _tick, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../helper/shared-vars.js';
 
 
 // #### Emitter constructor
@@ -913,7 +913,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return false;
 
-        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
         const v = requestVector(currentStampPosition).vectorSubtract(test);
 
