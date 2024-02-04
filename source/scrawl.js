@@ -85,6 +85,7 @@ export { makeConicGradient } from './factory/conic-gradient.js';
 export { makeCrescent } from './factory/crescent.js';
 export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
+export { makeEnhancedLabel } from './factory/enhanced-label.js';
 export { makeFilter } from './factory/filter.js';
 export { makeForce } from './factory/particle-force.js';
 export { makeGradient } from './factory/gradient.js';

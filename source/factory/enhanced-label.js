@@ -1,4 +1,4 @@
-// # Label factory
+// # EnhancedLabel factory
 // TODO - document purpose and description
 
 
@@ -15,11 +15,11 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 
 import textMix from '../mixin/text.js';
 
-import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_ENHANCED_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
-// #### Label constructor
-const Label = function (items = Ωempty) {
+// #### EnhancedLabel constructor
+const EnhancedLabel = function (items = Ωempty) {
 
     this.letterSpaceValue = 0;
     this.wordSpaceValue = 0;
@@ -33,9 +33,9 @@ const Label = function (items = Ωempty) {
 };
 
 
-// #### Label prototype
-const P = Label.prototype = doCreate();
-P.type = T_LABEL;
+// #### EnhancedLabel prototype
+const P = EnhancedLabel.prototype = doCreate();
+P.type = T_ENHANCED_LABEL;
 P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
@@ -45,7 +45,7 @@ P.isAsset = false;
 textMix(P);
 
 
-// #### Label attributes
+// #### EnhancedLabel attributes
 const defaultAttributes = {
 
     text: ZERO_STR,
@@ -520,7 +520,7 @@ P.recalculateFont = function () {
 
 
 // #### Clean functions
-// `cleanPathObject` - calculate the Label entity's __Path2D object__
+// `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
     this.dirtyPathObject = false;
@@ -887,7 +887,7 @@ P.none = function () {}
 
 // #### Factory
 // ```
-// scrawl.makeLabel({
+// scrawl.makeEnhancedLabel({
 //
 //     name: 'mylabel-fill',
 //
@@ -896,10 +896,10 @@ P.none = function () {}
 //     name: 'mylabel-draw',
 // });
 // ```
-export const makeLabel = function (items) {
+export const makeEnhancedLabel = function (items) {
 
     if (!items) return false;
-    return new Label(items);
+    return new EnhancedLabel(items);
 };
 
-constructors.Label = Label;
+constructors.EnhancedLabel = EnhancedLabel;

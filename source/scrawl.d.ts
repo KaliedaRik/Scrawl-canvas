@@ -1245,6 +1245,51 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 
 
+// EnhancedLabelInstance factory
+// -------------------------------------
+interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
+    letterSpacing?: string | number;
+    underlineGap?: number;
+    underlineOffset?: number;
+    underlineWidth?: number;
+    wordSpacing?: string | number;
+}
+
+interface EnhancedLabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, EnhancedLabelFactoryDeltaInputs {
+    delta?: LabelFactoryDeltaInputs;
+    direction?: string;
+    fontKerning?: string;
+    fontStretch?: string;
+    fontSize?: string | number;
+    fontVariant?: string;
+    fontWeight?: string;
+    fontStyle?: string;
+    fontString?: string;
+    fontVariantCaps?: string;
+    includeUnderline?: boolean;
+    text?: string;
+    textAlign?: string;
+    textBaseline?: string;
+    textRendering?: string;
+    underlineStyle?: StylesInstance | string;
+}
+
+interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}
+
+interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
+    clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
+    saveAsPacket: (item?: EnhancedLabelSaveInputs | boolean) => string;
+    set: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
+    setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
+    simpleStamp: (host: CellInstance, items?: EnhancedLabelFactoryInputs) => void;
+    recalculateFont: () => void;
+}
+
+interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, EnhancedLabelFactoryFunctions {}
+
+
+
+
 // FilterInstance factory
 // -------------------------------------
 interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
@@ -3037,6 +3082,7 @@ export function makeColor(items: ColorFactoryInputs): ColorInstance;
 export function makeConicGradient(items: ConicGradientFactoryInputs): ConicGradientInstance;
 export function makeCrescent(items: CrescentFactoryInputs): CrescentInstance;
 export function makeEmitter(items: EmitterFactoryInputs): EmitterInstance;
+export function makeEnhancedLabel(items: EnhancedLabelFactoryInputs): EnhancedLabelInstance;
 export function makeFilter(items: FilterFactoryInputs): FilterInstance;
 export function makeForce(items: ForceFactoryInputs): ForceInstance;
 export function makeGradient(items: GradientFactoryInputs): GradientInstance;

@@ -35,6 +35,7 @@ scrawl.makeLabel({
     strokeStyle: 'gold',
 
     lineWidth: 2,
+    lineCap: 'round',
     lineJoin: 'round',
 
     scale: 1.8,

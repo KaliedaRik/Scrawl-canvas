@@ -34,6 +34,8 @@ const mylabel = scrawl.makeLabel({
     fillStyle: 'orange',
     strokeStyle: 'black',
     lineWidth: 4,
+    lineCap: 'round',
+    lineJoin: 'round',
     showBoundingBox: true,
 });
 

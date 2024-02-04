@@ -6,7 +6,10 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, POLITE, SOURCE_OVER, T_CANVAS, T_CELL, TEXTAREA } from '../helper/shared-vars.js';
+import { ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, POLITE, SOURCE_OVER, SYSTEM_FONTS, T_CANVAS, T_CELL, TEXTAREA } from '../helper/shared-vars.js';
+
+import baseMix from '../mixin/base.js';
+import entityMix from '../mixin/entity.js';
 
 
 // #### Local variables
@@ -17,8 +20,9 @@ const textEntityConverter = document.createElement(TEXTAREA);
 export default function (P = Ωempty) {
 
 
-// #### Mixins
-// None required at this point
+    // #### Mixins
+    baseMix(P);
+    entityMix(P);
 
 
 // #### Shared attributes
@@ -213,6 +217,23 @@ export default function (P = Ωempty) {
 
         const {accessibleText, accessibleTextPlaceholder, text} = this;
         return accessibleText.replace(accessibleTextPlaceholder, text);
+    };
+
+
+    P.checkFontIsLoaded = function () {
+
+        const font = this.state.font;
+
+        if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;
+        else {
+
+            const fonts = document.fonts;
+
+            const check = fonts.check(font);
+
+            if (check) this.currentFontIsLoaded = true;
+            else this.dirtyFont = true;
+        }
     };
 
 

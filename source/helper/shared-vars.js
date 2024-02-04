@@ -546,6 +546,7 @@ export const T_COORDINATE = 'Coordinate';
 export const T_CRESCENT = 'Crescent';
 export const T_ELEMENT = 'Element';
 export const T_EMITTER = 'Emitter';
+export const T_ENHANCED_LABEL = 'EnhancedLabel';
 export const T_ESCAPE = 'Escape';
 export const T_FILTER = 'Filter';
 export const T_FILTER_ENGINE = 'FilterEngine';

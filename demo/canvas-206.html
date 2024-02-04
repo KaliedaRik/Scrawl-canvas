@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 202</title>
+  <title>Demo Canvas 206</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
@@ -15,14 +15,17 @@
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
-    #text-in-html {
+    .text-in-html-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0;
+      height: 300px;
+      padding: 0;
+    }
+    #text-in-html {
+      margin: 1em;
       border: 1px dashed blue;
       padding: 0;
-      height: 140px;
     }
     canvas {
       margin: 0 auto;
@@ -36,11 +39,11 @@
 
 <body>
   <div id="test-navigation">
-    <a href="canvas-201.html">&larr; Previous</a>
-    <a href="canvas-203.html">Next &rarr;</a>
+    <a href="canvas-205.html">&larr; Previous</a>
+    <a href="canvas-301.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 202</h1>
-  <h2>Label entity - basic support for non-western fonts</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 206</h1>
+  <h2>EnhancedLabel entity - multiline text</h2>
 
   <div class="controls">
 
@@ -94,33 +97,11 @@
       </select>
     </div>
 
-    <div class="lavender label">Direction</div>
-    <div class="lavender">
-      <select class="controlItem" id="direction">
-        <option value="ltr">left-to-right</option>
-        <option value="rtl">right-to-left</option>
-        <option value="inherit">inherit</option>
-      </select>
+    <div class="pink label">Width</div>
+    <div class="pink">
+      <input class="controlItem" id="width" type="range" value="500" min="200" max="600" step="5" />
     </div>
 
-    <div class="lavender label">Font kerning</div>
-    <div class="lavender">
-      <select class="controlItem" id="fontKerning">
-        <option value="auto">auto</option>
-        <option value="normal">normal</option>
-        <option value="none">none</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Text rendering</div>
-    <div class="lavender">
-      <select class="controlItem" id="textRendering">
-        <option value="auto">auto</option>
-        <option value="optimizeSpeed">optimizeSpeed</option>
-        <option value="optimizeLegibility">optimizeLegibility</option>
-        <option value="geometricPrecision">geometricPrecision</option>
-      </select>
-    </div>
 
     <div class="lavender label">Letter spacing</div>
     <div class="lavender">
@@ -138,68 +119,16 @@
     <canvas 
       id="mycanvas" 
       width="600" 
-      height="140"
+      height="300"
       data-scrawl-canvas
     ></canvas>
-    <p id="text-in-html"></p>
+    <div class="text-in-html-container">
+      <p id="text-in-html"></p>
+    </div>
   </div>
 
 
   <div class="controls">
-
-    <div class="green label">Start X (%)</div>
-    <div class="green">
-      <input class="controlItem" id="startX" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="green label">Start Y (%)</div>
-    <div class="green">
-      <input class="controlItem" id="startY" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="green label">Handle X (%)</div>
-    <div class="green">
-      <input class="controlItem" id="handleX" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="green label">Handle Y (%)</div>
-    <div class="green">
-      <input class="controlItem" id="handleY" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="green label">Handle X (string)</div>
-    <div class="green">
-      <select class="controlItem" id="handleX-string">
-        <option value="left">left</option>
-        <option value="start">start</option>
-        <option value="center">center</option>
-        <option value="end">end</option>
-        <option value="right">right</option>
-      </select>
-    </div>
-
-    <div class="green label">Handle Y (string)</div>
-    <div class="green">
-      <select class="controlItem" id="handleY-string">
-        <option value="top">top</option>
-        <option value="hanging">hanging</option>
-        <option value="middle">middle</option>
-        <option value="center">center</option>
-        <option value="alphabetic">alphabetic</option>
-        <option value="ideographic">ideographic</option>
-        <option value="bottom">bottom</option>
-      </select>
-    </div>
-
-    <div class="green label">Offset X (px)</div>
-    <div class="green">
-      <input class="controlItem" id="offsetX" type="range" value="0" min="-50" max="50" step="1" />
-    </div>
-
-    <div class="green label">Offset Y (px)</div>
-    <div class="green">
-      <input class="controlItem" id="offsetY" type="range" value="0" min="-50" max="50" step="1" />
-    </div>
 
     <div class="yellow label">Scale</div>
     <div class="yellow">
@@ -234,21 +163,15 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Check that all fonts load as expected.</li>
-      <li>Check the HandleX selections perform as expected, particularly for right-to-left fonts.</li>
-      <li>Check the HandleY selections work as expected for various fonts.</li>
-      <li>Check scale/roll/flip settings work as expected on the entity - the text should remain in its bounding box at all times.</li>
-      <li>Check the letter and word spacing attributes work as expected, and that the text remains within its bounding box at all times.</li>
+      <li>...</li>
     </ul>
-
-    <p><b>To note:</b> Safari-based browsers do not (yet) support letter and word spacing settings within the &lt;canvas> element.</p>
 
     <p><b>Touch test:</b> not required.</p>
 
-    <p><a href="../docs/demo/canvas-202.html">Annotated code</a></p>
+    <p><a href="../docs/demo/canvas-206.html">Annotated code</a></p>
   </div>
 
-  <script src="canvas-202.js" type="module"></script>
+  <script src="canvas-206.js" type="module"></script>
 
 </body>
 
