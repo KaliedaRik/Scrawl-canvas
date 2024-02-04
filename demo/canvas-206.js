@@ -30,7 +30,8 @@ html.style.width = '500px';
 html.innerHTML = westernText;
 
 
-const mylabel = scrawl.makeLabel({
+// const mylabel = scrawl.makeLabel({
+const mylabel = scrawl.makeEnhancedLabel({
     name: name('my-label'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
