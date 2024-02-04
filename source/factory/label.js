@@ -17,7 +17,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
-import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, SMALL_CAPS, START, SYSTEM_FONTS, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, SYSTEM_FONTS, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -706,12 +706,13 @@ P.underlineEngine = function (host, pos) {
         underlineOffset,
         underlineStyle,
         underlineWidth,
+        fontVerticalOffset,
     } = this;
 
     const [, x, y] = pos;
     const [localWidth, localHeight] = currentDimensions;
 
-    const underlineStartY = y + (underlineOffset * localHeight);
+    const underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset;
     const underlineDepth = underlineWidth * currentScale;
 
     // Setup the cell parts
@@ -735,6 +736,8 @@ P.underlineEngine = function (host, pos) {
     ctx.fontVariantCaps = state.fontVariantCaps;
     ctx.textRendering = state.textRendering;
     ctx.letterSpacing = state.letterSpacing;
+    ctx.lineCap = ROUND;
+    ctx.lineJoin = ROUND;
     ctx.wordSpacing = state.wordSpacing;
     ctx.direction = state.direction;
     ctx.textAlign = LEFT;

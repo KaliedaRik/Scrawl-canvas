@@ -268,7 +268,6 @@ export const HAS_PACKET_CHECK = '[';
 export const HASH = '#';
 export const HEIGHT = 'height';
 export const HEX_GRID = 'hex-grid';
-export const HIDDEN = 'hidden';
 export const HIGH = 'high';
 export const HREF = 'href';
 export const HREFLANG = 'hreflang';

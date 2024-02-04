@@ -173,10 +173,25 @@ See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Check that all fonts respond as expected when updating:</li>
+      <ul>
+        <li>Font size.</li>
+        <li>Font weight - as a string value.</li>
+        <li>Font variant (in particular 'small-caps'; other values as supported by the browser).</li>
+        <li>Font style (excluding oblique values).</li>
+      </ul>
+      <li>Check that wneh font size is set to '5vmax', the Label entity adjusts its size accordingly as the browser dimensions change.</li>
+      <li>Check that the "Roboto Flex" variable font responds as expected when updating:</li>
+      <ul>
+        <li>Font weight - as a number value.</li>
+        <li>Font style - oblique values.</li>
+        <li>Font stretch - both string and % values.</li>
+      </ul>
     </ul>
 
-    <p><b>Touch test:</b> ?????</p>
+    <p><b>Known issue:</b> the bounding box occasionally does not adapt as expected when changing some of these attributes. This is a code issue as the bug appears across browsers.</p>
+
+    <p><b>Touch test:</b> should work as expected.</p>
 
     <p><a href="../docs/demo/canvas-205.html">Annotated code</a></p>
   </div>

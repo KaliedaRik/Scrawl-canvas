@@ -128,7 +128,7 @@ export default function (items) {
         fontString: '1.4em Arial',
         text: 'Arrows',
         fillStyle: 'white',
-        underlineOffset: 0.8,
+        underlineOffset: 0.9,
         underlineWidth: 4,
         exposeText: false,
 

@@ -160,7 +160,6 @@ const updateFont = (event) => {
                     fontString: '60px serif',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -169,7 +168,6 @@ const updateFont = (event) => {
                     fontString: '60px sans-serif',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -178,7 +176,6 @@ const updateFont = (event) => {
                     fontString: '40px monospace',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -187,7 +184,6 @@ const updateFont = (event) => {
                     fontString: '60px cursive',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 5,
                 });
                 break;
 
@@ -196,7 +192,6 @@ const updateFont = (event) => {
                     fontString: '60px fantasy',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 14,
                 });
                 break;
 
@@ -205,7 +200,6 @@ const updateFont = (event) => {
                     fontString: '60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -214,7 +208,6 @@ const updateFont = (event) => {
                     fontString: 'bold 60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -223,7 +216,6 @@ const updateFont = (event) => {
                     fontString: 'italic 60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -232,7 +224,6 @@ const updateFont = (event) => {
                     fontString: 'bold italic 60px Garamond',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -241,7 +232,6 @@ const updateFont = (event) => {
                     fontString: '60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -250,7 +240,6 @@ const updateFont = (event) => {
                     fontString: 'bold 60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -259,7 +248,6 @@ const updateFont = (event) => {
                     fontString: 'italic 60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -268,7 +256,6 @@ const updateFont = (event) => {
                     fontString: 'bold italic 60px "Roboto Sans"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -277,7 +264,6 @@ const updateFont = (event) => {
                     fontString: '50px "Roboto Serif"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -294,7 +280,6 @@ const updateFont = (event) => {
                     fontString: 'italic 50px "Roboto Serif"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -303,7 +288,6 @@ const updateFont = (event) => {
                     fontString: 'bold italic 50px "Roboto Serif"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -312,7 +296,6 @@ const updateFont = (event) => {
                     fontString: '45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -321,7 +304,6 @@ const updateFont = (event) => {
                     fontString: 'bold 45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -330,7 +312,6 @@ const updateFont = (event) => {
                     fontString: 'italic 45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -339,7 +320,6 @@ const updateFont = (event) => {
                     fontString: 'bold italic 45px "Roboto Mono"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -348,7 +328,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Arabic Sans"',
                     text: 'لا يعرض أحد لتدخل تعسفي',
                     direction: 'rtl',
-                    fontVerticalOffset: 15,
                 });
                 break;
 
@@ -357,7 +336,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Arabic Naskh"',
                     text: 'لا يعرض أحد لتدخل تعسفي',
                     direction: 'rtl',
-                    fontVerticalOffset: 14,
                 });
                 break;
 
@@ -366,7 +344,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Urdu Nastaliq"',
                     text: 'ہر انسان کو آزادیٔ فکر،',
                     direction: 'rtl',
-                    fontVerticalOffset: 43,
                 });
                 break;
 
@@ -375,7 +352,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Chinese Simple Sans"',
                     text: '鉴于对人类家庭所有',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -384,7 +360,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Chinese Simple Serif"',
                     text: '鉴于对人类家庭所有',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -393,7 +368,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Devangari Sans"',
                     text: 'प्रत्येक व्यक्ति को विचार और',
                     direction: 'ltr',
-                    fontVerticalOffset: 11,
                 });
                 break;
 
@@ -402,7 +376,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Devangari Serif"',
                     text: 'प्रत्येक व्यक्ति को विचार और',
                     direction: 'ltr',
-                    fontVerticalOffset: 16,
                 });
                 break;
 
@@ -411,7 +384,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Hebrew Sans"',
                     text: 'כל אדם זכאי לחירות',
                     direction: 'rtl',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -420,7 +392,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Hebrew Serif"',
                     text: 'כל אדם זכאי לחירות',
                     direction: 'rtl',
-                    fontVerticalOffset: 6,
                 });
                 break;
 
@@ -429,7 +400,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Japanese Sans"',
                     text: '人類社会のすべて',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -438,7 +408,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Japanese Serif"',
                     text: '人類社会のすべて',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -447,7 +416,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Korean Sans"',
                     text: '모든 사람은 의견의',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -456,7 +424,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Korean Serif"',
                     text: '모든 사람은 의견의',
                     direction: 'ltr',
-                    fontVerticalOffset: 4,
                 });
                 break;
 
@@ -465,7 +432,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Mongolian Sans"',
                     text: 'ᠬᠦᠮᠦᠨ ᠪᠦᠷ ᠲᠥᠷᠥᠵᠦ',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -474,7 +440,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Tai Le Sans"',
                     text: 'ᥓᥣᥳ ᥞᥨᥛ ᥑᥤᥴ',
                     direction: 'ltr',
-                    fontVerticalOffset: 6,
                 });
                 break;
 
@@ -483,7 +448,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Tai Tham Sans"',
                     text: 'ᨾᨶᩩᩔ᩼ᨴ᩠ᨦᩢᩉᩖᩣ᩠ᨿᨠᩮ᩠ᨯᩨᨾᩣᨾᩦ',
                     direction: 'ltr',
-                    fontVerticalOffset: 13,
                 });
                 break;
 
@@ -492,7 +456,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Thai Looped Sans"',
                     text: 'โดยที่การยอมรับศักดิ์ศ',
                     direction: 'ltr',
-                    fontVerticalOffset: 20,
                 });
                 break;
 
@@ -501,7 +464,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Thai Serif"',
                     text: 'โดยที่การยอมรับศักดิ์ศ',
                     direction: 'ltr',
-                    fontVerticalOffset: 20,
                 });
                 break;
 
@@ -510,7 +472,6 @@ const updateFont = (event) => {
                     fontString: '50px "Noto Tirhuta Sans"',
                     text: '𑒮𑒩𑓂𑒫𑒹 𑒧𑒰𑒢𑒫𑒰𑓁 𑒮𑓂𑒫𑒞𑒢𑓂𑒞𑓂𑒩𑒰𑓁',
                     direction: 'ltr',
-                    fontVerticalOffset: 15,
                 });
                 break;
 
@@ -519,7 +480,6 @@ const updateFont = (event) => {
                     fontString: '60px "Bungee"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -528,7 +488,6 @@ const updateFont = (event) => {
                     fontString: '60px "Bungee Spice"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
                 break;
 
@@ -537,7 +496,6 @@ const updateFont = (event) => {
                     fontString: '60px "Carter One"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 5,
                 });
                 break;
 
@@ -546,7 +504,6 @@ const updateFont = (event) => {
                     fontString: '60px "Mountains Of Christmas"',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 6,
                 });
                 break;
 
@@ -555,7 +512,6 @@ const updateFont = (event) => {
                     fontString: '80px serif',
                     text: 'Long live the world!',
                     direction: 'ltr',
-                    fontVerticalOffset: 0,
                 });
         }
     }

@@ -12,7 +12,7 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
     }
     body {
       margin: 1rem 0;
@@ -31,9 +31,14 @@
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 019</h1>
   <h2>Screen Capture API - apply a filter to a browser web page</h2>
-  <p>Demo will show a web page opened in a separate browser tab; this page will request access to the other page before displaying it.</p>
+  <h3>Note that this page will request access to another browser page, window or screen before displaying it.</h3>
 
   <div class="controls">
+    <div class="yellow">
+      <button id="screen-request-button">Request screen capture</button>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
     <div class="yellow label">Filter</div>
     <div class="yellow">
       <select class="controlItem" id="backgroundFilter">
@@ -61,8 +66,10 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li></li>
     </ul>
+
+    <p><b>Known issue:</b> when building this demo without the 'Request screen capture' button, both Safari and Firefox report that "getDisplayMedia must be called from a user gesture handler", whereas Chrome immediately presents the user with a screen selector box.</p>
 
     <p><b>Touch test:</b> not required</p>
 
