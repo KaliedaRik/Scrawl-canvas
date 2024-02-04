@@ -8,6 +8,7 @@
 
   <title>Demo Canvas 043</title>
 
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -37,6 +38,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-042.html">&larr; Previous</a>
+    <a href="canvas-044.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 043</h1>
   <h2>Test various clipping strategies</h2>
 
@@ -60,9 +65,9 @@
     data-base-background-color="honeydew"
   ></canvas>
 
-  <h3>Note that Phrase entitys cannot clip to the letters.<br />For these, we have to use alternative solutions.</h3>
+  <h3>Note that Label entitys cannot clip to the letters.<br />For these, we have to use alternative solutions.</h3>
 
-  <p>Emulate clipping to a Phrase entity using a composite scene rendered in its own cell:</p>
+  <p>Emulate clipping to a Label entity using a composite scene rendered in its own cell:</p>
   <canvas 
     id="canvas3" 
     width="600" 

@@ -14,17 +14,17 @@
 // #### Imports
 import { artefact } from '../core/library.js';
 
-import { setMouseChanged } from '../core/system-flags.js';
+import { setMouseChanged } from '../helper/system-flags.js';
 
-import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 
-import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../factory/quaternion.js';
+import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../untracked-factory/quaternion.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import positionMix from './position.js';
 import deltaMix from './delta.js';
@@ -36,7 +36,7 @@ import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 
-import { _isArray, _round, _entries, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../core/shared-vars.js'
+import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // #### Export function
@@ -408,7 +408,7 @@ export default function (P = Ωempty) {
 
                         // TODO - this isn't working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail
                         // + Workaround is to explicitly set the stack's perspectiveZ value in Javascript
-                        items.perspectiveZ = (!isNaN(pStyle)) ? pStyle : 0;
+                        items.perspectiveZ = (_isFinite(pStyle)) ? pStyle : 0;
                     }
 
                     const pOrigin = style.perspectiveOrigin;
@@ -681,7 +681,7 @@ export default function (P = Ωempty) {
             }
             else return false;
 
-            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+            if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
             return engine.isPointInPath(this.pathObject, tx, ty);
 

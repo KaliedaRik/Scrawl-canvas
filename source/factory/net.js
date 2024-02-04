@@ -12,28 +12,21 @@
 // + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
 
 
-// #### Demos:
-// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
-// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-
-
 // #### Imports
 import { artefact, artefactnames, constructors, entity, particle, world } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 import { makeSpring } from './particle-spring.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _floor, _isArray, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../core/shared-vars.js';
+import { _floor, _isArray, _isFinite, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../helper/shared-vars.js';
 
 
 // #### Net constructor
@@ -464,7 +457,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return false;
 
-        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
         const v = requestVector();
 

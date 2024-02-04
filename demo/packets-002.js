@@ -110,19 +110,16 @@ let mypicture = scrawl.makePicture({
 });
 
 // Test Phrase entity
-let myphrase = scrawl.makePhrase({
+let myphrase = scrawl.makeLabel({
 
     name: 'phrase-tester',
 
-    text: 'H&epsilon;§BOLD§lj§/BOLD§&ouml;!',
-    font: '40px Garamond, serif',
+    text: 'H&epsilon;lj&ouml;!',
+    fontString: 'bold 40px Garamond, serif',
 
     width: 120,
     startX: 250,
     startY: 150,
-
-    justify: 'center',
-    lineHeight: 1,
 
     fillStyle: 'rgb(50 0 0)',
     method: 'fill',

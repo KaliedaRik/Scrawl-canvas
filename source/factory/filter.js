@@ -120,25 +120,18 @@
 // });
 // ```
 
-// #### Demos:
-// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Canvas-020](../../demo/canvas-020.html) - Testing createImageFromXXX functionality
-// + [Canvas-027](../../demo/canvas-027.html) - Video control and manipulation; chroma-based hit zone
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-// + [Filters-019](../../demo/filters-019.html) - Using a Noise asset with a displace filter
-
 
 // #### Imports
 import { cell, constructors, entity, group, styles } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from './gradient.js';
-import { colorEngine } from './filter-engine.js';
+import { colorEngine } from '../helper/filter-engine.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _freeze, _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../core/shared-vars.js';
+import { _freeze, _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Filter constructor

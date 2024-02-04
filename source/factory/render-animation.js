@@ -18,10 +18,6 @@
 // + __noTarget__ - default: `false`. the `renderAnimation` factory function expects to receive a Canvas or Stack artefact (or an array of such artefacts) in the `target` attribute of its argument object. When no target attribute is supplied, the RenderAnimation object will operate across all Canvas and Stack elements on the page. If the target is not a Canvas or Stack, then set the `noTarget` attribute to `true`.
 
 
-// #### Demos:
-// + Most Demos use RenderAnimation for managing their Display cycle
-
-
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 
@@ -29,15 +25,15 @@ import { clear, compile, show } from '../core/display-cycle.js';
 
 import { makeAnimationObserver } from '../core/events.js';
 
-import { doCreate, isa_boolean, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_boolean, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { animateAdd, animateIncludes, animateRemove } from '../core/animation-loop.js';
 
-import { forceUpdate } from '../core/system-flags.js';
+import { forceUpdate } from '../helper/system-flags.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../core/shared-vars.js';
+import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shared-vars.js';
 
 
 // #### RenderAnimation constructor

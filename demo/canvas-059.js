@@ -1,83 +1,355 @@
 // # Demo Canvas 059
-// CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab()
+// Semi-accessible Minimap; multiple drag zones
 
-// [Run code](../../demo/canvas-059.html)
+// [Run code](../../demo/filters-059.html)
 import * as scrawl from '../source/scrawl.js';
+
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas;
 
-const width = canvas.get('width');
+canvas.set({
 
-const data = [
-    ['rgb-key', 'red', 'orange', 'gold'],
-    ['rgb-hex', '#f09', '#FF0099', '#ff009980'],
-    ['rgb()', 'rgb(255, 0, 153)', 'rgb(2.55e2, 0e0, 1.53e2)', 'rgb(255 0 153)'],
-    ['rgba()', 'rgba(100%, 0%, 60%, 1)', 'rgba(51 170 51 / 0.4)', 'rgba(51, 170, 51.6, 80%)'],
-    ['hsl()', 'hsl(30, 100%, 50%)', 'hsl(30 100% 50%)', 'hsl(30.0 100% 50% / 60%)'],
-    ['hsla()', 'hsla(30, 100%, 50%, 0.6)', 'hsla(30 100% 50% / 0.6)', 'hsla(30.2 100% 50% / 60%)'],
-    ['hwb()', 'hwb(90 10% 10%)', 'hwb(90deg 10% 10% / 0.5)', 'hwb(.25turn 0% 40% / 50%)'],
-    ['lab()', 'lab(29.2345% 39.3825 20.0664)', 'lab(52.2345% 40.1645 59.9971)', 'lab(52.2345% 40.1645 59.9971 / .5)'],
-    ['lch()', 'lch(29.2345% 44.2 27)', 'lch(52.2345% 72.2 56.2)', 'lch(52.2345% 72.2 56.2 / .5)'],
-    ['oklab()', 'oklab(59.686% 0.1009 0.1192)', 'oklab(0.65125 -0.0320 0.1274)', 'oklab(42.1% 41% -25% / .5)'],
-    ['oklch()', 'oklch(59.686% 0.15619 49.7694)', 'oklch(0.65125 0.13138 104.097)', 'oklch(42.1% 48.25% 328.4 / .5)'],
-];
+    includeInTabNavigation: true,
 
-const len = data.length;
-const blockWidth = ((width * 0.9) / len) - 10;
+}).setBase({
+    // The base Cell needs to compile after the other Cells
+    compileOrder: 2
+});
 
-data.forEach((d, index) => {
+// Magic numbers
+const mainDimensions = 1600;
+const mapDimensions = 200;
+const mainMapRatio = mainDimensions / mapDimensions;
 
-    const [label, top, mid, base] = d;
+let [displayWidth, displayHeight] = canvas.get("dimensions");
+let frameWidth = (displayWidth / mainDimensions) * mapDimensions;
+let frameHeight = (displayHeight / mainDimensions) * mapDimensions;
 
-    scrawl.makeBlock({
-        name: `${label}-top`,
-        startX: (blockWidth * index) + (index * 10) + 10,
-        startY: '10%',
-        width: blockWidth,
-        height: '28%',
-        fillStyle: top,
-    }).clone({
-        name: `${label}-mid`,
-        startY: '40%',
-        fillStyle: mid,
-    }).clone({
-        name: `${label}-base`,
-        startY: '70%',
-        fillStyle: base,
+// Build out the large Cell (1600px x 1600px)
+// - we don't actually display this Cell
+const mainCell = canvas.buildCell({
+
+    name: "main-cell",
+    dimensions: [mainDimensions, mainDimensions],
+    shown: false,
+    compileOrder: 0,
+    backgroundColor: "ivory"
+});
+
+// Populate the large Cell with some shapes
+const myColorFactory = scrawl.makeColor({
+
+    name: "my-color-factory",
+    minimumColor: "orange",
+    maximumColor: "green"
+});
+
+scrawl.makeGroup({
+
+    name: "my-circle-group",
+    host: mainCell.name
+});
+
+for (let i = 0; i < 50; i++) {
+
+    scrawl.makeWheel({
+
+        name: `just-a-wheel-${i}`,
+        group: "my-circle-group",
+        startX: 50 + Math.random() * (mainDimensions - 100),
+        startY: 50 + Math.random() * (mainDimensions - 100),
+        radius: 20 + Math.random() * 30,
+        fillStyle: myColorFactory.getRangeColor(Math.random()),
+        method: "fillThenDraw"
     });
+}
 
-    scrawl.makePhrase({
-        name: `label-${label}-main`,
-        text: label,
-        startX: (blockWidth * index) + (index * 10) + 10,
-        startY: '3%',
-    });
+// Display the large Cell in the base Cell
+const mainCellPicture = scrawl.makePicture({
 
-    scrawl.makePhrase({
-        name: `label-${label}-top`,
-        pivot: `${label}-top`,
-        lockTo: 'pivot',
-        text: top,
-        fillStyle: 'black',
-        roll: 53,
-        order: 1,
-    }).clone({
-        name: `label-${label}-mid`,
-        pivot: `${label}-mid`,
-        text: mid,
-    }).clone({
-        name: `label-${label}-base`,
-        pivot: `${label}-base`,
-        text: base,
-    });
+    name: "main-cell-picture",
+    group: canvas.base.name,
+    asset: "main-cell",
+    dimensions: [displayWidth, displayHeight],
+    copyDimensions: [displayWidth, displayHeight]
+});
+
+// Functionality to enable drag-drop on main Cell
+scrawl.makeDragZone({
+    zone: canvas,
+    collisionGroup: "my-circle-group",
+    coordinateSource: mainCell,
+    endOn: ["up", "leave"],
+    preventTouchDefaultWhenDragging: true,
+    processingOrder: 2,
+});
+
+// Build out the smaller map Cell (200px x 200px)
+// - this will initially display in the top right corner
+// - it will be draggable too
+scrawl.makeGroup({
+
+    name: "map-pivot-group",
+    host: canvas.base.name
+});
+
+const myMapPivot = scrawl.makeBlock({
+
+    name: "map-pivot",
+    group: "map-pivot-group",
+    start: [displayWidth - mapDimensions, 0],
+    dimensions: [mapDimensions, mapDimensions],
+    method: "none"
+});
+
+// Functionality so we can drag-drop the map Cell around the base Cell
+scrawl.makeDragZone({
+    zone: canvas,
+    collisionGroup: "map-pivot-group",
+    coordinateSource: canvas.base,
+    endOn: ["up", "leave"],
+    preventTouchDefaultWhenDragging: true,
+    processingOrder: 1,
+});
+
+const mapCell = canvas.buildCell({
+
+    name: "map-cell",
+    dimensions: [mapDimensions, mapDimensions],
+    // We pivot the map Cell to the draggable Block entity
+    // - wherever the Block goes, the map Cell will follow
+    pivot: "map-pivot",
+    lockTo: "pivot",
+    backgroundColor: "white",
+    // The map Cell needs to compile after the large Cell
+    compileOrder: 1
+});
+
+// Now we can copy the large Cell into the map Cell
+scrawl.makePicture({
+
+    name: "map-cell-picture",
+    group: "map-cell",
+    asset: "main-cell",
+    dimensions: ["100%", "100%"],
+    copyDimensions: ["100%", "100%"],
+    lineWidth: 4,
+    method: "fillThenDraw",
+    globalAlpha: 0.5
+});
+
+// Add the draggable map frame
+scrawl.makeGroup({
+
+    name: "my-frame-group",
+    host: mapCell.name
+});
+
+const frame = scrawl.makeBlock({
+
+    name: "my-frame",
+    group: "my-frame-group",
+    dimensions: [frameWidth, frameHeight],
+    strokeStyle: "red",
+    lineWidth: 2,
+    method: "draw"
+});
+
+// Functionality so we can drag-drop the frame around the map Cell
+const checkFrameDrag = () => {
+
+    if (frameDragZone()) {
+
+        const [x, y] = frame.get("position");
+
+        const newX = x * mainMapRatio,
+        newY = y * mainMapRatio;
+
+        // Adjust the position of the Picture wrt to the frame in the map
+        mainCellPicture.set({
+            copyStartX: newX,
+            copyStartY: newY
+        });
+
+        // Adjust the position of the large Cell wrt the base Cell
+        mainCell.set({
+            startX: -newX,
+            startY: -newY
+        });
+    }
+};
+
+const frameDragZone = scrawl.makeDragZone({
+
+    zone: canvas,
+    collisionGroup: "my-frame-group",
+    coordinateSource: mapCell,
+    endOn: ["up", "leave"],
+    updateWhileMoving: checkFrameDrag,
+    preventTouchDefaultWhenDragging: true,
+    exposeCurrentArtefact: true,
+    processingOrder: 0,
 });
 
 
+// Add a label to the map Cell
+scrawl.makeLabel({
+
+    name: "map-label",
+    group: "map-cell",
+    text: "Minimap (draggable)",
+    fontString: "16px Arial, sans-serif",
+    start: ["center", 10],
+    handle: ["center", 0]
+});
+
 // #### Scene animation
-// None - rendering once should be sufficient
-scrawl.render();
+const checkForChanges = () => {
+
+    const [w, h] = canvas.get("dimensions");
+
+    if (w !== displayWidth || h !== displayHeight) {
+
+        displayWidth = w;
+        displayHeight = h;
+
+        frameWidth = (displayWidth / mainDimensions) * mapDimensions;
+        frameHeight = (displayHeight / mainDimensions) * mapDimensions;
+
+        mainCellPicture.set({
+            dimensions: [displayWidth, displayHeight],
+            copyDimensions: [displayWidth, displayHeight]
+        });
+
+        frame.set({
+            dimensions: [frameWidth, frameHeight]
+        });
+
+        myMapPivot.set({
+            start: [displayWidth - mapDimensions, 0]
+        });
+    }
+
+    mainCell.updateHere();
+    mapCell.updateHere();
+};
+
+
+// Keyboard navigation
+const moveFrame = (direction) => {
+
+    let [x, y] = frame.get('position');
+
+    switch (direction) {
+
+        case 'left' :
+            x -= 1;
+            break;
+        case 'up' :
+            y -= 1;
+            break;
+        case 'right' :
+            x += 1;
+            break;
+        case 'down' :
+            y += 1;
+            break;
+    }
+
+    const newX = x * mainMapRatio,
+        newY = y * mainMapRatio;
+
+    frame.set({
+        startX: x,
+        startY: y,
+    });
+
+    // Adjust the position of the Picture wrt to the frame in the map
+    mainCellPicture.set({
+        copyStartX: newX,
+        copyStartY: newY
+    });
+
+    // Adjust the position of the large Cell wrt the base Cell
+    mainCell.set({
+        startX: -newX,
+        startY: -newY
+    });
+};
+
+const moveMinimap = (direction) => {
+
+    let [x, y] = myMapPivot.get('position');
+
+    switch (direction) {
+
+        case 'left' :
+            x -= 2;
+            break;
+        case 'up' :
+            y -= 2;
+            break;
+        case 'right' :
+            x += 2;
+            break;
+        case 'down' :
+            y += 2;
+            break;
+    }
+
+    myMapPivot.set({
+        startX: x,
+        startY: y,
+    });
+};
+
+const canvasKeys = (e) => {
+
+    const { keyCode, shiftKey, isComposing } = e;
+
+    // Ignore when user is composing a glyph
+    if (isComposing || 229 === keyCode) return;
+
+    // Tab, Enter/Return, Esc
+    if (9 === keyCode || 13 === keyCode || 27 === keyCode) {
+        canvas.domElement.blur();
+        return;
+    }
+
+    e.preventDefault();
+
+    // Left/right arrow keys (with and without shift)
+    if (shiftKey) {
+        if (37 === keyCode) moveMinimap('left');
+        else if (38 === keyCode) moveMinimap('up');
+        else if (39 === keyCode) moveMinimap('right');
+        else if (40 === keyCode) moveMinimap('down');
+    }
+    else {
+        if (37 === keyCode) moveFrame('left');
+        else if (38 === keyCode) moveFrame('up');
+        else if (39 === keyCode) moveFrame('right');
+        else if (40 === keyCode) moveFrame('down');
+    }
+}
+scrawl.addNativeListener('keydown', canvasKeys, canvas.domElement);
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage');
+
+
+// Create the Display cycle animation
+scrawl.makeRender({
+
+    name: "demo-animation",
+    target: canvas,
+    commence: checkForChanges,
+    afterShow: report,
+});
 
 
 // #### Development and testing

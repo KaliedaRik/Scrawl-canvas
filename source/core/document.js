@@ -5,15 +5,15 @@
 
 
 // #### Imports
-import { artefact } from "./library.js";
+import { artefact, entitynames, entity } from "./library.js";
 
-import { pushUnique, Ωempty } from "./utilities.js";
+import { pushUnique, Ωempty } from "../helper/utilities.js";
 
 import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from './shared-vars.js';
+import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, FONT_USERS, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### DOM element updates
@@ -210,18 +210,15 @@ export const domShow = function (singleArtefact = ZERO_STR) {
     }
 };
 
-// #### DOM Holding areas
-// `Exported handles` (to modules). During its initialization phase, Scrawl-canvas will add two hidden 'hold' elements at the top and bottom of the document body where it can add additional elements as-and-when required.
+export const recalculateFonts = (delay = 100) => {
 
-// Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas> elements to inform non-visual website visitors about content in the canvas.
-export const scrawlCanvasHold = document.createElement('div');
-scrawlCanvasHold.style.padding = 0;
-scrawlCanvasHold.style.border = 0;
-scrawlCanvasHold.style.margin = 0;
-scrawlCanvasHold.style.width = '4500px';
-scrawlCanvasHold.style.boxSizing = 'border-box';
-scrawlCanvasHold.style.position = 'absolute';
-scrawlCanvasHold.style.top = '-5000px';
-scrawlCanvasHold.style.left = '-5000px';
-scrawlCanvasHold.id = 'Scrawl-ARIA-default-hold';
-document.body.appendChild(scrawlCanvasHold);
+    setTimeout(() => {
+
+        entitynames.forEach(name => {
+
+            const ent = entity[name];
+
+            if (FONT_USERS.includes(ent.type)) ent.recalculateFont();
+        });
+    }, delay);
+};

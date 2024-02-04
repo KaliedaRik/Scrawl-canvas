@@ -115,8 +115,8 @@ const wheel2 = wheel1.clone({
 
 // Create the filter
 scrawl.makeFilter({
-    name: name('invert'),
-    method: 'invert',
+    name: name('myfilter'),
+    method: 'red',
 });
 
 
@@ -159,7 +159,7 @@ const imageCapture = function () {
 scrawl.makePicture({
 
     name: name('cell-image'),
-    group: hold.base.name,
+    group: hold.get('baseGroup'),
 
     width: '13%',
     height: '76%',
@@ -210,13 +210,13 @@ scrawl.makePicture({
 
 
 // Give the hold Picture entitys some labels
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: name('cell-phrase'),
-    group: hold.base.name,
+    group: hold.get('baseGroup'),
 
     text: 'Cell',
-    font: '15px Arial, sans-serif',
+    fontString: '15px Arial, sans-serif',
 
     startY: '85%',
     pivot: name('cell-image'),
@@ -299,27 +299,27 @@ const events = function () {
             switch (currentTarget) {
 
                 case 'block1' :
-                    block1.addFilters(name('invert'));
+                    block1.addFilters(name('myfilter'));
                     break;
 
                 case 'block2' :
-                    block2.addFilters(name('invert'));
+                    block2.addFilters(name('myfilter'));
                     break;
 
                 case 'wheel1' :
-                    wheel1.addFilters(name('invert'));
+                    wheel1.addFilters(name('myfilter'));
                     break;
 
                 case 'wheel2' :
-                    wheel2.addFilters(name('invert'));
+                    wheel2.addFilters(name('myfilter'));
                     break;
 
                 case 'group' :
-                    group.addFilters(name('invert'));
+                    group.addFilters(name('myfilter'));
                     break;
 
                 case 'cell' :
-                    base.addFilters(name('invert'));
+                    base.addFilters(name('myfilter'));
                     break;
             }
 
@@ -328,6 +328,7 @@ const events = function () {
     };
 }();
 scrawl.addNativeListener(['input'], events, '.controlItem');
+
 
 // Set the DOM input values
 // @ts-expect-error

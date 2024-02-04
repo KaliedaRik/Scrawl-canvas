@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 205</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+/*
+EB Garamond (common alphabetic) - Serif, with regular, bold, italic and bolditalic versions
+*/
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
+    }
+
+/*
+Roboto Flex (common alphabetic) - variable font
+See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
+*/
+    @font-face {
+      font-family: "Roboto Flex";
+      src: url("fonts/RobotoFlex-VariableFont.ttf") format("opentype");
+      font-weight: 100 900;
+      font-stretch: 25% 150%;
+      font-style: oblique 0deg 10deg;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-204.html">&larr; Previous</a>
+    <a href="canvas-301.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 205</h1>
+  <h2>Label entity - updating font parts; experiments with variable font</h2>
+  <h3>Drag and drop the Label around the canvas</h3>
+
+  <div class="controls">
+    <div class="green label">Font</div>
+    <div class="green">
+      <select class="controlItem" id="fontString">
+        <option value="40px Garamond">Garamond (normal)</option>
+        <option value="bold 40px Garamond">Garamond (bold)</option>
+        <option value="italic 40px Garamond">Garamond (italic)</option>
+        <option value="bold italic 40px Garamond">Garamond (bold italic)</option>
+        <option value="40px 'Roboto Flex'">Roboto Flex (variable)</option>
+      </select>
+    </div>
+
+    <div class="green label">Font size</div>
+    <div class="green">
+      <select class="controlItem" id="fontSize">
+        <option value="40px">40px</option>
+        <option value="3em">3em</option>
+        <option value="280%">280%</option>
+        <option value="5vmax">5vmax</option>
+        <option value="5cap">5cap</option>
+      </select>
+    </div>
+
+    <div class="green label">Font weight (string)</div>
+    <div class="green">
+      <select class="controlItem" id="fontWeight-string">
+        <option value="normal">normal</option>
+        <option value="bold">bold</option>
+        <option value="bolder">bolder</option>
+        <option value="lighter">lighter</option>
+      </select>
+    </div>
+
+    <div class="green label">Font weight (number)</div>
+    <div class="green">
+      <input class="controlItem" id="fontWeight-number" type="range" value="400" min="100" max="900" step="10" />
+    </div>
+
+    <div class="green label">Font variant</div>
+    <div class="green">
+      <select class="controlItem" id="fontVariant">
+        <option value="normal">normal</option>
+        <option value="small-caps">small-caps</option>
+        <option value="all-small-caps">all-small-caps</option>
+        <option value="petite-caps">petite-caps</option>
+        <option value="all-petite-caps">all-petite-caps</option>
+        <option value="unicase">unicase</option>
+        <option value="titling-caps">titling-caps</option>
+      </select>
+    </div>
+
+    <div class="green label">Font style</div>
+    <div class="green">
+      <select class="controlItem" id="fontStyle">
+        <option value="normal">normal</option>
+        <option value="italic">italic</option>
+        <option value="oblique">oblique</option>
+        <option value="oblique 2deg">oblique 2deg</option>
+        <option value="oblique 4deg">oblique 4deg</option>
+        <option value="oblique 6deg">oblique 6deg</option>
+        <option value="oblique 8deg">oblique 8deg</option>
+        <option value="oblique 10deg">oblique 10deg</option>
+      </select>
+    </div>
+
+    <div class="green label">Font stretch (string)</div>
+    <div class="green">
+      <select class="controlItem" id="fontStretch-string">
+        <option value="ultra-condensed">ultra-condensed</option>
+        <option value="extra-condensed">extra-condensed</option>
+        <option value="condensed">condensed</option>
+        <option value="semi-condensed">semi-condensed</option>
+        <option value="normal">normal</option>
+        <option value="semi-expanded">semi-expanded</option>
+        <option value="expanded">expanded</option>
+        <option value="extra-expanded">extra-expanded</option>
+        <option value="ultra-expanded">ultra-expanded</option>
+      </select>
+    </div>
+
+    <div class="green label">Font stretch (%)</div>
+    <div class="green">
+      <input class="controlItem" id="fontStretch-percent" type="range" value="100" min="25" max="150" step="1" />
+    </div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls">
+    <div class="yellow label">Scale</div>
+    <div class="yellow">
+      <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow">
+      <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
+    </div>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check that all fonts respond as expected when updating:</li>
+      <ul>
+        <li>Font size.</li>
+        <li>Font weight - as a string value.</li>
+        <li>Font variant (in particular 'small-caps'; other values as supported by the browser).</li>
+        <li>Font style (excluding oblique values).</li>
+      </ul>
+      <li>Check that wneh font size is set to '5vmax', the Label entity adjusts its size accordingly as the browser dimensions change.</li>
+      <li>Check that the "Roboto Flex" variable font responds as expected when updating:</li>
+      <ul>
+        <li>Font weight - as a number value.</li>
+        <li>Font style - oblique values.</li>
+        <li>Font stretch - both string and % values.</li>
+      </ul>
+    </ul>
+
+    <p><b>Known issue:</b> the bounding box occasionally does not adapt as expected when changing some of these attributes. This is a code issue as the bug appears across browsers.</p>
+
+    <p><b>Touch test:</b> should work as expected.</p>
+
+    <p><a href="../docs/demo/canvas-205.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-205.js" type="module"></script>
+
+</body>
+
+</html>

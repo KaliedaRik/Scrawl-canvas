@@ -6,78 +6,154 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 057</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    .css-tests div {
-      margin-bottom:  2px;
-      padding: 4px;
+    #my-image-store {
+      display: none;
+    }
+
+    .instructions {
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid black;
+      width: 400px;
+      height: 400px;
+      min-height: 200px;
+      min-width: 200px;
+      max-height: 600px;
+      max-width: 600px;
+      margin: 1rem auto;
+    }
+
+    .button-container {
+      width:  100%;
+      text-align: center;
+    }
+    button {
+      font-size: 1.4rem;
+      padding: 0.4rem;
+      width: 280px;
+      margin-top: 1rem;
+      background-color: darkred;
+      color: yellow;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
     }
   </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-056.html">&larr; Previous</a>
+    <a href="canvas-058.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 057</h1>
-  <h2>CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz</h2>
-  <p>Note: this canvas will use the display-p3 color space where the device, browser and display screen all support it.</p>
+  <h2>Create and use a RawAsset object to modify an image asset</h2>
 
-  <canvas 
-    id="mycanvas" 
-    width="800" 
-    height="600"
-    data-scrawl-canvas
-    data-canvas-color-space="display-p3"
-  ></canvas>
+  <p class="instructions">Drag-drop an image onto the canvas to start doing Art with it. Click on the record button at any time to record your Art creation process. Video will download when you stop recording. Canvas (and video output) can be resized by dragging bottom-right corner. Note: video recording and download only works in Chrome and (possibly) Firefox.</p>
+
+  <div class="button-container">
+    <button id="my-record-video-button">Record a video</button>
+  </div>
+
+  <div class="canvas-container">
+    <canvas 
+      id="mycanvas"
+      data-scrawl-canvas
+      data-is-responsive="true" 
+      data-base-width="600" 
+      data-base-height="600" 
+      data-base-background-color="blanchedalmond"
+      data-fit="cover"
+    ></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="yellow label">Line width</div>
+    <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="4" min="1" max="20" step="1" /></div>
+
+    <div class="yellow label">Line opacity</div>
+    <div class="yellow"><input class="controlItem" id="lineOpacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="yellow label">Line length multiplier</div>
+    <div class="yellow"><input class="controlItem" id="lineLengthMultiplier" type="range" value="20" min="1" max="100" step="1" /></div>
+
+    <div class="yellow label">Line length start</div>
+    <div class="yellow"><input class="controlItem" id="lineLengthStart" type="range" value="5" min="0" max="100" step="1" /></div>
+
+    <div class="blue label">Offset X</div>
+    <div class="blue"><input class="controlItem" id="offsetX" type="range" value="0" min="-100" max="100" step="1" /></div>
+
+    <div class="blue label">Offset Y</div>
+    <div class="blue"><input class="controlItem" id="offsetY" type="range" value="0" min="-100" max="100" step="1" /></div>
+
+    <div class="blue label">Rotation multiplier</div>
+    <div class="blue"><input class="controlItem" id="rotationMultiplier" type="range" value="90" min="0" max="360" step="1" /></div>
+
+    <div class="blue label">Rotation start</div>
+    <div class="blue"><input class="controlItem" id="rotationStart" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="lavender label">Lines to add</div>
+    <div class="lavender"><input class="controlItem" id="linesToAdd" type="range" value="50" min="0" max="200" step="1" /></div>
+
+    <div class="lavender label">Line blend</div>
+    <div class="lavender">
+      <select class="controlItem" id="lineBlend">
+        <option value="source-over">normal</option>
+        <option value="color-burn">color-burn</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="darken">darken</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="hard-light">hard-light</option>
+        <option value="lighten">lighten</option>
+        <option value="lighter">lighter</option>
+        <option value="multiply">multiply</option>
+        <option value="overlay">overlay</option>
+        <option value="screen">screen</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color">color</option>
+        <option value="hue">hue</option>
+        <option value="luminosity">luminosity</option>
+        <option value="saturation">saturation</option>
+      </select>
+    </div>
+
+    <div class="pink label">Noise scale</div>
+    <div class="pink"><input class="controlItem" id="noiseScale" type="range" value="80" min="40" max="120" step="1" /></div>
+
+  </div>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create a canvas; fill it with blocks whose fillStyle attributes have been populated with a range of different <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">CSS color value</a> strings.</li>
-      <li>Check that the expected color displays in the canvas.</li>
-      <li>For comparison, create a set of &lt;div> elements with their backgroundColor values set to those same color strings.</li>
+      <li>Create a RawAsset object which can amend an image to make it look like an Impressionist painting (think: Van Gogh).</li>
+      <li>The RawAsset object will require both a NoiseAsset object, and an ImageAsset object - the NoiseAsset will affect how the RawAsset will modify the ImageAsset.</li>
+      <li>Include additional controls to allow the user to modify the output in various ways.</li>
+      <li>In addition: allow user to drag-and-drop their own image file onto the canvas, to use as the base for the painting exercise.</li>
+      <li>Include functionality to allow the user to record their output as a video, and download that video.</li>
     </ul>
-    <p><b>Note that:</b> browser support for different color spaces is somewhat patchy. Browsers that do support the newer color spacess in CSS may not support them in &lt;canvas> elements.</p>
-    <p>For browsers that do not currently support a given color() CSS string, SC will render that color as transparent black - which is the expected action. Malformed CSS strings may be rendered as either a clamped version of the color, or opaque/transparent black (again, the expected action).</p>
 
-    <p><b>Touch test:</b> not required</p>
+    <p><b>Touch test:</b> not required. Ability to drag/drop files onto canvas in touch devices not yet investigated - best UX would probably be to display a normal HTML file selector form.</p>
 
     <p><a href="../docs/demo/canvas-057.html">Annotated code</a></p>
   </div>
 
-  <p>&nbsp;<br />Test if color strings work for CSS in this browser:</p>
-  <div class="css-tests">
-    <div style="background-color: color(srgb 0.5 1 0.25);">color(srgb 0.5 1 0.25)</div>
-    <div style="background-color: color(srgb 20% 0.6 100%);">color(srgb 20% 0.6 100%)</div>
-    <div style="background-color: color(srgb 0.5 0 1 / 0.5);">color(srgb 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(srgb-linear 0.5 1 0.25);">color(srgb-linear 0.5 1 0.25)</div>
-    <div style="background-color: color(srgb-linear 20% 0.6 100%);">color(srgb-linear 20% 0.6 100%)</div>
-    <div style="background-color: color(srgb-linear 0.5 0 1 / 0.5);">color(srgb-linear 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(display-p3 0.5 1 0.25);">color(display-p3 0.5 1 0.25)</div>
-    <div style="background-color: color(display-p3 20% 0.6 100%);">color(display-p3 20% 0.6 100%)</div>
-    <div style="background-color: color(display-p3 0.5 0 1 / 0.5);">color(display-p3 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(a98-rgb 0.5 1 0.25);">color(a98-rgb 0.5 1 0.25)</div>
-    <div style="background-color: color(a98-rgb 20% 0.6 100%);">color(a98-rgb 20% 0.6 100%)</div>
-    <div style="background-color: color(a98-rgb 0.5 0 1 / 0.5);">color(a98-rgb 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(prophoto-rgb 0.5 1 0.25);">color(prophoto-rgb 0.5 1 0.25)</div>
-    <div style="background-color: color(prophoto-rgb 20% 0.6 100%);">color(prophoto-rgb 20% 0.6 100%)</div>
-    <div style="background-color: color(prophoto-rgb 0.5 0 1 / 0.5);">color(prophoto-rgb 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(rec2020 0.5 1 0.25);">color(rec2020 0.5 1 0.25)</div>
-    <div style="background-color: color(rec2020 20% 0.6 100%);">color(rec2020 20% 0.6 100%)</div>
-    <div style="background-color: color(rec2020 0.5 0 1 / 0.5);">color(rec2020 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(xyz 0.5 1 0.25);">color(xyz 0.5 1 0.25)</div>
-    <div style="background-color: color(xyz 20% 0.6 100%);">color(xyz 20% 0.6 100%)</div>
-    <div style="background-color: color(xyz 0.5 0 1 / 0.5);">color(xyz 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(xyz-d50 0.5 1 0.25);">color(xyz-d50 0.5 1 0.25)</div>
-    <div style="background-color: color(xyz-d50 20% 0.6 100%);">color(xyz-d50 20% 0.6 100%)</div>
-    <div style="background-color: color(xyz-d50 0.5 0 1 / 0.5);">color(xyz-d50 0.5 0 1 / 0.5)</div>
-    <div style="background-color: color(xyz-d65 0.5 1 0.25);">color(xyz-d65 0.5 1 0.25)</div>
-    <div style="background-color: color(xyz-d65 20% 0.6 100%);">color(xyz-d65 20% 0.6 100%)</div>
-    <div style="background-color: color(xyz-d65 0.5 0 1 / 0.5);">color(xyz-d65 0.5 0 1 / 0.5)</div>
-    <p><br />Malformed strings</p>
-    <div style="background-color: color(rec2020 0.5 1.2 0.25);">color(rec2020 0.5 1.2 0.25)</div>
-    <div style="background-color: color(srgb 0.5 1.2 0.25);">color(srgb 0.5 1.2 0.25)</div>
-    <div style="background-color: color(display-p3 0.5 1.2 0.25);">color(display-p3 0.5 1.2 0.25)</div>
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="canvas-057.js" type="module"></script>

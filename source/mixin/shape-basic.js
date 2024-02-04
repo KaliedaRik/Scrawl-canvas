@@ -5,17 +5,17 @@
 // #### Imports
 import { artefact } from '../core/library.js';
 
-import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseVector, requestVector } from '../factory/vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { calculatePath, releasePathCalcObject, requestPathCalcObject } from './shape-path-calculation.js';
+import { calculatePath, releasePathCalcObject, requestPathCalcObject } from '../helper/shape-path-calculation.js';
 
 import entityMix from './entity.js';
 
-import { _atan2, _ceil, _floor, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, HALFTRANS, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _ceil, _floor, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, HALFTRANS, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -226,7 +226,7 @@ export default function (P = Ωempty) {
     // `getConstantPosition` - internal function called by `getPathPositionData`
     P.getConstantPosition = function (pos) {
 
-        if (!pos || !pos.toFixed || isNaN(pos)) return 0;
+        if (!_isFinite(pos)) return 0;
         if (pos >= 1) return 0.9999;
 
         const positions = this.unitPositions;

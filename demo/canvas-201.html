@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 201</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+/*
+EB Garamond (common alphabetic) - Serif, with regular, bold, italic and bolditalic versions
+*/
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-061.html">&larr; Previous</a>
+    <a href="canvas-202.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 201</h1>
+  <h2>Label entity (make, clone, method); Label accessible text</h2>
+
+  <canvas 
+    id="mycanvas" 
+    width="800" 
+    height="400"
+    data-scrawl-canvas
+    data-base-background-color="beige"
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a Label entity</li>
+      <li>Clone the entity</li>
+      <li>Position the entitys on the canvas</li>
+      <li>Change the state of a subset of entitys sharing the same state object</li>
+      <li>Check the various drawing methods available to the entitys</li>
+      <li>Check that the entitys' dimensions update quickly once the font loads, as shown by their bounding boxes: all parts of the text should be inside the bounding box</li>
+      <li>Check drag-and-drop works as expected</li>
+      <li>Make sure that text positioning (relative to the canvas) is the same across browsers, and the bounding box dimensions are also the same.</li>
+  </ul>
+  <p>Accessibility</p>
+  <ul>
+      <li>Check that the canvas element's text hold &lt;div> is populated as expected, with entity text ordered in line with their accessibleTextOrder attribute values</li>
+      <li>Check that when entitys kill and resurrect themselves, the changes are reflected in the text hold</li>
+      <li>Check that when an entity's textIsAccessible attribute changes, the changes are reflected in the text hold, with correct ordering maintained</li>
+      <li>Check that the text hold's aria-busy attribute updates (from "false" to "true", then back to "false") when each change takes place</li>
+    </ul>
+
+    <p><b>Touch test:</b> should work as expected - though flicking a label may lead to it moving beyond the canvas border and out of sight!</p>
+
+    <p><a href="../docs/demo/canvas-201.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-201.js" type="module"></script>
+
+</body>
+
+</html>

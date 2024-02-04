@@ -1,23 +1,30 @@
 // # Demo Canvas 018
-// Phrase entity - text along a path
+// Gradient and Color factories - transparency
 
 // [Run code](../../demo/canvas-018.html)
 import {
     library as L,
-    makeOval,
-    makePhrase,
+    importDomImage,
+    makeFilter,
     makePicture,
+    createImageFromEntity,
+    makeRadialGradient,
+    makeBlock,
     makeRender,
-    makeSpiral,
-    makeUpdater,
+    addNativeListener,
 } from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-// Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+// Get handles to the Canvas wrappers
+const canvases = L.canvas,
+    entitys = L.entity,
+    c1 = canvases['hackney'],
+    c2 = canvases['heathrow'],
+    c3 = canvases['kingston'],
+    c4 = canvases['burglary'];
 
 
 // Namespacing boilerplate
@@ -25,142 +32,136 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
-// Create Shape entitys for paths
-makeOval({
+// Import the images we defined in the DOM (in &lt;img> elements)
+importDomImage('.places');
 
-    name: name('oval-path'),
+// For this scene, we'll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene
+const data = [
+    {
+        canvas: c1,
+        image: 'hackney-bg',
+        transparency: 'transparent',
+    },
+    {
+        canvas: c2,
+        image: 'heathrow-bg',
+        transparency: 'rgb(0 0 0 / 0)',
+    },
+    {
+        canvas: c3,
+        image: 'kingston-bg',
+        transparency: '#00000000',
+    },
+    {
+        canvas: c4,
+        image: 'burglary-bg',
+        transparency: '#0000',
+    },
+];
 
-    strokeStyle: 'black',
-    method: 'draw',
 
-    startX: 'center',
-    startY: 'center',
-    handleX: 'center',
-    handleY: 'center',
+// This array will hold a set of functions which we will invoke in turn at the start of each Display cycle
+const checkFunctions = [];
 
-    radiusX: '40%',
-    radiusY: '42%',
 
-    useAsPath: true,
+// The blur filter is temporary - we use it once on each image to generate a blurred version of that image
+// + We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption
+makeFilter({
+    name: name('blur'),
+    method: 'gaussianBlur',
+    radius: 20,
 });
 
-const spiral = makeSpiral({
+// Iterate through our data array to create Scrawl-canvas objects
+data.forEach(scene => {
 
-    name: name('spiral-path'),
+    // The original picture, with the blur filter applied to it
+    // - We will remove the filter in a later step
+    const entity = makePicture({
 
-    strokeStyle: 'darkgreen',
-    method: 'draw',
+        name: name(`${scene.image}-original`),
+        group: scene.canvas.base.name,
 
-    startX: 'center',
-    startY: 'center',
-    handleX: 'center',
-    handleY: 'center',
+        asset: scene.image,
 
-    loops: 5,
-    loopIncrement: 1,
-    drawFromLoop: 2,
+        dimensions: ['100%', '100%'],
+        copyDimensions: ['100%', '100%'],
 
-    scale: 40,
-    scaleOutline: false,
+        filters: [name('blur')],
+        method: 'fill',
+    });
 
-    flipUpend: true,
-    roll: 30,
+    // A one-off instruction to tell Scrawl-canvas to create an image asset from our Picture entity the next time it performs a Display cycle
+    createImageFromEntity(entity, true);
 
-    useAsPath: true,
+    // The purpose of this demo is to test the various ways we can define 'transparency' in Scrawl-canvas Color objects and Gradients - tests a set of Color factory bugs uncovered and fixed in v8.3.2
+    makeRadialGradient({
+
+        name: name(`${scene.image}-gradient`),
+        start: ['50%', '50%'],
+        end: ['50%', '50%'],
+        startRadius: '5%',
+        endRadius: '20%',
+
+        colors: [
+            [0, scene.transparency],
+            [999, 'black']
+        ],
+    });
+
+    // Apply the gradient to the scene via a Block entity
+    const filterBlock = makeBlock({
+
+        name: name(`${scene.image}-block`),
+        group: scene.canvas.base.name,
+
+        start: ['center', 'center'],
+        handle: ['center', 'center'],
+        dimensions: ['200%', '200%'],
+
+        fillStyle: name(`${scene.image}-gradient`),
+        lockFillStyleToEntity: true,
+    });
+
+    // Check whether the mouse cursor is hovering over this canvas, and update the filter Block entity's positioning accordingly
+    const f = () => {
+
+        const here = scene.canvas.here,
+            block = filterBlock;
+
+        return function () {
+
+            block.set({
+                lockTo: (here.active) ? 'mouse' : 'start',
+            });
+        }
+    };
+    checkFunctions.push(f());
 });
 
+// This function will run once, at the end of the first Display cycle
+const postInitialization = (anim) => {
 
-// Create Phrase entitys
-makePhrase({
+    console.log(anim.target.name, 'postInitialization');
 
-    name: name('label'),
+    const original = entitys[name(`${anim.target.name}-bg-original`)];
 
-    text: 'H&epsilon;lj&ouml;!',
-    font: 'bold 40px Garamond, serif',
+    // Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene
+    original.set({
+        filters: [],
+        order: 2,
+        globalCompositeOperation: 'destination-over',
+    });
 
-    width: 120,
-    handleX: 'center',
-    handleY: '70%',
-
-    method: 'fillAndDraw',
-
-    justify: 'center',
-    lineHeight: 1,
-
-    fillStyle: 'green',
-    strokeStyle: 'gold',
-
-    shadowOffsetX: 2,
-    shadowOffsetY: 2,
-    shadowBlur: 2,
-    shadowColor: 'black',
-
-    path: name('oval-path'),
-    lockTo: 'path',
-    addPathRotation: true,
-
-    delta: {
-        pathPosition: 0.0008,
-    }
-});
-
-const lorem = makePhrase({
-
-    name: name('myPhrase'),
-
-    // Note that the `SMALL-CAPS` styling has been deprecated and shouldn't be used. Included here only for testing the deprecated functionality
-    text: '&shy;§ITALIC§Lorem§/ITALIC§ ipsum §Red-Text§har varit <i>standard 😀</i> &auml;nda sedan §SMALL-CAPS§1500-talet§/SMALL-CAPS§, när-en-ok&aring;nd-§BOLD§bok§DEFAULTS§sättare-tog att antal 🤖 §BOLD§bok§/BOLD§stäver §OVERLINE§och <HIGHLIGHT>blandade§/OVERLINE§ dem</HIGHLIGHT> för §size-24§Red-Text§att§DEFAULTS§ g&ouml;ra, §Letter-spacing-10§ett 🎻 prov§u§exemplar</UNDERLINE>§/Letter-spacing-10§ §MONO§av en §BOLD§b&oacute;k.',
-
-    font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
-
-    justify: 'center',
-
-    fillStyle: '#003399',
-
-    method: 'fill',
-
-    textPath: name('spiral-path'),
-    textPathPosition: 0.9,
-
-    handleY: 12,
-
-    delta: {
-        textPathPosition: -0.0006,
-    }
-});
-
-
-// Add additional section classes to the library, via our new Phrase entity
-lorem.addSectionClass('Red-Text', { fill: 'red' })
-.addSectionClass('size-24', { size: '24px' })
-.addSectionClass('Letter-spacing-10', { space: 10 })
-.addSectionClass('/Letter-spacing-10', { space: 0 })
-.addSectionClass('MONO', { family: 'monospace' });
-
-// Create other entitys
-makePicture({
-
-    name: name('bunny'),
-    imageSource: 'img/bunny.png',
-
-    width: 26,
-    height: 37,
-
-    copyWidth: 26,
-    copyHeight: 37,
-
-    handleX: 'center',
-    handleY: 'center',
-
-    path: name('oval-path'),
-    pathPosition: .50,
-    lockTo: 'path',
-    addPathRotation: true,
-
-    delta: {
-        pathPosition: 0.0008,
-    }
-})
+    // Create a second Picture entity using the blurred image asset Scrawl-canvas created for us during the first iteration of the Display cycle.
+    // + Note that we've asked Scrawl-canvas to create an &lt;img> element (outside of the DOM) from our original Picture's blurred output. Element creation takes time (it's an asynchronous action), which means that our new Picture entity won't show up for up to a second after the demo starts running.
+    original.clone({
+        name: name(`${anim.target.name}-bg-blurred`),
+        asset: name(`${anim.target.name}-bg-original-image`),
+        order: 1,
+        globalCompositeOperation: 'source-atop',
+    });
+};
 
 
 // #### Scene animation
@@ -172,90 +173,28 @@ const report = reportSpeed('#reportmessage');
 makeRender({
 
     name: name('animation'),
-    target: canvas,
+    target: [c1, c2, c3, c4],
+    observer: true,
+
+    afterCreated: postInitialization,
+    commence: () => checkFunctions.forEach(f => f()),
+});
+
+makeRender({
+
+    name: name('speed'),
+    noTarget: true,
     afterShow: report,
 });
 
 
-// #### User interaction
-// Observer functionality for the ___spiral___ Shape entity
-makeUpdater({
+// For this demo we will suppress touchmove functionality over the canvas
+addNativeListener('touchmove', (e) => {
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+    e.preventDefault();
+    e.returnValue = false;
 
-    target: spiral,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        start_xAbsolute: ['startX', 'round'],
-        start_yAbsolute: ['startY', 'round'],
-        handle_xAbsolute: ['handleX', 'round'],
-        handle_yAbsolute: ['handleY', 'round'],
-
-        roll: ['roll', 'float'],
-        scale: ['scale', 'float'],
-        upend: ['flipUpend', 'boolean'],
-        reverse: ['flipReverse', 'boolean'],
-    },
-});
-
-// Observer functionality for the ___lorem___ Phrase entity
-makeUpdater({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: lorem,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        overline: ['overlinePosition', 'float'],
-        letterSpacing: ['letterSpacing', 'float'],
-        family: ['family', 'raw'],
-        size_px: ['size', 'px'],
-
-        direction: ['textPathDirection', 'raw'],
-        justify: ['justify', 'raw'],
-    },
-});
-
-// Setup form
-// @ts-expect-error
-document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 40;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#direction').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#justify').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#overline').value = 0.1;
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#family').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#size_px').value = 16;
-
+}, [c1.domElement, c2.domElement, c3.domElement, c4.domElement]);
 
 // #### Development and testing
 console.log(L);

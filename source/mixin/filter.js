@@ -2,21 +2,16 @@
 // The filter mixin adds functionality to Cell, Group and all entity factories which allows those objects to use Scrawl-canvas [Filter objects](../factory/filter.html) in their output.
 
 
-// #### Demos:
-// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-
-
 // #### Imports
 import { asset, filter, styles } from '../core/library.js';
 
-import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function

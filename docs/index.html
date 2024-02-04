@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Scrawl-canvas Documentation</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link rel="stylesheet" media="all" href="docco.css" />
   <style>
     body {
@@ -125,6 +126,10 @@
     <li><a href="source/factory/crescent.html">factory/crescent.js</a></li>
     <ul>
       <li>makeCrescent</li>
+    </ul>
+    <li><a href="source/factory/label.html">factory/label.js</a></li>
+    <ul>
+      <li>makeLabel</li>
     </ul>
     <li><a href="source/factory/phrase.html">factory/phrase.js</a></li>
     <ul>
@@ -482,13 +487,11 @@
     <li><a href="demo/canvas-012.html">Canvas-012</a> Shape entity position; shape entity as a path for other artefacts to follow</li>
     <li><a href="demo/canvas-013.html">Canvas-013</a> Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog</li>
     <li><a href="demo/canvas-014.html">Canvas-014</a> Line, Quadratic and Bezier entitys - control lock alternatives</li>
-    <li><a href="demo/canvas-015.html">Canvas-015</a> Phrase entity (make, clone, method, multiline)</li>
-    <li><a href="demo/canvas-015a.html">Canvas-015a</a> Phrase entity - cache output to improve render speeds</li>
-    <li><a href="demo/canvas-016.html">Canvas-016</a> Phrase entity position and font attributes; Block mimic functionality</li>
-    <li><a href="demo/canvas-017.html">Canvas-017</a> Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality</li>
-    <li><a href="demo/canvas-018.html">Canvas-018</a> Phrase entity - text along a path</li>
-    <li><a href="demo/canvas-019.html">Canvas-019</a> Gradient and Color factories - transparency</li>
-    <li><a href="demo/canvas-019a.html">Canvas-019a</a> Gradient and Color factories - transparency - alternative approach using Cells instead of images</li>
+    <li><a href="demo/canvas-015.html">Canvas-015</a> CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()</li>
+    <li><a href="demo/canvas-016.html">Canvas-016</a> CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz</li>
+    <li><a href="demo/canvas-017.html">Canvas-017</a> Gradients stress test</li>
+    <li><a href="demo/canvas-018.html">Canvas-018</a> Gradient and Color factories - transparency</li>
+    <li><a href="demo/canvas-019.html">Canvas-019</a> Gradient and Color factories - transparency - alternative approach using Cells instead of images</li>
     <li><a href="demo/canvas-020.html">Canvas-020</a> Testing createImageFromXXX functionality</li>
     <li><a href="demo/canvas-021.html">Canvas-021</a> Import and use spritesheets</li>
     <li><a href="demo/canvas-022.html">Canvas-022</a> Grid entity - basic functionality (color, gradients)</li>
@@ -498,7 +501,7 @@
     <li><a href="demo/canvas-026.html">Canvas-026</a> Tower of Hanoi</li>
     <li><a href="demo/canvas-027.html">Canvas-027</a> Video control and manipulation; chroma-based hit zone</li>
     <li><a href="demo/canvas-028.html">Canvas-028</a> Image magnifier; test some composite operations</li>
-    <li><a href="demo/canvas-029.html">Canvas-029</a> Phrase entitys and gradients</li>
+    <li><a href="demo/canvas-029.html">Canvas-029</a> Image smoothing</li>
     <li><a href="demo/canvas-030.html">Canvas-030</a> Polyline entity functionality</li>
     <li><a href="demo/canvas-031.html">Canvas-031</a> Cell generation and processing order - kaliedoscope clock</li>
     <li><a href="demo/canvas-032.html">Canvas-032</a> Freehand drawing</li>
@@ -521,20 +524,32 @@
     <li><a href="demo/canvas-049.html">Canvas-049</a> Conic gradients</li>
     <li><a href="demo/canvas-050.html">Canvas-050</a> Manipulate artefact delta animation values; test animation maxFrameRate</li>
     <li><a href="demo/canvas-051.html">Canvas-051</a> Line Spirals</li>
-    <li><a href="demo/canvas-052.html">Canvas-052</a> Create and use a RawAsset object to modify an image asset</li>
+    <li><a href="demo/canvas-052.html">Canvas-052</a> Noise asset functionality</li>
     <li><a href="demo/canvas-053.html">Canvas-053</a> Display output from a Reaction-Diffusion asset</li>
     <li><a href="demo/canvas-054.html">Canvas-054</a> Animated contour lines: map a complex gradient to NoiseAsset output</li>
     <li><a href="demo/canvas-055.html">Canvas-055</a> Crescent entity functionality</li>
     <li><a href="demo/canvas-056.html">Canvas-056</a> Seeded random number generator; point on path</li>
-    <li><a href="demo/canvas-057.html">Canvas-057</a> CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz</li>
-    <li><a href="demo/canvas-058.html">Canvas-058</a> Image smoothing</li>
-    <li><a href="demo/canvas-059.html">Canvas-059</a> CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()</li>
-    <li><a href="demo/canvas-060.html">Canvas-060</a> Noise asset functionality</li>
-    <li><a href="demo/canvas-061.html">Canvas-061</a> Gradients stress test</li>
-    <li><a href="demo/canvas-062.html">Canvas-062</a> Group and ungroup entitys; create a bespoke drag-drop UX</li>
-    <li><a href="demo/canvas-063.html">Canvas-063</a> Semi-accessible Minimap; multiple drag zones</li>
-    <li><a href="demo/canvas-064.html">Canvas-064</a> Animation object: gradient along a line</li>
-    <li><a href="demo/canvas-065.html">Canvas-065</a> Wide Gamut 2D Graphics using HTML Canvas</li>
+    <li><a href="demo/canvas-057.html">Canvas-057</a> Create and use a RawAsset object to modify an image asset</li>
+    <li><a href="demo/canvas-058.html">Canvas-058</a> Group and ungroup entitys; create a bespoke drag-drop UX</li>
+    <li><a href="demo/canvas-059.html">Canvas-059</a> Semi-accessible Minimap; multiple drag zones</li>
+    <li><a href="demo/canvas-060.html">Canvas-060</a> Animation object: gradient along a line</li>
+    <li><a href="demo/canvas-061.html">Canvas-061</a> Wide Gamut 2D Graphics using HTML Canvas</li>
+
+    <li><a href="demo/canvas-201.html">Canvas-201</a> Label entity (make, clone, method); Label accessible text</li>
+    <li><a href="demo/canvas-202.html">Canvas-202</a> Label entity - basic support for non-western fonts</li>
+    <li><a href="demo/canvas-203.html">Canvas-203</a> Label entity - underline text</li>
+    <li><a href="demo/canvas-204.html">Canvas-204</a> Label entity - gradients and patterns</li>
+    <li><a href="demo/canvas-205.html">Canvas-205</a> Label entity - updating font parts; experiments with variable font</li>
+  </ul>
+
+  <h4>(Deprecated) Phrase demos</h4>
+  <ul>
+    <li><a href="demo/canvas-301.html">Canvas-301</a> Phrase entity (make, clone, method, multiline)</li>
+    <li><a href="demo/canvas-302.html">Canvas-302</a> Phrase entity - cache output to improve render speeds</li>
+    <li><a href="demo/canvas-303.html">Canvas-303</a> Phrase entity position and font attributes; Block mimic functionality</li>
+    <li><a href="demo/canvas-304.html">Canvas-304</a> Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality</li>
+    <li><a href="demo/canvas-305.html">Canvas-305</a> Phrase entity - text along a path</li>
+    <li><a href="demo/canvas-306.html">Canvas-306</a> Phrase entitys and gradients</li>
   </ul>
 
   <h4>Filters demos</h4>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 304</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-303.html">&larr; Previous</a>
+    <a href="canvas-305.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 304</h1>
+  <h2>Phrase entity - test lineHeight, letterSpacing and justify attributes<br />Section classes functionality</h2>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="lavender label">Line height</div>
+    <div class="lavender"><input class="controlItem" id="lineHeight" type="range" value="1.5" min="-1" max="3" step="0.01" /></div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Letter spacing</div>
+    <div class="lavender"><input class="controlItem" id="letterSpacing" type="range" value="0" min="-10" max="30" step="0.1" /></div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Justify</div>
+    <div class="lavender">
+      <select class="controlItem" id="justify">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+        <option value="full">full</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font family</div>
+    <div class="lavender">
+      <select class="controlItem" id="family">
+        <option value="'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif">sans-serif</option>
+        <option value="'Lucida Bright', 'Lucida Fax', Palatino, 'Palatino Linotype', Palladio, 'URW Palladio', serif">serif</option>
+        <option value="'Fira Mono', 'DejaVu Sans Mono', Menlo, Consolas, 'Liberation Mono', Monaco, 'Lucida Console', monospace">monospace</option>
+        <option value="'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive">cursive</option>
+        <option value="Papyrus, Herculanum, 'Party LET', 'Curlz MT', Harrington, fantasy">fantasy</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font size</div>
+    <div class="lavender">
+      <select class="controlItem" id="size_string">
+        <option value="16px">16px</option>
+        <option value="1.2em">1.2em</option>
+        <option value="2vw">2vw</option>
+        <option value="x-small">x-small</option>
+        <option value="x-large">x-large</option>
+        <option value="larger">larger</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font size (px)</div>
+    <div class="lavender"><input class="controlItem" id="size_px" type="range" value="16" min="8" max="32" step="0.2" /></div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.02" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="pink label">Overline</div>
+    <div class="pink"><input class="controlItem" id="overline" type="range" value="0.10" min="-0.2" max="1.2" step="0.01" /></div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="pink label">Width (n)</div>
+    <div class="pink"><input class="controlItem" id="absoluteWidth" type="range" value="300" min="100" max="500" step="1" /></div>
+    <div class="pink">&nbsp;</div>
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a Phrase entity</li>
+      <li>Display the Phrase entity on a canvas</li>
+      <li>Check that Phrase.setGlyphStyles() functionality works as expected</li>
+      <li>Check that Phrase justification functionality works as expected</li>
+      <li>Check that Phrase line height functionality works as expected</li>
+      <li>Check that Phrase letter spacing functionality works as expected</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/canvas-304.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-304.js" type="module"></script>
+
+</body>
+
+</html>

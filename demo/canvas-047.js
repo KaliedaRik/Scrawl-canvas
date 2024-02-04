@@ -40,6 +40,7 @@ const easingDisplayComponent = function (name, ypos) {
     scrawl.makePhrase({
         name: `${name}-label`,
         text: name,
+        accessibleText: 'Example of §',
         startX: 10,
         startY: ypos + 6,
     });

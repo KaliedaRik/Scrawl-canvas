@@ -27,26 +27,17 @@
 // TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
 
 
-// #### Demos:
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-006](../../demo/canvas-006.html) - Canvas tween stress test
-// + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
-// + [DOM-005](../../demo/dom-005.html) - DOM tween stress test
-// + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
-
-
 // #### Imports
 import { animationtickers, constructors } from '../core/library.js';
 
-import { convertTime, doCreate, easeEngines, mergeOver, pushUnique, xt, xtGet, xto, λnull, Ωempty } from '../core/utilities.js';
+import { convertTime, doCreate, easeEngines, mergeOver, pushUnique, xt, xtGet, xto, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Tween constructor

@@ -56,13 +56,12 @@ const updateLabelsAndWorm = function (asset) {
 
             face.forEach((coord, index) => {
 
-                entitys.push(scrawl.makePhrase({
+                entitys.push(scrawl.makeLabel({
                     name: `label-${index}`,
                     text: `${index}`,
                     handle: ['center', 'center'],
-                    width: 20,
-                    justify: 'center',
-                    font: '10px Arial',
+                    fontString: '10px Arial',
+                    textIsAccessible: false,
                 }));
             });
         }
@@ -81,11 +80,11 @@ const updateLabelsAndWorm = function (asset) {
         });
 
         // Check for perilous user input
-        if (isNaN(wormStart)) wormStart = 0;
+        if (!Number.isFinite(wormStart)) wormStart = 0;
         if (wormStart < 0) wormStart = 0;
         if (wormStart > 468) wormStart = 468;
 
-        if (isNaN(wormEnd)) wormEnd = 0;
+        if (!Number.isFinite(wormEnd)) wormEnd = 0;
         if (wormEnd < 0) wormEnd = 0;
         if (wormEnd > 468) wormEnd = 468;
 

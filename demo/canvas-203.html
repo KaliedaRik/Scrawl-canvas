@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 203</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <link href="css/fontface-declarations.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-202.html">&larr; Previous</a>
+    <a href="canvas-204.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 203</h1>
+  <h2>Label entity - underline text</h2>
+
+  <div class="controls">
+
+    <div class="lavender label">Select font</div>
+    <div class="lavender">
+      <select class="controlItem" id="font">
+        <option value="serif">serif</option>
+        <option value="sans-serif">sans-serif</option>
+        <option value="monospace">monospace</option>
+        <option value="cursive">cursive</option>
+        <option value="fantasy">fantasy</option>
+        <option value="garamond">Garamond</option>
+        <option value="garamond-bold">Garamond (bold)</option>
+        <option value="garamond-italic">Garamond (italic)</option>
+        <option value="garamond-bolditalic">Garamond (bold-italic)</option>
+        <option value="roboto">Roboto</option>
+        <option value="roboto-bold">Roboto (bold)</option>
+        <option value="roboto-italic">Roboto (italic)</option>
+        <option value="roboto-bolditalic">Roboto (bold-italic)</option>
+        <option value="roboto-serif">Roboto Serif</option>
+        <option value="roboto-serif-bold">Roboto Serif (bold)</option>
+        <option value="roboto-serif-italic">Roboto Serif (italic)</option>
+        <option value="roboto-serif-bolditalic">Roboto Serif (bold-italic)</option>
+        <option value="roboto-mono">Roboto Mono</option>
+        <option value="roboto-mono-bold">Roboto Mono (bold)</option>
+        <option value="roboto-mono-italic">Roboto Mono (italic)</option>
+        <option value="roboto-mono-bolditalic">Roboto Mono (bold-italic)</option>
+        <option value="noto-arabic-sans">Noto Arabic Sans</option>
+        <option value="noto-arabic-naskh">Noto Arabic Naskh</option>
+        <option value="noto-urdu-nastaliq">Noto Urdu Nastaliq</option>
+        <option value="noto-chinese-simple-sans">Noto Chinese Simple Sans</option>
+        <option value="noto-chinese-simple-serif">Noto Chinese Simple Serif</option>
+        <option value="noto-devangari-sans">Noto Devangari Sans</option>
+        <option value="noto-devangari-serif">Noto Devangari Serif</option>
+        <option value="noto-hebrew-sans">Noto Hebrew Sans</option>
+        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
+        <option value="noto-japanese-sans">Noto Japanese Sans</option>
+        <option value="noto-japanese-serif">Noto Japanese Serif</option>
+        <option value="noto-korean-sans">Noto Korean Sans</option>
+        <option value="noto-korean-serif">Noto Korean Serif</option>
+        <option value="noto-mongolian-sans">Noto Mongolian Sans</option>
+        <option value="noto-tai-le-sans">Noto Tai Le Sans</option>
+        <option value="noto-tai-tham-sans">Noto Tai Tham Sans</option>
+        <option value="noto-thai-looped-sans">Noto Thai Looped Sans</option>
+        <option value="noto-thai-serif">Noto Thai Serif</option>
+        <option value="noto-tirhuta-sans">Noto Tirhuta Sans</option>
+        <option value="bungee">Bungee</option>
+        <option value="bungee-spice">Bungee Spice</option>
+        <option value="carter-one">Carter One</option>
+        <option value="mountains-of-christmas">Mountains Of Christmas</option>
+      </select>
+    </div>
+
+    <div class="pink label">Include underline</div>
+    <div class="pink">
+      <select class="controlItem" id="includeUnderline">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="pink label">Underline style</div>
+    <div class="pink">
+      <select class="controlItem" id="underlineStyle">
+        <option value="">default</option>
+        <option value="red">red</option>
+        <option value="demo-linear-gradient">gradient</option>
+        <option value="demo-water-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="pink label">Underline gap</div>
+    <div class="pink">
+      <input class="controlItem" id="underlineGap" type="range" value="3" min="0" max="7" step="0.05" />
+    </div>
+
+    <div class="pink label">Underline width</div>
+    <div class="pink">
+      <input class="controlItem" id="underlineWidth" type="range" value="1" min="1" max="100" step="1" />
+    </div>
+
+    <div class="pink label">Underline offset</div>
+    <div class="pink">
+      <input class="controlItem" id="underlineOffset" type="range" value="0" min="-0.5" max="1.5" step="0.005" />
+    </div>
+
+    <div class="lavender label">Letter spacing</div>
+    <div class="lavender">
+      <input class="controlItem" id="letterSpacing" type="range" value="0" min="-10" max="20" step="1" />
+    </div>
+
+    <div class="lavender label">Word spacing</div>
+    <div class="lavender">
+      <input class="controlItem" id="wordSpacing" type="range" value="0" min="-20" max="50" step="1" />
+    </div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls">
+
+    <div class="green label">Start X (%)</div>
+    <div class="green">
+      <input class="controlItem" id="startX" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="green label">Start Y (%)</div>
+    <div class="green">
+      <input class="controlItem" id="startY" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="green label">Handle X (%)</div>
+    <div class="green">
+      <input class="controlItem" id="handleX" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="green label">Handle Y (%)</div>
+    <div class="green">
+      <input class="controlItem" id="handleY" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="green label">Handle X (string)</div>
+    <div class="green">
+      <select class="controlItem" id="handleX-string">
+        <option value="left">left</option>
+        <option value="start">start</option>
+        <option value="center">center</option>
+        <option value="end">end</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+
+    <div class="green label">Handle Y (string)</div>
+    <div class="green">
+      <select class="controlItem" id="handleY-string">
+        <option value="top">top</option>
+        <option value="hanging">hanging</option>
+        <option value="middle">middle</option>
+        <option value="center">center</option>
+        <option value="alphabetic">alphabetic</option>
+        <option value="ideographic">ideographic</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow">
+      <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow">
+      <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
+    </div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check that the underline appears (when included) for all fonts, and it can be offset as required.</li>
+      <li>Check that the underline width (it should be called depth?) works as expected.</li>
+      <li>Check that the underline is a solid line, breaking only where the text interrupts it.</li>
+      <li>Check the gap between the underline and any interrupting text is adjustable.</li>
+      <li>Check the underline expands/contracts as letter and word spacing is adjusted.</li>
+      <li>Check that the underline stays in its place in relation to the text as scale/roll/flip values change.</li>
+      <li>Check that the underline style updates as expected, including for gradient and pattern styles.</li>
+      <li>Make sure that underline positioning is respected across browsers.</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required.</p>
+
+    <p><a href="../docs/demo/canvas-203.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-203.js" type="module"></script>
+
+</body>
+
+</html>

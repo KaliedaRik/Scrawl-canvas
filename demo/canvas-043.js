@@ -308,7 +308,7 @@ const canvasTwoPostInitialization = function () {
 
 
 // #### Canvas 3:
-// Emulate clipping to a Phrase entity using a composite scene rendered in its own cell
+// Emulate clipping to a Label entity using a composite scene rendered in its own cell
 const ns3 = `canvas3`;
 const name3 = (name) => `${ns3}-${name}`;
 
@@ -319,15 +319,15 @@ const c3Cell = canvas3.buildCell({
     dimensions: ['100%', '100%'],
 });
 
-const c3Phrase = scrawl.makePhrase({
+const c3Phrase = scrawl.makeLabel({
 
     name: name3('serif-text-hello'),
     group: name3('serif-cell'),
 
     text: 'HELLO!',
-    font: 'bold 120px serif',
-    lineHeight: 1,
+    fontString: 'bold 120px serif',
 });
+
 
 const canvasThreePostInitialization = function () {
 

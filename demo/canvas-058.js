@@ -1,122 +1,254 @@
 // # Demo Canvas 058
-// Image smoothing
+// Group and ungroup entitys; create a bespoke drag-drop UX
 
-// [Run code](../../demo/canvas-058.html)
-import * as scrawl from '../source/scrawl.js'
+// [Run code](../../demo/filters-058.html)
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas;
 
-scrawl.importDomImage('.flowers');
+const [w, h] = canvas.get('dimensions');
 
 
-canvas.setBase({
-    compileOrder: 1,
-});
+const colorEngine = scrawl.makeColor({
 
-const textCell = canvas.buildCell({
-
-    name: 'text-cell',
-    dimensions: [100, 100],
-    shown: false,
+    name: 'color-engine',
+    minimumColor: 'red',
+    maximumColor: 'blue',
 });
 
 
-scrawl.makePhrase({
+const boxGroup = scrawl.makeGroup({
+    name: 'box-group',
+    host: canvas.base.name,
+});
 
-    name: 'hello-world-in-cell',
-    group: 'text-cell',
+for (let i = 0; i < 100; i++) {
 
-    text: 'Hello world!',
+    scrawl.makeBlock({
 
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
+        name: `b-${i}`,
+        group: 'box-group',
+        dimensions: [30, 30],
+        startX: (w * 0.1) + (Math.random() * (w * 0.8)),
+        startY: (h * 0.1) + (Math.random() * (h * 0.8)),
+        handle: ['center', 'center'],
+        roll: Math.random() * 360,
+        fillStyle: colorEngine.getRangeColor(Math.random()),
+        globalAlpha: 0.25,
+        delta: {
+            roll: 0.8,
+        },
+        noDeltaUpdates: true,
+    });
+}
 
-    lineHeight: 0.8,
+const referenceGroup = scrawl.makeGroup({
+    name: 'reference-group',
+    host: canvas.base.name,
+});
+
+const referenceBlock = scrawl.makeBlock({
+
+    name: 'reference-block',
+    group: 'reference-group',
+    dimensions: [0, 0],
+    method: 'draw',
+    lineDash: [4, 2],
+    delta: {
+        lineDashOffset: 0.2,
+    },
+
+    onEnter: function () {
+
+        canvas.set({
+            css: {
+                cursor: 'grab',
+            },
+        });
+
+// @ts-expect-error
+        this.set({
+            lineDash: [16, 2],
+            lineWidth: 2,
+        });
+    },
+
+    onLeave: function () {
+
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+
+// @ts-expect-error
+        this.set({
+            lineDash: [4, 2],
+            lineWidth: 1,
+        });
+    },
 });
 
 
-scrawl.makePicture({
-
-    name: 'flower',
-    asset: 'iris',
-
-    start: [3, 3],
-    dimensions: [297, 297],
-
-    copyStart: [200, 200],
-    copyDimensions: [50, 50],
-
-    lineWidth: 6,
-    strokeStyle: 'gold',
-
-    method: 'fillThenDraw',
-
-}).clone({
-
-    name: 'hello',
-    asset: 'text-cell',
-
-    start: [300, 300],
-    dimensions: [297, 297],
-
-    copyStart: [15, 15],
-    copyDimensions: [70, 70],
+const gatherGroup = scrawl.makeGroup({
+    name: 'gather-group',
 });
 
-scrawl.makePhrase({
+let isGathering = false,
+    isMoving = false;
 
-    name: 'hello-world-in-base-1',
+let startX = 0,
+    startY = 0;
 
-    text: 'Hello world!',
+const downAction = () => {
 
-    start: ['25%', '60%'],
-    handle: ['center', 'center'],
+    const { here } = canvas;
 
-    lineHeight: 0.8,
+    if (here) {
 
-}).clone({
+        const hit = referenceGroup.getArtefactAt(here);
 
-    name: 'hello-world-in-base-2',
-    startY: '70%',
-    scale: 2,
+        if (typeof hit !== 'boolean' && hit.artefact) {
 
-}).clone({
+            isMoving = true;
+            isGathering = false;
+        }
+        else {
 
-    name: 'hello-world-in-base-3',
-    startY: '85%',
-    scale: 4.5,
-});
+            boxGroup.setArtefacts({
+                globalAlpha: 0.25,
+                noDeltaUpdates: true,
+            });
 
-scrawl.makePattern({
+            const {x, y} = here;
 
-    name: 'bunny-pattern',
-    imageSource: 'img/bunny.png',
-    matrixA: 3,
-    matrixD: 3,
-});
+            startX = x;
+            startY = y;
 
-scrawl.makeBlock({
+            referenceBlock.set({
+                start: [x, y],
+                dimensions: [0, 0],
+            });
 
-    name: 'pattern-block',
+            isGathering = true;
+            isMoving = false;
+        }
+    }
+}
 
-    start: [300, 3],
-    dimensions: [297, 297],
+const moveAction = (e) => {
 
-    lineWidth: 6,
-    fillStyle: 'bunny-pattern',
-    strokeStyle: 'gold',
+    if (isGathering) doGathering();
+    else if (isMoving) doMoving(e);
+};
 
-    method: 'fillThenDraw',
-});
+const doGathering = () => {
 
+    const { here } = canvas;
+
+    if (here) {
+
+        const {x, y} = here;
+
+        let width = 0,
+            height = 0,
+            revStartX = 0,
+            revStartY = 0;
+
+        if (x < startX) {
+
+            width = startX - x;
+            revStartX = x;
+        }
+        else width = x - startX;
+
+        if (y < startY) {
+
+            height = startY - y;
+            revStartY = y;
+        }
+        else height = y - startY;
+
+        referenceBlock.set({
+            startX: revStartX || startX,
+            startY: revStartY || startY,
+            width,
+            height,
+        });
+
+        gatherGroup.setArtefacts({
+            globalAlpha: 0.25,
+            noDeltaUpdates: true,
+        });
+
+        gatherGroup.clearArtefacts();
+
+        const boxes = boxGroup.get('artefacts');
+
+        boxes.forEach(b => {
+
+            const box = boxGroup.getArtefact(b);
+
+            if (box) {
+
+                const hit = referenceGroup.getArtefactAt([box.get('position')]);
+
+                if (typeof hit !== 'boolean' && hit.artefact) {
+
+                    gatherGroup.addArtefacts(box);
+                }
+            }
+        });
+
+        gatherGroup.setArtefacts({
+            globalAlpha: 1,
+            noDeltaUpdates: false,
+        });
+    }
+};
+
+const doMoving = (e) => {
+
+    if (e) {
+
+        e.preventDefault();
+
+        const { movementX, movementY } = e;
+
+        gatherGroup.updateArtefacts({
+            startX: movementX,
+            startY: movementY,
+        });
+
+        referenceGroup.updateArtefacts({
+            startX: movementX,
+            startY: movementY,
+        });
+    }
+}
+
+const upAction = () => {
+
+    isGathering = false;
+    isMoving = false;
+    startX = 0;
+    startY = 0;
+};
+
+scrawl.addListener('down', downAction, canvas.domElement);
+scrawl.addListener('move', moveAction, canvas.domElement);
+scrawl.addListener(['up', 'leave'], upAction, canvas.domElement);
+
+scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
+
 
 // Create the Display cycle animation
 scrawl.makeRender({
@@ -126,45 +258,6 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
 // #### Development and testing
-// Setup form observer functionality
-scrawl.makeUpdater({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: canvas.base.name,
-    targetLibrarySection: 'group',
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        imageSmoothingEnabled: ['imageSmoothingEnabled', 'boolean'],
-        imageSmoothingQuality: ['imageSmoothingQuality', 'raw'],
-    },
-});
-
-
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    if (e && e.target) {
-
-        const val = (e.target.value === '1') ? true : false;
-
-        canvas.set({ smoothFont: val });
-        canvas.setBase({ smoothFont: val });
-        textCell.set({ smoothFont: val });
-    }
-}, '#smoothFont')
-
-// @ts-expect-error
-document.querySelector('#smoothFont').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#imageSmoothingEnabled').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#imageSmoothingQuality').options.selectedIndex = 2;
-
-
 console.log(scrawl.library);

@@ -422,6 +422,17 @@ canvas9.buildCell({
     compileOrder: 0,
 });
 
+// scrawl.makeLabel({
+
+//     name: 'watermark-text',
+//     group: 'watermark-pattern-cell',
+//     text: 'Scrawl-canvas',
+//     fontString: 'bold 25px sans-serif',
+//     start: ['center', 'center'],
+//     handle: ['center', 'center'],
+//     method: 'draw',
+// });
+
 scrawl.makePhrase({
 
     name: 'watermark-text',

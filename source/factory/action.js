@@ -7,19 +7,15 @@
 // TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
 
 
-// #### Demos:
-// + [DOM-006](../../demo/dom-006.html)- Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../core/shared-vars.js';
+import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Action constructor

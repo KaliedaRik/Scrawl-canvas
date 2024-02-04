@@ -10,16 +10,14 @@
 
 
 // #### Imports
-import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
-
-import { scrawlCanvasHold } from '../core/document.js';
+import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../factory/state.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { filterEngine } from '../factory/filter-engine.js';
-import { importDomImage } from '../factory/image-asset.js';
+import { filterEngine } from '../helper/filter-engine.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
 
 import positionMix from '../mixin/position.js';
@@ -32,7 +30,7 @@ import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
 
-import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -177,6 +175,7 @@ export default function (P = Ωempty) {
 // + Be aware that entitys can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
+
 
 // #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
@@ -645,17 +644,25 @@ export default function (P = Ωempty) {
 
                     if (!this.stashedImage) {
 
-                        const newimg = this.stashedImage = document.createElement(IMG);
+                        const control = this.group.currentHost.getController();
 
-                        newimg.id = stashId;
+                        if (control) {
 
-                        newimg.onload = function () {
+                            const that = this;
 
-                            scrawlCanvasHold.appendChild(newimg);
-                            importDomImage(`#${stashId}`);
-                        };
+                            const newimg = document.createElement(IMG);
+                            newimg.id = stashId;
+                            newimg.alt = `A cached image of the ${this.name} ${this.type} entity`;
 
-                        newimg.src = filterEl.toDataURL();
+                            newimg.onload = function () {
+
+                                control.canvasHold.appendChild(newimg);
+                                that.stashedImage = newimg;
+                                importDomImage(`#${stashId}`);
+                            };
+
+                            newimg.src = filterEl.toDataURL();
+                        }
                     }
                     else this.stashedImage.src = filterEl.toDataURL();
                 }

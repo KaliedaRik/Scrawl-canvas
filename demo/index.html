@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Scrawl-canvas Demos</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -139,10 +140,10 @@
     <p>Entitys include:</p>
 
     <ul>
-      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>, <strong>Crescent</strong>) and text (<strong>Phrase</strong>).</li>
+      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>, <strong>Crescent</strong>) and text (<strong>Label</strong>, <strong>EnhancedLabel</strong>).</li>
       <ul>
         <li>Wheel entitys also include part-circle shapes such as pie slices and truncated circles.</li>
-        <li>Phrase text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated along (curved) paths.</li>
+        <li>EnhancedLabel text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated along (curved) paths.</li>
         <li>CSS font strings are supported as far as possible, including font-sizes declared using suffixes such as 'em', 'rem', 'vw', 'pt', etc.</li>
       </ul>
       <li>Path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Bezier, Cog, Line, LineSpiral, Oval, Polygon, Polyline, Quadratic, Rectangle, Spiral, Star, Tetragon</strong>).</li>
@@ -275,44 +276,30 @@
       <div class="no-padding"><img src="thumbs/canvas-015.webp" /></div>
       <div>
         <a href="canvas-015.html">Canvas 015</a>
-        Phrase entity (make, clone, method, multiline)
-        <br /><span class="responsive">Drag zones</span>
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-015.webp" /></div>
-      <div>
-        <a href="canvas-015a.html">Canvas 015a</a>
-        Phrase entity - cache output to improve render speeds
-        <br /><span class="responsive">Drag zones</span>
+        CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-016.webp" /></div>
       <div>
         <a href="canvas-016.html">Canvas 016</a>
-        Phrase entity position and font attributes; Block mimic functionality
+        CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-017.webp" /></div>
       <div>
         <a href="canvas-017.html">Canvas 017</a>
-        Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-018.webp" /></div>
-      <div>
-        <a href="canvas-018.html">Canvas 018</a>
-        Phrase entity - text along a path
+        Gradients stress test
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-019.webp" /></div>
       <div>
-        <a href="canvas-019.html">Canvas 019</a>
+        <a href="canvas-018.html">Canvas 018</a>
         Gradient and Color factories - transparency
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-019.webp" /></div>
       <div>
-        <a href="canvas-019a.html">Canvas 019a</a>
+        <a href="canvas-019.html">Canvas 019</a>
         Gradient and Color factories - transparency - alternative approach using Cells instead of images
       </div>
 
@@ -379,7 +366,7 @@
       <div class="no-padding"><img src="thumbs/canvas-029.webp" /></div>
       <div>
         <a href="canvas-029.html">Canvas 029</a>
-        Phrase entitys and gradients
+        Image smoothing
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-030.webp" /></div>
@@ -532,9 +519,8 @@
       <div class="no-padding"><img src="thumbs/canvas-052.webp" /></div>
       <div>
         <a href="canvas-052.html">Canvas 052</a>
-        Create and use a RawAsset object to modify an image asset
+        Noise asset functionality
         <br /><span class="responsive">Responsive canvas</span>
-        <br /><span class="responsive">Record video</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-053.webp" /></div>
@@ -567,60 +553,113 @@
       <div class="no-padding"><img src="thumbs/canvas-057.webp" /></div>
       <div>
         <a href="canvas-057.html">Canvas 057</a>
-        CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz
+        Create and use a RawAsset object to modify an image asset
+        <br /><span class="responsive">Responsive canvas</span>
+        <br /><span class="responsive">Record video</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-058.webp" /></div>
       <div>
         <a href="canvas-058.html">Canvas 058</a>
-        Image smoothing
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-059.png" /></div>
-      <div>
-        <a href="canvas-059.html">Canvas 059</a>
-        CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-060.webp" /></div>
-      <div>
-        <a href="canvas-060.html">Canvas 060</a>
-        Noise asset functionality
-        <br /><span class="responsive">Responsive canvas</span>
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-061.webp" /></div>
-      <div>
-        <a href="canvas-061.html">Canvas 061</a>
-        Gradients stress test
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-062.webp" /></div>
-      <div>
-        <a href="canvas-062.html">Canvas 062</a>
         Group and ungroup entitys; create a bespoke drag-drop UX
       </div>
 
-      <div class="no-padding"><img src="thumbs/canvas-063.webp" /></div>
+      <div class="no-padding"><img src="thumbs/canvas-059.webp" /></div>
       <div>
-        <a href="canvas-063.html">Canvas 063</a>
+        <a href="canvas-059.html">Canvas 059</a>
         Semi-accessible Minimap; multiple drag zones
         <br /><span class="responsive">Responsive canvas</span>
         <br /><span class="responsive">Drag zones</span>
       </div>
 
-      <div class="no-padding"><img src="thumbs/canvas-064.webp" /></div>
+      <div class="no-padding"><img src="thumbs/canvas-060.webp" /></div>
       <div>
-        <a href="canvas-064.html">Canvas 064</a>
+        <a href="canvas-060.html">Canvas 060</a>
         Animation object: gradient along a line
         <br /><span class="responsive">Responsive canvas</span>
         <br /><span class="responsive">Drag zones</span>
       </div>
 
-      <div class="no-padding"><img src="thumbs/canvas-065.png" /></div>
+      <div class="no-padding"><img src="thumbs/canvas-061.webp" /></div>
       <div>
-        <a href="canvas-065.html">Canvas 065</a>
+        <a href="canvas-061.html">Canvas 061</a>
         Wide Gamut 2D Graphics using HTML Canvas
+      </div>
+    </div>
+
+    <h2>Label and EnhancedLabel entity tests</h2>
+    
+    <div class="container">
+      <div class="no-padding"><img src="thumbs/canvas-201.webp" /></div>
+      <div>
+        <a href="canvas-201.html">Canvas 201</a>
+        Label entity (make, clone, method); Label accessible text
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-202.webp" /></div>
+      <div>
+        <a href="canvas-202.html">Canvas 202</a>
+        Label entity - basic support for non-western fonts
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-203.webp" /></div>
+      <div>
+        <a href="canvas-203.html">Canvas 203</a>
+        Label entity - underline text
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-204.webp" /></div>
+      <div>
+        <a href="canvas-204.html">Canvas 204</a>
+        Label entity - gradients and patterns
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-205.webp" /></div>
+      <div>
+        <a href="canvas-205.html">Canvas 205</a>
+        Label entity - updating font parts; experiments with variable font
+      </div>
+      
+    </div>
+
+    <h2>Phrase entity tests</h2>
+    <p>Note that Phrase entitys are deprecated and will be removed in a future release. Use Label and EnhancedLabel entitys instead.</p>
+    
+    <div class="container">
+      <div class="no-padding"><img src="thumbs/canvas-301.webp" /></div>
+      <div>
+        <a href="canvas-301.html">Canvas 301</a>
+        Phrase entity (make, clone, method, multiline)
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-301.webp" /></div>
+      <div>
+        <a href="canvas-302.html">Canvas 302</a>
+        Phrase entity - cache output to improve render speeds
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-303.webp" /></div>
+      <div>
+        <a href="canvas-303.html">Canvas 303</a>
+        Phrase entity position and font attributes
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-304.webp" /></div>
+      <div>
+        <a href="canvas-304.html">Canvas 304</a>
+        Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-305.webp" /></div>
+      <div>
+        <a href="canvas-305.html">Canvas 305</a>
+        Phrase entity - text along a path
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-306.webp" /></div>
+      <div>
+        <a href="canvas-306.html">Canvas 306</a>
+        Phrase entitys and gradients
       </div>
     </div>
 

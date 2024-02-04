@@ -18,7 +18,7 @@ const spinFactory = function (name, radius, order, duration, clockwise) {
 
     scrawl.makeGroup({
         name: `${name}-group`,
-        host: canvas.base.name,
+        host: canvas.base,
         order,
     });
 

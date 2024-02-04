@@ -27,21 +27,14 @@
 // Stack wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Stack wrapper will remove its DOM element from the document - __including all Elements and Canvases that it contains__.
 
 
-// #### Demos:
-// + All stack demos include Stack wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
-// + [DOM-001](../../demo/dom-001.html) - Loading the scrawl-canvas library using a script tag in the HTML code
-// + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
-// + [DOM-010](../../demo/dom-010.html) - Add and remove (kill) Scrawl-canvas Stack elements programmatically
-
-
 // #### Imports
 import { artefact, constructors, group, purge, stack } from '../core/library.js';
 
-import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { domShow } from '../core/document.js';
 
-import { rootElementsAdd, rootElementsIncludes, rootElementsRemove } from "../core/document-root-elements.js";
+import { rootElementsAdd, rootElementsIncludes, rootElementsRemove } from "../helper/document-root-elements.js";
 
 import { currentCorePosition, uiSubscribedElements } from '../core/user-interaction.js';
 
@@ -53,7 +46,7 @@ import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../core/shared-vars.js';
+import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Stack constructor
@@ -117,10 +110,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [cascade](../mixin/cascade.html)
-// + [dom](../mixin/dom.html)
-// + [display](../mixin/displayShape.html)
 baseMix(P);
 cascadeMix(P);
 domMix(P);

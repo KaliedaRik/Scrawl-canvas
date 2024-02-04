@@ -15,21 +15,16 @@
 // + TODO: clone functionality not yet tested. A possible use case is to clome a Loom so they share the same Shape struts, but have different Picture sources and `from/toPathStart/End` cursor values - multiple images tracked and animated.
 
 
-// #### Demos:
-// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
-// + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-
-
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -39,7 +34,7 @@ import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Loom constructor
@@ -1116,7 +1111,7 @@ P.getBoundingBox = function () {
 /* eslint-disable-next-line */
                 let [lex, ley, ew, eh, ex, ey] = tPath.getBoundingBox();
 
-                if (isNaN(lsx) || isNaN(lsy) || isNaN(sw) || isNaN(sh) || isNaN(sx) || isNaN(sy) || isNaN(lex) || isNaN(ley) || isNaN(ew) || isNaN(eh) || isNaN(ex) || isNaN(ey)) this.dirtyStart = true;
+                if (!_isFinite(lsx) || !_isFinite(lsy) || !_isFinite(sw) || !_isFinite(sh) || !_isFinite(sx) || !_isFinite(sy) || !_isFinite(lex) || !_isFinite(ley) || !_isFinite(ew) || !_isFinite(eh) || !_isFinite(ex) || !_isFinite(ey)) this.dirtyStart = true;
 
                 if (lsx == lex && lsy == ley && sw == ew && sh == eh && sx == ex && sy == ey) this.dirtyStart = true;
 
@@ -1367,7 +1362,7 @@ P.checkHit = function (items = []) {
             }
             else return false;
 
-            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+            if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
             cx = tx - x;
             cy = ty - y;

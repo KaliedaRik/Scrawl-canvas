@@ -3,13 +3,13 @@
 
 
 // #### Imports
-import { Ωempty } from '../core/utilities.js';
+import { Ωempty } from '../helper/utilities.js';
 
 import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../core/shared-vars.js';
+import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -204,6 +204,42 @@ export default function (P = Ωempty) {
                 else engine.strokeStyle = item;
             }
             else engine.strokeStyle = item.getData(entity, layer);
+        },
+
+        direction: function (item, engine) {
+            engine.direction = item;
+        },
+
+        fontKerning: function (item, engine) {
+            engine.fontKerning = item;
+        },
+
+        fontStretch: function (item, engine) {
+            engine.fontStretch = item;
+        },
+
+        fontVariantCaps: function (item, engine) {
+            engine.fontVariantCaps = item;
+        },
+
+        letterSpacing: function (item, engine) {
+            engine.letterSpacing = item;
+        },
+
+        textAlign: function (item, engine) {
+            engine.textAlign = LEFT;
+        },
+
+        textBaseline: function (item, engine) {
+            engine.textBaseline = TOP;
+        },
+
+        textRendering: function (item, engine) {
+            engine.textRendering = item;
+        },
+
+        wordSpacing: function (item, engine) {
+            engine.wordSpacing = item;
         },
     });
 

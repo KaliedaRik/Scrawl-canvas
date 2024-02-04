@@ -21,22 +21,16 @@
 // The Spring factory uses the Base mixin, thus Spring objects can be cloned and killed like other Scrawl-canvas objects. Spring objects are stored in the `scrawl.library.spring` section of the Scrawl-canvas library object.
 
 
-// #### Demos:
-// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
-// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
-
-
 // #### Imports
 import { constructors, particle } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 
-import { SPRING, T_PARTICLE, T_SPRING } from '../core/shared-vars.js';
+import { SPRING, T_PARTICLE, T_SPRING } from '../helper/shared-vars.js';
 
 
 // #### Spring constructor

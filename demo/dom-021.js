@@ -58,19 +58,16 @@ const arrow = scrawl.makeShape({
 
 // Draggable phrase entitys
 // + Will update their text values depending on the canvas shape
-const shapeLabel = scrawl.makePhrase({
+const shapeLabel = scrawl.makeLabel({
     name: 'shape-label',
     group: dragGroup,
     bringToFrontOnDrag: false,
     text: 'Canvas shape: ???',
-    width: 200,
     start: ['25%', '50%'],
-    justify: 'center',
     handle: ['center', 'center'],
-    font: '1.5rem monospace',
-    lineHeight: 1.3,
+    fontString: '24px "Roboto Sans"',
     fillStyle: 'yellow',
-    boundingBoxColor: 'yellow',
+    boundingBoxStyle: 'yellow',
     lineWidth: 1,
     method: 'fill',
 
@@ -105,8 +102,8 @@ const closeButton = scrawl.makeRectangle({
     rectangleHeight: 40,
     radius: 6,
     start: ['right', 'top'],
-    handle: ['right', 'top'],
-    offset: [-8, 8],
+    handle: ['center', 'center'],
+    offset: [-58, 28],
     method: 'fillThenDraw',
     fillStyle: 'white',
     strokeStyle: 'orange',
@@ -136,18 +133,14 @@ const closeButton = scrawl.makeRectangle({
     },
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
     name: 'close-button-label',
     group: closeButtonGroup,
     text: 'Close',
-    width: 100,
     pivot: 'close-button',
     lockTo: 'pivot',
-    handle: ['right', 'top'],
-    offsetY: 10,
-    justify: 'center',
-    font: '1.5rem Arial, sans-serif',
-    lineHeight: 1,
+    handle: ['center', 'center'],
+    fontString: '24px  "Roboto Sans"',
     fillStyle: 'black',
     method: 'fill',
 });

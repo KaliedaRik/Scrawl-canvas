@@ -9,15 +9,15 @@
 // #### Imports
 import * as library from "./library.js";
 
-import { detectBrowser, isa_obj, λnull } from "./utilities.js";
+import { detectBrowser, isa_obj, λnull } from "../helper/utilities.js";
 
 import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
-import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from './system-flags.js';
+import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from '../helper/system-flags.js';
 
-import { _computed, _floor, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
+import { _computed, _floor, _isFinite, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -270,7 +270,7 @@ export const getTouchActionChoke = function () {
 
 export const setTouchActionChoke = function (val) {
 
-    if (val && val.toFixed && !isNaN(val)) touchActionChoke = val;
+    if (_isFinite(val)) touchActionChoke = val;
 };
 
 export const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
@@ -465,7 +465,7 @@ const updateUiSubscribedElement = function (art) {
     }
 };
 
-const updatePhraseEntitys = function () {
+const updateTextBasedEntitys = function () {
 
     _values(library.entity).forEach(ent => {
 
@@ -474,6 +474,7 @@ const updatePhraseEntitys = function () {
             ent.dirtyDimensions = true;
             ent.dirtyFont = true;
         }
+        else if (FONT_USERS.includes(ent.type)) ent.recalculateFont();
     })
 };
 
@@ -544,7 +545,7 @@ const coreListenersTracker = makeAnimation({
         if (viewportChanged) {
 
             setViewportChanged(false);
-            updatePhraseEntitys();
+            updateTextBasedEntitys();
         }
     },
 });

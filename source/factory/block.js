@@ -9,19 +9,11 @@
 // + Blocks can be cloned, and killed.
 
 
-// #### Demos:
-// + [Canvas-001](../../demo/canvas-001.html) - Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Packets-001](../../demo/packets-001.html) - Save and load Scrawl-canvas entity using text packets
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
-import { doCreate, Ωempty } from '../core/utilities.js';
+import { doCreate, Ωempty } from '../helper/utilities.js';
 
-import { ENTITY, T_BLOCK } from '../core/shared-vars.js';
+import { ENTITY, T_BLOCK } from '../helper/shared-vars.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -50,8 +42,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
 

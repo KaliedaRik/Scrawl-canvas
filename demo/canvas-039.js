@@ -21,19 +21,19 @@ const mycell = canvas.buildCell({
     width: 600,
     height: 400,
 
-    startX: 300,
+    startX: 380,
     startY: 200,
 
-    handleX: 300,
+    handleX: 400,
     handleY: 200,
 
     offsetX: 0,
-    offsetY: 0,
+    offsetY: 60,
 
-    roll: 0,
-    scale: 1,
+    roll: 120,
+    scale: 0.8,
 
-    flipUpend: false,
+    flipUpend: true,
     flipReverse: false,
 
     backgroundColor: 'lightblue',
@@ -220,23 +220,23 @@ scrawl.makeUpdater({
 
 // Setup form
 // @ts-expect-error
-document.querySelector('#start_x').value = 300;
+document.querySelector('#start_x').value = 380;
 // @ts-expect-error
 document.querySelector('#start_y').value = 200;
 // @ts-expect-error
-document.querySelector('#handle_x').value = 300;
+document.querySelector('#handle_x').value = 400;
 // @ts-expect-error
 document.querySelector('#handle_y').value = 200;
 // @ts-expect-error
 document.querySelector('#offset_x').value = 0;
 // @ts-expect-error
-document.querySelector('#offset_y').value = 0;
+document.querySelector('#offset_y').value = 60;
 // @ts-expect-error
-document.querySelector('#roll').value = 0;
+document.querySelector('#roll').value = 120;
 // @ts-expect-error
-document.querySelector('#scale').value = 1;
+document.querySelector('#scale').value = 0.8;
 // @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
+document.querySelector('#upend').options.selectedIndex = 1;
 // @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
 // @ts-expect-error

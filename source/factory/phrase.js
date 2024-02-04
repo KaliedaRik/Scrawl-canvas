@@ -1,4 +1,8 @@
 // # Phrase factory
+//
+// __THE PHRASE ENTITY IS DEPRECATED__ and will be removed from the library in a future update
+// + Use the new `Label` and `EnhancedLabel` entitys instead
+//
 // Phrase entitys are graphical text rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [CanvasRenderingContext2D interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - in particular the `fillRect`, `strokeRect`, `fillText` and `strokeText` methods.
 // + Positioning functionality for the Phrase is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
 // + Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
@@ -28,74 +32,26 @@
 // Phrase entity text content is __accessible to assistive technologies__ such as screen readers, by default.
 
 
-// #### Demos:
-// + [Canvas-015](../../demo/canvas-015.html) - Phrase entity (make, clone, method, multiline)
-// + [Canvas-016](../../demo/canvas-016.html) - Phrase entity position and font attributes; Block mimic functionality
-// + [Canvas-017](../../demo/canvas-017.html) - Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
-// + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
-// + [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
-// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
-// + [Modules-001](../../demo/modules-001.html) - Scrawl-canvas modularized code - London crime charts
-
-// #### TODO:
-// The [CSS Font Loading API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) is beginning to stabilize across browsers, which means we can watch for font loads and then perform text measurements using the [TextMetrics interface](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)
-// + Currently we need to calculate font/text height using temporary DOM elements - this is both ugly and less than accurate
-// + Text metrics will give us much better height measurements, and also glyph width measurements (and thus advance values for eg text along a path)
-// + However progress with the enhanced TextMetrics is slower across browsers, meaning that any code we develop is likely to bloat the code base as we cannot (yet) afford to discard existing code.
-// + More details in Demo [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
-//
-// interface TextMetrics {
-//   // x-direction
-//   readonly attribute double width; // advance width
-//   readonly attribute double actualBoundingBoxLeft;
-//   readonly attribute double actualBoundingBoxRight;
-
-//   // y-direction
-//   readonly attribute double fontBoundingBoxAscent;
-//   readonly attribute double fontBoundingBoxDescent;
-//   readonly attribute double actualBoundingBoxAscent;
-//   readonly attribute double actualBoundingBoxDescent;
-//   readonly attribute double emHeightAscent;
-//   readonly attribute double emHeightDescent;
-//   readonly attribute double hangingBaseline;
-//   readonly attribute double alphabeticBaseline;
-//   readonly attribute double ideographicBaseline;
-// };
-
-
 // #### Imports
 import { artefact, cell, cellnames, constructors, sectionClasses, styles, stylesnames } from '../core/library.js';
 
-import { scrawlCanvasHold } from '../core/document.js';
+import { addStrings, doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../helper/utilities.js';
 
-import { addStrings, doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../core/utilities.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
-
-import { makeFontAttributes } from './font-attributes.js';
+import { makeFontAttributes } from '../untracked-factory/font-attributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+import textMix from '../mixin/text.js';
 
-import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _assign, _ceil, _floor, _isFinite, _max, _parse, _values, AUTO, BLACK, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, ENTITY, FAMILY, FULL, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SPACE, STYLE, T_PHRASE, T_SHAPE, TEXTAREA, TOP, VARIANT, WEIGHT, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
 const defaultTextForHeightMeasurements = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
-
-const fontHeightCalculator = document.createElement(DIV);
-fontHeightCalculator.style.padding = 0;
-fontHeightCalculator.style.border = 0;
-fontHeightCalculator.style.margin = 0;
-fontHeightCalculator.style.height = AUTO;
-fontHeightCalculator.style.lineHeight = 1;
-fontHeightCalculator.style.boxSizing = BORDER_BOX;
-fontHeightCalculator.innerHTML = defaultTextForHeightMeasurements;
-fontHeightCalculator.setAttribute(ARIA_HIDDEN, TRUE);
-scrawlCanvasHold.appendChild(fontHeightCalculator);
 
 const textEntityConverter = document.createElement(TEXTAREA);
 
@@ -156,10 +112,9 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
+textMix(P);
 
 P.midInitActions = function () {
 
@@ -176,11 +131,6 @@ const defaultAttributes = {
 // __width__ - Number or String
 // + In addition to normal dimensional values, Phrase entitys will accept the String label __'auto'__ (default). When set to 'auto' the width will be calculated as the natural, single line text length.
     width: AUTO,
-
-// __exposeText__ - Boolean accessibility feature
-// + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element.
-// + The element - a &lt;div> - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
-    exposeText: true,
 
 // __lineHeight__ - a positive float Number multiplier applied to the font height to add space between lines of text
     lineHeight: 1.15,
@@ -257,15 +207,6 @@ const defaultAttributes = {
 // __highlightStyle__
     highlightStyle: DEF_HIGHLIGHT,
 
-// ##### Bounding box
-// The bounding box represents the Phrase entity's collision detection ___hit area___. It contains all of the entity's text, including line spacing.
-
-// __boundingBoxColor__
-    boundingBoxColor: HALFTRANS,
-
-// __showBoundingBox__ - Boolean flag indicating whether the Phrase entity's bounding box should be displayed
-    showBoundingBox: false,
-
 // ##### Text along a path
 // Phrase entitys, alongside other artefacts, can use a [Shape entity](./shape.html) as a ___reference path___ to determine its location in the canvas display - achieved by setting the `path`, `pathPosition`, etc attributes as required.
 // + In this case, the Phrase's text will appear as boxed text, with straight lines of text.
@@ -312,11 +253,16 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Clone management
+// No additional clone functionality required
+
 
 // #### Kill management
 P.factoryKill = function () {
 
-    if (this.exposedTextHold) this.exposedTextHold.remove();
+    if (this.accessibleTextHold) this.accessibleTextHold.remove();
+
+    const hold = this.getCanvasTextHold(this.currentHost);
+    if (hold) hold.dirtyTextTabOrder = true;
 };
 
 
@@ -705,6 +651,36 @@ S.family = function (item) {
 };
 
 
+// #### Accessibility
+G.textIsAccessible = function () {
+
+    return this.textIsAccessible;
+};
+S.textIsAccessible = function (item) {
+
+    this.textIsAccessible = !!item;
+    this.dirtyText = true;
+    this.dirtyAccessibleText = true;
+};
+
+// Deprecated attribute mapped to equivalent
+G.exposeText = G.textIsAccessible;
+S.exposeText = S.textIsAccessible;
+
+G.boundingBoxStyle = function () {
+
+    return this.boundingBoxStyle;
+}
+S.boundingBoxStyle = function (item) {
+
+    this.boundingBoxStyle = item;
+}
+
+// Deprecated attribute mapped to equivalent
+G.boundingBoxColor = G.boundingBoxStyle;
+S.boundingBoxColor = S.boundingBoxStyle;
+
+
 // #### Prototype functions
 
 // `cleanDimensionsAdditionalActions` - local overwrite
@@ -855,48 +831,13 @@ P.buildText = function () {
     t = this.setSectionStyles(t);
     this.currentText = t;
 
-    if (isNaN(this.currentDimensions[0])) this.dirtyText = true;
+    if (!_isFinite(this.currentDimensions[0])) this.dirtyText = true;
     else {
 
         this.calculateTextPositions(t);
 
-        if (this.exposeText) {
-
-            if (!this.exposedTextHold) {
-
-                const myhold = document.createElement(DIV);
-                myhold.id = `${this.name}-text-hold`;
-                myhold.setAttribute(ARIA_LIVE, POLITE);
-                this.exposedTextHold = myhold;
-                this.exposedTextHoldAttached = false;
-            }
-
-            this.exposedTextHold.textContent = t;
-
-            if (!this.exposedTextHoldAttached) {
-
-                if (this.currentHost) {
-
-                    const hold = this.getCanvasTextHold(this.currentHost);
-
-                    if (hold && hold.textHold) {
-
-                        hold.textHold.appendChild(this.exposedTextHold);
-                        this.exposedTextHoldAttached = true;
-                    }
-                }
-            }
-        }
+        this.updateAccessibleTextHold();
     }
-};
-
-P.getCanvasTextHold = function (item) {
-
-    if (item && item.type == T_CELL && item.controller && item.controller.type == T_CANVAS && item.controller.textHold) return item.controller;
-
-    if (item && item.type == T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
-
-    return false;
 };
 
 // `convertTextEntityCharacters` - internal function called by `buildText`
@@ -943,6 +884,14 @@ P.calculateTextPositions = function (mytext) {
 
     const self = this,
         host = (this.group && this.group.getHost) ? this.group.getHost() : false;
+
+    let fontHeightCalculator = null;
+    if (host) {
+
+        const controller = host.getController();
+
+        if (controller) fontHeightCalculator = controller.fontHeightCalculator;
+    }
 
     const textGlyphWidths = requestArray(),
         textLines = requestArray(),
@@ -1139,9 +1088,13 @@ P.calculateTextPositions = function (mytext) {
         else {
 
             // browsers differ in the value thy return for this measurement
-            fontHeightCalculator.style.font = font;
-            item = fontHeightCalculator.clientHeight;
-            fontLibrary[font] = item;
+            if (fontHeightCalculator) {
+
+                fontHeightCalculator.style.font = font;
+                item = fontHeightCalculator.clientHeight;
+                fontLibrary[font] = item;
+            }
+            else fontLibrary[font] = 12;
         }
     });
     engine.restore();
@@ -1467,7 +1420,7 @@ P.regularStamp = function () {
                 data = preStamper(currentHost, engine, this, pos[i]);
                 stamper[method](engine, this, data);
             }
-            if (this.showBoundingBox) this.drawBoundingBox(engine);
+            if (this.showBoundingBox) this.drawBoundingBox(currentHost);
         }
     }
 };
@@ -1651,21 +1604,6 @@ P.stamper = {
         engine.fillText(...data);
         engine.globalCompositeOperation = gco;
     },
-};
-
-// `drawBoundingBox` - internal helper function called by `regularStamp`
-P.drawBoundingBox = function (engine) {
-
-    engine.save();
-    engine.strokeStyle = this.boundingBoxColor;
-    engine.lineWidth = 1;
-    engine.globalCompositeOperation = SOURCE_OVER;
-    engine.globalAlpha = 1;
-    engine.shadowOffsetX = 0;
-    engine.shadowOffsetY = 0;
-    engine.shadowBlur = 0;
-    engine.stroke(this.pathObject);
-    engine.restore();
 };
 
 // `performRotation` - internal helper function called by `regularStamp`

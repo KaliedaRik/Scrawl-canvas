@@ -16,23 +16,18 @@
 // + TODO: packet management, clone and kill functionality not yet tested. Much of the other functionality also lacks tests.
 
 
-// #### Demos:
-// + [Particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [Particles-016](../../demo/particles-016.html) - Mesh entitys
-
-
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -42,7 +37,7 @@ import hiddenElementsMix from '../mixin/hiddenDomElements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _atan2, _ceil, _isArray, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _ceil, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Mesh constructor
@@ -1100,7 +1095,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return false;
 
-        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
         return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
 

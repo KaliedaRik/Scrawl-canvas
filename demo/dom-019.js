@@ -42,23 +42,40 @@ scrawl.makeFilter({
 let myBackground;
 
 // Capture the media stream
-scrawl.importScreenCapture({
-    name: 'my-screen-capture',
-})
-.then(mycamera => {
+const requestScreenCapture = () => {
 
-    // Take the media stream and display it in our canvas element
-    myBackground = scrawl.makePicture({
+    console.log('attempting to capture screen');
 
-        name: 'background',
-        asset: mycamera.name,
-        order: 2,
+    scrawl.importScreenCapture({
+        name: 'my-screen-capture',
+    })
+    .then(mycamera => {
+    
+        requestButton.setAttribute('disabled', '');
 
-        dimensions: ['100%', '100%'],
-        copyDimensions: ['100%', '100%'],
+        // Take the media stream and display it in our canvas element
+        myBackground = scrawl.makePicture({
+
+            name: 'background',
+            asset: mycamera.name,
+            order: 2,
+
+            dimensions: ['100%', '100%'],
+            copyDimensions: ['100%', '100%'],
+        });
+
+        console.log('screen capture should be working');
+    })
+    .catch(err => {
+
+        requestButton.removeAttribute('disabled');
+        console.log(err.message);
     });
-})
-.catch(err => console.log(err.message));
+};
+
+// Attach the screen capture function to the button
+const requestButton = document.querySelector('#screen-request-button');
+scrawl.addNativeListener('click', requestScreenCapture, requestButton);
 
 
 // #### Scene animation

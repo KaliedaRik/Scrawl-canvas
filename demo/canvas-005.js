@@ -218,7 +218,7 @@ const setCursorTo = {
     pointer: () => {
         canvas.set({
             css: {
-                cursor: 'pointer',
+                cursor: 'grab',
             },
         });
     },

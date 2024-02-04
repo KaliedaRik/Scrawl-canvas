@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 302</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-301.html">&larr; Previous</a>
+    <a href="canvas-303.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 302</h1>
+  <h2>Phrase entity - cache output to improve render speeds</h2>
+
+  <canvas 
+    id="mycanvas" 
+    width="650" 
+    height="300"
+    data-scrawl-canvas
+    data-base-background-color="aliceblue"
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a phrase entity</li>
+      <li>Clone the phrase, to check the various drawing methods available</li>
+      <li>Change the state of a subset of phrases sharing the same state object</li>
+      <li>Cache the output of each Phrase entity and create Picture entitys from them</li>
+      <li>Position the picture phrases on the canvas</li>
+      <li>Check drag-and-drop functionality</li>
+    </ul>
+
+    <h4>Known issues when using this approach:</h4>
+    <ol>
+      <li>Calculating the best Picture dimensions to replicate the Phrase may take some experimentation; remember that Phrase entitys include their lineHight attribute when calculating their height value.</li>
+      <li>Any bounding box will be incorrectly placed with relation to the captured text; try using a stroke around the Picture entity instead.</li>
+      <li>Phrase entitys with dynamic fill or stroke styles (for example animated patterns or gradients) will not benefit from this approach.</li>
+      <li>The 'clear' method will not work because the cache image is captured against a transparent background.</li>
+    </ol>
+    
+    <p><b>Touch test:</b> should work as expected - though flicking a text may lead to it moving beyond the canvas border and out of sight!</p>
+
+    <p><a href="../docs/demo/canvas-302.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-302.js" type="module"></script>
+
+</body>
+
+</html>

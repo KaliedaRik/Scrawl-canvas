@@ -48,12 +48,12 @@ scrawl.makePicture({
 });
 
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'edgeDetect-label',
     text: 'Edge detect',
 
-    font: '20px sans-serif',
+    fontString: '20px sans-serif',
 
     fillStyle: 'white',
     lineWidth: 4,
@@ -70,7 +70,7 @@ scrawl.makePhrase({
     text: 'Sharpen',
     pivot: 'sharpen-filter',
 
-})
+});
 
 
 // #### Scene animation

@@ -1,27 +1,17 @@
 // # Color factory
-
-// #### Demos:
-// While any entity using a color style will make use of color functionality, the following demos are most relevant for testing this functionality
-// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
-// + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
-// + [Canvas-047](../../demo/canvas-047.html) - Easing functions for Color and Tween factories
-// + [Canvas-059](../../demo/canvas-059.html) - CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lab(), lch(), oklab(), oklch()
-// + [Filters-027](../../demo/filters-027.html) - Parameters for: reducePalette filter
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-// + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
-// + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
+// TODO - documentation!
 
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, λfirstArg, Ωempty } from '../core/utilities.js';
+import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, λfirstArg, Ωempty } from '../helper/utilities.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -779,7 +769,7 @@ P.getAlphaValue = function (alpha) {
         else a = parseFloat(alpha);
     }
     // This test should capture alpha values of `none`
-    if (isNaN(a)) a = 1;
+    if (!_isFinite(a)) a = 1;
     else if (a > 1) a = 1;
     else if ( a < 0) a = 0;
 
@@ -798,7 +788,7 @@ P.getHueValue = function (hue) {
     else hue = parseFloat(hue);
 
     // We test and correct for the hue-related `none` value here
-    if (isNaN(hue)) return 0;
+    if (!_isFinite(hue)) return 0;
 
     return correctAngle(hue);
 };
@@ -1149,7 +1139,7 @@ P.convertRGBtoHex = function (red, green, blue) {
     if (green.substring) green = parseInt(green, 10);
     if (blue.substring) blue = parseInt(blue, 10);
 
-    if (!isNaN(red) && !isNaN(green) && !isNaN(blue)) {
+    if (_isFinite(red) && _isFinite(green) && _isFinite(blue)) {
 
         const r = (_0 + (red).toString(16)).slice(-2),
             g = (_0 + (green).toString(16)).slice(-2),

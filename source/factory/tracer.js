@@ -12,25 +12,20 @@
 // = [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
 
 
-// #### Demos:
-// + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-
-
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _piDouble, BLACK, ENTITY, T_TRACER } from '../core/shared-vars.js';
+import { _isArray, _isFinite, _piDouble, BLACK, ENTITY, T_TRACER } from '../helper/shared-vars.js';
 
 
 // #### Tracer constructor
@@ -218,7 +213,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return false;
 
-        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
         const v = requestVector(currentStampPosition).vectorSubtract(test);
 

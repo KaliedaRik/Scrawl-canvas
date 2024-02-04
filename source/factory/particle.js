@@ -23,34 +23,19 @@
 // As part of a particle animation many thousands of Particle objects may need to be generated, used and then discarded. Scrawl-canvas attempts to make this more efficient by pooling particle objects so that they can be reused as the animation progresses.
 
 
-// #### Demos:
-// + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
-// + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
-// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
-// + [particles-004](../../demo/particles-004.html) - Emit particles along the length of a path
-// + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
-// + [particles-006](../../demo/particles-006.html) - Fixed number of particles in a field; preAction and postAction functionality
-// + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
-// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
-// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
-// + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-
-
 // #### Imports
 import { constructors, force, spring, springnames } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseParticleHistory, requestParticleHistory } from './particle-history.js';
+import { releaseParticleHistory, requestParticleHistory } from '../untracked-factory/particle-history.js';
 
-import { makeVector, releaseVector, requestVector } from './vector.js';
+import { makeVector, releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 // The Particle object uses the base mixin, thus it supports all the normal Scrawl-canvas functionality such as `get`, `set`, `setDelta`, `clone`, `kill`, etc.
 import baseMix from '../mixin/base.js';
 
-import { _isArray, BLACK, EULER, PARTICLE, T_PARTICLE } from '../core/shared-vars.js';
+import { _isArray, BLACK, EULER, PARTICLE, T_PARTICLE } from '../helper/shared-vars.js';
 
 
 // #### Particle constructor

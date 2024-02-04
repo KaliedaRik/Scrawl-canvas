@@ -598,6 +598,28 @@ interface StylesMixinFunctions {
 
 
 
+// Text mixin
+// -------------------------------------
+interface TextMixinDeltaInputs {
+    boundingBoxLineWidth?: number;
+}
+
+interface TextMixinInputs {
+    accessibleText?: string;
+    accessibleTextOrder?: number;
+    accessibleTextPlaceholder?: string;
+    boundingBoxStyle?: StylesInstance | string;
+    showBoundingBox?: boolean;
+    textIsAccessible?: boolean;
+}
+
+interface TextMixinFunctions {
+    getAccessibleText: () => string;
+    convertTextEntityCharacters: (item: string) => string;
+}
+
+
+
 // Tween mixin
 // -------------------------------------
 interface TweenMixinDeltaInputs {
@@ -1517,6 +1539,50 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 
 
 
+// LabelInstance factory
+// -------------------------------------
+interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
+    letterSpacing?: string | number;
+    underlineGap?: number;
+    underlineOffset?: number;
+    underlineWidth?: number;
+    wordSpacing?: string | number;
+}
+
+interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelFactoryDeltaInputs {
+    delta?: LabelFactoryDeltaInputs;
+    direction?: string;
+    fontKerning?: string;
+    fontStretch?: string;
+    fontSize?: string | number;
+    fontVariant?: string;
+    fontWeight?: string;
+    fontStyle?: string;
+    fontString?: string;
+    fontVariantCaps?: string;
+    includeUnderline?: boolean;
+    text?: string;
+    textAlign?: string;
+    textBaseline?: string;
+    textRendering?: string;
+    underlineStyle?: StylesInstance | string;
+}
+
+interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
+
+interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
+    clone: (item?: LabelFactoryInputs) => LabelInstance;
+    saveAsPacket: (item?: LabelSaveInputs | boolean) => string;
+    set: (item?: LabelFactoryInputs) => LabelInstance;
+    setDelta: (item?: LabelFactoryDeltaInputs) => LabelInstance;
+    simpleStamp: (host: CellInstance, items?: LabelFactoryInputs) => void;
+    recalculateFont: () => void;
+}
+
+interface LabelInstance extends LabelFactoryInputs, LabelFactoryFunctions {}
+
+
+
 
 // LineInstance factory
 // -------------------------------------
@@ -1878,15 +1944,13 @@ type PhraseVariant = 'normal' | 'small-caps';
 
 type PhraseWeight = 'normal' | 'bold' | 'lighter' | 'bolder' | number;
 
-type PhraseStretch = 'normal' | 'semi-condensed' | 'condensed' | 'extra-condensed' | 'ultra-condensed' | 'semi-expanded' | 'expanded' | 'extra-expanded' | 'ultra-expanded';
-
 type PhraseSize = 'xx-small' | 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'xx-large' | 'xxx-large' | 'smaller' | 'larger' | string;
 
 type PhraseSizeMetric = 'em' | 'rem' | 'lh' | 'rlh' | 'ex' | 'cap' | 'ch' | 'ic' | '%'| 'vw' | 'vh' | 'vmax' | 'vmin' | 'vi' | 'vb' | 'in' | 'cm' | 'mm' | 'Q' | 'pc' | 'pt' | 'px';
 
-type PhaseFamily = 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui' | 'math' | 'emoji' | 'fangsong' | string;
+type PhraseFamily = 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui' | 'math' | 'emoji' | 'fangsong' | string;
 
-interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
     letterSpacing?: number;
     lineHeight?: number;
     overlinePosition?: number;
@@ -1897,37 +1961,40 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
     underlineWidth?: number;
 }
 
-interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, PhraseFactoryDeltaInputs {
+interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, PhraseFactoryDeltaInputs {
     addTextPathRoll?: boolean;
     boundingBoxColor?: string;
+    breakOnlyOnBreakGlyphs?: boolean;
     delta?: PhraseFactoryDeltaInputs;
     exposeText?: boolean;
-    family?: PhaseFamily;
+    family?: PhraseFamily;
     font?: string;
     highlightStyle?: string;
+    isVerticalText?: boolean;
     justify?: PhraseJustifyValues;
     noOverlineGlyphs?: string;
     noUnderlineGlyphs?: string;
     overlineStyle?: string;
     sectionClassMarker?: string;
-    showBoundingBox?: boolean;
     size?: PhraseSize;
     sizeMetric?: PhraseSizeMetric;
-    stretch?: PhraseStretch;
+    sizeValue?: number;
     style?: PhraseStyle;
     text?: string;
     textPath?: ShapeInstance | string;
     textPathDirection?: PhraseTextPathDirection;
     textPathLoop?: boolean;
+    treatAsBreakGlyphs?: string[];
     treatWordAsGlyph?: boolean;
     underlineStyle?: string;
     variant?: PhraseVariant;
     weight?: PhraseWeight;
+    wordSpacing?: number;
 }
 
 interface PhraseSaveInputs extends PhraseFactoryInputs, SaveInputs {}
 
-interface PhraseFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+interface PhraseFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
     addSectionClass: (label: string, obj: CommonObjectInput) => PhraseInstance;
     clone: (item?: PhraseFactoryInputs) => PhraseInstance;
     removeSectionClass: (label: string) => PhraseInstance;
@@ -2450,7 +2517,7 @@ interface StateFactoryDeltaInputs {
 }
 
 interface StateFactoryInputs {
-    fillStyle?: any;
+    fillStyle?: StylesInstance | string;
     filter?: string;
     font?: string;
     globalCompositeOperation?: GlobalCompositeOperationValues;
@@ -2460,7 +2527,7 @@ interface StateFactoryInputs {
     lineDash?: number[];
     lineJoin?: LineJoinValues;
     shadowColor?: string;
-    strokeStyle?: any;
+    strokeStyle?: StylesInstance | string;
 }
 
 interface StateFactoryFunctions extends BaseMixinFunctions {}
@@ -2975,6 +3042,7 @@ export function makeForce(items: ForceFactoryInputs): ForceInstance;
 export function makeGradient(items: GradientFactoryInputs): GradientInstance;
 export function makeGrid(items: GridFactoryInputs): GridInstance;
 export function makeGroup(items: GroupFactoryInputs): GroupInstance;
+export function makeLabel(items: LabelFactoryInputs): LabelInstance;
 export function makeLine(items: LineFactoryInputs): LineInstance;
 export function makeLineSpiral(items: LineSpiralFactoryInputs): LineSpiralInstance;
 export function makeLoom(items: LoomFactoryInputs): LoomInstance;
@@ -3069,6 +3137,8 @@ export function stopCoreAnimationLoop(): void;
 export function stopCoreListeners(): void;
 
 export function forceUpdate(): void;
+
+export function recalculateFonts(item?: number): void;
 
 
 

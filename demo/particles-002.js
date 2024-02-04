@@ -65,11 +65,11 @@ const picture = scrawl.makePicture({
 // @ts-expect-error
 }).set(commonValues);
 
-const phrase = scrawl.makePhrase({
+const phrase = scrawl.makeLabel({
     name: 'particle-phrase-entity',
     text: 'Hello',
-    font: 'bold 40px Garamond, serif',
-    exposeText: false,
+    fontString: 'bold 40px Garamond, serif',
+    textIsAccessible: false,
 // @ts-expect-error
 }).set(commonValues);
 

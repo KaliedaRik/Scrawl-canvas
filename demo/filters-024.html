@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Filters 024</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -45,6 +46,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="filters-023.html">&larr; Previous</a>
+    <a href="filters-025.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 024</h1>
   <h2>Parameters for: curveWeights filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
@@ -66,21 +71,25 @@
 
   <div class="grid">
     
-    <canvas 
-      id="output-canvas" 
-      width="400" 
-      height="400"
-      data-scrawl-canvas
-    ></canvas>
-
-    <div>    
+    <div>
       <canvas 
-        id="channel-weights-canvas" 
-        width="360" 
-        height="360"
-        data-base-background-color="beige"
-      data-scrawl-canvas
+        id="output-canvas" 
+        width="400" 
+        height="400"
+        data-scrawl-canvas
       ></canvas>
+    </div>
+
+    <div>
+      <div>
+        <canvas 
+          id="channel-weights-canvas" 
+          width="360" 
+          height="360"
+          data-base-background-color="beige"
+        data-scrawl-canvas
+        ></canvas>
+      </div>
 
       <div class="channel-buttons">
         <button id="black" class="channel-selector selected">Mixed channels</button>

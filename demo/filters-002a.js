@@ -11,7 +11,6 @@ import { reportSpeed } from './utilities.js';
 // Create some convenience shortcut variables to various sections of the Scrawl-canvas library
 const canvas = scrawl.library.canvas.mycanvas,
     filters = scrawl.library.filter,
-    groups = scrawl.library.group,
     entitys = scrawl.library.entity;
 
 
@@ -64,7 +63,7 @@ scrawl.makeFilter({
 const originals = scrawl.makeGroup({
 
     name: 'originals',
-    host: canvas.base.name,
+    host: canvas.base,
 });
 
 scrawl.makePicture({
@@ -156,7 +155,7 @@ scrawl.makePicture({
 const cache = scrawl.makeGroup({
 
     name: 'cache',
-    host: canvas.base.name,
+    host: canvas.base,
 });
 
 const createCachePictures = () => {
@@ -187,16 +186,16 @@ const createCachePictures = () => {
 const addLabels = () => {
 
     // The Phrase entitys can go in the canvas element's default Group. To make sure they display correctly (after the Picture entitys have been stamped) we'll set the default Group's order attribute to a higher value
-    groups[canvas.base.name].set({
+    canvas.get('baseGroup').set({
         order: 1,
     });
 
-    scrawl.makePhrase({
+    scrawl.makeLabel({
 
         name: 'red-label',
         text: 'Red',
 
-        font: '20px sans-serif',
+        fontString: '20px sans-serif',
 
         fillStyle: 'white',
         lineWidth: 4,

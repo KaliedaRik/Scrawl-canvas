@@ -13,33 +13,23 @@
 // NOTE: __Groups are NOT used to position a set of artefacts in the display__ - they have no positioning functionality, which is instead handled by the artefact objects themselves. To position and move a collection of artefacts around the display, choose one of them to act as a a reference, and then __pivot__ or __mimic__ other artefacts to that reference. When you position or animate the reference artefact, all the other artefacts will position/move with it. See Demo [Canvas-002](../../demo/canvas-002.html) for an example.
 
 
-// #### Demos:
-// + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier Shapes - control lock alternatives
-// + [Canvas-020](../../demo/canvas-020.html) - Testing createImageFromXXX functionality
-// + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
-// + [DOM-008](../../demo/dom-008.html) - 3d animated cube
-// + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
-
-
 // #### Imports
 import { artefact, cell, constructors, entity, group } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
-import { scrawlCanvasHold } from '../core/document.js';
+import { filterEngine } from '../helper/filter-engine.js';
 
-import { filterEngine } from './filter-engine.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 
-import { importDomImage } from './image-asset.js';
-
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../core/shared-vars.js';
+import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
 
 
 // #### Group constructor
@@ -510,7 +500,7 @@ P.applyFilters = function (myCell) {
 };
 
 
-// `stashAction` - internal function which creates an ImageAsset object (and, as determined by the setting of the Group's `stashOutputAsAsset` flag, an &lt;img> element which gets attached to the DOM document in the `scrawlCanvasHold` hidden &lt;div> element) from the Group's entity's output.
+// `stashAction` - internal function which creates an ImageAsset object (and, as determined by the setting of the Group's `stashOutputAsAsset` flag, an &lt;img> element which gets attached to the host &lt;canvas> element's `canvasHold` hidden &lt;div> element) from the Group's entity's output.
 //
 // NOTE: the `stashOutput` and `stashOutputAsAsset` flags are not Group object attributes. They are set on the group as a result of invoking the `scrawl.createImageFromGroup` function, and will be set to false as soon as the `Group.stashAction` function runs (in other words, stashing a Group's output is a one-off operation).
 P.stashAction = function (img) {
@@ -542,17 +532,26 @@ P.stashAction = function (img) {
 
             if (!this.stashedImage) {
 
-                const newimg = this.stashedImage = document.createElement('img');
+                const host = this.currentHost;
+                const control = (host) ? host.getController() : null;
 
-                newimg.id = stashId;
+                if (control) {
 
-                newimg.onload = function () {
+                    const that = this;
 
-                    scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${stashId}`);
-                };
+                    const newimg = document.createElement(IMG);
+                    newimg.id = stashId;
+                    newimg.alt = `A cached image of the ${this.name} Group of entitys`;
 
-                newimg.src = myElement.toDataURL();
+                    newimg.onload = function () {
+
+                        control.canvasHold.appendChild(newimg);
+                        that.stashedImage = newimg;
+                        importDomImage(`#${stashId}`);
+                    };
+
+                    newimg.src = myElement.toDataURL();
+                }
             }
             else this.stashedImage.src = myElement.toDataURL();
         }
@@ -786,6 +785,20 @@ P.clearFiltersFromEntitys = function () {
         ent = entity[name];
 
         if (ent && ent.clearFilters) ent.clearFilters();
+    });
+    return this;
+};
+
+// `recalculateFonts` - gets Label and EnhancedLabel entitys in the Group to recalculate their font/text dimensions.
+P.recalculateFonts = function () {
+
+    let ent;
+
+    this.artefacts.forEach(name => {
+
+        ent = entity[name];
+
+        if (ent && ent.recalculateFont) ent.recalculateFont();
     });
     return this;
 };

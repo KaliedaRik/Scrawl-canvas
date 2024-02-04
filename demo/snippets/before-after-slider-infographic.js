@@ -362,7 +362,7 @@ const linkFactory = function (scrawl, items, canvas, linkTextGroup, colors) {
         handleY: justify,
         justify,
 
-        font: '16px Arial, sans-serif',
+        font: '24px Arial, sans-serif',
         lineHeight: 1,
         fillStyle: colors.link,
 

@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Filters 027</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -25,6 +26,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="filters-026.html">&larr; Previous</a>
+    <a href="filters-028.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 027</h1>
   <h2>Parameters for: reducePalette filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
@@ -84,20 +89,24 @@
   </div>
 
   <div class="canvas-grid">
-    <canvas 
-      id="canvas-1" 
-      width="400" 
-      height="400"
-      data-scrawl-canvas
-      data-base-background-color="red"
-    ></canvas>
-    <canvas 
-      id="canvas-2" 
-      width="400" 
-      height="400"
-      data-scrawl-canvas
-      data-base-background-color="red"
-    ></canvas>
+    <div>
+      <canvas 
+        id="canvas-1" 
+        width="400" 
+        height="400"
+        data-scrawl-canvas
+        data-base-background-color="red"
+      ></canvas>
+    </div>
+    <div>
+      <canvas 
+        id="canvas-2" 
+        width="400" 
+        height="400"
+        data-scrawl-canvas
+        data-base-background-color="red"
+      ></canvas>
+    </div>
   </div>
 
   <p id="reportmessage"></p>

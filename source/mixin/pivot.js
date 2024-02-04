@@ -5,9 +5,9 @@
 // #### Imports
 import { artefact, asset } from '../core/library.js';
 
-import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { CORNER_LABELS, PIVOT, START, T_BEZIER, T_CELL, T_LINE, T_POLYLINE, T_QUADRATIC, ZERO_STR } from '../core/shared-vars.js';
+import { CORNER_LABELS, PIVOT, START, T_BEZIER, T_CELL, T_LINE, T_POLYLINE, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function

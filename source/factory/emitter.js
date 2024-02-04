@@ -12,39 +12,27 @@
 // + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
 
 
-// #### Demos:
-// + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
-// + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
-// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
-// + [particles-004](../../demo/particles-004.html) - Emit particles along the length of a path
-// + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
-// + [particles-006](../../demo/particles-006.html) - Fixed number of Particles in a field; preAction and postAction functionality
-// + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-// + [delaunator-001](../../demo/delaunator-001.html) - Delauney triangulation and Voronoi cell visualisation
-
-
 // #### Imports
 import { artefact, constructors, world } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 
 import { releaseParticle, requestParticle } from './particle.js';
 
-import { releaseCell,  requestCell } from './cell-fragment.js';
+import { releaseCell,  requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { makeVector, releaseVector, requestVector } from './vector.js';
+import { makeVector, releaseVector, requestVector } from '../untracked-factory/vector.js';
 
-import { releaseCoordinate, requestCoordinate } from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
 import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _now, _floor, _random, _piDouble, _abs, _tick, _isArray, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../core/shared-vars.js';
+import { _abs, _floor, _isArray, _isFinite, _now, _piDouble, _random, _tick, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../helper/shared-vars.js';
 
 
 // #### Emitter constructor
@@ -925,7 +913,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return false;
 
-        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
         const v = requestVector(currentStampPosition).vectorSubtract(test);
 

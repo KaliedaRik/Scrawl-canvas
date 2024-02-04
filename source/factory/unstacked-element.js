@@ -1,28 +1,19 @@
 // # UnstackedElement factory
-
 // ___To be aware - this artefact factory is HIGHLY EXPERIMENTAL; its API will be subject to short-notice breaking changes as we amend and inprove the artefact's functionality___
-
+//
 // TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
 
 
 // ## Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, xt, Ωempty } from '../helper/utilities.js';
 
 import { makeCanvas } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_NAME, HEIGHT, RELATIVE, STATIC, T_UNSTACKED_ELEMENT, UE_INCLUDED_STYLES, UE_MIMICKED_STYLES, UNSTACKEDELEMENT, WIDTH, Z_INDEX } from '../core/shared-vars.js';
+import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_NAME, HEIGHT, RELATIVE, STATIC, T_UNSTACKED_ELEMENT, UE_INCLUDED_STYLES, UE_MIMICKED_STYLES, UNSTACKEDELEMENT, WIDTH, Z_INDEX } from '../helper/shared-vars.js';
 
 
 // ## UnstackedElement constructor

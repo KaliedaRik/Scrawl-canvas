@@ -5,17 +5,17 @@
 
 
 // #### Imports
-import { mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { mergeOver, xt, Ωempty } from '../helper/utilities.js';
 
 import { asset } from '../core/library.js';
 
-import { _now } from '../core/shared-vars.js';
+import { _now } from '../helper/shared-vars.js';
 
-import { importImage } from '../factory/image-asset.js';
-import { importVideo } from '../factory/video-asset.js';
-import { importSprite } from '../factory/sprite-asset.js';
+import { importImage } from '../asset-management/image-asset.js';
+import { importVideo } from '../asset-management/video-asset.js';
+import { importSprite } from '../asset-management/sprite-asset.js';
 
-import { ADD_TEXT_TRACK, CAN_PLAY_TYPE, CAPTURE_STREAM, DEFAULT, FAST_SEEK, LOAD, PAUSE, PLAY, SET_MEDIA_KEYS, SET_SINK_ID, T_SPRITE, T_VIDEO } from '../core/shared-vars.js';
+import { ADD_TEXT_TRACK, CAN_PLAY_TYPE, CAPTURE_STREAM, DEFAULT, FAST_SEEK, LOAD, PAUSE, PLAY, SET_MEDIA_KEYS, SET_SINK_ID, T_SPRITE, T_VIDEO } from '../helper/shared-vars.js';
 
 
 // #### Export function

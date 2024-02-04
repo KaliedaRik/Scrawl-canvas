@@ -31,33 +31,22 @@
 // Scrawl-canvas (partially) disables Cell wrapper `packet` functionality. ___Cell wrappers cannot be cloned.___ They can be killed, either using their `kill` function or by invoking their Canvas wrapper controller's `killCell` function.
 
 
-// #### Demos:
-// + All canvas and packets demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
-// + [Canvas-036](../../demo/canvas-036.html) - Cell artefact-like positional functionality
-// + [Canvas-039](../../demo/canvas-039.html) - Detecting mouse/pointer cursor movements across a non-base Cell
-// + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
-
-
 // #### Imports
 import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
-
-import { scrawlCanvasHold } from '../core/document.js';
+import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 
-import { makeCoordinate, releaseCoordinate, requestCoordinate } from './coordinate.js';
+import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
-import { filterEngine } from './filter-engine.js';
-import { importDomImage } from './image-asset.js';
+import { filterEngine } from '../helper/filter-engine.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
@@ -74,7 +63,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
+import { _isFinite, _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Cell constructor
@@ -713,15 +702,18 @@ P.installElement = function (element, colorSpace = SRGB) {
 // `updateControllerCells` - internal function: ask the Cell's Canvas controller to review/update its cells data
 P.updateControllerCells = function () {
 
+    const controller = this.getController();
+    if (controller) controller.dirtyCells = true;
+};
+
+// `getController` - internal function: ask the Cell's Canvas controller to review/update its cells data
+P.getController = function () {
+
     const { controller, currentHost } = this;
 
-    if (controller) controller.dirtyCells = true;
-    else if (currentHost) {
-
-        const host = currentHost.getHost();
-
-        if (host) host.dirtyCells = true;
-    }
+    if (controller) return controller;
+    if (currentHost) return currentHost.getHost();
+    return null;
 };
 
 // `clear`
@@ -1004,19 +996,19 @@ P.stashOutputAction = function () {
         if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
 
             if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
-            if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
+            if (!_isFinite(stashWidth) || stashWidth <= 0) stashWidth = 1;
             if (stashWidth > cellWidth) stashWidth = cellWidth;
 
             if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
-            if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
+            if (!_isFinite(stashHeight) || stashHeight <= 0) stashHeight = 1;
             if (stashHeight > cellHeight) stashHeight = cellHeight;
 
             if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
-            if (isNaN(stashX) || stashX < 0) stashX = 0;
+            if (!_isFinite(stashX) || stashX < 0) stashX = 0;
             if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
 
             if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
-            if (isNaN(stashY) || stashY < 0) stashY = 0;
+            if (!_isFinite(stashY) || stashY < 0) stashY = 0;
             if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
         }
 
@@ -1043,17 +1035,25 @@ P.stashOutputAction = function () {
 
             if (!this.stashedImage) {
 
-                const newimg = this.stashedImage = document.createElement(IMG);
+                const control = this.getController();
 
-                newimg.id = stashId;
+                if (control) {
 
-                newimg.onload = function () {
+                    const that = this;
 
-                    scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${stashId}`);
-                };
+                    const newimg = document.createElement(IMG);
+                    newimg.id = stashId;
+                    newimg.alt = `A cached image of the ${this.name} Cell`;
 
-                newimg.src = sourcecanvas.toDataURL();
+                    newimg.onload = function () {
+
+                        control.canvasHold.appendChild(newimg);
+                        that.stashedImage = newimg;
+                        importDomImage(`#${stashId}`);
+                    };
+
+                    newimg.src = sourcecanvas.toDataURL();
+                }
             }
             else this.stashedImage.src = sourcecanvas.toDataURL();
 
@@ -1078,7 +1078,7 @@ P.getHost = function () {
     return false;
 };
 
-// `updateBaseHere` - Internal function - keeping the Canvas object's 'base' Cell's `.here` attribute up-to-date with accurate mouse/pointer/touch cursor data
+// `updateBaseHere` - Internal function called by a Canvas wrapper on its base Cell
 P.updateBaseHere = function (controllerHere, fit) {
 
     if (this.isBase) {

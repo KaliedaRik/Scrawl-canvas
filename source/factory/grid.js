@@ -12,23 +12,17 @@
 // + Grids can be cloned, and killed.
 
 
-// #### Demos:
-// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
-// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
-
-
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../core/shared-vars.js';
+import { _isArray, _isFinite, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../helper/shared-vars.js';
 
 
 // #### Grid constructor
@@ -86,8 +80,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
 baseMix(P);
 entityMix(P);
 
@@ -744,7 +736,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return [false];
 
-        if (!x.toFixed || !y.toFixed || isNaN(x) || isNaN(y)) return [false];
+        if (!_isFinite(x) || !_isFinite(y)) return [false];
 
         return [true, x, y];
     }
