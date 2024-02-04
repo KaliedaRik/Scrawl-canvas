@@ -69,6 +69,7 @@ const build = function (items) {
             name: name('title'),
             group: group,
             order: 1,
+            accessibleTextOrder: 1,
 
             text: 'No title',
 
@@ -86,6 +87,7 @@ const build = function (items) {
 
             name: name('subtitle'),
             text: 'No data selected',
+            accessibleTextOrder: 2,
 
             startY: '9%',
             size: '1.2rem',
@@ -98,6 +100,7 @@ const build = function (items) {
             name: name('y-top'),
             group: group,
             order: 1,
+            accessibleTextOrder: 6,
 
             text: '0',
             accessibleText: 'To § crimes',
@@ -114,7 +117,8 @@ const build = function (items) {
 
             name: name('y-bottom'),
             startY: '92%',
-            accessibleText: 'From § crimes',
+            accessibleText: 'Y axis. From § crimes',
+            accessibleTextOrder: 5,
         });
 
         const xLabelLeft = yLabelTop.clone({
@@ -122,7 +126,8 @@ const build = function (items) {
             name: name('x-left'),
             startX: '10%',
             startY: '96%',
-            accessibleText: 'From year §',
+            accessibleText: 'X axis. From year §',
+            accessibleTextOrder: 3,
         });
 
         const xLabelRight = xLabelLeft.clone({
@@ -130,6 +135,7 @@ const build = function (items) {
             name: name('x-right'),
             startX: '89%',
             accessibleText: 'To year §',
+            accessibleTextOrder: 4,
         });
 
         scrawl.makeLine({

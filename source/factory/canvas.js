@@ -174,14 +174,6 @@ const Canvas = function (items = Ωempty) {
 
         const navigation = document.createElement(NAV);
         navigation.id = `${this.name}-navigation`;
-        navigation.style.width = PX0;
-        navigation.style.height = PX0;
-        navigation.style.maxWidth = PX0;
-        navigation.style.maxHeight = PX0;
-        navigation.style.border = PX0;
-        navigation.style.padding = PX0;
-        navigation.style.margin = PX0;
-        navigation.style.overflow = HIDDEN;
         navigation.setAttribute(ARIA_LIVE, POLITE);
         navigation.setAttribute(ARIA_BUSY, 'false');
         this.navigation = navigation;
@@ -191,14 +183,6 @@ const Canvas = function (items = Ωempty) {
 
         const textHold = document.createElement(DIV);
         textHold.id = `${this.name}-text-hold`;
-        textHold.style.width = PX0;
-        textHold.style.height = PX0;
-        textHold.style.maxWidth = PX0;
-        textHold.style.maxHeight = PX0;
-        textHold.style.border = PX0;
-        textHold.style.padding = PX0;
-        textHold.style.margin = PX0;
-        textHold.style.overflow = HIDDEN;
         textHold.setAttribute(ARIA_LIVE, POLITE);
         textHold.setAttribute(ARIA_BUSY, 'false');
         this.textHold = textHold;
@@ -208,16 +192,8 @@ const Canvas = function (items = Ωempty) {
 
         const canvasHold = document.createElement('div');
         canvasHold.id = `${this.name}-canvas-hold`;
-        canvasHold.style.width = PX0;
-        canvasHold.style.height = PX0;
-        canvasHold.style.maxWidth = PX0;
-        canvasHold.style.maxHeight = PX0;
-        canvasHold.style.border = PX0;
-        canvasHold.style.padding = PX0;
-        canvasHold.style.margin = PX0;
-        canvasHold.style.overflow = HIDDEN;
-        canvasHold.setAttribute(ARIA_LIVE, POLITE);
-        canvasHold.setAttribute(ARIA_BUSY, 'false');
+        canvasHold.style.display = NONE;
+        canvasHold.setAttribute(ARIA_HIDDEN, TRUE);
         this.canvasHold = canvasHold;
         el.appendChild(canvasHold);
 
@@ -236,48 +212,25 @@ const Canvas = function (items = Ωempty) {
 
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
-        ariaLabel.style.width = PX0;
-        ariaLabel.style.height = PX0;
-        ariaLabel.style.maxWidth = PX0;
-        ariaLabel.style.maxHeight = PX0;
-        ariaLabel.style.border = PX0;
-        ariaLabel.style.padding = PX0;
-        ariaLabel.style.margin = PX0;
-        ariaLabel.style.overflow = HIDDEN;
         ariaLabel.setAttribute(ARIA_LIVE, POLITE);
         this.ariaLabelElement = ariaLabel;
-        el.insertAdjacentElement('afterend', ariaLabel);
+        el.appendChild(ariaLabel);
         el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
 
         const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
-        ariaDescription.style.width = PX0;
-        ariaDescription.style.height = PX0;
-        ariaDescription.style.maxWidth = PX0;
-        ariaDescription.style.maxHeight = PX0;
-        ariaDescription.style.border = PX0;
-        ariaDescription.style.padding = PX0;
-        ariaDescription.style.margin = PX0;
-        ariaDescription.style.overflow = HIDDEN;
         ariaDescription.setAttribute(ARIA_LIVE, POLITE);
         this.ariaDescriptionElement = ariaDescription;
-        el.insertAdjacentElement('afterend', ariaDescription);
+        el.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
 
         const fontSizeCalculator = document.createElement(DIV);
         fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
-        fontSizeCalculator.style.width = PX0;
-        fontSizeCalculator.style.height = PX0;
-        fontSizeCalculator.style.maxWidth = PX0;
-        fontSizeCalculator.style.maxHeight = PX0;
-        fontSizeCalculator.style.border = PX0;
-        fontSizeCalculator.style.padding = PX0;
-        fontSizeCalculator.style.margin = PX0;
-        fontSizeCalculator.style.overflow = HIDDEN;
+        fontSizeCalculator.style.display = NONE;
         fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);
         this.fontSizeCalculator = fontSizeCalculator;
         this.fontSizeCalculatorValues = _computed(fontSizeCalculator);
-        el.insertAdjacentElement('afterend', fontSizeCalculator);
+        el.appendChild(fontSizeCalculator);
 
         this.cleanAria();
     }

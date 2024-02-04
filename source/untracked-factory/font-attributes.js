@@ -410,7 +410,7 @@ P.calculateSize = function () {
             [parentSize, rootSize, viewportWidth, viewportHeight] = host.getComputedFontSizes();
         }
 
-        if (isNaN(sizeValue)) sizeValue = 12;
+        if (!_isFinite(sizeValue)) sizeValue = 12;
 
         let res = parentSize;
 

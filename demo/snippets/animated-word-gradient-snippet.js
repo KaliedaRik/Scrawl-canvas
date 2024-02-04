@@ -67,12 +67,6 @@ export default function (scrawl, el) {
         const backgroundColor = compStyles.backgroundColor || '#f2f2f2',
             fontString = compStyles.font || `${(compStyles.fontStyle != 'normal') ? compStyles.fontStyle + ' ' : ''}${(compStyles.fontVariant != 'normal') ? compStyles.fontVariant + ' ' : ''}${compStyles.fontSize} ${compStyles.fontFamily}` || '20px sans-serif';
 
-        const processText = t => {
-            t = t.replace(/<canvas.*<\/canvas>/gi, '');
-            t = t.replace(/<div.*<\/div>/gi, '');
-            return t;
-        }
-
         canvas.set({
             backgroundColor,
         });
@@ -108,7 +102,7 @@ export default function (scrawl, el) {
             name: `${name}-text`,
             group,
             font: fontString,
-            text: processText(el.innerHTML),
+            text: el.innerText,
             fillStyle: `${name}-gradient`,
 
             // This is a bad fix for mis-aligned text - a better solution would be to expose startX and startY so coder could set them individually for each instance where this snippet is used, so the replacement canvas text can line up exactly with its surrounding text

@@ -1111,7 +1111,7 @@ P.getBoundingBox = function () {
 /* eslint-disable-next-line */
                 let [lex, ley, ew, eh, ex, ey] = tPath.getBoundingBox();
 
-                if (!_isFinite(lsx) || !_isFinite(lsy) || !_isFinite(sw) || !_isFinite(sh) || !_isFinite(sx) || isNaN(sy) || !_isFinite(lex) || !_isFinite(ley) || !_isFinite(ew) || !_isFinite(eh) || !_isFinite(ex) || !_isFinite(ey)) this.dirtyStart = true;
+                if (!_isFinite(lsx) || !_isFinite(lsy) || !_isFinite(sw) || !_isFinite(sh) || !_isFinite(sx) || !_isFinite(sy) || !_isFinite(lex) || !_isFinite(ley) || !_isFinite(ew) || !_isFinite(eh) || !_isFinite(ex) || !_isFinite(ey)) this.dirtyStart = true;
 
                 if (lsx == lex && lsy == ley && sw == ew && sh == eh && sx == ex && sy == ey) this.dirtyStart = true;
 

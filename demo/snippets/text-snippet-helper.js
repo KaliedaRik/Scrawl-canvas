@@ -138,7 +138,6 @@ export const getSnippetData = (snippet, scrawl) => {
 
     const processText = t => {
         t = t.replace(/<canvas.*<\/canvas>/gi, '');
-        t = t.replace(/<div.*<\/div>/gi, '');
         t = t.replace(/<button.*<\/button>/gi, '');
         if (!t.length) {
             addTextNode();
