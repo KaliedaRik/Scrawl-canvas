@@ -47,7 +47,7 @@ export default function (items) {
         name: name('top'),
         start: ['center', '5%'],
         handle: ['center', 'center'],
-        fontString: '1em Arial, sans-serif',
+        font: '1em Arial, sans-serif',
         lineHeight: 1,
         fillStyle: 'white',
     });

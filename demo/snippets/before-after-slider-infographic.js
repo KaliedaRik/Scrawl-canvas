@@ -307,7 +307,7 @@ const pinFactory = function (scrawl, items, canvas, pinTextGroup, pinTextBackgro
             pivot: `${name}-pin`,
             lockTo: 'pivot',
 
-            fontString: '28px Arial, sans-serif',
+            font: '28px Arial, sans-serif',
             fillStyle: colors.default,
 
             exposeText: (suppressAccessibleText) ? false : true,
@@ -362,7 +362,7 @@ const linkFactory = function (scrawl, items, canvas, linkTextGroup, colors) {
         handleY: justify,
         justify,
 
-        fontString: '16px Arial, sans-serif',
+        font: '24px Arial, sans-serif',
         lineHeight: 1,
         fillStyle: colors.link,
 
@@ -671,7 +671,7 @@ export default function (scrawl, el) {
                 start: ['1%', '1%'],
                 handle: ['left', 'top'],
                 text: leftPanel.date,
-                fontString: '20px Arial, sans-serif',
+                font: '20px Arial, sans-serif',
                 lineHeight: 0.7,
                 fillStyle: colors.white,
             });
@@ -726,7 +726,7 @@ export default function (scrawl, el) {
                 start: ['99%', '1%'],
                 handle: ['right', 'top'],
                 text: rightPanel.date,
-                fontString: '20px Arial, sans-serif',
+                font: '20px Arial, sans-serif',
                 lineHeight: 0.7,
                 fillStyle: colors.white,
             });
