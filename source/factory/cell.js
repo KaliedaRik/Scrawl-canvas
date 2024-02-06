@@ -39,7 +39,7 @@ import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } 
 import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
 
 import { makeGroup } from './group.js';
-import { makeState } from './state.js';
+import { makeState } from '../untracked-factory/state.js';
 
 import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 

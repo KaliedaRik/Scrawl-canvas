@@ -38,7 +38,7 @@ import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeI
 
 import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
 
-import { makeState } from './state.js';
+import { makeState } from '../untracked-factory/state.js';
 import { makeCell } from './cell.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';

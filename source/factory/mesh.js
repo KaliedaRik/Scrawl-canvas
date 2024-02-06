@@ -23,7 +23,7 @@ import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωemp
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
-import { makeState } from './state.js';
+import { makeState } from '../untracked-factory/state.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 

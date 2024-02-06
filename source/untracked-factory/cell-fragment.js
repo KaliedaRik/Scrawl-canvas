@@ -5,7 +5,7 @@
 // #### Imports
 import { doCreate, λnull, λthis } from '../helper/utilities.js';
 
-import { makeState } from '../factory/state.js';
+import { makeState } from './state.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';

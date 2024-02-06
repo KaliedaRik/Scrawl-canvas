@@ -105,6 +105,11 @@ export const styles = {};
 export const stylesnames = [];
 
 
+// For use with Label and EnhancedLabel entitys
+export const textstyle = {};
+export const textstylenames = [];
+
+
 // DOM unstackedElement wrappers created using the __makeUnstackedElement__ and __makeSnippet__ factories
 export const unstackedelement = {};
 export const unstackedelementnames = [];
@@ -149,6 +154,9 @@ export function purge (namespace = '') {
 
         const candidateFilters = filternames.filter(c => c.indexOf(namespace) === 0);
         remove(candidateFilters, filter);
+
+        const candidateTextStyles = textstylenames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateTextStyles, filter);
 
         const candidateAnchors = anchornames.filter(c => c.indexOf(namespace) === 0);
         remove(candidateAnchors, anchor);

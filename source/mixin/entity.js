@@ -12,7 +12,7 @@
 // #### Imports
 import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
-import { makeState } from '../factory/state.js';
+import { makeState } from '../untracked-factory/state.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 

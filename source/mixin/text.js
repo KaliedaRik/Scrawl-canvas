@@ -1,4 +1,6 @@
 // # Text mixin
+// Adds accessibility and bounding box functionality to Phrase, Label and EnhancedLabel entitys. Also includes the functionality to see whether a font has been loaded.
+
 
 
 // #### Imports
@@ -8,9 +10,6 @@ import { mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, POLITE, SOURCE_OVER, SYSTEM_FONTS, T_CANVAS, T_CELL, TEXTAREA } from '../helper/shared-vars.js';
 
-import baseMix from '../mixin/base.js';
-import entityMix from '../mixin/entity.js';
-
 
 // #### Local variables
 const textEntityConverter = document.createElement(TEXTAREA);
@@ -18,11 +17,6 @@ const textEntityConverter = document.createElement(TEXTAREA);
 
 // #### Export function
 export default function (P = Ωempty) {
-
-
-    // #### Mixins
-    baseMix(P);
-    entityMix(P);
 
 
 // #### Shared attributes
@@ -235,6 +229,4 @@ export default function (P = Ωempty) {
             else this.dirtyFont = true;
         }
     };
-
-
 }

@@ -6,29 +6,26 @@
 import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { makeState } from '../factory/state.js';
+// import { makeState } from '../untracked-factory/state.js';
+// import { makeTextStyle } from './text-style.js';
 import { currentGroup } from '../factory/canvas.js';
 
-import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
+import baseMix from '../mixin/base.js';
+import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
+import labelMix from '../mixin/label.js';
 
-import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_LABEL, TEXTSTYLE_KEYS, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
 const Label = function (items = Ωempty) {
 
-    this.letterSpaceValue = 0;
-    this.wordSpaceValue = 0;
-
     this.entityInit(items);
-
-    this.dirtyFont = true;
-    this.currentFontIsLoaded = false;
-
     return this;
 };
 
@@ -42,37 +39,18 @@ P.isAsset = false;
 
 
 // #### Mixins
+baseMix(P);
+entityMix(P);
 textMix(P);
+labelMix(P);
 
 
 // #### Label attributes
-const defaultAttributes = {
-
-    text: ZERO_STR,
-
-    fontString: DEFAULT_FONT,
-
-    includeUnderline: false,
-    underlineStyle: ZERO_STR,
-    underlineWidth: 1,
-    underlineOffset: 0,
-    underlineGap: 3,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);
+// No additional attributes required beyond those supplied by the mixins
 
 
 // #### Packet management
-P.finalizePacketOut = function (copy, items) {
-
-    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
-    stateCopy.letterSpacing = this.letterSpaceValue;
-    stateCopy.wordSpacing = this.wordSpaceValue;
-    copy = mergeOver(copy, stateCopy);
-
-    copy = this.handlePacketAnchor(copy, items);
-
-    return copy;
-};
+// No additional packet functionality required
 
 
 // #### Clone management
@@ -83,259 +61,30 @@ P.finalizePacketOut = function (copy, items) {
 // No additional kill functionality defined here
 
 
-// #### Get, Set, deltaSet
+// // #### Get, Set, deltaSet
 const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// __Note that__ dimensions (width, height) cannot be set on labels as the entity's dimensional values will depend entirely on the `font`, `text` and `scale` attributes
-G.width = function () {
-
-    return this.currentDimensions[0];
-};
-S.width = λnull;
-D.width = λnull;
-
-G.height = function () {
-
-    return this.currentDimensions[1];
-};
-S.height = λnull;
-D.height = λnull;
-
-G.dimensions = function () {
-
-    return [...this.currentDimensions];
-};
-S.dimensions = λnull;
-D.dimensions = λnull;
-
-S.scale = function (item) {
-
-    this.scale = item;
-    this.dirtyScale = true;
-    this.dirtyFont = true;
-    this.currentFontIsLoaded = false;
-};
-D.scale = function (item) {
-
-    this.scale += item;
-    this.dirtyScale = true;
-    this.dirtyFont = true;
-    this.currentFontIsLoaded = false;
-};
-
-G.rawFont = function () {
-
-    return this.fontString;
-};
-G.defaultFont = function () {
-
-    return this.defaultFont;
-};
-S.fontString = function (item) {
-
-    if (item?.substring) {
-
-        this.fontString = item;
-        this.dirtyFont = true;
-        this.currentFontIsLoaded = false;
-        this.updateUsingFontString= true;
-    }
-};
-
-S.fontSize = function (item) {
-
-    this.fontSize = (item.toFixed) ? `${item}px` : item.toLowerCase();
-    this.dirtyFont = true;
-    this.updateUsingFontParts = true;
-}
-
-S.fontStyle = function (item) {
-
-    if (item?.substring) {
-
-        this.fontStyle = item.toLowerCase();
-        this.dirtyFont = true;
-        this.updateUsingFontParts = true;
-    }
-}
-
-G.fontVariant = function () {
-
-    return this.fontVariant;
-};
-S.fontVariant = function (item) {
-
-    if (item?.substring) {
-
-        this.fontVariant = item.toLowerCase();
-        this.dirtyFont = true;
-        this.updateUsingFontParts = true;
-    }
-};
-G.fontVariantCaps = G.fontVariant;
-S.fontVariantCaps = S.fontVariant;
-
-S.fontStretch = function (item) {
-
-    if (item?.substring) {
-
-        this.fontStretch = item.toLowerCase();
-        this.dirtyFont = true;
-        this.updateUsingFontParts = true;
-    }
-};
-
-S.fontWeight = function (item) {
-
-    this.fontWeight = (item.toFixed) ? `${item}` : item;
-    this.dirtyFont = true;
-    this.updateUsingFontParts = true;
-};
-
-G.rawText = function () {
-
-    return this.rawText;
-};
-S.text = function (item) {
-
-    this.rawText = (item.substring) ? item : item.toString;
-    this.text = this.convertTextEntityCharacters(this.rawText);
-
-    this.dirtyText = true;
-    this.dirtyFont = true;
-    this.currentFontIsLoaded = false;
-};
-
-G.direction = function () {
-
-    return this.state.direction;
-};
-S.direction = function (item) {
-
-    if (item?.substring) {
-
-        this.state.direction = item;
-        this.dirtyFont = true;
-    }
-};
-
-G.fontKerning = function () {
-
-    return this.state.fontKerning;
-};
-S.fontKerning = function (item) {
-
-    if (item?.substring) {
-
-        this.state.fontKerning = item;
-        this.dirtyFont = true;
-    }
-};
-
-G.letterSpacing = function () {
-
-    return this.state.letterSpacing;
-};
-D.letterSpacing = function (item) {
-
-    if (!item?.toFixed)  item = parseFloat(item) || 0;
-    this.letterSpaceValue += item;
-    this.dirtyFont = true;
-};
-S.letterSpacing = function (item) {
-
-    if (!item?.toFixed)  item = parseFloat(item) || 0;
-    this.letterSpaceValue = item;
-    this.dirtyFont = true;
-};
-
-G.wordSpacing = function () {
-
-    return this.state.wordSpacing;
-};
-D.wordSpacing = function (item) {
-
-    if (!item?.toFixed)  item = parseFloat(item) || 0;
-    this.wordSpaceValue += item;
-    this.dirtyFont = true;
-};
-S.wordSpacing = function (item) {
-
-    if (!item?.toFixed)  item = parseFloat(item) || 0;
-    this.wordSpaceValue = item;
-    this.dirtyFont = true;
-};
-
-G.textAlign = function () {
-
-    return this.state.textAlign;
-};
-S.textAlign = λnull;
-
-G.textBaseline = function () {
-
-    return this.state.textBaseline;
-};
-S.textBaseline = λnull;
-
-G.textRendering = function () {
-
-    return this.state.textRendering;
-};
-S.textRendering = function (item) {
-
-    if (item?.substring) {
-
-        this.state.textRendering = item;
-        this.dirtyFont = true;
-    }
-};
-
 
 // #### Prototype functions
 
-// `entityInit` - overwrites the mixin/entity.js function
-P.entityInit = function (items = Ωempty) {
+P.cleanFont = function () {
 
-    this.modifyConstructorInputForAnchorButton(items);
+    this.dirtyFont = false;
 
-    this.makeName(items.name);
-    this.register();
-    this.initializePositions();
+    this.temperFont();
 
-    this.state = makeState(Ωempty);
-
-    this.set(this.defs);
-
-    if (!items.group) items.group = currentGroup;
-
-    this.onEnter = λnull;
-    this.onLeave = λnull;
-    this.onDown = λnull;
-    this.onUp = λnull;
-
-    this.updateUsingFontParts = false;
-    this.updateUsingFontString = false;
-
-    this.set(items);
-
-    this.midInitActions(items);
-
-    if (this.purge) this.purgeArtefact(this.purge);
+    if (!this.dirtyFont) this.measureFont();
 };
 
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
-// + We also get basic text metrics at this point in time
 P.temperFont = function () {
 
-    const { group, state } = this;
+    const { group, state, defaultTextStyle } = this;
 
-    if (group && state) {
-
-        this.dirtyFont = false;
+    if (xta(group, state, defaultTextStyle)) {
 
         const host = (group && group.getHost) ? group.getHost() : false;
 
@@ -356,8 +105,11 @@ P.temperFont = function () {
         if (!fontSizeCalculator) this.dirtyFont = true;
         else {
 
-            let fontSize = this.fontSize;
-            const { currentScale, fontStretch, fontStyle, fontWeight, fontVariant, fontString, updateUsingFontParts, updateUsingFontString } = this;
+            // let fontSize = this.fontSize;
+            // const { currentScale, fontStretch, fontStyle, fontWeight, fontVariant, fontString, updateUsingFontParts, updateUsingFontString } = this;
+            let fontSize = defaultTextStyle.fontSize;
+            const { fontStretch, fontStyle, fontWeight, fontVariant, fontString } = defaultTextStyle;
+            const { currentScale, updateUsingFontParts, updateUsingFontString } = this;
 
             // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
             fontSizeCalculator.style.font = fontString;
@@ -371,7 +123,7 @@ P.temperFont = function () {
                 if (foundSize && foundSize[0]) fontSize = foundSize[0];
 
                 fontSizeCalculator.style.fontSize = fontSize;
-                this.fontSize = fontSize
+                defaultTextStyle.fontSize = fontSize;
             }
 
             // We only adjust if a part of the font string has been recently 'set'
@@ -430,7 +182,7 @@ P.temperFont = function () {
             if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
             f += `${elSizeValue * currentScale}px ${elFamily}`
 
-            this.defaultFont = f;
+            defaultTextStyle.defaultFont = f;
             state.font = f;
 
             // Rebuild the `fontString` string - attempting to minimise user input error
@@ -444,42 +196,41 @@ P.temperFont = function () {
             else f += `${elSizeValue}px `
 
             f += `${elFamily}`;
-            this.fontString = f;
+            defaultTextStyle.fontString = f;
 
-            // Update `this` attributes
-            this.fontStretch = elStretch;
-            this.fontStyle = elStyle;
-            this.fontVariant = elVariant;
-            this.fontWeight = elWeight;
+            // Update `defaultTextStyle` attributes
+            defaultTextStyle.fontStretch = elStretch;
+            defaultTextStyle.fontStyle = elStyle;
+            defaultTextStyle.fontVariant = elVariant;
+            defaultTextStyle.fontWeight = elWeight;
 
             // Populate state for style, variant, stretch
             state.fontVariantCaps = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
             state.fontStretch = (FONT_STRETCH_VALS.includes(elStretch)) ? elStretch : NORMAL;
-
-            this.measureFont();
         }
     }
 };
 
-// `measureFont` - force the entity to recalculate its dimensions without having to set anything.
+// `measureFont` - generate basic font metadata
 P.measureFont = function () {
 
-    const { state, letterSpaceValue, wordSpaceValue, currentScale } = this;
+    const { state, defaultTextStyle, currentScale } = this;
+    const { letterSpaceValue, wordSpaceValue } = defaultTextStyle;
 
     const mycell = requestCell();
     const engine = mycell.engine;
 
-    state.letterSpacing = `${letterSpaceValue * currentScale}px`;
-    state.wordSpacing = `${wordSpaceValue * currentScale}px`;
+    defaultTextStyle.letterSpacing = `${letterSpaceValue * currentScale}px`;
+    defaultTextStyle.wordSpacing = `${wordSpaceValue * currentScale}px`;
 
     engine.font = state.font;
-    engine.fontKerning = state.fontKerning;
+    engine.fontKerning = defaultTextStyle.fontKerning;
     engine.fontStretch = state.fontStretch;
     engine.fontVariantCaps = state.fontVariantCaps;
-    engine.textRendering = state.textRendering;
-    engine.letterSpacing = state.letterSpacing;
-    engine.wordSpacing = state.wordSpacing;
-    engine.direction = state.direction;
+    engine.textRendering = defaultTextStyle.textRendering;
+    engine.letterSpacing = defaultTextStyle.letterSpacing;
+    engine.wordSpacing = defaultTextStyle.wordSpacing;
+    engine.direction = defaultTextStyle.direction;
     engine.textAlign = LEFT;
     engine.textBaseline = TOP;
 
@@ -564,11 +315,11 @@ P.cleanHandle = function () {
 
     this.dirtyHandle = false;
 
-    const { handle, currentHandle, currentDimensions, mimicked, state, fontVerticalOffset, alphabeticBaseline, hangingBaseline, ideographicBaseline } = this;
+    const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle, fontVerticalOffset, alphabeticBaseline, hangingBaseline, ideographicBaseline } = this;
 
     const [hx, hy] = handle;
     const [dx, dy] = currentDimensions;
-    const direction = state.direction || LTR;
+    const direction = defaultTextStyle.direction || LTR;
 
     // horizontal
     if (hx.toFixed) currentHandle[0] = hx;
@@ -621,7 +372,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyScale) this.cleanScale();
     if (this.dirtyText) this.updateAccessibleTextHold();
-    if (this.dirtyFont) this.temperFont();
+    if (this.dirtyFont) this.cleanFont();
     if (this.dirtyDimensions) this.cleanDimensions();
     if (!this.currentFontIsLoaded) this.checkFontIsLoaded();
     if (this.dirtyLock) this.cleanLock();
@@ -661,7 +412,11 @@ P.regularStamp = function () {
         dest.rotateDestination(engine, x, y, this);
 
         // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
-        if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+        if (!this.noCanvasEngineUpdates) {
+
+            this.state.set(this.defaultTextStyle);
+            dest.setEngine(this);
+        }
 
         // Invoke the appropriate __stamping method__ (below)
         this[this.method](dest);

@@ -43,6 +43,8 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import { makeFontAttributes } from '../untracked-factory/font-attributes.js';
 
+import baseMix from '../mixin/base.js';
+import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
 import { _abs, _assign, _ceil, _floor, _isFinite, _max, _parse, _values, AUTO, BLACK, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, ENTITY, FAMILY, FULL, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SPACE, STYLE, T_PHRASE, T_SHAPE, TEXTAREA, TOP, VARIANT, WEIGHT, ZERO_STR } from '../helper/shared-vars.js';
@@ -110,6 +112,8 @@ P.isAsset = false;
 
 
 // #### Mixins
+baseMix(P);
+entityMix(P);
 textMix(P);
 
 

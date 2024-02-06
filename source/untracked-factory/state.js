@@ -19,7 +19,7 @@ import baseMix from '../mixin/base.js';
 import { _HSL, _keys, _RGB, AUTO, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NAME, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STYLES, T_COLOR, T_ENHANCED_LABEL, T_LABEL, T_PHRASE, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
 
 
-import { makeColor } from './color.js';
+import { makeColor } from '../factory/color.js';
 const colorChecker = makeColor({
     name: 'SC-system-state-do-not-remove',
 });

@@ -6,14 +6,18 @@
 import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { makeState } from '../factory/state.js';
-import { currentGroup } from '../factory/canvas.js';
+import { makeState } from '../untracked-factory/state.js';
+import { makeTextStyle } from './text-style.js';
+import { currentGroup } from './canvas.js';
 
 import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
+import baseMix from '../mixin/base.js';
+import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
+import labelMix from '../mixin/label.js';
 
 import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_ENHANCED_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
@@ -23,6 +27,11 @@ const EnhancedLabel = function (items = Ωempty) {
 
     this.letterSpaceValue = 0;
     this.wordSpaceValue = 0;
+
+    this.defaultTextStyle = makeTextStyle({
+        name: `${this.name}_default-textstyle`,
+        isDefaultTextStyle: true,
+    });
 
     this.entityInit(items);
 
@@ -42,7 +51,10 @@ P.isAsset = false;
 
 
 // #### Mixins
+baseMix(P);
+entityMix(P);
 textMix(P);
+labelMix(P);
 
 
 // #### EnhancedLabel attributes
@@ -365,7 +377,6 @@ P.entityInit = function (items = Ωempty) {
 
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
-// + We also get basic text metrics at this point in time
 P.temperFont = function () {
 
     const { group, state } = this;
@@ -596,7 +607,7 @@ P.calculateHorizontalTextThatBreaksOnSpace = function () {
 };
 
 P.calculateHorizontalTextThatBreaksOnSpaceWithStyling = function () {
-    
+
     // if `direction == 'ltr` we stamp individual characters from the left rightwards
     // + we need to care about kerning, but ligatures will break
 };
