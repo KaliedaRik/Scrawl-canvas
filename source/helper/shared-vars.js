@@ -610,9 +610,6 @@ export const TARGET_SECTIONS = _freeze(['artefact', 'group', 'animation', 'anima
 export const TETRAGON = 'tetragon';
 export const TEXTAREA = 'textarea';
 export const TEXTSTYLE = 'textstyle';
-export const TEXTSTYLE_KEYS = _freeze([
-    'fontString', 'includeUnderline', 'underlineStyle', 'underlineWidth', 'underlineOffset', 'underlineGap', 'includeHighlight', 'highlightStyle', 'fillStyle', 'strokeStyle', 'direction', 'fontKerning', 'textRendering', 'letterSpacing', 'wordSpacing', 'fontStretch', 'fontVariantCaps', 'lineWidth', 'lineDash', 'lineDashOffset']);
-
 export const THRESHOLD = 'threshold';
 export const TICKERUPDATE = 'tickerupdate';
 export const TILE_PICTURE = 'tilePicture';

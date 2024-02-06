@@ -6,11 +6,7 @@
 import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-// import { makeState } from '../untracked-factory/state.js';
-// import { makeTextStyle } from './text-style.js';
-import { currentGroup } from '../factory/canvas.js';
-
-import { doCreate, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, xta, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -19,7 +15,7 @@ import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DEFAULT_FONT, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_LABEL, TEXTSTYLE_KEYS, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_LABEL, TOP } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -61,10 +57,8 @@ labelMix(P);
 // No additional kill functionality defined here
 
 
-// // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+// #### Get, Set, deltaSet
+// No additional functionality required
 
 
 // #### Prototype functions
@@ -105,10 +99,8 @@ P.temperFont = function () {
         if (!fontSizeCalculator) this.dirtyFont = true;
         else {
 
-            // let fontSize = this.fontSize;
-            // const { currentScale, fontStretch, fontStyle, fontWeight, fontVariant, fontString, updateUsingFontParts, updateUsingFontString } = this;
             let fontSize = defaultTextStyle.fontSize;
-            const { fontStretch, fontStyle, fontWeight, fontVariant, fontString } = defaultTextStyle;
+            const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = defaultTextStyle;
             const { currentScale, updateUsingFontParts, updateUsingFontString } = this;
 
             // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
@@ -132,7 +124,7 @@ P.temperFont = function () {
                 this.updateUsingFontParts = false;
                 fontSizeCalculator.style.fontStretch = fontStretch;
                 fontSizeCalculator.style.fontStyle = fontStyle;
-                fontSizeCalculator.style.fontVariant = fontVariant;
+                fontSizeCalculator.style.fontVariantCaps = fontVariantCaps;
                 fontSizeCalculator.style.fontWeight = fontWeight;
                 fontSizeCalculator.style.fontSize = fontSize;
             }
@@ -140,7 +132,7 @@ P.temperFont = function () {
 
             // Extract and manipulate data for font weight, variant and style
             let elWeight = fontSizeCalculatorValues.fontWeight,
-                elVariant = fontSizeCalculatorValues.fontVariant,
+                elVariant = fontSizeCalculatorValues.fontVariantCaps,
                 elStretch = fontSizeCalculatorValues.fontStretch,
                 elStyle = fontSizeCalculatorValues.fontStyle;
 
@@ -201,7 +193,7 @@ P.temperFont = function () {
             // Update `defaultTextStyle` attributes
             defaultTextStyle.fontStretch = elStretch;
             defaultTextStyle.fontStyle = elStyle;
-            defaultTextStyle.fontVariant = elVariant;
+            defaultTextStyle.fontVariantCaps = elVariant;
             defaultTextStyle.fontWeight = elWeight;
 
             // Populate state for style, variant, stretch
@@ -433,7 +425,7 @@ P.stampPositioningHelper = function () {
     return [text, x, y];
 }
 
-// `stampPositioningHelper` - internal helper function
+// `underlineEngine` - internal helper function
 P.underlineEngine = function (host, pos) {
 
     // Setup constants
@@ -441,18 +433,21 @@ P.underlineEngine = function (host, pos) {
         currentDimensions,
         currentScale,
         currentStampPosition,
-        state,
+        defaultTextStyle,
+        fontVerticalOffset,
+    } = this;
+
+    const {
         underlineGap,
         underlineOffset,
         underlineStyle,
         underlineWidth,
-        fontVerticalOffset,
-    } = this;
+    } = defaultTextStyle;
 
     const [, x, y] = pos;
     const [localWidth, localHeight] = currentDimensions;
 
-    const underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset;
+    const underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
     const underlineDepth = underlineWidth * currentScale;
 
     // Setup the cell parts
@@ -470,16 +465,16 @@ P.underlineEngine = function (host, pos) {
     // Setup the underline context
     ctx.fillStyle = BLACK;
     ctx.strokeStyle = BLACK;
-    ctx.font = state.font;
-    ctx.fontKerning = state.fontKerning;
-    ctx.fontStretch = state.fontStretch;
-    ctx.fontVariantCaps = state.fontVariantCaps;
-    ctx.textRendering = state.textRendering;
-    ctx.letterSpacing = state.letterSpacing;
+    ctx.font = defaultTextStyle.defaultFont;
+    ctx.fontKerning = defaultTextStyle.fontKerning;
+    ctx.fontStretch = defaultTextStyle.fontStretch;
+    ctx.fontVariantCaps = defaultTextStyle.fontVariant;
+    ctx.textRendering = defaultTextStyle.textRendering;
+    ctx.letterSpacing = defaultTextStyle.letterSpacing;
     ctx.lineCap = ROUND;
     ctx.lineJoin = ROUND;
-    ctx.wordSpacing = state.wordSpacing;
-    ctx.direction = state.direction;
+    ctx.wordSpacing = defaultTextStyle.wordSpacing;
+    ctx.direction = defaultTextStyle.direction;
     ctx.textAlign = LEFT;
     ctx.textBaseline = TOP;
     ctx.lineWidth = (underlineGap * 2) * currentScale;

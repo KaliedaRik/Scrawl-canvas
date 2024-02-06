@@ -69,7 +69,7 @@ Font.details:
     Font size: ${mylabel.fontSize}
     Font style: ${mylabel.fontStyle}
     Font stretch: ${mylabel.fontStretch}
-    Font variant: ${mylabel.fontVariant}
+    Font variant: ${mylabel.fontVariantCaps}
     Font weight: ${mylabel.fontWeight}
     `;
 });
@@ -103,7 +103,7 @@ scrawl.makeUpdater({
         scale: ['scale', 'float'],
         'fontWeight-string': ['fontWeight', 'raw'],
         'fontWeight-number': ['fontWeight', 'int'],
-        fontVariant: ['fontVariant', 'raw'],
+        fontVariantCaps: ['fontVariantCaps', 'raw'],
         fontStyle: ['fontStyle', 'raw'],
         'fontStretch-string': ['fontStretch', 'raw'],
         'fontStretch-percent': ['fontStretch', '%'],
@@ -125,7 +125,7 @@ document.querySelector('#fontWeight-string').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#fontWeight-number').value = 400;
 // @ts-expect-error
-document.querySelector('#fontVariant').options.selectedIndex = 0;
+document.querySelector('#fontVariantCaps').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#fontStyle').options.selectedIndex = 0;
 // @ts-expect-error

@@ -8,11 +8,11 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _keys, AUTO, BLACK, DEFAULT_FONT, LINE_DASH, LTR, NAME, NORMAL, PX0, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
+import { _keys, AUTO, BLACK, DEFAULT_FONT, LINE_DASH, LTR, NAME, NORMAL, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
 
 // #### Wheel constructor
 const TextStyle = function (items = Ωempty) {
@@ -50,7 +50,6 @@ const defaultAttributes = {
 
     fontString: DEFAULT_FONT,
 
-    includeUnderline: false,
     underlineStyle: ZERO_STR,
     underlineWidth: 1,
     underlineOffset: 0,
@@ -214,6 +213,63 @@ const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
+G.rawFont = function () {
+
+    return this.fontString;
+};
+G.defaultFont = function () {
+
+    return this.defaultFont;
+};
+S.fontString = function (item) {
+
+    if (item?.substring) this.fontString = item;
+};
+
+S.fontSize = function (item) {
+
+    this.fontSize = (item.toFixed) ? `${item}px` : item.toLowerCase();
+};
+
+S.fontStyle = function (item) {
+
+    if (item?.substring) this.fontStyle = item.toLowerCase();
+};
+
+S.fontVariantCaps = function (item) {
+
+    if (item?.substring) this.fontVariantCaps = item.toLowerCase();
+};
+
+S.fontStretch = function (item) {
+
+    if (item?.substring) this.fontStretch = item.toLowerCase();
+};
+
+S.fontWeight = function (item) {
+
+    this.fontWeight = (item.toFixed) ? `${item}` : item;
+};
+
+S.direction = function (item) {
+
+    if (item?.substring) this.direction = item;
+};
+
+S.fontKerning = function (item) {
+
+    if (item?.substring) this.fontKerning = item;
+};
+
+
+G.letterSpaceValue = function () {
+
+    return this.letterSpaceValue;
+};
+G.letterSpacing = function () {
+
+    return `${this.letterSpaceValue}px`;
+};
 D.letterSpacing = function (item) {
 
     this.letterSpaceValue += (!item?.toFixed) ? parseFloat(item) : 0;
@@ -223,6 +279,14 @@ S.letterSpacing = function (item) {
     this.letterSpaceValue = (!item?.toFixed) ? parseFloat(item) : 0;
 };
 
+G.wordSpaceValue = function () {
+
+    return this.wordSpaceValue;
+};
+G.wordSpacing = function () {
+
+    return `${this.wordSpaceValue}px`;
+};
 D.wordSpacing = function (item) {
 
     this.wordSpaceValue += (!item?.toFixed) ? parseFloat(item) : 0;
@@ -231,6 +295,16 @@ S.wordSpacing = function (item) {
 
     this.wordSpaceValue = (!item?.toFixed) ? parseFloat(item) : 0;
 };
+
+S.textRendering = function (item) {
+
+    if (item?.substring) this.textRendering = item;
+};
+
+G.textAlign = λnull;
+S.textAlign = λnull;
+G.textBaseline = λnull;
+S.textBaseline = λnull;
 
 
 // #### Prototype functions

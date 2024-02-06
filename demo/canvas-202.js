@@ -140,12 +140,21 @@ scrawl.makeUpdater({
         textRendering: ['textRendering', 'raw'],
     },
 
-    callback: () => {
+    callback: () => setTimeout(() => {
+
 // @ts-expect-error
         html.style.letterSpacing = mylabel.get('letterSpacing');
 // @ts-expect-error
         html.style.wordSpacing = mylabel.get('wordSpacing');
-    },
+// @ts-expect-error
+        html.style.direction = mylabel.get('direction');
+// @ts-expect-error
+        html.style.fontKerning = mylabel.get('fontKerning');
+// @ts-expect-error
+        html.style.textRendering = mylabel.get('textRendering');
+// @ts-expect-error
+        html.style.transform = `scale(${mylabel.get('scale')}) rotate(${mylabel.get('roll')}deg)`;
+    }, 50),
 });
 const selector = document.querySelector('#font');
 
@@ -522,7 +531,7 @@ const updateFont = (event) => {
         setTimeout(() => {
 
 // @ts-expect-error
-            html.style.font = mylabel.get('defaultFont');
+            html.style.font = mylabel.get('fontString');
 // @ts-expect-error
             html.style.direction = mylabel.get('direction');
             html.textContent = mylabel.get('text');

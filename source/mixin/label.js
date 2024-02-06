@@ -10,9 +10,9 @@ import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../factory/text-style.js';
 import { currentGroup } from '../factory/canvas.js';
 
-import { mergeOver, removeItem, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, mergeOver, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _keys, _parse, NAME, STATE_KEYS, TEXTSTYLE_KEYS, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _freeze, _keys, _parse, NAME, STATE_KEYS, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -23,6 +23,8 @@ export default function (P = Ωempty) {
     const defaultAttributes = {
 
         text: ZERO_STR,
+
+        includeUnderline: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -35,7 +37,6 @@ export default function (P = Ωempty) {
 
         copy = mergeOver(copy, {
             fontString: defaultTextCopy.fontString,
-            includeUnderline: defaultTextCopy.includeUnderline,
             underlineStyle: defaultTextCopy.underlineStyle,
             underlineWidth: defaultTextCopy.underlineWidth,
             underlineOffset: defaultTextCopy.underlineOffset,
@@ -96,6 +97,16 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     // Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
+    const TEXTSTYLE_KEYS = _freeze(['fontString', 'fontSize', 'underlineStyle', 'underlineWidth', 'underlineOffset', 'underlineGap', 'includeHighlight', 'highlightStyle', 'fillStyle', 'strokeStyle', 'direction', 'fontKerning', 'textRendering', 'letterSpaceValue', 'wordSpaceValue', 'letterSpacing', 'wordSpacing', 'fontStretch', 'fontVariantCaps', 'fontWeight', 'fontStyle', 'lineWidth', 'lineDash', 'lineDashOffset']);
+
+    const LABEL_DIRTY_FONT_KEYS = _freeze(['fontString', 'fontSize', 'direction', 'fontKerning', 'textRendering', 'letterSpacing', 'wordSpacing', 'fontStretch', 'fontVariantCaps', 'fontWeight', 'fontStyle', 'scale']);
+
+    const LABEL_UPDATE_PARTS_KEYS = _freeze(['fontSize', 'fontStyle', 'fontVariantCaps', 'fontStretch', 'fontWeight', 'fontStyle']);
+
+    const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
+
+    const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString', 'fontSize', 'scale']);
+
     P.get = function (item) {
 
         const getter = this.getters[item];
@@ -179,6 +190,11 @@ export default function (P = Ωempty) {
                         if (fn) fn.call(this, val);
                         else if (typeof defs[key] != UNDEF) this[key] = val;
                     }
+
+                    if (LABEL_DIRTY_FONT_KEYS.includes(key)) this.dirtyFont = true;
+                    if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
+                    if (LABEL_UPDATE_FONTSTRING_KEYS.includes(key)) this.updateUsingFontString = true;
+                    if (LABEL_UNLOADED_FONT_KEYS.includes(key)) this.currentFontIsLoaded = false;
                 }
             }
         }
@@ -230,12 +246,16 @@ export default function (P = Ωempty) {
                         if (fn) fn.call(this, val);
                         else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
                     }
+
+                    if (LABEL_DIRTY_FONT_KEYS.includes(key)) this.dirtyFont = true;
+                    if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
+                    if (LABEL_UPDATE_FONTSTRING_KEYS.includes(key)) this.updateUsingFontString = true;
+                    if (LABEL_UNLOADED_FONT_KEYS.includes(key)) this.currentFontIsLoaded = false;
                 }
             }
         }
         return this;
     };
-
 
     const G = P.getters,
         S = P.setters,
@@ -262,163 +282,6 @@ export default function (P = Ωempty) {
     };
     S.dimensions = λnull;
     D.dimensions = λnull;
-
-    S.scale = function (item) {
-
-        this.scale = item;
-        this.dirtyScale = true;
-        this.dirtyFont = true;
-        this.currentFontIsLoaded = false;
-    };
-    D.scale = function (item) {
-
-        this.scale += item;
-        this.dirtyScale = true;
-        this.dirtyFont = true;
-        this.currentFontIsLoaded = false;
-    };
-
-    G.rawFont = function () {
-
-        return this.defaultTextStyle.fontString;
-    };
-    G.defaultFont = function () {
-
-        return this.defaultTextStyle.defaultFont;
-    };
-    S.fontString = function (item) {
-
-        if (item?.substring) {
-
-            this.defaultTextStyle.fontString = item;
-            this.dirtyFont = true;
-            this.currentFontIsLoaded = false;
-            this.updateUsingFontString= true;
-        }
-    };
-
-    S.fontSize = function (item) {
-
-        this.defaultTextStyle.fontSize = (item.toFixed) ? `${item}px` : item.toLowerCase();
-        this.dirtyFont = true;
-        this.updateUsingFontParts = true;
-    }
-
-    S.fontStyle = function (item) {
-
-        if (item?.substring) {
-
-            this.defaultTextStyle.fontStyle = item.toLowerCase();
-            this.dirtyFont = true;
-            this.updateUsingFontParts = true;
-        }
-    }
-
-    G.fontVariant = function () {
-
-        return this.defaultTextStyle.fontVariant;
-    };
-    S.fontVariant = function (item) {
-
-        if (item?.substring) {
-
-            this.defaultTextStyle.fontVariant = item.toLowerCase();
-            this.dirtyFont = true;
-            this.updateUsingFontParts = true;
-        }
-    };
-    G.fontVariantCaps = G.fontVariant;
-    S.fontVariantCaps = S.fontVariant;
-
-    S.fontStretch = function (item) {
-
-        if (item?.substring) {
-
-            this.defaultTextStyle.fontStretch = item.toLowerCase();
-            this.dirtyFont = true;
-            this.updateUsingFontParts = true;
-        }
-    };
-
-    S.fontWeight = function (item) {
-
-        this.defaultTextStyle.fontWeight = (item.toFixed) ? `${item}` : item;
-        this.dirtyFont = true;
-        this.updateUsingFontParts = true;
-    };
-
-    S.direction = function (item) {
-
-        if (item?.substring) {
-
-            this.defaultTextStyle.direction = item;
-            this.dirtyFont = true;
-        }
-    };
-
-    S.fontKerning = function (item) {
-
-        if (item?.substring) {
-
-            this.defaultTextStyle.fontKerning = item;
-            this.dirtyFont = true;
-        }
-    };
-
-
-    G.letterSpacing = function (item) {
-
-        return `${this.defaultTextStyle.letterSpaceValue * this.currentScale}px`;
-    };
-    D.letterSpacing = function (item) {
-
-        this.defaultTextStyle.set({letterSpacing: item});
-        this.dirtyFont = true;
-    };
-
-    S.letterSpacing = function (item) {
-
-        this.defaultTextStyle.set({letterSpacing: item});
-        this.dirtyFont = true;
-    };
-
-
-    G.wordSpacing = function (item) {
-
-        return `${this.defaultTextStyle.wordSpaceValue * this.currentScale}px`;
-    };
-    D.wordSpacing = function (item) {
-
-        this.defaultTextStyle.set({wordSpacing: item});
-        this.dirtyFont = true;
-    };
-
-    S.wordSpacing = function (item) {
-
-        this.defaultTextStyle.set({wordSpacing: item});
-        this.dirtyFont = true;
-    };
-
-    G.textAlign = function () {
-
-        return this.state.textAlign;
-    };
-    S.textAlign = λnull;
-
-    G.textBaseline = function () {
-
-        return this.state.textBaseline;
-    };
-    S.textBaseline = λnull;
-
-    S.textRendering = function (item) {
-
-        if (item?.substring) {
-
-            this.defaultTextStyle.textRendering = item;
-            this.dirtyFont = true;
-        }
-    };
 
     G.rawText = function () {
 
