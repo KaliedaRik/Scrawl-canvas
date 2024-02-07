@@ -3186,6 +3186,8 @@ export function forceUpdate(): void;
 
 export function recalculateFonts(item?: number): void;
 
+export function purgeFontMetadata(): void;
+
 
 
 

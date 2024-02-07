@@ -214,19 +214,25 @@ export default function (P = Ωempty) {
     };
 
 
-    P.checkFontIsLoaded = function () {
+    P.checkFontIsLoaded = function (font) {
 
-        const font = this.state.font;
-
-        if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;
+        if (font == null) this.currentFontIsLoaded = false;
+        else if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;
         else {
 
-            const fonts = document.fonts;
+            if (this.currentFontIsLoaded != null && !this.currentFontIsLoaded) {
 
-            const check = fonts.check(font);
+                this.currentFontIsLoaded = null;
 
-            if (check) this.currentFontIsLoaded = true;
-            else this.dirtyFont = true;
+                const fonts = document.fonts;
+
+                fonts.load(font)
+                .then (() => this.currentFontIsLoaded = true)
+                .catch ((e) => {
+                    this.currentFontIsLoaded = false;
+                    console.log('checkFontIsLoaded error:', font, e);
+                });
+            }
         }
     };
 }

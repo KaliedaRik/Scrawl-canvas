@@ -265,7 +265,6 @@ export const HANDLE = 'handle';
 export const HANGING = 'hanging';
 export const HARD_LIGHT = 'hard-light';
 export const HAS_PACKET_CHECK = '[';
-export const HASH = '#';
 export const HEIGHT = 'height';
 export const HEX_GRID = 'hex-grid';
 export const HIGH = 'high';

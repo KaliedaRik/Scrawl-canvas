@@ -56,22 +56,6 @@ const report = reportSpeed('#reportmessage', function () {
     const boxReadout = `
     width: ${mylabel.get('width')}
     height: ${mylabel.get('height')}
-    fontVerticalOffset: ${mylabel.get('fontVerticalOffset')}
-`;
-
-// @ts-expect-error
-    const metrics = mylabel.metrics;
-    const metricsReadout = `
-    abbAscent: ${metrics.actualBoundingBoxAscent}
-    abbDescent: ${metrics.actualBoundingBoxDescent}
-    abbleft: ${metrics.actualBoundingBoxLeft}
-    abbRight: ${metrics.actualBoundingBoxRight}
-    fbbAscent: ${metrics.fontBoundingBoxAscent}
-    fbbDescent: ${metrics.fontBoundingBoxDescent}
-    alphabeticBaseline: ${metrics.alphabeticBaseline}
-    hangingBaseline: ${metrics.hangingBaseline}
-    ideographicBaseline: ${metrics.ideographicBaseline}
-    width: ${metrics.width}
 `;
 
     let fontReadout = `
@@ -90,7 +74,6 @@ const report = reportSpeed('#reportmessage', function () {
     return `
 Box data:${boxReadout}
 Positioning:${position}
-Font metrics:${metricsReadout}
 Loaded fonts:${fontReadout}`;
 });
 
@@ -140,8 +123,11 @@ scrawl.makeUpdater({
         textRendering: ['textRendering', 'raw'],
     },
 
+    // We need to let the changes settle before transferring them over to our DOM element
     callback: () => setTimeout(() => {
 
+// @ts-expect-error
+        html.style.transform = `scale(${mylabel.get('scale')}) rotate(${mylabel.get('roll')}deg)`;
 // @ts-expect-error
         html.style.letterSpacing = mylabel.get('letterSpacing');
 // @ts-expect-error
@@ -152,8 +138,6 @@ scrawl.makeUpdater({
         html.style.fontKerning = mylabel.get('fontKerning');
 // @ts-expect-error
         html.style.textRendering = mylabel.get('textRendering');
-// @ts-expect-error
-        html.style.transform = `scale(${mylabel.get('scale')}) rotate(${mylabel.get('roll')}deg)`;
     }, 50),
 });
 const selector = document.querySelector('#font');

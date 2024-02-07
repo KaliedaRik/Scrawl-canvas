@@ -67,6 +67,11 @@ export const fontattribute = {};
 export const fontattributenames = [];
 
 
+// collects metadata of various requested fonts
+export const fontfamilymetadata = {};
+export const fontfamilymetadatanames = [];
+
+
 // Objects created using the __makeGroup__ factory, and generated as part of the process of creating Stack and Canvas artefacts, and Cell assets.
 export const group = {};
 export const groupnames = [];

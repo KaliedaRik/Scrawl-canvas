@@ -10,19 +10,14 @@
 
 
 // #### Imports
-import { constructors, entity, styles } from '../core/library.js';
+import { constructors, entity } from '../core/library.js';
 
-import { doCreate, isa_obj, xt, xtGet, Ωempty } from '../helper/utilities.js';
+import { doCreate, xt, xtGet } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _HSL, _keys, _RGB, AUTO, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NAME, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STYLES, T_COLOR, T_ENHANCED_LABEL, T_LABEL, T_PHRASE, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
+import { AUTO, BLACK, BUTT, DEFAULT_FONT, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, T_COLOR, T_ENHANCED_LABEL, T_LABEL, T_PHRASE, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
 
-
-import { makeColor } from '../factory/color.js';
-const colorChecker = makeColor({
-    name: 'SC-system-state-do-not-remove',
-});
 
 // #### State constructor
 const State = function () {
@@ -150,6 +145,10 @@ P.defs = {
 // __wordSpacing__ - pixel string. Default is `0px`
     wordSpacing: PX0,
 
+// __fontStretch__, __fontVariantCaps__ - string. Note that these text-related attributes have patchy support across rendering engines.
+    fontStretch: NORMAL,
+    fontVariantCaps: NORMAL,
+
 
 // ##### CSS/SVG filters
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the entity as it is stamped on the canvas.
@@ -166,9 +165,7 @@ P.defs = {
 
 
 // ##### Other attributes
-// The following Canvas 2D engine attributes are actively ignored by Scrawl-canvas. For some, equivalent functionality has been coded up elsewhere in the library to manage similar/overlapping functionality provided by these attributes
-    fontStretch: NORMAL,
-    fontVariantCaps: NORMAL,
+// The following Canvas 2D engine attributes are actively ignored by Scrawl-canvas. Local text positioning is handled by the entity handles and associated layout functionality.
     textAlign: LEFT,
     textBaseline: TOP,
 };
@@ -217,87 +214,17 @@ P.finalizePacketOut = function (copy) {
 
 
 // #### Get, Set, deltaSet
-P.set = function (items = Ωempty) {
+const G = P.getters,
+    S = P.setters;
 
-    const keys = _keys(items),
-        keysLen = keys.length;
+G.canvasFont = function () {
 
-    let key, i;
-
-    const d = this.defs;
-
-    for (i = 0; i < keysLen; i++) {
-
-        key = keys[i];
-
-        if (key != NAME) {
-
-            if (typeof d[key] != UNDEF) {
-
-                this[key] = items[key];
-                this.dirtyFilterIdentifier = true;
-            }
-        }
-    }
-    return this;
+    return this.font;
 };
+S.canvasFont = function (item) {
 
-P.get = function (item) {
-
-    const d = this.defs[item];
-
-    if (d != null) {
-
-        const i = this[item];
-        return (i != null) ? i : d;
-    }
-    else return undefined;
+    this.font = item;
 };
-
-const S = P.setters;
-
-// The following setters use the `SC-system-state-do-not-remove` Color factory. This factory gets created when the `state.js` file first runs and is accessed only by State objects
-S.fillStyle = function (item) {
-
-    let temp;
-
-    if (isa_obj(item) && item.lib == STYLES) this.fillStyle = item;
-    else{
-
-        temp = styles[item];
-
-        if (temp) this.fillStyle = temp;
-        else if (item.includes(_RGB) || item.includes(_HSL) || item.includes(HASH)) this.fillStyle = item;
-        else this.fillStyle = colorChecker.checkColor(item);
-    }
-};
-
-S.strokeStyle = function (item) {
-
-    let temp;
-
-    if (isa_obj(item) && item.lib == STYLES) this.strokeStyle = item;
-    else{
-
-        temp = styles[item];
-
-        if (temp) this.strokeStyle = temp;
-        else if (item.includes(_RGB) || item.includes(_HSL) || item.includes(HASH)) this.strokeStyle = item;
-        else this.strokeStyle = colorChecker.checkColor(item);
-    }
-};
-
-S.shadowColor = function (item) {
-
-    if (item.includes(_RGB) || item.includes(_HSL) || item.includes(HASH)) this.shadowColor = item;
-    else this.shadowColor = colorChecker.checkColor(item);
-};
-
-// Actively ignore any attempts to set the following attributes
-// S.fontStretch = λnull;
-// S.fontVariantCaps = λnull;
-// S.textAlign = λnull;
-// S.textBaseline = λnull;
 
 
 // #### Prototype functions
@@ -428,10 +355,6 @@ P.setStateFromEngine = function (engine) {
     this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
 
     // Actively ignore the following attributes
-    engine.fontStretch = NORMAL;
-    this.fontStretch = NORMAL;
-    engine.fontVariantCaps = NORMAL;
-    this.fontVariantCaps = NORMAL;
     engine.textAlign = LEFT;
     this.textAlign = LEFT;
     engine.textBaseline = TOP;

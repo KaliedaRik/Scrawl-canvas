@@ -15,7 +15,7 @@ import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { _abs, _ceil, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_LABEL, TOP } from '../helper/shared-vars.js';
+import { _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, START, T_LABEL, TOP } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -65,20 +65,24 @@ labelMix(P);
 
 P.cleanFont = function () {
 
-    this.dirtyFont = false;
+    if (this.currentFontIsLoaded) {
 
-    this.temperFont();
+        this.dirtyFont = false;
 
-    if (!this.dirtyFont) this.measureFont();
+        this.temperFont();
+
+        if (!this.dirtyFont) this.measureFont();
+    }
+    else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
 };
 
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
 P.temperFont = function () {
 
-    const { group, state, defaultTextStyle } = this;
+    const { group, defaultTextStyle } = this;
 
-    if (xta(group, state, defaultTextStyle)) {
+    if (xta(group, defaultTextStyle)) {
 
         const host = (group && group.getHost) ? group.getHost() : false;
 
@@ -97,168 +101,8 @@ P.temperFont = function () {
         }
 
         if (!fontSizeCalculator) this.dirtyFont = true;
-        else {
-
-            let fontSize = defaultTextStyle.fontSize;
-            const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = defaultTextStyle;
-            const { currentScale, updateUsingFontParts, updateUsingFontString } = this;
-
-            // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
-            fontSizeCalculator.style.font = fontString;
-
-            // On initial load `this.fontSize` will be empty or undefined
-            if (updateUsingFontString || fontSize == null || !fontSize) {
-
-                this.updateUsingFontString = false;
-                const foundSize = fontString.match(FONT_LENGTH_REGEX);
-
-                if (foundSize && foundSize[0]) fontSize = foundSize[0];
-
-                fontSizeCalculator.style.fontSize = fontSize;
-                defaultTextStyle.fontSize = fontSize;
-            }
-
-            // We only adjust if a part of the font string has been recently 'set'
-            if (updateUsingFontParts) {
-
-                this.updateUsingFontParts = false;
-                fontSizeCalculator.style.fontStretch = fontStretch;
-                fontSizeCalculator.style.fontStyle = fontStyle;
-                fontSizeCalculator.style.fontVariantCaps = fontVariantCaps;
-                fontSizeCalculator.style.fontWeight = fontWeight;
-                fontSizeCalculator.style.fontSize = fontSize;
-            }
-            else if (currentScale != 1) fontSizeCalculator.style.fontSize = fontSize;
-
-            // Extract and manipulate data for font weight, variant and style
-            let elWeight = fontSizeCalculatorValues.fontWeight,
-                elVariant = fontSizeCalculatorValues.fontVariantCaps,
-                elStretch = fontSizeCalculatorValues.fontStretch,
-                elStyle = fontSizeCalculatorValues.fontStyle;
-
-            // Update elWeight, if required
-            if (elWeight == 400) elWeight = NORMAL;
-
-            // Update elVariant, if required
-            elVariant = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
-
-            // Update elStyle, if required
-            elStyle = (elStyle == ITALIC || elStyle.includes(OBLIQUE)) ? elStyle : NORMAL;
-
-            // elStretch will always be a percent string, which canvas engines refuse to process
-            const stretchVal = parseFloat(elStretch);
-
-            if (!_isFinite(stretchVal)) elStretch = NORMAL;
-            else {
-
-                if (stretchVal <= 50) elStretch = 'ultra-condensed';
-                else if (stretchVal <= 62.5) elStretch = 'extra-condensed';
-                else if (stretchVal <= 75) elStretch = 'condensed';
-                else if (stretchVal <= 87.5) elStretch = 'semi-condensed';
-                else if (stretchVal >= 200) elStretch = 'ultra-expanded';
-                else if (stretchVal >= 150) elStretch = 'extra-expanded';
-                else if (stretchVal >= 125) elStretch = 'expanded';
-                else if (stretchVal >= 112.5) elStretch = 'semi-expanded';
-                else elStretch = NORMAL;
-            }
-
-            // Extract data for font family and size
-            const elSizeString = fontSizeCalculatorValues.fontSize,
-                elFamily = fontSizeCalculatorValues.fontFamily,
-                elSizeValue = parseFloat(elSizeString);
-
-            // Build the internal `defaultFont` string, and update Label `state` with it
-            let f = '';
-            if (elStyle == ITALIC || elStyle.includes(OBLIQUE)) f += `${elStyle} `;
-            if (elVariant == SMALL_CAPS) f += `${elVariant} `;
-            if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
-            f += `${elSizeValue * currentScale}px ${elFamily}`
-
-            defaultTextStyle.defaultFont = f;
-            state.font = f;
-
-            // Rebuild the `fontString` string - attempting to minimise user input error
-            f = '';
-            if (elStretch != null && elStretch && elStretch != NORMAL) f += `${elStretch} `;
-            if (elStyle != null && elStyle && elStyle != NORMAL) f += `${elStyle} `;
-            if (elVariant != null && elVariant && elVariant != NORMAL) f += `${elVariant} `;
-            if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
-
-            if (fontSize) f += `${fontSize} `;
-            else f += `${elSizeValue}px `
-
-            f += `${elFamily}`;
-            defaultTextStyle.fontString = f;
-
-            // Update `defaultTextStyle` attributes
-            defaultTextStyle.fontStretch = elStretch;
-            defaultTextStyle.fontStyle = elStyle;
-            defaultTextStyle.fontVariantCaps = elVariant;
-            defaultTextStyle.fontWeight = elWeight;
-
-            // Populate state for style, variant, stretch
-            state.fontVariantCaps = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
-            state.fontStretch = (FONT_STRETCH_VALS.includes(elStretch)) ? elStretch : NORMAL;
-        }
+        else this.updateTextStyle(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
     }
-};
-
-// `measureFont` - generate basic font metadata
-P.measureFont = function () {
-
-    const { state, defaultTextStyle, currentScale } = this;
-    const { letterSpaceValue, wordSpaceValue } = defaultTextStyle;
-
-    const mycell = requestCell();
-    const engine = mycell.engine;
-
-    defaultTextStyle.letterSpacing = `${letterSpaceValue * currentScale}px`;
-    defaultTextStyle.wordSpacing = `${wordSpaceValue * currentScale}px`;
-
-    engine.font = state.font;
-    engine.fontKerning = defaultTextStyle.fontKerning;
-    engine.fontStretch = state.fontStretch;
-    engine.fontVariantCaps = state.fontVariantCaps;
-    engine.textRendering = defaultTextStyle.textRendering;
-    engine.letterSpacing = defaultTextStyle.letterSpacing;
-    engine.wordSpacing = defaultTextStyle.wordSpacing;
-    engine.direction = defaultTextStyle.direction;
-    engine.textAlign = LEFT;
-    engine.textBaseline = TOP;
-
-    this.metrics = engine.measureText(this.text);
-
-    // Calculate Label dimensions
-    const { actualBoundingBoxLeft, actualBoundingBoxRight, actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxAscent, fontBoundingBoxDescent, alphabeticBaseline, hangingBaseline, ideographicBaseline} = this.metrics;
-
-    let fontHeight = fontBoundingBoxAscent + fontBoundingBoxDescent;
-    if (!_isFinite(fontHeight)) fontHeight = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
-
-    this.dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
-    this.dimensions[1] = fontHeight;
-
-    // Setup text-specific handle offsets
-    this.alphabeticBaseline = -alphabeticBaseline;
-    this.hangingBaseline = -hangingBaseline;
-    this.ideographicBaseline = -ideographicBaseline;
-
-    // Setup font vertical offset
-    this.fontVerticalOffset = (_isFinite(fontBoundingBoxAscent) ? fontBoundingBoxAscent : actualBoundingBoxAscent) / currentScale;
-
-    // Clean up; set required dirty flags
-    releaseCell(mycell);
-
-    this.dirtyPathObject = true;
-    this.dirtyDimensions = true;
-};
-
-
-// `recalculateFont` - force the entity to recalculate its dimensions without having to set anything.
-// + Can also be invoked via the entity's Group object's `recalculateFonts` function
-// + Can be invoked globally via the `scrawl.recalculateFonts` function
-P.recalculateFont = function () {
-
-    this.dirtyFont = true;
 };
 
 
@@ -307,7 +151,8 @@ P.cleanHandle = function () {
 
     this.dirtyHandle = false;
 
-    const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle, fontVerticalOffset, alphabeticBaseline, hangingBaseline, ideographicBaseline } = this;
+    const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle, alphabeticBaseline, hangingBaseline, ideographicBaseline } = this;
+    // const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle } = this;
 
     const [hx, hy] = handle;
     const [dx, dy] = currentDimensions;
@@ -329,21 +174,9 @@ P.cleanHandle = function () {
     else if (hy == BOTTOM) currentHandle[1] = dy;
     else if (hy == CENTER) currentHandle[1] = dy / 2;
     else if (hy == MIDDLE) currentHandle[1] = dy / 2;
-    else if (hy == HANGING) {
-
-        if (_isFinite(hangingBaseline)) currentHandle[1] = hangingBaseline + fontVerticalOffset;
-        else currentHandle[1] = 0;
-    }
-    else if (hy == ALPHABETIC) {
-
-        if (_isFinite(alphabeticBaseline)) currentHandle[1] = alphabeticBaseline + fontVerticalOffset;
-        else currentHandle[1] = 0;
-    }
-    else if (hy == IDEOGRAPHIC) {
-
-        if (_isFinite(ideographicBaseline)) currentHandle[1] = ideographicBaseline + fontVerticalOffset;
-        else currentHandle[1] = 0;
-    }
+    else if (hy == HANGING) currentHandle[1] = (_isFinite(hangingBaseline)) ? hangingBaseline : 0;
+    else if (hy == ALPHABETIC) currentHandle[1] = (_isFinite(alphabeticBaseline)) ? alphabeticBaseline : 0;
+    else if (hy == IDEOGRAPHIC) currentHandle[1] = (_isFinite(ideographicBaseline)) ? ideographicBaseline : 0;
     else if (!_isFinite(parseFloat(hy))) currentHandle[1] = 0;
     else currentHandle[1] = (parseFloat(hy) / 100) * dy;
 
@@ -366,7 +199,6 @@ P.prepareStamp = function() {
     if (this.dirtyText) this.updateAccessibleTextHold();
     if (this.dirtyFont) this.cleanFont();
     if (this.dirtyDimensions) this.cleanDimensions();
-    if (!this.currentFontIsLoaded) this.checkFontIsLoaded();
     if (this.dirtyLock) this.cleanLock();
     if (this.dirtyStart) this.cleanStart();
     if (this.dirtyOffset) this.cleanOffset();
@@ -465,7 +297,7 @@ P.underlineEngine = function (host, pos) {
     // Setup the underline context
     ctx.fillStyle = BLACK;
     ctx.strokeStyle = BLACK;
-    ctx.font = defaultTextStyle.defaultFont;
+    ctx.font = defaultTextStyle.canvasFont;
     ctx.fontKerning = defaultTextStyle.fontKerning;
     ctx.fontStretch = defaultTextStyle.fontStretch;
     ctx.fontVariantCaps = defaultTextStyle.fontVariant;

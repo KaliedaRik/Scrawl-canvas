@@ -68,6 +68,7 @@ export {
     setPixelRatioChangeAction,
     getIgnorePixelRatio,
     setIgnorePixelRatio,
+    purgeFontMetadata,
 } from './core/user-interaction.js';
 export { forceUpdate } from './helper/system-flags.js';
 export { makeAction } from './factory/action.js';

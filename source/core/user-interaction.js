@@ -613,3 +613,13 @@ export const applyCoreScrollListener = function () {
     scrollAction();
     setMouseChanged(true);
 };
+
+
+// Putting this small library-related function here as this file gets all `core/library` objects rather than selectively importing some of them
+export const purgeFontMetadata = function () {
+
+    const { fontfamilymetadata, fontfamilymetadatanames } = library;
+
+    fontfamilymetadatanames.forEach(f => delete fontfamilymetadata[f]);
+    fontfamilymetadatanames.length = 0;
+};

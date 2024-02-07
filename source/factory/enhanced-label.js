@@ -15,7 +15,7 @@ import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { _abs, _ceil, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_ENHANCED_LABEL, TOP } from '../helper/shared-vars.js';
+import { _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_STRETCH_VALS, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SMALL_CAPS, START, T_ENHANCED_LABEL, TOP } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -243,64 +243,6 @@ P.temperFont = function () {
     }
 };
 
-// `measureFont` - generate basic font metadata
-P.measureFont = function () {
-
-    const { state, defaultTextStyle, currentScale } = this;
-    const { letterSpaceValue, wordSpaceValue } = defaultTextStyle;
-
-    const mycell = requestCell();
-    const engine = mycell.engine;
-
-    defaultTextStyle.letterSpacing = `${letterSpaceValue * currentScale}px`;
-    defaultTextStyle.wordSpacing = `${wordSpaceValue * currentScale}px`;
-
-    engine.font = state.font;
-    engine.fontKerning = defaultTextStyle.fontKerning;
-    engine.fontStretch = state.fontStretch;
-    engine.fontVariantCaps = state.fontVariantCaps;
-    engine.textRendering = defaultTextStyle.textRendering;
-    engine.letterSpacing = defaultTextStyle.letterSpacing;
-    engine.wordSpacing = defaultTextStyle.wordSpacing;
-    engine.direction = defaultTextStyle.direction;
-    engine.textAlign = LEFT;
-    engine.textBaseline = TOP;
-
-    this.metrics = engine.measureText(this.text);
-
-    // Calculate Label dimensions
-    const { actualBoundingBoxLeft, actualBoundingBoxRight, actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxAscent, fontBoundingBoxDescent, alphabeticBaseline, hangingBaseline, ideographicBaseline} = this.metrics;
-
-    let fontHeight = fontBoundingBoxAscent + fontBoundingBoxDescent;
-    if (!_isFinite(fontHeight)) fontHeight = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
-
-    this.dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
-    this.dimensions[1] = fontHeight;
-
-    // Setup text-specific handle offsets
-    this.alphabeticBaseline = -alphabeticBaseline;
-    this.hangingBaseline = -hangingBaseline;
-    this.ideographicBaseline = -ideographicBaseline;
-
-    // Setup font vertical offset
-    this.fontVerticalOffset = (_isFinite(fontBoundingBoxAscent) ? fontBoundingBoxAscent : actualBoundingBoxAscent) / currentScale;
-
-    // Clean up; set required dirty flags
-    releaseCell(mycell);
-
-    this.dirtyPathObject = true;
-    this.dirtyDimensions = true;
-};
-
-
-// `recalculateFont` - force the entity to recalculate its dimensions without having to set anything.
-// + Can also be invoked via the entity's Group object's `recalculateFonts` function
-// + Can be invoked globally via the `scrawl.recalculateFonts` function
-P.recalculateFont = function () {
-
-    this.dirtyFont = true;
-};
-
 
 // #### Clean functions
 // `cleanPathObject` - calculate the Label entity's __Path2D object__
@@ -462,7 +404,6 @@ P.prepareStamp = function() {
     if (this.dirtyText) this.updateAccessibleTextHold();
     if (this.dirtyFont) this.cleanFont();
     if (this.dirtyDimensions) this.cleanDimensions();
-    if (!this.currentFontIsLoaded) this.checkFontIsLoaded();
     if (this.dirtyLock) this.cleanLock();
     if (this.dirtyStart) this.cleanStart();
     if (this.dirtyOffset) this.cleanOffset();

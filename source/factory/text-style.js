@@ -217,9 +217,13 @@ G.rawFont = function () {
 
     return this.fontString;
 };
-G.defaultFont = function () {
+G.canvasFont = function () {
 
-    return this.defaultFont;
+    return this.canvasFont;
+};
+G.fontFamily = function () {
+
+    return this.fontFamily;
 };
 S.fontString = function (item) {
 
