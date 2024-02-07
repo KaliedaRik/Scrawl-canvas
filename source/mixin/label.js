@@ -105,7 +105,7 @@ export default function (P = Ωempty) {
 
     const LABEL_UPDATE_PARTS_KEYS = _freeze(['fontSize', 'fontStretch', 'fontStyle', 'fontVariantCaps', 'fontWeight']);
 
-    const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontSize', 'fontString', 'scale']);
+    const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
 
     const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
 
@@ -285,6 +285,100 @@ export default function (P = Ωempty) {
     S.dimensions = λnull;
     D.dimensions = λnull;
 
+    G.canvasFont = function () {
+
+        return this?.defaultTextStyle?.canvasFont;
+    };
+    G.direction = function () {
+
+        return this?.defaultTextStyle?.direction;
+    };
+    G.fillStyle = function () {
+
+        return this?.defaultTextStyle?.fillStyle;
+    };
+    G.fontFamily = function () {
+
+        return this?.defaultTextStyle?.fontFamily;
+    };
+    G.fontKerning = function () {
+
+        return this?.defaultTextStyle?.fontKerning;
+    };
+    G.fontSize = function () {
+
+        return this?.defaultTextStyle?.fontSize;
+    };
+    G.fontStretch = function () {
+
+        return this?.defaultTextStyle?.fontStretch;
+    };
+    G.fontString = function () {
+
+        return this?.defaultTextStyle?.fontString;
+    };
+    G.fontStyle = function () {
+
+        return this?.defaultTextStyle?.fontStyle;
+    };
+    G.fontVariantCaps = function () {
+
+        return this?.defaultTextStyle?.fontVariantCaps;
+    };
+    G.fontWeight = function () {
+
+        return this?.defaultTextStyle?.fontWeight;
+    };
+    G.highlightStyle = function () {
+
+        return this?.defaultTextStyle?.highlightStyle;
+    };
+    G.includeHighlight = function () {
+
+        return this.includeHighlight;
+    };
+    G.letterSpacing = function () {
+
+        return this?.defaultTextStyle?.letterSpacing;
+    };
+    G.lineDashOffset = function () {
+
+        return this?.defaultTextStyle?.lineDashOffset;
+    };
+    G.lineWidth = function () {
+
+        return this?.defaultTextStyle?.lineWidth;
+    };
+    G.strokeStyle = function () {
+
+        return this?.defaultTextStyle?.strokeStyle;
+    };
+    G.textRendering = function () {
+
+        return this?.defaultTextStyle?.textRendering;
+    };
+    G.underlineGap = function () {
+
+        return this?.defaultTextStyle?.underlineGap;
+    };
+    G.underlineOffset = function () {
+
+        return this?.defaultTextStyle?.underlineOffset;
+    };
+    G.underlineStyle = function () {
+
+        const s = this?.defaultTextStyle?.underlineStyle;
+        return (s) ? s: this?.defaultTextStyle?.fillstyle;
+    };
+    G.underlineWidth = function () {
+
+        return this?.defaultTextStyle?.underlineWidth;
+    };
+    G.wordSpacing = function () {
+
+        return this?.defaultTextStyle?.wordSpacing;
+    };
+
     G.rawText = function () {
 
         return this.rawText;
@@ -356,7 +450,7 @@ export default function (P = Ωempty) {
     P.measureFont = function () {
 
         const { defaultTextStyle, currentScale } = this;
-        const { fontFamily, fontSize, letterSpaceValue, wordSpaceValue } = defaultTextStyle;
+        const { fontFamily, fontSizeValue, letterSpaceValue, wordSpaceValue } = defaultTextStyle;
 
         defaultTextStyle.letterSpacing = `${letterSpaceValue * currentScale}px`;
         defaultTextStyle.wordSpacing = `${wordSpaceValue * currentScale}px`;
@@ -383,8 +477,7 @@ export default function (P = Ωempty) {
 
         const meta = this.getFontMetadata(fontFamily);
 
-        const size = parseFloat(fontSize);
-        const ratio = size / 100;
+        const ratio = fontSizeValue / 100;
 
         this.dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
         this.dimensions[1] = meta.height * ratio * currentScale;
@@ -461,7 +554,7 @@ export default function (P = Ωempty) {
             if (foundSize && foundSize[0]) fontSize = foundSize[0];
 
             calculator.style.fontSize = fontSize;
-            textStyle.fontSize = fontSize;
+            textStyle.fontSize = results.fontSize;
         }
 
         // We only adjust if a part of the font string has been recently 'set'
@@ -511,6 +604,7 @@ export default function (P = Ωempty) {
         // Extract data for font family and size
         const elSizeString = results.fontSize,
             elSizeValue = parseFloat(elSizeString);
+        textStyle.fontSizeValue = elSizeValue;
 
         // Build the internal `canvasFont` string
         let f = '';
@@ -540,7 +634,4 @@ export default function (P = Ωempty) {
         textStyle.fontWeight = elWeight;
         textStyle.fontFamily = elFamily;
     };
-
-
-
 }

@@ -50,7 +50,7 @@ const mylabel = scrawl.makeLabel({
 
     includeUnderline: true,
     underlineWidth: 3,
-    underlineOffset: 0.83,
+    underlineOffset: 0.9,
 });
 
 

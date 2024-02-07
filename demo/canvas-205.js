@@ -63,14 +63,14 @@ canvas.set({
 const report = reportSpeed('#reportmessage', () => {
     return `
 Font.details:
-    Raw font: ${mylabel.get('rawFont')}
-    Default font: ${mylabel.get('defaultFont')}
+    Font string (entity): ${mylabel.get('fontString')}
+    Font string (canvas): ${mylabel.get('canvasFont')}
 
-    Font size: ${mylabel.fontSize}
-    Font style: ${mylabel.fontStyle}
-    Font stretch: ${mylabel.fontStretch}
-    Font variant: ${mylabel.fontVariantCaps}
-    Font weight: ${mylabel.fontWeight}
+    Font size: ${mylabel.get('fontSize')}
+    Font style: ${mylabel.get('fontStyle')}
+    Font stretch: ${mylabel.get('fontStretch')}
+    Font variant: ${mylabel.get('fontVariantCaps')}
+    Font weight: ${mylabel.get('fontWeight')}
     `;
 });
 
