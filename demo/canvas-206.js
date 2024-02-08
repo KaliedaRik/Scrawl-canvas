@@ -20,16 +20,6 @@ const name = (n) => `${namespace}-${n}`;
 const westernText = 'Lorem ipsum dolor sit amet, consectetur 😀 adipiscing &eacute;lit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure d&ouml;lor in reprehenderit 🤖&icirc;n voluptate velit &copy;2024 esse cillum dolore eu fug🎻iat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui offici&thorn;a deserunt mollit anim id est laborum.';
 
 
-const html = document.querySelector('#text-in-html');
-// @ts-expect-error
-html.style.font = '16px serif';
-// @ts-expect-error
-html.style.direction = 'ltr';
-// @ts-expect-error
-html.style.width = '500px';
-html.innerHTML = westernText;
-
-
 // const mylabel = scrawl.makeLabel({
 const mylabel = scrawl.makeEnhancedLabel({
     name: name('my-label'),
@@ -100,25 +90,7 @@ scrawl.makeUpdater({
         fontKerning: ['fontKerning', 'raw'],
         textRendering: ['textRendering', 'raw'],
     },
-
-    callback: () => {
-// @ts-expect-error
-        html.style.letterSpacing = mylabel.get('letterSpacing');
-// @ts-expect-error
-        html.style.wordSpacing = mylabel.get('wordSpacing');
-    },
 });
-
-
-const widthSelector = document.querySelector('#width');
-const updateWidth = (event) => {
-
-    const width = event.target.value;
-
-// @ts-expect-error
-    html.style.width = `${width}px`;
-};
-scrawl.addNativeListener(['change', 'input'], (e) => updateWidth(e), widthSelector);
 
 
 const fontSelector = document.querySelector('#font');
@@ -507,8 +479,6 @@ scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
 // Setup form
 // @ts-expect-error
 fontSelector.options.selectedIndex = 0;
-// @ts-expect-error
-widthSelector.value = 500;
 
 // @ts-expect-error
 document.querySelector('#scale').value = 1;

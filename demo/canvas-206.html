@@ -15,24 +15,11 @@
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
-    .text-in-html-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 300px;
-      padding: 0;
-    }
-    #text-in-html {
-      margin: 1em;
-      border: 1px dashed blue;
-      padding: 0;
+    .no-overflow {
+      overflow: hidden;
     }
     canvas {
       margin: 0 auto;
-      border: 1px dashed red;
-    }
-    .no-overflow {
-      overflow: hidden;
     }
   </style>
 </head>
@@ -97,11 +84,8 @@
       </select>
     </div>
 
-    <div class="pink label">Width</div>
-    <div class="pink">
-      <input class="controlItem" id="width" type="range" value="500" min="200" max="600" step="5" />
-    </div>
-
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
 
     <div class="lavender label">Letter spacing</div>
     <div class="lavender">
@@ -115,17 +99,13 @@
 
   </div>
 
-  <div class="no-overflow">
-    <canvas 
-      id="mycanvas" 
-      width="600" 
-      height="300"
-      data-scrawl-canvas
-    ></canvas>
-    <div class="text-in-html-container">
-      <p id="text-in-html"></p>
-    </div>
-  </div>
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+    data-base-background-color="aliceblue"
+  ></canvas>
 
 
   <div class="controls">

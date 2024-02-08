@@ -43,42 +43,8 @@ labelMix(P);
 
 // #### EnhancedLabel attributes
 const defaultAttributes = {
-/*
-`justifyLines` depends on the setting of `isVertical`.
-+ When `isVertical =  true`, 'left' becomes 'top', 'right' becomes 'bottom'
-+ When `isVertical =  false`, 'top' becomes 'left', 'bottom' becomes 'right'
-+ Accepted values are: 'left', 'top'; 'center'; 'right', 'bottom'; 'full'
-+ Accepted values are: numbers, measured in px; %strings, relating to the appropriate dimension of the Cell
-*/
-    justifyLines: 'left',
 
-/*
-`keyDimension` depends on the setting of `isVertical`.
-+ When `isVertical =  true`, keyDimension is height; width is treated as unlimited
-+ When `isVertical =  false`, keyDimension is width; height is treated as unlimited
-*/
-    keyDimension: '100%',
-
-/*
-`lineHeight` depends on the setting of `isVertical`.
-+ When `isVertical =  true`, lineHeight is horizontal space between lines
-+ When `isVertical =  false`, lineHeight is vertical space between lines
-*/
-    lineHeight: 1,
-
-/*
-When `isVertical` is true, we ignore the values for `canStyleCharacters` as we're going to stamp each character separately
-*/
-    isVertical: false,
-/*
-When `breakLineOnCharacter` is true, we ignore the values for `canStyleCharacters` as we're going to stamp each character separately
-*/
-    breakLineOnCharacter: false,
-
-/*
-When `canStyleCharacters` is true, we MUST stamp each character separately
-*/
-    canStyleCharacters: false,
+    includeUnderline: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -96,9 +62,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-// const G = P.getters,
-//     S = P.setters,
-//     D = P.deltaSetters;
+// No additional functionality required
 
 
 // #### Prototype functions
@@ -147,7 +111,7 @@ P.temperFont = function () {
 
 
 // #### Clean functions
-// `cleanPathObject` - calculate the Label entity's __Path2D object__
+// `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
     this.dirtyPathObject = false;
@@ -224,62 +188,6 @@ P.cleanHandle = function () {
     this.dirtyStampHandlePositions = true;
 
     if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
-};
-
-
-P.calculateText = function () {
-
-    // The `direction` attribute is also important
-    const { isVertical, breakLineOnCharacter, canStyleCharacters } = this;
-
-    // This key decision tree doesn't yet include text along a path!
-    if (isVertical) {
-
-        if (breakLineOnCharacter) this.calculateVerticalTextThatBreaksOnCharacter();
-        else this.calculateVerticalTextThatBreaksOnSpace();
-    }
-    else {
-
-        if (breakLineOnCharacter) this.calculateHorizontalTextThatBreaksOnCharacter();
-        else {
-
-            if (canStyleCharacters) this.calculateHorizontalTextThatBreaksOnSpaceWithStyling();
-            else this.calculateHorizontalTextThatBreaksOnSpace();
-        }
-    }
-    this.dirtyPathObject = true;
-    this.dirtyDimensions = true;
-};
-
-P.calculateVerticalTextThatBreaksOnCharacter = function () {
-
-    // if `direction == 'ltr` first vertical line is leftmost; otherwise it is rightmost
-    // 'justifyLines' is done vertically: 'top/left', 'center', 'bottom/right', 'full'
-    // + we dont care about kerning/ligatures
-};
-
-P.calculateVerticalTextThatBreaksOnSpace = function () {
-
-    // if `direction == 'ltr` first vertical line is leftmost; otherwise it is rightmost
-    // 'justifyLines' is done vertically: 'top/left', 'center', 'bottom/right', 'full'
-    // + we dont care about kerning/ligatures
-};
-
-P.calculateHorizontalTextThatBreaksOnCharacter = function () {
-
-    // if `direction == 'ltr` we stamp individual characters from the left rightwards
-    // + we need to care about kerning, but ligatures will break
-};
-
-P.calculateHorizontalTextThatBreaksOnSpace = function () {
-
-    // stamp by word, not character - this is the only solution which will capture ligatures
-};
-
-P.calculateHorizontalTextThatBreaksOnSpaceWithStyling = function () {
-
-    // if `direction == 'ltr` we stamp individual characters from the left rightwards
-    // + we need to care about kerning, but ligatures will break
 };
 
 
@@ -393,7 +301,7 @@ P.underlineEngine = function (host, pos) {
     // Setup the underline context
     ctx.fillStyle = BLACK;
     ctx.strokeStyle = BLACK;
-    ctx.font = defaultTextStyle.defaultFont;
+    ctx.font = defaultTextStyle.canvasFont;
     ctx.fontKerning = defaultTextStyle.fontKerning;
     ctx.fontStretch = defaultTextStyle.fontStretch;
     ctx.fontVariantCaps = defaultTextStyle.fontVariant;
@@ -448,41 +356,16 @@ P.draw = function (host) {
 // `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
 P.fill = function (host) {
 
-    // if (this.currentFontIsLoaded) {
-
-    //     const engine = host.engine;
-    //     const pos = this.stampPositioningHelper();
-
-    //     if (this.includeUnderline) this.underlineEngine(host, pos);
-
-    //     engine.fillText(...pos);
-
-    //     if (this.showBoundingBox) this.drawBoundingBox(host);
-    // }
-
     if (this.currentFontIsLoaded) {
 
         const engine = host.engine;
         const pos = this.stampPositioningHelper();
 
-        const pouredT = [...pos[0]];
-        // const pouredForPrint = [];
-        // let pouredPrint = '';
+        if (this.includeUnderline) this.underlineEngine(host, pos);
 
-        let x = -280;
-        let y = -140;
+        engine.fillText(...pos);
 
-        for (let i = 0, iz = pouredT.length; i < iz; i++) {
-
-            engine.fillText(pouredT[i], x, y);
-
-            x += 20;
-            if (x >= 280) {
-                x = -280;
-                y += 20;
-            }
-        }
-        // console.log(pos[0].length, t.length, T.length, t, T);
+        if (this.showBoundingBox) this.drawBoundingBox(host);
     }
 };
 
