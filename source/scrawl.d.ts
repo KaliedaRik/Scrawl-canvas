@@ -355,6 +355,20 @@ interface FilterMixinFunctions {
 
 
 
+// Label mixin
+// -------------------------------------
+interface LabelMixinDeltaInputs {}
+
+interface LabelMixinInputs {
+    text?: string;
+}
+
+interface LabelMixinFunctions {
+    recalculateFont: () => void;
+}
+
+
+
 // Mimic mixin
 // -------------------------------------
 interface MimicMixinDeltaInputs {}
@@ -602,12 +616,14 @@ interface StylesMixinFunctions {
 // -------------------------------------
 interface TextMixinDeltaInputs {
     boundingBoxLineWidth?: number;
+    boundingBoxLineDashOffset?: number;
 }
 
 interface TextMixinInputs {
     accessibleText?: string;
     accessibleTextOrder?: number;
     accessibleTextPlaceholder?: string;
+    boundingBoxLineDash?: number[];
     boundingBoxStyle?: StylesInstance | string;
     showBoundingBox?: boolean;
     textIsAccessible?: boolean;
@@ -1247,42 +1263,20 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 // EnhancedLabelInstance factory
 // -------------------------------------
-interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
-    letterSpacing?: string | number;
-    underlineGap?: number;
-    underlineOffset?: number;
-    underlineWidth?: number;
-    wordSpacing?: string | number;
-}
+interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
 
-interface EnhancedLabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, EnhancedLabelFactoryDeltaInputs {
-    delta?: LabelFactoryDeltaInputs;
-    direction?: string;
-    fontKerning?: string;
-    fontStretch?: string;
-    fontSize?: string | number;
-    fontVariant?: string;
-    fontWeight?: string;
-    fontStyle?: string;
-    fontString?: string;
-    fontVariantCaps?: string;
-    includeUnderline?: boolean;
-    text?: string;
-    textAlign?: string;
-    textBaseline?: string;
-    textRendering?: string;
-    underlineStyle?: StylesInstance | string;
+interface EnhancedLabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
+    delta?: EnhancedLabelFactoryDeltaInputs;
 }
 
 interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}
 
-interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
+interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions, LabelMixinFunctions {
     clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     saveAsPacket: (item?: EnhancedLabelSaveInputs | boolean) => string;
     set: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
     simpleStamp: (host: CellInstance, items?: EnhancedLabelFactoryInputs) => void;
-    recalculateFont: () => void;
 }
 
 interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, EnhancedLabelFactoryFunctions {}
@@ -1586,42 +1580,21 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 
 // LabelInstance factory
 // -------------------------------------
-interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
-    letterSpacing?: string | number;
-    underlineGap?: number;
-    underlineOffset?: number;
-    underlineWidth?: number;
-    wordSpacing?: string | number;
-}
+interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
 
-interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelFactoryDeltaInputs {
+interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
     delta?: LabelFactoryDeltaInputs;
-    direction?: string;
-    fontKerning?: string;
-    fontStretch?: string;
-    fontSize?: string | number;
-    fontVariant?: string;
-    fontWeight?: string;
-    fontStyle?: string;
-    fontString?: string;
-    fontVariantCaps?: string;
     includeUnderline?: boolean;
-    text?: string;
-    textAlign?: string;
-    textBaseline?: string;
-    textRendering?: string;
-    underlineStyle?: StylesInstance | string;
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
 
-interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
+interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions, LabelMixinFunctions {
     clone: (item?: LabelFactoryInputs) => LabelInstance;
     saveAsPacket: (item?: LabelSaveInputs | boolean) => string;
     set: (item?: LabelFactoryInputs) => LabelInstance;
     setDelta: (item?: LabelFactoryDeltaInputs) => LabelInstance;
     simpleStamp: (host: CellInstance, items?: LabelFactoryInputs) => void;
-    recalculateFont: () => void;
 }
 
 interface LabelInstance extends LabelFactoryInputs, LabelFactoryFunctions {}
@@ -2609,6 +2582,45 @@ interface TetragonInstance extends TetragonFactoryInputs, TetragonFactoryFunctio
     length: number;
 }
 
+
+
+
+// TextStyleInstance factory
+// -------------------------------------
+interface TextStyleFactoryDeltaInputs extends BaseMixinDeltaInputs {
+    letterSpacing?: number;
+    lineDashOffset?: number;
+    lineWidth?: number;
+    underlineOffset?: number;
+    underlineWidth?: number;
+    wordSpacing?: number;
+}
+
+interface TextStyleFactoryInputs extends BaseMixinInputs, TextStyleFactoryDeltaInputs {
+    direction?: string;
+    fillStyle?: StylesInstance | string;
+    fontKerning?: string;
+    fontStretch?: string;
+    fontString?: string;
+    fontVariantCaps?: string;
+    highlightStyle?: StylesInstance | string;
+    lineDash?: number[],
+    strokeStyle?: StylesInstance | string;
+    textRendering?: string;
+    underlineGap?: number;
+    underlineStyle?: StylesInstance | string;
+}
+
+interface TextStyleSaveInputs extends TextStyleFactoryFunctions, SaveInputs {}
+
+interface TextStyleFactoryFunctions extends BaseMixinFunctions {
+    clone: (item?: TextStyleFactoryInputs) => TextStyleInstance;
+    saveAsPacket: (item?: TextStyleSaveInputs | boolean) => string;
+    set: (item?: TextStyleFactoryInputs) => TextStyleInstance;
+    setDelta: (item?: TextStyleFactoryDeltaInputs) => TextStyleInstance;
+}
+
+interface TextStyleInstance extends TextStyleFactoryInputs, TextStyleFactoryFunctions {}
 
 
 

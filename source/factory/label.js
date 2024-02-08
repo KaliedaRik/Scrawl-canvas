@@ -6,7 +6,7 @@
 import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { doCreate, xta, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, xta, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -42,7 +42,11 @@ labelMix(P);
 
 
 // #### Label attributes
-// No additional attributes required beyond those supplied by the mixins
+const defaultAttributes = {
+
+    includeUnderline: false,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management

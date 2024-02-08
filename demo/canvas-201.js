@@ -91,6 +91,14 @@ scrawl.makeLabel({
     accessibleText: `${name('mylabel_fillThenDraw')} says: §`,
     accessibleTextOrder: 3,
 
+    lineDash: [5, 5],
+    boundingBoxLineDash: [8, 4, 2, 4],
+
+    delta: {
+        lineDashOffset: -0.1,
+        boundingBoxLineDashOffset: 0.3,
+    },
+
 }).clone({
 
     name: name('mylabel_clear'),
@@ -99,6 +107,10 @@ scrawl.makeLabel({
     accessibleText: `${name('mylabel_clear')} says: §`,
     accessibleTextOrder: 1,
     textIsAccessible: false,
+
+    lineDash: [],
+    boundingBoxLineDash: [],
+    delta: {},
 });
 
 

@@ -234,7 +234,6 @@ export const FOCUS = 'focus';
 export const FOCUS_ACTION = 'focusAction';
 export const FONT_ATTRIBUTE = 'fontattribute';
 export const FONT_LENGTH_REGEX = /[0-9.,]+(%|cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvmax|dvmin|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvmax|lvmin|lvw|mm|pc|pt|px|Q|rcap|rch|rem|rex|ric|rlh|svb|svh|svi|svmax|svmin|svw|vb|vh|vi|vmax|vmin|vw)/i;
-export const FONT_STRETCH_VALS = _freeze(['ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded']);
 export const FONT_VARIANT_VALS = _freeze(['small-caps', 'all-small-caps', 'petite-caps', 'all-petite-caps', 'unicase', 'titling-caps']);
 export const FONT_USERS = _freeze(['Label', 'EnhancedLabel']);
 export const FORCE = 'force';

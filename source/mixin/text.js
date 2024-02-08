@@ -30,6 +30,8 @@ export default function (P = Ωempty) {
         showBoundingBox: false,
         boundingBoxStyle: BLACK,
         boundingBoxLineWidth: 1,
+        boundingBoxLineDash: null,
+        boundingBoxLineDashOffset: 0,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -111,9 +113,12 @@ export default function (P = Ωempty) {
         const uStroke = this.getStyle(this.boundingBoxStyle, 'fillStyle', host);
         const engine = host.engine;
 
+// console.log(this.lineDash, this.boundingBoxLineDash)
         engine.save();
         engine.strokeStyle = uStroke;
         engine.lineWidth = this.boundingBoxLineWidth;
+        engine.setLineDash(this.boundingBoxLineDash || []);
+        engine.lineDashOffset = this.boundingBoxLineDashOffset || 0;
         engine.globalCompositeOperation = SOURCE_OVER;
         engine.globalAlpha = 1;
         engine.shadowOffsetX = 0;

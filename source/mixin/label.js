@@ -25,8 +25,6 @@ export default function (P = Ωempty) {
     const defaultAttributes = {
 
         text: ZERO_STR,
-
-        includeUnderline: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
