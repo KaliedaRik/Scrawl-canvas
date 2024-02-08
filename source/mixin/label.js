@@ -36,40 +36,42 @@ export default function (P = Ωempty) {
         const stateCopy = _parse(this.state.saveAsPacket(items))[3];
 
         copy = mergeOver(copy, {
-            fontString: defaultTextCopy.fontString,
-            underlineStyle: defaultTextCopy.underlineStyle,
-            underlineWidth: defaultTextCopy.underlineWidth,
-            underlineOffset: defaultTextCopy.underlineOffset,
-            underlineGap: defaultTextCopy.underlineGap,
-            includeHighlight: defaultTextCopy.includeHighlight,
-            highlightStyle: defaultTextCopy.highlightStyle,
-            fillStyle: defaultTextCopy.fillStyle,
-            strokeStyle: defaultTextCopy.strokeStyle,
             direction: defaultTextCopy.direction,
+            fillStyle: defaultTextCopy.fillStyle,
             fontKerning: defaultTextCopy.fontKerning,
-            textRendering: defaultTextCopy.textRendering,
             fontStretch: defaultTextCopy.fontStretch,
+            fontString: defaultTextCopy.fontString,
             fontVariantCaps: defaultTextCopy.fontVariantCaps,
+            highlightStyle: defaultTextCopy.highlightStyle,
+            includeHighlight: defaultTextCopy.includeHighlight,
+            includeUnderline: defaultTextCopy.includeUnderline,
             letterSpacing: defaultTextCopy.letterSpaceValue,
-            wordSpacing: defaultTextCopy.wordSpaceValue,
-            lineWidth: defaultTextCopy.lineWidth,
             lineDash: defaultTextCopy.lineDash,
             lineDashOffset: defaultTextCopy.lineDashOffset,
+            lineWidth: defaultTextCopy.lineWidth,
+            strokeStyle: defaultTextCopy.strokeStyle,
+            textRendering: defaultTextCopy.textRendering,
+            underlineGap: defaultTextCopy.underlineGap,
+            underlineOffset: defaultTextCopy.underlineOffset,
+            underlineStyle: defaultTextCopy.underlineStyle,
+            underlineWidth: defaultTextCopy.underlineWidth,
+            wordSpacing: defaultTextCopy.wordSpaceValue,
+            
+            filter: stateCopy.filter,
             font: null,
-            textAlign: LEFT,
-            textBaseline: TOP,
+            globalAlpha: stateCopy.globalAlpha,
+            globalCompositeOperation: stateCopy.globalCompositeOperation,
+            imageSmoothingEnabled: stateCopy.imageSmoothingEnabled,
+            imageSmoothingQuality: stateCopy.imageSmoothingQuality,
             lineCap: ROUND,
             lineJoin: ROUND,
             miterLimit: 10,
-            globalAlpha: stateCopy.globalAlpha,
-            globalCompositeOperation: stateCopy.globalCompositeOperation,
-            shadowOffsetX: stateCopy.shadowOffsetX,
-            shadowOffsetY: stateCopy.shadowOffsetY,
             shadowBlur: stateCopy.shadowBlur,
             shadowColor: stateCopy.shadowColor,
-            filter: stateCopy.filter,
-            imageSmoothingEnabled: stateCopy.imageSmoothingEnabled,
-            imageSmoothingQuality: stateCopy.imageSmoothingQuality,
+            shadowOffsetX: stateCopy.shadowOffsetX,
+            shadowOffsetY: stateCopy.shadowOffsetY,
+            textAlign: LEFT,
+            textBaseline: TOP,
         });
 
         copy = this.handlePacketAnchor(copy, items);
@@ -97,7 +99,7 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     // Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
-    const TEXTSTYLE_KEYS = _freeze(['direction', 'fillStyle', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
+    const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
 
     const LABEL_DIRTY_FONT_KEYS = _freeze(['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing']);
 
@@ -107,42 +109,40 @@ export default function (P = Ωempty) {
 
     const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
 
-    P.get = function (item) {
+    P.get = function (key) {
 
-        const getter = this.getters[item];
+        const {defs, getters, state, defaultTextStyle} = this;
 
-        if (getter) return getter.call(this);
+        const defaultTextStyleGetters = (defaultTextStyle) ? defaultTextStyle.getters : Ωempty;
+        const defaultTextStyleDefs = (defaultTextStyle) ? defaultTextStyle.defs : Ωempty;
 
+        const stateGetters = (state) ? state.getters : Ωempty;
+        const stateDefs = (state) ? state.defs : Ωempty;
+
+        let fn;
+
+        if (TEXTSTYLE_KEYS.includes(key)) {
+
+            fn = defaultTextStyleGetters[key];
+
+            if (fn) return fn.call(defaultTextStyle);
+            else if (typeof defaultTextStyleDefs[key] != UNDEF) return defaultTextStyle[key];
+        }
+        else if (STATE_KEYS.includes(key)) {
+
+            fn = stateGetters[key];
+
+            if (fn) return fn.call(state);
+            else if (typeof stateDefs[key] != UNDEF) return state[key];
+        }
         else {
 
-            const {state, defaultTextStyle} = this;
+            fn = getters[key];
 
-            let def = this.defs[item];
-            let val;
-
-            if (def != null) {
-
-                val = this[item];
-                return (typeof val != UNDEF) ? val : def;
-            }
-
-            def = defaultTextStyle.defs[item];
-
-            if (def != null) {
-
-                val = defaultTextStyle[item];
-                return (typeof val != UNDEF) ? val : def;
-            }
-
-            def = state.defs[item];
-
-            if (def != null) {
-
-                val = state[item];
-                return (typeof val != UNDEF) ? val : def;
-            }
-            return null;
+            if (fn) return fn.call(this);
+            else if (typeof defs[key] != UNDEF) return this[key];
         }
+        return null;
     };
 
     P.set = function (items = Ωempty) {
@@ -282,100 +282,6 @@ export default function (P = Ωempty) {
     };
     S.dimensions = λnull;
     D.dimensions = λnull;
-
-    G.canvasFont = function () {
-
-        return this?.defaultTextStyle?.canvasFont;
-    };
-    G.direction = function () {
-
-        return this?.defaultTextStyle?.direction;
-    };
-    G.fillStyle = function () {
-
-        return this?.defaultTextStyle?.fillStyle;
-    };
-    G.fontFamily = function () {
-
-        return this?.defaultTextStyle?.fontFamily;
-    };
-    G.fontKerning = function () {
-
-        return this?.defaultTextStyle?.fontKerning;
-    };
-    G.fontSize = function () {
-
-        return this?.defaultTextStyle?.fontSize;
-    };
-    G.fontStretch = function () {
-
-        return this?.defaultTextStyle?.fontStretch;
-    };
-    G.fontString = function () {
-
-        return this?.defaultTextStyle?.fontString;
-    };
-    G.fontStyle = function () {
-
-        return this?.defaultTextStyle?.fontStyle;
-    };
-    G.fontVariantCaps = function () {
-
-        return this?.defaultTextStyle?.fontVariantCaps;
-    };
-    G.fontWeight = function () {
-
-        return this?.defaultTextStyle?.fontWeight;
-    };
-    G.highlightStyle = function () {
-
-        return this?.defaultTextStyle?.highlightStyle;
-    };
-    G.includeHighlight = function () {
-
-        return this.includeHighlight;
-    };
-    G.letterSpacing = function () {
-
-        return this?.defaultTextStyle?.letterSpacing;
-    };
-    G.lineDashOffset = function () {
-
-        return this?.defaultTextStyle?.lineDashOffset;
-    };
-    G.lineWidth = function () {
-
-        return this?.defaultTextStyle?.lineWidth;
-    };
-    G.strokeStyle = function () {
-
-        return this?.defaultTextStyle?.strokeStyle;
-    };
-    G.textRendering = function () {
-
-        return this?.defaultTextStyle?.textRendering;
-    };
-    G.underlineGap = function () {
-
-        return this?.defaultTextStyle?.underlineGap;
-    };
-    G.underlineOffset = function () {
-
-        return this?.defaultTextStyle?.underlineOffset;
-    };
-    G.underlineStyle = function () {
-
-        const s = this?.defaultTextStyle?.underlineStyle;
-        return (s) ? s: this?.defaultTextStyle?.fillstyle;
-    };
-    G.underlineWidth = function () {
-
-        return this?.defaultTextStyle?.underlineWidth;
-    };
-    G.wordSpacing = function () {
-
-        return this?.defaultTextStyle?.wordSpacing;
-    };
 
     G.rawText = function () {
 

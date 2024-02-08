@@ -1584,7 +1584,6 @@ interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelta
 
 interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
     delta?: LabelFactoryDeltaInputs;
-    includeUnderline?: boolean;
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
@@ -2604,6 +2603,8 @@ interface TextStyleFactoryInputs extends BaseMixinInputs, TextStyleFactoryDeltaI
     fontString?: string;
     fontVariantCaps?: string;
     highlightStyle?: StylesInstance | string;
+    includeHighlight?: boolean;
+    includeUnderline?: boolean;
     lineDash?: number[],
     strokeStyle?: StylesInstance | string;
     textRendering?: string;

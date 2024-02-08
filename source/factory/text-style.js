@@ -12,7 +12,7 @@ import { addStrings, doCreate, mergeOver, λnull, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _keys, AUTO, BLACK, DEFAULT_FONT, LINE_DASH, LTR, NAME, NORMAL, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
+import { _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, LINE_DASH, LTR, NAME, NORMAL, SANS_SERIF, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
 
 // #### Wheel constructor
 const TextStyle = function (items = Ωempty) {
@@ -49,7 +49,9 @@ baseMix(P);
 const defaultAttributes = {
 
     fontString: DEFAULT_FONT,
+    canvasFont: DEFAULT_FONT,
 
+    includeUnderline: false,
     underlineStyle: ZERO_STR,
     underlineWidth: 1,
     underlineOffset: 0,
@@ -71,6 +73,10 @@ const defaultAttributes = {
     textRendering: AUTO,
     fontStretch: NORMAL,
     fontVariantCaps: NORMAL,
+    fontWeight: NORMAL,
+    fontStyle: NORMAL,
+    fontSize: DEFAULT_FONT_SIZE,
+    fontFamily: SANS_SERIF,
     // `textAlign` - always has the value of 'left'
     // `textBaseline` - always has the value of 'top'
 
@@ -94,7 +100,6 @@ const defaultAttributes = {
     // `filter` - handled by the entity, not here
     // `imageSmoothingEnabled` - handled by the entity, not here
     // `imageSmoothingQuality` - handled by the entity, not here
-
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -213,18 +218,18 @@ const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-G.rawFont = function () {
+// G.rawFont = function () {
 
-    return this.fontString;
-};
-G.canvasFont = function () {
+//     return this.fontString;
+// };
+// G.canvasFont = function () {
 
-    return this.canvasFont;
-};
-G.fontFamily = function () {
+//     return this.canvasFont;
+// };
+// G.fontFamily = function () {
 
-    return this.fontFamily;
-};
+//     return this.fontFamily;
+// };
 S.fontString = function (item) {
 
     if (item?.substring) this.fontString = item;

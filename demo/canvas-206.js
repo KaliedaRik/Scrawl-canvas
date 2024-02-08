@@ -461,16 +461,6 @@ const updateFont = (event) => {
                     direction: 'ltr',
                 });
         }
-
-        // We need to let the changes settle before transferring them over to our DOM element
-        setTimeout(() => {
-
-// @ts-expect-error
-            html.style.font = mylabel.get('defaultFont');
-// @ts-expect-error
-            html.style.direction = mylabel.get('direction');
-            html.innerHTML = mylabel.get('rawText');
-        }, 50);
     }
 };
 scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
