@@ -224,7 +224,7 @@ P.purgeParticlesFromLibrary = function () {
             if (tempArt.particle && !tempArt.particle.substring && tempArt.particle.name) tempArt.particle = tempArt.particle.name;
 
             // Polyline entitys go one step further in that they can also use Particles in their pin array
-            if (tempArt.type = T_POLYLINE && tempArt.useParticlesAsPins) {
+            if (tempArt.type === T_POLYLINE && tempArt.useParticlesAsPins) {
 
                 tempArt.pins.forEach((pin, index) => {
 

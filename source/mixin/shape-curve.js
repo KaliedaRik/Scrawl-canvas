@@ -78,7 +78,7 @@ P.factoryKill = function () {
 
         if (art.name !== this.name) {
 
-=            if (art.startControlPivot && art.startControlPivot.name === this.name) art.set({ startControlPivot: false});
+            if (art.startControlPivot && art.startControlPivot.name === this.name) art.set({ startControlPivot: false});
             if (art.controlPivot && art.controlPivot.name === this.name) art.set({ controlPivot: false});
             if (art.endControlPivot && art.endControlPivot.name === this.name) art.set({ endControlPivot: false});
             if (art.endPivot && art.endPivot.name === this.name) art.set({ endPivot: false});
