@@ -271,18 +271,18 @@ P.get = function (item) {
         let def = this.defs[item],
             val;
 
-        if (typeof def != UNDEF) {
+        if (typeof def !== UNDEF) {
 
             val = this[item];
-            return (typeof val != UNDEF) ? val : def;
+            return (typeof val !== UNDEF) ? val : def;
         }
 
         def = state.defs[item];
 
-        if (typeof def != UNDEF) {
+        if (typeof def !== UNDEF) {
 
             val = state[item];
-            return (typeof val != UNDEF) ? val : def;
+            return (typeof val !== UNDEF) ? val : def;
         }
         return null;
     }
@@ -310,14 +310,14 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEF) {
+                    else if (typeof defs[key] !== UNDEF) {
 
                         this[key] = value;
                         this.dirtyFilterIdentifier = true;
@@ -328,7 +328,7 @@ P.set = function (items = Ωempty) {
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
+                    else if (typeof stateDefs[key] !== UNDEF) state[key] = value;
                 }
             }
         }
@@ -409,7 +409,7 @@ S.group = function (item) {
 
     if (item) {
 
-        if (this.group && this.group.type == T_GROUP) this.group.removeArtefacts(this.name);
+        if (this.group && this.group.type === T_GROUP) this.group.removeArtefacts(this.name);
 
         if (item.substring) {
 
@@ -421,7 +421,7 @@ S.group = function (item) {
         else this.group = item;
     }
 
-    if (this.group && this.group.type == T_GROUP) this.group.addArtefacts(this.name);
+    if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
 };
 
 // __getHere__ - returns current core position.
@@ -437,7 +437,7 @@ S.net = function (item) {
 
         item = (item.substring) ? artefact[item] : item;
 
-        if (item && item.type == T_NET) {
+        if (item && item.type === T_NET) {
 
             this.net = item;
             this.dirtyStart = true;
@@ -451,11 +451,11 @@ S.source = function (item) {
 
     item = (item.substring) ? artefact[item] : item;
 
-    if (item && item.type == T_PICTURE) {
+    if (item && item.type === T_PICTURE) {
 
         const src = this.source;
 
-        if (src && src.type == T_PICTURE) src.imageUnsubscribe(this.name);
+        if (src && src.type === T_PICTURE) src.imageUnsubscribe(this.name);
 
         this.source = item;
         item.imageSubscribe(this.name);
@@ -595,25 +595,25 @@ P.setSourceDimension = function () {
 
                 coord.push([x0, y0, x1, y1]);
 
-                if (x == 0) {
+                if (x === 0) {
 
                     left.push([x0, y0]);
                 }
-                else if (x == xz - 1) {
+                else if (x === xz - 1) {
 
                     right.push([x1, y1]);
                 }
-                else if (y == 0) {
+                else if (y === 0) {
 
                     top.push([x0, y0]);
 
-                    if (x == xz - 2) top.push([x1, y1]);
+                    if (x === xz - 2) top.push([x1, y1]);
                 }
-                else if (y == rows - 1) {
+                else if (y === rows - 1) {
 
                     bottom.push([x0, y0]);
 
-                    if (x == xz - 2) bottom.push([x1, y1]);
+                    if (x === xz - 2) bottom.push([x1, y1]);
                 }
 
                 xPos.push(x0, x1);
@@ -709,7 +709,7 @@ P.setSourceDimension = function () {
 // + TODO: we may have to disable this functionality for the Mesh entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
 P.simpleStamp = function (host, changes) {
 
-    if (host && host.type == T_CELL) {
+    if (host && host.type === T_CELL) {
 
         this.currentHost = host;
 
@@ -732,7 +732,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (force) {
 
-        if (host && host.type == T_CELL) this.currentHost = host;
+        if (host && host.type === T_CELL) this.currentHost = host;
 
         if (changes) {
 

@@ -107,7 +107,7 @@ P.finalizePacketOut = function (copy, items) {
 
     _keys(copy).forEach(key => {
 
-        if (key == PINS) {
+        if (key === PINS) {
 
             const temp = [];
 
@@ -246,8 +246,8 @@ S.pivot = function (item) {
 
         this.pivot = null;
 
-        if (this.lockTo[0] == PIVOT) this.lockTo[0] = START;
-        if (this.lockTo[1] == PIVOT) this.lockTo[1] = START;
+        if (this.lockTo[0] === PIVOT) this.lockTo[0] = START;
+        if (this.lockTo[1] === PIVOT) this.lockTo[1] = START;
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
@@ -260,7 +260,7 @@ S.pivot = function (item) {
 
         if (newPivot && newPivot.name) {
 
-            if (oldPivot && oldPivot.name != newPivot.name) removeItem(oldPivot.pivoted, name);
+            if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
 
             pushUnique(newPivot.pivoted, name);
 
@@ -461,9 +461,9 @@ P.buildCurve = function (x, y, coords) {
 P.cleanCoordinate = function (coord, dim) {
 
     if (coord.toFixed) return coord;
-    if (coord == LEFT || coord == TOP) return 0;
-    if (coord == RIGHT || coord == BOTTOM) return dim;
-    if (coord == CENTER) return dim / 2;
+    if (coord === LEFT || coord === TOP) return 0;
+    if (coord === RIGHT || coord === BOTTOM) return dim;
+    if (coord === CENTER) return dim / 2;
     return (parseFloat(coord) / 100) * dim;
 };
 

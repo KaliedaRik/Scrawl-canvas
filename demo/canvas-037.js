@@ -111,7 +111,7 @@ scrawl.addListener('down', () => {
     const here = base.here,
         target = baseGroup.getArtefactAt(base.here);
 
-    draggingArtefact = (target && target.artefact && target.artefact.type == 'Picture') ?
+    draggingArtefact = (target && target.artefact && target.artefact.type === 'Picture') ?
         target.artefact :
         false;
 

@@ -297,7 +297,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = this[item];
-            return (typeof val != UNDEF) ? val : def;
+            return (typeof val !== UNDEF) ? val : def;
         }
 
         def = state.defs[item];
@@ -305,7 +305,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = state[item];
-            return (typeof val != UNDEF) ? val : def;
+            return (typeof val !== UNDEF) ? val : def;
         }
         return null;
     }
@@ -333,21 +333,21 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEF) this[key] = value;
+                    else if (typeof defs[key] !== UNDEF) this[key] = value;
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
+                    else if (typeof stateDefs[key] !== UNDEF) state[key] = value;
                 }
             }
         }
@@ -377,21 +377,21 @@ P.setDelta = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
+                    else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], value);
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], value);
+                    else if (typeof stateDefs[key] !== UNDEF) state[key] = addStrings(state[key], value);
                 }
             }
         }
@@ -423,7 +423,7 @@ S.group = function (item) {
 
     if (item) {
 
-        if (this.group && this.group.type == T_GROUP) this.group.removeArtefacts(this.name);
+        if (this.group && this.group.type === T_GROUP) this.group.removeArtefacts(this.name);
 
         if (item.substring) {
 
@@ -435,7 +435,7 @@ S.group = function (item) {
         else this.group = item;
     }
 
-    if (this.group && this.group.type == T_GROUP) this.group.addArtefacts(this.name);
+    if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
 };
 
 // __getHere__ - returns current core position.
@@ -462,7 +462,7 @@ S.fromPath = function (item) {
 
         if (newPath && newPath.name && newPath.useAsPath) {
 
-            if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
+            if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
 
             pushUnique(newPath.pathed, name);
 
@@ -484,7 +484,7 @@ S.toPath = function (item) {
 
         if (newPath && newPath.name && newPath.useAsPath) {
 
-            if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
+            if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
 
             pushUnique(newPath.pathed, name);
 
@@ -500,11 +500,11 @@ S.source = function (item) {
 
     item = (item.substring) ? artefact[item] : item;
 
-    if (item && item.type == T_PICTURE) {
+    if (item && item.type === T_PICTURE) {
 
         const src = this.source;
 
-        if (src && src.type == T_PICTURE) src.imageUnsubscribe(this.name);
+        if (src && src.type === T_PICTURE) src.imageUnsubscribe(this.name);
 
         this.source = item;
         item.imageSubscribe(this.name);
@@ -1113,7 +1113,7 @@ P.getBoundingBox = function () {
 
                 if (!_isFinite(lsx) || !_isFinite(lsy) || !_isFinite(sw) || !_isFinite(sh) || !_isFinite(sx) || !_isFinite(sy) || !_isFinite(lex) || !_isFinite(ley) || !_isFinite(ew) || !_isFinite(eh) || !_isFinite(ex) || !_isFinite(ey)) this.dirtyStart = true;
 
-                if (lsx == lex && lsy == ley && sw == ew && sh == eh && sx == ex && sy == ey) this.dirtyStart = true;
+                if (lsx === lex && lsy === ley && sw === ew && sh === eh && sx === ex && sy === ey) this.dirtyStart = true;
 
                 lsx += sx;
                 lsy += sy;

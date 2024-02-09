@@ -547,7 +547,7 @@ const getShapeUnitMetaData = function (species, precision, args) {
 
     // We want to separate out linear species before going into the while loop
     // + because these calculations will be simple
-    if (species == LINEAR) {
+    if (species === LINEAR) {
 
         const [sx, sy, ex, ey] = args;
 
@@ -559,9 +559,9 @@ const getShapeUnitMetaData = function (species, precision, args) {
         xPts = xPts.concat([sx, ex]);
         yPts = yPts.concat([sy, ey]);
     }
-    else if (species == BEZIER || (species == QUADRATIC)) {
+    else if (species === BEZIER || (species === QUADRATIC)) {
 
-        const func = (species == BEZIER) ? GET_BEZIER : GET_QUADRATIC;
+        const func = (species === BEZIER) ? GET_BEZIER : GET_QUADRATIC;
 
         let flag = false,
             step = 0.25,

@@ -430,19 +430,19 @@ P.preparePinsForStamp = function () {
 
         name = dirtyPins[i];
 
-        if ((scPivot && scPivot.name == name) || (scPath && scPath.name == name)) {
+        if ((scPivot && scPivot.name === name) || (scPath && scPath.name === name)) {
 
             this.dirtyStartControl = true;
             if (this.startControlLockTo.includes(PATH)) this.currentStartControlPathData = false;
         }
 
-        if ((ecPivot && ecPivot.name == name) || (ecPath && ecPath.name == name)) {
+        if ((ecPivot && ecPivot.name === name) || (ecPath && ecPath.name === name)) {
 
             this.dirtyEndControl = true;
             if (this.endControlLockTo.includes(PATH)) this.currentEndControlPathData = false;
         }
 
-        if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
+        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
 
             this.dirtyEnd = true;
             if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;

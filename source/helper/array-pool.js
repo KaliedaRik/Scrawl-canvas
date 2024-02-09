@@ -38,7 +38,7 @@ export const requestArray = function () {
 
 export const releaseArray = function (a) {
 
-    if (a && a.type == T_GENERIC_ARRAY) {
+    if (a && a.type === T_GENERIC_ARRAY) {
 
         a.length = 0;
         genericArrayPool.push(a);

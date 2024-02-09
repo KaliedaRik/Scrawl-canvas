@@ -123,8 +123,8 @@ P.factoryKill = function () {
 
         s = spring[name];
 
-        if (s.particleFrom && s.particleFrom.name == this.name) deadSprings.push(s);
-        else if (s.particleTo && s.particleTo.name == this.name) deadSprings.push(s);
+        if (s.particleFrom && s.particleFrom.name === this.name) deadSprings.push(s);
+        else if (s.particleTo && s.particleTo.name === this.name) deadSprings.push(s);
     });
 
     deadSprings.forEach(s => s.kill());
@@ -398,7 +398,7 @@ export const requestParticle = function (items) {
 // `exported function` - return a Particle to the particle pool. Failing to return Particles to the pool may lead to more inefficient code and possible memory leaks.
 export const releaseParticle = function (item) {
 
-    if (item && item.type == T_PARTICLE) {
+    if (item && item.type === T_PARTICLE) {
 
         item.history.forEach(h => releaseParticleHistory(h));
         item.history.length = 0;

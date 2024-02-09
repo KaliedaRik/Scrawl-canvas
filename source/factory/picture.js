@@ -285,7 +285,7 @@ P.get = function (item) {
 
     const source = this.source;
 
-    if ((item.indexOf($VIDEO) == 0 || item.indexOf($IMAGE) == 0) && source) {
+    if ((item.indexOf($VIDEO) === 0 || item.indexOf($IMAGE) === 0) && source) {
 
         if (gettableVideoAssetAtributes.includes(item)) return source[item.substring(6)];
         else if (gettableImageAssetAtributes.includes(item)) return source[item.substring(6)];
@@ -304,18 +304,18 @@ P.get = function (item) {
             let def = this.defs[item],
                 val;
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
 
             def = state.defs[item];
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = state[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             return undefined;
         }
@@ -345,27 +345,27 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if ((key.indexOf($VIDEO) == 0 || key.indexOf($IMAGE) == 0) && source) {
+            if ((key.indexOf($VIDEO) === 0 || key.indexOf($IMAGE) === 0) && source) {
 
                 if (settableVideoAssetAtributes.includes(key)) source[key.substring(6)] = value
                 else if (settableImageAssetAtributes.includes(key)) source[key.substring(6)] = value
             }
 
-            else if (key && key != NAME && value != null) {
+            else if (key && key !== NAME && value != null) {
 
                 if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEF) this[key] = value;
+                    else if (typeof defs[key] !== UNDEF) this[key] = value;
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
+                    else if (typeof stateDefs[key] !== UNDEF) state[key] = value;
                 }
             }
         }
@@ -515,7 +515,7 @@ P.prepareStamp = function() {
     // Not content with the dirty flag, the entity now interrogates its asset via its `checkSource` to trigger it to directly rewrite key information if it has changed - particularly dimensional data
     if (this.asset) {
 
-        if (this.asset.type == T_SPRITE) this.checkSpriteFrame(this);
+        if (this.asset.type === T_SPRITE) this.checkSpriteFrame(this);
         else {
 
             if (this.asset.checkSource) this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
@@ -593,9 +593,9 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        if (!this.pasteArray || this.pasteArray.length != 4) this.preparePasteObject();
+        if (!this.pasteArray || this.pasteArray.length !== 4) this.preparePasteObject();
 
-        if (this.pasteArray.length != 4) this.dirtyPathObject = true;
+        if (this.pasteArray.length !== 4) this.dirtyPathObject = true;
         else {
 
             const p = this.pathObject = new Path2D();

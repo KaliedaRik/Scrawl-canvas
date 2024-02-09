@@ -418,11 +418,11 @@ P.getStopData = function (gradient, start, end, cycle) {
         let spread, offset, i, iz, item, n;
 
         let engine = easingFunction;
-        if (easing != FUNCTION && easeEngines[easing]) engine = easeEngines[easing];
+        if (easing !== FUNCTION && easeEngines[easing]) engine = easeEngines[easing];
 
         const colorSpace = this.getColorSpace();
 
-        const precisionTest = (!precision || (easing == LINEAR && colorSpace == RGB)) ? false : true;
+        const precisionTest = (!precision || (easing === LINEAR && colorSpace === RGB)) ? false : true;
 
         const data = [];
 
@@ -502,9 +502,9 @@ P.getStopData = function (gradient, start, end, cycle) {
 
                         item = keys[i];
 
-                        if (item == 999) offset = (item - start - 0.01) / spread;
+                        if (item === 999) offset = (item - start - 0.01) / spread;
                         else if (item > start) offset = (item - start) / spread;
-                        else if (item == 0) offset = (item + n + 0.01) / spread;
+                        else if (item === 0) offset = (item + n + 0.01) / spread;
                         else if (item < end) offset = (item + n) / spread;
                         else continue;
 
@@ -558,7 +558,7 @@ P.getStopData = function (gradient, start, end, cycle) {
     }
 
     // Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient
-    if (start == end) return stops[start] || BLANK;
+    if (start === end) return stops[start] || BLANK;
 
     // check to see if data has already been memoized and is suitable for return
     return getWorkstoreItem(workstoreName) || BLANK;

@@ -133,7 +133,7 @@ P.preparePinsForStamp = function () {
 
         name = dirtyPins[i];
 
-        if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
+        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
 
             this.dirtyEnd = true;
             if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;

@@ -88,7 +88,7 @@ S.revert = function (item) {
 
     this.revert = item;
 
-    if (typeof this.revert != FUNCTION) this.revert = λnull;
+    if (typeof this.revert !== FUNCTION) this.revert = λnull;
 };
 
 // Internal attribute. Set true after the ticker moves past the instance's time value (and set false if the ticker is moving backwards)
@@ -123,12 +123,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = value;
+                else if (typeof defs[key] !== UNDEF) this[key] = value;
             }
         }
 

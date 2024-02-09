@@ -689,7 +689,7 @@ P.cleanDimensionsAdditionalActions = function () {
     this.fontAttributes.dirtyFont = true;
     this.fontAttributes.updateMetadata(this.scale, this.lineHeight, this.getHost());
 
-    if (this.dimensions[0] == AUTO) {
+    if (this.dimensions[0] === AUTO) {
 
         this.buildText();
 
@@ -773,7 +773,7 @@ P.getTextPath = function () {
 
         path = this.textPath = artefact[this.textPath];
 
-        if (path.type == T_SHAPE && path.useAsPath) path.pathed.push(this.name);
+        if (path.type === T_SHAPE && path.useAsPath) path.pathed.push(this.name);
         else {
 
             path = this.path = false;
@@ -1009,7 +1009,7 @@ P.calculateTextPositions = function (mytext) {
                 item = gStyle.stroke;
                 if (item && item !== currentStrokeStyle) {
 
-                    if (DEFAULT == item) currentStrokeStyle = defaultStrokeStyle;
+                    if (DEFAULT === item) currentStrokeStyle = defaultStrokeStyle;
                     else currentStrokeStyle = makeStyle(gStyle.stroke);
                     gPos[1] = currentStrokeStyle;
                 }
@@ -1017,7 +1017,7 @@ P.calculateTextPositions = function (mytext) {
                 item = gStyle.fill;
                 if (item && item !== currentFillStyle) {
 
-                    if (DEFAULT == item) currentFillStyle = defaultFillStyle;
+                    if (DEFAULT === item) currentFillStyle = defaultFillStyle;
                     else currentFillStyle = makeStyle(gStyle.fill);
                     gPos[2] = currentFillStyle;
                 }
@@ -1149,7 +1149,7 @@ P.calculateTextPositions = function (mytext) {
         glyphWidth = singles[i] + textGlyphWidths[i];
         textGlyphWidths[i] = glyphWidth;
 
-        if (treatWordAsGlyph || glyph == SPACE) ends = i;
+        if (treatWordAsGlyph || glyph === SPACE) ends = i;
 
         lineLen += glyphWidth;
         totalLen += glyphWidth;
@@ -1171,10 +1171,10 @@ P.calculateTextPositions = function (mytext) {
         }
 
         // Need to pick up the last (or only) line
-        if (i + 1 == iz) {
+        if (i + 1 === iz) {
 
             // Pick up single line
-            if (lineLen == totalLen) {
+            if (lineLen === totalLen) {
 
                 fragment = mytext;
 
@@ -1225,7 +1225,7 @@ P.calculateTextPositions = function (mytext) {
         // + We have 2 non-path scenarios: full-justified text; and regular text
 
         // Scenario 1: `justify === 'full'`
-        if (justify == FULL) {
+        if (justify === FULL) {
 
             cursor = 0;
             height = handleY;
@@ -1241,7 +1241,7 @@ P.calculateTextPositions = function (mytext) {
 
                     item = textPositions[cursor];
 
-                    if (item[6] == SPACE) textGlyphWidths[cursor] += space;
+                    if (item[6] === SPACE) textGlyphWidths[cursor] += space;
 
                     item[7] = _floor(len);
                     item[8] = _floor(height);
@@ -1265,8 +1265,8 @@ P.calculateTextPositions = function (mytext) {
 
             for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
-                if (justify == RIGHT) len = (width - textLineWidths[i]) + handleX;
-                else if (justify == CENTER) len = ((width - textLineWidths[i]) / 2) + handleX;
+                if (justify === RIGHT) len = (width - textLineWidths[i]) + handleX;
+                else if (justify === CENTER) len = ((width - textLineWidths[i]) / 2) + handleX;
                 else len = handleX;
 
                 for (j = 0, jz = [...textLines[i]].length; j < jz; j++) {
@@ -1348,11 +1348,11 @@ P.regularStamp = function () {
 
         let i, iz, pos, data;
 
-        if (method == NONE) this.performRotation(engine);
+        if (method === NONE) this.performRotation(engine);
 
         // Scrawl-canvas clips canvases to the Phrase's hit area
         // + To 'clip' to the text, use stamp order and globalCompositeOperation instead
-        else if (method == CLIP) {
+        else if (method === CLIP) {
 
             this.performRotation(engine);
             engine.clip(this.pathObject, this.winding);
@@ -1432,7 +1432,7 @@ P.calculateGlyphPathPositions = function () {
         len = path.length,
         textPos = this.textPositions,
         widths = this.textGlyphWidths,
-        direction = (this.textPathDirection == LTR) ? true : false,
+        direction = (this.textPathDirection === LTR) ? true : false,
         justify = this.justify,
         loop = this.textPathLoop,
         pathSpeed = this.constantPathSpeed;

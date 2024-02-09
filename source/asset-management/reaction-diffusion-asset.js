@@ -566,7 +566,7 @@ P.cleanScene = function () {
             destB.fill(0);
 
             // The scene can be set up to include either random values, or we can use Scrawl-canvas entitys to supply the initial state for the second reagent
-            if (ENTITY == initialSettingPreference && entity[initialSettingEntity]) {
+            if (ENTITY === initialSettingPreference && entity[initialSettingEntity]) {
 
                 const ent = entity[initialSettingEntity],
                     cell = requestCell();

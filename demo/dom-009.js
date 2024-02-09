@@ -209,7 +209,7 @@ const buttonControls = function () {
         e.preventDefault();
         e.returnValue = false;
 
-        if (e.target.id == 'mystack') {
+        if (e.target.id === 'mystack') {
 
             circleGroup.setDeltaValues({
                 roll: 'reverse'

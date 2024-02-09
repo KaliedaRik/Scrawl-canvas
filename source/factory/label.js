@@ -406,7 +406,7 @@ P.temperFont = function () {
                 fontSizeCalculator.style.fontWeight = fontWeight;
                 fontSizeCalculator.style.fontSize = fontSize;
             }
-            else if (currentScale != 1) fontSizeCalculator.style.fontSize = fontSize;
+            else if (currentScale !== 1) fontSizeCalculator.style.fontSize = fontSize;
 
             // Extract and manipulate data for font weight, variant and style
             let elWeight = fontSizeCalculatorValues.fontWeight,
@@ -415,13 +415,13 @@ P.temperFont = function () {
                 elStyle = fontSizeCalculatorValues.fontStyle;
 
             // Update elWeight, if required
-            if (elWeight == 400) elWeight = NORMAL;
+            if (elWeight === 400) elWeight = NORMAL;
 
             // Update elVariant, if required
             elVariant = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
 
             // Update elStyle, if required
-            elStyle = (elStyle == ITALIC || elStyle.includes(OBLIQUE)) ? elStyle : NORMAL;
+            elStyle = (elStyle === ITALIC || elStyle.includes(OBLIQUE)) ? elStyle : NORMAL;
 
             // elStretch will always be a percent string, which canvas engines refuse to process
             const stretchVal = parseFloat(elStretch);
@@ -449,7 +449,7 @@ P.temperFont = function () {
             let f = '';
             if (elStyle == ITALIC || elStyle.includes(OBLIQUE)) f += `${elStyle} `;
             if (elVariant == SMALL_CAPS) f += `${elVariant} `;
-            if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
+            if (elWeight != null && elWeight && elWeight !== NORMAL && elWeight !== 400) f += `${elWeight} `;
             f += `${elSizeValue * currentScale}px ${elFamily}`
 
             this.defaultFont = f;
@@ -457,10 +457,10 @@ P.temperFont = function () {
 
             // Rebuild the `fontString` string - attempting to minimise user input error
             f = '';
-            if (elStretch != null && elStretch && elStretch != NORMAL) f += `${elStretch} `;
-            if (elStyle != null && elStyle && elStyle != NORMAL) f += `${elStyle} `;
-            if (elVariant != null && elVariant && elVariant != NORMAL) f += `${elVariant} `;
-            if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
+            if (elStretch != null && elStretch && elStretch !== NORMAL) f += `${elStretch} `;
+            if (elStyle != null && elStyle && elStyle !== NORMAL) f += `${elStyle} `;
+            if (elVariant != null && elVariant && elVariant !== NORMAL) f += `${elVariant} `;
+            if (elWeight != null && elWeight && elWeight !== NORMAL && elWeight !== 400) f += `${elWeight} `;
 
             if (fontSize) f += `${fontSize} `;
             else f += `${elSizeValue}px `
@@ -568,7 +568,7 @@ P.cleanDimensions = function () {
     this.dirtyHandle = true;
     this.dirtyOffset = true;
 
-    if (oldW != curDims[0] || oldH != curDims[1]) this.dirtyPositionSubscribers = true;
+    if (oldW !== curDims[0] || oldH !== curDims[1]) this.dirtyPositionSubscribers = true;
 
     if (this.mimicked && this.mimicked.length) this.dirtyMimicDimensions = true;
 
@@ -587,31 +587,31 @@ P.cleanHandle = function () {
 
     // horizontal
     if (hx.toFixed) currentHandle[0] = hx;
-    else if (hx == LEFT) currentHandle[0] = 0;
-    else if (hx == RIGHT) currentHandle[0] = dx;
-    else if (hx == CENTER) currentHandle[0] = dx / 2;
-    else if (hx == START) currentHandle[0] = (direction == LTR) ? 0 : dx;
-    else if (hx == END) currentHandle[0] = (direction == LTR) ? dx : 0;
+    else if (hx === LEFT) currentHandle[0] = 0;
+    else if (hx === RIGHT) currentHandle[0] = dx;
+    else if (hx === CENTER) currentHandle[0] = dx / 2;
+    else if (hx === START) currentHandle[0] = (direction === LTR) ? 0 : dx;
+    else if (hx === END) currentHandle[0] = (direction === LTR) ? dx : 0;
     else if (!_isFinite(parseFloat(hx))) currentHandle[0] = 0;
     else currentHandle[0] = (parseFloat(hx) / 100) * dx;
 
     // vertical
     if (hy.toFixed) currentHandle[1] = hy;
-    else if (hy == TOP) currentHandle[1] = 0;
-    else if (hy == BOTTOM) currentHandle[1] = dy;
-    else if (hy == CENTER) currentHandle[1] = dy / 2;
-    else if (hy == MIDDLE) currentHandle[1] = dy / 2;
-    else if (hy == HANGING) {
+    else if (hy === TOP) currentHandle[1] = 0;
+    else if (hy === BOTTOM) currentHandle[1] = dy;
+    else if (hy === CENTER) currentHandle[1] = dy / 2;
+    else if (hy === MIDDLE) currentHandle[1] = dy / 2;
+    else if (hy === HANGING) {
 
         if (_isFinite(hangingBaseline)) currentHandle[1] = hangingBaseline + fontVerticalOffset;
         else currentHandle[1] = 0;
     }
-    else if (hy == ALPHABETIC) {
+    else if (hy === ALPHABETIC) {
 
         if (_isFinite(alphabeticBaseline)) currentHandle[1] = alphabeticBaseline + fontVerticalOffset;
         else currentHandle[1] = 0;
     }
-    else if (hy == IDEOGRAPHIC) {
+    else if (hy === IDEOGRAPHIC) {
 
         if (_isFinite(ideographicBaseline)) currentHandle[1] = ideographicBaseline + fontVerticalOffset;
         else currentHandle[1] = 0;

@@ -49,9 +49,9 @@ P.set = function (items, y) {
 
     if (xt(items)) {
 
-        if (items.type == T_COORDINATE) this.setFromArray(items);
-        else if (items.type == T_VECTOR) this.setFromVector(items);
-        else if (items.type == T_QUATERNION) this.setFromVector(items.v);
+        if (items.type === T_COORDINATE) this.setFromArray(items);
+        else if (items.type === T_VECTOR) this.setFromVector(items);
+        else if (items.type === T_QUATERNION) this.setFromVector(items.v);
         else if (_isArray(items)) this.setFromArray(items);
         else if (xt(y)) this.setFromArray([items, y]);
     }
@@ -233,7 +233,7 @@ export const requestCoordinate = function (items, y) {
 // `exported function` - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.
 export const releaseCoordinate = function (c) {
 
-    if (c && c.type == T_COORDINATE) coordinatePool.push(c.zero());
+    if (c && c.type === T_COORDINATE) coordinatePool.push(c.zero());
 };
 
 

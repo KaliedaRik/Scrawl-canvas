@@ -74,7 +74,7 @@ export default function (P = Ωempty) {
 
             if (newPath && newPath.name && newPath.useAsPath) {
 
-                if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
+                if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
 
                 pushUnique(newPath.pathed, name);
 

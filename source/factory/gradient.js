@@ -94,7 +94,7 @@ P.updateGradientArgs = function (x, y) {
     let ex = currentEnd[0] + x;
 
     // check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
-    if (sx == ex && sy == ey) ex++;
+    if (sx === ex && sy === ey) ex++;
 
     gradientArgs.length = 0;
     gradientArgs.push(sx, sy, ex, ey);

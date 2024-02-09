@@ -324,9 +324,9 @@ export const createImageFromCell = function (item, stashAsAsset = false) {
 
     let mycell = (item.substring) ? cell[item] || canvas[item] : item;
 
-    if (mycell.type == T_CANVAS) mycell = mycell.base;
+    if (mycell.type === T_CANVAS) mycell = mycell.base;
 
-    if (mycell.type == T_CELL) {
+    if (mycell.type === T_CELL) {
 
         mycell.stashOutput = true;
 
@@ -341,9 +341,9 @@ export const createImageFromGroup = function (item, stashAsAsset = false) {
 
     if (item && !item.substring) {
 
-        if (item.type == T_GROUP) mygroup = item;
-        else if (item.type == T_CELL) mygroup = group[item.name];
-        else if (item.type == T_CANVAS) mygroup = group[item.base.name];
+        if (item.type === T_GROUP) mygroup = item;
+        else if (item.type === T_CELL) mygroup = group[item.name];
+        else if (item.type === T_CANVAS) mygroup = group[item.base.name];
     }
     else if (item && item.substring) mygroup = group[item];
 

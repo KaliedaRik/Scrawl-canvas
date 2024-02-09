@@ -221,7 +221,7 @@ export default function (P = Ωempty) {
 
                 obj = filter.actions[j];
 
-                if (obj.action == PROCESS_IMAGE) {
+                if (obj.action === PROCESS_IMAGE) {
 
                     flag = true;
 

@@ -161,7 +161,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     let rep = '';
     document.fonts.forEach(k => {
-        if (k.status == 'loaded') rep +=(`    ${k.family} ${k.weight} ${k.style}\n`)
+        if (k.status === 'loaded') rep +=(`    ${k.family} ${k.weight} ${k.style}\n`)
     })
 
     return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}

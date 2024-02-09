@@ -118,7 +118,7 @@ export default function (P = Ωempty) {
             const repeat = this.repeat,
                 engine = mycell.engine;
 
-            if (this.type == T_CELL || this.type == T_NOISE) {
+            if (this.type === T_CELL || this.type === T_NOISE) {
 
                 source = this.element;
                 loaded = true;

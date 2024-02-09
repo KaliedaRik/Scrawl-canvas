@@ -231,7 +231,7 @@ P.getRandomNumbers = function (items = {}) {
 
     let i, j, k, temp, currentRow;
 
-    if (type == BLUENOISE && imgWidth) {
+    if (type === BLUENOISE && imgWidth) {
 
         const bLen = bluenoise.length,
             blueDims = _sqrt(bLen),
@@ -259,7 +259,7 @@ P.getRandomNumbers = function (items = {}) {
         }
         releaseArray(bLines);
     }
-    else if (type == ORDERED && imgWidth) {
+    else if (type === ORDERED && imgWidth) {
 
         const oLen = orderedNoise.length,
             oDims = _sqrt(oLen),
@@ -523,7 +523,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         else if (_isArray(pointVals)) req = POINTS_ARRAY;
         else if (_isFinite(pointVals)) req = RANDOM_POINTS;
 
-        if (req == UNSET) return [];
+        if (req === UNSET) return [];
 
         // The `tileWidth`, `tileHeight`, `tileRadius`, `offsetX` and `offsetY` arguments can be supplied as absolute Number values (in px), or as a String % value relative to the source image dimensions.
         // + `tileRadius` is relative to the source image's width
@@ -553,14 +553,14 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         if (_isFinite(angle)) ang = angle;
 
         let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
-        if (req == POINTS_ARRAY) name += `-${pointVals.join(ARG_SPLITTER)}`;
-        else if (req == RANDOM_POINTS) name += `-${pointVals}-${seed}`;
+        if (req === POINTS_ARRAY) name += `-${pointVals.join(ARG_SPLITTER)}`;
+        else if (req === RANDOM_POINTS) name += `-${pointVals}-${seed}`;
 
         const itemInWorkstore = getWorkstoreItem(name);
 
         if (itemInWorkstore) return itemInWorkstore;
 
-        if (req == RECT_GRID && tileW === 1 && tileH === 1) return getOrAddWorkstoreItem(name);
+        if (req === RECT_GRID && tileW === 1 && tileH === 1) return getOrAddWorkstoreItem(name);
 
         const coord = requestCoordinate(),
             origin = [offX, offY],
@@ -576,7 +576,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             pointsName = ZERO_STR;
 
         // Check to stop the hex grid breaking when user supplies an inappropriately low `tileHeight` argument value, compared to the value supplied in the `tileRadius` argument.
-        if (req == HEX_GRID && tileH / tileR < 1.05) tileH = tileR * 1.05;
+        if (req === HEX_GRID && tileH / tileR < 1.05) tileH = tileR * 1.05;
 
         const halfW = _floor(tileW / 2),
             halfH = _floor(tileH / 2),
@@ -718,7 +718,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
                         if (w >= 0 && w < iWidth && h >= 0 && h < iHeight) {
 
-                            if (req == RANDOM_POINTS) {
+                            if (req === RANDOM_POINTS) {
 
                                 if (coord.zero().subtract(origin).add([w, h]).getMagnitude() > tileR) continue;
                             }
@@ -950,8 +950,8 @@ P.checkChannelLevelsParameters = function (f) {
 
                 starts = 0;
                 ends = 255;
-                if (i != 0) starts = _ceil(v[i - 1] + ((v[i] - v[i - 1]) / 2));
-                if (i != iz - 1) ends = _floor(v[i] + ((v[i + 1] - v[i]) / 2));
+                if (i !== 0) starts = _ceil(v[i - 1] + ((v[i] - v[i - 1]) / 2));
+                if (i !== iz - 1) ends = _floor(v[i] + ((v[i + 1] - v[i]) / 2));
 
                 res.push([starts, ends, v[i]]);
             }
@@ -981,20 +981,20 @@ P.getInputAndOutputLines = function (requirements) {
         lineMix = false,
         alphaData = false;
 
-    if (requirements.lineIn == SOURCE_ALPHA || requirements.lineMix == SOURCE_ALPHA) alphaData = this.getAlphaData(sourceData);
+    if (requirements.lineIn === SOURCE_ALPHA || requirements.lineMix === SOURCE_ALPHA) alphaData = this.getAlphaData(sourceData);
 
     if (requirements.lineIn) {
 
-        if (requirements.lineIn == SOURCE) lineIn = sourceData;
-        else if (requirements.lineIn == SOURCE_ALPHA) lineIn = alphaData;
+        if (requirements.lineIn === SOURCE) lineIn = sourceData;
+        else if (requirements.lineIn === SOURCE_ALPHA) lineIn = alphaData;
         else if (cache[requirements.lineIn]) lineIn = cache[requirements.lineIn];
     }
 
     if (requirements.lineMix) {
 
-        if (requirements.lineMix == SOURCE) lineMix = sourceData;
-        else if (requirements.lineMix == SOURCE_ALPHA) lineMix = alphaData;
-        else if (requirements.lineMix == CURRENT) lineMix = cache.work;
+        if (requirements.lineMix === SOURCE) lineMix = sourceData;
+        else if (requirements.lineMix === SOURCE_ALPHA) lineMix = alphaData;
+        else if (requirements.lineMix === CURRENT) lineMix = cache.work;
         else if (cache[requirements.lineMix]) lineMix = cache[requirements.lineMix];
     }
 
@@ -1024,7 +1024,7 @@ P.processResults = function (store, incoming, ratio) {
 
     let antiRatio, i, iz;
 
-    if (ratio == 1) {
+    if (ratio === 1) {
 
         for (i = 0, iz = sData.length; i < iz; i++) {
 
@@ -1333,14 +1333,14 @@ P.theBigActionsObject = _freeze({
 
         // Pixel calculations
         const colorburnCalc = (din, dmix) => {
-            if (dmix == 1) return 255;
-            else if (din == 0) return 0;
+            if (dmix === 1) return 255;
+            else if (din === 0) return 0;
             return (1 - _min(1, ((1 - dmix) / din ))) * 255;
         };
 
         const colordodgeCalc = (din, dmix) => {
-            if (dmix == 0) return 0;
-            else if (din == 1) return 255;
+            if (dmix === 0) return 0;
+            else if (din === 1) return 255;
             return _min(1, (dmix / (1 - din))) * 255;
         };
 
@@ -2789,14 +2789,14 @@ P.theBigActionsObject = _freeze({
         } = requirements;
 
         let offsetForChannelX = 3;
-        if (channelX == RED) offsetForChannelX = 0;
-        else if (channelX == GREEN) offsetForChannelX = 1;
-        else if (channelX == BLUE) offsetForChannelX = 2;
+        if (channelX === RED) offsetForChannelX = 0;
+        else if (channelX === GREEN) offsetForChannelX = 1;
+        else if (channelX === BLUE) offsetForChannelX = 2;
 
         let offsetForChannelY = 3;
-        if (channelY == RED) offsetForChannelY = 0;
-        else if (channelY == GREEN) offsetForChannelY = 1;
-        else if (channelY == BLUE) offsetForChannelY = 2;
+        if (channelY === RED) offsetForChannelY = 0;
+        else if (channelY === GREEN) offsetForChannelY = 1;
+        else if (channelY === BLUE) offsetForChannelY = 2;
 
         let x, y, dx, dy, dPos, iPos, mPos;
 
@@ -2873,43 +2873,43 @@ P.theBigActionsObject = _freeze({
         weights.fill(0, 0, 9);
         weights[4] = 1;
 
-        if (slices == 0) {
+        if (slices === 0) {
             weights[5] = strength - remains;
             weights[8] = remains;
             weights[3] = -weights[5];
             weights[0] = -weights[8];
         }
-        else if (slices == 1) {
+        else if (slices === 1) {
             weights[8] = strength - remains;
             weights[7] = remains;
             weights[0] = -weights[8];
             weights[1] = -weights[7];
         }
-        else if (slices == 2) {
+        else if (slices === 2) {
             weights[7] = strength - remains;
             weights[6] = remains;
             weights[1] = -weights[7];
             weights[2] = -weights[6];
         }
-        else if (slices == 3) {
+        else if (slices === 3) {
             weights[6] = strength - remains;
             weights[3] = remains;
             weights[2] = -weights[6];
             weights[5] = -weights[3];
         }
-        else if (slices == 4) {
+        else if (slices === 4) {
             weights[3] = strength - remains;
             weights[0] = remains;
             weights[5] = -weights[3];
             weights[8] = -weights[0];
         }
-        else if (slices == 5) {
+        else if (slices === 5) {
             weights[0] = strength - remains;
             weights[1] = remains;
             weights[8] = -weights[0];
             weights[7] = -weights[1];
         }
-        else if (slices == 6) {
+        else if (slices === 6) {
             weights[1] = strength - remains;
             weights[2] = remains;
             weights[7] = -weights[1];
@@ -3582,7 +3582,7 @@ P.theBigActionsObject = _freeze({
         height = _floor(height);
 
         let weights = requirements.weights;
-        if (!weights || weights.length != (width * height)) {
+        if (!weights || weights.length !== (width * height)) {
             weights = [].fill(0, 0, (width * height) - 1);
             weights[_floor(weights.length / 2) + 1] = 1;
         }
@@ -3704,7 +3704,7 @@ P.theBigActionsObject = _freeze({
 
             const pattern = patterns[_floor((avg / 255) * 13)];
 
-            if (width == 1) grays.push(...pattern);
+            if (width === 1) grays.push(...pattern);
             else {
 
                 gray = pattern[0];
@@ -3801,7 +3801,7 @@ P.theBigActionsObject = _freeze({
 
             let simpleoffset = false;
 
-            if (offsetRedX == offsetGreenX && offsetRedX == offsetBlueX && offsetRedX == offsetAlphaX && offsetRedY == offsetGreenY && offsetRedY == offsetBlueY && offsetRedY == offsetAlphaY) simpleoffset = true;
+            if (offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedX === offsetAlphaX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY && offsetRedY === offsetAlphaY) simpleoffset = true;
 
             const grid = this.buildImageGrid(input),
                 gWidth = grid[0].length,
@@ -3957,7 +3957,7 @@ P.theBigActionsObject = _freeze({
 
                 const {width:sWidth, height:sHeight} = this.cache.source;
 
-                if (sWidth != width || sHeight != height) {
+                if (sWidth !== width || sHeight !== height) {
 
                     const temp = new ImageData(sWidth, sHeight),
                         tempData = temp.data;
@@ -4048,7 +4048,7 @@ P.theBigActionsObject = _freeze({
             b = g + 1;
             a = b + 1;
 
-            if (noiseType == RANDOM) {
+            if (noiseType === RANDOM) {
 
                 rndLevel = rnd[++rndCursor];
                 rndWidth = rnd[++rndCursor];
@@ -5098,7 +5098,7 @@ P.theBigActionsObject = _freeze({
             lineOut,
         } = requirements;
 
-        if (weights.length != 1024) {
+        if (weights.length !== 1024) {
 
             weights.length = 1024;
             weights.fill(0);

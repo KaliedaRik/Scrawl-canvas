@@ -180,7 +180,7 @@ S.size = function (item) {
 
             [, val, suffix] = r;
 
-            if (val && suffix && val != STOP) {
+            if (val && suffix && val !== STOP) {
 
                 size = val;
                 metric = suffix;
@@ -194,19 +194,19 @@ S.size = function (item) {
 
                 [, val, suffix] = r;
 
-                if (val && suffix && val != STOP) {
+                if (val && suffix && val !== STOP) {
 
                     size = val;
                     metric = suffix;
                 }
             }
         }
-        if (size != this.sizeValue) {
+        if (size !== this.sizeValue) {
 
             this.sizeValue = size;
             this.dirtyFont = true;
         }
-        if (metric != this.sizeMetric) {
+        if (metric !== this.sizeMetric) {
 
             this.sizeMetric = metric;
             this.dirtyFont = true;
@@ -255,7 +255,7 @@ S.style = function (item) {
         v = (item.includes(ITALIC)) ? ITALIC : v;
         v = (item.includes(OBLIQUE)) ? OBLIQUE : v;
 
-        if (v != this.style) {
+        if (v !== this.style) {
 
             this.style = v;
             this.dirtyFont = true;
@@ -310,7 +310,7 @@ S.weight = function (item) {
             v = (/^\d00$/.test(item)) ? item : v;
         }
 
-        if (v != this.weight) {
+        if (v !== this.weight) {
 
             this.weight = v;
             this.dirtyFont = true;
@@ -348,7 +348,7 @@ S.family = function (item) {
         }
         if (counter < len) v = itemArray.slice(counter).join(SPACE);
 
-        if (v != this.family) {
+        if (v !== this.family) {
 
             this.family = v;
             this.dirtyFont = true;
@@ -378,8 +378,8 @@ P.updateMetadata = function (scale, lineHeight, host) {
         this.dirtyFont = true;
     }
 
-    const currentHost = (this.host && this.host.type && this.host.type == T_CELL) ? this.host.name : ZERO_STR;
-    if (host && host.type && host.type == T_CELL && host.name !== currentHost) {
+    const currentHost = (this.host && this.host.type && this.host.type === T_CELL) ? this.host.name : ZERO_STR;
+    if (host && host.type && host.type === T_CELL && host.name !== currentHost) {
 
         this.host = host;
         this.dirtyFont = true;
@@ -553,9 +553,9 @@ P.buildFont = function () {
 
     let font = ZERO_STR;
 
-    if (this.style != NORMAL) font += `${this.style} `;
-    if (this.variant != NORMAL) font += `${this.variant} `;
-    if (this.weight != NORMAL) font += `${this.weight} `;
+    if (this.style !== NORMAL) font += `${this.style} `;
+    if (this.variant !== NORMAL) font += `${this.variant} `;
+    if (this.weight !== NORMAL) font += `${this.weight} `;
 
     font += `${this.calculateSize()} `;
 

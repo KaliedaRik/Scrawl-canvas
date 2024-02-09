@@ -274,7 +274,7 @@ S.world = function (item) {
     let w;
 
     if (item.substring) w = world[item];
-    else if (isa_obj(item) && item.type == T_WORLD) w = item;
+    else if (isa_obj(item) && item.type === T_WORLD) w = item;
 
     if (w) {
 
