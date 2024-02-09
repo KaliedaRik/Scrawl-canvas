@@ -339,7 +339,7 @@ export default function (P = Ωempty) {
 
             if (ratio > banner) {
 
-                if (current != BANNER) {
+                if (current !== BANNER) {
 
                     this.currentDisplayShape = BANNER;
                     this.actionBannerShape();
@@ -349,7 +349,7 @@ export default function (P = Ωempty) {
             }
             else if (ratio > landscape) {
 
-                if (current != LANDSCAPE) {
+                if (current !== LANDSCAPE) {
 
                     this.currentDisplayShape = LANDSCAPE;
                     this.actionLandscapeShape();
@@ -359,7 +359,7 @@ export default function (P = Ωempty) {
             }
             else if (ratio < skyscraper) {
 
-                if (current != SKYSCRAPER) {
+                if (current !== SKYSCRAPER) {
 
                     this.currentDisplayShape = SKYSCRAPER;
                     this.actionSkyscraperShape();
@@ -369,7 +369,7 @@ export default function (P = Ωempty) {
             }
             else if (ratio < portrait) {
 
-                if (current != PORTRAIT) {
+                if (current !== PORTRAIT) {
 
                     this.currentDisplayShape = PORTRAIT;
                     this.actionPortraitShape();
@@ -379,7 +379,7 @@ export default function (P = Ωempty) {
             }
             else {
 
-                if (current != RECTANGLE) {
+                if (current !== RECTANGLE) {
 
                     this.currentDisplayShape = RECTANGLE;
                     this.actionRectangleShape();
@@ -414,7 +414,7 @@ export default function (P = Ωempty) {
 
             if (area > largest) {
 
-                if (current != LARGEST) {
+                if (current !== LARGEST) {
 
                     this.currentDisplayArea = LARGEST;
                     this.actionLargestArea();
@@ -424,7 +424,7 @@ export default function (P = Ωempty) {
             }
             else if (area > larger) {
 
-                if (current != LARGER) {
+                if (current !== LARGER) {
 
                     this.currentDisplayArea = LARGER;
                     this.actionLargerArea();
@@ -434,7 +434,7 @@ export default function (P = Ωempty) {
             }
             else if (area < smallest) {
 
-                if (current != SMALLEST) {
+                if (current !== SMALLEST) {
 
                     this.currentDisplayArea = SMALLEST;
                     this.actionSmallestArea();
@@ -444,7 +444,7 @@ export default function (P = Ωempty) {
             }
             else if (area < smaller) {
 
-                if (current != SMALLER) {
+                if (current !== SMALLER) {
 
                     this.currentDisplayArea = SMALLER;
                     this.actionSmallerArea();
@@ -454,7 +454,7 @@ export default function (P = Ωempty) {
             }
             else {
 
-                if (current != REGULAR) {
+                if (current !== REGULAR) {
 
                     this.currentDisplayArea = REGULAR;
                     this.actionRegularArea();

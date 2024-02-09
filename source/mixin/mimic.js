@@ -82,12 +82,12 @@ export default function (P = Ωempty) {
 
                 newMimic = asset[item];
 
-                if (newMimic && newMimic.type != T_CELL) newMimic = false;
+                if (newMimic && newMimic.type !== T_CELL) newMimic = false;
             }
 
             if (newMimic && newMimic.name) {
 
-                if (oldMimic && oldMimic.name != newMimic.name) removeItem(oldMimic.mimicked, name);
+                if (oldMimic && oldMimic.name !== newMimic.name) removeItem(oldMimic.mimicked, name);
 
                 pushUnique(newMimic.mimicked, name);
 

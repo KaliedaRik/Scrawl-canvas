@@ -82,12 +82,12 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     // + must be a Group object
     if (!collisionGroup) {
 
-        if (zone.type == T_CANVAS) collisionGroup = library.group[zone.base.name];
+        if (zone.type === T_CANVAS) collisionGroup = library.group[zone.base.name];
         else collisionGroup = library.group[zone.name];
     }
     else if (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
 
-    if (!collisionGroup || collisionGroup.type != T_GROUP) return new Error('dragZone constructor - unable to recover collisionGroup group');
+    if (!collisionGroup || collisionGroup.type !== T_GROUP) return new Error('dragZone constructor - unable to recover collisionGroup group');
 
     // `coordinateSource` will be an object containing `x` and `y` attributes
     // + default's to the zone's `here` object
@@ -98,7 +98,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     }
     else {
 
-        if (zone.type == T_CANVAS) coordinateSource = zone.base.here;
+        if (zone.type === T_CANVAS) coordinateSource = zone.base.here;
         else coordinateSource = zone.here;
     }
 
@@ -162,7 +162,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
         checkE(e);
 
         const type = e.type;
-        if (type == TOUCH_START || type == TOUCH_CANCEL) touchAction(e, resetCoordsToZeroOnTouchEnd);
+        if (type === TOUCH_START || type === TOUCH_CANCEL) touchAction(e, resetCoordsToZeroOnTouchEnd);
 
         current = collisionGroup.getArtefactAt(coordinateSource);
 
@@ -186,7 +186,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
             checkE(e);
 
             const type = e.type;
-            if (type == TOUCH_MOVE) touchAction(e);
+            if (type === TOUCH_MOVE) touchAction(e);
 
             if (e.shiftKey) updateWhileShiftMoving(e);
             else updateWhileMoving(e);
@@ -200,7 +200,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
             checkE(e);
 
             const type = e.type;
-            if (type == TOUCH_END) {
+            if (type === TOUCH_END) {
 
                 touchAction(e, resetCoordsToZeroOnTouchEnd);
             }
@@ -222,7 +222,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
         const name = `${zone.name}_${collisionGroup.name}_${processingOrder}`;
 
-        dragZones[zone.name] = dragZones[zone.name].filter(z => z.name != name);
+        dragZones[zone.name] = dragZones[zone.name].filter(z => z.name !== name);
 
         if (!dragZones[zone.name].length) {
             doRemoveListeners(startOn, endOn, target);
@@ -234,7 +234,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
         if (actionKill) {
 
-            if (actionKill == EXIT || actionKill == DROP) {
+            if (actionKill === EXIT || actionKill === DROP) {
 
                 drop();
                 updateOnPrematureExit();
@@ -283,7 +283,7 @@ export const makeDragZone = function (items = Ωempty) {
             while (!name) {
 
                 if (dragZones[myTarget.id]) name = myTarget.id;
-                if (myTarget.tagName == $BODY) break;
+                if (myTarget.tagName === $BODY) break;
                 myTarget = myTarget.parentElement;
             }
 

@@ -17,7 +17,7 @@ import { makeAnimation } from "../factory/animation.js";
 
 import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from '../helper/system-flags.js';
 
-import { _computed, _floor, _isFinite, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
+import { _computed, _floor, _isFinite, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -54,7 +54,7 @@ contrastMediaQuery.addEventListener(CHANGE, () => {
 
     const res = contrastMediaQuery.matches;
 
-    if (currentCorePosition.prefersContrast != res) {
+    if (currentCorePosition.prefersContrast !== res) {
 
         currentCorePosition.prefersContrast = res;
         setPrefersContrastChanged(true);
@@ -69,7 +69,7 @@ reducedMotionMediaQuery.addEventListener(CHANGE, () => {
 
     const res = reducedMotionMediaQuery.matches;
 
-    if (currentCorePosition.prefersReducedMotion != res) {
+    if (currentCorePosition.prefersReducedMotion !== res) {
 
         currentCorePosition.prefersReducedMotion = res;
         setPrefersReducedMotionChanged(true);
@@ -84,7 +84,7 @@ colorSchemeMediaQuery.addEventListener(CHANGE, () => {
 
     const res = colorSchemeMediaQuery.matches;
 
-    if (currentCorePosition.prefersDarkColorScheme != res) {
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
 
         currentCorePosition.prefersDarkColorScheme = res;
         setPrefersDarkColorSchemeChanged(true);
@@ -99,7 +99,7 @@ reducedTransparencyMediaQuery.addEventListener(CHANGE, () => {
 
     const res = reducedTransparencyMediaQuery.matches;
 
-    if (currentCorePosition.prefersReduceTransparency != res) {
+    if (currentCorePosition.prefersReduceTransparency !== res) {
 
         currentCorePosition.prefersReduceTransparency = res;
         setPrefersReduceTransparencyChanged(true);
@@ -114,7 +114,7 @@ reducedDataMediaQuery.addEventListener(CHANGE, () => {
 
     const res = reducedDataMediaQuery.matches;
 
-    if (currentCorePosition.prefersReduceData != res) {
+    if (currentCorePosition.prefersReduceData !== res) {
 
         currentCorePosition.prefersReduceData = res;
         setPrefersReduceDataChanged(true);
@@ -131,7 +131,7 @@ displaySupportsP3ColorMediaQuery.addEventListener(CHANGE, () => {
 
     const res = displaySupportsP3ColorMediaQuery.matches;
 
-    if (currentCorePosition.displaySupportsP3Color != res) {
+    if (currentCorePosition.displaySupportsP3Color !== res) {
 
         currentCorePosition.displaySupportsP3Color = res;
     }
@@ -146,8 +146,8 @@ const checkCanvasSupportsDisplayP3 = () => {
     // Needs to be done in try-catch because (apparently) Safari throws a fit if colorSpace option is supported by the canvas engine but the minimum macOS/iOS system requirements for display-p3 support are not met
     try {
 
-        const e = c.getContext("2d", { colorSpace: "display-p3" });
-        return e.getContextAttributes().colorSpace == "display-p3";
+        const e = c.getContext("2d", { colorSpace: DISPLAY_P3 });
+        return e.getContextAttributes().colorSpace === DISPLAY_P3;
     }
     catch { console.log('checkCanvasSupportsDisplayP3 errored')}
     return false;
@@ -207,7 +207,7 @@ const resizeAction = function () {
     const w = document.documentElement.clientWidth,
         h = document.documentElement.clientHeight;
 
-    if (currentCorePosition.w != w || currentCorePosition.h != h) {
+    if (currentCorePosition.w !== w || currentCorePosition.h !== h) {
 
         currentCorePosition.w = w;
         currentCorePosition.h = h;
@@ -225,7 +225,7 @@ const scrollAction = function () {
     const x = window.pageXOffset,
         y = window.pageYOffset;
 
-    if (currentCorePosition.scrollX != x || currentCorePosition.scrollY != y) {
+    if (currentCorePosition.scrollX !== x || currentCorePosition.scrollY !== y) {
         currentCorePosition.x += (x - currentCorePosition.scrollX);
         currentCorePosition.y += (y - currentCorePosition.scrollY);
         currentCorePosition.scrollX = x;
@@ -244,7 +244,7 @@ const moveAction = function (e) {
     const x = _round(e.pageX),
         y = _round(e.pageY);
 
-    if (currentCorePosition.x != x || currentCorePosition.y != y) {
+    if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
         currentCorePosition.type = (navigator.pointerEnabled) ? POINTER : MOUSE;
         currentCorePosition.x = x;
         currentCorePosition.y = y;
@@ -418,7 +418,7 @@ const updateUiSubscribedElement = function (art) {
             }
 
             // Canvas `fit` attribute adjustments
-            if (dom.type == T_CANVAS) dom.updateBaseHere(here, dom.fit);
+            if (dom.type === T_CANVAS) dom.updateBaseHere(here, dom.fit);
 
             // Automatically check for element resize
             // + The artefact's `checkForResize` flag needs to be set
@@ -428,7 +428,7 @@ const updateUiSubscribedElement = function (art) {
 
                 const [w, h] = dom.currentDimensions;
 
-                if (dom.type == T_CANVAS) {
+                if (dom.type === T_CANVAS) {
                     // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
                     // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
                     // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
@@ -469,7 +469,7 @@ const updateTextBasedEntitys = function () {
 
     _values(library.entity).forEach(ent => {
 
-        if (ent.type == T_PHRASE) {
+        if (ent.type === T_PHRASE) {
 
             ent.dirtyDimensions = true;
             ent.dirtyFont = true;

@@ -172,7 +172,7 @@ P.finalizePacketOut = function (copy) {
             if (d.engine && d.engine.substring) res.engine = d.engine.substring;
             else {
 
-                if (xt(d.engine) && d.engine !== null) {
+                if (xt(d.engine) && d.engine != null) {
 
                     const e = this.stringifyFunction(d.engine);
 
@@ -325,7 +325,7 @@ P.calculateEffectiveDuration = function (item) {
 
     this.effectiveDuration = 0;
 
-    if (cType == PC) {
+    if (cType === PC) {
 
         if (ticker) {
 
@@ -386,7 +386,7 @@ P.update = function (items = Ωempty) {
             if (!items.next) this.status = (reversed) ? -1 : 1;
         }
     }
-    // For Tweens with a duration == 0
+    // For Tweens with a duration === 0
     else {
 
         if (status != this.status) {
@@ -453,7 +453,7 @@ P.doSimpleUpdate = function (items = Ωempty) {
 
         const t = targets[j];
 
-        if (T_GROUP == t.type) t.setArtefacts(setObj);
+        if (T_GROUP === t.type) t.setArtefacts(setObj);
         else t.set(setObj);
     }
 
@@ -543,7 +543,7 @@ P.run = function () {
         this.commenceAction();
         t.run();
 
-        if (typeof this.onRun == FUNCTION) this.onRun();
+        if (typeof this.onRun === FUNCTION) this.onRun();
     }
     return this;
 };
@@ -568,7 +568,7 @@ P.halt = function() {
 
         t.halt();
 
-        if (typeof this.onHalt == FUNCTION) this.onHalt();
+        if (typeof this.onHalt === FUNCTION) this.onHalt();
     }
     return this;
 };
@@ -584,7 +584,7 @@ P.reverse = function() {
 
         t.reverse();
 
-        if (typeof this.onReverse == FUNCTION) this.onReverse();
+        if (typeof this.onReverse === FUNCTION) this.onReverse();
     }
     return this;
 };
@@ -600,7 +600,7 @@ P.resume = function() {
 
         t.resume();
 
-        if (typeof this.onResume == FUNCTION) this.onResume();
+        if (typeof this.onResume === FUNCTION) this.onResume();
     }
     return this;
 };
@@ -616,7 +616,7 @@ P.seekTo = function(milliseconds) {
 
         t.seekTo(milliseconds);
 
-        if (typeof this.onSeekTo == FUNCTION) this.onSeekTo();
+        if (typeof this.onSeekTo === FUNCTION) this.onSeekTo();
     }
     return this;
 };
@@ -632,7 +632,7 @@ P.seekFor = function(milliseconds) {
 
         t.seekFor(milliseconds);
 
-        if (typeof this.onSeekFor == FUNCTION) this.onSeekFor();
+        if (typeof this.onSeekFor === FUNCTION) this.onSeekFor();
     }
     return this;
 };

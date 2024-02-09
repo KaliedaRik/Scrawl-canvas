@@ -341,7 +341,7 @@ export default function (P = Ωempty) {
             for (i = 0, iz = unitPartials.length; i < iz; i++) {
 
                 species = this.units[i][0];
-                if (species == MOVE || species == CLOSE || species == UNKNOWN) continue;
+                if (species === MOVE || species === CLOSE || species === UNKNOWN) continue;
 
                 stoppingLen = unitPartials[i];
 
@@ -551,8 +551,8 @@ export default function (P = Ωempty) {
                 if (art.addPathOffset) art.dirtyOffset = true;
                 if (art.addPathRotation) art.dirtyRotation = true;
 
-                if (art.type == T_POLYLINE) art.dirtyPins = true;
-                else if (art.type == T_LINE || art.type == T_QUADRATIC || art.type == T_BEZIER) art.dirtyPins.push(this.name);
+                if (art.type === T_POLYLINE) art.dirtyPins = true;
+                else if (art.type === T_LINE || art.type === T_QUADRATIC || art.type === T_BEZIER) art.dirtyPins.push(this.name);
             }
         }, this);
     };

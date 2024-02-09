@@ -83,7 +83,7 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
                 const { key } = e;
 
                // Tab, Esc
-                if (T_TAB == key || T_ESCAPE == key) {
+                if (T_TAB === key || T_ESCAPE === key) {
 
                     target.blur();
                     return;
@@ -208,7 +208,7 @@ export const makeKeyboardZone = function (items = Ωempty) {
             while (!name) {
 
                 if (keyboardZones[myTarget.id]) name = myTarget.id;
-                if (myTarget.tagName == $BODY) break;
+                if (myTarget.tagName === $BODY) break;
                 myTarget = myTarget.parentElement;
             }
 

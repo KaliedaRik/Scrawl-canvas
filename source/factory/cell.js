@@ -233,7 +233,7 @@ P.factoryKill = function () {
 
         if (cvs.cells.includes(myname)) cvs.removeCell(myname);
 
-        if (cvs.base && cvs.base.name == myname) {
+        if (cvs.base && cvs.base.name === myname) {
 
             cvs.set({
                 visibility: false,
@@ -253,8 +253,8 @@ P.factoryKill = function () {
                 const fill = state.fillStyle,
                     stroke = state.strokeStyle;
 
-                if (fill.name && fill.name == myname) state.fillStyle = state.defs.fillStyle;
-                if (stroke.name && stroke.name == myname) state.strokeStyle = state.defs.strokeStyle;
+                if (fill.name && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+                if (stroke.name && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
             }
         }
     });
@@ -540,7 +540,7 @@ G.group = function () {
 // `checkSource` - internal function
 P.checkSource = function (width, height) {
 
-    if (this.currentDimensions[0] != width || this.currentDimensions[1] != height) this.notifySubscribers();
+    if (this.currentDimensions[0] !== width || this.currentDimensions[1] !== height) this.notifySubscribers();
 };
 
 // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
@@ -1093,7 +1093,7 @@ P.updateBaseHere = function (controllerHere, fit) {
         const controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
         const controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
 
-        if (dims[0] != controllerWidth || dims[1] != controllerHeight) {
+        if (dims[0] !== controllerWidth || dims[1] !== controllerHeight) {
 
             if (!this.basePaste) this.basePaste = [];
 

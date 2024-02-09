@@ -239,7 +239,7 @@ P.getChanges = function (ent, engineState) {
         result = {};
 
     const getItem = function (source, key) {
-        return (typeof source[key] != UNDEF) ? source[key] : defs[key];
+        return (typeof source[key] !== UNDEF) ? source[key] : defs[key];
     };
 
     if (ent.substring) ent = entity[ent];
@@ -263,18 +263,18 @@ P.getChanges = function (ent, engineState) {
             desired = getItem(this, k);
             current = getItem(engineState, k);
 
-            if (k == LINE_DASH) {
+            if (k === LINE_DASH) {
 
                 if (desired.length || current.length) {
 
-                    if (desired.length != current.length) result.lineDash = desired;
+                    if (desired.length !== current.length) result.lineDash = desired;
                     else {
 
                         linedashFlag = false;
 
                         for (j = 0, jz = desired.length; j < jz; j++) {
 
-                            if (desired[j] != current[j]) {
+                            if (desired[j] !== current[j]) {
                                 linedashFlag = true;
                                 break;
                             }
@@ -285,7 +285,7 @@ P.getChanges = function (ent, engineState) {
                 }
             }
 
-            else if (k == LINE_WIDTH) {
+            else if (k === LINE_WIDTH) {
 
                 if (ent.scaleOutline) {
 
@@ -314,7 +314,7 @@ P.getChanges = function (ent, engineState) {
         if (desired.substring && current !== desired) result[k] = desired;
 
         // Color object colors need to be extracted before they can be compared and, if necessary, updated
-        else if (desired.type == T_COLOR) {
+        else if (desired.type === T_COLOR) {
 
             desired = desired.getData();
 

@@ -90,7 +90,7 @@ P.addCanvas = function (items = Ωempty) {
             el = this.domElement,
             style = el.style;
 
-        if (style.position == STATIC) style.position = RELATIVE;
+        if (style.position === STATIC) style.position = RELATIVE;
 
         canvas.id = `${this.name}-canvas`;
 
@@ -154,7 +154,7 @@ P.checkElementStyleValues = function () {
                 case WIDTH :
 
                     w = _max(styleW, elW);
-                    if (this.canvasWidth != w) {
+                    if (this.canvasWidth !== w) {
 
                         this.canvasWidth = w;
                         this.dirtyDimensions = true;
@@ -164,7 +164,7 @@ P.checkElementStyleValues = function () {
                 case HEIGHT :
 
                     h = _max(styleH, elH);
-                    if (this.canvasHeight != h) {
+                    if (this.canvasHeight !== h) {
 
                         this.canvasHeight = h;
                         this.dirtyDimensions = true;
@@ -173,10 +173,10 @@ P.checkElementStyleValues = function () {
 
                 case Z_INDEX :
 
-                    z = (styleZ == AUTO) ? 0 : parseInt(styleZ, 10);
+                    z = (styleZ === AUTO) ? 0 : parseInt(styleZ, 10);
                     z = (this.canvasOnTop) ? z + 1 : z - 1;
 
-                    if (this.canvasZIndex != z) {
+                    if (this.canvasZIndex !== z) {
 
                         this.canvasZIndex = z;
                         this.dirtyZIndex = true;
@@ -189,7 +189,7 @@ P.checkElementStyleValues = function () {
                     hi = host[item];
                     si = style[item];
 
-                    if(!xt(hi) || hi != si) {
+                    if(!xt(hi) || hi !== si) {
 
                         host[item] = si;
                         results[item] = si;

@@ -382,9 +382,9 @@ P.prepareStamp = function (myCell) {
 
     this.artefactCalculateBuckets.forEach(art => {
 
-        if (art.lib == ENTITY) {
+        if (art.lib === ENTITY) {
 
-            if (!art.currentHost || art.currentHost.name != host.name) {
+            if (!art.currentHost || art.currentHost.name !== host.name) {
 
                 art.currentHost = host;
                 if (!myCell) art.dirtyHost = true;
@@ -886,7 +886,7 @@ P.getAllArtefactsAt = function (items) {
         const foundArtefacts = (results.length) ? true : false,
             isHovering = this.isHovering;
 
-        if (isHovering != foundArtefacts) {
+        if (isHovering !== foundArtefacts) {
 
             this.isHovering = foundArtefacts;
 

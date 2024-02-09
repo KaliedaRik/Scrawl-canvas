@@ -78,7 +78,7 @@ export const requestParticleHistory = function () {
 // `exported function` - return a ParticleHistory array to the history pool. Failing to return arrays to the pool may lead to more inefficient code and possible memory leaks.
 export const releaseParticleHistory = function (h) {
 
-    if (h && h.type == T_PARTICLE_HISTORY) {
+    if (h && h.type === T_PARTICLE_HISTORY) {
 
         h.fill(0);
         particleHistoryPool.push(h);

@@ -163,7 +163,7 @@ P.checkSource = function (width, height) {
 
         this.sourceLoaded = true;
 
-        if (!this.sourceNaturalWidth || !this.sourceNaturalHeight || this.sourceNaturalWidth != width || this.sourceNaturalHeight != height) {
+        if (!this.sourceNaturalWidth || !this.sourceNaturalHeight || this.sourceNaturalWidth !== width || this.sourceNaturalHeight !== height) {
 
             this.sourceNaturalWidth = source.width;
             this.sourceNaturalHeight = source.height;

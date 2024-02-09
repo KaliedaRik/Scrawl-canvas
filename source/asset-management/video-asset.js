@@ -127,7 +127,7 @@ S.source = function (item) {
 
     if (item) {
 
-        if (item.tagName.toUpperCase() == _VIDEO) {
+        if (item.tagName.toUpperCase() === _VIDEO) {
 
             this.source = item;
             this.sourceNaturalWidth = item.videoWidth || 0;
@@ -275,7 +275,7 @@ export const importDomVideo = function (query) {
 
         let name;
 
-        if (item.tagName.toUpperCase() == _VIDEO) {
+        if (item.tagName.toUpperCase() === _VIDEO) {
 
             if (item.id || item.name) name = item.id || item.name;
             else {

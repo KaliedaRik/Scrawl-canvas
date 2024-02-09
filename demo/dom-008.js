@@ -248,7 +248,7 @@ const stackCheck = (function () {
 
     return function () {
 
-        if (here.active != stackActive) {
+        if (here.active !== stackActive) {
 
             stackActive = here.active;
 

@@ -82,7 +82,7 @@ export default function (P = Ωempty) {
 
         const ticker = this.ticker;
 
-        if (ticker == `${this.name}_ticker`) {
+        if (ticker === `${this.name}_ticker`) {
 
             const t = animationtickers[ticker];
 
@@ -117,7 +117,7 @@ export default function (P = Ωempty) {
 
         this.action = item;
 
-        if (typeof this.action != FUNCTION) this.action = λnull;
+        if (typeof this.action !== FUNCTION) this.action = λnull;
     };
 
 
@@ -131,7 +131,7 @@ export default function (P = Ωempty) {
 
         this.effectiveTime = 0;
 
-        if (cType == PC && cTime <= 100) {
+        if (cType === PC && cTime <= 100) {
 
             if (this.ticker) {
 
@@ -153,7 +153,7 @@ export default function (P = Ωempty) {
             const oldT = this.ticker,
                 newT = animationtickers[item];
 
-            if (oldT && oldT != item) this.removeFromTicker(oldT);
+            if (oldT && oldT !== item) this.removeFromTicker(oldT);
 
             if (xt(newT)) {
 
@@ -222,9 +222,9 @@ export default function (P = Ωempty) {
 
         items.forEach(item => {
 
-            if (typeof item == FUNCTION) {
+            if (typeof item === FUNCTION) {
 
-                if (typeof item.set == FUNCTION) this.targets.push(item);
+                if (typeof item.set === FUNCTION) this.targets.push(item);
             }
             else {
 
@@ -250,14 +250,14 @@ export default function (P = Ωempty) {
             const type = target.type || UNKNOWN,
                 name = target.name || UNNAMED;
 
-            if (type != UNKNOWN && name != UNNAMED) identifiers.push(`${type}_${name}`);
+            if (type !== UNKNOWN && name !== UNNAMED) identifiers.push(`${type}_${name}`);
         });
 
         items.forEach(item => {
 
             let myObj;
 
-            if (typeof item == FUNCTION) myObj = item;
+            if (typeof item === FUNCTION) myObj = item;
             else myObj = locateTarget(item);
 
             if (myObj) {
@@ -265,7 +265,7 @@ export default function (P = Ωempty) {
                 const type = myObj.type || UNKNOWN,
                     name = myObj.name || UNNAMED;
 
-                if (type != UNKNOWN && name != UNNAMED) {
+                if (type !== UNKNOWN && name !== UNNAMED) {
 
                     const objName = `${type}_${name}`,
                         doRemove = identifiers.indexOf(objName);
@@ -292,7 +292,7 @@ export default function (P = Ωempty) {
 
         if (!item.substring) return false;
 
-        return this.targets.some(t => t.name == item);
+        return this.targets.some(t => t.name === item);
     };
 
     P.run = λnull;

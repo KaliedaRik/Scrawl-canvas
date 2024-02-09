@@ -166,8 +166,8 @@ export const observeAndUpdate = function (items = Ωempty) {
 
                             if (targetVal.substring) {
 
-                                if (TRUE == targetVal.toLowerCase()) val = true;
-                                else if (FALSE == targetVal.toLowerCase()) val = false;
+                                if (TRUE === targetVal.toLowerCase()) val = true;
+                                else if (FALSE === targetVal.toLowerCase()) val = false;
                                 else val = (parseFloat(targetVal)) ? true : false;
                             }
                             else val = (targetVal) ? true : false;
@@ -184,7 +184,7 @@ export const observeAndUpdate = function (items = Ωempty) {
                 // Update - we can apply updates to a Group of artefacts, or to a single artefact
                 if (actionFlag) {
 
-                    if (target.type == T_GROUP) {
+                    if (target.type === T_GROUP) {
 
                         target.setArtefacts({
                             [actionAttribute]: val

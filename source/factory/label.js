@@ -42,11 +42,7 @@ labelMix(P);
 
 
 // #### Label attributes
-const defaultAttributes = {
-
-// __text__ - string.
-    text: ZERO_STR,
-};
+const defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
@@ -145,7 +141,7 @@ P.cleanDimensions = function () {
     this.dirtyHandle = true;
     this.dirtyOffset = true;
 
-    if (oldW != curDims[0] || oldH != curDims[1]) this.dirtyPositionSubscribers = true;
+    if (oldW !== curDims[0] || oldH !== curDims[1]) this.dirtyPositionSubscribers = true;
 
     if (this.mimicked && this.mimicked.length) this.dirtyMimicDimensions = true;
 
@@ -165,23 +161,23 @@ P.cleanHandle = function () {
 
     // horizontal
     if (hx.toFixed) currentHandle[0] = hx;
-    else if (hx == LEFT) currentHandle[0] = 0;
-    else if (hx == RIGHT) currentHandle[0] = dx;
-    else if (hx == CENTER) currentHandle[0] = dx / 2;
-    else if (hx == START) currentHandle[0] = (direction == LTR) ? 0 : dx;
-    else if (hx == END) currentHandle[0] = (direction == LTR) ? dx : 0;
+    else if (hx === LEFT) currentHandle[0] = 0;
+    else if (hx === RIGHT) currentHandle[0] = dx;
+    else if (hx === CENTER) currentHandle[0] = dx / 2;
+    else if (hx === START) currentHandle[0] = (direction === LTR) ? 0 : dx;
+    else if (hx === END) currentHandle[0] = (direction === LTR) ? dx : 0;
     else if (!_isFinite(parseFloat(hx))) currentHandle[0] = 0;
     else currentHandle[0] = (parseFloat(hx) / 100) * dx;
 
     // vertical
     if (hy.toFixed) currentHandle[1] = hy;
-    else if (hy == TOP) currentHandle[1] = 0;
-    else if (hy == BOTTOM) currentHandle[1] = dy;
-    else if (hy == CENTER) currentHandle[1] = dy / 2;
-    else if (hy == MIDDLE) currentHandle[1] = dy / 2;
-    else if (hy == HANGING) currentHandle[1] = (_isFinite(hangingBaseline)) ? hangingBaseline : 0;
-    else if (hy == ALPHABETIC) currentHandle[1] = (_isFinite(alphabeticBaseline)) ? alphabeticBaseline : 0;
-    else if (hy == IDEOGRAPHIC) currentHandle[1] = (_isFinite(ideographicBaseline)) ? ideographicBaseline : 0;
+    else if (hy === TOP) currentHandle[1] = 0;
+    else if (hy === BOTTOM) currentHandle[1] = dy;
+    else if (hy === CENTER) currentHandle[1] = dy / 2;
+    else if (hy === MIDDLE) currentHandle[1] = dy / 2;
+    else if (hy === HANGING) currentHandle[1] = (_isFinite(hangingBaseline)) ? hangingBaseline : 0;
+    else if (hy === ALPHABETIC) currentHandle[1] = (_isFinite(alphabeticBaseline)) ? alphabeticBaseline : 0;
+    else if (hy === IDEOGRAPHIC) currentHandle[1] = (_isFinite(ideographicBaseline)) ? ideographicBaseline : 0;
     else if (!_isFinite(parseFloat(hy))) currentHandle[1] = 0;
     else currentHandle[1] = (parseFloat(hy) / 100) * dy;
 

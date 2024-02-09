@@ -95,7 +95,7 @@ const Stack = function (items = Ωempty) {
 
         if (ds.isResponsive) this.isResponsive = true;
 
-        if (el.getAttribute(DATA_SCRAWL_GROUP) == ROOT) rootElementsAdd(this.name);
+        if (el.getAttribute(DATA_SCRAWL_GROUP) === ROOT) rootElementsAdd(this.name);
     }
     return this;
 };
@@ -581,7 +581,7 @@ export const addStack = function (items = Ωempty) {
     el.setAttribute(DATA_SCRAWL_GROUP, mygroup);
 
     // determine what the stack-to-be element's position style attribute will be
-    if (mygroup == ROOT) position = RELATIVE;
+    if (mygroup === ROOT) position = RELATIVE;
 
     // add (or move) the stack-to-be element to/in the DOM
     if (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);

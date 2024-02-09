@@ -134,7 +134,7 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 item = deltaConstraints[key];
 
-                if (_isArray(item) && item.length == 3) {
+                if (_isArray(item) && item.length === 3) {
 
                     [min, max, action] = deltaConstraints[key];
 

@@ -76,12 +76,12 @@ export default function (P = Ωempty) {
 
                 newPivot = asset[item];
 
-                if (newPivot && newPivot.type != T_CELL) newPivot = false;
+                if (newPivot && newPivot.type !== T_CELL) newPivot = false;
             }
 
             if (newPivot && newPivot.name) {
 
-                if (oldPivot && oldPivot.name != newPivot.name) removeItem(oldPivot.pivoted, name);
+                if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
 
                 pushUnique(newPivot.pivoted, name);
 
@@ -142,8 +142,8 @@ export default function (P = Ωempty) {
                 if (art.addPivotOffset) art.dirtyOffset = true;
                 if (art.addPivotRotation) art.dirtyRotation = true;
 
-                if (art.type == T_POLYLINE) art.dirtyPins = true;
-                else if (art.type == T_LINE || art.type == T_QUADRATIC || art.type == T_BEZIER) art.dirtyPins.push(this.name);
+                if (art.type === T_POLYLINE) art.dirtyPins = true;
+                else if (art.type === T_LINE || art.type === T_QUADRATIC || art.type === T_BEZIER) art.dirtyPins.push(this.name);
             }
         }, this);
     };

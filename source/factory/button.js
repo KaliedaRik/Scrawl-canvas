@@ -155,12 +155,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             val = items[key];
 
-            if (key && key != NAME && val != null) {
+            if (key && key !== NAME && val != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, val);
-                else if (typeof defs[key] != UNDEF) this[key] = val;
+                else if (typeof defs[key] !== UNDEF) this[key] = val;
             }
         }
         this.dirtyButton = true;

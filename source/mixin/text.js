@@ -157,10 +157,10 @@ export default function (P = Ωempty) {
 // `getCanvasTextHold` - get a handle for the &lt;canvas> element's child text hold &lt;div>
     P.getCanvasTextHold = function (item) {
 
-        if (item?.type == T_CELL && item?.controller?.type == T_CANVAS && item?.controller?.textHold) return item.controller;
+        if (item?.type === T_CELL && item?.controller?.type === T_CANVAS && item?.controller?.textHold) return item.controller;
 
         // For non-based Cells we have to make a recursive call to find the &lt;canvas> host
-        if (item && item.type == T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
+        if (item && item.type === T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
 
         return false;
     };

@@ -104,7 +104,7 @@ export const domShow = function (singleArtefact = ZERO_STR) {
                             w = dims[0];
                             h = dims[1];
 
-                            if (art.type == T_CANVAS) {
+                            if (art.type === T_CANVAS) {
 
                                 if (ignoreDpr) {
 

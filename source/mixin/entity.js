@@ -190,7 +190,7 @@ export default function (P = Ωempty) {
 
         let result = true;
 
-        if(!incs.indexOf(key) && value == this.defs[key]) result = false;
+        if(!incs.indexOf(key) && value === this.defs[key]) result = false;
 
         return result;
     };
@@ -270,7 +270,7 @@ export default function (P = Ωempty) {
             if (def != null) {
 
                 val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
 
             def = state.defs[item];
@@ -278,7 +278,7 @@ export default function (P = Ωempty) {
             if (def != null) {
 
                 val = state[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             return null;
         }
@@ -305,21 +305,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     if (!STATE_KEYS.includes(key)) {
 
                         fn = setters[key];
 
                         if (fn) fn.call(this, val);
-                        else if (typeof defs[key] != UNDEF) this[key] = val;
+                        else if (typeof defs[key] !== UNDEF) this[key] = val;
                     }
                     else {
 
                         fn = stateSetters[key];
 
                         if (fn) fn.call(state, val);
-                        else if (typeof stateDefs[key] != UNDEF) state[key] = val;
+                        else if (typeof stateDefs[key] !== UNDEF) state[key] = val;
                     }
                 }
             }
@@ -348,21 +348,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     if (!STATE_KEYS.includes(key)) {
 
                         fn = setters[key];
 
                         if (fn) fn.call(this, val);
-                        else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
+                        else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], val);
                     }
                     else {
 
                         fn = stateSetters[key];
 
                         if (fn) fn.call(state, val);
-                        else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], val);
+                        else if (typeof stateDefs[key] !== UNDEF) state[key] = addStrings(state[key], val);
                     }
                 }
             }
