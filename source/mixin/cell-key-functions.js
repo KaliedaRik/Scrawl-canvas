@@ -32,15 +32,15 @@ export default function (P = Ωempty) {
             eVal = engine[key];
             sVal = state[key];
 
-            if (key == LINE_DASH) {
+            if (key === LINE_DASH) {
 
                 engine.lineDash = sVal;
                 engine.setLineDash(engine.lineDash);
             }
             else if (eVal !== sVal) engine[key] = sVal;
         }
-        if (engine.textAlign != LEFT) engine.textAlign = LEFT;
-        if (engine.textBaseline != TOP) engine.textBaseline = TOP;
+        if (engine.textAlign !== LEFT) engine.textAlign = LEFT;
+        if (engine.textBaseline !== TOP) engine.textBaseline = TOP;
 
         return this;
     };

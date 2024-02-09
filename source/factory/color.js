@@ -246,9 +246,9 @@ P.kill = function () {
                 stroke = state.strokeStyle,
                 shadow = state.shadowColor;
 
-            if (isa_obj(fill) && fill.name == myname) state.fillStyle = state.defs.fillStyle;
-            if (isa_obj(stroke) && stroke.name == myname) state.strokeStyle = state.defs.strokeStyle;
-            if (isa_obj(shadow) && shadow.name == myname) state.shadowColor = state.defs.shadowColor;
+            if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+            if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+            if (isa_obj(shadow) && shadow.name === myname) state.shadowColor = state.defs.shadowColor;
         }
     });
 
@@ -272,15 +272,15 @@ P.get = function (item) {
 
         return this.getRangeColor(item);
     }
-    else if (item == MIN) {
+    else if (item === MIN) {
 
         return this.getMinimumColor();
     }
-    else if (item == MAX) {
+    else if (item === MAX) {
 
         return this.getMaximumColor();
     }
-    else if (item == RANDOM) {
+    else if (item === RANDOM) {
 
         this.generateRandomColor();
         return this.getCurrentColor();
@@ -295,10 +295,10 @@ P.get = function (item) {
 
             const def = this.defs[item];
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 const val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             return undefined;
         }
@@ -323,12 +323,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = value;
+                else if (typeof defs[key] !== UNDEF) this[key] = value;
             }
         }
         if (items.random) this.generateRandomColor();
@@ -551,13 +551,13 @@ P.returnColorFromValues = function (b, c, d, a) {
     const col = this.buildColorString(b, c, d, a, colorSpace);
 
     let flag = false;
-    if (XYZ == colorSpace) flag = true;
-    else if (colorSpace != returnColorAs) flag = true;
-    else if (HWB == returnColorAs && !supportsHWB) flag = true;
-    else if (LAB == returnColorAs && !supportsLAB) flag = true;
-    else if (LCH == returnColorAs && !supportsLCH) flag = true;
-    else if (OKLAB == returnColorAs && !supportsOKLAB) flag = true;
-    else if (OKLCH == returnColorAs && !supportsOKLCH) flag = true;
+    if (XYZ === colorSpace) flag = true;
+    else if (colorSpace !== returnColorAs) flag = true;
+    else if (HWB === returnColorAs && !supportsHWB) flag = true;
+    else if (LAB === returnColorAs && !supportsLAB) flag = true;
+    else if (LCH === returnColorAs && !supportsLCH) flag = true;
+    else if (OKLAB === returnColorAs && !supportsOKLAB) flag = true;
+    else if (OKLCH === returnColorAs && !supportsOKLCH) flag = true;
 
     if (flag) {
 
@@ -615,7 +615,7 @@ P.checkColor = function (item) {
         else if (item.includes(_LCH)) colSpace = LCH;
         else if (item.includes(_XYZ)) colSpace = XYZ;
 
-        if (RGB == colSpace || HSL == colSpace) return item;
+        if (RGB === colSpace || HSL === colSpace) return item;
 
         this.colorSpace = colSpace;
 
@@ -643,8 +643,8 @@ P.getRangeColor = function (item, internalGradientBuild = false) {
         if (internalGradientBuild) {
 
             if (HSL_HWB_ARRAY.includes(col)) col = RGB;
-            else if (LCH == col) col = LAB;
-            else if (OKLCH == col) col = OKLAB;
+            else if (LCH === col) col = LAB;
+            else if (OKLCH === col) col = OKLAB;
         }
 
         const vals = this.calculateRangeColorValues(item, internalGradientBuild),
@@ -668,8 +668,8 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
     if (internalGradientBuild) {
 
         if (HSL_HWB_ARRAY.includes(colorSpace)) col = _RGB;
-        else if (LCH == colorSpace) col = _LAB;
-        else if (OKLCH == colorSpace) col = _OKLAB;
+        else if (LCH === colorSpace) col = _LAB;
+        else if (OKLCH === colorSpace) col = _OKLAB;
     }
 
     const [bMin, cMin, dMin, aMin] = this[`${col}_min`];
@@ -677,7 +677,7 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
 
     let e = easingFunction;
 
-    if (!internalGradientBuild && easing != FUNCTION && easeEngines[easing]) e = easeEngines[easing];
+    if (!internalGradientBuild && easing !== FUNCTION && easeEngines[easing]) e = easeEngines[easing];
 
     const val = (internalGradientBuild) ? item : e(item);
 
@@ -779,7 +779,7 @@ P.getAlphaValue = function (alpha) {
 // `getHueValue` - internal helper function - because the CSS `hue` definition is massively overloaded with possibilities
 P.getHueValue = function (hue) {
 
-    if (hue == NONE) return 0;
+    if (hue === NONE) return 0;
 
     if (hue.includes(DEG)) hue = parseFloat(hue)
     else if (hue.includes(RAD)) hue = parseFloat(hue) / _radian;
@@ -804,9 +804,9 @@ P.getColorValuesFromString = function(str, col) {
     const res = str.split(SPACE).filter(e => e != null && e !== ZERO_STR);
 
     // We test and correct for the `none` value here (excluding alpha channel)
-    if (res[0] == null || res[0] == NONE) res[0] = _0;
-    if (res[1] == null || res[1] == NONE) res[1] = _0;
-    if (res[2] == null || res[2] == NONE) res[2] = _0;
+    if (res[0] == null || res[0] === NONE) res[0] = _0;
+    if (res[1] == null || res[1] === NONE) res[1] = _0;
+    if (res[2] == null || res[2] === NONE) res[2] = _0;
 
     return res;
 };

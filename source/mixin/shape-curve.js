@@ -78,15 +78,15 @@ P.factoryKill = function () {
 
         if (art.name !== this.name) {
 
-            if (art.startControlPivot && art.startControlPivot.name == this.name) art.set({ startControlPivot: false});
-            if (art.controlPivot && art.controlPivot.name == this.name) art.set({ controlPivot: false});
-            if (art.endControlPivot && art.endControlPivot.name == this.name) art.set({ endControlPivot: false});
-            if (art.endPivot && art.endPivot.name == this.name) art.set({ endPivot: false});
+=            if (art.startControlPivot && art.startControlPivot.name === this.name) art.set({ startControlPivot: false});
+            if (art.controlPivot && art.controlPivot.name === this.name) art.set({ controlPivot: false});
+            if (art.endControlPivot && art.endControlPivot.name === this.name) art.set({ endControlPivot: false});
+            if (art.endPivot && art.endPivot.name === this.name) art.set({ endPivot: false});
 
-            if (art.startControlPath && art.startControlPath.name == this.name) art.set({ startControlPath: false});
-            if (art.controlPath && art.controlPath.name == this.name) art.set({ controlPath: false});
-            if (art.endControlPath && art.endControlPath.name == this.name) art.set({ endControlPath: false});
-            if (art.endPath && art.endPath.name == this.name) art.set({ endPath: false});
+            if (art.startControlPath && art.startControlPath.name === this.name) art.set({ startControlPath: false});
+            if (art.controlPath && art.controlPath.name === this.name) art.set({ controlPath: false});
+            if (art.endControlPath && art.endControlPath.name === this.name) art.set({ endControlPath: false});
+            if (art.endPath && art.endPath.name === this.name) art.set({ endPath: false});
         }
     });
 };
@@ -250,9 +250,9 @@ P.factoryKill = function () {
 
             this[attr] = null;
 
-            if (label == START_CONTROL) this.dirtyStartControlLock = true;
-            else if (label == CONTROL) this.dirtyControlLock = true;
-            else if (label == END_CONTROL) this.dirtyEndControlLock = true;
+            if (label === START_CONTROL) this.dirtyStartControlLock = true;
+            else if (label === CONTROL) this.dirtyControlLock = true;
+            else if (label === END_CONTROL) this.dirtyEndControlLock = true;
             else this.dirtyEndLock = true;
         }
         else if (item) {
@@ -291,9 +291,9 @@ P.factoryKill = function () {
 
                     this.updateDirty();
 
-                    if (label == START_CONTROL) this.dirtyStartControl = true;
-                    else if (label == CONTROL) this.dirtyControl = true;
-                    else if (label == END_CONTROL) this.dirtyEndControl = true;
+                    if (label === START_CONTROL) this.dirtyStartControl = true;
+                    else if (label === CONTROL) this.dirtyControl = true;
+                    else if (label === END_CONTROL) this.dirtyEndControl = true;
                     else this.dirtyEnd = true;
 
                     this[attr] = item;
@@ -404,10 +404,10 @@ P.factoryKill = function () {
 
         if (this.dirtyStart) this.cleanStart();
 
-        if (this.dirtyStartControl || this.startControlLockTo == PARTICLE) this.cleanControl(START_CONTROL);
-        if (this.dirtyEndControl || this.endControlLockTo == PARTICLE) this.cleanControl(END_CONTROL);
-        if (this.dirtyControl || this.controlLockTo == PARTICLE) this.cleanControl(CONTROL);
-        if (this.dirtyEnd || this.endLockTo == PARTICLE) this.cleanControl(END);
+        if (this.dirtyStartControl || this.startControlLockTo === PARTICLE) this.cleanControl(START_CONTROL);
+        if (this.dirtyEndControl || this.endControlLockTo === PARTICLE) this.cleanControl(END_CONTROL);
+        if (this.dirtyControl || this.controlLockTo === PARTICLE) this.cleanControl(CONTROL);
+        if (this.dirtyEnd || this.endLockTo === PARTICLE) this.cleanControl(END);
 
         if (this.dirtyOffset) this.cleanOffset();
         if (this.dirtyRotation) this.cleanRotation();
@@ -476,9 +476,9 @@ P.factoryKill = function () {
         const raw = this[label],
             current = this[`current${capLabel}`];
 
-        if (lock == PIVOT && (!pivot || pivot.substring)) lock = COORD;
-        else if (lock == PATH && (!path || path.substring)) lock = COORD;
-        else if (lock == PARTICLE && (!part || part.substring)) lock = COORD;
+        if (lock === PIVOT && (!pivot || pivot.substring)) lock = COORD;
+        else if (lock === PATH && (!path || path.substring)) lock = COORD;
+        else if (lock === PARTICLE && (!part || part.substring)) lock = COORD;
 
         switch(lock) {
 
@@ -573,7 +573,7 @@ P.factoryKill = function () {
         if (pathPos > 1) pathPos = pathPos % 1;
 
         pathPos = parseFloat(pathPos.toFixed(6));
-        if (pathPos != tempPos) this[`${label}PathPosition`] = pathPos;
+        if (pathPos !== tempPos) this[`${label}PathPosition`] = pathPos;
 
         if (pathData) {
 
@@ -622,15 +622,15 @@ P.factoryKill = function () {
 
             if (sub) {
 
-                if (sub.type == T_LINE || sub.type == T_QUADRATIC || sub.type == T_BEZIER) {
+                if (sub.type === T_LINE || sub.type === T_QUADRATIC || sub.type === T_BEZIER) {
 
-                    if (sub.type == T_QUADRATIC) {
+                    if (sub.type === T_QUADRATIC) {
 
                         sub.dirtyControl = true;
                         sub.currentControlPathData = false;
                     }
 
-                    else if (sub.type == T_BEZIER) {
+                    else if (sub.type === T_BEZIER) {
 
                         sub.dirtyStartControl = true;
                         sub.dirtyEndControl = true;

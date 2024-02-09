@@ -180,8 +180,8 @@ const myEmitter = makeEmitter({
 
                 // Set the engine's fillStyle attribute - we're using a range color here
                 // + We request the color from the emitter's fillColorFactory using the `get` function
-                // + When `alpha == 1` the color factory will return the maximum color string
-                // + When `alpha == 0` the color factory will return the minimum color
+                // + When `alpha === 1` the color factory will return the maximum color string
+                // + When `alpha === 0` the color factory will return the minimum color
                 // + values between 0 and 1 return a ranged color between the minimum and maximum colors
                 engine.fillStyle = colorFactory.get(colorRange);
 

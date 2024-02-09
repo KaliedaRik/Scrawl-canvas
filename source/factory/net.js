@@ -107,7 +107,7 @@ const defaultAttributes = {
     springConstant: 50,
     damperConstant: 10,
 
-    // This is a ratio figure, not the actual rest length. If `== 1`, spring restLength will equal the initial distance between the two particles. `< 1` and the length will be proportionately smaller; `> 1` gives results in a longer length
+    // This is a ratio figure, not the actual rest length. If `=== 1`, spring restLength will equal the initial distance between the two particles. `< 1` and the length will be proportionately smaller; `> 1` gives results in a longer length
     restLength: 1,
 
     // __showSprings__ - Boolean flag - when set, Scrawl-canvas will display the Spring connections between Particle pairs
@@ -224,11 +224,11 @@ P.purgeParticlesFromLibrary = function () {
             if (tempArt.particle && !tempArt.particle.substring && tempArt.particle.name) tempArt.particle = tempArt.particle.name;
 
             // Polyline entitys go one step further in that they can also use Particles in their pin array
-            if (tempArt.type == T_POLYLINE && tempArt.useParticlesAsPins) {
+            if (tempArt.type = T_POLYLINE && tempArt.useParticlesAsPins) {
 
                 tempArt.pins.forEach((pin, index) => {
 
-                    if (isa_obj(pin) && pin.type == T_PARTICLE) {
+                    if (isa_obj(pin) && pin.type === T_PARTICLE) {
 
                         tempArt.pins[index] = pin.name;
                         tempArt.dirtyPins = true;
@@ -274,7 +274,7 @@ S.world = function (item) {
     let w;
 
     if (item.substring) w = world[item];
-    else if (isa_obj(item) && item.type == T_WORLD) w = item;
+    else if (isa_obj(item) && item.type === T_WORLD) w = item;
 
     if (w) this.world = w;
 };

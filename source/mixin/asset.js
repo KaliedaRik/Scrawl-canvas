@@ -148,7 +148,7 @@ export default function (P = Ωempty) {
         if (sub && sub.name) {
 
             const name = sub.name,
-                index = this.subscribers.findIndex(item => item.name == name);
+                index = this.subscribers.findIndex(item => item.name === name);
 
             if (index >= 0) {
 

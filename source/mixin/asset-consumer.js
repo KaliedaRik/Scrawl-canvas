@@ -172,7 +172,7 @@ export default function (P = Ωempty) {
 
         const myAsset = this.asset;
 
-        if (myAsset && myAsset.type == T_VIDEO) return myAsset[action](...args);
+        if (myAsset && myAsset.type === T_VIDEO) return myAsset[action](...args);
     };
 
 // `videoPromiseAction` - internal helper function
@@ -180,7 +180,7 @@ export default function (P = Ωempty) {
 
         const myAsset = this.asset;
 
-        if (myAsset && myAsset.type == T_VIDEO) return myAsset[action](...args);
+        if (myAsset && myAsset.type === T_VIDEO) return myAsset[action](...args);
         else return Promise.reject('Asset not a video');
     };
 
@@ -238,7 +238,7 @@ export default function (P = Ωempty) {
 
         const asset = this.asset;
 
-        if (asset && asset.type == T_SPRITE && asset.manifest) {
+        if (asset && asset.type === T_SPRITE && asset.manifest) {
 
             const copyArray = this.copyArray;
 
@@ -275,7 +275,7 @@ export default function (P = Ωempty) {
 
                         const sourceName = this.source.id || this.source.name;
 
-                        if (source != sourceName) {
+                        if (source !== sourceName) {
 
                             const newSource = asset.sourceHold[source];
 
@@ -292,7 +292,7 @@ export default function (P = Ωempty) {
                 const [, x, y, w, h] = asset.manifest[this.spriteTrack][this.spriteCurrentFrame],
                     [cx, cy, cw, ch] = copyArray;
 
-                if (cx != x || cy != y || cw != w || ch != h) {
+                if (cx !== x || cy !== y || cw !== w || ch !== h) {
 
                     copyArray.length = 0;
                     copyArray.push(x, y, w, h);

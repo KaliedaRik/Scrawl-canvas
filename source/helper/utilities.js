@@ -31,9 +31,9 @@ export const addStrings = (current, delta) => {
     if ((delta != null)) {
 
         // Correct for labels
-        if (LEFT == current || TOP == current) current = PC0;
-        else if (RIGHT == current || BOTTOM == current) current = PC100;
-        else if (CENTER == current) current = PC50;
+        if (LEFT === current || TOP === current) current = PC0;
+        else if (RIGHT === current || BOTTOM === current) current = PC100;
+        else if (CENTER === current) current = PC50;
 
         const stringFlag = (current.substring || delta.substring) ? true : false;
 
@@ -166,11 +166,11 @@ export const interpolate = function (val, min, max) {
 };
 
 // __isa_boolean__ checks to make sure the argument is a boolean
-export const isa_boolean = item => (typeof item == BOOLEAN) ? true : false;
+export const isa_boolean = item => (typeof item === BOOLEAN) ? true : false;
 
 
 // __isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
-export const isa_canvas = item => (Object.prototype.toString.call(item) == $CANVAS_ELEMENT) ? true : false;
+export const isa_canvas = item => (Object.prototype.toString.call(item) === $CANVAS_ELEMENT) ? true : false;
 
 
 // __isa_dom__ checks to make sure the argument is a DOM element of some sort
@@ -178,7 +178,7 @@ export const isa_dom = item => (item && item.querySelector && item.dispatchEvent
 
 
 // __isa_fn__ checks to make sure the argument is a JavaScript function object
-export const isa_fn = item => (typeof item == FUNCTION) ? true : false;
+export const isa_fn = item => (typeof item === FUNCTION) ? true : false;
 
 
 // __isa_number__ checks to make sure the argument is true number (excluding NaN)
@@ -186,11 +186,11 @@ export const isa_number = item => (_isFinite(item)) ? true : false;
 
 
 // __isa_obj__ checks to make sure the argument is a JavaScript Object
-export const isa_obj = item => (Object.prototype.toString.call(item) == $OBJECT) ? true : false;
+export const isa_obj = item => (Object.prototype.toString.call(item) === $OBJECT) ? true : false;
 
 
 // __isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object
-export const isa_quaternion = item => (item && item.type && item.type == T_QUATERNION) ? true : false;
+export const isa_quaternion = item => (item && item.type && item.type === T_QUATERNION) ? true : false;
 
 
 // __mergeOver__ takes two objects and writes the attributes of one over the other. This function mutates the 'original' object rather than generating a third, new onject
@@ -233,7 +233,7 @@ export const mergeDiscard = (original, additional) => {
 
         _entries(additional).forEach(([key, val]) => {
 
-            if (val === null) delete original[key];
+            if (val == null) delete original[key];
             else original[key] = additional[key];
         });
     }
@@ -294,19 +294,19 @@ export const removeItem = (myArray, unwantedMember) => {
 
 
 // __xt__ checks to see if argument exists (is not 'undefined')
-export const xt = item => (typeof item == UNDEF) ? false : true;
+export const xt = item => (typeof item === UNDEF) ? false : true;
 
 
 // __xta__ checks to make sure that all the arguments supplied to the function exist (none are 'undefined')
-export const xta = (...args) => args.every(item => typeof item != UNDEF);
+export const xta = (...args) => args.every(item => typeof item !== UNDEF);
 
 
 // __xtGet__ returns the first existing (not 'undefined') argument supplied to the function
-export const xtGet = (...args) => args.find(item => typeof item != UNDEF);
+export const xtGet = (...args) => args.find(item => typeof item !== UNDEF);
 
 
 // __xto__ checks to make sure that at least one of the arguments supplied to the function exists (is not 'undefined')
-export const xto = (...args) => (args.find(item => typeof item != UNDEF)) ? true : false;
+export const xto = (...args) => (args.find(item => typeof item !== UNDEF)) ? true : false;
 
 
 // ##### Easing engines
@@ -512,10 +512,10 @@ export const detectBrowser = function () {
 /* eslint-disable-next-line */
     if ((!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.includes(' OPR/')) result.push('old-opera');
 
-    if (typeof InstallTrigger != UNDEF) result.push('firefox');
+    if (typeof InstallTrigger !== UNDEF) result.push('firefox');
 
 /* eslint-disable-next-line */
-    else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() == "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari != UNDEF && safari.pushNotification))) result.push('safari');
+    else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== UNDEF && safari.pushNotification))) result.push('safari');
 
 /* eslint-disable-next-line */
     if (/*@cc_on!@*/false || !!document.documentMode) result.push('internet-explorer');

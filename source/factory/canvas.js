@@ -95,7 +95,7 @@ const Canvas = function (items = Ωempty) {
 
         const ds = el.dataset;
 
-        this.useDisplayP3WhereAvailable = ds.canvasColorSpace == DISPLAY_P3 || items.canvasColorSpace == DISPLAY_P3;
+        this.useDisplayP3WhereAvailable = ds.canvasColorSpace === DISPLAY_P3 || items.canvasColorSpace === DISPLAY_P3;
         this.canvasColorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
 
         this.engine = this.domElement.getContext(_2D, { colorSpace: this.canvasColorSpace });
@@ -342,7 +342,7 @@ P.factoryKill = function () {
     removeItem(uiSubscribedElements, name);
 
     // Host and host Group
-    if (host && host != ROOT) {
+    if (host && host !== ROOT) {
 
         const h = (this.currentHost) ? this.currentHost : artefact[host];
 
@@ -1149,7 +1149,7 @@ export const setCurrentCanvas = function (item) {
                 changeFlag = true;
             }
         }
-        else if (item.type == T_CANVAS) {
+        else if (item.type === T_CANVAS) {
 
             currentCanvas = item;
             changeFlag = true;
@@ -1197,7 +1197,7 @@ export const addCanvas = function (items = Ωempty) {
 
     if (host) {
 
-        if (host.type == T_STACK) {
+        if (host.type === T_STACK) {
 
             mygroup = host.name;
             position = ABSOLUTE;

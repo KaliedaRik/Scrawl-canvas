@@ -81,7 +81,7 @@ const report = reportSpeed('#reportmessage', function () {
     let fontReadout = `
 `;
     document.fonts.forEach(k => {
-        if (k.status == 'loaded') fontReadout +=(`    ${k.family} ${k.weight} ${k.style}\n`)
+        if (k.status === 'loaded') fontReadout +=(`    ${k.family} ${k.weight} ${k.style}\n`)
     })
 
     const position = `

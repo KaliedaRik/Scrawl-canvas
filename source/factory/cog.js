@@ -250,7 +250,7 @@ P.makeCogPath = function () {
 
     xPts.push(currentPointX);
 
-    if (curve == BEZIER) {
+    if (curve === BEZIER) {
 
         for (i = 0; i < points; i++) {
 
@@ -293,7 +293,7 @@ P.makeCogPath = function () {
             myPath += `${deltaX},${deltaY} `;
         }
     }
-    else if (curve == QUADRATIC) {
+    else if (curve === QUADRATIC) {
 
         for (i = 0; i < points; i++) {
 
@@ -388,8 +388,8 @@ P.makeCogPath = function () {
 
     releaseArray(xPts);
 
-    if (curve == BEZIER) return `m${myXoffset},0c${myPath}z`;
-    if (curve == QUADRATIC) return `m${myXoffset},0q${myPath}z`;
+    if (curve === BEZIER) return `m${myXoffset},0c${myPath}z`;
+    if (curve === QUADRATIC) return `m${myXoffset},0q${myPath}z`;
     return `m${myXoffset},0l${myPath}z`;
 };
 

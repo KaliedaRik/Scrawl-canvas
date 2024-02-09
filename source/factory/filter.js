@@ -406,12 +406,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = value;
+                else if (typeof defs[key] !== UNDEF) this[key] = value;
             }
         }
     }
@@ -440,12 +440,12 @@ P.setDelta = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
+                else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], value);
             }
         }
     }
@@ -694,8 +694,8 @@ const setActionsArray = _freeze({
 
             f.ranges.forEach(range => {
 
-                if (range.length == 6) processedRanges.push(range);
-                else if (range.length == 2) {
+                if (range.length === 6) processedRanges.push(range);
+                else if (range.length === 2) {
 
                     if (range[0].substring && range[1].substring) {
 

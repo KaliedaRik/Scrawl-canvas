@@ -244,7 +244,7 @@ S.duration = function (item) {
 
                 target.calculateEffectiveTime();
 
-                if (target.type == T_TWEEN) target.calculateEffectiveDuration();
+                if (target.type === T_TWEEN) target.calculateEffectiveDuration();
             }
         }
     }
@@ -471,7 +471,7 @@ P.setEffectiveDuration = function() {
         temp = convertTime(this.duration);
 
         // Cannot use %-String values for Ticker `duration` attribute
-        if (temp[0] == PC) {
+        if (temp[0] === PC) {
 
             this.duration = 0
             this.recalculateEffectiveDuration();
@@ -492,13 +492,13 @@ P.checkObserverRunningState = function () {
 
             const anim = animation[observer];
 
-            if (anim && anim.type == T_RENDER_ANIMATION) {
+            if (anim && anim.type === T_RENDER_ANIMATION) {
 
                 observer = this.observer = anim;
             }
             else return true;
         }
-        if (observer.type == T_RENDER_ANIMATION) {
+        if (observer.type === T_RENDER_ANIMATION) {
 
             return observer.isRunning();
         }
@@ -649,7 +649,7 @@ P.run = function () {
         pushUnique(tickerAnimations, this.name);
         tickerAnimationsFlag = true;
 
-        if (typeof this.onRun == FUNCTION) this.onRun();
+        if (typeof this.onRun === FUNCTION) this.onRun();
     }
     return this;
 };
@@ -681,7 +681,7 @@ P.reset = function () {
     this.fn(true);
     this.active = false;
 
-    if (typeof this.onReset == FUNCTION) this.onReset();
+    if (typeof this.onReset === FUNCTION) this.onReset();
 
     return this;
 };
@@ -707,7 +707,7 @@ P.complete = function () {
     this.fn();
     this.active = false;
 
-    if (typeof this.onComplete == FUNCTION) this.onComplete();
+    if (typeof this.onComplete === FUNCTION) this.onComplete();
 
     return this;
 };
@@ -734,7 +734,7 @@ P.reverse = function (resume = false) {
     this.fn();
     this.active = false;
 
-    if (typeof this.onReverse == FUNCTION) this.onReverse();
+    if (typeof this.onReverse === FUNCTION) this.onReverse();
 
     if (resume) this.resume();
 
@@ -750,7 +750,7 @@ P.halt = function () {
     removeItem(tickerAnimations, this.name);
     tickerAnimationsFlag = true;
 
-    if (typeof this.onHalt == FUNCTION) this.onHalt();
+    if (typeof this.onHalt === FUNCTION) this.onHalt();
 
     return this;
 };
@@ -773,7 +773,7 @@ P.resume = function () {
         pushUnique(tickerAnimations, this.name);
         tickerAnimationsFlag = true;
 
-        if (typeof this.onResume == FUNCTION) this.onResume();
+        if (typeof this.onResume === FUNCTION) this.onResume();
 
     }
     return this;
@@ -805,7 +805,7 @@ P.seekTo = function (milliseconds, resume = false) {
     this.fn(backwards);
     this.active = false;
 
-    if (typeof this.onSeekTo == FUNCTION) this.onSeekTo();
+    if (typeof this.onSeekTo === FUNCTION) this.onSeekTo();
 
     if (resume) this.resume();
 
@@ -838,7 +838,7 @@ P.seekFor = function (milliseconds, resume = false) {
     this.fn(backwards);
     this.active = false;
 
-    if (typeof this.onSeekFor == FUNCTION) this.onSeekFor();
+    if (typeof this.onSeekFor === FUNCTION) this.onSeekFor();
 
     if (resume) this.resume();
 

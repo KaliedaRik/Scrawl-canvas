@@ -32,7 +32,7 @@ import { _isArray, ADD_EVENT_LISTENER, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN,
 // The function returns a function which, when invoked, will disconnect the observer from the DOM.
 export const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
 
-    if (typeof window.IntersectionObserver == FUNCTION && anim && anim.run) {
+    if (typeof window.IntersectionObserver === FUNCTION && anim && anim.run) {
 
         const observer = new IntersectionObserver((entries) => {
 

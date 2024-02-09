@@ -185,7 +185,7 @@ var uheprng = function (seed) {
 
         // this EXPORTED function allows you to seed the random generator.
         random.seed = function (seed) {
-            if (typeof seed === 'undefined' || seed === null) {
+            if (typeof seed === 'undefined' || seed == null) {
                 seed = Math.random();
             }
             if (typeof seed !== 'string') {

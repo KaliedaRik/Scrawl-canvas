@@ -194,7 +194,7 @@ export default function (P = Ωempty) {
 
                 pushUnique(uiSubscribedElements, this.name);
 
-                if (val == LOCAL) addLocalMouseMoveListener(this);
+                if (val === LOCAL) addLocalMouseMoveListener(this);
             }
             else {
 
@@ -398,7 +398,7 @@ export default function (P = Ωempty) {
                 // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
                 // for Stack artefacts only, discover perspective and perspective-origin values
-                if (this.type == T_STACK) {
+                if (this.type === T_STACK) {
 
                     const pStyle = parseFloat(style.perspective);
                     const {perspective, perspectiveX, perspectiveY, perspectiveZ} = items;
@@ -538,7 +538,7 @@ export default function (P = Ωempty) {
 
         const pathCorners = this.pathCorners;
 
-        if (pathCorners.length == 4) {
+        if (pathCorners.length === 4) {
 
             const here = this.getHere(),
                 x = currentCorePosition.scrollX - (here.offsetX || 0),

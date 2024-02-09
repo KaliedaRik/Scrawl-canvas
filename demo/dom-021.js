@@ -151,7 +151,7 @@ scrawl.makeLabel({
 // + When the popover closes, we need to disable the button to take it out of the tabbing order.
 scrawl.addNativeListener('toggle', (e) => {
 
-    if (e.newState == 'open') {
+    if (e.newState === 'open') {
         closeButton.set({
             buttonDisabled: false,
             buttonAutofocus: true,

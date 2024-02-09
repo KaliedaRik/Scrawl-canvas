@@ -161,7 +161,7 @@ S.columns = function (item) {
 
         if (!_isInteger(item)) item = parseInt(item, 10);
 
-        if (item != this.columns) {
+        if (item !== this.columns) {
 
             let i, iz, j;
 
@@ -194,7 +194,7 @@ S.rows = function (item) {
 
         if (!_isInteger(item)) item = parseInt(item, 10);
 
-        if (item != this.rows) {
+        if (item !== this.rows) {
 
             const currentRows = this.rows;
 
@@ -233,7 +233,7 @@ P.setTileFill = function (item) {
 
     const { columns, rows } = this;
 
-    if (_isArray(item) && item.length == columns * rows) {
+    if (_isArray(item) && item.length === columns * rows) {
 
         this.tileFill = item;
         this.dirtyFilterIdentifier = true;
@@ -308,7 +308,7 @@ P.getTilesUsingSource = function (key) {
 
     const res = [];
 
-    if (isa_number(key)) this.tileFill.forEach((val, index) => val == key && res.push(index));
+    if (isa_number(key)) this.tileFill.forEach((val, index) => val === key && res.push(index));
 
     return res;
 };

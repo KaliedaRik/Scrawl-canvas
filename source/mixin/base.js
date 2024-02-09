@@ -60,10 +60,10 @@ export default function (P = Ωempty) {
 
                 const def = this.defs[item];
 
-                if (typeof def != UNDEF) {
+                if (typeof def !== UNDEF) {
 
                     val = this[item];
-                    return (typeof val != UNDEF) ? val : def;
+                    return (typeof val !== UNDEF) ? val : def;
                 }
             }
         }
@@ -96,12 +96,12 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, val);
-                    else if (typeof defs[key] != UNDEF) this[key] = val;
+                    else if (typeof defs[key] !== UNDEF) this[key] = val;
                 }
             }
         }
@@ -134,12 +134,12 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, val);
-                    else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
+                    else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], val);
                 }
             }
         }
@@ -372,7 +372,7 @@ export default function (P = Ωempty) {
 
                 if (!url.substring) reject(new Error('Packet url supplied for import is not a string'));
 
-                if (url[0] == HAS_PACKET_CHECK) {
+                if (url[0] === HAS_PACKET_CHECK) {
 
                     // Looks like we already have a packet for processing
                     report = self.actionPacket(url);
@@ -437,7 +437,7 @@ export default function (P = Ωempty) {
 
             if (packet && packet.substring) {
 
-                if (packet[0] == HAS_PACKET_CHECK) {
+                if (packet[0] === HAS_PACKET_CHECK) {
 
                     let name, type, lib, update;
 

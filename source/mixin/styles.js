@@ -263,7 +263,7 @@ export default function (P = Ωempty) {
 // `palette` - argument has to be a Palette object
     S.palette = function (item = Ωempty) {
 
-        if(item.type == T_PALETTE) {
+        if(item.type === T_PALETTE) {
 
             item.dirtyPalette = true;
             this.palette = item;
@@ -401,18 +401,18 @@ export default function (P = Ωempty) {
             let def = this.defs[item],
                 val;
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
 
             def = palette.defs[item];
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = palette[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             else return undefined;
         }
@@ -444,21 +444,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 value = items[key];
 
-                if (key && key != NAME && value != null) {
+                if (key && key !== NAME && value != null) {
 
                     if (!PALETTE_KEYS.includes(key)) {
 
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != UNDEF) this[key] = value;
+                        else if (typeof defs[key] !== UNDEF) this[key] = value;
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != UNDEF) palette[key] = value;
+                        else if (typeof paletteDefs[key] !== UNDEF) palette[key] = value;
                     }
                 }
             }
@@ -492,21 +492,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 value = items[key];
 
-                if (key && key != NAME && value != null) {
+                if (key && key !== NAME && value != null) {
 
                     if (!PALETTE_KEYS.includes(key)) {
 
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
+                        else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], value);
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != UNDEF) palette[key] = addStrings(this[key], value);
+                        else if (typeof paletteDefs[key] !== UNDEF) palette[key] = addStrings(this[key], value);
                     }
                 }
             }
@@ -634,9 +634,9 @@ export default function (P = Ωempty) {
             dim = dimensions[i];
 
             if (val.toFixed) current[i] = val;
-            else if (val == LEFT || val == TOP) current[i] = 0;
-            else if (val == RIGHT || val == BOTTOM) current[i] = dim;
-            else if (val == CENTER) current[i] = dim / 2;
+            else if (val === LEFT || val === TOP) current[i] = 0;
+            else if (val === RIGHT || val === BOTTOM) current[i] = dim;
+            else if (val === CENTER) current[i] = dim / 2;
             else if (!_isFinite(parseFloat(val))) current[i] = 0;
             else current[i] = (parseFloat(val) / 100) * dim;
         }

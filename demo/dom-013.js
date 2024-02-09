@@ -59,9 +59,9 @@ const checkCanvasIsActive = function () {
     return function () {
 
         // We only want this function to run in the canvas render animation, though it will be called by both the canvas and stack renders
-        if (this.target.name == 'mycanvas') {
+        if (this.target.name === 'mycanvas') {
 
-            if (here.active != isActive) {
+            if (here.active !== isActive) {
 
                 isActive = here.active;
 

@@ -48,9 +48,9 @@
 // + __width__ and __height__ - for getting and setting the `dimensions` Coordinate values
 //
 // Scrawl-canvas also supports the following ___pseudo-values___, which can be used when setting __relative__ coordinates:
-// + `['left', 'top']` == `['0%', '0%']`
-// + `['center', 'center']` == `['50%', '50%']`
-// + `['bottom', 'right']` == `['100%', '100%']`
+// + `['left', 'top']` === `['0%', '0%']`
+// + `['center', 'center']` === `['50%', '50%']`
+// + `['bottom', 'right']` === `['100%', '100%']`
 //
 // ```
 // // The following code creates a block entity
@@ -313,7 +313,7 @@ export default function (P = Ωempty) {
 
             case LOCKTO :
 
-                if (value[0] == START && value[1] == START) {
+                if (value[0] === START && value[1] === START) {
 
                     result = (inc.includes(LOCKTO)) ? true : false;
                 }
@@ -321,7 +321,7 @@ export default function (P = Ωempty) {
 
             default :
 
-                if (this.lib == ENTITY) result = this.processEntityPacketOut(key, value, inc);
+                if (this.lib === ENTITY) result = this.processEntityPacketOut(key, value, inc);
                 else if (this.isArtefact) result = this.processDOMPacketOut(key, value, inc);
         }
         return result;
@@ -656,8 +656,8 @@ export default function (P = Ωempty) {
 
             this.particle = null;
 
-            if (this.lockTo[0] == PARTICLE) this.lockTo[0] = START;
-            if (this.lockTo[1] == PARTICLE) this.lockTo[1] = START;
+            if (this.lockTo[0] === PARTICLE) this.lockTo[0] = START;
+            if (this.lockTo[1] === PARTICLE) this.lockTo[1] = START;
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -753,7 +753,7 @@ export default function (P = Ωempty) {
 
         if (item) {
 
-            if (this.group && this.group.type == T_GROUP) this.group.removeArtefacts(this.name);
+            if (this.group && this.group.type === T_GROUP) this.group.removeArtefacts(this.name);
 
             if (item.substring) {
 
@@ -765,7 +765,7 @@ export default function (P = Ωempty) {
             else this.group = item;
         }
 
-        if (this.group && this.group.type == T_GROUP) this.group.addArtefacts(this.name);
+        if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
     };
 
 // __noFilters__
@@ -1033,9 +1033,9 @@ export default function (P = Ωempty) {
                 d = dimensions[i];
 
             if (s.toFixed) current[i] = s;
-            else if (s == LEFT || s == TOP) current[i] = 0;
-            else if (s == RIGHT || s == BOTTOM) current[i] = d;
-            else if (s == CENTER) current[i] = d / 2;
+            else if (s === LEFT || s === TOP) current[i] = 0;
+            else if (s === RIGHT || s === BOTTOM) current[i] = d;
+            else if (s === CENTER) current[i] = d / 2;
             else if (!_isFinite(parseFloat(s))) current[i] = 0;
             else current[i] = (parseFloat(s) / 100) * d;
         }
@@ -1351,10 +1351,10 @@ export default function (P = Ωempty) {
 
             const confirmLock = function (lock) {
 
-                if (lock == PIVOT && !pivot) return START;
-                else if (lock == PATH && !path) return START;
-                else if (lock == MIMIC && !mimic) return START;
-                else if (lock == PARTICLE && !particle) return START;
+                if (lock === PIVOT && !pivot) return START;
+                else if (lock === PATH && !path) return START;
+                else if (lock === MIMIC && !mimic) return START;
+                else if (lock === PARTICLE && !particle) return START;
                 return lock;
             };
 
@@ -1383,7 +1383,7 @@ export default function (P = Ωempty) {
                     }
 
                     // When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)
-                    else if (pivot.type == T_POLYLINE) {
+                    else if (pivot.type === T_POLYLINE) {
 
                         coord.setFromArray(pivot.getPinAt(pivotPin));
                     }
@@ -1451,9 +1451,9 @@ export default function (P = Ωempty) {
 
                     lock = confirmLock(lockTo[i]);
 
-                    if (lock == MOUSE) hereFlag = true;
+                    if (lock === MOUSE) hereFlag = true;
 
-                    if (START != lock) this.dirtyFilterIdentifier = true;
+                    if (START !== lock) this.dirtyFilterIdentifier = true;
 
                     localLockArray[i] = lock;
                 }
@@ -1470,7 +1470,7 @@ export default function (P = Ωempty) {
 
             getMethods[lock1](coord1);
 
-            if (lock1 == lock2) coord2.setFromArray(coord1);
+            if (lock1 === lock2) coord2.setFromArray(coord1);
             else getMethods[lock2](coord2);
 
             stamp[0] = coord1[0];
@@ -1479,7 +1479,7 @@ export default function (P = Ωempty) {
             releaseCoordinate(localLockArray, coord1, coord2);
         }
 
-        if (oldX != stamp[0] || oldY != stamp[1]) this.dirtyPositionSubscribers = true;
+        if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
     };
 
 
@@ -1517,9 +1517,9 @@ export default function (P = Ωempty) {
 
                 lock = lockArray[i];
 
-                if (lock == PIVOT && !pivot) lock = START;
-                if (lock == PATH && !path) lock = START;
-                if (lock == MIMIC && !mimic) lock = START;
+                if (lock === PIVOT && !pivot) lock = START;
+                if (lock === PATH && !path) lock = START;
+                if (lock === MIMIC && !mimic) lock = START;
 
                 coord = handle[i];
 
@@ -1551,7 +1551,7 @@ export default function (P = Ωempty) {
         // At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality.
         this.cleanStampHandlePositionsAdditionalActions();
 
-        if (oldX != stampHandle[0] || oldY != stampHandle[1]) this.dirtyPositionSubscribers = true;
+        if (oldX !== stampHandle[0] || oldY !== stampHandle[1]) this.dirtyPositionSubscribers = true;
     };
     P.cleanStampHandlePositionsAdditionalActions = λnull;
 

@@ -108,13 +108,13 @@ S.particleFrom = function (item) {
 
     if (item.substring) item = particle[item];
 
-    if (item && item.type == T_PARTICLE) this.particleFrom = item;
+    if (item && item.type === T_PARTICLE) this.particleFrom = item;
 };
 S.particleTo = function (item) {
 
     if (item.substring) item = particle[item];
 
-    if (item && item.type == T_PARTICLE) this.particleTo = item;
+    if (item && item.type === T_PARTICLE) this.particleTo = item;
 };
 
 

@@ -142,7 +142,7 @@ const currentPin = scrawl.makeDragZone({
 
         draggedPin = currentPin();
 
-        if (typeof draggedPin != 'boolean' && draggedPin) {
+        if (typeof draggedPin !== 'boolean' && draggedPin) {
 
             const pin = draggedPin.artefact,
                 name = pin.name;
@@ -160,7 +160,7 @@ const currentPin = scrawl.makeDragZone({
 
     updateOnEnd: () => {
 
-        if (typeof draggedPin != 'boolean' && draggedPin) {
+        if (typeof draggedPin !== 'boolean' && draggedPin) {
 
             const pin = draggedPin.artefact,
                 name = pin.name;

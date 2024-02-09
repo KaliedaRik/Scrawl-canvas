@@ -283,13 +283,13 @@ P.preparePinsForStamp = function () {
 
         name = dirtyPins[i];
 
-        if ((cPivot && cPivot.name == name) || (cPath && cPath.name == name)) {
+        if ((cPivot && cPivot.name === name) || (cPath && cPath.name === name)) {
 
             this.dirtyControl = true;
             if (this.controlLockTo.includes(PATH)) this.currentControlPathData = false;
         }
 
-        if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
+        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
 
             this.dirtyEnd = true;
             if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;
