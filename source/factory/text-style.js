@@ -48,58 +48,69 @@ baseMix(P);
 // #### TextStyle attributes
 const defaultAttributes = {
 
-    fontString: DEFAULT_FONT,
-    canvasFont: DEFAULT_FONT,
-
-    includeUnderline: false,
-    underlineStyle: ZERO_STR,
-    underlineWidth: 1,
-    underlineOffset: 0,
-    underlineGap: 3,
-
-    includeHighlight: false,
-    highlightStyle: YELLOW,
-
-    // #### State values
-    fillStyle: BLACK,
-    strokeStyle: BLACK,
-
-    // `globalAlpha` - handled by the entity, not here
-    // `globalCompositeOperation` - handled by the entity, not here
-
-    // `font` - handled by fontString and relatives
+    // Canvas state - text-related attributes used by text units
     direction: LTR,
     fontKerning: NORMAL,
-    textRendering: AUTO,
     fontStretch: NORMAL,
     fontVariantCaps: NORMAL,
-    fontWeight: NORMAL,
-    fontStyle: NORMAL,
-    fontSize: DEFAULT_FONT_SIZE,
-    fontFamily: SANS_SERIF,
-    // `textAlign` - always has the value of 'left'
-    // `textBaseline` - always has the value of 'top'
+    textRendering: AUTO,
 
-    // `letterSpacing` - we only keep the number value (which can then be scaled by the entity)
-    // `wordSpacing` - we only keep the number value (which can then be scaled by the entity)
+    // Canvas state - non-text-related attributes used by text units
+    fillStyle: BLACK,
+    lineDash: null,
+    lineDashOffset: 0,
+    lineWidth: 1,
+    strokeStyle: BLACK,
+
+    // Canvas state - text-related attributes ignored by text units
+    /*
+    font - Cannot be set. Managed by local attributes 'fontString', 'canvasFont'
+    textAlign - Cannot be set. Always has the value of 'left'
+    textBaseline - Cannot be set. Always has the value of 'top'
+    letterSpacing - Can be set/deltaSet. Managed by local attribute 'letterSpaceValue'
+    wordSpacing - Can be set/deltaSet. Managed by local attribute 'wordSpaceValue'
+    */
+    canvasFont: DEFAULT_FONT,
+    fontString: DEFAULT_FONT,
     letterSpaceValue: 0,
     wordSpaceValue: 0,
 
-    lineWidth: 1,
-    lineDash: null,
-    lineDashOffset: 0,
-    // `lineCap` - always has the value of 'round'
-    // `lineJoin` - always has the value of 'round'
-    // `miterLimit` - irrelevant as lineJoin/lineCap are permanently set to 'round'
+    // Canvas state - non-text-related attributes ignored by text units
+    /*
+    globalAlpha - Can be set/deltaSet. Handled by the entity, not here
+    globalCompositeOperation - Can be set. Handled by the entity, not here
+    lineCap - Cannot be set. Always has the value of 'round'
+    lineJoin - Cannot be set. Always has the value of 'round'
+    miterLimit - Cannot be set. Irrelevant as lineJoin/lineCap are permanently set to 'round'
+    shadowOffsetX - Can be set/deltaSet. Handled by the entity, not here
+    shadowOffsetY - Can be set/deltaSet. Handled by the entity, not here
+    shadowBlur - Can be set/deltaSet. Handled by the entity, not here
+    shadowColor - Can be set. Handled by the entity, not here
+    filter - Can be set. Handled by the entity, not here
+    imageSmoothingEnabled - Can be set. Handled by the entity, not here
+    imageSmoothingQuality - Can be set. Handled by the entity, not here
+    */
 
-    // `shadowOffsetX` - handled by the entity, not here
-    // `shadowOffsetY` - handled by the entity, not here
-    // `shadowBlur` - handled by the entity, not here
-    // `shadowColor` - handled by the entity, not here
+    // Unit font-related attributes
+    fontFamily: SANS_SERIF,
+    fontSize: DEFAULT_FONT_SIZE,
+    fontStyle: NORMAL,
+    fontWeight: NORMAL,
+    /* 
+    fontSizeValue - Internal attribute, not stored in defs object
+    lineHeight - Handled by the entity, not here
+    */
 
-    // `filter` - handled by the entity, not here
-    // `imageSmoothingEnabled` - handled by the entity, not here
-    // `imageSmoothingQuality` - handled by the entity, not here
+    // Unit underline styling
+    includeUnderline: false,
+    underlineGap: 3,
+    underlineOffset: 0,
+    underlineStyle: ZERO_STR,
+    underlineWidth: 1,
+
+    // Unit highlight styling
+    highlightStyle: YELLOW,
+    includeHighlight: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 

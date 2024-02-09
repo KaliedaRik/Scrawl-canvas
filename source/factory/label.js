@@ -15,7 +15,7 @@ import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, START, T_LABEL, TOP } from '../helper/shared-vars.js';
+import { _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -42,7 +42,11 @@ labelMix(P);
 
 
 // #### Label attributes
-const defaultAttributes = {};
+const defaultAttributes = {
+
+// __text__ - string.
+    text: ZERO_STR,
+};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 

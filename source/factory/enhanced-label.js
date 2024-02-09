@@ -15,7 +15,7 @@ import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, START, T_ENHANCED_LABEL, TOP } from '../helper/shared-vars.js';
+import { _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, START, T_ENHANCED_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -42,7 +42,18 @@ labelMix(P);
 
 
 // #### EnhancedLabel attributes
-const defaultAttributes = {};
+const defaultAttributes = {
+
+// __text__ - string.
+// + Can include html/css styling data
+    text: ZERO_STR,
+
+// __lineHeight__ - number. The distance between lines of text, as a ratio of the default font height
+// + Can be set/deltaSet in the normal way
+// + Alternatively, can be set via the fontString attribute.
+// + Default value is set to `1.5` for accessibility reasons
+    lineHeight: 1.5,
+};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 

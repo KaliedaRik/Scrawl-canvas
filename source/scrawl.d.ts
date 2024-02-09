@@ -359,9 +359,7 @@ interface FilterMixinFunctions {
 // -------------------------------------
 interface LabelMixinDeltaInputs {}
 
-interface LabelMixinInputs {
-    text?: string;
-}
+interface LabelMixinInputs {}
 
 interface LabelMixinFunctions {
     recalculateFont: () => void;
@@ -1263,10 +1261,13 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 // EnhancedLabelInstance factory
 // -------------------------------------
-interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
+interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {
+    lineHeight?: number;
+}
 
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
     delta?: EnhancedLabelFactoryDeltaInputs;
+    text?: string;
 }
 
 interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}

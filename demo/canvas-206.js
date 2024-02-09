@@ -110,6 +110,52 @@ const updateFont = (event) => {
                 });
                 break;
 
+            // <option value="serif-normal">serif (lh: normal)</option>
+            case 'serif-normal' :
+                mylabel.set({
+                    fontString: '16px / normal serif',
+                    text: westernText,
+                    direction: 'ltr',
+                });
+                break;
+
+            // <option value="serif-ratio">serif (lh: ratio)</option>
+            case 'serif-ratio' :
+                mylabel.set({
+                    fontString: '16px / 2.5 serif',
+                    text: westernText,
+                    direction: 'ltr',
+                });
+                break;
+
+            // <option value="serif-length">serif (lh: length)</option>
+            case 'serif-length' :
+                mylabel.set({
+                    fontString: '16px / 3em serif',
+                    text: westernText,
+                    direction: 'ltr',
+                });
+                break;
+
+            // <option value="serif-percent">serif (lh: percent)</option>
+            case 'serif-percent' :
+                mylabel.set({
+                    fontString: '16px / 180% serif',
+                    text: westernText,
+                    direction: 'ltr',
+                });
+                break;
+
+            // <option value="serif-px">serif (lh: px)</option>
+            case 'serif-px' :
+                mylabel.set({
+                    fontString: '16px / 30px serif',
+                    text: westernText,
+                    direction: 'ltr',
+                });
+                break;
+
+
             case 'sans-serif' :
                 mylabel.set({
                     fontString: '16px sans-serif',

@@ -22,10 +22,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    const defaultAttributes = {
-
-        text: ZERO_STR,
-    };
+    const defaultAttributes = {};
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
@@ -56,7 +53,7 @@ export default function (P = Ωempty) {
             underlineStyle: defaultTextCopy.underlineStyle,
             underlineWidth: defaultTextCopy.underlineWidth,
             wordSpacing: defaultTextCopy.wordSpaceValue,
-            
+
             filter: stateCopy.filter,
             font: null,
             globalAlpha: stateCopy.globalAlpha,
@@ -289,11 +286,24 @@ export default function (P = Ωempty) {
     };
     S.text = function (item) {
 
-        this.rawText = (item.substring) ? item : item.toString;
+        this.rawText = (item.substring) ? item : item.toString();
         this.text = this.convertTextEntityCharacters(this.rawText);
 
         this.dirtyFont = true;
         this.currentFontIsLoaded = false;
+    };
+
+    D.lineHeight = function (item) {
+
+        if (item.toFixed) this.lineHeight += item;
+
+        this.dirtyFont = true;
+    };
+    S.lineHeight = function (item) {
+
+        if (item.toFixed) this.lineHeight = item;
+
+        this.dirtyFont = true;
     };
 
 
@@ -441,7 +451,7 @@ export default function (P = Ωempty) {
 
         let fontSize = textStyle.fontSize;
         const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = textStyle;
-        const { currentScale, updateUsingFontParts, updateUsingFontString } = this;
+        const { currentScale, lineHeight, updateUsingFontParts, updateUsingFontString } = this;
 
         // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
         calculator.style.font = fontString;
@@ -489,6 +499,7 @@ export default function (P = Ωempty) {
         elStyle = (elStyle == ITALIC || elStyle.includes(OBLIQUE)) ? elStyle : NORMAL;
 
         // elStretch will always be a percent string, which canvas engines refuse to process
+        // + The "magic numbers" are as defined in the relevant specification
         const stretchVal = parseFloat(elStretch);
 
         if (!_isFinite(stretchVal)) elStretch = NORMAL;
@@ -505,10 +516,18 @@ export default function (P = Ωempty) {
             else elStretch = NORMAL;
         }
 
-        // Extract data for font family and size
+        // Extract data for font size
         const elSizeString = results.fontSize,
             elSizeValue = parseFloat(elSizeString);
+
         textStyle.fontSizeValue = elSizeValue;
+
+        // Work specifically for EnhancedLabel entitys, but performed here for efficiency
+        if (lineHeight != null && fontString.includes('/')) {
+
+            const lh = parseFloat(results.lineHeight);
+            this.lineHeight = (_isFinite(lh)) ? lh / elSizeValue : this.defs.lineHeight;
+        }
 
         // Build the internal `canvasFont` string
         let f = '';
