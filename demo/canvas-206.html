@@ -89,8 +89,34 @@
       </select>
     </div>
 
-    <div>&nbsp;</div>
-    <div>&nbsp;</div>
+    <div class="lavender label">Layout engine</div>
+    <div class="lavender">
+      <select class="controlItem" id="layoutEngine">
+        <option value="block-engine">Block entity</option>
+        <option value="wheel-engine">Wheel entity</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Line offset</div>
+    <div class="lavender">
+      <input class="controlItem" id="layoutEngineLineOffset" type="range" value="0" min="-20" max="20" step="1" />
+    </div>
+
+    <div class="lavender label">Vertical text</div>
+    <div class="lavender">
+      <select class="controlItem" id="layoutEngineVerticalText">
+        <option value="0">False</option>
+        <option value="1">True</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Local roll</div>
+    <div class="lavender">
+      <input class="controlItem" id="localRoll" type="range" value="0" min="0" max="360" step="1" />
+    </div>
+
+    <div class="lavender">&nbsp;</div>
+    <div class="lavender">&nbsp;</div>
 
     <div class="lavender label">Letter spacing</div>
     <div class="lavender">
@@ -115,6 +141,36 @@
 
   <div class="controls">
 
+    <div class="yellow label">Start X (%)</div>
+    <div class="yellow">
+      <input class="controlItem" id="startX" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="yellow label">Start Y (%)</div>
+    <div class="yellow">
+      <input class="controlItem" id="startY" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="yellow label">Handle X (%)</div>
+    <div class="yellow">
+      <input class="controlItem" id="handleX" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="yellow label">Handle Y (%)</div>
+    <div class="yellow">
+      <input class="controlItem" id="handleY" type="range" value="50" min="-50" max="150" step="1" />
+    </div>
+
+    <div class="yellow label">Offset X (px)</div>
+    <div class="yellow">
+      <input class="controlItem" id="offsetX" type="range" value="0" min="-50" max="50" step="1" />
+    </div>
+
+    <div class="yellow label">Offset Y (px)</div>
+    <div class="yellow">
+      <input class="controlItem" id="offsetY" type="range" value="0" min="-50" max="50" step="1" />
+    </div>
+
     <div class="yellow label">Scale</div>
     <div class="yellow">
       <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
@@ -125,22 +181,15 @@
       <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
     </div>
 
-    <div class="yellow label">Flip-upend</div>
+    <div class="yellow label">Width (Radius)</div>
     <div class="yellow">
-      <select class="controlItem" id="upend">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
+      <input class="controlItem" id="width" type="range" value="60" min="20" max="100" step="1" />
     </div>
 
-    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow label">Height</div>
     <div class="yellow">
-      <select class="controlItem" id="reverse">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
+      <input class="controlItem" id="height" type="range" value="80" min="20" max="100" step="1" />
     </div>
-
   </div>
 
   <p id="reportmessage"></p>

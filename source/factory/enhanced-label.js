@@ -3,25 +3,75 @@
 
 
 // #### Imports
-import { constructors } from '../core/library.js';
+import { constructors, artefact, group } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { doCreate, mergeOver, xta, Ωempty } from '../helper/utilities.js';
+import { currentCorePosition } from '../core/user-interaction.js';
+
+import { makeState } from '../untracked-factory/state.js';
+import { makeTextStyle } from '../factory/text-style.js';
+
+import { currentGroup } from './canvas.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
-import entityMix from '../mixin/entity.js';
+import deltaMix from '../mixin/delta.js';
+// import pathMix from '../mixin/path.js';
+// import mimicMix from '../mixin/mimic.js';
+// import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+// import anchorMix from '../mixin/anchor.js';
+// import buttonMix from '../mixin/button.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, START, T_ENHANCED_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
+
+import { _floor, _hypot, _radian, _round, ALPHABETIC, BLACK, BOTTOM, CENTER, END, ENTITY, GOOD_HOST, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, ROUND, START, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
 const EnhancedLabel = function (items = Ωempty) {
 
-    this.entityInit(items);
+    this.makeName(items.name);
+    this.register();
+
+    this.state = makeState(Ωempty);
+
+    // this.modifyConstructorInputForAnchorButton(items);
+
+    this.defaultTextStyle = makeTextStyle({
+        name: `${this.name}_default-textstyle`,
+        isDefaultTextStyle: true,
+    });
+
+    this.set(this.defs);
+
+    if (!items.group) items.group = currentGroup;
+
+    this.onEnter = λnull;
+    this.onLeave = λnull;
+    this.onDown = λnull;
+    this.onUp = λnull;
+
+    this.currentFontIsLoaded = false;
+    this.updateUsingFontParts = false;
+    this.updateUsingFontString = false;
+    this.letterSpaceValue = 0;
+    this.wordSpaceValue = 0;
+    this.currentScale = 1;
+
+    this.delta = {};
+
+    this.lines = [];
+
+    this.set(items);
+
+    this.dirtyFont = true;
+    this.currentFontIsLoaded = false;
+
     return this;
 };
 
@@ -36,7 +86,9 @@ P.isAsset = false;
 
 // #### Mixins
 baseMix(P);
-entityMix(P);
+deltaMix(P);
+// pathMix(P);
+// mimicMix(P);
 textMix(P);
 labelMix(P);
 
@@ -48,21 +100,79 @@ const defaultAttributes = {
 // + Can include html/css styling data
     text: ZERO_STR,
 
-// __lineHeight__ - number. The distance between lines of text, as a ratio of the default font height
+// __lineSpacing__ - number. The distance between lines of text, as a ratio of the default font height
 // + Can be set/deltaSet in the normal way
 // + Alternatively, can be set via the fontString attribute.
 // + Default value is set to `1.5` for accessibility reasons
-    lineHeight: 1.5,
+    lineSpacing: 1.5,
+
+// __layoutEngine__ - artefact object, or artefact's string name attribute.
+    layoutEngine: null,
+
+// __useLayoutEngineAsPath__ - boolean. If layout engine entity is a path-based entity, then we can either fit the text within it, or use its path for positioning.
+    useLayoutEngineAsPath: false,
+
+// __layoutEnginePathStart__ - where to start text positioning along the layout engine path.
+    layoutEnginePathStart: 0,
+
+// __layoutEngineLineOffset__ - how far away from the origin point the initial line should be.
+    layoutEngineLineOffset: 0,
+
+// __layoutEngineVerticalText__ - orientation of lines.
+    layoutEngineVerticalText: false,
+
+
+// The EnhancedLabel entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
+//
+// It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__.
+    visibility: true,
+    calculateOrder: 0,
+    stampOrder: 0,
+    host: null,
+    group: null,
+    anchor: null,
+
+    method: 'fill',
+
+    roll: 0,
+
+// __noCanvasEngineUpdates__ - Boolean flag - Canvas engine updates are required for the EnhancedLabel's border - strokeStyle and line styling; if an EnhancedLabel is to be drawn without a border, then setting this flag to `true` may help improve rendering efficiency.
+    noCanvasEngineUpdates: false,
+
+
+// __noDeltaUpdates__ - Boolean flag - EnhancedLabel entitys support delta animation - achieved by updating the `...path` attributes by appropriate (and small!) values. If the EnhancedLabel is not going to be animated by delta values, setting the flag to `true` may help improve rendering efficiency.
+    noDeltaUpdates: false,
+
+
+// __onEnter__, __onLeave__, __onDown__, __onUp__ - EnhancedLabel entitys support ___collision detection___, reporting a hit when a test coordinate falls within the EnhancedLabel's output image. As a result, EnhancedLabels can also accept and act on the four __on__ functions - see [entity event listener functions](../mixin/entity.html#section-11) for more details.
+    onEnter: null,
+    onLeave: null,
+    onDown: null,
+    onUp: null,
+
+
+// __noUserInteraction__ - Boolean flag - To switch off collision detection for a EnhancedLabel entity - which might help improve rendering efficiency - set the flag to `true`.
+    noUserInteraction: false,
+
+    useMimicDimensions: true,
+    useMimicFlip: true,
+    useMimicHandle: true,
+    useMimicOffset: true,
+    useMimicRotation: true,
+    useMimicScale: true,
+    useMimicStart: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-// No additional packet functionality required
+P.packetObjects = pushUnique(P.packetObjects, ['layoutEngine']);
 
 
 // #### Clone management
-// No additional clone functionality required
+// TODO - this functionality is currently disabled, need to enable it and make it work properly
+P.clone = λthis;
+
 
 
 // #### Kill management
@@ -70,10 +180,212 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-// No additional functionality required
+const G = P.getters,
+    S = P.setters,
+    D = P.deltaSetters;
+
+// __host__, __getHost__ - copied over from the position mixin.
+S.host = function (item) {
+
+    if (item) {
+
+        const host = artefact[item];
+
+        if (host && host.here) this.host = host.name;
+        else this.host = item;
+    }
+    else this.host = ZERO_STR;
+};
+
+// __group__ - copied over from the position mixin.
+G.group = function () {
+
+    return (this.group) ? this.group.name : ZERO_STR;
+};
+S.group = function (item) {
+
+    let g;
+
+    if (item) {
+
+        if (this.group && this.group.type === T_GROUP) this.group.removeArtefacts(this.name);
+
+        if (item.substring) {
+
+            g = group[item];
+
+            if (g) this.group = g;
+            else this.group = item;
+        }
+        else this.group = item;
+    }
+
+    if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
+};
+
+// __getHere__ - returns current core position.
+P.getHere = function () {
+
+    return currentCorePosition;
+};
+
+// __delta__ - copied over from the position mixin.
+S.delta = function (items) {
+
+    if (items) this.delta = mergeDiscard(this.delta, items);
+};
+
+
+// Pseudo-attributes mapping to mimic-related attribute, to provide a clearer understanding of how EnhancedLabel entitys use these attributes
+// + __updateOnLayoutDimensionsChange__
+// + __updateOnLayoutFlipChange__
+// + __updateOnLayoutHandleChange__
+// + __updateOnLayoutOffsetChange__
+// + __updateOnLayoutRotationChange__
+// + __updateOnLayoutScaleChange__
+// + __updateOnLayoutStartChange__
+G.updateOnLayoutDimensionsChange = function () {
+    return this.useMimicDimensions;
+};
+S.updateOnLayoutDimensionsChange = function (item) {
+    this.useMimicDimensions = !!item;
+};
+
+G.updateOnLayoutFlipChange = function () {
+    return this.useMimicFlip;
+};
+S.updateOnLayoutFlipChange = function (item) {
+    this.useMimicFlip = !!item;
+};
+
+G.updateOnLayoutHandleChange = function () {
+    return this.useMimicHandle;
+};
+S.updateOnLayoutHandleChange = function (item) {
+    this.useMimicHandle = !!item;
+};
+
+G.updateOnLayoutOffsetChange = function () {
+    return this.useMimicOffset;
+};
+S.updateOnLayoutOffsetChange = function (item) {
+    this.useMimicOffset = !!item;
+};
+
+G.updateOnLayoutRotationChange = function () {
+    return this.useMimicRotation;
+};
+S.updateOnLayoutRotationChange = function (item) {
+    this.useMimicRotation = !!item;
+};
+
+G.updateOnLayoutScaleChange = function () {
+    return this.useMimicScale;
+};
+S.updateOnLayoutScaleChange = function (item) {
+    this.useMimicScale = !!item;
+};
+
+G.updateOnLayoutStartChange = function () {
+    return this.useMimicStart;
+};
+S.updateOnLayoutStartChange = function (item) {
+    this.useMimicStart = !!item;
+};
+
+// __layoutEngine__ - TODO: documentation
+S.layoutEngine = function (item) {
+
+    if (item) {
+
+        const oldEngine = this.layoutEngine,
+            newEngine = (item.substring) ? artefact[item] : item,
+            name = this.name;
+
+        if (newEngine && newEngine.name) {
+
+            if (oldEngine && oldEngine.name !== newEngine.name) {
+
+                if (oldEngine.mimicked) removeItem(oldEngine.mimicked, name);
+                if (oldEngine.pathed) removeItem(oldEngine.pathed, name);
+            }
+
+            if (newEngine.mimicked) pushUnique(newEngine.mimicked, name);
+            if (newEngine.pathed) pushUnique(newEngine.pathed, name);
+
+            this.layoutEngine = newEngine;
+
+            this.dirtyLayout = true;
+        }
+    }
+};
+
+S.layoutEngineVerticalText = function (item) {
+
+    this.layoutEngineVerticalText = !!item;
+    this.dirtyLayout = true;
+};
+
+D.layoutEngineLineOffset = function (item) {
+
+    if (item.toFixed) {
+
+        this.layoutEngineLineOffset += item;
+        this.dirtyLayout = true;
+    }
+};
+S.layoutEngineLineOffset = function (item) {
+
+    if (item.toFixed) {
+
+        this.layoutEngineLineOffset = item;
+        this.dirtyLayout = true;
+    }
+};
+
+D.roll = function (item) {
+
+    if (item.toFixed) {
+
+        this.roll += item;
+        this.dirtyLayout = true;
+    }
+};
+S.roll = function (item) {
+
+    if (item.toFixed) {
+
+        this.roll = item;
+        this.dirtyLayout = true;
+    }
+};
 
 
 // #### Prototype functions
+
+// `getHost` - copied over from the position mixin.
+P.getHost = function () {
+
+    if (this.currentHost) return this.currentHost;
+    else if (this.host) {
+
+        const host = artefact[this.host];
+
+        if (host) {
+
+            this.currentHost = host;
+            this.dirtyHost = true;
+            return this.currentHost;
+        }
+    }
+    return currentCorePosition;
+};
+
+// Invalidate mid-init functionality
+P.midInitActions = λnull;
+
+
+// #### Clean functions
 
 P.cleanFont = function () {
 
@@ -118,84 +430,229 @@ P.temperFont = function () {
 };
 
 
-// #### Clean functions
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
-    this.dirtyPathObject = false;
+    const layout = this.layoutEngine;
 
-    const p = this.pathObject = new Path2D();
+    if (layout?.pathObject) {
 
-    const handle = this.currentHandle,
-        dims = this.currentDimensions;
+        this.dirtyPathObject = false;
 
-    const [x, y] = handle;
-    const [w, h] = dims;
-
-    p.rect(-x, -y, w, h);
+        this.pathObject = new Path2D(layout.pathObject);
+    }
 };
 
-// `cleanDimensions` - calculate the entity's __currentDimensions__ Array
-P.cleanDimensions = function () {
+P.cleanLayout = function () {
 
+    this.dirtyLayout = false;
+    this.dirtyScale = false;
     this.dirtyDimensions = false;
+    this.dirtyStart = false;
+    this.dirtyOffset = false;
+    this.dirtyHandle = false;
+    this.dirtyRotation = false;
 
-    const dims = this.dimensions,
-        curDims = this.currentDimensions;
+    const { useLayoutEngineAsPath } = this;
 
-    const [oldW, oldH] = curDims;
+    this.cleanPathObject();
 
-    curDims[0] = dims[0];
-    curDims[1] = dims[1];
+    if (useLayoutEngineAsPath) {
 
-    this.dirtyStart = true;
-    this.dirtyHandle = true;
-    this.dirtyOffset = true;
+        // Path-related positioning stuff
+    }
+    else {
 
-    if (oldW != curDims[0] || oldH != curDims[1]) this.dirtyPositionSubscribers = true;
-
-    if (this.mimicked && this.mimicked.length) this.dirtyMimicDimensions = true;
-
-    this.dirtyFilterIdentifier = true;
+        this.calculateLines();
+    }
 };
 
-P.cleanHandle = function () {
+P.calculateLines = function () {
 
-    this.dirtyHandle = false;
+    const getLeft = (x, y) => {
 
-    const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle, alphabeticBaseline, hangingBaseline, ideographicBaseline } = this;
-    // const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle } = this;
+        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
 
-    const [hx, hy] = handle;
-    const [dx, dy] = currentDimensions;
-    const direction = defaultTextStyle.direction || LTR;
+        while (engine.isPointInPath(pathObject, x, y, winding)) x--;
+        return ++x - constX;
+    };
 
-    // horizontal
-    if (hx.toFixed) currentHandle[0] = hx;
-    else if (hx == LEFT) currentHandle[0] = 0;
-    else if (hx == RIGHT) currentHandle[0] = dx;
-    else if (hx == CENTER) currentHandle[0] = dx / 2;
-    else if (hx == START) currentHandle[0] = (direction == LTR) ? 0 : dx;
-    else if (hx == END) currentHandle[0] = (direction == LTR) ? dx : 0;
-    else if (!_isFinite(parseFloat(hx))) currentHandle[0] = 0;
-    else currentHandle[0] = (parseFloat(hx) / 100) * dx;
+    const getRight = (x, y) => {
 
-    // vertical
-    if (hy.toFixed) currentHandle[1] = hy;
-    else if (hy == TOP) currentHandle[1] = 0;
-    else if (hy == BOTTOM) currentHandle[1] = dy;
-    else if (hy == CENTER) currentHandle[1] = dy / 2;
-    else if (hy == MIDDLE) currentHandle[1] = dy / 2;
-    else if (hy == HANGING) currentHandle[1] = (_isFinite(hangingBaseline)) ? hangingBaseline : 0;
-    else if (hy == ALPHABETIC) currentHandle[1] = (_isFinite(alphabeticBaseline)) ? alphabeticBaseline : 0;
-    else if (hy == IDEOGRAPHIC) currentHandle[1] = (_isFinite(ideographicBaseline)) ? ideographicBaseline : 0;
-    else if (!_isFinite(parseFloat(hy))) currentHandle[1] = 0;
-    else currentHandle[1] = (parseFloat(hy) / 100) * dy;
+        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
 
-    this.dirtyFilterIdentifier = true;
-    this.dirtyStampHandlePositions = true;
+        while (engine.isPointInPath(pathObject, x, y, winding)) x++;
+        return --x - constX;
+    };
 
-    if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
+    const getTop = (x, y) => {
+
+        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
+
+        while (engine.isPointInPath(pathObject, x, y, winding)) y--;
+        return ++y - constY;
+    };
+
+    const getBottom = (x, y) => {
+
+        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
+
+        while (engine.isPointInPath(pathObject, x, y, winding)) y++;
+        return --y - constY;
+    };
+
+    const getEndPoints = (x, y) => {
+
+        const pts = requestArray()
+        const results = [];
+
+        if (vertical) {
+
+            const startY = (direction === LTR) ? getTop(x, y) : getBottom(x, y);
+            const endY = (direction === LTR) ? getBottom(x, y) : getTop(x, y);
+
+            if (startY && endY) {
+
+                pts.push(...coord.set(x - constX, startY).rotate(overRotation));
+                pts.push(...coord.set(x - constX, endY).rotate(overRotation));
+            }
+        }
+        else {
+
+            const startX = (direction === LTR) ? getLeft(x, y) : getRight(x, y);
+            const endX = (direction === LTR) ? getRight(x, y) : getLeft(x, y);
+
+            if (startX && endX) {
+
+                pts.push(...coord.set(startX, y - constY).rotate(overRotation));
+                pts.push(...coord.set(endX, y - constY).rotate(overRotation));
+            }
+        }
+
+        results.push(...pts.map(p => _round(p)));
+
+        releaseArray(pts);
+
+        return results;
+    }
+
+    const mycell = requestCell();
+    const coord = requestCoordinate();
+
+    const engine = mycell.engine;
+    const { layoutEngine:layout, roll, defaultTextStyle:defs, lineSpacing, layoutEngineLineOffset:offset, layoutEngineVerticalText:vertical, lines } = this;
+    const { currentStampPosition, pathObject, winding, currentRotation } = layout;
+    const { fontSizeValue, direction } = defs;
+
+    const [constX, constY] = currentStampPosition;
+    const rotation = -roll * _radian;
+    const overRotation = -(-roll + currentRotation);
+    const step = fontSizeValue * lineSpacing;
+
+    mycell.rotateDestination(engine, ...currentStampPosition, layout);
+    engine.rotate(rotation);
+
+    if (engine.isPointInPath(pathObject, ...currentStampPosition, winding)) {
+
+        const rawData = [];
+
+        let beginX = constX + offset,
+            beginY = constY + offset;
+
+        if (vertical) {
+
+            rawData.push([beginX, getEndPoints(beginX, constY)]);
+
+            let flag = true;
+
+            while (flag) {
+
+                beginX -= step;
+                const res = getEndPoints(beginX, constY);
+
+                if (!res.length) flag = false;
+                else rawData.push([beginX, res]);
+            }
+
+            beginX = constX + offset;
+            flag = true;
+
+            while (flag) {
+
+                beginX += step;
+                const res = getEndPoints(beginX, constY);
+
+                if (!res.length) flag = false;
+                else rawData.push([beginX, res]);
+            }
+        }
+        else {
+
+            rawData.push([beginY, getEndPoints(constX, beginY)]);
+
+            let flag = true;
+
+            while (flag) {
+
+                beginY -= step;
+                const res = getEndPoints(constX, beginY);
+
+                if (!res.length) flag = false;
+                else rawData.push([beginY, res]);
+            }
+
+            beginY = constY + offset;
+            flag = true;
+
+            while (flag) {
+
+                beginY += step;
+                const res = getEndPoints(constX, beginY);
+
+                if (!res.length) flag = false;
+                else rawData.push([beginY, res]);
+            }
+        }
+
+        if (direction === LTR) rawData.sort((a, b) => a[0] - b[0]);
+        else rawData.sort((a, b) => b[0] - a[0]);
+
+        lines.length = 0;
+        rawData.forEach(d => {
+
+            const pts = d[1];
+            const [sx, sy, ex, ey] = pts;
+
+            lines.push(_floor(_hypot(sx - ex, sy - ey)));
+        });
+
+console.log(lines);
+
+        let path = '';
+
+        beginX = 0;
+        beginY = 0;
+
+        rawData.forEach(d => {
+
+            const pts = d[1];
+
+            path += `m${pts[0] - beginX},${pts[1] - beginY}l${pts[2] - pts[0]},${pts[3] - pts[1]}`;
+
+            beginX = pts[2];
+            beginY = pts[3];
+        });
+
+        this.localPath = new Path2D(path);
+    }
+    else {
+
+        this.localPath = null;
+        console.log(this.name, 'calculateLines ERROR: start point is outside layoutEngine artefact');
+    }
+
+    releaseCoordinate(coord);
+    releaseCell(mycell);
 };
 
 
@@ -205,34 +662,63 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
-    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) this.dirtyLayout = true;
 
-    if (this.dirtyScale) this.cleanScale();
-    if (this.dirtyText) this.updateAccessibleTextHold();
-    if (this.dirtyFont) this.cleanFont();
-    if (this.dirtyDimensions) this.cleanDimensions();
-    if (this.dirtyLock) this.cleanLock();
-    if (this.dirtyStart) this.cleanStart();
-    if (this.dirtyOffset) this.cleanOffset();
-    if (this.dirtyHandle) this.cleanHandle();
-    if (this.dirtyRotation) this.cleanRotation();
+    if (this.dirtyText) {
 
-    if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) {
-
-        this.dirtyStampPositions = true;
-        this.dirtyStampHandlePositions = true;
+        this.updateAccessibleTextHold();
+        this.dirtyLayout = true;
     }
 
-    if (this.dirtyStampPositions) this.cleanStampPositions();
-    if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
-    if (this.dirtyPathObject) this.cleanPathObject();
-    if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+    if (this.dirtyFont) {
 
-    this.prepareStampTabsHelper();
+        this.cleanFont();
+        this.dirtyLayout = true;
+    }
+
+    if (this.dirtyLayout) this.cleanLayout();
+
+    // this.prepareStampTabsHelper();
+};
+
+// `stamp` - All EnhancedLabel entity stamping, except for simple stamps, goes through this function.
+P.stamp = function (force = false, host, changes) {
+
+    if (force) {
+
+        if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
+
+        if (changes) {
+
+            this.set(changes);
+            this.prepareStamp();
+        }
+
+        this.regularStamp();
+    }
+
+    if (this.visibility) this.regularStamp();
 };
 
 
-// ##### Stamp methods
+// `simpleStamp` - bypassing the stamp functionality
+// + (probably not needed?)
+P.simpleStamp = function (host, changes) {
+
+    if (host && GOOD_HOST.includes(host.type)) {
+
+        this.currentHost = host;
+
+        if (changes) {
+
+            this.set(changes);
+            this.prepareStamp();
+        }
+        this.regularStamp();
+    }
+};
+
+
 // `regularStamp` - overwrites mixin/entity.js function.
 // + If decide to pass host instead of host.engine to method functions for all entitys, then this may be a temporary fix
 P.regularStamp = function () {
@@ -241,33 +727,37 @@ P.regularStamp = function () {
 
     if (dest) {
 
-        const engine = dest.engine;
-        const [x, y] = this.currentStampPosition;
+        const layout = this.layoutEngine;
 
-        // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
-        dest.rotateDestination(engine, x, y, this);
+        if (layout) {
 
-        // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
-        if (!this.noCanvasEngineUpdates) {
+            const engine = dest.engine;
+            const [x, y] = layout.currentStampPosition;
 
-            this.state.set(this.defaultTextStyle);
-            dest.setEngine(this);
+            const { state, noCanvasEngineUpdates, localPath, defaultTextStyle, showBoundingBox } = this;
+
+            // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
+            dest.rotateDestination(engine, x, y, layout);
+
+            // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
+            if (!noCanvasEngineUpdates) {
+
+                state.set(defaultTextStyle);
+                dest.setEngine(this);
+            }
+
+            if (localPath) engine.stroke(localPath);
+
+            // Invoke the appropriate __stamping method__ (below)
+            // this[this.method](dest.engine, 0, 0, this.text);
+
+            if (showBoundingBox) this.drawBoundingBox(dest);
         }
-
-        // Invoke the appropriate __stamping method__ (below)
-        this[this.method](dest);
     }
 };
 
-// `stampPositioningHelper` - internal helper function
-P.stampPositioningHelper = function () {
 
-    const { currentHandle, currentScale, text, fontVerticalOffset } = this;
-    const x = -currentHandle[0],
-        y = -currentHandle[1] + fontVerticalOffset * currentScale;
-
-    return [text, x, y];
-}
+// ##### Stamp methods
 
 // `underlineEngine` - internal helper function
 P.underlineEngine = function (host, pos) {
@@ -346,137 +836,37 @@ P.underlineEngine = function (host, pos) {
 };
 
 // `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
-P.draw = function (host) {
+P.draw = function (engine, x, y, text) {
 
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.strokeText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
+    engine.strokeText(text, x, y);
 };
 
 // `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
-P.fill = function (host) {
+P.fill = function (engine, x, y, text) {
 
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.fillText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
+    engine.fillText(text, x, y);
 };
 
 // `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
-P.drawAndFill = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.strokeText(...pos);
-        engine.fillText(...pos);
-        this.currentHost.clearShadow();
-        engine.strokeText(...pos);
-        engine.fillText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
+P.drawAndFill = P.fill;
 
 // `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
-P.fillAndDraw = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.fillText(...pos);
-        engine.strokeText(...pos);
-        this.currentHost.clearShadow();
-        engine.fillText(...pos);
-        engine.strokeText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
+P.fillAndDraw = P.draw;
 
 // `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
-P.drawThenFill = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.strokeText(...pos);
-        engine.fillText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
+P.drawThenFill = P.fill;
 
 // `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
-P.fillThenDraw = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.fillText(...pos);
-        engine.strokeText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
+P.fillThenDraw = P.draw;
 
 // `clip` - restrict drawing activities to the entity's enclosed area
-P.clip = function (host) {
-
-    const engine = host.engine;
-    engine.clip(this.pathObject, this.winding);
- };
+P.clip = λnull;
 
 // `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
-P.clear = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const gco = engine.globalCompositeOperation;
-        const pos = this.stampPositioningHelper();
-
-        engine.globalCompositeOperation = DESTINATION_OUT;
-        engine.fillText(...pos);
-        engine.globalCompositeOperation = gco;
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
+P.clear = λnull;
 
 // `none` - perform all the calculations required, but don't perform the final stamping
-P.none = function () {}
+P.none = λnull;
 
 
 // #### Factory

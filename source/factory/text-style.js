@@ -96,7 +96,7 @@ const defaultAttributes = {
     fontSize: DEFAULT_FONT_SIZE,
     fontStyle: NORMAL,
     fontWeight: NORMAL,
-    /* 
+    /*
     fontSizeValue - Internal attribute, not stored in defs object
     lineHeight - Handled by the entity, not here
     */

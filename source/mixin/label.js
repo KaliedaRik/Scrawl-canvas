@@ -14,7 +14,7 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 
 import { addStrings, mergeOver, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _ceil, _freeze, _isFinite, _keys, _parse, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, ITALIC, LEFT, NAME, NORMAL, OBLIQUE, ROUND, SMALL_CAPS, STATE_KEYS, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _freeze, _isFinite, _keys, _parse, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, ITALIC, LEFT, NAME, NORMAL, OBLIQUE, ROUND, SMALL_CAPS, STATE_KEYS, TOP, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -293,15 +293,15 @@ export default function (P = Ωempty) {
         this.currentFontIsLoaded = false;
     };
 
-    D.lineHeight = function (item) {
+    D.lineSpacing = function (item) {
 
-        if (item.toFixed) this.lineHeight += item;
+        if (item.toFixed) this.lineSpacing += item;
 
         this.dirtyFont = true;
     };
-    S.lineHeight = function (item) {
+    S.lineSpacing = function (item) {
 
-        if (item.toFixed) this.lineHeight = item;
+        if (item.toFixed) this.lineSpacing = item;
 
         this.dirtyFont = true;
     };
@@ -340,6 +340,8 @@ export default function (P = Ωempty) {
         this.letterSpaceValue = 0;
         this.wordSpaceValue = 0;
 
+        this.delta = {};
+
         this.set(items);
 
         this.midInitActions(items);
@@ -363,7 +365,7 @@ export default function (P = Ωempty) {
     // `measureFont` - generate basic font metadata
     P.measureFont = function () {
 
-        const { defaultTextStyle, currentScale } = this;
+        const { defaultTextStyle, currentScale, dimensions } = this;
         const { fontFamily, fontSizeValue, letterSpaceValue, wordSpaceValue } = defaultTextStyle;
 
         defaultTextStyle.letterSpacing = `${letterSpaceValue * currentScale}px`;
@@ -393,8 +395,11 @@ export default function (P = Ωempty) {
 
         const ratio = fontSizeValue / 100;
 
-        this.dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
-        this.dimensions[1] = meta.height * ratio * currentScale;
+        if (dimensions) {
+
+            dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
+            dimensions[1] = meta.height * ratio * currentScale;
+        }
 
         const offset = meta.verticalOffset * ratio;
 
@@ -451,7 +456,7 @@ export default function (P = Ωempty) {
 
         let fontSize = textStyle.fontSize;
         const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = textStyle;
-        const { currentScale, lineHeight, updateUsingFontParts, updateUsingFontString } = this;
+        const { currentScale, lineSpacing, updateUsingFontParts, updateUsingFontString } = this;
 
         // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
         calculator.style.font = fontString;
@@ -523,10 +528,10 @@ export default function (P = Ωempty) {
         textStyle.fontSizeValue = elSizeValue;
 
         // Work specifically for EnhancedLabel entitys, but performed here for efficiency
-        if (lineHeight != null && fontString.includes('/')) {
+        if (lineSpacing != null && fontString.includes('/')) {
 
             const lh = parseFloat(results.lineHeight);
-            this.lineHeight = (_isFinite(lh)) ? lh / elSizeValue : this.defs.lineHeight;
+            this.lineSpacing = (_isFinite(lh)) ? lh / elSizeValue : this.defs.lineSpacing;
         }
 
         // Build the internal `canvasFont` string

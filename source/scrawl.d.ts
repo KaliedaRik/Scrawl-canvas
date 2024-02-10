@@ -622,6 +622,7 @@ interface TextMixinInputs {
     accessibleTextOrder?: number;
     accessibleTextPlaceholder?: string;
     boundingBoxLineDash?: number[];
+    boundingBoxColor?: string;
     boundingBoxStyle?: StylesInstance | string;
     showBoundingBox?: boolean;
     textIsAccessible?: boolean;
@@ -1261,23 +1262,67 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 // EnhancedLabelInstance factory
 // -------------------------------------
-interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {
-    lineHeight?: number;
+interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {
+    lineSpacing?: number;
+    roll?: number;
+    layoutEngineLineOffset?: number;
 }
 
-interface EnhancedLabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
-    delta?: EnhancedLabelFactoryDeltaInputs;
+interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
+
     text?: string;
+
+    layoutEngine?: ArtefactInstance | string;
+    useLayoutEngineAsPath?: boolean;
+    layoutEnginePathStart?: number;
+    constantPathSpeed?: boolean;
+    layoutEngineVerticalText?: boolean;
+
+    delta?: EnhancedLabelFactoryDeltaInputs;
+    group?: GroupInstance | string;
+    method?: MethodValues;
+    noCanvasEngineUpdates?: boolean;
+    noDeltaUpdates?: boolean;
+    noUserInteraction?: boolean;
+    onDown?: DefaultInputFunction;
+    onEnter?: DefaultInputFunction;
+    onLeave?: DefaultInputFunction;
+    onUp?: DefaultInputFunction;
+    order?: number;
+    compileOrder?: number;
+    showOrder?: number;
+    visibility?: boolean;
+
+    useMimicDimensions?: boolean;               // use updateOnLayoutDimensionsChange
+    useMimicFlip?: boolean;                     // use updateOnLayoutFlipChange
+    useMimicHandle?: boolean;                   // use updateOnLayoutHandleChange
+    useMimicOffset?: boolean;                   // use updateOnLayoutOffsetChange
+    useMimicRotation?: boolean;                 // use updateOnLayoutRotationChange
+    useMimicScale?: boolean;                    // use updateOnLayoutScaleChange
+    useMimicStart?: boolean;                    // use updateOnLayoutStartChange
+    updateOnLayoutDimensionsChange?: boolean;
+    updateOnLayoutFlipChange?: boolean;
+    updateOnLayoutHandleChange?: boolean;
+    updateOnLayoutOffsetChange?: boolean;
+    updateOnLayoutRotationChange?: boolean;
+    updateOnLayoutScaleChange?: boolean;
+    updateOnLayoutStartChange?: boolean;
 }
 
 interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}
 
-interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions, LabelMixinFunctions {
+interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions, TextMixinFunctions, LabelMixinFunctions {
     clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     saveAsPacket: (item?: EnhancedLabelSaveInputs | boolean) => string;
     set: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
     simpleStamp: (host: CellInstance, items?: EnhancedLabelFactoryInputs) => void;
+
+
+
+    // checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
+    // getBoundingBox: () => number[];
+    // update: () => void;
 }
 
 interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, EnhancedLabelFactoryFunctions {}
@@ -1584,7 +1629,9 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
 
 interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
-    delta?: LabelFactoryDeltaInputs;
+    delta?: EnhancedLabelFactoryDeltaInputs;
+    text?: string;
+    // layoutEngine?: null,
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
@@ -1981,7 +2028,6 @@ interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelt
 
 interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, PhraseFactoryDeltaInputs {
     addTextPathRoll?: boolean;
-    boundingBoxColor?: string;
     breakOnlyOnBreakGlyphs?: boolean;
     delta?: PhraseFactoryDeltaInputs;
     exposeText?: boolean;

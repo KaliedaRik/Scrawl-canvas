@@ -20,24 +20,44 @@ const name = (n) => `${namespace}-${n}`;
 const westernText = 'Lorem ipsum dolor sit amet, consectetur 😀 adipiscing &eacute;lit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure d&ouml;lor in reprehenderit 🤖&icirc;n voluptate velit &copy;2024 esse cillum dolore eu fug🎻iat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui offici&thorn;a deserunt mollit anim id est laborum.';
 
 
-// const mylabel = scrawl.makeLabel({
-const mylabel = scrawl.makeEnhancedLabel({
-    name: name('my-label'),
+const blockEngine = scrawl.makeBlock({
+
+    name: name('block-layout-engine'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    fontString: '16px serif',
-    text: westernText,
-    showBoundingBox: true,
+    dimensions: ['60%', '80%'],
+    fillStyle: 'beige',
 });
 
-scrawl.makeWheel({
-    name: name('pin'),
-    radius: 4,
+const wheelEngine = scrawl.makeWheel({
+
+    name: name('wheel-layout-engine'),
+    width: '60%',
+    start: ['center', 'center'],
     handle: ['center', 'center'],
-    pivot: name('my-label'),
-    lockTo: 'pivot',
-    fillStyle: 'blue',
-})
+    fillStyle: 'beige',
+    visibility: false,
+});
+
+const engineGroup = scrawl.makeGroup({
+
+    name: name('layout-engines'),
+
+}).addArtefacts(blockEngine, wheelEngine);
+
+
+const mylabel = scrawl.makeEnhancedLabel({
+
+    name: name('my-label'),
+    fontString: '16px serif',
+    text: westernText,
+
+    showBoundingBox: true,
+
+    // method: 'draw',
+
+    layoutEngine: name('block-layout-engine'),
+});
 
 
 // #### Scene animation
@@ -77,20 +97,65 @@ scrawl.makeUpdater({
 
     updates: {
 
-        roll: ['roll', 'float'],
-        scale: ['scale', 'float'],
-
-        upend: ['flipUpend', 'boolean'],
-        reverse: ['flipReverse', 'boolean'],
-
         wordSpacing: ['wordSpacing', 'px'],
         letterSpacing: ['letterSpacing', 'px'],
-
-        direction: ['direction', 'raw'],
-        fontKerning: ['fontKerning', 'raw'],
-        textRendering: ['textRendering', 'raw'],
+        layoutEngineLineOffset: ['layoutEngineLineOffset', 'float'],
+        layoutEngineVerticalText: ['layoutEngineVerticalText', 'boolean'],
+        localRoll: ['roll', 'float'],
     },
 });
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: engineGroup,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        startX: ['startX', '%'],
+        startY: ['startY', '%'],
+        handleX: ['handleX', '%'],
+        handleY: ['handleY', '%'],
+        offsetX: ['offsetX', 'px'],
+        offsetY: ['offsetY', 'px'],
+        width: ['width', '%'],
+        height: ['height', '%'],
+        scale: ['scale', 'float'],
+        roll: ['roll', 'float'],
+    },
+});
+
+
+const layoutEngineSelector = document.querySelector('#layoutEngine');
+const updateLayoutEngine = (event) => {
+
+    const engine = event.target.value;
+
+    if (engine) {
+
+        engineGroup.setArtefacts({ visibility: false });
+
+        switch (engine) {
+
+            case 'wheel-engine' :
+
+                mylabel.set({ layoutEngine: wheelEngine });
+                wheelEngine.set({ visibility: true });
+                break;
+
+            default :
+
+                mylabel.set({ layoutEngine: blockEngine });
+                blockEngine.set({ visibility: true });
+            }
+    }
+};
+scrawl.addNativeListener('change', (e) => updateLayoutEngine(e), layoutEngineSelector);
 
 
 const fontSelector = document.querySelector('#font');
@@ -342,7 +407,7 @@ const updateFont = (event) => {
 
             case 'noto-chinese-simple-sans' :
                 mylabel.set({
-                    fontString: '16x "Noto Chinese Simple Sans"',
+                    fontString: '16px "Noto Chinese Simple Sans"',
                     text: '鉴于对人类家庭所有成员的固有尊严及其平等的和不移的权利的承认,乃是世界自由、正义与和平的基础, 鉴于对人权的无视和侮蔑已发展为野蛮暴行,这些暴行玷污了人类的良心,而一个人人享有言论和信仰自由并免予恐惧和匮乏的世界的来临,已被宣布为普通人民的最高愿望, 鉴于为使人类不致迫不得已铤而走险对暴政和压迫进行反叛,有必要使人权受法治的保护, 鉴于有必要促进各国间友好关系的发展。',
                     direction: 'ltr',
                 });
@@ -515,20 +580,40 @@ scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
 // Setup form
 // @ts-expect-error
 fontSelector.options.selectedIndex = 0;
+// @ts-expect-error
+layoutEngineSelector.options.selectedIndex = 0;
 
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#letterSpacing').value = 0;
 // @ts-expect-error
 document.querySelector('#wordSpacing').value = 0;
 
+// @ts-expect-error
+document.querySelector('#startX').value = 50;
+// @ts-expect-error
+document.querySelector('#startY').value = 50;
+// @ts-expect-error
+document.querySelector('#handleX').value = 50;
+// @ts-expect-error
+document.querySelector('#handleY').value = 50;
+// @ts-expect-error
+document.querySelector('#offsetX').value = 0;
+// @ts-expect-error
+document.querySelector('#offsetY').value = 0;
+// @ts-expect-error
+document.querySelector('#width').value = 60;
+// @ts-expect-error
+document.querySelector('#height').value = 80;
+// @ts-expect-error
+document.querySelector('#scale').value = 1;
+// @ts-expect-error
+document.querySelector('#roll').value = 0;
+// @ts-expect-error
+document.querySelector('#layoutEngineLineOffset').value = 0;
+// @ts-expect-error
+document.querySelector('#layoutEngineVerticalText').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#localRoll').value = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

@@ -42,7 +42,11 @@ labelMix(P);
 
 
 // #### Label attributes
-const defaultAttributes = {};
+const defaultAttributes = {
+
+// __text__ - string.
+    text: ZERO_STR,
+};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 

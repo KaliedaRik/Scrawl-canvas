@@ -141,7 +141,7 @@ const defaultAttributes = {
 
 // The Loom entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
-// It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__, __collides__.
+// It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__.
     visibility: true,
     calculateOrder: 0,
     stampOrder: 0,
@@ -846,6 +846,7 @@ P.stamp = function (force = false, host, changes) {
         this.regularStamp();
     }
 };
+
 
 // #### Clean functions
 
