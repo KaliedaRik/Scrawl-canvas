@@ -63,7 +63,22 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-// No additional functionality required
+const G = P.getters,
+    S = P.setters;
+
+G.rawText = function () {
+
+    return this.rawText;
+};
+S.text = function (item) {
+
+    this.rawText = (item.substring) ? item : item.toString();
+    this.text = this.convertTextEntityCharacters(this.rawText);
+
+    this.dirtyFont = true;
+    this.currentFontIsLoaded = false;
+};
+
 
 
 // #### Prototype functions

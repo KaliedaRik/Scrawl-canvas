@@ -280,19 +280,6 @@ export default function (P = Ωempty) {
     S.dimensions = λnull;
     D.dimensions = λnull;
 
-    G.rawText = function () {
-
-        return this.rawText;
-    };
-    S.text = function (item) {
-
-        this.rawText = (item.substring) ? item : item.toString();
-        this.text = this.convertTextEntityCharacters(this.rawText);
-
-        this.dirtyFont = true;
-        this.currentFontIsLoaded = false;
-    };
-
     D.lineSpacing = function (item) {
 
         if (item.toFixed) this.lineSpacing += item;

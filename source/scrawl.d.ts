@@ -1278,6 +1278,9 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     constantPathSpeed?: boolean;
     layoutEngineVerticalText?: boolean;
 
+    breakTextOnSpaces?: boolean;
+    breakWordsOnHyphens?: boolean;
+
     delta?: EnhancedLabelFactoryDeltaInputs;
     group?: GroupInstance | string;
     method?: MethodValues;

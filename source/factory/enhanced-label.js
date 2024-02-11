@@ -1,5 +1,7 @@
 // # EnhancedLabel factory
 // TODO - document purpose and description
+//
+// To note: EnhancedLabel entitys will, if told to, break words across lines on hard (- U+2010) and soft (&shy U+00AD) hyphens. It makes no effort to guess whether a word _can_ be broken at a given place, regardless of any [CSS settings for the web page/component](https://css-tricks.com/almanac/properties/h/hyphenate/) in which the SC canvas finds itself. For that sort of functionality, use a third party library like [Hyphenopoly](https://github.com/mnater/Hyphenopoly) to pre-process text before feeding it into the entity.
 
 
 // #### Imports
@@ -29,7 +31,7 @@ import labelMix from '../mixin/label.js';
 
 import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _floor, _hypot, _radian, _round, ALPHABETIC, BLACK, BOTTOM, CENTER, END, ENTITY, GOOD_HOST, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, ROUND, START, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _hypot, _radian, _round, ALPHABETIC, BLACK, BOTTOM, CENTER, END, ENTITY, GOOD_HOST, HANGING, HYPHEN, IDEOGRAPHIC, LEFT, LTR, MIDDLE, PX0, ROUND, SPACE, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -66,6 +68,8 @@ const EnhancedLabel = function (items = Ωempty) {
     this.delta = {};
 
     this.lines = [];
+    this.textUnits = [];
+    this.textUnitLengths = [];
 
     this.set(items);
 
@@ -120,6 +124,18 @@ const defaultAttributes = {
 
 // __layoutEngineVerticalText__ - orientation of lines.
     layoutEngineVerticalText: false,
+
+// __breakTextOnSpaces__ - boolean.
+// + When `true` (default), the textUnits will consist of words which are stamped as a unit (which preserves ligatures and kerning within the word).
+// + Set this attribute to `false` if the font's language, when written, (generally) doesn't include spaces (eg: Chinese, Japanese), or when there is a requirement to style individual characters within words
+    breakTextOnSpaces: true,
+
+// __breakWordsOnHyphens__ - boolean.
+// + When `true`, words that include hard or soft hyphens will be split into separate units for processing. Be aware that in highly ligatured fonts this may cause problems. The attribute defaults to `false`.
+// + It is possible to style individual characters in a text that breaks on spaces by adding soft hyphens before and after the characters, but it may (will) lead to unnatural-looking word breaks at the end of the line
+    breakWordsOnHyphens: false,
+
+
 
 
 // The EnhancedLabel entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
@@ -360,6 +376,31 @@ S.alignment = function (item) {
     }
 };
 
+S.breakTextOnSpaces = function (item) {
+
+    this.breakTextOnSpaces = !!item;
+    this.dirtyText = true;
+};
+
+S.breakWordsOnHyphens = function (item) {
+
+    this.breakWordsOnHyphens = !!item;
+    this.dirtyText = true;
+};
+
+G.rawText = function () {
+
+    return this.rawText;
+};
+S.text = function (item) {
+
+    this.rawText = (item.substring) ? item : item.toString();
+    this.text = this.convertTextEntityCharacters(this.rawText);
+
+    this.dirtyText = true;
+    this.dirtyFont = true;
+    this.currentFontIsLoaded = false;
+};
 
 // #### Prototype functions
 
@@ -459,19 +500,116 @@ P.cleanLayout = function () {
 
     if (useLayoutEngineAsPath) {
 
-        // Path-related positioning stuff
+        // TODO: Path-related positioning stuff
     }
-    else {
+    else this.calculateLines();
 
-        this.calculateLines();
-    }
-
-    this.getTextUnits();
+    this.dirtyTextLayout = true;
 };
 
-P.getTextUnits = function () {
+P.cleanText = function () {
 
-    console.log(this.name, 'getTextUnits');
+    this.dirtyText = false;
+
+    const { text, textUnits, breakTextOnSpaces, breakWordsOnHyphens } = this;
+
+    const textCharacters = [];
+
+    textUnits.length = 0;
+
+    textCharacters.push(...text);
+
+    if (breakTextOnSpaces) {
+
+        const unit = [];
+
+        if (breakWordsOnHyphens) {
+
+
+            textCharacters.forEach(c => {
+
+                if (TEXT_SPACES_REGEX.test(c)) {
+
+                    textUnits.push(unit.join(''))
+                    textUnits.push(' ');
+                    unit.length = 0;
+                }
+                else if (TEXT_HYPHENS_REGEX.test(c)) {
+
+                    textUnits.push(unit.join(''))
+                    textUnits.push(c);
+                    unit.length = 0;
+                }
+                else unit.push(c);
+            })
+        }
+        else {
+
+            textCharacters.forEach(c => {
+
+                if (TEXT_SPACES_REGEX.test(c)) {
+
+                    textUnits.push(unit.join(''))
+                    textUnits.push(' ');
+                    unit.length = 0;
+                }
+                else unit.push(c);
+            })
+        }
+    }
+    else textUnits.push(...textCharacters);
+
+console.log(textUnits);
+    this.measureTextUnits();
+
+    this.dirtyTextLayout = true;
+};
+
+P.measureTextUnits = function () {
+
+    const { textUnits, textUnitLengths, defaultTextStyle } = this;
+
+    const { letterSpacing } = defaultTextStyle;
+
+    const mycell = requestCell(),
+        engine = mycell.engine;
+
+    let res;
+
+    textUnitLengths.length = 0;
+
+    engine.fillStyle = BLACK;
+    engine.strokeStyle = BLACK;
+    engine.font = defaultTextStyle.canvasFont;
+    engine.fontKerning = defaultTextStyle.fontKerning;
+    engine.fontStretch = defaultTextStyle.fontStretch;
+    engine.fontVariantCaps = defaultTextStyle.fontVariant;
+    engine.textRendering = defaultTextStyle.textRendering;
+    engine.lineCap = ROUND;
+    engine.lineJoin = ROUND;
+    engine.direction = defaultTextStyle.direction;
+    engine.textAlign = LEFT;
+    engine.textBaseline = TOP;
+    engine.wordSpacing = PX0;
+
+    textUnits.forEach(t => {
+
+        if (t === SPACE || t === HYPHEN) engine.letterSpacing = PX0;
+        else engine.letterSpacing = letterSpacing;
+
+        res = engine.measureText(t);
+
+        textUnitLengths.push(res.width);
+    });
+
+console.log(textUnitLengths);
+    releaseCell(mycell);
+};
+
+P.layoutText = function () {
+
+    console.log(this.name, 'layoutText');
+    this.dirtyTextLayout = false;
 };
 
 P.calculateLines = function () {
@@ -787,19 +925,21 @@ P.prepareStamp = function() {
 
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) this.dirtyLayout = true;
 
-    if (this.dirtyText) {
-
-        this.updateAccessibleTextHold();
-        this.dirtyLayout = true;
-    }
-
     if (this.dirtyFont) {
 
         this.cleanFont();
-        this.dirtyLayout = true;
+        this.dirtyText = true;
+    }
+
+    if (this.dirtyText) {
+
+        this.updateAccessibleTextHold();
+        this.cleanText();
     }
 
     if (this.dirtyLayout) this.cleanLayout();
+
+    if (this.dirtyTextLayout) this.layoutText();
 
     // this.prepareStampTabsHelper();
 };
