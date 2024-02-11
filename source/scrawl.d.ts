@@ -1264,7 +1264,7 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 // -------------------------------------
 interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {
     lineSpacing?: number;
-    roll?: number;
+    alignment?: number;
     layoutEngineLineOffset?: number;
 }
 
@@ -1631,7 +1631,6 @@ interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDelta
 interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
     delta?: EnhancedLabelFactoryDeltaInputs;
     text?: string;
-    // layoutEngine?: null,
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}

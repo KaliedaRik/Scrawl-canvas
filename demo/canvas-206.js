@@ -39,11 +39,25 @@ const wheelEngine = scrawl.makeWheel({
     visibility: false,
 });
 
+const crescentEngine = scrawl.makeCrescent({
+
+    name: name('crescent-layout-engine'),
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    outerRadius: 200,
+    innerRadius: 150,
+    displacement: 150,
+    fillStyle: 'beige',
+    visibility: false,
+});
+
+
+
 const engineGroup = scrawl.makeGroup({
 
     name: name('layout-engines'),
 
-}).addArtefacts(blockEngine, wheelEngine);
+}).addArtefacts(blockEngine, wheelEngine, crescentEngine);
 
 
 const mylabel = scrawl.makeEnhancedLabel({
@@ -101,7 +115,7 @@ scrawl.makeUpdater({
         letterSpacing: ['letterSpacing', 'px'],
         layoutEngineLineOffset: ['layoutEngineLineOffset', 'float'],
         layoutEngineVerticalText: ['layoutEngineVerticalText', 'boolean'],
-        localRoll: ['roll', 'float'],
+        alignment: ['alignment', 'float'],
     },
 });
 
@@ -146,6 +160,12 @@ const updateLayoutEngine = (event) => {
 
                 mylabel.set({ layoutEngine: wheelEngine });
                 wheelEngine.set({ visibility: true });
+                break;
+
+            case 'crescent-engine' :
+
+                mylabel.set({ layoutEngine: crescentEngine });
+                crescentEngine.set({ visibility: true });
                 break;
 
             default :
@@ -613,7 +633,7 @@ document.querySelector('#layoutEngineLineOffset').value = 0;
 // @ts-expect-error
 document.querySelector('#layoutEngineVerticalText').options.selectedIndex = 0;
 // @ts-expect-error
-document.querySelector('#localRoll').value = 0;
+document.querySelector('#alignment').value = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

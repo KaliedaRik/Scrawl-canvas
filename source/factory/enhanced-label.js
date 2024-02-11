@@ -134,7 +134,7 @@ const defaultAttributes = {
 
     method: 'fill',
 
-    roll: 0,
+    alignment: 0,
 
 // __noCanvasEngineUpdates__ - Boolean flag - Canvas engine updates are required for the EnhancedLabel's border - strokeStyle and line styling; if an EnhancedLabel is to be drawn without a border, then setting this flag to `true` may help improve rendering efficiency.
     noCanvasEngineUpdates: false,
@@ -343,19 +343,19 @@ S.layoutEngineLineOffset = function (item) {
     }
 };
 
-D.roll = function (item) {
+D.alignment = function (item) {
 
     if (item.toFixed) {
 
-        this.roll += item;
+        this.alignment += item;
         this.dirtyLayout = true;
     }
 };
-S.roll = function (item) {
+S.alignment = function (item) {
 
     if (item.toFixed) {
 
-        this.roll = item;
+        this.alignment = item;
         this.dirtyLayout = true;
     }
 };
@@ -465,192 +465,315 @@ P.cleanLayout = function () {
 
         this.calculateLines();
     }
+
+    this.getTextUnits();
+};
+
+P.getTextUnits = function () {
+
+    console.log(this.name, 'getTextUnits');
 };
 
 P.calculateLines = function () {
 
-    const getLeft = (x, y) => {
-
-        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
-
-        while (engine.isPointInPath(pathObject, x, y, winding)) x--;
-        return ++x - constX;
-    };
-
-    const getRight = (x, y) => {
-
-        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
-
-        while (engine.isPointInPath(pathObject, x, y, winding)) x++;
-        return --x - constX;
-    };
-
-    const getTop = (x, y) => {
-
-        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
-
-        while (engine.isPointInPath(pathObject, x, y, winding)) y--;
-        return ++y - constY;
-    };
-
-    const getBottom = (x, y) => {
-
-        if (!engine.isPointInPath(pathObject, x, y, winding)) return null;
-
-        while (engine.isPointInPath(pathObject, x, y, winding)) y++;
-        return --y - constY;
-    };
-
+    // Local functions to find the points where a given line crosses the layout engine's shape border
     const getEndPoints = (x, y) => {
 
-        const pts = requestArray()
         const results = [];
 
-        if (vertical) {
+        let edgePoints, len, i;
 
-            const startY = (direction === LTR) ? getTop(x, y) : getBottom(x, y);
-            const endY = (direction === LTR) ? getBottom(x, y) : getTop(x, y);
+        if (vertical) edgePoints = (directionIsLtr) ? goTopToBottom(x, y, height) : goBottomToTop(x, y, height);
+        else edgePoints = (directionIsLtr) ? goLeftToRight(x, y, width) : goRightToLeft(x, y, width);
 
-            if (startY && endY) {
+        len = edgePoints.length;
 
-                pts.push(...coord.set(x - constX, startY).rotate(overRotation));
-                pts.push(...coord.set(x - constX, endY).rotate(overRotation));
+        if (len && len % 2 === 0) {
+
+            for (i = 0; i < len; i++) {
+
+                coord.set(edgePoints[i]);
+                coord.subtract(currentStampPosition);
+                coord.rotate(rotationFix);
+                results.push(...coord);
             }
         }
-        else {
+        // We sanitize the results (to integer values) after they have been rotated
+        return results.map(r => _round(r));
+    };
 
-            const startX = (direction === LTR) ? getLeft(x, y) : getRight(x, y);
-            const endX = (direction === LTR) ? getRight(x, y) : getLeft(x, y);
+    const goLeftToRight = (x, y, dim) => {
 
-            if (startX && endX) {
+        const startAt = x + (-dim * 3),
+            endAt = x + (dim * 3),
+            res = [];
 
-                pts.push(...coord.set(startX, y - constY).rotate(overRotation));
-                pts.push(...coord.set(endX, y - constY).rotate(overRotation));
+        let isInLayout = false,
+            check = false;
+
+        for (let i = startAt; i < endAt; i++) {
+
+            check = engine.isPointInPath(pathObject, i, y, winding);
+
+            if (check !== isInLayout) {
+
+                res.push([check === false ? i - 1 : i, y]);
+                isInLayout = check;
             }
         }
+        return res;
+    };
 
-        results.push(...pts.map(p => _round(p)));
+    const goRightToLeft = (x, y, dim) => {
 
-        releaseArray(pts);
+        const startAt = x + (dim * 3),
+            endAt = x + (-dim * 3),
+            res = [];
 
-        return results;
-    }
+        let isInLayout = false,
+            check = false;
 
+        for (let i = startAt; i > endAt; i--) {
+
+            check = engine.isPointInPath(pathObject, i, y, winding);
+
+            if (check !== isInLayout) {
+
+                res.push([check === false ? i + 1 : i, y]);
+                isInLayout = check;
+            }
+        }
+        return res;
+    };
+
+    const goTopToBottom = (x, y, dim) => {
+
+        const startAt = y + (-dim * 3),
+            endAt = y + (dim * 3),
+            res = [];
+
+        let isInLayout = false,
+            check = false;
+
+        for (let i = startAt; i < endAt; i++) {
+
+            check = engine.isPointInPath(pathObject, x, i, winding);
+
+            if (check !== isInLayout) {
+
+                res.push([x, check === false ? i - 1 : i]);
+                isInLayout = check;
+            }
+        }
+        return res;
+    };
+
+    const goBottomToTop = (x, y, dim) => {
+
+        const startAt = y + (dim * 3),
+            endAt = y + (-dim * 3),
+            res = [];
+
+        let isInLayout = false,
+            check = false;
+
+        for (let i = startAt; i < endAt; i--) {
+
+            check = engine.isPointInPath(pathObject, x, i, winding);
+
+            if (check !== isInLayout) {
+
+                res.push([x, check === false ? i + 1 : i]);
+                isInLayout = check;
+            }
+        }
+        return res;
+    };
+
+
+    // MAIN FUNCTION STARTS HERE
     const mycell = requestCell();
     const coord = requestCoordinate();
 
     const engine = mycell.engine;
-    const { layoutEngine:layout, roll, defaultTextStyle:defs, lineSpacing, layoutEngineLineOffset:offset, layoutEngineVerticalText:vertical, lines } = this;
-    const { currentStampPosition, pathObject, winding, currentRotation } = layout;
-    const { fontSizeValue, direction } = defs;
 
-    const [constX, constY] = currentStampPosition;
-    const rotation = -roll * _radian;
-    const overRotation = -(-roll + currentRotation);
+    const {
+        alignment,
+        defaultTextStyle,
+        layoutEngine,
+        layoutEngineLineOffset,
+        layoutEngineVerticalText: vertical,
+        lines,
+        lineSpacing,
+    } = this;
+
+    const { 
+        currentDimensions,
+        currentRotation,
+        currentStampPosition,
+        pathObject,
+        winding,
+    } = layoutEngine;
+
+    const {
+        direction,
+        fontSizeValue,
+    } = defaultTextStyle;
+
+    const rotation = -alignment * _radian;
+    const rotationFix = alignment - currentRotation;
+
     const step = fontSizeValue * lineSpacing;
 
-    mycell.rotateDestination(engine, ...currentStampPosition, layout);
+    const [constX, constY] = currentStampPosition;
+    const [width, height] = currentDimensions;
+
+    const directionIsLtr = direction === LTR;
+
+    const rawData = [];
+
+    let flag = false,
+        path = '',
+        beginX, beginY,
+        lineResults, lineData, lineLength, lineVal,
+        lineProcessing = [],
+        sx, sy, ex, ey, i, iz, counter;
+
+
+    // Prepare canvas for work
+    mycell.rotateDestination(engine, constX, constY, layoutEngine);
     engine.rotate(rotation);
 
-    if (engine.isPointInPath(pathObject, ...currentStampPosition, winding)) {
 
-        const rawData = [];
+    // Main calculations
+    // + TODO: one bug remains - functionality currently doesn't take into account handle offsets at the first level, which means lines don't generate if the handle pushes the layout entity too far away from the stamp position. This is due to the while/flag interaction. Probably won't fix as it's a bit of an edge case...
+    if (vertical) {
 
-        let beginX = constX + offset,
-            beginY = constY + offset;
+        // The first line is close to currentStampPosition
+        beginX = constX + layoutEngineLineOffset;
+        rawData.push([beginX, getEndPoints(beginX, constY)]);
 
-        if (vertical) {
+        // Find lines to the left of the first line
+        flag = true;
+        while (flag) {
 
-            rawData.push([beginX, getEndPoints(beginX, constY)]);
+            beginX -= step;
+            lineResults = getEndPoints(beginX, constY);
 
-            let flag = true;
-
-            while (flag) {
-
-                beginX -= step;
-                const res = getEndPoints(beginX, constY);
-
-                if (!res.length) flag = false;
-                else rawData.push([beginX, res]);
-            }
-
-            beginX = constX + offset;
-            flag = true;
-
-            while (flag) {
-
-                beginX += step;
-                const res = getEndPoints(beginX, constY);
-
-                if (!res.length) flag = false;
-                else rawData.push([beginX, res]);
-            }
-        }
-        else {
-
-            rawData.push([beginY, getEndPoints(constX, beginY)]);
-
-            let flag = true;
-
-            while (flag) {
-
-                beginY -= step;
-                const res = getEndPoints(constX, beginY);
-
-                if (!res.length) flag = false;
-                else rawData.push([beginY, res]);
-            }
-
-            beginY = constY + offset;
-            flag = true;
-
-            while (flag) {
-
-                beginY += step;
-                const res = getEndPoints(constX, beginY);
-
-                if (!res.length) flag = false;
-                else rawData.push([beginY, res]);
-            }
+            if (!lineResults.length) flag = false;
+            else rawData.push([beginX, lineResults]);
         }
 
-        if (direction === LTR) rawData.sort((a, b) => a[0] - b[0]);
-        else rawData.sort((a, b) => b[0] - a[0]);
+        // Find lines to the right of the first line
+        beginX = constX + layoutEngineLineOffset;
+        flag = true;
+        while (flag) {
 
-        lines.length = 0;
-        rawData.forEach(d => {
+            beginX += step;
+            lineResults = getEndPoints(beginX, constY);
 
-            const pts = d[1];
-            const [sx, sy, ex, ey] = pts;
-
-            lines.push(_floor(_hypot(sx - ex, sy - ey)));
-        });
-
-console.log(lines);
-
-        let path = '';
-
-        beginX = 0;
-        beginY = 0;
-
-        rawData.forEach(d => {
-
-            const pts = d[1];
-
-            path += `m${pts[0] - beginX},${pts[1] - beginY}l${pts[2] - pts[0]},${pts[3] - pts[1]}`;
-
-            beginX = pts[2];
-            beginY = pts[3];
-        });
-
-        this.localPath = new Path2D(path);
+            if (!lineResults.length) flag = false;
+            else rawData.push([beginX, lineResults]);
+        }
     }
     else {
 
-        this.localPath = null;
-        console.log(this.name, 'calculateLines ERROR: start point is outside layoutEngine artefact');
+        // The first line is close to currentStampPosition
+        beginY = constY + layoutEngineLineOffset;
+        rawData.push([beginY, getEndPoints(constX, beginY)]);
+
+        // Find lines above the first line
+        flag = true;
+        while (flag) {
+
+            beginY -= step;
+            lineResults = getEndPoints(constX, beginY);
+
+            if (!lineResults.length) flag = false;
+            else rawData.push([beginY, lineResults]);
+        }
+
+        // Find lines below the first line
+        beginY = constY + layoutEngineLineOffset;
+        flag = true;
+        while (flag) {
+
+            beginY += step;
+            lineResults = getEndPoints(constX, beginY);
+
+            if (!lineResults.length) flag = false;
+            else rawData.push([beginY, lineResults]);
+        }
     }
 
+
+    // Sort the raw data top-bottom etc
+    if (directionIsLtr) rawData.sort((a, b) => a[0] - b[0]);
+    else rawData.sort((a, b) => b[0] - a[0]);
+
+
+    // Push line data into the this.lines array
+    lines.length = 0;
+    lineLength = 0;
+    lineProcessing.length = 0;
+
+    rawData.forEach(d => {
+
+        lineData = d[1];
+        [sx, sy, ex, ey] = lineData;
+
+        lineVal = _hypot(sx - ex, sy - ey)
+
+        lineProcessing.push(lineVal);
+        lineLength += lineVal;
+    });
+
+    lineVal = 0;
+
+    lineProcessing.forEach(d => {
+
+        // Currently storing as an object. Need to turn it into an array for more efficient processing
+        lines.push({
+            length: d,
+            lengthRatio: d / lineLength,
+            startAt: lineVal / lineLength,
+        });
+
+        lineVal += d;
+    });
+
+
+    // Generate the path string
+    beginX = 0;
+    beginY = 0;
+
+    rawData.forEach(data => {
+
+        lineData = data[1];
+        counter = 0;
+
+        for (i = 0, iz = lineData.length; i < iz; i += 4) {
+
+            sx = lineData[counter++];
+            sy = lineData[counter++];
+            ex = lineData[counter++];
+            ey = lineData[counter++];
+
+            path += `m ${sx - beginX}, ${sy - beginY} l ${ex - sx}, ${ey - sy} `;
+
+            beginX = ex;
+            beginY = ey;
+        }
+    });
+
+    // We can do 2 things here:
+    // 1. Do all the calculations required for layout along the line locally
+    // 2. Stuff the path into a hidden shape entity and let that do all the calculations for us
+    // + These are all line paths, so calculations shouldn't be too onerous?
+    this.localPath = new Path2D(`${path}z`);
+
+
+    // Clean up
     releaseCoordinate(coord);
     releaseCell(mycell);
 };
