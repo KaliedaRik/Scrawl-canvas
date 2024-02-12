@@ -110,22 +110,24 @@ export default function (P = Ωempty) {
 // `drawBoundingBox` - internal helper function called by `method` functions
     P.drawBoundingBox = function (host) {
 
-        const uStroke = this.getStyle(this.boundingBoxStyle, 'fillStyle', host);
-        const engine = host.engine;
+        if (this.pathObject) {
 
-// console.log(this.lineDash, this.boundingBoxLineDash)
-        engine.save();
-        engine.strokeStyle = uStroke;
-        engine.lineWidth = this.boundingBoxLineWidth;
-        engine.setLineDash(this.boundingBoxLineDash || []);
-        engine.lineDashOffset = this.boundingBoxLineDashOffset || 0;
-        engine.globalCompositeOperation = SOURCE_OVER;
-        engine.globalAlpha = 1;
-        engine.shadowOffsetX = 0;
-        engine.shadowOffsetY = 0;
-        engine.shadowBlur = 0;
-        engine.stroke(this.pathObject);
-        engine.restore();
+            const uStroke = this.getStyle(this.boundingBoxStyle, 'fillStyle', host);
+            const engine = host.engine;
+
+            engine.save();
+            engine.strokeStyle = uStroke;
+            engine.lineWidth = this.boundingBoxLineWidth;
+            engine.setLineDash(this.boundingBoxLineDash || []);
+            engine.lineDashOffset = this.boundingBoxLineDashOffset || 0;
+            engine.globalCompositeOperation = SOURCE_OVER;
+            engine.globalAlpha = 1;
+            engine.shadowOffsetX = 0;
+            engine.shadowOffsetY = 0;
+            engine.shadowBlur = 0;
+            engine.stroke(this.pathObject);
+            engine.restore();
+        }
     };
 
 

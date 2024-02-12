@@ -12,7 +12,7 @@ import { addStrings, doCreate, mergeOver, λnull, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, LINE_DASH, LTR, NAME, NORMAL, SANS_SERIF, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, LINE_DASH, LTR, NAME, NORMAL, SANS_SERIF, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
 
 // #### Wheel constructor
 const TextStyle = function (items = Ωempty) {
@@ -25,6 +25,7 @@ const TextStyle = function (items = Ωempty) {
     if (this.isDefaultTextStyle) {
 
         this.set(this.defs);
+
         this.set(items);
     }
     else this.set(items, true);
@@ -48,69 +49,90 @@ baseMix(P);
 // #### TextStyle attributes
 const defaultAttributes = {
 
-    // Canvas state - text-related attributes used by text units
+    // #### Canvas state - text-related attributes used by text units
     direction: LTR,
     fontKerning: NORMAL,
     fontStretch: NORMAL,
     fontVariantCaps: NORMAL,
     textRendering: AUTO,
 
-    // Canvas state - non-text-related attributes used by text units
+    // #### Canvas state - non-text-related attributes used by text units
     fillStyle: BLACK,
     lineDash: null,
     lineDashOffset: 0,
     lineWidth: 1,
     strokeStyle: BLACK,
 
-    // Canvas state - text-related attributes ignored by text units
+    // #### Canvas state - text-related attributes ignored by text units
     /*
-    font - Cannot be set. Managed by local attributes 'fontString', 'canvasFont'
-    textAlign - Cannot be set. Always has the value of 'left'
-    textBaseline - Cannot be set. Always has the value of 'top'
-    letterSpacing - Can be set/deltaSet. Managed by local attribute 'letterSpaceValue'
-    wordSpacing - Can be set/deltaSet. Managed by local attribute 'wordSpaceValue'
+    `font` - Cannot be set. Managed by local attributes 'fontString', 'canvasFont'
+    `textAlign` - Cannot be set. Always has the value of 'left'
+    `textBaseline` - Cannot be set. Always has the value of 'top'
+    `letterSpacing` - Can be set/deltaSet. Managed by local attribute 'letterSpaceValue'
+    `wordSpacing` - Can be set/deltaSet. Managed by local attribute 'wordSpaceValue'
     */
     canvasFont: DEFAULT_FONT,
     fontString: DEFAULT_FONT,
     letterSpaceValue: 0,
     wordSpaceValue: 0,
 
-    // Canvas state - non-text-related attributes ignored by text units
+    // #### Canvas state - non-text-related attributes ignored by text units
     /*
-    globalAlpha - Can be set/deltaSet. Handled by the entity, not here
-    globalCompositeOperation - Can be set. Handled by the entity, not here
-    lineCap - Cannot be set. Always has the value of 'round'
-    lineJoin - Cannot be set. Always has the value of 'round'
-    miterLimit - Cannot be set. Irrelevant as lineJoin/lineCap are permanently set to 'round'
-    shadowOffsetX - Can be set/deltaSet. Handled by the entity, not here
-    shadowOffsetY - Can be set/deltaSet. Handled by the entity, not here
-    shadowBlur - Can be set/deltaSet. Handled by the entity, not here
-    shadowColor - Can be set. Handled by the entity, not here
-    filter - Can be set. Handled by the entity, not here
-    imageSmoothingEnabled - Can be set. Handled by the entity, not here
-    imageSmoothingQuality - Can be set. Handled by the entity, not here
+    `globalAlpha` - Can be set/deltaSet. Handled by the entity, not here
+    `globalCompositeOperation` - Can be set. Handled by the entity, not here
+    `lineCap` - Cannot be set. Always has the value of 'round'
+    `lineJoin` - Cannot be set. Always has the value of 'round'
+    `miterLimit` - Cannot be set. Irrelevant as lineJoin/lineCap are permanently set to 'round'
+    `filter` - Can be set. Handled by the entity, not here
+    `imageSmoothingEnabled` - Can be set. Handled by the entity, not here
+    `imageSmoothingQuality` - Can be set. Handled by the entity, not here
+
+    Note that shadow functionality is not supported by EnhancedLabels
+    `shadowOffsetX` - Can be set/deltaSet. Handled by the entity, not here.
+    `shadowOffsetY` - Can be set/deltaSet. Handled by the entity, not here.
+    `shadowBlur` - Can be set/deltaSet. Handled by the entity, not here.
+    `shadowColor` - Can be set. Handled by the entity, not here.
     */
 
-    // Unit font-related attributes
+    // #### Unit font-related attributes
     fontFamily: SANS_SERIF,
     fontSize: DEFAULT_FONT_SIZE,
     fontStyle: NORMAL,
     fontWeight: NORMAL,
     /*
-    fontSizeValue - Internal attribute, not stored in defs object
-    lineHeight - Handled by the entity, not here
+    `fontSizeValue` - Internal attribute, not stored in defs object
+    `lineHeight` - Handled by the entity (as `lineSpacing`), not here
     */
 
-    // Unit underline styling
+    // #### Unit underline styling
+    // Underlines go behind the text, with clear guttering between the text characters and the underline
+    // + Supports gradients, patterns and CSS color strings
+    // + The underline thickness is adjustable via the `underlineWidth` attribute
+    // + The position of the underline can be determined by the  `underlineOffset` attribute, which takes a unit number where `0` is the top of the font height and `1` represents the bottom of the font height
+    // + the thickness of the gap between characters and the underline, where they overlap, is controlled by the `underlineGap` attribute, measured in pixels
     includeUnderline: false,
     underlineGap: 3,
     underlineOffset: 0,
     underlineStyle: ZERO_STR,
     underlineWidth: 1,
 
-    // Unit highlight styling
+    // #### Unit highlight styling
+    // Highlight goes behind the text and any underline, with no guttering provided. It is the full font height.
+    // + Supports gradients, patterns and CSS color strings
     highlightStyle: YELLOW,
     includeHighlight: false,
+
+    // #### Unit offsets and rotations
+    // __unitOffset__ - Array of string enum, string% relative value, or absolute number (px) value.
+    // + Horizontal enum values are 'left' (default), 'center', 'right' relative to the text unit's width (including `letterSpacing`)
+    // + Vertical enum values are 'top' (default), 'center', 'bottom', 'hanging' (font-dependent), 'middle' (which is an alias of center), 'alphabetic' (font-dependent), 'ideographic' (font-dependent) - all relative to the font's reported height
+    // + String% values are relative to the text unit's width and the font's reported height
+    // + Number values are pixel distances from the top-left corner of the text unit
+    // + __unitOffsetX__ and __unitOffsetY__ are supported pseudo-elements for getting and setting this attribute
+    unitOffset: null,
+
+    // __unitRotation__ - number representing degrees. A value of `0` (default) will display the text unit in alignment with its path; positive values rotate the text unit clockwise
+    unitRotation: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -229,18 +251,6 @@ const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// G.rawFont = function () {
-
-//     return this.fontString;
-// };
-// G.canvasFont = function () {
-
-//     return this.canvasFont;
-// };
-// G.fontFamily = function () {
-
-//     return this.fontFamily;
-// };
 S.fontString = function (item) {
 
     if (item?.substring) this.fontString = item;
@@ -319,6 +329,55 @@ S.wordSpacing = function (item) {
 S.textRendering = function (item) {
 
     if (item?.substring) this.textRendering = item;
+};
+
+G.unitOffset = function () {
+
+    return [...this.unitOffset];
+};
+G.unitOffsetX = function () {
+
+    return this.unitOffset[0];
+};
+G.unitOffsetY = function () {
+
+    return this.unitOffset[1];
+};
+S.unitOffset = function (item) {
+
+    if (_isArray(item) && item.length === 2) {
+
+        if (this.unitOffset == null) this.createUnitOffset();
+
+        this.unitOffset[0] = item[0];
+        this.unitOffset[1] = item[1];
+    }
+};
+S.unitOffsetX = function (item) {
+
+    if (this.unitOffset == null) this.createUnitOffset();
+
+    this.unitOffset[0] = item;
+};
+S.unitOffsetY = function (item) {
+
+    if (this.unitOffset == null) this.createUnitOffset();
+
+    this.unitOffset[1] = item;
+};
+
+P.createUnitOffset = function () {
+
+    this.unitOffset = ['top', 'left'];
+};
+
+D.unitRotation = function (item) {
+
+    if (item.toFixed) this.unitRotation += item;
+};
+S.unitRotation = function (item) {
+
+    if (item.toFixed) this.unitRotation = item;
 };
 
 G.textAlign = λnull;

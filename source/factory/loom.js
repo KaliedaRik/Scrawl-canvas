@@ -836,7 +836,7 @@ P.stamp = function (force = false, host, changes) {
         return this.regularStamp();
     }
 
-    if (this.visibility) {
+    else if (this.visibility) {
 
         // if (this.sourceIsVideoOrSprite || this.dirtyInput) this.sourceImageData = this.cleanInput();
         if (this.sourceIsVideoOrSprite || this.dirtyInput) this.cleanInput();

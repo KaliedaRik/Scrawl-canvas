@@ -1271,6 +1271,7 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
 
     text?: string;
+    lineSpacing?: number;
 
     layoutEngine?: ArtefactInstance | string;
     useLayoutEngineAsPath?: boolean;
@@ -1280,6 +1281,9 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
 
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
+
+    justifyLine?: PhraseJustifyValues;
+    allowSubUnitStyling?: boolean;
 
     delta?: EnhancedLabelFactoryDeltaInputs;
     group?: GroupInstance | string;
@@ -2641,6 +2645,7 @@ interface TextStyleFactoryDeltaInputs extends BaseMixinDeltaInputs {
     lineWidth?: number;
     underlineOffset?: number;
     underlineWidth?: number;
+    unitRotation?: number
     wordSpacing?: number;
 }
 
@@ -2659,6 +2664,9 @@ interface TextStyleFactoryInputs extends BaseMixinInputs, TextStyleFactoryDeltaI
     textRendering?: string;
     underlineGap?: number;
     underlineStyle?: StylesInstance | string;
+    unitOffset?: CommonTwoElementArrayInput;
+    unitOffsetX?: StringOrNumberInput;
+    unitOffsetY?: StringOrNumberInput;
 }
 
 interface TextStyleSaveInputs extends TextStyleFactoryFunctions, SaveInputs {}

@@ -17,7 +17,7 @@ import { currentGroup } from './canvas.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
-import { releaseArray, requestArray } from '../helper/array-pool.js';
+// import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
@@ -31,7 +31,9 @@ import labelMix from '../mixin/label.js';
 
 import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _floor, _hypot, _radian, _round, ALPHABETIC, BLACK, BOTTOM, CENTER, END, ENTITY, GOOD_HOST, HANGING, HYPHEN, IDEOGRAPHIC, LEFT, LTR, MIDDLE, PX0, ROUND, SPACE, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _hypot, _piHalf, _radian, _round, BLACK, ENTITY, GOOD_HOST, LEFT, LTR, PX0, ROUND, SPACE, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+
+// import { ALPHABETIC, BOTTOM, CENTER, END, HANGING, HYPHEN, IDEOGRAPHIC, MIDDLE, START } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -135,8 +137,13 @@ const defaultAttributes = {
 // + It is possible to style individual characters in a text that breaks on spaces by adding soft hyphens before and after the characters, but it may (will) lead to unnatural-looking word breaks at the end of the line
     breakWordsOnHyphens: false,
 
+// __justifyLine__ - string enum. Allowed values are 'left', 'right', 'center' (default), 'full'
+// + Determines the positioning of text units along the line. Has nothing to do with the `direction` attribute.
+    justifyLine: 'center',
 
-
+// __allowSubUnitStyling__ - boolean.
+// + When `true`, forces space-hyphen-broken text to become single-character text units, with kerning (if required) handled manually. This will break heavily ligatured fonts such as Arabic and Devangari fonts in unexpected and unpleasant ways. Default: `false`
+    allowSubUnitStyling: false,
 
 // The EnhancedLabel entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
@@ -312,6 +319,7 @@ S.updateOnLayoutStartChange = function (item) {
 // __layoutEngine__ - TODO: documentation
 S.layoutEngine = function (item) {
 
+// console.log(this.name, 'S.layoutEngine', item)
     if (item) {
 
         const oldEngine = this.layoutEngine,
@@ -331,6 +339,7 @@ S.layoutEngine = function (item) {
 
             this.layoutEngine = newEngine;
 
+            this.dirtyPathObject = true;
             this.dirtyLayout = true;
         }
     }
@@ -430,6 +439,8 @@ P.midInitActions = λnull;
 
 P.cleanFont = function () {
 
+// console.log(this.name, 'cleanFont (trigger: dirtyFont', this.dirtyFont);
+
     if (this.currentFontIsLoaded) {
 
         this.dirtyFont = false;
@@ -444,6 +455,8 @@ P.cleanFont = function () {
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
 P.temperFont = function () {
+
+// console.log(this.name, 'temperFont (trigger: none - called by cleanFont');
 
     const { group, defaultTextStyle } = this;
 
@@ -474,109 +487,215 @@ P.temperFont = function () {
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
+// console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutEngine?.pathObject}`);
+
     const layout = this.layoutEngine;
 
-    if (layout?.pathObject) {
+    if (this.dirtyPathObject && layout?.pathObject) {
 
+// console.log(this.name, `cleanPathObject RUNNING!`)
         this.dirtyPathObject = false;
 
         this.pathObject = new Path2D(layout.pathObject);
     }
 };
 
+
 P.cleanLayout = function () {
 
-    this.dirtyLayout = false;
-    this.dirtyScale = false;
-    this.dirtyDimensions = false;
-    this.dirtyStart = false;
-    this.dirtyOffset = false;
-    this.dirtyHandle = false;
-    this.dirtyRotation = false;
+// console.log(this.name, `cleanLayout (triggers: dirtyLayout ${this.dirtyLayout}, checks: currentFontIsLoaded ${this.currentFontIsLoaded}`);
 
-    const { useLayoutEngineAsPath } = this;
+    if (this.currentFontIsLoaded) {
 
-    this.cleanPathObject();
+        this.dirtyLayout = false;
 
-    if (useLayoutEngineAsPath) {
+        const { useLayoutEngineAsPath } = this;
 
-        // TODO: Path-related positioning stuff
+        if (useLayoutEngineAsPath) {
+
+            // TODO: Path-related positioning stuff
+        }
+        else this.calculateLines();
+
+        this.dirtyTextLayout = true;
     }
-    else this.calculateLines();
-
-    this.dirtyTextLayout = true;
 };
 
 P.cleanText = function () {
 
-    this.dirtyText = false;
+// console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded}`);
 
-    const { text, textUnits, breakTextOnSpaces, breakWordsOnHyphens } = this;
+    const makeUnitObject = (chars, type) => {
 
-    const textCharacters = [];
+        return {
+            chars,
+            len: 0,
+            type,
+            style: null,
+        };
+    };
 
-    textUnits.length = 0;
+    if (this.currentFontIsLoaded) {
 
-    textCharacters.push(...text);
+        this.dirtyText = false;
 
-    if (breakTextOnSpaces) {
+        const { text, textUnits, breakTextOnSpaces, breakWordsOnHyphens, allowSubUnitStyling } = this;
 
-        const unit = [];
+        const textCharacters = [...text];
 
-        if (breakWordsOnHyphens) {
+        textUnits.length = 0;
 
+        if (!allowSubUnitStyling && breakTextOnSpaces) {
 
-            textCharacters.forEach(c => {
+            this.textUnitsHaveMultipleCharacters = true;
 
-                if (TEXT_SPACES_REGEX.test(c)) {
+            const unit = [];
 
-                    textUnits.push(unit.join(''))
-                    textUnits.push(' ');
-                    unit.length = 0;
-                }
-                else if (TEXT_HYPHENS_REGEX.test(c)) {
+            if (breakWordsOnHyphens) {
 
-                    textUnits.push(unit.join(''))
-                    textUnits.push(c);
-                    unit.length = 0;
-                }
-                else unit.push(c);
-            })
+                textCharacters.forEach(c => {
+
+                    if (TEXT_SPACES_REGEX.test(c)) {
+
+                        textUnits.push(makeUnitObject(unit.join(''), TEXT_TYPE_CHARS));
+                        textUnits.push(makeUnitObject(SPACE, TEXT_TYPE_SPACE));
+                        unit.length = 0;
+                    }
+                    else if (TEXT_HYPHENS_REGEX.test(c)) {
+
+                        textUnits.push(makeUnitObject(unit.join(''), TEXT_TYPE_CHARS));
+                        textUnits.push(makeUnitObject(c, TEXT_TYPE_HYPHEN));
+                        unit.length = 0;
+                    }
+                    else unit.push(c);
+                });
+            }
+            else {
+
+                textCharacters.forEach(c => {
+
+                    if (TEXT_SPACES_REGEX.test(c)) {
+
+                        textUnits.push(makeUnitObject(unit.join(''), TEXT_TYPE_CHARS));
+                        textUnits.push(makeUnitObject(SPACE, TEXT_TYPE_SPACE));
+                        unit.length = 0;
+                    }
+                    else unit.push(c);
+                });
+            }
         }
         else {
 
-            textCharacters.forEach(c => {
+            this.textUnitsHaveMultipleCharacters = false;
 
-                if (TEXT_SPACES_REGEX.test(c)) {
+            textCharacters.forEach(c => textUnits.push(makeUnitObject(c, TEXT_TYPE_CHARS)));
+        }
 
-                    textUnits.push(unit.join(''))
-                    textUnits.push(' ');
-                    unit.length = 0;
-                }
-                else unit.push(c);
-            })
+        this.measureTextUnits();
+
+        this.dirtyTextLayout = true;
+    }
+};
+
+
+P.layoutText = function () {
+
+// console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLayout}, checks: currentFontIsLoaded' ${this.currentFontIsLoaded}`);
+
+    if (this.currentFontIsLoaded) {
+
+        if (this?.lines.length && this?.textUnits.length) {
+
+            this.dirtyTextLayout = false;
+
+            this.assignTextUnitsToLines();
+
+            this.positionTextUnits();
         }
     }
-    else textUnits.push(...textCharacters);
-
-console.log(textUnits);
-    this.measureTextUnits();
-
-    this.dirtyTextLayout = true;
 };
+
+
+P.positionTextUnits = function () {
+
+console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText');
+};
+
+
+P.assignTextUnitsToLines = function () {
+
+// console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layoutText');
+
+    const {
+        lines,
+        textUnits,
+    } = this;
+
+    const unitArrayLength = textUnits.length;
+
+    let unitCursor = 0,
+        // lengthTaken, lengthRemaining,
+        lengthRemaining,
+        i, unit, len, type;
+
+    lines.forEach(line => {
+
+        const {
+            length: lineLength,
+            unitData,
+        } = line;
+
+        // lengthTaken = 0;
+        lengthRemaining = lineLength;
+
+        for (i = unitCursor; i < unitArrayLength; i++) {
+
+            unit = textUnits[i];
+
+            ({ len, type } = unit);
+
+            if (len < lengthRemaining) {
+
+                if (lengthRemaining === lineLength) {
+
+                    if (type !== TEXT_TYPE_SPACE) {
+
+                        // lengthTaken += len;
+                        lengthRemaining -= len;
+                        unitData.push(unitCursor);
+                    }
+                }
+                else {
+
+                    // lengthTaken += len;
+                    lengthRemaining -= len;
+                    unitData.push(unitCursor);
+                }
+                ++unitCursor;
+            }
+            else {
+
+                if (type === TEXT_TYPE_SPACE) ++unitCursor;
+                break;
+            }
+        }
+    })
+    // console.log(lines);
+};
+
 
 P.measureTextUnits = function () {
 
-    const { textUnits, textUnitLengths, defaultTextStyle } = this;
+// console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText');
 
-    const { letterSpacing } = defaultTextStyle;
+    const { textUnits, defaultTextStyle } = this;
+
+    const { letterSpacing, letterSpaceValue } = defaultTextStyle;
 
     const mycell = requestCell(),
         engine = mycell.engine;
 
     let res;
-
-    textUnitLengths.length = 0;
 
     engine.fillStyle = BLACK;
     engine.strokeStyle = BLACK;
@@ -594,41 +713,40 @@ P.measureTextUnits = function () {
 
     textUnits.forEach(t => {
 
-        if (t === SPACE || t === HYPHEN) engine.letterSpacing = PX0;
+        const {chars, type} = t;
+
+        if (type === TEXT_TYPE_SPACE) engine.letterSpacing = PX0;
         else engine.letterSpacing = letterSpacing;
 
-        res = engine.measureText(t);
+        if (type !== TEXT_TYPE_SOFT_HYPHEN) {
 
-        textUnitLengths.push(res.width);
+            res = engine.measureText(chars);
+            t.len = res.width - letterSpaceValue;
+        }
     });
 
-console.log(textUnitLengths);
     releaseCell(mycell);
 };
 
-P.layoutText = function () {
-
-    console.log(this.name, 'layoutText');
-    this.dirtyTextLayout = false;
-};
-
 P.calculateLines = function () {
+
+// console.log(this.name, 'calculateLines (trigger: none - called by cleanLayout');
 
     // Local functions to find the points where a given line crosses the layout engine's shape border
     const getEndPoints = (x, y) => {
 
         const results = [];
 
-        let edgePoints, len, i;
+        let edgePoints;
 
         if (vertical) edgePoints = (directionIsLtr) ? goTopToBottom(x, y, height) : goBottomToTop(x, y, height);
         else edgePoints = (directionIsLtr) ? goLeftToRight(x, y, width) : goRightToLeft(x, y, width);
 
-        len = edgePoints.length;
+        const len = edgePoints.length;
 
         if (len && len % 2 === 0) {
 
-            for (i = 0; i < len; i++) {
+            for (let i = 0; i < len; i++) {
 
                 coord.set(edgePoints[i]);
                 coord.subtract(currentStampPosition);
@@ -715,7 +833,7 @@ P.calculateLines = function () {
         let isInLayout = false,
             check = false;
 
-        for (let i = startAt; i < endAt; i--) {
+        for (let i = startAt; i > endAt; i--) {
 
             check = engine.isPointInPath(pathObject, x, i, winding);
 
@@ -745,7 +863,7 @@ P.calculateLines = function () {
         lineSpacing,
     } = this;
 
-    const { 
+    const {
         currentDimensions,
         currentRotation,
         currentStampPosition,
@@ -768,14 +886,15 @@ P.calculateLines = function () {
 
     const directionIsLtr = direction === LTR;
 
-    const rawData = [];
+    const rawData = [],
+        lineProcessing = [];
 
     let flag = false,
         path = '',
         beginX, beginY,
         lineResults, lineData, lineLength, lineVal,
-        lineProcessing = [],
-        sx, sy, ex, ey, i, iz, counter;
+        sx, sy, ex, ey, i, iz,
+        counter;
 
 
     // Prepare canvas for work
@@ -860,7 +979,7 @@ P.calculateLines = function () {
         lineData = d[1];
         [sx, sy, ex, ey] = lineData;
 
-        lineVal = _hypot(sx - ex, sy - ey)
+        lineVal = _hypot(sx - ex, sy - ey);
 
         lineProcessing.push(lineVal);
         lineLength += lineVal;
@@ -868,13 +987,19 @@ P.calculateLines = function () {
 
     lineVal = 0;
 
-    lineProcessing.forEach(d => {
+    lineProcessing.forEach((d, i) => {
+
+        [sx, sy, ex, ey] = rawData[i][1];
 
         // Currently storing as an object. Need to turn it into an array for more efficient processing
         lines.push({
             length: d,
             lengthRatio: d / lineLength,
-            startAt: lineVal / lineLength,
+            startPositionInPath: lineVal / lineLength,
+            startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
+            endAt: [...coord.set([ex, ey]).add(currentStampPosition)],
+            slope: this.getLinearAngle(sx, sy, ex, ey),
+            unitData: [],
         });
 
         lineVal += d;
@@ -897,7 +1022,7 @@ P.calculateLines = function () {
             ex = lineData[counter++];
             ey = lineData[counter++];
 
-            path += `m ${sx - beginX}, ${sy - beginY} l ${ex - sx}, ${ey - sy} `;
+            path += `m${sx - beginX},${sy - beginY}l${ex - sx},${ey - sy}`;
 
             beginX = ex;
             beginY = ey;
@@ -916,14 +1041,41 @@ P.calculateLines = function () {
     releaseCell(mycell);
 };
 
+// `getLinearAngle`
+P.getLinearAngle = function (sx, sy, ex, ey) {
+
+    const dx = ex - sx,
+        dy = ey - sy;
+
+    return (-_atan2(dx, dy) + _piHalf) / _radian;
+};
 
 // #### Display cycle functions
 
 P.prepareStamp = function() {
 
+console.log(`
+
+${this.name} prepareStamp`);
+
     if (this.dirtyHost) this.dirtyHost = false;
 
-    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) this.dirtyLayout = true;
+    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
+
+// console.log('Trigger cleanPathObject because', `dirtyScale ${this.dirtyScale} dirtyDimensions ${this.dirtyDimensions} dirtyStart ${this.dirtyStart} dirtyOffset ${this.dirtyOffset} dirtyHandle ${this.dirtyHandle} dirtyRotation ${this.dirtyRotation} dirtyPathObject ${this.dirtyPathObject}`)
+
+        this.dirtyScale = false;
+        this.dirtyDimensions = false;
+        this.dirtyStart = false;
+        this.dirtyOffset = false;
+        this.dirtyHandle = false;
+        this.dirtyRotation = false;
+
+        this.dirtyPathObject = true;
+        this.dirtyLayout = true;
+    }
+
+    if (this.dirtyPathObject) this.cleanPathObject();
 
     if (this.dirtyFont) {
 
@@ -931,15 +1083,18 @@ P.prepareStamp = function() {
         this.dirtyText = true;
     }
 
-    if (this.dirtyText) {
+    if (!this.dirtyPathObject) {
 
-        this.updateAccessibleTextHold();
-        this.cleanText();
+        if (this.dirtyText) {
+
+            this.updateAccessibleTextHold();
+            this.cleanText();
+        }
+
+        if (this.dirtyLayout) this.cleanLayout();
+
+        if (this.dirtyTextLayout) this.layoutText();
     }
-
-    if (this.dirtyLayout) this.cleanLayout();
-
-    if (this.dirtyTextLayout) this.layoutText();
 
     // this.prepareStampTabsHelper();
 };
@@ -947,20 +1102,22 @@ P.prepareStamp = function() {
 // `stamp` - All EnhancedLabel entity stamping, except for simple stamps, goes through this function.
 P.stamp = function (force = false, host, changes) {
 
-    if (force) {
+    if (!this.dirtyFont && !this.dirtyText && !this.dirtyLayout) {
 
-        if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
+        if (force) {
 
-        if (changes) {
+            if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
 
-            this.set(changes);
-            this.prepareStamp();
+            if (changes) {
+
+                this.set(changes);
+                this.prepareStamp();
+            }
+
+            this.regularStamp();
         }
-
-        this.regularStamp();
+        else if (this.visibility) this.regularStamp();
     }
-
-    if (this.visibility) this.regularStamp();
 };
 
 

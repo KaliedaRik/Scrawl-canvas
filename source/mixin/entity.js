@@ -501,7 +501,7 @@ export default function (P = Ωempty) {
             else return this.regularStamp();
         }
 
-        if (this.visibility) {
+        else if (this.visibility) {
 
             if (this.stashOutput || filterTest) return this.filteredStamp(filterTest);
             else return this.regularStamp();

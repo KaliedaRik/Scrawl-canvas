@@ -742,7 +742,7 @@ P.stamp = function (force = false, host, changes) {
         this.regularStamp();
     }
 
-    if (this.visibility) {
+    else if (this.visibility) {
 
         if (this.dirtyInput) {
 
