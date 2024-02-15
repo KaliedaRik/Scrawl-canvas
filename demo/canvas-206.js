@@ -99,6 +99,23 @@ scrawl.makeRender({
 
 
 // #### User interaction
+const updateDisplayText = () => {
+
+    setTimeout(() => {
+
+        displayText.innerHTML = mylabel.get('rawText');
+// @ts-expect-error
+        displayText.style.direction = mylabel.get('direction');
+// @ts-expect-error
+        displayText.style.font = mylabel.get('fontString');
+// @ts-expect-error
+        displayText.style.lineHeight = mylabel.get('lineSpacing');
+    }, 50);
+};
+
+updateDisplayText();
+
+
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -111,8 +128,6 @@ scrawl.makeUpdater({
 
     updates: {
 
-        wordSpacing: ['wordSpacing', 'px'],
-        letterSpacing: ['letterSpacing', 'px'],
         layoutEngineLineOffset: ['layoutEngineLineOffset', 'float'],
         layoutEngineVerticalText: ['layoutEngineVerticalText', 'boolean'],
         alignment: ['alignment', 'float'],
@@ -694,30 +709,11 @@ const updateFont = (event) => {
 scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
 
 
-const updateDisplayText = () => {
-
-    displayText.innerHTML = mylabel.get('rawText');
-// @ts-expect-error
-    displayText.style.direction = mylabel.get('direction');
-// @ts-expect-error
-    displayText.style.font = mylabel.get('fontString');
-// @ts-expect-error
-    displayText.style.lineHeight = mylabel.get('lineSpacing');
-};
-
-updateDisplayText();
-
-
 // Setup form
 // @ts-expect-error
 fontSelector.options.selectedIndex = 0;
 // @ts-expect-error
 layoutEngineSelector.options.selectedIndex = 0;
-
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#wordSpacing').value = 0;
 
 // @ts-expect-error
 document.querySelector('#startX').value = 50;

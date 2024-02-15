@@ -26,7 +26,7 @@ import labelMix from '../mixin/label.js';
 
 import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _assign, _atan2, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, ENTITY, GOOD_HOST, LEFT, LTR, NORMAL, PX0, ROUND, SPACE, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _assign, _atan2, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, END, ENTITY, FULL, GOOD_HOST, LEFT, LTR, NORMAL, PX0, ROUND, SPACE, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // import { ALPHABETIC, BOTTOM, CENTER, END, HANGING, HYPHEN, IDEOGRAPHIC, MIDDLE, START } from '../helper/shared-vars.js';
 
@@ -61,6 +61,9 @@ const EnhancedLabel = function (items = Ωempty) {
     this.letterSpaceValue = 0;
     this.wordSpaceValue = 0;
     this.currentScale = 1;
+
+    this.currentStampPosition = [0, 0];
+    this.currentRotation = 0;
 
     this.delta = {};
 
@@ -128,15 +131,16 @@ const defaultAttributes = {
 
 // __breakWordsOnHyphens__ - boolean.
 // + When `true`, words that include hard or soft hyphens will be split into separate units for processing. Be aware that in highly ligatured fonts this may cause problems. The attribute defaults to `false`.
-// + It is possible to style individual characters in a text that breaks on spaces by adding soft hyphens before and after the characters, but it may (will) lead to unnatural-looking word breaks at the end of the line
+// + It is possible to style individual characters in a text that breaks on spaces by adding soft hyphens before and after the characters, but it may (will) lead to unnatural-looking word breaks at the end of the line.
+// + Attribute has no effect if `breakTextOnSpaces` is `false`.
     breakWordsOnHyphens: false,
 
-// __justifyLine__ - string enum. Allowed values are 'left', 'right', 'center' (default), 'full'
+// __justifyLine__ - string enum. Allowed values are 'start', 'end', 'center' (default), 'full'
 // + Determines the positioning of text units along the line. Has nothing to do with the `direction` attribute.
     justifyLine: 'center',
 
 // __allowSubUnitStyling__ - boolean.
-// + When `true`, forces space-hyphen-broken text to become single-character text units, with kerning (if required) handled manually. This will break heavily ligatured fonts such as Arabic and Devangari fonts in unexpected and unpleasant ways. Default: `false`
+// + When `true`, forces space-hyphen-broken text to become single-character text units, with kerning (if required) handled manually. This will break heavily ligatured fonts (such as Arabic and Devangari fonts) in unexpected and unpleasant ways. Default: `false`
     allowSubUnitStyling: false,
 
 // __truncateString__ - string.
@@ -522,6 +526,7 @@ P.cleanText = function () {
             len: 0,
             type,
             style: null,
+            lineOffset: 0,
         };
     };
 
@@ -841,6 +846,178 @@ P.positionTextUnits = function () {
 
 console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText');
 
+    if (this.useLayoutEngineAsPath) this.positionTextUnitsAlongPath();
+    else if (!this.breakTextOnSpaces || this.allowSubUnitStyling) this.positionTextCharactersInSpace();
+    else this.positionTextWordsInSpace()
+};
+
+
+P.positionTextCharactersInSpace = function () {
+
+console.log(this.name, 'positionTextCharactersInSpace (trigger: none - called by positionTextUnits');
+
+    if (this.layoutEngineVerticalText) this.positionTextCharactersVerticallyInSpace();
+    else {
+
+        const {
+            lines,
+            textUnits,
+            justifyLine,
+        } = this;
+    }
+};
+
+
+P.positionTextCharactersVerticallyInSpace = function () {
+
+console.log(this.name, 'positionTextCharactersVerticallyInSpace (trigger: none - called by positionTextCharactersInSpace');
+
+    const {
+        lines,
+        textUnits,
+        justifyLine,
+    } = this;
+};
+
+
+P.positionTextWordsInSpace = function () {
+
+console.log(this.name, 'positionTextWordsInSpace (trigger: none - called by positionTextUnits');
+
+    if (this.layoutEngineVerticalText) this.positionTextWordsVerticallyInSpace();
+    else {
+
+        const {
+            lines,
+            textUnits,
+            justifyLine,
+            defaultTextStyle,
+        } = this;
+
+        const directionFix = (defaultTextStyle.direction === LTR) ? 1 : -1;
+
+        let unit, length, unitData, unitLengths, spaceLengths, currentOffset;
+
+        const distances = [];
+
+        console.log('JUSTIFY:', justifyLine);
+        console.log('LINES:', lines);
+        console.log('TEXT-UNITS:', textUnits);
+
+        lines.forEach((line, index) => {
+
+            ({ length, unitData } = line);
+
+            if (unitData.length) {
+
+                unitLengths = 0;
+                spaceLengths = 0;
+                distances.length = 0;
+
+                unitData.forEach(u => {
+
+                    // Need to exclude end-of-line soft hyphens and truncation chars 
+                    if (u.toFixed) {
+
+                        unit = textUnits[u];
+
+                        if (unit.type === TEXT_TYPE_CHARS) unitLengths += unit.len;
+                        else if (unit.type === TEXT_TYPE_SPACE) spaceLengths += unit.len;
+                        distances.push(unit.len);
+                    }
+
+                });
+
+                console.log(`Line ${index}: length ${length}; character lengths ${unitLengths}; space lengths ${spaceLengths}; remaining space: ${length - (unitLengths + spaceLengths)}
+    distances: ${distances}`);
+
+                switch (justifyLine) {
+
+                    case FULL :
+                        break;
+
+                    case START :
+
+                        currentOffset = 0;
+
+                        unitData.forEach((u, index) => {
+
+                            if (u.toFixed) {
+
+                                unit = textUnits[u];
+                                unit.lineOffset = currentOffset;
+                                currentOffset += (unit.len * directionFix);
+                            }
+                        });
+                        break;
+
+                    case END :
+
+                        currentOffset = (length - (unitLengths + spaceLengths)) * directionFix;
+
+                        unitData.forEach((u, index) => {
+
+                            if (u.toFixed) {
+
+                                unit = textUnits[u];
+                                unit.lineOffset = currentOffset;
+                                currentOffset += (unit.len * directionFix);
+                            }
+                        });
+                        break;
+
+
+                    default :
+
+                        currentOffset = ((length - (unitLengths + spaceLengths)) * directionFix) / 2;
+
+                        unitData.forEach((u, index) => {
+
+                            if (u.toFixed) {
+
+                                unit = textUnits[u];
+                                unit.lineOffset = currentOffset;
+                                currentOffset += (unit.len * directionFix);
+                            }
+                        });
+                }
+            }
+            else console.log(`Nothing to process for line ${index}`);
+        });
+    }
+};
+
+
+P.positionTextWordsVerticallyInSpace = function () {
+
+console.log(this.name, 'positionTextWordsVerticallyInSpace (trigger: none - called by positionTextWordsInSpace');
+
+    if (this.layoutEngineVerticalText) this.positionTextWordsVerticallyInSpace();
+    else {
+
+        const {
+            lines,
+            textUnits,
+            justifyLine,
+        } = this;
+
+        console.log('JUSTIFY:', justifyLine);
+        console.log('LINES:', lines);
+        console.log('TEXT-UNITS:', textUnits);
+    }
+};
+
+
+P.positionTextUnitsAlongPath = function () {
+
+console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits');
+
+    const {
+        lines,
+        textUnits,
+        layoutEnginePathStart,
+        layoutEngineVerticalText,
+    } = this;
 };
 
 
@@ -938,35 +1115,35 @@ P.measureTextUnits = function () {
 
 // console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText');
 
-    const { textUnits, defaultTextStyle } = this;
+    const { textUnits, defaultTextStyle, state } = this;
 
     const { letterSpacing, letterSpaceValue } = defaultTextStyle;
 
     const mycell = requestCell(),
         engine = mycell.engine;
 
+    const currentTextStyle = _create(defaultTextStyle);
+    _assign(currentTextStyle, defaultTextStyle);
+
     let res;
 
-    engine.fillStyle = BLACK;
-    engine.strokeStyle = BLACK;
-    engine.font = defaultTextStyle.canvasFont;
-    engine.fontKerning = defaultTextStyle.fontKerning;
-    engine.fontStretch = defaultTextStyle.fontStretch;
-    engine.fontVariantCaps = defaultTextStyle.fontVariant;
-    engine.textRendering = defaultTextStyle.textRendering;
-    engine.lineCap = ROUND;
-    engine.lineJoin = ROUND;
-    engine.direction = defaultTextStyle.direction;
-    engine.textAlign = LEFT;
-    engine.textBaseline = TOP;
-    engine.wordSpacing = PX0;
+    state.set(defaultTextStyle);
+    mycell.setEngine(this);
+
 
     textUnits.forEach(t => {
 
-        const {chars, type} = t;
+        const {chars, type, style} = t;
+
+        if (style) {
+
+            currentTextStyle.set(style);
+            state.set(currentTextStyle);
+            mycell.setEngine(this);
+        }
 
         if (type === TEXT_TYPE_SPACE) engine.letterSpacing = PX0;
-        else engine.letterSpacing = letterSpacing;
+        // else engine.letterSpacing = letterSpacing;
 
         if (type !== TEXT_TYPE_SOFT_HYPHEN) {
 
@@ -1248,6 +1425,7 @@ P.calculateLines = function () {
             startPositionInPath: lineVal / lineLength,
             startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
             endAt: [...coord.set([ex, ey]).add(currentStampPosition)],
+            // slope: (directionIsLtr) ? this.getLinearAngle(sx, sy, ex, ey) : this.getLinearAngle(sx, sy, ex, ey) - 180,
             slope: this.getLinearAngle(sx, sy, ex, ey),
             unitData: [],
         });
@@ -1390,6 +1568,15 @@ P.simpleStamp = function (host, changes) {
 // + If decide to pass host instead of host.engine to method functions for all entitys, then this may be a temporary fix
 P.regularStamp = function () {
 
+    if (this.currentHost && this.layoutEngine) {
+
+        if (this.useLayoutEngineAsPath) this.regularStampAlongPath();
+        else this.regularStampInSpace();
+    }
+};
+
+P.regularStampInSpace = function () {
+
     const dest = this.currentHost;
 
     if (dest) {
@@ -1398,27 +1585,121 @@ P.regularStamp = function () {
 
         if (layout) {
 
+            // const engine = dest.engine;
+            // const [x, y] = layout.currentStampPosition;
+
+            // const { state, noCanvasEngineUpdates, localPath, defaultTextStyle, showBoundingBox } = this;
+
+            // // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
+            // dest.rotateDestination(engine, x, y, layout);
+
+            // // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
+            // if (!noCanvasEngineUpdates) {
+
+            //     state.set(defaultTextStyle);
+            //     dest.setEngine(this);
+            // }
+
+            // if (localPath) engine.stroke(localPath);
+
+            // // Invoke the appropriate __stamping method__ (below)
+            // // this[this.method](dest.engine, 0, 0, this.text);
+
+            // if (showBoundingBox) this.drawBoundingBox(dest);
+
+
             const engine = dest.engine;
-            const [x, y] = layout.currentStampPosition;
 
-            const { state, noCanvasEngineUpdates, localPath, defaultTextStyle, showBoundingBox } = this;
+            const {
+                state,
+                lines,
+                localPath,
+                textUnits,
+                defaultTextStyle,
+            } = this;
 
-            // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
-            dest.rotateDestination(engine, x, y, layout);
+            let x, y, sx, sy, unit;
 
-            // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
-            if (!noCanvasEngineUpdates) {
+            const currentTextStyle = _create(defaultTextStyle);
+            _assign(currentTextStyle, defaultTextStyle);
 
-                state.set(defaultTextStyle);
-                dest.setEngine(this);
+            engine.save();
+
+            lines.forEach(line => {
+
+                this.currentRotation = line.slope;
+                [sx, sy] = line.startAt;
+
+                line.unitData.forEach(u => {
+
+                    if (u.substring) {
+
+                    }
+                    else {
+
+                        unit = textUnits[u];
+
+                        if (unit.style) currentTextStyle.set(unit.style);
+
+                        state.set(currentTextStyle);
+                        dest.setEngine(this);
+
+                        dest.rotateDestination(engine, sx + unit.lineOffset, sy, this);
+
+                        engine.fillText(unit.chars, 0, 0);
+                    }
+                });
+            });
+
+            if (localPath) {
+
+                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
+
+                engine.globalAlpha = 0.3;
+                engine.stroke(localPath);
             }
 
-            if (localPath) engine.stroke(localPath);
+            engine.restore();
+        }
+    }
+};
 
-            // Invoke the appropriate __stamping method__ (below)
-            // this[this.method](dest.engine, 0, 0, this.text);
+P.regularStampAlongPath = function () {
 
-            if (showBoundingBox) this.drawBoundingBox(dest);
+    const dest = this.currentHost;
+
+    if (dest) {
+
+        const layout = this.layoutEngine;
+
+        if (layout) {
+
+            // const engine = dest.engine;
+            // const [x, y] = layout.currentStampPosition;
+
+            // const { state, noCanvasEngineUpdates, localPath, defaultTextStyle, showBoundingBox } = this;
+
+            // // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
+            // dest.rotateDestination(engine, x, y, layout);
+
+            // // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
+            // if (!noCanvasEngineUpdates) {
+
+            //     state.set(defaultTextStyle);
+            //     dest.setEngine(this);
+            // }
+
+            // if (localPath) engine.stroke(localPath);
+
+            // // Invoke the appropriate __stamping method__ (below)
+            // // this[this.method](dest.engine, 0, 0, this.text);
+
+            // if (showBoundingBox) this.drawBoundingBox(dest);
+
+
+            const engine = dest.engine;
+
+            const { lines, textUnits } = this;
         }
     }
 };
