@@ -1285,6 +1285,11 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     justifyLine?: PhraseJustifyValues;
     allowSubUnitStyling?: boolean;
 
+    useDocumentStyling?: boolean;
+
+    hyphenString?: string;
+    truncateString?: string;
+
     delta?: EnhancedLabelFactoryDeltaInputs;
     group?: GroupInstance | string;
     method?: MethodValues;
@@ -2643,6 +2648,8 @@ interface TextStyleFactoryDeltaInputs extends BaseMixinDeltaInputs {
     letterSpacing?: number;
     lineDashOffset?: number;
     lineWidth?: number;
+    overlineOffset?: number;
+    overlineWidth?: number;
     underlineOffset?: number;
     underlineWidth?: number;
     unitRotation?: number
@@ -2658,8 +2665,10 @@ interface TextStyleFactoryInputs extends BaseMixinInputs, TextStyleFactoryDeltaI
     fontVariantCaps?: string;
     highlightStyle?: StylesInstance | string;
     includeHighlight?: boolean;
+    includeOverline?: boolean;
     includeUnderline?: boolean;
     lineDash?: number[],
+    overlineStyle?: StylesInstance | string;
     strokeStyle?: StylesInstance | string;
     textRendering?: string;
     underlineGap?: number;

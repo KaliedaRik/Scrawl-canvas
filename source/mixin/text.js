@@ -8,11 +8,11 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, POLITE, SOURCE_OVER, SYSTEM_FONTS, T_CANVAS, T_CELL, TEXTAREA } from '../helper/shared-vars.js';
+import { ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, POLITE, SOURCE_OVER, SYSTEM_FONTS, T_CANVAS, T_CELL } from '../helper/shared-vars.js';
 
 
 // #### Local variables
-const textEntityConverter = document.createElement(TEXTAREA);
+const textEntityConverter = document.createElement(DIV);
 
 
 // #### Export function
@@ -100,10 +100,11 @@ export default function (P = Ωempty) {
 
 // `convertTextEntityCharacters`, `textEntityConverter` - (not part of the Label prototype!) - a &lt;textarea> element not attached to the DOM which we can use to temper user-supplied text
 // + Tempering includes converting HTMLentity copy - such as changing `&epsilon;` to an &epsilon; letter
+// + We also strip the supplied text of all HTML markup
     P.convertTextEntityCharacters = function (item) {
 
         textEntityConverter.innerHTML = item;
-        return textEntityConverter.value;
+        return textEntityConverter.textContent;
     };
 
 

@@ -21,17 +21,12 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
-// import pathMix from '../mixin/path.js';
-// import mimicMix from '../mixin/mimic.js';
-// import hiddenElementsMix from '../mixin/hiddenDomElements.js';
-// import anchorMix from '../mixin/anchor.js';
-// import buttonMix from '../mixin/button.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _atan2, _hypot, _piHalf, _radian, _round, BLACK, ENTITY, GOOD_HOST, LEFT, LTR, PX0, ROUND, SPACE, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _assign, _atan2, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, ENTITY, GOOD_HOST, LEFT, LTR, NORMAL, PX0, ROUND, SPACE, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // import { ALPHABETIC, BOTTOM, CENTER, END, HANGING, HYPHEN, IDEOGRAPHIC, MIDDLE, START } from '../helper/shared-vars.js';
 
@@ -71,7 +66,6 @@ const EnhancedLabel = function (items = Ωempty) {
 
     this.lines = [];
     this.textUnits = [];
-    this.textUnitLengths = [];
 
     this.set(items);
 
@@ -144,6 +138,12 @@ const defaultAttributes = {
 // __allowSubUnitStyling__ - boolean.
 // + When `true`, forces space-hyphen-broken text to become single-character text units, with kerning (if required) handled manually. This will break heavily ligatured fonts such as Arabic and Devangari fonts in unexpected and unpleasant ways. Default: `false`
     allowSubUnitStyling: false,
+
+// __truncateString__ - string.
+    truncateString: '…',
+
+// __hyphenString__ - string.
+    hyphenString: '-',
 
 // The EnhancedLabel entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
@@ -411,6 +411,24 @@ S.text = function (item) {
     this.currentFontIsLoaded = false;
 };
 
+S.truncateString = function (item) {
+
+    if (item.substring) {
+
+        this.truncateString = this.convertTextEntityCharacters(item);
+        this.dirtyText = true;
+    }
+};
+
+S.hyphenString = function (item) {
+
+    if (item.substring) {
+
+        this.hyphenString = this.convertTextEntityCharacters(item);
+        this.dirtyText = true;
+    }
+};
+
 // #### Prototype functions
 
 // `getHost` - copied over from the position mixin.
@@ -453,37 +471,6 @@ P.cleanFont = function () {
 };
 
 
-// `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
-P.temperFont = function () {
-
-// console.log(this.name, 'temperFont (trigger: none - called by cleanFont');
-
-    const { group, defaultTextStyle } = this;
-
-    if (xta(group, defaultTextStyle)) {
-
-        const host = (group && group.getHost) ? group.getHost() : false;
-
-        let fontSizeCalculator = null,
-            fontSizeCalculatorValues = null;
-
-        if (host) {
-
-            const controller = host.getController();
-
-            if (controller) {
-
-                fontSizeCalculator = controller.fontSizeCalculator;
-                fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
-            }
-        }
-
-        if (!fontSizeCalculator) this.dirtyFont = true;
-        else this.updateTextStyle(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
-    }
-};
-
-
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
@@ -521,6 +508,9 @@ P.cleanLayout = function () {
     }
 };
 
+// TODO - this is all based on the defaultTextStyle.
+// + Will need to find a way to populate unit object style attribute before measuring text units
+// + Styling will be defined in the (raw) text line using HTML/CSS - do not repeat the mistakes of Phrase!
 P.cleanText = function () {
 
 // console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded}`);
@@ -591,9 +581,240 @@ P.cleanText = function () {
             textCharacters.forEach(c => textUnits.push(makeUnitObject(c, TEXT_TYPE_CHARS)));
         }
 
+        this.assessTextForStyle();
         this.measureTextUnits();
 
         this.dirtyTextLayout = true;
+    }
+};
+
+
+P.assessTextForStyle = function () {
+
+    // We don't process if we can't get a host and its calculator, obtained via the entity's group
+    const group = this.group;
+
+    if (group) {
+
+        const host = (group && group.getHost) ? group.getHost() : null;
+
+        let tester = null;
+
+        if (host) {
+
+            const controller = host.getController();
+
+            if (controller) {
+
+                tester = controller.labelStylesCalculator;
+            }
+        }
+
+        // No calculator! Reset dirty flag and return
+        if (!tester) {
+
+            this.dirtyText = true;
+            return null;
+        }
+
+       // Local helper function `processNode`
+       // + recursively step through the text's HTML nodes
+        const processNode = (node) => {
+
+            if (node.nodeType !== 3) {
+
+                for (const item of node.childNodes) {
+
+                    processNode(item);
+                }
+            }
+            else {
+
+                const unit = textUnits[getCharacterUnit(cursor)];
+                if (unit != null && unit.style == null) unit.style = makeTextStyle({});
+
+                cursor += node.textContent.length;
+
+                diffStyles(node, unit);
+            }
+
+        };
+
+        // Local helper function `getCharacterUnit`
+        // + called by `processNode`, maps char position to textUnit item
+        const getCharacterUnit = (pos) => {
+
+            let len = 0;
+
+            for (let i = 0, iz = textUnits.length; i < iz; i++) {
+
+                len += textUnits[i].chars.length;
+
+                if (pos < len) return i;
+            }
+            return null;
+        };
+
+        // Local helper function `diffStyles`
+        // + called by `processNode`, diffs required styles against existing ones
+        const diffStyles = (node, unit) => {
+
+            const nodeVals = _computed(node.parentNode);
+
+            const unitSet = {};
+            let oldVal, newVal;
+
+            oldVal = currentTextStyle.direction;
+            newVal = nodeVals.getPropertyValue('direction');
+            if (oldVal !== newVal)  unitSet.direction = newVal;
+
+            oldVal = currentTextStyle.fontFamily;
+            newVal = nodeVals.getPropertyValue('font-family');
+            if (oldVal !== newVal) unitSet.fontFamily = newVal;
+
+            oldVal = currentTextStyle.fontKerning;
+            newVal = nodeVals.getPropertyValue('font-kerning');
+            if (oldVal !== newVal) unitSet.fontKerning = newVal;
+
+            oldVal = currentTextStyle.fontSize;
+            newVal = nodeVals.getPropertyValue('font-size');
+            if (oldVal !== newVal) unitSet.fontSize = newVal;
+
+            oldVal = currentTextStyle.fontStretch;
+            newVal = nodeVals.getPropertyValue('font-stretch');
+            if (oldVal !== newVal) unitSet.fontStretch = newVal;
+
+            oldVal = currentTextStyle.fontStyle;
+            newVal = nodeVals.getPropertyValue('font-style');
+            if (oldVal !== newVal) unitSet.fontStyle = newVal;
+
+            oldVal = currentTextStyle.fontVariantCaps;
+            newVal = nodeVals.getPropertyValue('font-variant-caps');
+            if (oldVal !== newVal) unitSet.fontVariantCaps = newVal;
+
+            oldVal = currentTextStyle.fontWeight;
+            newVal = nodeVals.getPropertyValue('font-weight');
+            if (oldVal !== newVal) unitSet.fontWeight = newVal;
+
+            oldVal = currentTextStyle.get('letterSpacing');
+            newVal = nodeVals.getPropertyValue('letter-spacing');
+            if (newVal === NORMAL) newVal = PX0;
+            if (oldVal !== newVal) unitSet.letterSpacing = newVal;
+
+            oldVal = currentTextStyle.textRendering;
+            newVal = nodeVals.getPropertyValue('text-rendering');
+            if (oldVal !== newVal) unitSet.textRendering = newVal;
+
+            oldVal = currentTextStyle.get('wordSpacing');
+            newVal = nodeVals.getPropertyValue('word-spacing');
+            if (oldVal !== newVal) unitSet.wordSpacing = newVal;
+
+            oldVal = currentTextStyle.fillStyle;
+            newVal = nodeVals.getPropertyValue('--SC-fill-style');
+            if (oldVal !== newVal) unitSet.fillStyle = newVal;
+
+            oldVal = currentTextStyle.includeHighlight;
+            newVal = !!nodeVals.getPropertyValue('--SC-include-highlight');
+            if (oldVal !== newVal) unitSet.includeHighlight = newVal;
+
+            oldVal = currentTextStyle.highlightStyle;
+            newVal = nodeVals.getPropertyValue('--SC-highlight-style');
+            if (oldVal !== newVal) unitSet.highlightStyle = newVal;
+
+            oldVal = currentTextStyle.lineWidth;
+            newVal = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
+            if (oldVal !== newVal) unitSet.lineWidth = newVal;
+
+            oldVal = currentTextStyle.includeOverline;
+            newVal = !!nodeVals.getPropertyValue('--SC-include-overline');
+            if (oldVal !== newVal) unitSet.includeOverline = newVal;
+
+            oldVal = currentTextStyle.overlineOffset;
+            newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-offset'));
+            if (oldVal !== newVal) unitSet.overlineOffset = newVal;
+
+            oldVal = currentTextStyle.overlineStyle;
+            newVal = nodeVals.getPropertyValue('--SC-overline-style');
+            if (oldVal !== newVal) unitSet.overlineStyle = newVal;
+
+            oldVal = currentTextStyle.overlineWidth;
+            newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-width'));
+            if (oldVal !== newVal) unitSet.overlineWidth = newVal;
+
+            oldVal = currentTextStyle.includeUnderline;
+            newVal = !!nodeVals.getPropertyValue('--SC-include-underline');
+            if (oldVal !== newVal) unitSet.includeUnderline = newVal;
+
+            oldVal = currentTextStyle.underlineGap;
+            newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-gap'));
+            if (oldVal !== newVal) unitSet.underlineGap = newVal;
+
+            oldVal = currentTextStyle.underlineOffset;
+            newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-offset'));
+            if (oldVal !== newVal) unitSet.underlineOffset = newVal;
+
+            oldVal = currentTextStyle.underlineStyle;
+            newVal = nodeVals.getPropertyValue('--SC-underline-style');
+            if (oldVal !== newVal) unitSet.underlineStyle = newVal;
+
+            oldVal = currentTextStyle.underlineWidth;
+            newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-width'));
+            if (oldVal !== newVal) unitSet.underlineWidth = newVal;
+
+            unit.style.set(unitSet, true);
+            currentTextStyle.set(unitSet, true);
+        };
+
+        // Local helper function `setupTester`
+        // + called by main function, assigns default text styles to the tester div
+        const setupTester = () => {
+
+            tester.style.setProperty('direction', defaultTextStyle.direction);
+            tester.style.setProperty('font-family', defaultTextStyle.fontFamily);
+            tester.style.setProperty('font-kerning', defaultTextStyle.fontKerning);
+            tester.style.setProperty('font-size', defaultTextStyle.fontSize);
+            tester.style.setProperty('font-stretch', defaultTextStyle.fontStretch);
+            tester.style.setProperty('font-style', defaultTextStyle.fontStyle);
+            tester.style.setProperty('font-variant-caps', defaultTextStyle.fontVariantCaps);
+            tester.style.setProperty('font-weight', defaultTextStyle.fontWeight);
+            tester.style.setProperty('letter-spacing', defaultTextStyle.get('letterSpacing'));
+            tester.style.setProperty('text-rendering', defaultTextStyle.textRendering);
+            tester.style.setProperty('word-spacing', defaultTextStyle.get('wordSpacing'));
+
+            tester.style.setProperty('--SC-fill-style', defaultTextStyle.fillStyle);
+            tester.style.setProperty('--SC-highlight-style', defaultTextStyle.highlightStyle);
+            tester.style.setProperty('--SC-overline-offset', defaultTextStyle.overlineOffset);
+            tester.style.setProperty('--SC-overline-style', defaultTextStyle.overlineStyle);
+            tester.style.setProperty('--SC-overline-width', defaultTextStyle.overlineWidth);
+            tester.style.setProperty('--SC-stroke-width', defaultTextStyle.lineWidth);
+            tester.style.setProperty('--SC-stroke-style', defaultTextStyle.strokeStyle);
+            tester.style.setProperty('--SC-underline-gap', defaultTextStyle.underlineGap);
+            tester.style.setProperty('--SC-underline-offset', defaultTextStyle.underlineOffset);
+            tester.style.setProperty('--SC-underline-style', defaultTextStyle.underlineStyle);
+            tester.style.setProperty('--SC-underline-width', defaultTextStyle.underlineWidth);
+
+            tester.className = this.name;
+            tester.innerHTML = rawText;
+        };
+
+
+        // Start processing data here
+        const { rawText, defaultTextStyle, textUnits } = this;
+
+        const currentTextStyle = _create(defaultTextStyle);
+        _assign(currentTextStyle, defaultTextStyle);
+
+        let cursor = 0;
+
+        setupTester();
+        processNode(tester);
+    }
+
+    // No group! Reset dirty flag and return
+    else {
+
+        this.dirtyText = true;
+        return null;
     }
 };
 
@@ -619,6 +840,7 @@ P.layoutText = function () {
 P.positionTextUnits = function () {
 
 console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText');
+
 };
 
 
@@ -634,7 +856,6 @@ P.assignTextUnitsToLines = function () {
     const unitArrayLength = textUnits.length;
 
     let unitCursor = 0,
-        // lengthTaken, lengthRemaining,
         lengthRemaining,
         i, unit, len, type;
 
@@ -645,7 +866,6 @@ P.assignTextUnitsToLines = function () {
             unitData,
         } = line;
 
-        // lengthTaken = 0;
         lengthRemaining = lineLength;
 
         for (i = unitCursor; i < unitArrayLength; i++) {
@@ -656,18 +876,17 @@ P.assignTextUnitsToLines = function () {
 
             if (len < lengthRemaining) {
 
+                // first textunit cannot be a space
                 if (lengthRemaining === lineLength) {
 
                     if (type !== TEXT_TYPE_SPACE) {
 
-                        // lengthTaken += len;
                         lengthRemaining -= len;
                         unitData.push(unitCursor);
                     }
                 }
                 else {
 
-                    // lengthTaken += len;
                     lengthRemaining -= len;
                     unitData.push(unitCursor);
                 }
@@ -679,11 +898,42 @@ P.assignTextUnitsToLines = function () {
                 break;
             }
         }
-    })
-    // console.log(lines);
+
+        // Get rid of trailing spaces
+        if (unitData.length) {
+
+            unit = unitData[unitData.length - 1];
+            if (textUnits[unit].type === TEXT_TYPE_SPACE) unitData.pop();
+        }
+    });
+
+    // Truncation
+    if (unitArrayLength !== unitCursor) {
+
+        const unitData = lines[lines.length - 1].unitData,
+            mutableUnitData = [...unitData];
+
+        for (i = unitData.length - 1; i >= 0; i--) {
+
+            type = textUnits[unitData[i]]?.type;
+
+            if (type !== TEXT_TYPE_CHARS) mutableUnitData.pop();
+            else {
+
+                mutableUnitData.pop();
+                mutableUnitData.push(TEXT_TYPE_TRUNCATE);
+                unitData.length = 0;
+                unitData.push(...mutableUnitData);
+                break;
+            }
+        }
+    }
 };
 
 
+// TODO - this is all based on the defaultTextStyle.
+// + Will need to be amended when we take into account text styling
+// + Font metadata already includes data for space|hyphen|truncate chars (at 100px) so may not need to measure them directly?
 P.measureTextUnits = function () {
 
 // console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText');
@@ -1054,15 +1304,12 @@ P.getLinearAngle = function (sx, sy, ex, ey) {
 
 P.prepareStamp = function() {
 
-console.log(`
-
-${this.name} prepareStamp`);
+// console.log(`
+// ${this.name} prepareStamp`);
 
     if (this.dirtyHost) this.dirtyHost = false;
 
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
-
-// console.log('Trigger cleanPathObject because', `dirtyScale ${this.dirtyScale} dirtyDimensions ${this.dirtyDimensions} dirtyStart ${this.dirtyStart} dirtyOffset ${this.dirtyOffset} dirtyHandle ${this.dirtyHandle} dirtyRotation ${this.dirtyRotation} dirtyPathObject ${this.dirtyPathObject}`)
 
         this.dirtyScale = false;
         this.dirtyDimensions = false;

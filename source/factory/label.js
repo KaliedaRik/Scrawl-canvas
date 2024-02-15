@@ -6,7 +6,7 @@
 import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { doCreate, mergeOver, xta, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -94,35 +94,6 @@ P.cleanFont = function () {
         if (!this.dirtyFont) this.measureFont();
     }
     else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
-};
-
-
-// `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
-P.temperFont = function () {
-
-    const { group, defaultTextStyle } = this;
-
-    if (xta(group, defaultTextStyle)) {
-
-        const host = (group && group.getHost) ? group.getHost() : false;
-
-        let fontSizeCalculator = null,
-            fontSizeCalculatorValues = null;
-
-        if (host) {
-
-            const controller = host.getController();
-
-            if (controller) {
-
-                fontSizeCalculator = controller.fontSizeCalculator;
-                fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
-            }
-        }
-
-        if (!fontSizeCalculator) this.dirtyFont = true;
-        else this.updateTextStyle(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
-    }
 };
 
 

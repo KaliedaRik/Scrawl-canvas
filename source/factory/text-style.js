@@ -4,6 +4,39 @@
 // + __immutable__ - set once and used by EnhancedText entitys to amend the styling of their default TextStyle as the text string requires
 
 
+// Mapping TextStyle attributes to CSS computed attributes
+// + canvasFont           - local, not mapped
+// + direction            - map directly
+// + fillStyle            - map to variable `--SC-fill-style`
+// + fontFamily           - map directly
+// + fontKerning          - map directly
+// + fontSize             - map directly
+// + fontSizeValue        - local, not mapped
+// + fontStretch          - map directly
+// + fontString           - local, not mapped
+// + fontStyle            - map directly
+// + fontVariantCaps      - map directly
+// + fontWeight           - map directly
+// + highlightStyle       - map to variable `--SC-highlight-style`
+// + includeHighlight     - local, not mapped
+// + includeUnderline     - local, not mapped
+// + isDefaultTextStyle   - local, not mapped
+// + letterSpaceValue     - local, not mapped
+// + letterSpacing        - map directly
+// + lineDashOffset       - local, not mapped
+// + lineWidth            - map to variable `--SC-stroke-width`
+// + name                 - local, not mapped
+// + strokeStyle          - map to variable `--SC-stroke-style`
+// + textRendering        - map directly
+// + underlineGap         - map to variable `--SC-underline-gap`
+// + underlineOffset      - map to variable `--SC-underline-offset`
+// + underlineStyle       - map to variable `--SC-underline-style`
+// + underlineWidth       - map to variable `--SC-underline-width`
+// + unitRotation         - local, not mapped
+// + wordSpaceValue       - local, not mapped
+// + wordSpacing          - map directly
+
+
 
 // #### Imports
 import { constructors } from '../core/library.js';
@@ -115,6 +148,16 @@ const defaultAttributes = {
     underlineOffset: 0,
     underlineStyle: ZERO_STR,
     underlineWidth: 1,
+
+    // #### Unit overline styling
+    // Overlines go over the text, with no guttering
+    // + Supports gradients, patterns and CSS color strings
+    // + The overline thickness is adjustable via the `overlineWidth` attribute
+    // + The position of the overline can be determined by the  `overlineOffset` attribute, which takes a unit number where `0` is the top of the font height and `1` represents the bottom of the font height
+    includeOverline: false,
+    overlineOffset: 0,
+    overlineStyle: ZERO_STR,
+    overlineWidth: 1,
 
     // #### Unit highlight styling
     // Highlight goes behind the text and any underline, with no guttering provided. It is the full font height.
@@ -302,11 +345,13 @@ G.letterSpacing = function () {
 };
 D.letterSpacing = function (item) {
 
-    this.letterSpaceValue += (!item?.toFixed) ? parseFloat(item) : 0;
+    if (item === NORMAL) item = 0;
+    this.letterSpaceValue += (!item?.toFixed) ? parseFloat(item) : item;
 };
 S.letterSpacing = function (item) {
 
-    this.letterSpaceValue = (!item?.toFixed) ? parseFloat(item) : 0;
+    if (item === NORMAL) item = 0;
+    this.letterSpaceValue = (!item?.toFixed) ? parseFloat(item) : item;
 };
 
 G.wordSpaceValue = function () {
@@ -319,11 +364,13 @@ G.wordSpacing = function () {
 };
 D.wordSpacing = function (item) {
 
-    this.wordSpaceValue += (!item?.toFixed) ? parseFloat(item) : 0;
+    if (item === NORMAL) item = 0;
+    this.wordSpaceValue += (!item?.toFixed) ? parseFloat(item) : item;
 };
 S.wordSpacing = function (item) {
 
-    this.wordSpaceValue = (!item?.toFixed) ? parseFloat(item) : 0;
+    if (item === NORMAL) item = 0;
+    this.wordSpaceValue = (!item?.toFixed) ? parseFloat(item) : item;
 };
 
 S.textRendering = function (item) {

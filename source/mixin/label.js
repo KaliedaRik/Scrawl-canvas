@@ -12,9 +12,9 @@ import { currentGroup } from '../factory/canvas.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { addStrings, mergeOver, removeItem, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, mergeOver, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _ceil, _freeze, _isFinite, _keys, _parse, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, ITALIC, LEFT, NAME, NORMAL, OBLIQUE, ROUND, SMALL_CAPS, STATE_KEYS, TOP, UNDEF } from '../helper/shared-vars.js';
+import { _abs, _ceil, _freeze, _isFinite, _keys, _parse, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, ITALIC, LEFT, NAME, NORMAL, OBLIQUE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, TOP, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -46,6 +46,9 @@ export default function (P = Ωempty) {
             lineDash: defaultTextCopy.lineDash,
             lineDashOffset: defaultTextCopy.lineDashOffset,
             lineWidth: defaultTextCopy.lineWidth,
+            overlineOffset: defaultTextCopy.overlineOffset,
+            overlineStyle: defaultTextCopy.overlineStyle,
+            overlineWidth: defaultTextCopy.overlineWidth,
             strokeStyle: defaultTextCopy.strokeStyle,
             textRendering: defaultTextCopy.textRendering,
             underlineGap: defaultTextCopy.underlineGap,
@@ -96,7 +99,7 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     // Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
-    const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
+    const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
 
     const LABEL_DIRTY_FONT_KEYS = _freeze(['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing']);
 
@@ -349,6 +352,35 @@ export default function (P = Ωempty) {
     };
 
 
+    // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
+    P.temperFont = function () {
+
+        const { group, defaultTextStyle } = this;
+
+        if (xta(group, defaultTextStyle)) {
+
+            const host = (group && group.getHost) ? group.getHost() : false;
+
+            let fontSizeCalculator = null,
+                fontSizeCalculatorValues = null;
+
+            if (host) {
+
+                const controller = host.getController();
+
+                if (controller) {
+
+                    fontSizeCalculator = controller.fontSizeCalculator;
+                    fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
+                }
+            }
+
+            if (!fontSizeCalculator) this.dirtyFont = true;
+            else this.updateTextStyle(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
+        }
+    };
+
+
     // `measureFont` - generate basic font metadata
     P.measureFont = function () {
 
@@ -414,24 +446,33 @@ export default function (P = Ωempty) {
 
             engine.font = font;
 
-            const metrics = engine.measureText(' ');
-
-            releaseCell(mycell);
+            const metrics = engine.measureText(SPACE);
 
             const { actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxAscent, fontBoundingBoxDescent, alphabeticBaseline, hangingBaseline, ideographicBaseline} = metrics;
 
             let height = fontBoundingBoxAscent + fontBoundingBoxDescent;
             if (!_isFinite(height)) height = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
 
+            let { truncateString, hyphenString } = this;
+            if (truncateString == null) truncateString = '…';
+            if (hyphenString == null) hyphenString = '-';
+
+            const truncateLength = engine.measureText(truncateString).width;
+            const hyphenLength = engine.measureText(hyphenString).width;
+
             fontfamilymetadatanames.push(font);
             fontfamilymetadata[font] = {
                 height,
                 space: metrics.width,
+                hyphen: hyphenLength,
+                truncate: truncateLength,
                 alphabeticBaseline: -alphabeticBaseline,
                 hangingBaseline: -hangingBaseline,
                 ideographicBaseline: -ideographicBaseline,
                 verticalOffset: _isFinite(fontBoundingBoxAscent) ? fontBoundingBoxAscent : actualBoundingBoxAscent,
             }
+
+            releaseCell(mycell);
 
             return fontfamilymetadata[font];
         }

@@ -210,6 +210,20 @@ const Canvas = function (items = Ωempty) {
         this.fontHeightCalculator = fontHeightCalculator;
         canvasHold.appendChild(fontHeightCalculator);
 
+        const fontSizeCalculator = document.createElement(DIV);
+        fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
+        fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.fontSizeCalculator = fontSizeCalculator;
+        this.fontSizeCalculatorValues = _computed(fontSizeCalculator);
+        canvasHold.appendChild(fontSizeCalculator);
+
+        const labelStylesCalculator = document.createElement(DIV);
+        labelStylesCalculator.id = `${this.name}-styles`;
+        labelStylesCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.labelStylesCalculator = labelStylesCalculator;
+        this.labelStylesCalculatorValues = _computed(labelStylesCalculator);
+        canvasHold.appendChild(labelStylesCalculator);
+
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
         ariaLabel.setAttribute(ARIA_LIVE, POLITE);
@@ -224,15 +238,9 @@ const Canvas = function (items = Ωempty) {
         el.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
 
-        const fontSizeCalculator = document.createElement(DIV);
-        fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
-        fontSizeCalculator.style.display = NONE;
-        fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);
-        this.fontSizeCalculator = fontSizeCalculator;
-        this.fontSizeCalculatorValues = _computed(fontSizeCalculator);
-        el.appendChild(fontSizeCalculator);
-
         this.cleanAria();
+
+        this.computedStyles = _computed(el);
     }
 
     this.dirtyCells = true;
@@ -362,11 +370,6 @@ P.factoryKill = function () {
     this.base.kill();
 
     // DOM removals
-    this.navigation.remove();
-    this.textHold.remove();
-    this.ariaLabelElement.remove();
-    this.ariaDescriptionElement.remove();
-    this.fontSizeCalculator.remove();
     this.domElement.remove();
 };
 
@@ -520,6 +523,35 @@ G.baseName = function () {
 
 
 // #### Prototype functions
+
+// P.updateElementToInherit = function (el) {
+
+//     el.style.borderTopColor = INHERIT;
+//     el.style.borderTopWidth = INHERIT;
+//     el.style.direction = INHERIT;
+//     el.style.fontFamily = INHERIT;
+//     el.style.fontKerning = INHERIT;
+//     el.style.fontLanguageOverride = INHERIT;
+//     el.style.fontOpticalSizing = INHERIT;
+//     el.style.fontSize = INHERIT;
+//     el.style.fontSizeAdjust = INHERIT;
+//     el.style.fontStretch = INHERIT;
+//     el.style.fontStyle = INHERIT;
+//     el.style.fontVariant = INHERIT;
+//     el.style.fontVariantCaps = INHERIT;
+//     el.style.fontWeight = INHERIT;
+//     el.style.color = INHERIT;
+//     el.style.hyphenateCharacter = INHERIT;
+//     el.style.hyphens = INHERIT;
+//     el.style.letterSpacing = INHERIT;
+//     el.style.lineHeight = INHERIT;
+//     el.style.textAlign = INHERIT;
+//     el.style.textAlignLast = INHERIT;
+//     el.style.textDecorationColor = INHERIT;
+//     el.style.textDecorationThickness = INHERIT;
+//     el.style.textUnderlineOffset = INHERIT;
+//     el.style.wordSpacing = INHERIT;
+// };
 
 // `setAsCurrentCanvas` - invoke function (without arguments) to make this Canvas wrapper the __current canvas__ for future entity generation operations. This is additional to the `scrawl.setCurrentCanvas` function.
 P.setAsCurrentCanvas = function () {

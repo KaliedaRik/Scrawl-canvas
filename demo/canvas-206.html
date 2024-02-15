@@ -21,6 +21,128 @@
     canvas {
       margin: 0 auto;
     }
+
+/*
+CSS property direction                      maps to TextStyle direction
+CSS property font-family                    maps to TextStyle fontFamily
+CSS property font-kerning                   maps to TextStyle fontKerning
+CSS property font-size                      maps to TextStyle fontSize
+CSS property font-stretch                   maps to TextStyle fontStretch
+CSS property font-style                     maps to TextStyle fontStyle
+CSS property font-variant-caps              maps to TextStyle fontVariantCaps
+CSS property font-weight                    maps to TextStyle fontWeight
+CSS property letter-spacing                 maps to TextStyle letterSpacing
+CSS property text-rendering                 maps to TextStyle textRendering
+CSS property word-spacing                   maps to TextStyle wordSpacing
+
+CSS custom property --SC-fill-style         maps to TextStyle fillStyle
+CSS custom property --SC-stroke-style       maps to TextStyle strokeStyle
+CSS custom property --SC-stroke-width       maps to TextStyle lineWidth
+
+CSS custom property --SC-include-highlight  maps to TextStyle includeHighlight
+CSS custom property --SC-highlight-style    maps to TextStyle highlightStyle
+
+CSS custom property --SC-include-overline   maps to TextStyle includeOverline
+CSS custom property --SC-overline-offset    maps to TextStyle overlineOffset
+CSS custom property --SC-overline-style     maps to TextStyle overlineStyle
+CSS custom property --SC-overline-width     maps to TextStyle overlineWidth
+
+CSS custom property --SC-include-underline  maps to TextStyle includeUnderline
+CSS custom property --SC-underline-gap      maps to TextStyle underlineGap
+CSS custom property --SC-underline-offset   maps to TextStyle underlineOffset
+CSS custom property --SC-underline-style    maps to TextStyle underlineStyle
+CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
+
+*/
+
+    .demo-my-label, .demo-explanation-styles {
+
+      & b {
+        font-weight: bold;
+      }
+
+      & strong {
+        --SC-include-highlight: true;
+        --SC-highlight-style: honeydew;
+
+        font-weight: bold;
+        background-color: var(--SC-highlight-style);
+      }
+
+      & i {
+        font-style: italic;
+      }
+
+      & em {
+        --SC-fill-style: blue;
+
+        font-style: italic;
+        color: var(--SC-fill-style);
+      }
+      
+      & u {
+        --SC-include-underline: true;
+        text-decoration: underline;
+      }
+      
+      & s {
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.4;
+        --SC-overline-style: red;
+        --SC-overline-width: 5px;
+
+        text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
+      }
+
+      & .bold {
+        font-weight: bold;
+      }
+      
+      & .italic {
+        font-style: italic;
+      }
+      
+      & .underline {
+        --SC-include-underline: true;
+
+        text-decoration: underline;
+        font-variant: small-caps;
+      }
+
+      & .strike {
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.5;
+        --SC-overline-style: gray;
+        --SC-overline-width: 2px;
+
+        text-decoration-line: line-through;
+        text-decoration-color: var(--SC-overline-style);
+        text-decoration-thickness: var(--SC-overline-width);
+        color: gray;
+      }
+
+      & .red {
+        --SC-fill-style: red;
+
+        color: var(--SC-fill-style);
+      }
+
+      & .letter-spaced {
+        letter-spacing: 10px;
+      }
+
+      & .word-spaced {
+        word-spacing: 0.8rem;
+      }
+
+      & .make-bigger {
+        font-size: 120%;
+      }
+
+      & .make-monospace {
+        font-family: monospace;
+      }
+    }
   </style>
 </head>
 
@@ -31,6 +153,8 @@
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 206</h1>
   <h2>EnhancedLabel entity - multiline text</h2>
+
+  <p class="demo-explanation-styles"></p>
 
   <div class="controls">
 
