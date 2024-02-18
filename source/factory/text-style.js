@@ -45,7 +45,7 @@ import { addStrings, doCreate, mergeOver, λnull, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _isArray, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, LINE_DASH, LTR, NAME, NORMAL, SANS_SERIF, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, FONT_STRETCH_VALS, LINE_DASH, LTR, NAME, NORMAL, PC, SANS_SERIF, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
 
 // #### Wheel constructor
 const TextStyle = function (items = Ωempty) {
@@ -301,7 +301,13 @@ S.fontString = function (item) {
 
 S.fontSize = function (item) {
 
-    this.fontSize = (item.toFixed) ? `${item}px` : item.toLowerCase();
+    const val = (!item?.toFixed) ? parseFloat(item) : item;
+
+    if (_isFinite(val)) {
+
+        this.fontSizeValue = val;
+        this.fontSize = `${val}px`;
+    }
 };
 
 S.fontStyle = function (item) {
@@ -316,8 +322,37 @@ S.fontVariantCaps = function (item) {
 
 S.fontStretch = function (item) {
 
-    if (item?.substring) this.fontStretch = item.toLowerCase();
+    if (item?.substring) {
+
+        this.fontStretch = this.fontStretchHelper(item);
+    }
 };
+P.fontStretchHelper = function (item) {
+
+    if (!item.substring) return NORMAL;
+
+    item = item.toLowerCase();
+
+    if (FONT_STRETCH_VALS.includes(item)) return item;
+
+    if (item.includes(PC)) {
+
+        const val = parseFloat(item);
+
+        if (_isFinite(val)) {
+            if (val <= 50) return FONT_STRETCH_VALS[0];
+            else if (val <= 62.5) return FONT_STRETCH_VALS[1];
+            else if (val <= 75) return FONT_STRETCH_VALS[2];
+            else if (val <= 87.5) return FONT_STRETCH_VALS[3];
+            else if (val >= 200) return FONT_STRETCH_VALS[7];
+            else if (val >= 150) return FONT_STRETCH_VALS[6];
+            else if (val >= 125) return FONT_STRETCH_VALS[5];
+            else if (val >= 112.5) return FONT_STRETCH_VALS[4];
+        }
+    }
+    return NORMAL;
+
+}
 
 S.fontWeight = function (item) {
 
@@ -346,12 +381,26 @@ G.letterSpacing = function () {
 D.letterSpacing = function (item) {
 
     if (item === NORMAL) item = 0;
-    this.letterSpaceValue += (!item?.toFixed) ? parseFloat(item) : item;
+
+    const val = (!item?.toFixed) ? parseFloat(item) : item;
+
+    if (_isFinite(val)) {
+
+        this.letterSpaceValue += val;
+        this.letterSpacing = `${this.letterSpaceValue}px`;
+    }
 };
 S.letterSpacing = function (item) {
 
     if (item === NORMAL) item = 0;
-    this.letterSpaceValue = (!item?.toFixed) ? parseFloat(item) : item;
+
+    const val = (!item?.toFixed) ? parseFloat(item) : item;
+
+    if (_isFinite(val)) {
+
+        this.letterSpaceValue = val;
+        this.letterSpacing = `${val}px`;
+    }
 };
 
 G.wordSpaceValue = function () {
@@ -364,13 +413,23 @@ G.wordSpacing = function () {
 };
 D.wordSpacing = function (item) {
 
-    if (item === NORMAL) item = 0;
-    this.wordSpaceValue += (!item?.toFixed) ? parseFloat(item) : item;
+    const val = (!item?.toFixed) ? parseFloat(item) : item;
+
+    if (_isFinite(val)) {
+
+        this.wordSpaceValue += val;
+        this.wordSpacing = `${this.wordSpaceValue}px`;
+    }
 };
 S.wordSpacing = function (item) {
 
-    if (item === NORMAL) item = 0;
-    this.wordSpaceValue = (!item?.toFixed) ? parseFloat(item) : item;
+    const val = (!item?.toFixed) ? parseFloat(item) : item;
+
+    if (_isFinite(val)) {
+
+        this.wordSpaceValue = val;
+        this.wordSpacing = `${val}px`;
+    }
 };
 
 S.textRendering = function (item) {

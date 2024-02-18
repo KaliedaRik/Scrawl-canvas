@@ -15,11 +15,24 @@
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
-    .no-overflow {
+    .demo-explanation-styles {
+      width: calc(600px * 0.6);
+      height: calc(400px * 0.8);
+      padding: 0;
+      hyphens: none;
       overflow: hidden;
     }
-    canvas {
-      margin: 0 auto;
+
+    .comparator {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
+      align-items: center;
+    }
+
+    #preload-fonts {
+      height: 0;
+      overflow: hidden;
     }
 
 /*
@@ -55,7 +68,7 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
 */
 
-    .demo-my-label, .demo-explanation-styles {
+    .demo-my-label, .demo-explanation-styles, #preload-fonts {
 
       & b {
         font-weight: bold;
@@ -110,15 +123,17 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
       }
 
       & .strike {
+        --SC-fill-style: gray;
+
         --SC-include-overline: true;
         --SC-overline-offset: 0.5;
         --SC-overline-style: gray;
         --SC-overline-width: 2px;
 
+        color: var(--SC-fill-style);
         text-decoration-line: line-through;
         text-decoration-color: var(--SC-overline-style);
         text-decoration-thickness: var(--SC-overline-width);
-        color: gray;
       }
 
       & .red {
@@ -154,39 +169,20 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 206</h1>
   <h2>EnhancedLabel entity - multiline text</h2>
 
-  <p class="demo-explanation-styles"></p>
-
   <div class="controls">
 
     <div class="lavender label">Select font</div>
     <div class="lavender">
       <select class="controlItem" id="font">
         <option value="serif">serif</option>
-        <option value="serif-normal">serif (lh: normal)</option>
-        <option value="serif-ratio">serif (lh: ratio)</option>
-        <option value="serif-length">serif (lh: length)</option>
-        <option value="serif-percent">serif (lh: percent)</option>
-        <option value="serif-px">serif (lh: px)</option>
         <option value="sans-serif">sans-serif</option>
         <option value="monospace">monospace</option>
         <option value="cursive">cursive</option>
         <option value="fantasy">fantasy</option>
         <option value="garamond">Garamond</option>
-        <option value="garamond-bold">Garamond (bold)</option>
-        <option value="garamond-italic">Garamond (italic)</option>
-        <option value="garamond-bolditalic">Garamond (bold-italic)</option>
         <option value="roboto">Roboto</option>
-        <option value="roboto-bold">Roboto (bold)</option>
-        <option value="roboto-italic">Roboto (italic)</option>
-        <option value="roboto-bolditalic">Roboto (bold-italic)</option>
         <option value="roboto-serif">Roboto Serif</option>
-        <option value="roboto-serif-bold">Roboto Serif (bold)</option>
-        <option value="roboto-serif-italic">Roboto Serif (italic)</option>
-        <option value="roboto-serif-bolditalic">Roboto Serif (bold-italic)</option>
         <option value="roboto-mono">Roboto Mono</option>
-        <option value="roboto-mono-bold">Roboto Mono (bold)</option>
-        <option value="roboto-mono-italic">Roboto Mono (italic)</option>
-        <option value="roboto-mono-bolditalic">Roboto Mono (bold-italic)</option>
         <option value="noto-arabic-sans">Noto Arabic Sans</option>
         <option value="noto-arabic-naskh">Noto Arabic Naskh</option>
         <option value="noto-urdu-nastaliq">Noto Urdu Nastaliq</option>
@@ -207,9 +203,13 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
         <option value="noto-thai-serif">Noto Thai Serif</option>
         <option value="noto-tirhuta-sans">Noto Tirhuta Sans</option>
         <option value="bungee">Bungee</option>
-        <option value="bungee-spice">Bungee Spice</option>
         <option value="carter-one">Carter One</option>
         <option value="mountains-of-christmas">Mountains Of Christmas</option>
+        <option value="serif-normal">serif (lh: normal)</option>
+        <option value="serif-ratio">serif (lh: ratio)</option>
+        <option value="serif-length">serif (lh: length)</option>
+        <option value="serif-percent">serif (lh: percent)</option>
+        <option value="serif-px">serif (lh: px)</option>
       </select>
     </div>
 
@@ -227,11 +227,13 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
       <input class="controlItem" id="layoutEngineLineOffset" type="range" value="0" min="-20" max="20" step="1" />
     </div>
 
-    <div class="lavender label">Vertical text</div>
+    <div class="lavender label">Justify line</div>
     <div class="lavender">
-      <select class="controlItem" id="layoutEngineVerticalText">
-        <option value="0">False</option>
-        <option value="1">True</option>
+      <select class="controlItem" id="justifyLine">
+        <option value="center">center</option>
+        <option value="start">start</option>
+        <option value="end">end</option>
+        <option value="full">full</option>
       </select>
     </div>
 
@@ -242,13 +244,15 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-    data-base-background-color="aliceblue"
-  ></canvas>
+  <div class="comparator">
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="400"
+      data-scrawl-canvas
+    ></canvas>
+    <p class="demo-explanation-styles"></p>
+  </div>
 
 
   <div class="controls">
@@ -315,6 +319,38 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
     <p><b>Touch test:</b> not required.</p>
 
     <p><a href="../docs/demo/canvas-206.html">Annotated code</a></p>
+
+    <p><br /><strong>A special note about fonts</strong></p>
+    <p>Because fonts load asynchronously, and SC EnhancedLabel entitys currently have a (near-unsolvable) bug where they will measure a font before the font family's various iterations (if specified in CSS <code style="display: inline">@font-family</code> definitions) have downloaded - they only wait for their default font to download, not any additional fonts included (via CSS) in their text string - it makes sense for us to trigger font downloads as soon as possible. And the simplest way to do that is to include text using those fonts in a <code style="display: inline">"hidden"</code> (actually an <code style="display: inline">aria-hidden="true" style="height: 0; overflow: hidden"</code>) element in the web page, ahead of the <code style="display: inline">&lt;script></code> tag that triggers the SC canvas build.</p>
+    <p>There are, of course, more professional ways for a front-end engineer to manage efficient and timely font downloads ... but this is just a demo and, well, needs must!</p>
+    <div id="preload-fonts" aria-hidden="true">
+      <div style='font-family: "Garamond"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Roboto"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Roboto Mono"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Arabic Naskh"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Urdu Nastaliq"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Chinese Simple Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Devangari Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Devangari Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Hebrew Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Hebrew Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Japanese Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Japanese Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Korean Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Korean Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Mongolian Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Tai Le Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Tai Tham Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Thai Looped Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Thai Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Tirhuta Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Bungee"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Carter One"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Mountains Of Christmas"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    </div>
   </div>
 
   <script src="canvas-206.js" type="module"></script>

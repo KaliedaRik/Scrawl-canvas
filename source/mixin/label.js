@@ -6,10 +6,6 @@
 // #### Imports
 import { fontfamilymetadata, fontfamilymetadatanames, textstyle, textstylenames } from '../core/library.js';
 
-import { makeState } from '../untracked-factory/state.js';
-import { makeTextStyle } from '../factory/text-style.js';
-import { currentGroup } from '../factory/canvas.js';
-
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { addStrings, mergeOver, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
@@ -99,11 +95,11 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     // Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
-    const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
+    const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
 
     const LABEL_DIRTY_FONT_KEYS = _freeze(['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing']);
 
-    const LABEL_UPDATE_PARTS_KEYS = _freeze(['fontSize', 'fontStretch', 'fontStyle', 'fontVariantCaps', 'fontWeight']);
+    const LABEL_UPDATE_PARTS_KEYS = _freeze(['fontFamily', 'fontSize', 'fontStretch', 'fontStyle', 'fontVariantCaps', 'fontWeight']);
 
     const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
 
@@ -299,50 +295,6 @@ export default function (P = Ωempty) {
 
 // #### Prototype functions
 
-    // `entityInit` - overwrites the mixin/entity.js function
-    P.entityInit = function (items = Ωempty) {
-
-        this.modifyConstructorInputForAnchorButton(items);
-
-        this.makeName(items.name);
-        this.register();
-        this.initializePositions();
-
-        this.state = makeState(Ωempty);
-
-        this.defaultTextStyle = makeTextStyle({
-            name: `${this.name}_default-textstyle`,
-            isDefaultTextStyle: true,
-        });
-
-        this.set(this.defs);
-
-        if (!items.group) items.group = currentGroup;
-
-        this.onEnter = λnull;
-        this.onLeave = λnull;
-        this.onDown = λnull;
-        this.onUp = λnull;
-
-        this.currentFontIsLoaded = false;
-        this.updateUsingFontParts = false;
-        this.updateUsingFontString = false;
-        this.letterSpaceValue = 0;
-        this.wordSpaceValue = 0;
-
-        this.delta = {};
-
-        this.set(items);
-
-        this.midInitActions(items);
-
-        if (this.purge) this.purgeArtefact(this.purge);
-
-        this.dirtyFont = true;
-        this.currentFontIsLoaded = false;
-    };
-
-
     // `recalculateFont` - force the entity to recalculate its dimensions without having to set anything.
     // + Can also be invoked via the entity's Group object's `recalculateFonts` function
     // + Can be invoked globally via the `scrawl.recalculateFonts` function
@@ -376,7 +328,10 @@ export default function (P = Ωempty) {
             }
 
             if (!fontSizeCalculator) this.dirtyFont = true;
-            else this.updateTextStyle(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
+            else {
+
+                this.updateTextStyle(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
+            }
         }
     };
 
@@ -517,37 +472,17 @@ export default function (P = Ωempty) {
         else if (currentScale != 1) calculator.style.fontSize = fontSize;
 
         // Extract and manipulate data for font weight, variant and style
-        let elWeight = results.fontWeight,
-            elVariant = results.fontVariantCaps,
-            elStretch = results.fontStretch,
-            elStyle = results.fontStyle;
+        const elWeight = results.fontWeight,
+            elStretch = textStyle.fontStretchHelper(results.fontStretch);
 
-        // Update elWeight, if required
-        if (elWeight == 400) elWeight = NORMAL;
+        let elVariant = results.fontVariantCaps,
+            elStyle = results.fontStyle;
 
         // Update elVariant, if required
         elVariant = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
 
         // Update elStyle, if required
         elStyle = (elStyle == ITALIC || elStyle.includes(OBLIQUE)) ? elStyle : NORMAL;
-
-        // elStretch will always be a percent string, which canvas engines refuse to process
-        // + The "magic numbers" are as defined in the relevant specification
-        const stretchVal = parseFloat(elStretch);
-
-        if (!_isFinite(stretchVal)) elStretch = NORMAL;
-        else {
-
-            if (stretchVal <= 50) elStretch = 'ultra-condensed';
-            else if (stretchVal <= 62.5) elStretch = 'extra-condensed';
-            else if (stretchVal <= 75) elStretch = 'condensed';
-            else if (stretchVal <= 87.5) elStretch = 'semi-condensed';
-            else if (stretchVal >= 200) elStretch = 'ultra-expanded';
-            else if (stretchVal >= 150) elStretch = 'extra-expanded';
-            else if (stretchVal >= 125) elStretch = 'expanded';
-            else if (stretchVal >= 112.5) elStretch = 'semi-expanded';
-            else elStretch = NORMAL;
-        }
 
         // Extract data for font size
         const elSizeString = results.fontSize,
@@ -562,32 +497,50 @@ export default function (P = Ωempty) {
             this.lineSpacing = (_isFinite(lh)) ? lh / elSizeValue : this.defs.lineSpacing;
         }
 
-        // Build the internal `canvasFont` string
-        let f = '';
-        if (elStyle == ITALIC || elStyle.includes(OBLIQUE)) f += `${elStyle} `;
-        if (elVariant == SMALL_CAPS) f += `${elVariant} `;
-        if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
-        f += `${elSizeValue * currentScale}px ${elFamily}`
-        textStyle.canvasFont = f;
-
-        // Rebuild the `fontString` string - attempting to minimise user input error
-        f = '';
-        if (elStretch != null && elStretch && elStretch != NORMAL) f += `${elStretch} `;
-        if (elStyle != null && elStyle && elStyle != NORMAL) f += `${elStyle} `;
-        if (elVariant != null && elVariant && elVariant != NORMAL) f += `${elVariant} `;
-        if (elWeight != null && elWeight && elWeight != NORMAL && elWeight != 400) f += `${elWeight} `;
-
-        if (fontSize) f += `${fontSize} `;
-        else f += `${elSizeValue}px `
-
-        f += `${elFamily}`;
-        textStyle.fontString = f;
-
         // Update `textStyle` attributes
         textStyle.fontStretch = elStretch;
         textStyle.fontStyle = elStyle;
         textStyle.fontVariantCaps = elVariant;
         textStyle.fontWeight = elWeight;
         textStyle.fontFamily = elFamily;
+
+        // Rebuild font strings
+        this.updateCanvasFont(textStyle);
+        this.updateFontString(textStyle);
+    };
+
+    P.updateCanvasFont = function (style) {
+
+        const scale = this.currentScale
+
+        const { fontStyle, fontVariantCaps, fontWeight, fontSizeValue, fontFamily } = style
+
+        let f = '';
+
+        if (fontStyle == ITALIC || fontStyle.includes(OBLIQUE)) f += `${fontStyle} `;
+        if (fontVariantCaps == SMALL_CAPS) f += `${fontVariantCaps} `;
+        if (fontWeight != null && fontWeight && fontWeight !== NORMAL && fontWeight !== '400') f += `${fontWeight} `;
+        f += `${fontSizeValue * scale}px ${fontFamily}`
+
+        style.canvasFont = f;
+    };
+
+    P.updateFontString = function (style) {
+
+        const { fontStretch, fontStyle, fontVariantCaps, fontWeight, fontSize, fontSizeValue, fontFamily } = style
+
+        let f = '';
+
+        if (fontStretch != null && fontStretch && fontStretch !== NORMAL) f += `${fontStretch} `;
+        if (fontStyle != null && fontStyle && fontStyle !== NORMAL) f += `${fontStyle} `;
+        if (fontVariantCaps != null && fontVariantCaps && fontVariantCaps !== NORMAL) f += `${fontVariantCaps} `;
+        if (fontWeight != null && fontWeight && fontWeight !== NORMAL && fontWeight !== '400') f += `${fontWeight} `;
+
+        if (fontSize) f += `${fontSize} `;
+        else f += `${fontSizeValue}px `
+
+        f += `${fontFamily}`;
+
+        style.fontString = f;
     };
 }

@@ -19,7 +19,7 @@ const name = (n) => `${namespace}-${n}`;
 
 const displayText = document.querySelector('.demo-explanation-styles');
 
-const westernText = '<span class="underline">Lorem</span> ipsum <b>dolor sit</b> amet, con&shy;sectetur 😀 adi&shy;piscing &eacute;lit, sed <s>do eius-mod</s> <u>tempor in&shy;cididunt</u> ut labore et dolore magna aliqua. Ut enim ad <span class="bold">minim veniam</span>, quis <span class="letter-spaced">nostrud</span> exercit-ation <span class="strike">ullamco laboris</span> nisi ut aliquip ex ea "<span class="make-monospace">commodo</span>" consequat. Duis (aute <em>irure d&ouml;lor</em>) in reprehenderit 🤖&icirc;n <i>voluptate</i> velit &copy;2024 <i>esse &lt;cillum&gt; <b>dolore</b> eu fug🎻iat nulla</i> pariatur. <span class="red">Excepteur sint</span> occaecat &iexcl;cupidatat! <strong>non proident</strong>, <span class="word-spaced">sunt in culpa qui</span> offici&thorn;a deserunt <span class="make-bigger">mollit anim</span> id est laborum.';
+const westernText = '<span class="underline">Lorem</span> ipsum <b>dolor sit</b> amet, con&shy;sectetur 😀 adi&shy;piscing &eacute;lit, sed <s>do eius-mod</s> <u>tempor in&shy;cididunt</u> ut labore et dolore magna aliqua. Ut enim ad <span class="bold">minim veniam,</span> quis <span class="letter-spaced">nostrud</span> exercit-ation <span class="strike">ullamco laboris</span> nisi ut aliquip ex ea <span class="make-monospace">"commodo"</span> consequat. Duis <em>(aute irure d&ouml;lor)</em> in reprehenderit 🤖&icirc;n <i>voluptate</i> velit &copy;2024 <i>esse &lt;cillum&gt; <b>dolore</b> eu fug🎻iat nulla</i> pariatur. <span class="red">Excepteur sint</span> occaecat &iexcl;cupidatat! <strong>non proident,</strong> <span class="word-spaced">sunt in culpa qui</span> offici&thorn;a deserunt <span class="make-bigger">mollit anim</span> id est laborum.';
 
 
 const blockEngine = scrawl.makeBlock({
@@ -28,7 +28,7 @@ const blockEngine = scrawl.makeBlock({
     start: ['center', 'center'],
     handle: ['center', 'center'],
     dimensions: ['60%', '80%'],
-    fillStyle: 'beige',
+    fillStyle: 'transparent',
 });
 
 const wheelEngine = scrawl.makeWheel({
@@ -37,7 +37,7 @@ const wheelEngine = scrawl.makeWheel({
     width: '60%',
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    fillStyle: 'beige',
+    fillStyle: 'transparent',
     visibility: false,
 });
 
@@ -49,7 +49,7 @@ const crescentEngine = scrawl.makeCrescent({
     outerRadius: 200,
     innerRadius: 150,
     displacement: 150,
-    fillStyle: 'beige',
+    fillStyle: 'transparent',
     visibility: false,
 });
 
@@ -101,6 +101,11 @@ scrawl.makeRender({
 // #### User interaction
 const updateDisplayText = () => {
 
+    const dims = blockEngine.get('dimensions');
+
+    let justify = mylabel.get('justifyLine');
+    if (justify === 'full') justify = 'justify';
+
     setTimeout(() => {
 
         displayText.innerHTML = mylabel.get('rawText');
@@ -110,6 +115,13 @@ const updateDisplayText = () => {
         displayText.style.font = mylabel.get('fontString');
 // @ts-expect-error
         displayText.style.lineHeight = mylabel.get('lineSpacing');
+// @ts-expect-error
+        if (dims[0]) displayText.style.width = `${dims[0]}px`;
+// @ts-expect-error
+        if (dims[1]) displayText.style.height = `${dims[1]}px`;
+// @ts-expect-error
+        displayText.style.textAlign = justify;
+
     }, 50);
 };
 
@@ -129,9 +141,11 @@ scrawl.makeUpdater({
     updates: {
 
         layoutEngineLineOffset: ['layoutEngineLineOffset', 'float'],
-        layoutEngineVerticalText: ['layoutEngineVerticalText', 'boolean'],
         alignment: ['alignment', 'float'],
+        justifyLine: ['justifyLine', 'raw'],
     },
+
+    callback: updateDisplayText,
 });
 
 scrawl.makeUpdater({
@@ -157,6 +171,8 @@ scrawl.makeUpdater({
         scale: ['scale', 'float'],
         roll: ['roll', 'float'],
     },
+
+    callback: updateDisplayText,
 });
 
 
@@ -313,69 +329,9 @@ const updateFont = (event) => {
                 });
                 break;
 
-            case 'garamond-bold' :
-                mylabel.set({
-                    fontString: 'bold 16px Garamond',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'garamond-italic' :
-                mylabel.set({
-                    fontString: 'italic 16px Garamond',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'garamond-bolditalic' :
-                mylabel.set({
-                    fontString: 'bold italic 16px Garamond',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
             case 'roboto' :
                 mylabel.set({
                     fontString: '16px "Roboto Sans"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-bold' :
-                mylabel.set({
-                    fontString: 'bold 16px "Roboto Sans"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-italic' :
-                mylabel.set({
-                    fontString: 'italic 16px "Roboto Sans"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-bolditalic' :
-                mylabel.set({
-                    fontString: 'bold italic 16px "Roboto Sans"',
                     text: westernText,
                     direction: 'ltr',
                     breakTextOnSpaces: true,
@@ -393,69 +349,9 @@ const updateFont = (event) => {
                 });
                 break;
 
-            case 'roboto-serif-bold' :
-                mylabel.set({
-                    fontString: 'bold 16px "Roboto Serif"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-serif-italic' :
-                mylabel.set({
-                    fontString: 'italic 16px "Roboto Serif"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-serif-bolditalic' :
-                mylabel.set({
-                    fontString: 'bold italic 16px "Roboto Serif"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
             case 'roboto-mono' :
                 mylabel.set({
                     fontString: '16px "Roboto Mono"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-mono-bold' :
-                mylabel.set({
-                    fontString: 'bold 16px "Roboto Mono"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-mono-italic' :
-                mylabel.set({
-                    fontString: 'italic 16px "Roboto Mono"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
-            case 'roboto-mono-bolditalic' :
-                mylabel.set({
-                    fontString: 'bold italic 16px "Roboto Mono"',
                     text: westernText,
                     direction: 'ltr',
                     breakTextOnSpaces: true,
@@ -663,16 +559,6 @@ const updateFont = (event) => {
                 });
                 break;
 
-            case 'bungee-spice' :
-                mylabel.set({
-                    fontString: '16px "Bungee Spice"',
-                    text: westernText,
-                    direction: 'ltr',
-                    breakTextOnSpaces: true,
-                    lineSpacing: 1.5,
-                });
-                break;
-
             case 'carter-one' :
                 mylabel.set({
                     fontString: '16px "Carter One"',
@@ -738,7 +624,7 @@ document.querySelector('#roll').value = 0;
 // @ts-expect-error
 document.querySelector('#layoutEngineLineOffset').value = 0;
 // @ts-expect-error
-document.querySelector('#layoutEngineVerticalText').options.selectedIndex = 0;
+document.querySelector('#justifyLine').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#alignment').value = 0;
 

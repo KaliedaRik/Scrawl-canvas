@@ -6,7 +6,11 @@
 import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
+
+import { makeState } from '../untracked-factory/state.js';
+import { makeTextStyle } from '../factory/text-style.js';
+import { currentGroup } from '../factory/canvas.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -82,6 +86,50 @@ S.text = function (item) {
 
 
 // #### Prototype functions
+
+    // `entityInit` - overwrites the mixin/entity.js function
+    P.entityInit = function (items = Ωempty) {
+
+        this.modifyConstructorInputForAnchorButton(items);
+
+        this.makeName(items.name);
+        this.register();
+        this.initializePositions();
+
+        this.state = makeState(Ωempty);
+
+        this.defaultTextStyle = makeTextStyle({
+            name: `${this.name}_default-textstyle`,
+            isDefaultTextStyle: true,
+        });
+
+        this.set(this.defs);
+
+        if (!items.group) items.group = currentGroup;
+
+        this.onEnter = λnull;
+        this.onLeave = λnull;
+        this.onDown = λnull;
+        this.onUp = λnull;
+
+        this.currentFontIsLoaded = false;
+        this.updateUsingFontParts = false;
+        this.updateUsingFontString = false;
+        this.letterSpaceValue = 0;
+        this.wordSpaceValue = 0;
+
+        this.delta = {};
+
+        this.set(items);
+
+        this.midInitActions(items);
+
+        if (this.purge) this.purgeArtefact(this.purge);
+
+        this.dirtyFont = true;
+        this.currentFontIsLoaded = false;
+    };
+
 
 P.cleanFont = function () {
 

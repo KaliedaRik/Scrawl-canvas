@@ -26,7 +26,7 @@ import labelMix from '../mixin/label.js';
 
 import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _assign, _atan2, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, END, ENTITY, FULL, GOOD_HOST, LEFT, LTR, NORMAL, PX0, ROUND, SPACE, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _assign, _atan2, _ceil, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, FULL, GOOD_HOST, LEFT, LTR, NONE, NORMAL, PX0, ROUND, ROW, ROW_REVERSE, SPACE, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // import { ALPHABETIC, BOTTOM, CENTER, END, HANGING, HYPHEN, IDEOGRAPHIC, MIDDLE, START } from '../helper/shared-vars.js';
 
@@ -121,8 +121,12 @@ const defaultAttributes = {
 // __layoutEngineLineOffset__ - how far away from the origin point the initial line should be.
     layoutEngineLineOffset: 0,
 
-// __layoutEngineVerticalText__ - orientation of lines.
-    layoutEngineVerticalText: false,
+// __textUnitDirection__ - orientation of text units within the layout engine space. Values follows the CSS flexbox _flex-direction_ attribute's example:
+// + `row` - left to right where `direction = 'ltr'`; right to left where `direction = 'rtl'`
+// + `row-reverse` - right to left where `direction = 'ltr'`; left to right where `direction = 'rtl'`
+// + `column` - top to bottom where `direction = 'ltr'`; bottom to top where `direction = 'rtl'`
+// + `column-reverse` - bottom to top where `direction = 'ltr'`; top to bottom where `direction = 'rtl'`
+    textUnitDirection: ROW,
 
 // __breakTextOnSpaces__ - boolean.
 // + When `true` (default), the textUnits will consist of words which are stamped as a unit (which preserves ligatures and kerning within the word).
@@ -137,7 +141,7 @@ const defaultAttributes = {
 
 // __justifyLine__ - string enum. Allowed values are 'start', 'end', 'center' (default), 'full'
 // + Determines the positioning of text units along the line. Has nothing to do with the `direction` attribute.
-    justifyLine: 'center',
+    justifyLine: CENTER,
 
 // __allowSubUnitStyling__ - boolean.
 // + When `true`, forces space-hyphen-broken text to become single-character text units, with kerning (if required) handled manually. This will break heavily ligatured fonts (such as Arabic and Devangari fonts) in unexpected and unpleasant ways. Default: `false`
@@ -349,10 +353,13 @@ S.layoutEngine = function (item) {
     }
 };
 
-S.layoutEngineVerticalText = function (item) {
+S.textUnitDirection = function (item) {
 
-    this.layoutEngineVerticalText = !!item;
-    this.dirtyLayout = true;
+    if (TEXT_UNIT_DIRECTION_VALUES.includes(item)) {
+
+        this.textUnitDirection = item;
+        this.dirtyLayout = true;
+    }
 };
 
 D.layoutEngineLineOffset = function (item) {
@@ -413,6 +420,9 @@ S.text = function (item) {
     this.dirtyText = true;
     this.dirtyFont = true;
     this.currentFontIsLoaded = false;
+
+    const tester = this.getTester();
+    if (tester) tester.innerHTML = this.rawText;
 };
 
 S.truncateString = function (item) {
@@ -430,6 +440,15 @@ S.hyphenString = function (item) {
 
         this.hyphenString = this.convertTextEntityCharacters(item);
         this.dirtyText = true;
+    }
+};
+
+S.justifyLine = function (item) {
+
+    if (item.substring) {
+
+        this.justifyLine = item;
+        this.dirtyLayout = true;
     }
 };
 
@@ -456,6 +475,44 @@ P.getHost = function () {
 // Invalidate mid-init functionality
 P.midInitActions = λnull;
 
+
+P.getTester = function () {
+
+    const group = this.group;
+
+    if (group) {
+
+        const host = (group && group.getHost) ? group.getHost() : null;
+
+        if (host) {
+
+            const controller = host.getController();
+
+            if (controller) return controller.labelStylesCalculator;
+        }
+    }
+    return null;
+};
+
+
+P.makeWorkingTextStyle = function (template, name) {
+
+    const workStyle = _create(template);
+    _assign(workStyle, template);
+
+    workStyle.name = name;
+    workStyle.isDefaultTextStyle = false;
+
+    return workStyle;
+};
+
+P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
+
+    worker.set(style, true);
+    this.updateCanvasFont(worker);
+    state.set(worker);
+    cell.setEngine(this);
+};
 
 // #### Clean functions
 
@@ -484,7 +541,6 @@ P.cleanPathObject = function () {
 
     if (this.dirtyPathObject && layout?.pathObject) {
 
-// console.log(this.name, `cleanPathObject RUNNING!`)
         this.dirtyPathObject = false;
 
         this.pathObject = new Path2D(layout.pathObject);
@@ -512,9 +568,6 @@ P.cleanLayout = function () {
     }
 };
 
-// TODO - this is all based on the defaultTextStyle.
-// + Will need to find a way to populate unit object style attribute before measuring text units
-// + Styling will be defined in the (raw) text line using HTML/CSS - do not repeat the mistakes of Phrase!
 P.cleanText = function () {
 
 // console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded}`);
@@ -527,6 +580,8 @@ P.cleanText = function () {
             type,
             style: null,
             lineOffset: 0,
+            kernOffset: 0,
+            stampFlag: true,
         };
     };
 
@@ -552,18 +607,21 @@ P.cleanText = function () {
 
                     if (TEXT_SPACES_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(''), TEXT_TYPE_CHARS));
+                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
                         textUnits.push(makeUnitObject(SPACE, TEXT_TYPE_SPACE));
                         unit.length = 0;
                     }
                     else if (TEXT_HYPHENS_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(''), TEXT_TYPE_CHARS));
+                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
                         textUnits.push(makeUnitObject(c, TEXT_TYPE_HYPHEN));
                         unit.length = 0;
                     }
                     else unit.push(c);
                 });
+
+                // Capturing the last word
+                if (unit.length) textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
             }
             else {
 
@@ -571,24 +629,31 @@ P.cleanText = function () {
 
                     if (TEXT_SPACES_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(''), TEXT_TYPE_CHARS));
+                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
                         textUnits.push(makeUnitObject(SPACE, TEXT_TYPE_SPACE));
                         unit.length = 0;
                     }
                     else unit.push(c);
                 });
+
+                // Capturing the last word
+                if (unit.length) textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
             }
         }
         else {
 
             this.textUnitsHaveMultipleCharacters = false;
 
-            textCharacters.forEach(c => textUnits.push(makeUnitObject(c, TEXT_TYPE_CHARS)));
+            textCharacters.forEach(c => {
+
+                if (TEXT_SPACES_REGEX.test(c)) textUnits.push(makeUnitObject(SPACE, TEXT_TYPE_SPACE));
+                else textUnits.push(makeUnitObject(c, TEXT_TYPE_CHARS));
+            });
         }
 
         this.assessTextForStyle();
-        this.measureTextUnits();
 
+        this.measureTextUnits();
         this.dirtyTextLayout = true;
     }
 };
@@ -596,231 +661,232 @@ P.cleanText = function () {
 
 P.assessTextForStyle = function () {
 
-    // We don't process if we can't get a host and its calculator, obtained via the entity's group
-    const group = this.group;
+// console.log(this.name, `assessTextForStyle (trigger: none - called directly by cleanText`);
 
-    if (group) {
+    const tester = this.getTester();
 
-        const host = (group && group.getHost) ? group.getHost() : null;
-
-        let tester = null;
-
-        if (host) {
-
-            const controller = host.getController();
-
-            if (controller) {
-
-                tester = controller.labelStylesCalculator;
-            }
-        }
-
-        // No calculator! Reset dirty flag and return
-        if (!tester) {
-
-            this.dirtyText = true;
-            return null;
-        }
-
-       // Local helper function `processNode`
-       // + recursively step through the text's HTML nodes
-        const processNode = (node) => {
-
-            if (node.nodeType !== 3) {
-
-                for (const item of node.childNodes) {
-
-                    processNode(item);
-                }
-            }
-            else {
-
-                const unit = textUnits[getCharacterUnit(cursor)];
-                if (unit != null && unit.style == null) unit.style = makeTextStyle({});
-
-                cursor += node.textContent.length;
-
-                diffStyles(node, unit);
-            }
-
-        };
-
-        // Local helper function `getCharacterUnit`
-        // + called by `processNode`, maps char position to textUnit item
-        const getCharacterUnit = (pos) => {
-
-            let len = 0;
-
-            for (let i = 0, iz = textUnits.length; i < iz; i++) {
-
-                len += textUnits[i].chars.length;
-
-                if (pos < len) return i;
-            }
-            return null;
-        };
-
-        // Local helper function `diffStyles`
-        // + called by `processNode`, diffs required styles against existing ones
-        const diffStyles = (node, unit) => {
-
-            const nodeVals = _computed(node.parentNode);
-
-            const unitSet = {};
-            let oldVal, newVal;
-
-            oldVal = currentTextStyle.direction;
-            newVal = nodeVals.getPropertyValue('direction');
-            if (oldVal !== newVal)  unitSet.direction = newVal;
-
-            oldVal = currentTextStyle.fontFamily;
-            newVal = nodeVals.getPropertyValue('font-family');
-            if (oldVal !== newVal) unitSet.fontFamily = newVal;
-
-            oldVal = currentTextStyle.fontKerning;
-            newVal = nodeVals.getPropertyValue('font-kerning');
-            if (oldVal !== newVal) unitSet.fontKerning = newVal;
-
-            oldVal = currentTextStyle.fontSize;
-            newVal = nodeVals.getPropertyValue('font-size');
-            if (oldVal !== newVal) unitSet.fontSize = newVal;
-
-            oldVal = currentTextStyle.fontStretch;
-            newVal = nodeVals.getPropertyValue('font-stretch');
-            if (oldVal !== newVal) unitSet.fontStretch = newVal;
-
-            oldVal = currentTextStyle.fontStyle;
-            newVal = nodeVals.getPropertyValue('font-style');
-            if (oldVal !== newVal) unitSet.fontStyle = newVal;
-
-            oldVal = currentTextStyle.fontVariantCaps;
-            newVal = nodeVals.getPropertyValue('font-variant-caps');
-            if (oldVal !== newVal) unitSet.fontVariantCaps = newVal;
-
-            oldVal = currentTextStyle.fontWeight;
-            newVal = nodeVals.getPropertyValue('font-weight');
-            if (oldVal !== newVal) unitSet.fontWeight = newVal;
-
-            oldVal = currentTextStyle.get('letterSpacing');
-            newVal = nodeVals.getPropertyValue('letter-spacing');
-            if (newVal === NORMAL) newVal = PX0;
-            if (oldVal !== newVal) unitSet.letterSpacing = newVal;
-
-            oldVal = currentTextStyle.textRendering;
-            newVal = nodeVals.getPropertyValue('text-rendering');
-            if (oldVal !== newVal) unitSet.textRendering = newVal;
-
-            oldVal = currentTextStyle.get('wordSpacing');
-            newVal = nodeVals.getPropertyValue('word-spacing');
-            if (oldVal !== newVal) unitSet.wordSpacing = newVal;
-
-            oldVal = currentTextStyle.fillStyle;
-            newVal = nodeVals.getPropertyValue('--SC-fill-style');
-            if (oldVal !== newVal) unitSet.fillStyle = newVal;
-
-            oldVal = currentTextStyle.includeHighlight;
-            newVal = !!nodeVals.getPropertyValue('--SC-include-highlight');
-            if (oldVal !== newVal) unitSet.includeHighlight = newVal;
-
-            oldVal = currentTextStyle.highlightStyle;
-            newVal = nodeVals.getPropertyValue('--SC-highlight-style');
-            if (oldVal !== newVal) unitSet.highlightStyle = newVal;
-
-            oldVal = currentTextStyle.lineWidth;
-            newVal = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
-            if (oldVal !== newVal) unitSet.lineWidth = newVal;
-
-            oldVal = currentTextStyle.includeOverline;
-            newVal = !!nodeVals.getPropertyValue('--SC-include-overline');
-            if (oldVal !== newVal) unitSet.includeOverline = newVal;
-
-            oldVal = currentTextStyle.overlineOffset;
-            newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-offset'));
-            if (oldVal !== newVal) unitSet.overlineOffset = newVal;
-
-            oldVal = currentTextStyle.overlineStyle;
-            newVal = nodeVals.getPropertyValue('--SC-overline-style');
-            if (oldVal !== newVal) unitSet.overlineStyle = newVal;
-
-            oldVal = currentTextStyle.overlineWidth;
-            newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-width'));
-            if (oldVal !== newVal) unitSet.overlineWidth = newVal;
-
-            oldVal = currentTextStyle.includeUnderline;
-            newVal = !!nodeVals.getPropertyValue('--SC-include-underline');
-            if (oldVal !== newVal) unitSet.includeUnderline = newVal;
-
-            oldVal = currentTextStyle.underlineGap;
-            newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-gap'));
-            if (oldVal !== newVal) unitSet.underlineGap = newVal;
-
-            oldVal = currentTextStyle.underlineOffset;
-            newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-offset'));
-            if (oldVal !== newVal) unitSet.underlineOffset = newVal;
-
-            oldVal = currentTextStyle.underlineStyle;
-            newVal = nodeVals.getPropertyValue('--SC-underline-style');
-            if (oldVal !== newVal) unitSet.underlineStyle = newVal;
-
-            oldVal = currentTextStyle.underlineWidth;
-            newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-width'));
-            if (oldVal !== newVal) unitSet.underlineWidth = newVal;
-
-            unit.style.set(unitSet, true);
-            currentTextStyle.set(unitSet, true);
-        };
-
-        // Local helper function `setupTester`
-        // + called by main function, assigns default text styles to the tester div
-        const setupTester = () => {
-
-            tester.style.setProperty('direction', defaultTextStyle.direction);
-            tester.style.setProperty('font-family', defaultTextStyle.fontFamily);
-            tester.style.setProperty('font-kerning', defaultTextStyle.fontKerning);
-            tester.style.setProperty('font-size', defaultTextStyle.fontSize);
-            tester.style.setProperty('font-stretch', defaultTextStyle.fontStretch);
-            tester.style.setProperty('font-style', defaultTextStyle.fontStyle);
-            tester.style.setProperty('font-variant-caps', defaultTextStyle.fontVariantCaps);
-            tester.style.setProperty('font-weight', defaultTextStyle.fontWeight);
-            tester.style.setProperty('letter-spacing', defaultTextStyle.get('letterSpacing'));
-            tester.style.setProperty('text-rendering', defaultTextStyle.textRendering);
-            tester.style.setProperty('word-spacing', defaultTextStyle.get('wordSpacing'));
-
-            tester.style.setProperty('--SC-fill-style', defaultTextStyle.fillStyle);
-            tester.style.setProperty('--SC-highlight-style', defaultTextStyle.highlightStyle);
-            tester.style.setProperty('--SC-overline-offset', defaultTextStyle.overlineOffset);
-            tester.style.setProperty('--SC-overline-style', defaultTextStyle.overlineStyle);
-            tester.style.setProperty('--SC-overline-width', defaultTextStyle.overlineWidth);
-            tester.style.setProperty('--SC-stroke-width', defaultTextStyle.lineWidth);
-            tester.style.setProperty('--SC-stroke-style', defaultTextStyle.strokeStyle);
-            tester.style.setProperty('--SC-underline-gap', defaultTextStyle.underlineGap);
-            tester.style.setProperty('--SC-underline-offset', defaultTextStyle.underlineOffset);
-            tester.style.setProperty('--SC-underline-style', defaultTextStyle.underlineStyle);
-            tester.style.setProperty('--SC-underline-width', defaultTextStyle.underlineWidth);
-
-            tester.className = this.name;
-            tester.innerHTML = rawText;
-        };
-
-
-        // Start processing data here
-        const { rawText, defaultTextStyle, textUnits } = this;
-
-        const currentTextStyle = _create(defaultTextStyle);
-        _assign(currentTextStyle, defaultTextStyle);
-
-        let cursor = 0;
-
-        setupTester();
-        processNode(tester);
-    }
-
-    // No group! Reset dirty flag and return
-    else {
+    // No calculator! Reset dirty flag and return
+    if (!tester) {
 
         this.dirtyText = true;
         return null;
     }
+
+    // Local helper function `processNode`
+    // + recursively step through the text's HTML nodes
+    const processNode = (node) => {
+
+        if (node.nodeType !== 3) {
+
+            for (const item of node.childNodes) {
+
+                processNode(item);
+            }
+        }
+        else {
+
+            const unit = textUnits[getCharacterUnit(cursor)];
+            if (unit != null && unit.style == null) unit.style = makeTextStyle({});
+
+            cursor += node.textContent.length;
+
+            diffStyles(node, unit);
+        }
+
+    };
+
+    // Local helper function `getCharacterUnit`
+    // + called by `processNode`, maps char position to textUnit item
+    const getCharacterUnit = (pos) => {
+
+        let len = 0;
+
+        for (let i = 0, iz = textUnits.length; i < iz; i++) {
+
+            len += textUnits[i].chars.length;
+
+            if (pos < len) return i;
+        }
+        return null;
+    };
+
+    // Local helper function `diffStyles`
+    // + called by `processNode`, diffs required styles against existing ones
+    const diffStyles = (node, unit) => {
+
+        const nodeVals = _computed(node.parentNode);
+
+        const unitSet = {};
+        let oldVal, newVal;
+
+        oldVal = currentTextStyle.direction;
+        newVal = nodeVals.getPropertyValue('direction');
+// if (oldVal !== newVal) console.log(`direction | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal)  unitSet.direction = newVal;
+
+        oldVal = currentTextStyle.fontFamily;
+        newVal = nodeVals.getPropertyValue('font-family');
+// if (oldVal !== newVal) console.log(`fontFamily | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fontFamily = newVal;
+
+        oldVal = currentTextStyle.fontKerning;
+        newVal = nodeVals.getPropertyValue('font-kerning');
+// if (oldVal !== newVal) console.log(`fontKerning | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fontKerning = newVal;
+
+        oldVal = currentTextStyle.fontSize;
+        newVal = nodeVals.getPropertyValue('font-size');
+// if (oldVal !== newVal) console.log(`fontSize | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fontSize = newVal;
+
+        oldVal = currentTextStyle.fontStretch;
+        newVal = nodeVals.getPropertyValue('font-stretch');
+        if (newVal === '100%') newVal = NORMAL;
+// if (oldVal !== newVal) console.log(`fontStretch | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fontStretch = newVal;
+
+        oldVal = currentTextStyle.fontStyle;
+        newVal = nodeVals.getPropertyValue('font-style');
+// if (oldVal !== newVal) console.log(`fontStyle | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fontStyle = newVal;
+
+        oldVal = currentTextStyle.fontVariantCaps;
+        newVal = nodeVals.getPropertyValue('font-variant-caps');
+// if (oldVal !== newVal) console.log(`fontVariantCaps | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fontVariantCaps = newVal;
+
+        oldVal = currentTextStyle.fontWeight;
+        newVal = nodeVals.getPropertyValue('font-weight');
+// if (oldVal !== newVal) console.log(`fontWeight | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fontWeight = newVal;
+
+        oldVal = currentTextStyle.get('letterSpacing');
+        newVal = nodeVals.getPropertyValue('letter-spacing');
+        if (newVal === NORMAL) newVal = PX0;
+// if (oldVal !== newVal) console.log(`letterSpacing | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.letterSpacing = newVal;
+
+        oldVal = currentTextStyle.textRendering;
+        newVal = nodeVals.getPropertyValue('text-rendering');
+// if (oldVal !== newVal) console.log(`textRendering | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.textRendering = newVal;
+
+        oldVal = currentTextStyle.get('wordSpacing');
+        newVal = nodeVals.getPropertyValue('word-spacing');
+// if (oldVal !== newVal) console.log(`wordSpacing | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.wordSpacing = newVal;
+
+        oldVal = currentTextStyle.fillStyle;
+        newVal = nodeVals.getPropertyValue('--SC-fill-style');
+// if (oldVal !== newVal) console.log(`fillStyle | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.fillStyle = newVal;
+
+        oldVal = currentTextStyle.includeHighlight;
+        newVal = !!nodeVals.getPropertyValue('--SC-include-highlight');
+// if (oldVal !== newVal) console.log(`includeHighlight | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.includeHighlight = newVal;
+
+        oldVal = currentTextStyle.highlightStyle;
+        newVal = nodeVals.getPropertyValue('--SC-highlight-style');
+// if (oldVal !== newVal) console.log(`highlightStyle | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.highlightStyle = newVal;
+
+        oldVal = currentTextStyle.lineWidth;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
+// if (oldVal !== newVal) console.log(`lineWidth | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.lineWidth = newVal;
+
+        oldVal = currentTextStyle.includeOverline;
+        newVal = !!nodeVals.getPropertyValue('--SC-include-overline');
+// if (oldVal !== newVal) console.log(`includeOverline | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.includeOverline = newVal;
+
+        oldVal = currentTextStyle.overlineOffset;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-offset'));
+// if (oldVal !== newVal) console.log(`overlineOffset | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.overlineOffset = newVal;
+
+        oldVal = currentTextStyle.overlineStyle;
+        newVal = nodeVals.getPropertyValue('--SC-overline-style');
+// if (oldVal !== newVal) console.log(`overlineStyle | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.overlineStyle = newVal;
+
+        oldVal = currentTextStyle.overlineWidth;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-width'));
+// if (oldVal !== newVal) console.log(`overlineWidth | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.overlineWidth = newVal;
+
+        oldVal = currentTextStyle.includeUnderline;
+        newVal = !!nodeVals.getPropertyValue('--SC-include-underline');
+// if (oldVal !== newVal) console.log(`includeUnderline | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.includeUnderline = newVal;
+
+        oldVal = currentTextStyle.underlineGap;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-gap'));
+// if (oldVal !== newVal) console.log(`underlineGap | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.underlineGap = newVal;
+
+        oldVal = currentTextStyle.underlineOffset;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-offset'));
+// if (oldVal !== newVal) console.log(`underlineOffset | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.underlineOffset = newVal;
+
+        oldVal = currentTextStyle.underlineStyle;
+        newVal = nodeVals.getPropertyValue('--SC-underline-style');
+// if (oldVal !== newVal) console.log(`underlineStyle | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.underlineStyle = newVal;
+
+        oldVal = currentTextStyle.underlineWidth;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-width'));
+// if (oldVal !== newVal) console.log(`underlineWidth | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.underlineWidth = newVal;
+
+        unit.style.set(unitSet, true);
+        currentTextStyle.set(unitSet, true);
+    };
+
+    // Local helper function `setupTester`
+    // + called by main function, assigns default text styles to the tester div
+    const setupTester = () => {
+
+        tester.style.setProperty('direction', defaultTextStyle.direction);
+        tester.style.setProperty('font-family', defaultTextStyle.fontFamily);
+        tester.style.setProperty('font-kerning', defaultTextStyle.fontKerning);
+        tester.style.setProperty('font-size', defaultTextStyle.fontSize);
+        tester.style.setProperty('font-stretch', defaultTextStyle.fontStretch);
+        tester.style.setProperty('font-style', defaultTextStyle.fontStyle);
+        tester.style.setProperty('font-variant-caps', defaultTextStyle.fontVariantCaps);
+        tester.style.setProperty('font-weight', defaultTextStyle.fontWeight);
+        tester.style.setProperty('letter-spacing', defaultTextStyle.get('letterSpacing'));
+        tester.style.setProperty('text-rendering', defaultTextStyle.textRendering);
+        tester.style.setProperty('word-spacing', defaultTextStyle.get('wordSpacing'));
+
+        tester.style.setProperty('--SC-fill-style', defaultTextStyle.fillStyle);
+        tester.style.setProperty('--SC-highlight-style', defaultTextStyle.highlightStyle);
+        tester.style.setProperty('--SC-overline-offset', defaultTextStyle.overlineOffset);
+        tester.style.setProperty('--SC-overline-style', defaultTextStyle.overlineStyle);
+        tester.style.setProperty('--SC-overline-width', defaultTextStyle.overlineWidth);
+        tester.style.setProperty('--SC-stroke-width', defaultTextStyle.lineWidth);
+        tester.style.setProperty('--SC-stroke-style', defaultTextStyle.strokeStyle);
+        tester.style.setProperty('--SC-underline-gap', defaultTextStyle.underlineGap);
+        tester.style.setProperty('--SC-underline-offset', defaultTextStyle.underlineOffset);
+        tester.style.setProperty('--SC-underline-style', defaultTextStyle.underlineStyle);
+        tester.style.setProperty('--SC-underline-width', defaultTextStyle.underlineWidth);
+
+        tester.className = this.name;
+        tester.innerHTML = rawText;
+    };
+
+
+    // Start processing data here
+    const { rawText, defaultTextStyle, textUnits } = this;
+
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'style-worker');
+
+    let cursor = 0;
+
+    setupTester();
+    processNode(tester);
 };
 
 
@@ -834,190 +900,16 @@ P.layoutText = function () {
 
             this.dirtyTextLayout = false;
 
-            this.assignTextUnitsToLines();
+            this.textUnits.forEach(unit => {
 
+                unit.stampFlag = true;
+                unit.lineOffset = 0;
+            });
+
+            this.assignTextUnitsToLines();
             this.positionTextUnits();
         }
     }
-};
-
-
-P.positionTextUnits = function () {
-
-console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText');
-
-    if (this.useLayoutEngineAsPath) this.positionTextUnitsAlongPath();
-    else if (!this.breakTextOnSpaces || this.allowSubUnitStyling) this.positionTextCharactersInSpace();
-    else this.positionTextWordsInSpace()
-};
-
-
-P.positionTextCharactersInSpace = function () {
-
-console.log(this.name, 'positionTextCharactersInSpace (trigger: none - called by positionTextUnits');
-
-    if (this.layoutEngineVerticalText) this.positionTextCharactersVerticallyInSpace();
-    else {
-
-        const {
-            lines,
-            textUnits,
-            justifyLine,
-        } = this;
-    }
-};
-
-
-P.positionTextCharactersVerticallyInSpace = function () {
-
-console.log(this.name, 'positionTextCharactersVerticallyInSpace (trigger: none - called by positionTextCharactersInSpace');
-
-    const {
-        lines,
-        textUnits,
-        justifyLine,
-    } = this;
-};
-
-
-P.positionTextWordsInSpace = function () {
-
-console.log(this.name, 'positionTextWordsInSpace (trigger: none - called by positionTextUnits');
-
-    if (this.layoutEngineVerticalText) this.positionTextWordsVerticallyInSpace();
-    else {
-
-        const {
-            lines,
-            textUnits,
-            justifyLine,
-            defaultTextStyle,
-        } = this;
-
-        const directionFix = (defaultTextStyle.direction === LTR) ? 1 : -1;
-
-        let unit, length, unitData, unitLengths, spaceLengths, currentOffset;
-
-        const distances = [];
-
-        console.log('JUSTIFY:', justifyLine);
-        console.log('LINES:', lines);
-        console.log('TEXT-UNITS:', textUnits);
-
-        lines.forEach((line, index) => {
-
-            ({ length, unitData } = line);
-
-            if (unitData.length) {
-
-                unitLengths = 0;
-                spaceLengths = 0;
-                distances.length = 0;
-
-                unitData.forEach(u => {
-
-                    // Need to exclude end-of-line soft hyphens and truncation chars 
-                    if (u.toFixed) {
-
-                        unit = textUnits[u];
-
-                        if (unit.type === TEXT_TYPE_CHARS) unitLengths += unit.len;
-                        else if (unit.type === TEXT_TYPE_SPACE) spaceLengths += unit.len;
-                        distances.push(unit.len);
-                    }
-
-                });
-
-                console.log(`Line ${index}: length ${length}; character lengths ${unitLengths}; space lengths ${spaceLengths}; remaining space: ${length - (unitLengths + spaceLengths)}
-    distances: ${distances}`);
-
-                switch (justifyLine) {
-
-                    case FULL :
-                        break;
-
-                    case START :
-
-                        currentOffset = 0;
-
-                        unitData.forEach((u, index) => {
-
-                            if (u.toFixed) {
-
-                                unit = textUnits[u];
-                                unit.lineOffset = currentOffset;
-                                currentOffset += (unit.len * directionFix);
-                            }
-                        });
-                        break;
-
-                    case END :
-
-                        currentOffset = (length - (unitLengths + spaceLengths)) * directionFix;
-
-                        unitData.forEach((u, index) => {
-
-                            if (u.toFixed) {
-
-                                unit = textUnits[u];
-                                unit.lineOffset = currentOffset;
-                                currentOffset += (unit.len * directionFix);
-                            }
-                        });
-                        break;
-
-
-                    default :
-
-                        currentOffset = ((length - (unitLengths + spaceLengths)) * directionFix) / 2;
-
-                        unitData.forEach((u, index) => {
-
-                            if (u.toFixed) {
-
-                                unit = textUnits[u];
-                                unit.lineOffset = currentOffset;
-                                currentOffset += (unit.len * directionFix);
-                            }
-                        });
-                }
-            }
-            else console.log(`Nothing to process for line ${index}`);
-        });
-    }
-};
-
-
-P.positionTextWordsVerticallyInSpace = function () {
-
-console.log(this.name, 'positionTextWordsVerticallyInSpace (trigger: none - called by positionTextWordsInSpace');
-
-    if (this.layoutEngineVerticalText) this.positionTextWordsVerticallyInSpace();
-    else {
-
-        const {
-            lines,
-            textUnits,
-            justifyLine,
-        } = this;
-
-        console.log('JUSTIFY:', justifyLine);
-        console.log('LINES:', lines);
-        console.log('TEXT-UNITS:', textUnits);
-    }
-};
-
-
-P.positionTextUnitsAlongPath = function () {
-
-console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits');
-
-    const {
-        lines,
-        textUnits,
-        layoutEnginePathStart,
-        layoutEngineVerticalText,
-    } = this;
 };
 
 
@@ -1036,6 +928,8 @@ P.assignTextUnitsToLines = function () {
         lengthRemaining,
         i, unit, len, type;
 
+    // TODO - this currently works for rows; will work for columns if each textUnit `len` is set to the font height, with spaces having 0 or minimal values?
+    // + Setting `len` happens elsewhere. This function just processes the data
     lines.forEach(line => {
 
         const {
@@ -1053,39 +947,16 @@ P.assignTextUnitsToLines = function () {
 
             if (len < lengthRemaining) {
 
-                // first textunit cannot be a space
-                if (lengthRemaining === lineLength) {
-
-                    if (type !== TEXT_TYPE_SPACE) {
-
-                        lengthRemaining -= len;
-                        unitData.push(unitCursor);
-                    }
-                }
-                else {
-
-                    lengthRemaining -= len;
-                    unitData.push(unitCursor);
-                }
+                lengthRemaining -= len;
+                unitData.push(unitCursor);
                 ++unitCursor;
             }
-            else {
-
-                if (type === TEXT_TYPE_SPACE) ++unitCursor;
-                break;
-            }
-        }
-
-        // Get rid of trailing spaces
-        if (unitData.length) {
-
-            unit = unitData[unitData.length - 1];
-            if (textUnits[unit].type === TEXT_TYPE_SPACE) unitData.pop();
+            else break;
         }
     });
 
     // Truncation
-    if (unitArrayLength !== unitCursor) {
+   if (unitArrayLength !== unitCursor) {
 
         const unitData = lines[lines.length - 1].unitData,
             mutableUnitData = [...unitData];
@@ -1108,49 +979,219 @@ P.assignTextUnitsToLines = function () {
 };
 
 
-// TODO - this is all based on the defaultTextStyle.
-// + Will need to be amended when we take into account text styling
-// + Font metadata already includes data for space|hyphen|truncate chars (at 100px) so may not need to measure them directly?
+P.positionTextUnits = function () {
+
+// console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText');
+
+    if (this.useLayoutEngineAsPath) this.positionTextUnitsAlongPath();
+    else this.positionTextUnitsInSpace();
+};
+
+
+P.positionTextUnitsAlongPath = function () {
+
+// console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits');
+
+};
+
+
+P.positionTextUnitsInSpace = function () {
+
+// console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits');
+
+    const {
+        lines,
+        textUnits,
+        justifyLine,
+        defaultTextStyle,
+    } = this;
+
+    // We're justifying text, thus we need to know what direction the language/font considers to be its natural starting side (left/right) which we can then use when determining what justifying to start/end means
+    const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
+
+    let unit, length, unitData, unitLengths, unitIndices, noOfSpaces, spaceStep, spaceRemaining;
+
+    const initialDistances = [],
+        adjustedDistances = [];
+
+    lines.forEach(line => {
+
+        ({ length, unitData } = line);
+
+        // only process lines that have textUnits
+        if (unitData.length) {
+
+            unitIndices = unitData.length - 1;
+
+            unitLengths = 0;
+            noOfSpaces = 0;
+            spaceStep = 0;
+            initialDistances.length = 0;
+            adjustedDistances.length = 0;
+
+            // Get distances that need to be processed
+            unitData.forEach((unitIndex, dataIndex) => {
+
+                if (unitIndex.toFixed) {
+
+                    unit = textUnits[unitIndex];
+
+                    // We ignore spaces at the start/end of the line
+                    if ((dataIndex === 0 || dataIndex === unitIndices) && unit.type === TEXT_TYPE_SPACE) unit.stampFlag = false;
+
+                    // Populate the initialDistances array, and keep a running total of the current length used
+                    if (unit.stampFlag) {
+
+                        initialDistances.push(unitLengths)
+                        unitLengths += unit.len - unit.kernOffset;
+
+                        // keep a count of the number of spaces within the line
+                        if (justifyLine === FULL && unit.type === TEXT_TYPE_SPACE) noOfSpaces++;
+                    }
+                }
+            });
+
+            // Unused space
+            spaceRemaining = length - unitLengths;
+
+            // Add unused space to distances as we push data into adjustedDistances
+            switch (justifyLine) {
+
+                // If justify is 'end', we add unused space to all distances
+                case END :
+
+                    adjustedDistances.push(...initialDistances.map(d => d + spaceRemaining));
+                    break;
+
+                // If justify is 'center', we add half the unused space to all distances
+                case CENTER :
+
+                    spaceRemaining /= 2;
+                    adjustedDistances.push(...initialDistances.map(d => d + spaceRemaining));
+                    break;
+
+                // If justify is 'full' ... we handle this case below
+                case FULL :
+
+                    if (noOfSpaces) spaceStep = spaceRemaining / noOfSpaces;
+
+                    adjustedDistances.push(...initialDistances);
+                    break;
+
+                // If justify is 'start' ... no distance adjustments required
+                default :
+
+                    adjustedDistances.push(...initialDistances);
+            }
+
+            // Full justify text needs special processing as we only want to add portions of remaining space to each of the relevant 'space' text units
+            if (justifyLine === FULL) {
+
+                unitIndices = 0;
+
+                unitData.forEach(unitIndex => {
+
+                    unit = textUnits[unitIndex];
+
+                    if (unit?.stampFlag) {
+
+                        unitIndices++
+
+                        if (unit.type === TEXT_TYPE_SPACE) {
+
+                            for (let i = unitIndices, iz = adjustedDistances.length; i < iz; i++) {
+
+                                adjustedDistances[i] += spaceStep;
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Now we can update the relevant textUnit objects. This is where we take into account the language/font preference for what they consider to be their natural start/end sides
+            unitData.forEach(u => {
+
+                if (u.toFixed) {
+
+                    unit = textUnits[u];
+
+                    if (unit.stampFlag) {
+
+                        if (languageDirectionIsLtr) unit.lineOffset = adjustedDistances.shift();
+                        else unit.lineOffset = length - unit.len - adjustedDistances.shift();
+                    }
+                }
+            });
+        }
+    });
+};
+
+
 P.measureTextUnits = function () {
 
-// console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText');
+// console.log(this.name, 'MEASURE_TEXT_UNITS (trigger: none - called by cleanText');
 
     const { textUnits, defaultTextStyle, state } = this;
-
-    const { letterSpacing, letterSpaceValue } = defaultTextStyle;
 
     const mycell = requestCell(),
         engine = mycell.engine;
 
-    const currentTextStyle = _create(defaultTextStyle);
-    _assign(currentTextStyle, defaultTextStyle);
+    let res, chars, type, style, len, nextUnit, nextStyle, nextChars, nextType, nextLen, unkernedLen;
 
-    let res;
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'measure-worker');
 
-    state.set(defaultTextStyle);
-    mycell.setEngine(this);
-
+    this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mycell);
 
     textUnits.forEach(t => {
 
-        const {chars, type, style} = t;
+        ({chars, type, style} = t);
 
-        if (style) {
+        if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
 
-            currentTextStyle.set(style);
-            state.set(currentTextStyle);
-            mycell.setEngine(this);
-        }
+        res = engine.measureText(chars);
 
-        if (type === TEXT_TYPE_SPACE) engine.letterSpacing = PX0;
-        // else engine.letterSpacing = letterSpacing;
-
-        if (type !== TEXT_TYPE_SOFT_HYPHEN) {
-
-            res = engine.measureText(chars);
-            t.len = res.width - letterSpaceValue;
-        }
+        if (type === TEXT_TYPE_SPACE) t.len = res.width + currentTextStyle.wordSpaceValue;
+        else t.len = res.width;
     });
+
+    // Gather kerning data (if required)
+    if (this.useLayoutEngineAsPath || !this.breakTextOnSpaces || this.allowSubUnitStyling) {
+
+        textUnits.forEach((unit, index) => {
+
+            ({chars, type, style, len} = unit);
+
+            if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
+
+            // Do we need to perform this work?
+            if (currentTextStyle.fontKerning !== NONE) {
+
+                nextUnit = textUnits[index + 1];
+
+                // No need to kern the last textUnit
+                if (nextUnit) {
+
+                    ({ style: nextStyle, chars: nextChars, type: nextType, len: nextLen} = nextUnit);
+
+                    // We don't need to kern anything next to a space, or the space itself
+                    if (type !== TEXT_TYPE_SPACE && nextType !== TEXT_TYPE_SPACE) {
+
+                        // We won't kern anything that's changing style in significant ways
+                        if (!nextStyle || !(nextStyle.fontFamily || nextStyle.fontSize || nextStyle.fontVariantCaps)) {
+
+                            unkernedLen = len + nextLen;
+
+                            res = engine.measureText(`${chars}${nextChars}`);
+
+                            // the kerning applies the the next textUnit, not the current one
+                            nextUnit.kernOffset = unkernedLen - res.width;
+                        }
+                    }
+                }
+            }
+        });
+    }
+// console.log(textUnits);
 
     releaseCell(mycell);
 };
@@ -1164,10 +1205,7 @@ P.calculateLines = function () {
 
         const results = [];
 
-        let edgePoints;
-
-        if (vertical) edgePoints = (directionIsLtr) ? goTopToBottom(x, y, height) : goBottomToTop(x, y, height);
-        else edgePoints = (directionIsLtr) ? goLeftToRight(x, y, width) : goRightToLeft(x, y, width);
+        const edgePoints = walkTheLine(x, y, width);
 
         const len = edgePoints.length;
 
@@ -1181,11 +1219,12 @@ P.calculateLines = function () {
                 results.push(...coord);
             }
         }
+
         // We sanitize the results (to integer values) after they have been rotated
         return results.map(r => _round(r));
     };
 
-    const goLeftToRight = (x, y, dim) => {
+    const walkTheLine = (x, y, dim) => {
 
         const startAt = x + (-dim * 3),
             endAt = x + (dim * 3),
@@ -1205,76 +1244,10 @@ P.calculateLines = function () {
             }
         }
         return res;
-    };
-
-    const goRightToLeft = (x, y, dim) => {
-
-        const startAt = x + (dim * 3),
-            endAt = x + (-dim * 3),
-            res = [];
-
-        let isInLayout = false,
-            check = false;
-
-        for (let i = startAt; i > endAt; i--) {
-
-            check = engine.isPointInPath(pathObject, i, y, winding);
-
-            if (check !== isInLayout) {
-
-                res.push([check === false ? i + 1 : i, y]);
-                isInLayout = check;
-            }
-        }
-        return res;
-    };
-
-    const goTopToBottom = (x, y, dim) => {
-
-        const startAt = y + (-dim * 3),
-            endAt = y + (dim * 3),
-            res = [];
-
-        let isInLayout = false,
-            check = false;
-
-        for (let i = startAt; i < endAt; i++) {
-
-            check = engine.isPointInPath(pathObject, x, i, winding);
-
-            if (check !== isInLayout) {
-
-                res.push([x, check === false ? i - 1 : i]);
-                isInLayout = check;
-            }
-        }
-        return res;
-    };
-
-    const goBottomToTop = (x, y, dim) => {
-
-        const startAt = y + (dim * 3),
-            endAt = y + (-dim * 3),
-            res = [];
-
-        let isInLayout = false,
-            check = false;
-
-        for (let i = startAt; i > endAt; i--) {
-
-            check = engine.isPointInPath(pathObject, x, i, winding);
-
-            if (check !== isInLayout) {
-
-                res.push([x, check === false ? i + 1 : i]);
-                isInLayout = check;
-            }
-        }
-        return res;
-    };
+    }
 
 
-    // MAIN FUNCTION STARTS HERE
+    // Main functionality
     const mycell = requestCell();
     const coord = requestCoordinate();
 
@@ -1285,7 +1258,6 @@ P.calculateLines = function () {
         defaultTextStyle,
         layoutEngine,
         layoutEngineLineOffset,
-        layoutEngineVerticalText: vertical,
         lines,
         lineSpacing,
     } = this;
@@ -1299,7 +1271,6 @@ P.calculateLines = function () {
     } = layoutEngine;
 
     const {
-        direction,
         fontSizeValue,
     } = defaultTextStyle;
 
@@ -1309,9 +1280,7 @@ P.calculateLines = function () {
     const step = fontSizeValue * lineSpacing;
 
     const [constX, constY] = currentStampPosition;
-    const [width, height] = currentDimensions;
-
-    const directionIsLtr = direction === LTR;
+    const [width,] = currentDimensions;
 
     const rawData = [],
         lineProcessing = [];
@@ -1323,80 +1292,42 @@ P.calculateLines = function () {
         sx, sy, ex, ey, i, iz,
         counter;
 
-
     // Prepare canvas for work
     mycell.rotateDestination(engine, constX, constY, layoutEngine);
     engine.rotate(rotation);
 
-
-    // Main calculations
+    // Main calculations: start with the line closest to the layout engine's `currentStampPosition` attribute
     // + TODO: one bug remains - functionality currently doesn't take into account handle offsets at the first level, which means lines don't generate if the handle pushes the layout entity too far away from the stamp position. This is due to the while/flag interaction. Probably won't fix as it's a bit of an edge case...
-    if (vertical) {
+    beginY = constY + layoutEngineLineOffset;
+    rawData.push([beginY, getEndPoints(constX, beginY)]);
 
-        // The first line is close to currentStampPosition
-        beginX = constX + layoutEngineLineOffset;
-        rawData.push([beginX, getEndPoints(beginX, constY)]);
+    // Find lines above the first line
+    flag = true;
+    while (flag) {
 
-        // Find lines to the left of the first line
-        flag = true;
-        while (flag) {
+        beginY -= step;
+        lineResults = getEndPoints(constX, beginY);
 
-            beginX -= step;
-            lineResults = getEndPoints(beginX, constY);
-
-            if (!lineResults.length) flag = false;
-            else rawData.push([beginX, lineResults]);
-        }
-
-        // Find lines to the right of the first line
-        beginX = constX + layoutEngineLineOffset;
-        flag = true;
-        while (flag) {
-
-            beginX += step;
-            lineResults = getEndPoints(beginX, constY);
-
-            if (!lineResults.length) flag = false;
-            else rawData.push([beginX, lineResults]);
-        }
-    }
-    else {
-
-        // The first line is close to currentStampPosition
-        beginY = constY + layoutEngineLineOffset;
-        rawData.push([beginY, getEndPoints(constX, beginY)]);
-
-        // Find lines above the first line
-        flag = true;
-        while (flag) {
-
-            beginY -= step;
-            lineResults = getEndPoints(constX, beginY);
-
-            if (!lineResults.length) flag = false;
-            else rawData.push([beginY, lineResults]);
-        }
-
-        // Find lines below the first line
-        beginY = constY + layoutEngineLineOffset;
-        flag = true;
-        while (flag) {
-
-            beginY += step;
-            lineResults = getEndPoints(constX, beginY);
-
-            if (!lineResults.length) flag = false;
-            else rawData.push([beginY, lineResults]);
-        }
+        if (!lineResults.length) flag = false;
+        else rawData.push([beginY, lineResults]);
     }
 
+    // Find lines below the first line
+    beginY = constY + layoutEngineLineOffset;
+    flag = true;
+    while (flag) {
 
-    // Sort the raw data top-bottom etc
-    if (directionIsLtr) rawData.sort((a, b) => a[0] - b[0]);
-    else rawData.sort((a, b) => b[0] - a[0]);
+        beginY += step;
+        lineResults = getEndPoints(constX, beginY);
 
+        if (!lineResults.length) flag = false;
+        else rawData.push([beginY, lineResults]);
+    }
 
-    // Push line data into the this.lines array
+    // Sort the raw line data
+    rawData.sort((a, b) => a[0] - b[0]);
+
+    // Push line data into the `this.lines` array
     lines.length = 0;
     lineLength = 0;
     lineProcessing.length = 0;
@@ -1420,19 +1351,16 @@ P.calculateLines = function () {
 
         // Currently storing as an object. Need to turn it into an array for more efficient processing
         lines.push({
-            length: d,
+            length: _ceil(d),
             lengthRatio: d / lineLength,
             startPositionInPath: lineVal / lineLength,
             startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
             endAt: [...coord.set([ex, ey]).add(currentStampPosition)],
-            // slope: (directionIsLtr) ? this.getLinearAngle(sx, sy, ex, ey) : this.getLinearAngle(sx, sy, ex, ey) - 180,
-            slope: this.getLinearAngle(sx, sy, ex, ey),
             unitData: [],
         });
 
         lineVal += d;
     });
-
 
     // Generate the path string
     beginX = 0;
@@ -1457,12 +1385,7 @@ P.calculateLines = function () {
         }
     });
 
-    // We can do 2 things here:
-    // 1. Do all the calculations required for layout along the line locally
-    // 2. Stuff the path into a hidden shape entity and let that do all the calculations for us
-    // + These are all line paths, so calculations shouldn't be too onerous?
     this.localPath = new Path2D(`${path}z`);
-
 
     // Clean up
     releaseCoordinate(coord);
@@ -1585,29 +1508,6 @@ P.regularStampInSpace = function () {
 
         if (layout) {
 
-            // const engine = dest.engine;
-            // const [x, y] = layout.currentStampPosition;
-
-            // const { state, noCanvasEngineUpdates, localPath, defaultTextStyle, showBoundingBox } = this;
-
-            // // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
-            // dest.rotateDestination(engine, x, y, layout);
-
-            // // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
-            // if (!noCanvasEngineUpdates) {
-
-            //     state.set(defaultTextStyle);
-            //     dest.setEngine(this);
-            // }
-
-            // if (localPath) engine.stroke(localPath);
-
-            // // Invoke the appropriate __stamping method__ (below)
-            // // this[this.method](dest.engine, 0, 0, this.text);
-
-            // if (showBoundingBox) this.drawBoundingBox(dest);
-
-
             const engine = dest.engine;
 
             const {
@@ -1618,35 +1518,38 @@ P.regularStampInSpace = function () {
                 defaultTextStyle,
             } = this;
 
-            let x, y, sx, sy, unit;
-
-            const currentTextStyle = _create(defaultTextStyle);
-            _assign(currentTextStyle, defaultTextStyle);
+            let sx, sy, unit, style, lineOffset, chars;
 
             engine.save();
 
+            const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+
+            this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
+
             lines.forEach(line => {
 
-                this.currentRotation = line.slope;
                 [sx, sy] = line.startAt;
 
                 line.unitData.forEach(u => {
 
                     if (u.substring) {
 
+                        // for handling hyphen + truncation issues
                     }
                     else {
 
                         unit = textUnits[u];
 
-                        if (unit.style) currentTextStyle.set(unit.style);
+                        ({style, lineOffset, chars} = unit);
 
-                        state.set(currentTextStyle);
-                        dest.setEngine(this);
+                        if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, dest);
 
-                        dest.rotateDestination(engine, sx + unit.lineOffset, sy, this);
+                        if (unit.stampFlag) {
 
-                        engine.fillText(unit.chars, 0, 0);
+                            dest.rotateDestination(engine, sx + lineOffset, sy, layout);
+
+                            engine.fillText(chars, 0, 0);
+                        }
                     }
                 });
             });
@@ -1675,31 +1578,8 @@ P.regularStampAlongPath = function () {
         if (layout) {
 
             // const engine = dest.engine;
-            // const [x, y] = layout.currentStampPosition;
 
-            // const { state, noCanvasEngineUpdates, localPath, defaultTextStyle, showBoundingBox } = this;
-
-            // // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
-            // dest.rotateDestination(engine, x, y, layout);
-
-            // // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
-            // if (!noCanvasEngineUpdates) {
-
-            //     state.set(defaultTextStyle);
-            //     dest.setEngine(this);
-            // }
-
-            // if (localPath) engine.stroke(localPath);
-
-            // // Invoke the appropriate __stamping method__ (below)
-            // // this[this.method](dest.engine, 0, 0, this.text);
-
-            // if (showBoundingBox) this.drawBoundingBox(dest);
-
-
-            const engine = dest.engine;
-
-            const { lines, textUnits } = this;
+            // const { lines, textUnits } = this;
         }
     }
 };

@@ -1262,6 +1262,8 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 // EnhancedLabelInstance factory
 // -------------------------------------
+type TextUnitDirectionValues = 'row' | 'row-reverse' | 'column' | 'column-reverse';
+
 interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {
     lineSpacing?: number;
     alignment?: number;
@@ -1277,7 +1279,8 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     useLayoutEngineAsPath?: boolean;
     layoutEnginePathStart?: number;
     constantPathSpeed?: boolean;
-    layoutEngineVerticalText?: boolean;
+    
+    textUnitDirection?: TextUnitDirectionValues;
 
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
