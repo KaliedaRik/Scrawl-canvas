@@ -26,7 +26,7 @@ import labelMix from '../mixin/label.js';
 
 import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _assign, _atan2, _ceil, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, FULL, GOOD_HOST, LEFT, LTR, NONE, NORMAL, PX0, ROUND, ROW, ROW_REVERSE, SPACE, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HYPHENS_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _assign, _atan2, _ceil, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, FULL, GOOD_HOST, LEFT, LTR, NONE, NORMAL, PX0, ROUND, ROW, ROW_REVERSE, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // import { ALPHABETIC, BOTTOM, CENTER, END, HANGING, HYPHEN, IDEOGRAPHIC, MIDDLE, START } from '../helper/shared-vars.js';
 
@@ -601,8 +601,6 @@ P.cleanText = function () {
 
         if (!allowSubUnitStyling && breakTextOnSpaces) {
 
-            this.textUnitsHaveMultipleCharacters = true;
-
             if (breakWordsOnHyphens) {
 
                 textCharacters.forEach(c => {
@@ -613,10 +611,16 @@ P.cleanText = function () {
                         textUnits.push(makeUnitObject(c, TEXT_TYPE_SPACE));
                         unit.length = 0;
                     }
-                    else if (TEXT_HYPHENS_REGEX.test(c)) {
+                    else if (TEXT_HARD_HYPHEN_REGEX.test(c)) {
 
                         textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
                         textUnits.push(makeUnitObject(c, TEXT_TYPE_HYPHEN));
+                        unit.length = 0;
+                    }
+                    else if (TEXT_SOFT_HYPHEN_REGEX.test(c)) {
+
+                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
+                        textUnits.push(makeUnitObject(c, TEXT_TYPE_SOFT_HYPHEN));
                         unit.length = 0;
                     }
                     else unit.push(c);
@@ -643,8 +647,6 @@ P.cleanText = function () {
             }
         }
         else {
-
-            this.textUnitsHaveMultipleCharacters = false;
 
             textCharacters.forEach((c, index) => {
 
@@ -970,7 +972,18 @@ P.assignTextUnitsToLines = function () {
                 unitData.push(unitCursor);
                 ++unitCursor;
             }
-            else break;
+            else {
+
+                // Check to see if the last successful character added to the line was a soft hyphen
+                unit = textUnits[unitCursor - 1];
+
+                if (unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
+
+                    unitData.pop();
+                    unitData.push(TEXT_TYPE_SOFT_HYPHEN);
+                }
+                break;
+            }
         }
     });
 
@@ -1537,7 +1550,7 @@ P.regularStampInSpace = function () {
                 defaultTextStyle,
             } = this;
 
-            let sx, sy, unit, style, lineOffset, chars;
+            let sx, sy, unit, style, lineOffset, chars, type, len, offset;
 
             engine.save();
 
@@ -1545,18 +1558,39 @@ P.regularStampInSpace = function () {
 
             this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
 
+            // TODO: The following code is good only for `textUnitDirection: ROW` situations. We also need code for:
+            // + `COLUMN` - where we will 'stack' the text units along the length of the line, rather than laying them out end-to-end.
+            // + `ROW_REVERSE` - reverse the layout order (but not the contents) of the text units along the line.
+            // + `COLUMN_REVERSE` - reverse the stack order of the text units along the line.
             lines.forEach(line => {
 
                 [sx, sy] = line.startAt;
 
-                line.unitData.forEach(u => {
+                line.unitData.forEach((u, uIndex) => {
 
                     if (u.substring) {
 
-                        // for handling hyphen + truncation issues
+                        // We're at the end of the line but need to add something additional
+                        // + For the last line, this will be the default truncation copy (eg: `...`)
+                        // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
+                        unit = textUnits[line.unitData[uIndex - 1]];
+
+                        ({ type, lineOffset, len } = unit);
+
+                        offset = sx + lineOffset;
+
+                        if (type === TEXT_TYPE_SPACE) dest.rotateDestination(engine, offset, sy, layout);
+                        else dest.rotateDestination(engine, offset + len, sy, layout);
+
+                        // TODO - this currently has a minor bug, where the truncation and soft hyphens appear "beyond the border" - for instance when text is end aligned. We need to correct this at the point when we determine the line will have a hyphen/truncation (when we stick the string letter into the line's unitData array). Reducing the spaces equally by small amounts should be a good fix?
+                        if (u === TEXT_TYPE_TRUNCATE) engine.fillText(this.truncateString, 0, 0);
+                        else if (u === TEXT_TYPE_SOFT_HYPHEN) engine.fillText(this.hyphenString, 0, 0);
                     }
                     else {
 
+                        // Stamp as usual
+                        //
+                        // TODO: currently only implementing the `fill` method. Need to include `draw`, and possibly `fillAndDraw` and `drawAndFill`
                         unit = textUnits[u];
 
                         ({style, lineOffset, chars} = unit);

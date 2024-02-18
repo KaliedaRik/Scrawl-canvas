@@ -71,6 +71,8 @@ const mylabel = scrawl.makeEnhancedLabel({
     showBoundingBox: true,
 
     layoutEngine: name('block-layout-engine'),
+
+    breakWordsOnHyphens: true,
 });
 
 

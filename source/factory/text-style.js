@@ -4,38 +4,144 @@
 // + __immutable__ - set once and used by EnhancedText entitys to amend the styling of their default TextStyle as the text string requires
 
 
-// Mapping TextStyle attributes to CSS computed attributes
-// + canvasFont           - local, not mapped
-// + direction            - map directly
-// + fillStyle            - map to variable `--SC-fill-style`
-// + fontFamily           - map directly
-// + fontKerning          - map directly
-// + fontSize             - map directly
-// + fontSizeValue        - local, not mapped
-// + fontStretch          - map directly
-// + fontString           - local, not mapped
-// + fontStyle            - map directly
-// + fontVariantCaps      - map directly
-// + fontWeight           - map directly
-// + highlightStyle       - map to variable `--SC-highlight-style`
-// + includeHighlight     - local, not mapped
-// + includeUnderline     - local, not mapped
-// + isDefaultTextStyle   - local, not mapped
-// + letterSpaceValue     - local, not mapped
-// + letterSpacing        - map directly
-// + lineDashOffset       - local, not mapped
-// + lineWidth            - map to variable `--SC-stroke-width`
-// + name                 - local, not mapped
-// + strokeStyle          - map to variable `--SC-stroke-style`
-// + textRendering        - map directly
-// + underlineGap         - map to variable `--SC-underline-gap`
-// + underlineOffset      - map to variable `--SC-underline-offset`
-// + underlineStyle       - map to variable `--SC-underline-style`
-// + underlineWidth       - map to variable `--SC-underline-width`
-// + unitRotation         - local, not mapped
-// + wordSpaceValue       - local, not mapped
-// + wordSpacing          - map directly
-
+// CSS property `direction`                      maps to TextStyle `direction`
+// CSS property `font-family`                    maps to TextStyle `fontFamily`
+// CSS property `font-kerning`                   maps to TextStyle `fontKerning`
+// CSS property `font-size`                      maps to TextStyle `fontSize`
+// CSS property `font-stretch`                   maps to TextStyle `fontStretch`
+// CSS property `font-style`                     maps to TextStyle `fontStyle`
+// CSS property `font-variant-caps`              maps to TextStyle `fontVariantCaps`
+// CSS property `font-weight`                    maps to TextStyle `fontWeight`
+// CSS property `letter-spacing`                 maps to TextStyle `letterSpacing`
+// CSS property `text-rendering`                 maps to TextStyle `textRendering`
+// CSS property `word-spacing`                   maps to TextStyle `wordSpacing`
+//
+// CSS custom property `--SC-fill-style`         maps to TextStyle `fillStyle`
+// CSS custom property `--SC-stroke-style`       maps to TextStyle `strokeStyle`
+// CSS custom property `--SC-stroke-width`       maps to TextStyle `lineWidth`
+//
+// CSS custom property `--SC-include-highlight`  maps to TextStyle `includeHighlight`
+// CSS custom property `--SC-highlight-style`    maps to TextStyle `highlightStyle`
+//
+// CSS custom property `--SC-include-overline`   maps to TextStyle `includeOverline`
+// CSS custom property `--SC-overline-offset`    maps to TextStyle `overlineOffset`
+// CSS custom property `--SC-overline-style`     maps to TextStyle `overlineStyle`
+// CSS custom property `--SC-overline-width`     maps to TextStyle `overlineWidth`
+//
+// CSS custom property `--SC-include-underline`  maps to TextStyle `includeUnderline`
+// CSS custom property `--SC-underline-gap`      maps to TextStyle `underlineGap`
+// CSS custom property `--SC-underline-offset`   maps to TextStyle `underlineOffset`
+// CSS custom property `--SC-underline-style`    maps to TextStyle `underlineStyle`
+// CSS custom property `--SC-underline-width`    maps to TextStyle `underlineWidth`
+// ```
+// <!-- Example CSS markup -->
+// <style>
+// /*
+//    SC will expose each EnhancedLabel entity
+//    by adding its name as a class to a hidden <div> element
+//    when processing its text attribute (whenever updated)
+//
+//    Styling for the text string can take place within this class.
+//    SC checks/imports/uses the attributes and custom properties listed above.
+//    The custom properties can also be used as normal, for text displayed in non-JS environments.
+// */
+// .demo-my-label {
+//
+//     /* bold, italic, etc */
+//     & b {
+//         font-weight: bold;
+//     }
+//
+//     & .bold {
+//         font-weight: bold;
+//     }
+//
+//     & strong {
+//         --SC-include-highlight: true;
+//         --SC-highlight-style: honeydew;
+//
+//         font-weight: bold;
+//         background-color: var(--SC-highlight-style);
+//     }
+//
+//     & i {
+//         font-style: italic;
+//     }
+//
+//     & em {
+//         --SC-fill-style: blue;
+//
+//         font-style: italic;
+//         color: var(--SC-fill-style);
+//     }
+//
+//     & .italic {
+//         font-style: italic;
+//     }
+//
+//     & u {
+//         --SC-include-underline: true;
+//         text-decoration: underline;
+//     }
+//
+//     /* underline, strikethrough */
+//     & s {
+//         --SC-include-overline: true;
+//         --SC-overline-offset: 0.4;
+//         --SC-overline-style: red;
+//         --SC-overline-width: 5px;
+//
+//         text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
+//     }
+//
+//     & .underline {
+//         --SC-include-underline: true;
+//
+//         text-decoration: underline;
+//         font-variant: small-caps;
+//     }
+//
+//     & .strike {
+//         --SC-fill-style: gray;
+//
+//         --SC-include-overline: true;
+//         --SC-overline-offset: 0.5;
+//         --SC-overline-style: gray;
+//         --SC-overline-width: 2px;
+//
+//         color: var(--SC-fill-style);
+//         text-decoration-line: line-through;
+//         text-decoration-color: var(--SC-overline-style);
+//         text-decoration-thickness: var(--SC-overline-width);
+//     }
+//
+//     /* letter- and word-spacing */
+//     & .letter-spaced {
+//         letter-spacing: 10px;
+//     }
+//
+//     & .word-spaced {
+//         word-spacing: 0.8rem;
+//     }
+//
+//     /*.fonts */
+//     & .make-bigger {
+//         font-size: 120%;
+//     }
+//
+//     & .make-monospace {
+//         font-family: monospace;
+//     }
+//
+//     /* colors */
+//     & .red {
+//         --SC-fill-style: red;
+//
+//         color: var(--SC-fill-style);
+//     }
+// }
+// </style>
+// ```
 
 
 // #### Imports
