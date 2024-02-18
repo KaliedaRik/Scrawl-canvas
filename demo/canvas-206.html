@@ -353,6 +353,18 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
     </div>
   </div>
 
+  <p><br /><strong>Another special note about Chinese and Japanese scripts</strong></p>
+  <p>As much as we would like to treat every Chinese and Japanese character as its own thing, both writing systems insist that certain punctuation marks cannot be separated from their preceding character over a line break. Browsers know about this, and make sure it happens in normal HTML. SC, however, makes no effort to guess when this should happen.</p>
+  <p>For this demo, we have manually added word joiner characters - HTML entity <code style="display: inline">&amp;#x2060;</code> - immediately before these punctuation marks. A more robust code solution to pre-process canvas text would be required to handle this sort of thing in production environments. Building such a solution into the SC code is not in scope for the project.</p>
+
+  <p><br /><strong>An even more special note about Thai scripts</strong></p>
+  <p>Breaking Thai "words" across lines is a difficult issue - see the <a href="https://www.w3.org/International/sealreq/thai/">W3C Thai Layout Requirements</a> spec for the latest position.</p>
+  <p>The Thai script is a complex abugida. Spaces are used, but the tendency is to only insert them at natural breath pauses, which means a Thai "word" (as in: a set of characters not separated by spaces) can get exceptionally long.</p>
+  <p>To break such words across lines, one recommendation is to insert zero-space spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. Browser engines seem to do this internally, but getting that data from the text string doesn't seem possible. For the two Thai fonts above, this has been done manually by copying the raw string into a <code style="display: inline">&lt;div style='width: 10px; font: 16px "Noto Thai Looped Sans"'></code> element and then counting the characters. Not recommended for production!</p>
+  <div style='width: 10px; font: 16px "Noto Thai Looped Sans"'>
+    ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้
+  </div>
+
   <script src="canvas-206.js" type="module"></script>
 
 </body>
