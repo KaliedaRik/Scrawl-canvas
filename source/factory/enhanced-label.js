@@ -581,6 +581,7 @@ P.cleanText = function () {
             style: null,
             lineOffset: 0,
             kernOffset: 0,
+            replaceLen: 0,
             stampFlag: true,
         };
     };
@@ -941,73 +942,157 @@ P.assignTextUnitsToLines = function () {
     const {
         lines,
         textUnits,
+        textUnitDirection,
     } = this;
 
     const unitArrayLength = textUnits.length;
 
     let unitCursor = 0,
         lengthRemaining,
-        i, unit, len, type;
+        i, unit, unitData, unitAfter, len, lineLength, type;
 
-    // TODO - this currently works for rows; will work for columns if each textUnit `len` is set to the font height, with spaces having 0 or minimal values?
-    // + Setting `len` happens elsewhere. This function just processes the data
-    lines.forEach(line => {
+    // TODO: The following code is good only for `textUnitDirection: ROW` situations. We also need code for:
+    // + `COLUMN` - where we will 'stack' the text units along the length of the line, rather than laying them out end-to-end.
+    // + `ROW_REVERSE` - reverse the layout order (but not the contents) of the text units along the line.
+    // + `COLUMN_REVERSE` - reverse the stack order of the text units along the line.
+    if (textUnitDirection === COLUMN || textUnitDirection === COLUMN_REVERSE) {}
+    else {
 
-        const {
-            length: lineLength,
-            unitData,
-        } = line;
+        lines.forEach(line => {
 
-        lengthRemaining = lineLength;
-
-        for (i = unitCursor; i < unitArrayLength; i++) {
-
-            unit = textUnits[i];
-
-            ({ len, type } = unit);
-
-            if (len < lengthRemaining) {
+            const addUnit = function (len) {
 
                 lengthRemaining -= len;
                 unitData.push(unitCursor);
                 ++unitCursor;
-            }
-            else {
+            };
 
-                // Check to see if the last successful character added to the line was a soft hyphen
-                unit = textUnits[unitCursor - 1];
+            ({
+                length: lineLength,
+                unitData,
+            } = line);
 
-                if (unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
+            lengthRemaining = lineLength;
 
-                    unitData.pop();
-                    unitData.push(TEXT_TYPE_SOFT_HYPHEN);
+            for (i = unitCursor; i < unitArrayLength; i++) {
+
+                unit = textUnits[i];
+
+                ({ len, type } = unit);
+
+                // Check: is there room for the text unit
+                if (len < lengthRemaining) {
+
+                    // We need to do a look-forward for soft hyphens
+                    unit = textUnits[i + 1];
+
+                    // Next text unit is a soft hyphen
+                    if (unit && unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
+
+                        unitAfter = textUnits[i + 2];
+
+                        // Check: this text unit and the next significant one will fit on line
+                        if (unitAfter && len + unitAfter.len < lengthRemaining) addUnit(len);
+
+                        // Check: this text unit and the visible hyphen will fit on line
+                        else if (len + unit.replaceLen < lengthRemaining) {
+
+                            addUnit(len);
+                            addUnit(unit.replaceLen);
+                            unitData.push(TEXT_TYPE_SOFT_HYPHEN);
+                            break;
+                        }
+
+                        // Check: there's no room for this text unit and its soft hyphen
+                        else break;
+                    }
+
+                    // Next text unit is not a soft hyphen; add this text unit to the array
+                    else addUnit(len);
                 }
-                break;
+
+                // There's no room on this line for the text unit
+                else break;
             }
-        }
-    });
+        });
 
-    // Truncation
-   if (unitArrayLength !== unitCursor) {
+        // Truncation check
+        if (unitArrayLength !== unitCursor) {
 
-        const unitData = lines[lines.length - 1].unitData,
-            mutableUnitData = [...unitData];
+            let currentLine, replaceLen;
 
-        for (i = unitData.length - 1; i >= 0; i--) {
+            let ultimateLine = lines.length - 1,
+                acc, mutableUnitData;
 
-            type = textUnits[unitData[i]]?.type;
+            for (currentLine = ultimateLine; currentLine >= 0; currentLine--) {
 
-            if (type !== TEXT_TYPE_CHARS) mutableUnitData.pop();
-            else {
+                ({
+                    length: lineLength,
+                    unitData,
+                } = lines[currentLine]);
 
-                mutableUnitData.pop();
-                mutableUnitData.push(TEXT_TYPE_TRUNCATE);
+                acc = unitData.reduce((a, v) => {
+
+                    if (textUnits[v] && textUnits[v].type === TEXT_TYPE_CHARS) a++
+                    return a;
+
+                }, 0);
+
+                if (acc) {
+
+                    mutableUnitData = [...unitData];
+                    break;
+                }
+                else unitData.length = 0;
+            }
+
+            if (mutableUnitData?.length) {
+
+                ({
+                    length: lineLength,
+                    unitData,
+                } = lines[currentLine]);
+
+                acc = unitData.reduce((a, v) => {
+
+                    if (textUnits[v]?.len) a += textUnits[v].len;
+                    return a;
+
+                }, 0);
+
+                for (i = unitData.length - 1; i >= 0; i--) {
+
+                    unit = textUnits[unitData[i]];
+
+                    ({ len, replaceLen, type } = unit);
+
+                    if (type !== TEXT_TYPE_CHARS && type !== TEXT_TYPE_SOFT_HYPHEN) {
+
+                        acc -= len;
+                        mutableUnitData.pop();
+                    }
+                    else {
+
+                        if (acc + replaceLen < lineLength) {
+
+                            mutableUnitData.push(TEXT_TYPE_TRUNCATE);
+                            break;
+                        }
+                        else {
+
+                            acc -= len;
+                            mutableUnitData.pop();
+                        }
+                    }
+                }
                 unitData.length = 0;
                 unitData.push(...mutableUnitData);
-                break;
             }
         }
     }
+
+    // Will need to do look-aheads for soft hyphens as units connected by them can't be reversed
+    if (textUnitDirection === ROW_REVERSE || textUnitDirection === COLUMN_REVERSE) {}
 };
 
 
@@ -1086,6 +1171,13 @@ P.positionTextUnitsInSpace = function () {
             // Unused space
             spaceRemaining = length - unitLengths;
 
+            // Adjustment for dynamic inputs (soft hyphen, truncation chars)
+            if (unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE)) {
+
+                unit = textUnits[unitData[unitData.length - 2]];
+                spaceRemaining -= unit?.replaceLen || 0;
+            }
+
             // Add unused space to distances as we push data into adjustedDistances
             switch (justifyLine) {
 
@@ -1163,7 +1255,7 @@ P.measureTextUnits = function () {
 
 // console.log(this.name, 'MEASURE_TEXT_UNITS (trigger: none - called by cleanText');
 
-    const { textUnits, defaultTextStyle, state } = this;
+    const { textUnits, defaultTextStyle, state, hyphenString, truncateString } = this;
 
     const mycell = requestCell(),
         engine = mycell.engine;
@@ -1180,10 +1272,27 @@ P.measureTextUnits = function () {
 
         if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
 
-        res = engine.measureText(chars);
+        if (type === TEXT_TYPE_SOFT_HYPHEN) {
 
-        if (type === TEXT_TYPE_SPACE) t.len = res.width + currentTextStyle.wordSpaceValue;
-        else t.len = res.width;
+            res = engine.measureText(hyphenString);
+            t.replaceLen = res.width;
+        }
+        else {
+
+            res = engine.measureText(chars);
+
+            if (type === TEXT_TYPE_SPACE) {
+
+                t.len = res.width + currentTextStyle.wordSpaceValue;
+            }
+            else {
+
+                t.len = res.width;
+
+                res = engine.measureText(truncateString);
+                t.replaceLen = res.width;
+            }
+        }
     });
 
     // Gather kerning data (if required)
@@ -1548,9 +1657,13 @@ P.regularStampInSpace = function () {
                 localPath,
                 textUnits,
                 defaultTextStyle,
+                alignment,
+                currentRotation,
+                truncateString,
+                hyphenString,
             } = this;
 
-            let sx, sy, unit, style, lineOffset, chars, type, len, offset;
+            let sx, sy, unitData, unit, style, lineOffset, chars, len;
 
             engine.save();
 
@@ -1558,38 +1671,43 @@ P.regularStampInSpace = function () {
 
             this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
 
-            // TODO: The following code is good only for `textUnitDirection: ROW` situations. We also need code for:
-            // + `COLUMN` - where we will 'stack' the text units along the length of the line, rather than laying them out end-to-end.
-            // + `ROW_REVERSE` - reverse the layout order (but not the contents) of the text units along the line.
-            // + `COLUMN_REVERSE` - reverse the stack order of the text units along the line.
+            const rotation = (alignment + currentRotation) * _radian;
+
             lines.forEach(line => {
 
                 [sx, sy] = line.startAt;
+                unitData = line.unitData;
 
-                line.unitData.forEach((u, uIndex) => {
+                dest.rotateDestination(engine, sx, sy, layout);
+                engine.rotate(rotation);
+
+                unitData.forEach((u, uIndex) => {
 
                     if (u.substring) {
 
-                        // We're at the end of the line but need to add something additional
-                        // + For the last line, this will be the default truncation copy (eg: `...`)
-                        // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
-                        unit = textUnits[line.unitData[uIndex - 1]];
+                        // Truncations and hyphens have to hang off of something. They can't appear on their own line
+                        if (unitData.length > 1) {
 
-                        ({ type, lineOffset, len } = unit);
+                            // We're at the end of the line but need to add something additional:
+                            // + For the last line, this will be the default truncation copy (eg: `...`)
+                            // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
+                            unit = textUnits[unitData[uIndex - 1]];
 
-                        offset = sx + lineOffset;
+                            ({ lineOffset, len } = unit);
 
-                        if (type === TEXT_TYPE_SPACE) dest.rotateDestination(engine, offset, sy, layout);
-                        else dest.rotateDestination(engine, offset + len, sy, layout);
+                            // TODO - this currently has a minor bug, where the truncation and soft hyphens appear "beyond the border" - for instance when text is end aligned. We need to correct this at the point when we determine the line will have a hyphen/truncation (when we stick the string letter into the line's unitData array). Reducing the spaces equally by small amounts should be a good fix?
+                            if (u === TEXT_TYPE_TRUNCATE) {
 
-                        // TODO - this currently has a minor bug, where the truncation and soft hyphens appear "beyond the border" - for instance when text is end aligned. We need to correct this at the point when we determine the line will have a hyphen/truncation (when we stick the string letter into the line's unitData array). Reducing the spaces equally by small amounts should be a good fix?
-                        if (u === TEXT_TYPE_TRUNCATE) engine.fillText(this.truncateString, 0, 0);
-                        else if (u === TEXT_TYPE_SOFT_HYPHEN) engine.fillText(this.hyphenString, 0, 0);
+                                engine.fillText(truncateString, lineOffset + len, 0);
+                            }
+                            else if (u === TEXT_TYPE_SOFT_HYPHEN) {
+
+                                engine.fillText(hyphenString, lineOffset + len, 0);
+                            }
+                        }
                     }
                     else {
 
-                        // Stamp as usual
-                        //
                         // TODO: currently only implementing the `fill` method. Need to include `draw`, and possibly `fillAndDraw` and `drawAndFill`
                         unit = textUnits[u];
 
@@ -1597,12 +1715,7 @@ P.regularStampInSpace = function () {
 
                         if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, dest);
 
-                        if (unit.stampFlag) {
-
-                            dest.rotateDestination(engine, sx + lineOffset, sy, layout);
-
-                            engine.fillText(chars, 0, 0);
-                        }
+                        if (unit.stampFlag) engine.fillText(chars, lineOffset, 0);
                     }
                 });
             });
@@ -1614,7 +1727,6 @@ P.regularStampInSpace = function () {
                 engine.globalAlpha = 0.3;
                 engine.stroke(localPath);
             }
-
             engine.restore();
         }
     }
