@@ -955,7 +955,9 @@ P.assignTextUnitsToLines = function () {
     // + `COLUMN` - where we will 'stack' the text units along the length of the line, rather than laying them out end-to-end.
     // + `ROW_REVERSE` - reverse the layout order (but not the contents) of the text units along the line.
     // + `COLUMN_REVERSE` - reverse the stack order of the text units along the line.
-    if (textUnitDirection === COLUMN || textUnitDirection === COLUMN_REVERSE) {}
+    if (textUnitDirection === COLUMN || textUnitDirection === COLUMN_REVERSE) {
+        console.log('TODO - columns');
+    }
     else {
 
         lines.forEach(line => {
@@ -1019,12 +1021,10 @@ P.assignTextUnitsToLines = function () {
         // Truncation check
         if (unitArrayLength !== unitCursor) {
 
-            let currentLine, replaceLen;
-
-            let ultimateLine = lines.length - 1,
+            let currentLine, replaceLen,
                 acc, mutableUnitData;
 
-            for (currentLine = ultimateLine; currentLine >= 0; currentLine--) {
+            for (currentLine = lines.length - 1; currentLine >= 0; currentLine--) {
 
                 ({
                     length: lineLength,
@@ -1092,7 +1092,9 @@ P.assignTextUnitsToLines = function () {
     }
 
     // Will need to do look-aheads for soft hyphens as units connected by them can't be reversed
-    if (textUnitDirection === ROW_REVERSE || textUnitDirection === COLUMN_REVERSE) {}
+    if (textUnitDirection === ROW_REVERSE || textUnitDirection === COLUMN_REVERSE) {
+        console.log('TODO - reverse text units');
+    }
 };
 
 
@@ -1658,12 +1660,16 @@ P.regularStampInSpace = function () {
                 textUnits,
                 defaultTextStyle,
                 alignment,
-                currentRotation,
                 truncateString,
                 hyphenString,
             } = this;
 
-            let sx, sy, unitData, unit, style, lineOffset, chars, len;
+            const currentRotation = layout.currentRotation;
+            const directionIsLtr = defaultTextStyle.direction === LTR;
+
+            const coord = requestCoordinate();
+
+            let sx, sy, unitData, unit, style, lineOffset, chars, len, replaceLen;
 
             engine.save();
 
@@ -1671,11 +1677,12 @@ P.regularStampInSpace = function () {
 
             this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
 
-            const rotation = (alignment + currentRotation) * _radian;
+            const rotation = (alignment - currentRotation) * _radian;
 
             lines.forEach(line => {
 
-                [sx, sy] = line.startAt;
+                [sx, sy] = coord.set(line.startAt).subtract(layout.currentStampPosition).rotate(currentRotation).add(layout.currentStampPosition);
+
                 unitData = line.unitData;
 
                 dest.rotateDestination(engine, sx, sy, layout);
@@ -1693,16 +1700,18 @@ P.regularStampInSpace = function () {
                             // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
                             unit = textUnits[unitData[uIndex - 1]];
 
-                            ({ lineOffset, len } = unit);
+                            ({ lineOffset, len, replaceLen } = unit);
 
                             // TODO - this currently has a minor bug, where the truncation and soft hyphens appear "beyond the border" - for instance when text is end aligned. We need to correct this at the point when we determine the line will have a hyphen/truncation (when we stick the string letter into the line's unitData array). Reducing the spaces equally by small amounts should be a good fix?
                             if (u === TEXT_TYPE_TRUNCATE) {
 
-                                engine.fillText(truncateString, lineOffset + len, 0);
+                                if (directionIsLtr) engine.fillText(truncateString, lineOffset + len, 0);
+                                else engine.fillText(truncateString, lineOffset - replaceLen, 0);
                             }
                             else if (u === TEXT_TYPE_SOFT_HYPHEN) {
 
-                                engine.fillText(hyphenString, lineOffset + len, 0);
+                                if (directionIsLtr) engine.fillText(hyphenString, lineOffset + len, 0);
+                                else engine.fillText(hyphenString, lineOffset - replaceLen, 0);
                             }
                         }
                     }
@@ -1728,6 +1737,8 @@ P.regularStampInSpace = function () {
                 engine.stroke(localPath);
             }
             engine.restore();
+
+            releaseCoordinate(coord);
         }
     }
 };
