@@ -26,9 +26,7 @@ import labelMix from '../mixin/label.js';
 
 import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _assign, _atan2, _ceil, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, FULL, GOOD_HOST, LEFT, LTR, NONE, NORMAL, PX0, ROUND, ROW, ROW_REVERSE, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
-
-// import { ALPHABETIC, BOTTOM, CENTER, END, HANGING, HYPHEN, IDEOGRAPHIC, MIDDLE, START } from '../helper/shared-vars.js';
+import { _assign, _atan2, _ceil, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, GOOD_HOST, LEFT, LTR, NONE, NORMAL, PX0, ROUND, ROW, ROW_REVERSE, SPACE_BETWEEN, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -38,8 +36,6 @@ const EnhancedLabel = function (items = Ωempty) {
     this.register();
 
     this.state = makeState(Ωempty);
-
-    // this.modifyConstructorInputForAnchorButton(items);
 
     this.defaultTextStyle = makeTextStyle({
         name: `${this.name}_default-textstyle`,
@@ -90,8 +86,6 @@ P.isAsset = false;
 // #### Mixins
 baseMix(P);
 deltaMix(P);
-// pathMix(P);
-// mimicMix(P);
 textMix(P);
 labelMix(P);
 
@@ -139,7 +133,7 @@ const defaultAttributes = {
 // + Attribute has no effect if `breakTextOnSpaces` is `false`.
     breakWordsOnHyphens: false,
 
-// __justifyLine__ - string enum. Allowed values are 'start', 'end', 'center' (default), 'full'
+// __justifyLine__ - string enum. Allowed values are 'start', 'end', 'center' (default), 'space-between'
 // + Determines the positioning of text units along the line. Has nothing to do with the `direction` attribute.
     justifyLine: CENTER,
 
@@ -472,9 +466,6 @@ P.getHost = function () {
     return currentCorePosition;
 };
 
-// Invalidate mid-init functionality
-P.midInitActions = λnull;
-
 
 P.getTester = function () {
 
@@ -676,6 +667,7 @@ P.cleanText = function () {
         this.assessTextForStyle();
 
         this.measureTextUnits();
+
         this.dirtyTextLayout = true;
     }
 };
@@ -922,6 +914,11 @@ P.layoutText = function () {
 
             this.dirtyTextLayout = false;
 
+            this.lines.forEach(line => {
+
+                line.unitData.length = 0;
+            });
+
             this.textUnits.forEach(unit => {
 
                 unit.stampFlag = true;
@@ -943,6 +940,7 @@ P.assignTextUnitsToLines = function () {
         lines,
         textUnits,
         textUnitDirection,
+        breakWordsOnHyphens,
     } = this;
 
     const unitArrayLength = textUnits.length;
@@ -985,31 +983,35 @@ P.assignTextUnitsToLines = function () {
                 // Check: is there room for the text unit
                 if (len < lengthRemaining) {
 
-                    // We need to do a look-forward for soft hyphens
-                    unit = textUnits[i + 1];
+                    if (breakWordsOnHyphens) {
 
-                    // Next text unit is a soft hyphen
-                    if (unit && unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
+                        // We need to do a look-forward for soft hyphens
+                        unit = textUnits[i + 1];
 
-                        unitAfter = textUnits[i + 2];
+                        // Next text unit is a soft hyphen
+                        if (unit && unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
 
-                        // Check: this text unit and the next significant one will fit on line
-                        if (unitAfter && len + unitAfter.len < lengthRemaining) addUnit(len);
+                            unitAfter = textUnits[i + 2];
 
-                        // Check: this text unit and the visible hyphen will fit on line
-                        else if (len + unit.replaceLen < lengthRemaining) {
+                            // Check: this text unit and the next significant one will fit on line
+                            if (unitAfter && len + unitAfter.len < lengthRemaining) addUnit(len);
 
-                            addUnit(len);
-                            addUnit(unit.replaceLen);
-                            unitData.push(TEXT_TYPE_SOFT_HYPHEN);
-                            break;
+                            // Check: this text unit and the visible hyphen will fit on line
+                            else if (len + unit.replaceLen < lengthRemaining) {
+
+                                addUnit(len);
+                                addUnit(unit.replaceLen);
+                                unitData.push(TEXT_TYPE_SOFT_HYPHEN);
+                                break;
+                            }
+
+                            // Check: there's no room for this text unit and its soft hyphen
+                            else break;
                         }
 
-                        // Check: there's no room for this text unit and its soft hyphen
-                        else break;
+                        // Next text unit is not a soft hyphen; add this text unit to the array
+                        else addUnit(len);
                     }
-
-                    // Next text unit is not a soft hyphen; add this text unit to the array
                     else addUnit(len);
                 }
 
@@ -1165,7 +1167,7 @@ P.positionTextUnitsInSpace = function () {
                         unitLengths += unit.len - unit.kernOffset;
 
                         // keep a count of the number of spaces within the line
-                        if (justifyLine === FULL && unit.type === TEXT_TYPE_SPACE) noOfSpaces++;
+                        if (justifyLine === SPACE_BETWEEN && unit.type === TEXT_TYPE_SPACE) noOfSpaces++;
                     }
                 }
             });
@@ -1196,8 +1198,8 @@ P.positionTextUnitsInSpace = function () {
                     adjustedDistances.push(...initialDistances.map(d => d + spaceRemaining));
                     break;
 
-                // If justify is 'full' ... we handle this case below
-                case FULL :
+                // If justify is 'space-between' ... we handle this case below
+                case SPACE_BETWEEN :
 
                     if (noOfSpaces) spaceStep = spaceRemaining / noOfSpaces;
 
@@ -1210,8 +1212,8 @@ P.positionTextUnitsInSpace = function () {
                     adjustedDistances.push(...initialDistances);
             }
 
-            // Full justify text needs special processing as we only want to add portions of remaining space to each of the relevant 'space' text units
-            if (justifyLine === FULL) {
+            // space-between justify text needs special processing as we only want to add portions of remaining space to each of the relevant 'space' text units
+            if (justifyLine === SPACE_BETWEEN) {
 
                 unitIndices = 0;
 
@@ -1265,7 +1267,6 @@ P.measureTextUnits = function () {
     let res, chars, type, style, len, nextUnit, nextStyle, nextChars, nextType, nextLen, unkernedLen;
 
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'measure-worker');
-
     this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mycell);
 
     textUnits.forEach(t => {
@@ -1274,31 +1275,31 @@ P.measureTextUnits = function () {
 
         if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
 
-        if (type === TEXT_TYPE_SOFT_HYPHEN) {
+        res = engine.measureText(chars);
+
+        t.len = res.width;
+
+        if (type === TEXT_TYPE_SPACE) {
+
+            t.len += currentTextStyle.wordSpaceValue;
+        }
+        else if (type === TEXT_TYPE_SOFT_HYPHEN) {
 
             res = engine.measureText(hyphenString);
             t.replaceLen = res.width;
         }
         else {
 
-            res = engine.measureText(chars);
-
-            if (type === TEXT_TYPE_SPACE) {
-
-                t.len = res.width + currentTextStyle.wordSpaceValue;
-            }
-            else {
-
-                t.len = res.width;
-
-                res = engine.measureText(truncateString);
-                t.replaceLen = res.width;
-            }
+            res = engine.measureText(truncateString);
+            t.replaceLen = res.width;
         }
     });
 
     // Gather kerning data (if required)
     if (this.useLayoutEngineAsPath || !this.breakTextOnSpaces || this.allowSubUnitStyling) {
+
+        // Reset things back to initial before starting the second walk-through
+        this.setEngineFromWorkingTextStyle(currentTextStyle, defaultTextStyle, state, mycell);
 
         textUnits.forEach((unit, index) => {
 
@@ -1334,8 +1335,6 @@ P.measureTextUnits = function () {
             }
         });
     }
-// console.log(textUnits);
-
     releaseCell(mycell);
 };
 
@@ -1369,6 +1368,7 @@ P.calculateLines = function () {
 
     const walkTheLine = (x, y, dim) => {
 
+        // We always walk the line from left to right
         const startAt = x + (-dim * 3),
             endAt = x + (dim * 3),
             res = [];
@@ -1386,7 +1386,19 @@ P.calculateLines = function () {
                 isInLayout = check;
             }
         }
-        return res;
+
+        // In RTL script situations, the line partials need to be in RTL order
+        if (directionIsLtr) return res;
+        else {
+
+            const rtlRes = [];
+
+            for (i = res.length - 1; i >= 0; i -= 2) {
+
+                rtlRes.push(res[i - 1], res[i]);
+            }
+            return rtlRes;
+        }
     }
 
 
@@ -1415,10 +1427,13 @@ P.calculateLines = function () {
 
     const {
         fontSizeValue,
+        direction,
     } = defaultTextStyle;
 
     const rotation = -alignment * _radian;
     const rotationFix = alignment - currentRotation;
+
+    const directionIsLtr = direction === LTR;
 
     const step = fontSizeValue * lineSpacing;
 
@@ -1440,7 +1455,6 @@ P.calculateLines = function () {
     engine.rotate(rotation);
 
     // Main calculations: start with the line closest to the layout engine's `currentStampPosition` attribute
-    // + TODO: one bug remains - functionality currently doesn't take into account handle offsets at the first level, which means lines don't generate if the handle pushes the layout entity too far away from the stamp position. This is due to the while/flag interaction. Probably won't fix as it's a bit of an edge case...
     beginY = constY + layoutEngineLineOffset;
     rawData.push([beginY, getEndPoints(constX, beginY)]);
 
@@ -1478,31 +1492,52 @@ P.calculateLines = function () {
     rawData.forEach(d => {
 
         lineData = d[1];
-        [sx, sy, ex, ey] = lineData;
+        counter = 0;
 
-        lineVal = _hypot(sx - ex, sy - ey);
+        // There can be 1 or more "partial" lines along a line (eg: crescent shape horns)
+        for (i = 0, iz = lineData.length; i < iz; i += 4) {
 
-        lineProcessing.push(lineVal);
-        lineLength += lineVal;
+            sx = lineData[counter++];
+            sy = lineData[counter++];
+            ex = lineData[counter++];
+            ey = lineData[counter++];
+
+            lineVal = _hypot(sx - ex, sy - ey);
+
+            lineProcessing.push(lineVal);
+            lineLength += lineVal;
+        }
     });
 
     lineVal = 0;
 
-    lineProcessing.forEach((d, i) => {
+    rawData.forEach(d => {
 
-        [sx, sy, ex, ey] = rawData[i][1];
+        lineData = d[1];
+        counter = 0;
 
-        // Currently storing as an object. Need to turn it into an array for more efficient processing
-        lines.push({
-            length: _ceil(d),
-            lengthRatio: d / lineLength,
-            startPositionInPath: lineVal / lineLength,
-            startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
-            endAt: [...coord.set([ex, ey]).add(currentStampPosition)],
-            unitData: [],
-        });
+        // There can be 1 or more "partial" lines along a line (eg: crescent shape horns)
+        for (i = 0, iz = lineData.length; i < iz; i += 4) {
 
-        lineVal += d;
+            sx = lineData[counter++];
+            sy = lineData[counter++];
+            ex = lineData[counter++];
+            ey = lineData[counter++];
+
+            lineResults = lineProcessing.shift();
+
+            // Currently storing as an object. Need to turn it into an array for more efficient processing
+            lines.push({
+                length: _ceil(lineResults),
+                lengthRatio: lineResults / lineLength,
+                startPositionInPath: lineVal / lineLength,
+                startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
+                endAt: [...coord.set([ex, ey]).add(currentStampPosition)],
+                unitData: [],
+            });
+
+            lineVal += lineResults;
+        }
     });
 
     // Generate the path string

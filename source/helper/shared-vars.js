@@ -502,6 +502,7 @@ export const SOURCE_ONLY = 'source-only';
 export const SOURCE_OUT = 'source-out';
 export const SOURCE_OVER = 'source-over';
 export const SPACE = ' ';
+export const SPACE_BETWEEN = 'space-between';
 export const SPIRAL = 'spiral';
 export const SPRING = 'spring';
 export const SRGB = 'srgb';

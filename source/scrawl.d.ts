@@ -1263,6 +1263,7 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 // EnhancedLabelInstance factory
 // -------------------------------------
 type TextUnitDirectionValues = 'row' | 'row-reverse' | 'column' | 'column-reverse';
+type TextLineJustifyValues = 'start' | 'end' | 'center' | 'space-between';
 
 interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {
     lineSpacing?: number;
@@ -1279,13 +1280,13 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     useLayoutEngineAsPath?: boolean;
     layoutEnginePathStart?: number;
     constantPathSpeed?: boolean;
-    
+
     textUnitDirection?: TextUnitDirectionValues;
 
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
 
-    justifyLine?: PhraseJustifyValues;
+    justifyLine?: TextLineJustifyValues;
     allowSubUnitStyling?: boolean;
 
     useDocumentStyling?: boolean;
@@ -1332,12 +1333,6 @@ interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFu
     set: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
     simpleStamp: (host: CellInstance, items?: EnhancedLabelFactoryInputs) => void;
-
-
-
-    // checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
-    // getBoundingBox: () => number[];
-    // update: () => void;
 }
 
 interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, EnhancedLabelFactoryFunctions {}

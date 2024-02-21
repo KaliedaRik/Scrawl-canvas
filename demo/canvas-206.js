@@ -71,8 +71,6 @@ const mylabel = scrawl.makeEnhancedLabel({
     showBoundingBox: true,
 
     layoutEngine: name('block-layout-engine'),
-
-    breakWordsOnHyphens: true,
 });
 
 
@@ -106,7 +104,7 @@ const updateDisplayText = () => {
     const dims = blockEngine.get('dimensions');
 
     let justify = mylabel.get('justifyLine');
-    if (justify === 'full') justify = 'justify';
+    if (justify === 'space-between') justify = 'justify';
 
     setTimeout(() => {
 
@@ -145,6 +143,10 @@ scrawl.makeUpdater({
         layoutEngineLineOffset: ['layoutEngineLineOffset', 'float'],
         alignment: ['alignment', 'float'],
         justifyLine: ['justifyLine', 'raw'],
+        textUnitDirection: ['textUnitDirection', 'raw'],
+        lineSpacing: ['lineSpacing', 'float'],
+        breakTextOnSpaces: ['breakTextOnSpaces', 'boolean'],
+        breakWordsOnHyphens: ['breakWordsOnHyphens', 'boolean'],
     },
 
     callback: updateDisplayText,
@@ -212,6 +214,10 @@ scrawl.addNativeListener('change', (e) => updateLayoutEngine(e), layoutEngineSel
 
 
 const fontSelector = document.querySelector('#font');
+const lineSpacingSelector = document.querySelector('#lineSpacing');
+const directionSelector = document.querySelector('#direction');
+const breakTextOnSpacesSelector = document.querySelector('#breakTextOnSpaces');
+
 const updateFont = (event) => {
 
     const font = event.target.value;
@@ -230,7 +236,6 @@ const updateFont = (event) => {
                 });
                 break;
 
-            // <option value="serif-normal">serif (lh: normal)</option>
             case 'serif-normal' :
                 mylabel.set({
                     fontString: '16px / normal serif',
@@ -240,7 +245,6 @@ const updateFont = (event) => {
                 });
                 break;
 
-            // <option value="serif-ratio">serif (lh: ratio)</option>
             case 'serif-ratio' :
                 mylabel.set({
                     fontString: '16px / 2.5 serif',
@@ -250,7 +254,6 @@ const updateFont = (event) => {
                 });
                 break;
 
-            // <option value="serif-length">serif (lh: length)</option>
             case 'serif-length' :
                 mylabel.set({
                     fontString: '16px / 3em serif',
@@ -260,7 +263,6 @@ const updateFont = (event) => {
                 });
                 break;
 
-            // <option value="serif-percent">serif (lh: percent)</option>
             case 'serif-percent' :
                 mylabel.set({
                     fontString: '16px / 180% serif',
@@ -270,7 +272,6 @@ const updateFont = (event) => {
                 });
                 break;
 
-            // <option value="serif-px">serif (lh: px)</option>
             case 'serif-px' :
                 mylabel.set({
                     fontString: '16px / 30px serif',
@@ -591,6 +592,19 @@ const updateFont = (event) => {
                 });
         }
 
+// @ts-expect-error
+        if (mylabel.get('direction') === 'ltr') directionSelector.options.selectedIndex = 0;
+// @ts-expect-error
+        else directionSelector.options.selectedIndex = 1;
+
+// @ts-expect-error
+        if (mylabel.get('breakTextOnSpaces')) breakTextOnSpacesSelector.options.selectedIndex = 1;
+// @ts-expect-error
+        else breakTextOnSpacesSelector.options.selectedIndex = 0;
+
+// @ts-expect-error
+        lineSpacingSelector.value = mylabel.get('lineSpacing');
+
         updateDisplayText();
     }
 };
@@ -602,6 +616,12 @@ scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
 fontSelector.options.selectedIndex = 0;
 // @ts-expect-error
 layoutEngineSelector.options.selectedIndex = 0;
+// @ts-expect-error
+lineSpacingSelector.value = 1.5;
+// @ts-expect-error
+directionSelector.options.selectedIndex = 0;
+// @ts-expect-error
+breakTextOnSpacesSelector.options.selectedIndex = 1;
 
 // @ts-expect-error
 document.querySelector('#startX').value = 50;
@@ -629,6 +649,10 @@ document.querySelector('#layoutEngineLineOffset').value = 0;
 document.querySelector('#justifyLine').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#alignment').value = 0;
+// @ts-expect-error
+document.querySelector('#textUnitDirection').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#breakWordsOnHyphens').options.selectedIndex = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

@@ -283,11 +283,15 @@ export default function (P = Ωempty) {
 
         if (item.toFixed) this.lineSpacing += item;
 
+        if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
+
         this.dirtyFont = true;
     };
     S.lineSpacing = function (item) {
 
         if (item.toFixed) this.lineSpacing = item;
+
+        if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
 
         this.dirtyFont = true;
     };

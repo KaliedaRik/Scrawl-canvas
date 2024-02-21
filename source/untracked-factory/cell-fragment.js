@@ -87,6 +87,7 @@ export const releaseCell = function (c) {
     if (c && c.type == T_CELLFRAGMENT) {
 
         c.engine.restore();
+        c.state.setStateFromEngine(c.engine);
         cellPool.push(c);
     }
 };
