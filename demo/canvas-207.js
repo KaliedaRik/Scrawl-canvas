@@ -1,7 +1,7 @@
-// # Demo Canvas 206
-// EnhancedLabel entity - multiline text
+// # Demo Canvas 207
+// EnhancedLabel entity - basic multiline text
 
-// [Run code](../../demo/canvas-206.html)
+// [Run code](../../demo/canvas-207.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
@@ -19,7 +19,7 @@ const name = (n) => `${namespace}-${n}`;
 
 const displayText = document.querySelector('.demo-explanation-styles');
 
-const westernText = '<span class="underline">Lorem</span> ipsum <b>dolor sit</b> amet, con&shy;sectetur 😀 adi&shy;piscing &eacute;lit, sed <s>do eius-mod</s> <u>tempor in&shy;cididunt</u> ut labore et dolore magna aliqua. Ut enim ad <span class="bold">minim veniam,</span> quis <span class="letter-spaced">nostrud</span> exercit-ation <span class="strike">ullamco laboris</span> nisi ut aliquip ex ea <span class="make-monospace">"commodo"</span> consequat. Duis <em>(aute irure d&ouml;lor)</em> in reprehenderit 🤖&icirc;n <i>voluptate</i> velit &copy;2024 <i>esse &lt;cillum&gt; <b>dolore</b> eu fug🎻iat nulla</i> pariatur. <span class="red">Excepteur sint</span> occaecat &iexcl;cupidatat! <strong>non proident,</strong> <span class="word-spaced">sunt in culpa qui</span> offici&thorn;a deserunt <span class="make-bigger">mollit anim</span> id est laborum.';
+const westernText = 'Lorem ipsum dolor sit amet, con&shy;sectetur 😀 adi&shy;piscing &eacute;lit, sed do eius-mod tempor in&shy;cididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit-ation ullamco laboris nisi ut aliquip ex ea "commodo" consequat. Duis (aute irure d&ouml;lor) in reprehenderit 🤖&icirc;n voluptate velit &copy;2024 esse &lt;cillum&gt; dolore eu fug🎻iat nulla pariatur. Excepteur sint occaecat &iexcl;cupidatat! non proident, sunt in culpa qui offici&thorn;a deserunt mollit anim id est laborum.';
 
 
 const blockEngine = scrawl.makeBlock({
@@ -168,12 +168,6 @@ scrawl.makeUpdater({
 
     updates: {
 
-        startX: ['startX', '%'],
-        startY: ['startY', '%'],
-        handleX: ['handleX', '%'],
-        handleY: ['handleY', '%'],
-        offsetX: ['offsetX', 'px'],
-        offsetY: ['offsetY', 'px'],
         width: ['width', '%'],
         height: ['height', '%'],
         scale: ['scale', 'float'],
@@ -627,18 +621,6 @@ directionSelector.options.selectedIndex = 0;
 // @ts-expect-error
 breakTextOnSpacesSelector.options.selectedIndex = 1;
 
-// @ts-expect-error
-document.querySelector('#startX').value = 50;
-// @ts-expect-error
-document.querySelector('#startY').value = 50;
-// @ts-expect-error
-document.querySelector('#handleX').value = 50;
-// @ts-expect-error
-document.querySelector('#handleY').value = 50;
-// @ts-expect-error
-document.querySelector('#offsetX').value = 0;
-// @ts-expect-error
-document.querySelector('#offsetY').value = 0;
 // @ts-expect-error
 document.querySelector('#width').value = 60;
 // @ts-expect-error

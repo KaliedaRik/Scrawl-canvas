@@ -5,13 +5,69 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 206</title>
+  <title>Demo Canvas 208</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
-  <link href="css/fontface-declarations.css" rel="stylesheet" />
 
   <style>
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Garamond";
+      src: url("fonts/EBGaramond-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    @font-face {
+      font-family: "Bungee";
+      src: url("fonts/Bungee-Regular.ttf") format("opentype");
+    }
+
+    @font-face {
+      font-family: "Carter One";
+      src: url("fonts/CarterOne-Regular.ttf") format("opentype");
+    }
+
+    @font-face {
+      font-family: "Mountains Of Christmas";
+      src: url("fonts/MountainsofChristmas-Bold.ttf") format("opentype");
+    }
+
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
@@ -163,64 +219,27 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
 <body>
   <div id="test-navigation">
-    <a href="canvas-205.html">&larr; Previous</a>
-    <a href="canvas-301.html">Next &rarr;</a>
+    <a href="canvas-207.html">&larr; Previous</a>
+    <a href="filters-001.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 206</h1>
-  <h2>EnhancedLabel entity - multiline text</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 208</h1>
+  <h2>EnhancedLabel entity - styling multiline text</h2>
 
   <div class="controls">
 
     <div class="lavender label">Select font</div>
     <div class="lavender">
       <select class="controlItem" id="font">
-        <option value="serif">serif</option>
-        <option value="sans-serif">sans-serif</option>
-        <option value="monospace">monospace</option>
-        <option value="cursive">cursive</option>
-        <option value="fantasy">fantasy</option>
-        <option value="garamond">Garamond</option>
         <option value="roboto">Roboto</option>
-        <option value="roboto-serif">Roboto Serif</option>
-        <option value="roboto-mono">Roboto Mono</option>
-        <option value="noto-arabic-sans">Noto Arabic Sans</option>
-        <option value="noto-arabic-naskh">Noto Arabic Naskh</option>
-        <option value="noto-urdu-nastaliq">Noto Urdu Nastaliq</option>
-        <option value="noto-chinese-simple-sans">Noto Chinese Simple Sans</option>
-        <option value="noto-chinese-simple-serif">Noto Chinese Simple Serif</option>
-        <option value="noto-devangari-sans">Noto Devangari Sans</option>
-        <option value="noto-devangari-serif">Noto Devangari Serif</option>
-        <option value="noto-hebrew-sans">Noto Hebrew Sans</option>
-        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
-        <option value="noto-japanese-sans">Noto Japanese Sans</option>
-        <option value="noto-japanese-serif">Noto Japanese Serif</option>
-        <option value="noto-korean-sans">Noto Korean Sans</option>
-        <option value="noto-korean-serif">Noto Korean Serif</option>
-        <option value="noto-mongolian-sans">Noto Mongolian Sans</option>
-        <option value="noto-tai-le-sans">Noto Tai Le Sans</option>
-        <option value="noto-tai-tham-sans">Noto Tai Tham Sans</option>
-        <option value="noto-thai-looped-sans">Noto Thai Looped Sans</option>
-        <option value="noto-thai-serif">Noto Thai Serif</option>
-        <option value="noto-tirhuta-sans">Noto Tirhuta Sans</option>
+        <option value="garamond">Garamond</option>
         <option value="bungee">Bungee</option>
         <option value="carter-one">Carter One</option>
         <option value="mountains-of-christmas">Mountains Of Christmas</option>
-        <option value="serif-normal">serif (lh: normal)</option>
-        <option value="serif-ratio">serif (lh: ratio)</option>
-        <option value="serif-length">serif (lh: length)</option>
-        <option value="serif-percent">serif (lh: percent)</option>
-        <option value="serif-px">serif (lh: px)</option>
       </select>
     </div>
 
-    <div class="lavender label">Layout engine</div>
-    <div class="lavender">
-      <select class="controlItem" id="layoutEngine">
-        <option value="block-engine">Block entity</option>
-        <option value="wheel-engine">Wheel entity</option>
-        <option value="crescent-engine">Crescent entity</option>
-      </select>
-    </div>
+    <div class="lavender label">&nbsp;</div>
+    <div class="lavender">&nbsp;</div>
 
     <div class="lavender label">Text unit direction</div>
     <div class="lavender">
@@ -339,36 +358,6 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
   <div class="controls">
 
-    <div class="yellow label">Start X (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="startX" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Start Y (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="startY" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Handle X (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="handleX" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Handle Y (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="handleY" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Offset X (px)</div>
-    <div class="yellow">
-      <input class="controlItem" id="offsetX" type="range" value="0" min="-50" max="50" step="1" />
-    </div>
-
-    <div class="yellow label">Offset Y (px)</div>
-    <div class="yellow">
-      <input class="controlItem" id="offsetY" type="range" value="0" min="-50" max="50" step="1" />
-    </div>
-
     <div class="yellow label">Scale</div>
     <div class="yellow">
       <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />
@@ -400,54 +389,18 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
     <p><b>Touch test:</b> not required.</p>
 
-    <p><a href="../docs/demo/canvas-206.html">Annotated code</a></p>
+    <p><a href="../docs/demo/canvas-208.html">Annotated code</a></p>
 
-    <p><br /><strong>A special note about fonts</strong></p>
-    <p>Because fonts load asynchronously, and SC EnhancedLabel entitys currently have a (near-unsolvable) bug where they will measure a font before the font family's various iterations (if specified in CSS <code style="display: inline">@font-family</code> definitions) have downloaded - they only wait for their default font to download, not any additional fonts included (via CSS) in their text string - it makes sense for us to trigger font downloads as soon as possible. And the simplest way to do that is to include text using those fonts in a <code style="display: inline">"hidden"</code> (actually an <code style="display: inline">aria-hidden="true" style="height: 0; overflow: hidden"</code>) element in the web page, ahead of the <code style="display: inline">&lt;script></code> tag that triggers the SC canvas build.</p>
-    <p>There are, of course, more professional ways for a front-end engineer to manage efficient and timely font downloads ... but this is just a demo and, well, needs must!</p>
     <div id="preload-fonts" aria-hidden="true">
       <div style='font-family: "Garamond"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Roboto"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Roboto Mono"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Arabic Naskh"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Urdu Nastaliq"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Chinese Simple Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Devangari Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Devangari Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Hebrew Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Hebrew Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Japanese Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Japanese Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Korean Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Korean Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Mongolian Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Tai Le Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Tai Tham Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Thai Looped Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Thai Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-      <div style='font-family: "Noto Tirhuta Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Roboto Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
       <div style='font-family: "Bungee"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
       <div style='font-family: "Carter One"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
       <div style='font-family: "Mountains Of Christmas"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
     </div>
   </div>
 
-  <p><br /><strong>Another special note about Chinese and Japanese scripts</strong></p>
-  <p>As much as we would like to treat every Chinese and Japanese character as its own thing, both writing systems insist that certain punctuation marks cannot be separated from their preceding character over a line break. Browsers know about this, and make sure it happens in normal HTML. SC, however, makes no effort to guess when this should happen.</p>
-  <p>For this demo, we have manually added word joiner characters - HTML entity <code style="display: inline">&amp;#x2060;</code> - immediately before these punctuation marks. A more robust code solution to pre-process canvas text would be required to handle this sort of thing in production environments. Building such a solution into the SC code is not in scope for the project.</p>
-
-  <p><br /><strong>An even more special note about Thai scripts</strong></p>
-  <p>Breaking Thai "words" across lines is a difficult issue - see the <a href="https://www.w3.org/International/sealreq/thai/">W3C Thai Layout Requirements</a> spec for the latest position.</p>
-  <p>The Thai script is a complex abugida. Spaces are used, but the tendency is to only insert them at natural breath pauses, which means a Thai "word" (as in: a set of characters not separated by spaces) can get exceptionally long.</p>
-  <p>To break such words across lines, one recommendation is to insert zero-space spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. Browser engines seem to do this internally, but getting that data from the text string doesn't seem possible. For the two Thai fonts above, this has been done manually by copying the raw string into a <code style="display: inline">&lt;div style='width: 10px; font: 16px "Noto Thai Looped Sans"'></code> element and then counting the characters. Not recommended for production!</p>
-  <div style='width: 10px; font: 16px "Noto Thai Looped Sans"'>
-    ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้
-  </div>
-
-  <script src="canvas-206.js" type="module"></script>
+  <script src="canvas-208.js" type="module"></script>
 
 </body>
 

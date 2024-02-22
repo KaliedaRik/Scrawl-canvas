@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 206</title>
+  <title>Demo Canvas 207</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
@@ -34,140 +34,16 @@
       height: 0;
       overflow: hidden;
     }
-
-/*
-CSS property direction                      maps to TextStyle direction
-CSS property font-family                    maps to TextStyle fontFamily
-CSS property font-kerning                   maps to TextStyle fontKerning
-CSS property font-size                      maps to TextStyle fontSize
-CSS property font-stretch                   maps to TextStyle fontStretch
-CSS property font-style                     maps to TextStyle fontStyle
-CSS property font-variant-caps              maps to TextStyle fontVariantCaps
-CSS property font-weight                    maps to TextStyle fontWeight
-CSS property letter-spacing                 maps to TextStyle letterSpacing
-CSS property text-rendering                 maps to TextStyle textRendering
-CSS property word-spacing                   maps to TextStyle wordSpacing
-
-CSS custom property --SC-fill-style         maps to TextStyle fillStyle
-CSS custom property --SC-stroke-style       maps to TextStyle strokeStyle
-CSS custom property --SC-stroke-width       maps to TextStyle lineWidth
-
-CSS custom property --SC-include-highlight  maps to TextStyle includeHighlight
-CSS custom property --SC-highlight-style    maps to TextStyle highlightStyle
-
-CSS custom property --SC-include-overline   maps to TextStyle includeOverline
-CSS custom property --SC-overline-offset    maps to TextStyle overlineOffset
-CSS custom property --SC-overline-style     maps to TextStyle overlineStyle
-CSS custom property --SC-overline-width     maps to TextStyle overlineWidth
-
-CSS custom property --SC-include-underline  maps to TextStyle includeUnderline
-CSS custom property --SC-underline-gap      maps to TextStyle underlineGap
-CSS custom property --SC-underline-offset   maps to TextStyle underlineOffset
-CSS custom property --SC-underline-style    maps to TextStyle underlineStyle
-CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
-
-*/
-
-    .demo-my-label, .demo-explanation-styles, #preload-fonts {
-
-      & b {
-        font-weight: bold;
-      }
-
-      & strong {
-        --SC-include-highlight: true;
-        --SC-highlight-style: honeydew;
-
-        font-weight: bold;
-        background-color: var(--SC-highlight-style);
-      }
-
-      & i {
-        font-style: italic;
-      }
-
-      & em {
-        --SC-fill-style: blue;
-
-        font-style: italic;
-        color: var(--SC-fill-style);
-      }
-      
-      & u {
-        --SC-include-underline: true;
-        text-decoration: underline;
-      }
-      
-      & s {
-        --SC-include-overline: true;
-        --SC-overline-offset: 0.4;
-        --SC-overline-style: red;
-        --SC-overline-width: 5px;
-
-        text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
-      }
-
-      & .bold {
-        font-weight: bold;
-      }
-      
-      & .italic {
-        font-style: italic;
-      }
-      
-      & .underline {
-        --SC-include-underline: true;
-
-        text-decoration: underline;
-        font-variant: small-caps;
-      }
-
-      & .strike {
-        --SC-fill-style: gray;
-
-        --SC-include-overline: true;
-        --SC-overline-offset: 0.5;
-        --SC-overline-style: gray;
-        --SC-overline-width: 2px;
-
-        color: var(--SC-fill-style);
-        text-decoration-line: line-through;
-        text-decoration-color: var(--SC-overline-style);
-        text-decoration-thickness: var(--SC-overline-width);
-      }
-
-      & .red {
-        --SC-fill-style: red;
-
-        color: var(--SC-fill-style);
-      }
-
-      & .letter-spaced {
-        letter-spacing: 10px;
-      }
-
-      & .word-spaced {
-        word-spacing: 0.8rem;
-      }
-
-      & .make-bigger {
-        font-size: 120%;
-      }
-
-      & .make-monospace {
-        font-family: monospace;
-      }
-    }
   </style>
 </head>
 
 <body>
   <div id="test-navigation">
-    <a href="canvas-205.html">&larr; Previous</a>
-    <a href="canvas-301.html">Next &rarr;</a>
+    <a href="canvas-206.html">&larr; Previous</a>
+    <a href="canvas-208.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 206</h1>
-  <h2>EnhancedLabel entity - multiline text</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 207</h1>
+  <h2>EnhancedLabel entity - basic multiline text</h2>
 
   <div class="controls">
 
@@ -339,36 +215,6 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
   <div class="controls">
 
-    <div class="yellow label">Start X (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="startX" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Start Y (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="startY" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Handle X (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="handleX" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Handle Y (%)</div>
-    <div class="yellow">
-      <input class="controlItem" id="handleY" type="range" value="50" min="-50" max="150" step="1" />
-    </div>
-
-    <div class="yellow label">Offset X (px)</div>
-    <div class="yellow">
-      <input class="controlItem" id="offsetX" type="range" value="0" min="-50" max="50" step="1" />
-    </div>
-
-    <div class="yellow label">Offset Y (px)</div>
-    <div class="yellow">
-      <input class="controlItem" id="offsetY" type="range" value="0" min="-50" max="50" step="1" />
-    </div>
-
     <div class="yellow label">Scale</div>
     <div class="yellow">
       <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />
@@ -400,7 +246,7 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
     <p><b>Touch test:</b> not required.</p>
 
-    <p><a href="../docs/demo/canvas-206.html">Annotated code</a></p>
+    <p><a href="../docs/demo/canvas-207.html">Annotated code</a></p>
 
     <p><br /><strong>A special note about fonts</strong></p>
     <p>Because fonts load asynchronously, and SC EnhancedLabel entitys currently have a (near-unsolvable) bug where they will measure a font before the font family's various iterations (if specified in CSS <code style="display: inline">@font-family</code> definitions) have downloaded - they only wait for their default font to download, not any additional fonts included (via CSS) in their text string - it makes sense for us to trigger font downloads as soon as possible. And the simplest way to do that is to include text using those fonts in a <code style="display: inline">"hidden"</code> (actually an <code style="display: inline">aria-hidden="true" style="height: 0; overflow: hidden"</code>) element in the web page, ahead of the <code style="display: inline">&lt;script></code> tag that triggers the SC canvas build.</p>
@@ -447,7 +293,7 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
     ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้
   </div>
 
-  <script src="canvas-206.js" type="module"></script>
+  <script src="canvas-207.js" type="module"></script>
 
 </body>
 
