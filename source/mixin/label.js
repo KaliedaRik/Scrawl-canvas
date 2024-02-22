@@ -279,23 +279,6 @@ export default function (P = Ωempty) {
     S.dimensions = λnull;
     D.dimensions = λnull;
 
-    D.lineSpacing = function (item) {
-
-        if (item.toFixed) this.lineSpacing += item;
-
-        if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
-
-        this.dirtyFont = true;
-    };
-    S.lineSpacing = function (item) {
-
-        if (item.toFixed) this.lineSpacing = item;
-
-        if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
-
-        this.dirtyFont = true;
-    };
-
 
 // #### Prototype functions
 
@@ -404,6 +387,8 @@ export default function (P = Ωempty) {
             const engine = mycell.engine;
 
             engine.font = font;
+            engine.textBaseline = TOP;
+
 
             const metrics = engine.measureText(SPACE);
 
@@ -412,19 +397,9 @@ export default function (P = Ωempty) {
             let height = fontBoundingBoxAscent + fontBoundingBoxDescent;
             if (!_isFinite(height)) height = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
 
-            let { truncateString, hyphenString } = this;
-            if (truncateString == null) truncateString = '…';
-            if (hyphenString == null) hyphenString = '-';
-
-            const truncateLength = engine.measureText(truncateString).width;
-            const hyphenLength = engine.measureText(hyphenString).width;
-
             fontfamilymetadatanames.push(font);
             fontfamilymetadata[font] = {
                 height,
-                space: metrics.width,
-                hyphen: hyphenLength,
-                truncate: truncateLength,
                 alphabeticBaseline: -alphabeticBaseline,
                 hangingBaseline: -hangingBaseline,
                 ideographicBaseline: -ideographicBaseline,

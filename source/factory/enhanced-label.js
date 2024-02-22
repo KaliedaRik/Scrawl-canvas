@@ -12,6 +12,7 @@ import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../factory/text-style.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -26,7 +27,7 @@ import labelMix from '../mixin/label.js';
 
 import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _assign, _atan2, _ceil, _computed, _create, _hypot, _piHalf, _radian, _round, BLACK, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, GOOD_HOST, LEFT, LTR, NONE, NORMAL, PX0, ROUND, ROW, ROW_REVERSE, SPACE_BETWEEN, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _assign, _atan2, _ceil, _computed, _create, _hypot, _isArray, _isFinite, _piHalf, _radian, _round, ALPHABETIC, BLACK, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, GOOD_HOST, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, ROW, ROW_REVERSE, SPACE_BETWEEN, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -46,20 +47,14 @@ const EnhancedLabel = function (items = Ωempty) {
 
     if (!items.group) items.group = currentGroup;
 
-    this.onEnter = λnull;
-    this.onLeave = λnull;
-    this.onDown = λnull;
-    this.onUp = λnull;
-
     this.currentFontIsLoaded = false;
     this.updateUsingFontParts = false;
     this.updateUsingFontString = false;
-    this.letterSpaceValue = 0;
-    this.wordSpaceValue = 0;
+
     this.currentScale = 1;
 
-    this.currentStampPosition = [0, 0];
-    this.currentRotation = 0;
+    this.currentStampPosition = makeCoordinate();
+    this.textHandle = makeCoordinate();
 
     this.delta = {};
 
@@ -147,6 +142,12 @@ const defaultAttributes = {
 // __hyphenString__ - string.
     hyphenString: '-',
 
+// __textHandle__ - Coordinate.
+    textHandle: null,
+
+// __showGuidelines__ - boolean.
+    showGuidelines: false,
+
 // The EnhancedLabel entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
 // It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__.
@@ -161,23 +162,8 @@ const defaultAttributes = {
 
     alignment: 0,
 
-// __noCanvasEngineUpdates__ - Boolean flag - Canvas engine updates are required for the EnhancedLabel's border - strokeStyle and line styling; if an EnhancedLabel is to be drawn without a border, then setting this flag to `true` may help improve rendering efficiency.
-    noCanvasEngineUpdates: false,
-
-
 // __noDeltaUpdates__ - Boolean flag - EnhancedLabel entitys support delta animation - achieved by updating the `...path` attributes by appropriate (and small!) values. If the EnhancedLabel is not going to be animated by delta values, setting the flag to `true` may help improve rendering efficiency.
     noDeltaUpdates: false,
-
-
-// __onEnter__, __onLeave__, __onDown__, __onUp__ - EnhancedLabel entitys support ___collision detection___, reporting a hit when a test coordinate falls within the EnhancedLabel's output image. As a result, EnhancedLabels can also accept and act on the four __on__ functions - see [entity event listener functions](../mixin/entity.html#section-11) for more details.
-    onEnter: null,
-    onLeave: null,
-    onDown: null,
-    onUp: null,
-
-
-// __noUserInteraction__ - Boolean flag - To switch off collision detection for a EnhancedLabel entity - which might help improve rendering efficiency - set the flag to `true`.
-    noUserInteraction: false,
 
     useMimicDimensions: true,
     useMimicFlip: true,
@@ -356,6 +342,23 @@ S.textUnitDirection = function (item) {
     }
 };
 
+D.lineSpacing = function (item) {
+
+    if (item.toFixed) this.lineSpacing += item;
+
+    if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
+
+    this.dirtyLayout = true;
+};
+S.lineSpacing = function (item) {
+
+    if (item.toFixed) this.lineSpacing = item;
+
+    if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
+
+    this.dirtyLayout = true;
+};
+
 D.layoutEngineLineOffset = function (item) {
 
     if (item.toFixed) {
@@ -446,6 +449,23 @@ S.justifyLine = function (item) {
     }
 };
 
+S.textHandleX = function (item) {
+
+    this.textHandle[0] = item;
+};
+S.textHandleY = function (item) {
+
+    this.textHandle[1] = item;
+};
+S.textHandle = function (item) {
+
+    if (_isArray(item) && item.length > 1) {
+
+        this.textHandle[0] = item[0];
+        this.textHandle[1] = item[1];
+    }
+};
+
 // #### Prototype functions
 
 // `getHost` - copied over from the position mixin.
@@ -504,6 +524,65 @@ P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
     state.set(worker);
     cell.setEngine(this);
 };
+
+P.getTextHandleX = function (val, dim, dir) {
+
+    const scale = this.currentScale;
+
+    if (val.toFixed) return val * scale;
+
+    if (val === START) return (dir === LTR) ? 0 : dim * scale;
+
+    if (val === CENTER) return (dim / 2) * scale;
+
+    if (val === END) return (direction === LTR) ? dim * scale : 0;
+
+    if (val === LEFT) return 0;
+
+    if (val === RIGHT) return dim * scale;
+
+    if (!_isFinite(parseFloat(val))) return 0;
+
+    return ((parseFloat(val) / 100) * dim) * scale;
+};
+
+P.getTextHandleY = function (val, size, font) {
+
+    const { height, hangingBaseline, alphabeticBaseline, ideographicBaseline, verticalOffset } = this.getFontMetadata(font);
+
+    const ratio = size / 100;
+    const scale = this.currentScale;
+
+    const dim = (height - verticalOffset) * ratio;
+    const offset = verticalOffset * ratio;
+
+    if (val.toFixed) return val * scale;
+
+    if (val === TOP) return 0;
+
+    if (val === BOTTOM) return dim * scale;
+
+    if (val === CENTER) return (dim / 2) * scale;
+
+    if (val === ALPHABETIC) return (_isFinite(alphabeticBaseline)) ? 
+        (alphabeticBaseline * ratio) * scale : 
+        0;
+
+    if (val === HANGING) return (_isFinite(hangingBaseline)) ?
+        (hangingBaseline * ratio) * scale :
+        0;
+
+    if (val === IDEOGRAPHIC) return (_isFinite(ideographicBaseline)) ?
+        (ideographicBaseline * ratio) * scale :
+        0;
+
+    if (val === MIDDLE) return (dim / 2) * scale;
+
+    if (!_isFinite(parseFloat(val))) return 0;
+    
+    return (parseFloat(val) / 100) * dim;
+};
+
 
 // #### Clean functions
 
@@ -1570,14 +1649,6 @@ P.calculateLines = function () {
     releaseCell(mycell);
 };
 
-// `getLinearAngle`
-P.getLinearAngle = function (sx, sy, ex, ey) {
-
-    const dx = ex - sx,
-        dy = ey - sy;
-
-    return (-_atan2(dx, dy) + _piHalf) / _radian;
-};
 
 // #### Display cycle functions
 
@@ -1697,20 +1768,43 @@ P.regularStampInSpace = function () {
                 alignment,
                 truncateString,
                 hyphenString,
+                showGuidelines,
+                textHandle,
+                getTextHandleX: getX,
+                getTextHandleY: getY,
             } = this;
 
             const currentRotation = layout.currentRotation;
-            const directionIsLtr = defaultTextStyle.direction === LTR;
+            const direction = defaultTextStyle.direction;
+            const directionIsLtr = direction === LTR;
 
             const coord = requestCoordinate();
 
-            let sx, sy, unitData, unit, style, lineOffset, chars, len, replaceLen;
+            let sx, sy, unitData, unit, style, lineOffset, chars, len, replaceLen,
+                ox = 0, 
+                oy = 0;
+
+            const [hx, hy] = textHandle;
 
             engine.save();
+
+            if (showGuidelines && localPath) {
+
+                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
+
+                const alpha = engine.globalAlpha;
+
+                engine.globalAlpha = 0.3;
+                engine.stroke(localPath);
+
+                engine.globalAlpha = alpha;
+            }
 
             const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
 
             this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
+
+            oy = getY.call(this, hy, currentTextStyle.fontSizeValue, currentTextStyle.fontFamily);
 
             const rotation = (alignment - currentRotation) * _radian;
 
@@ -1736,17 +1830,19 @@ P.regularStampInSpace = function () {
                             unit = textUnits[unitData[uIndex - 1]];
 
                             ({ lineOffset, len, replaceLen } = unit);
+                            ox = getX.call(this, hx, len, direction);
+                            // oy = getY.call(this, hy, currentTextStyle.fontSizeValue, currentTextStyle.fontFamily);
 
                             // TODO - this currently has a minor bug, where the truncation and soft hyphens appear "beyond the border" - for instance when text is end aligned. We need to correct this at the point when we determine the line will have a hyphen/truncation (when we stick the string letter into the line's unitData array). Reducing the spaces equally by small amounts should be a good fix?
                             if (u === TEXT_TYPE_TRUNCATE) {
 
-                                if (directionIsLtr) engine.fillText(truncateString, lineOffset + len, 0);
-                                else engine.fillText(truncateString, lineOffset - replaceLen, 0);
+                                if (directionIsLtr) engine.fillText(truncateString, lineOffset + len -ox, -oy);
+                                else engine.fillText(truncateString, lineOffset - replaceLen -ox, -oy);
                             }
                             else if (u === TEXT_TYPE_SOFT_HYPHEN) {
 
-                                if (directionIsLtr) engine.fillText(hyphenString, lineOffset + len, 0);
-                                else engine.fillText(hyphenString, lineOffset - replaceLen, 0);
+                                if (directionIsLtr) engine.fillText(hyphenString, lineOffset + len - ox, -oy);
+                                else engine.fillText(hyphenString, lineOffset - replaceLen -ox, -oy);
                             }
                         }
                     }
@@ -1757,20 +1853,21 @@ P.regularStampInSpace = function () {
 
                         ({style, lineOffset, chars} = unit);
 
-                        if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, dest);
+                        if (style) {
 
-                        if (unit.stampFlag) engine.fillText(chars, lineOffset, 0);
+                            this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, dest);
+                            oy = getY.call(this, hy, currentTextStyle.fontSizeValue, currentTextStyle.fontFamily);
+                        }
+
+                        if (unit.stampFlag) {
+
+                            ox = getX.call(this, hx, len, direction);
+                            engine.fillText(chars, lineOffset - ox, -oy);
+                        }
                     }
                 });
             });
 
-            if (localPath) {
-
-                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
-
-                engine.globalAlpha = 0.3;
-                engine.stroke(localPath);
-            }
             engine.restore();
 
             releaseCoordinate(coord);
@@ -1794,118 +1891,6 @@ P.regularStampAlongPath = function () {
         }
     }
 };
-
-
-// ##### Stamp methods
-
-// `underlineEngine` - internal helper function
-P.underlineEngine = function (host, pos) {
-
-    // Setup constants
-    const {
-        currentDimensions,
-        currentScale,
-        currentStampPosition,
-        defaultTextStyle,
-        fontVerticalOffset,
-    } = this;
-
-    const {
-        underlineGap,
-        underlineOffset,
-        underlineStyle,
-        underlineWidth,
-    } = defaultTextStyle;
-
-    const [, x, y] = pos;
-    const [localWidth, localHeight] = currentDimensions;
-
-    const underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
-    const underlineDepth = underlineWidth * currentScale;
-
-    // Setup the cell parts
-    const mycell = requestCell();
-    const { element: canvasEl, engine      } = host;
-    const { element: el,       engine: ctx } = mycell;
-
-    const ratio = getPixelRatio();
-
-    mycell.w = el.width = canvasEl.width / ratio;
-    mycell.h = el.height = canvasEl.height / ratio;
-
-    mycell.rotateDestination(ctx, ...currentStampPosition, this);
-
-    // Setup the underline context
-    ctx.fillStyle = BLACK;
-    ctx.strokeStyle = BLACK;
-    ctx.font = defaultTextStyle.canvasFont;
-    ctx.fontKerning = defaultTextStyle.fontKerning;
-    ctx.fontStretch = defaultTextStyle.fontStretch;
-    ctx.fontVariantCaps = defaultTextStyle.fontVariant;
-    ctx.textRendering = defaultTextStyle.textRendering;
-    ctx.letterSpacing = defaultTextStyle.letterSpacing;
-    ctx.lineCap = ROUND;
-    ctx.lineJoin = ROUND;
-    ctx.wordSpacing = defaultTextStyle.wordSpacing;
-    ctx.direction = defaultTextStyle.direction;
-    ctx.textAlign = LEFT;
-    ctx.textBaseline = TOP;
-    ctx.lineWidth = (underlineGap * 2) * currentScale;
-
-    // Underlines can take their own styling, or use the fillStyle set on the Label entity
-    const uStyle = this.getStyle(underlineStyle, 'fillStyle', mycell);
-
-    // Generate the underline
-    ctx.strokeText(...pos);
-    ctx.fillText(...pos);
-
-    ctx.globalCompositeOperation = 'source-out';
-    ctx.fillStyle = uStyle;
-
-    ctx.fillRect(x, underlineStartY, localWidth, underlineDepth);
-
-    // Copy the underline over to the real cell
-    engine.save();
-    engine.setTransform(1, 0, 0, 1, 0, 0);
-    engine.drawImage(el, 0, 0);
-    engine.restore();
-
-    // Release the temporary cell
-    releaseCell(mycell);
-};
-
-// `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
-P.draw = function (engine, x, y, text) {
-
-    engine.strokeText(text, x, y);
-};
-
-// `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
-P.fill = function (engine, x, y, text) {
-
-    engine.fillText(text, x, y);
-};
-
-// `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
-P.drawAndFill = P.fill;
-
-// `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
-P.fillAndDraw = P.draw;
-
-// `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
-P.drawThenFill = P.fill;
-
-// `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
-P.fillThenDraw = P.draw;
-
-// `clip` - restrict drawing activities to the entity's enclosed area
-P.clip = λnull;
-
-// `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
-P.clear = λnull;
-
-// `none` - perform all the calculations required, but don't perform the final stamping
-P.none = λnull;
 
 
 // #### Factory

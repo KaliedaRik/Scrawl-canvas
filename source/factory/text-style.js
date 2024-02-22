@@ -205,8 +205,8 @@ const defaultAttributes = {
     // #### Canvas state - text-related attributes ignored by text units
     /*
     `font` - Cannot be set. Managed by local attributes 'fontString', 'canvasFont'
-    `textAlign` - Cannot be set. Always has the value of 'left'
-    `textBaseline` - Cannot be set. Always has the value of 'top'
+    `textAlign` - Cannot be set. Always has the value of 'left'.
+    `textBaseline` - Cannot be set. Always has the value of 'top'.
     `letterSpacing` - Can be set/deltaSet. Managed by local attribute 'letterSpaceValue'
     `wordSpacing` - Can be set/deltaSet. Managed by local attribute 'wordSpaceValue'
     */
@@ -270,18 +270,6 @@ const defaultAttributes = {
     // + Supports gradients, patterns and CSS color strings
     highlightStyle: YELLOW,
     includeHighlight: false,
-
-    // #### Unit offsets and rotations
-    // __unitOffset__ - Array of string enum, string% relative value, or absolute number (px) value.
-    // + Horizontal enum values are 'left' (default), 'center', 'right' relative to the text unit's width (including `letterSpacing`)
-    // + Vertical enum values are 'top' (default), 'center', 'bottom', 'hanging' (font-dependent), 'middle' (which is an alias of center), 'alphabetic' (font-dependent), 'ideographic' (font-dependent) - all relative to the font's reported height
-    // + String% values are relative to the text unit's width and the font's reported height
-    // + Number values are pixel distances from the top-left corner of the text unit
-    // + __unitOffsetX__ and __unitOffsetY__ are supported pseudo-elements for getting and setting this attribute
-    unitOffset: null,
-
-    // __unitRotation__ - number representing degrees. A value of `0` (default) will display the text unit in alignment with its path; positive values rotate the text unit clockwise
-    unitRotation: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 

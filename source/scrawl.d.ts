@@ -1274,7 +1274,6 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
 
     text?: string;
-    lineSpacing?: number;
 
     layoutEngine?: ArtefactInstance | string;
     useLayoutEngineAsPath?: boolean;
@@ -1297,16 +1296,10 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     delta?: EnhancedLabelFactoryDeltaInputs;
     group?: GroupInstance | string;
     method?: MethodValues;
-    noCanvasEngineUpdates?: boolean;
     noDeltaUpdates?: boolean;
-    noUserInteraction?: boolean;
-    onDown?: DefaultInputFunction;
-    onEnter?: DefaultInputFunction;
-    onLeave?: DefaultInputFunction;
-    onUp?: DefaultInputFunction;
     order?: number;
-    compileOrder?: number;
-    showOrder?: number;
+    calculateOrder?: number;
+    stampOrder?: number;
     visibility?: boolean;
 
     useMimicDimensions?: boolean;               // use updateOnLayoutDimensionsChange
