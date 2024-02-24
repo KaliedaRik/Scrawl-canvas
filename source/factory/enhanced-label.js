@@ -6,7 +6,6 @@
 
 // #### Imports
 import { constructors, artefact, group } from '../core/library.js';
-import { getPixelRatio } from '../core/user-interaction.js';
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
@@ -25,9 +24,9 @@ import deltaMix from '../mixin/delta.js';
 import textMix from '../mixin/text.js';
 import labelMix from '../mixin/label.js';
 
-import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _assign, _atan2, _ceil, _computed, _create, _hypot, _isArray, _isFinite, _piHalf, _radian, _round, ALPHABETIC, BLACK, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, GOOD_HOST, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, ROW, ROW_REVERSE, SPACE_BETWEEN, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _assign, _ceil, _computed, _create, _hypot, _isArray, _isFinite, _radian, _round, ALPHABETIC, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, END, ENTITY, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NONE, NORMAL, OBLIQUE, PX0, RIGHT, ROW, ROW_REVERSE, SMALL_CAPS, SPACE_BETWEEN, START, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -50,8 +49,6 @@ const EnhancedLabel = function (items = Ωempty) {
     this.currentFontIsLoaded = false;
     this.updateUsingFontParts = false;
     this.updateUsingFontString = false;
-
-    this.currentScale = 1;
 
     this.currentStampPosition = makeCoordinate();
     this.textHandle = makeCoordinate();
@@ -452,10 +449,12 @@ S.justifyLine = function (item) {
 S.textHandleX = function (item) {
 
     this.textHandle[0] = item;
+    this.dirtyLayout = true;
 };
 S.textHandleY = function (item) {
 
     this.textHandle[1] = item;
+    this.dirtyLayout = true;
 };
 S.textHandle = function (item) {
 
@@ -463,6 +462,7 @@ S.textHandle = function (item) {
 
         this.textHandle[0] = item[0];
         this.textHandle[1] = item[1];
+        this.dirtyLayout = true;
     }
 };
 
@@ -519,15 +519,26 @@ P.makeWorkingTextStyle = function (template, name) {
 
 P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
 
-    worker.set(style, true);
-    this.updateCanvasFont(worker);
+    // const scale = this.layoutEngine?.currentScale || 1;
+    // worker.set(style, true);
+    // this.updateCanvasFont(worker, scale);
+    // this.updateFontString(worker);
+    this.updateWorkingTextStyle(worker, style);
     state.set(worker);
     cell.setEngine(this);
 };
 
+P.updateWorkingTextStyle = function (worker, style) {
+
+    const scale = this.layoutEngine?.currentScale || 1;
+    worker.set(style, true);
+    this.updateCanvasFont(worker, scale);
+    this.updateFontString(worker);
+};
+
 P.getTextHandleX = function (val, dim, dir) {
 
-    const scale = this.currentScale;
+    const scale = this.layoutEngine?.currentScale || 1;
 
     if (val.toFixed) return val * scale;
 
@@ -535,7 +546,7 @@ P.getTextHandleX = function (val, dim, dir) {
 
     if (val === CENTER) return (dim / 2) * scale;
 
-    if (val === END) return (direction === LTR) ? dim * scale : 0;
+    if (val === END) return (dir === LTR) ? dim * scale : 0;
 
     if (val === LEFT) return 0;
 
@@ -551,10 +562,9 @@ P.getTextHandleY = function (val, size, font) {
     const { height, hangingBaseline, alphabeticBaseline, ideographicBaseline, verticalOffset } = this.getFontMetadata(font);
 
     const ratio = size / 100;
-    const scale = this.currentScale;
+    const scale = this.layoutEngine?.currentScale || 1;
 
     const dim = (height - verticalOffset) * ratio;
-    const offset = verticalOffset * ratio;
 
     if (val.toFixed) return val * scale;
 
@@ -564,8 +574,8 @@ P.getTextHandleY = function (val, size, font) {
 
     if (val === CENTER) return (dim / 2) * scale;
 
-    if (val === ALPHABETIC) return (_isFinite(alphabeticBaseline)) ? 
-        (alphabeticBaseline * ratio) * scale : 
+    if (val === ALPHABETIC) return (_isFinite(alphabeticBaseline)) ?
+        (alphabeticBaseline * ratio) * scale :
         0;
 
     if (val === HANGING) return (_isFinite(hangingBaseline)) ?
@@ -579,10 +589,39 @@ P.getTextHandleY = function (val, size, font) {
     if (val === MIDDLE) return (dim / 2) * scale;
 
     if (!_isFinite(parseFloat(val))) return 0;
-    
+
     return (parseFloat(val) / 100) * dim;
 };
 
+P.updateCanvasFont = function (style, scale) {
+
+    const { fontStyle, fontVariantCaps, fontWeight, fontSize, fontFamily } = style
+
+    let f = '';
+
+    if (fontStyle == ITALIC || fontStyle.includes(OBLIQUE)) f += `${fontStyle} `;
+    if (fontVariantCaps == SMALL_CAPS) f += `${fontVariantCaps} `;
+    if (fontWeight != null && fontWeight && fontWeight !== NORMAL && fontWeight !== '400') f += `${fontWeight} `;
+    f += `${parseFloat(fontSize) * scale}px ${fontFamily}`
+
+    style.canvasFont = f;
+};
+
+P.updateFontString = function (style) {
+
+    const { fontStretch, fontStyle, fontVariantCaps, fontWeight, fontSize, fontFamily } = style
+
+    let f = '';
+
+    if (fontStretch != null && fontStretch && fontStretch !== NORMAL) f += `${fontStretch} `;
+    if (fontStyle != null && fontStyle && fontStyle !== NORMAL) f += `${fontStyle} `;
+    if (fontVariantCaps != null && fontVariantCaps && fontVariantCaps !== NORMAL) f += `${fontVariantCaps} `;
+    if (fontWeight != null && fontWeight && fontWeight !== NORMAL && fontWeight !== '400') f += `${fontWeight} `;
+
+    f += `${fontSize} ${fontFamily}`;
+
+    style.fontString = f;
+};
 
 // #### Clean functions
 
@@ -593,10 +632,7 @@ P.cleanFont = function () {
     if (this.currentFontIsLoaded) {
 
         this.dirtyFont = false;
-
         this.temperFont();
-
-        if (!this.dirtyFont) this.measureFont();
     }
     else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
 };
@@ -653,6 +689,7 @@ P.cleanText = function () {
             kernOffset: 0,
             replaceLen: 0,
             stampFlag: true,
+            stampPos: [0, 0],
         };
     };
 
@@ -1145,24 +1182,28 @@ P.assignTextUnitsToLines = function () {
 
                     unit = textUnits[unitData[i]];
 
-                    ({ len, replaceLen, type } = unit);
+console.log(unit);
+                    if (unit) {
 
-                    if (type !== TEXT_TYPE_CHARS && type !== TEXT_TYPE_SOFT_HYPHEN) {
+                        ({ len, replaceLen, type } = unit);
 
-                        acc -= len;
-                        mutableUnitData.pop();
-                    }
-                    else {
-
-                        if (acc + replaceLen < lineLength) {
-
-                            mutableUnitData.push(TEXT_TYPE_TRUNCATE);
-                            break;
-                        }
-                        else {
+                        if (type !== TEXT_TYPE_CHARS && type !== TEXT_TYPE_SOFT_HYPHEN) {
 
                             acc -= len;
                             mutableUnitData.pop();
+                        }
+                        else {
+
+                            if (acc + replaceLen < lineLength) {
+
+                                mutableUnitData.push(TEXT_TYPE_TRUNCATE);
+                                break;
+                            }
+                            else {
+
+                                acc -= len;
+                                mutableUnitData.pop();
+                            }
                         }
                     }
                 }
@@ -1331,6 +1372,8 @@ P.positionTextUnitsInSpace = function () {
             });
         }
     });
+
+    this.finalizeForSpace();
 };
 
 
@@ -1436,7 +1479,7 @@ P.calculateLines = function () {
 
                 coord.set(edgePoints[i]);
                 coord.subtract(currentStampPosition);
-                coord.rotate(rotationFix);
+                coord.rotate(alignment);
                 results.push(...coord);
             }
         }
@@ -1498,6 +1541,7 @@ P.calculateLines = function () {
 
     const {
         currentDimensions,
+        currentScale,
         currentRotation,
         currentStampPosition,
         pathObject,
@@ -1509,12 +1553,11 @@ P.calculateLines = function () {
         direction,
     } = defaultTextStyle;
 
-    const rotation = -alignment * _radian;
-    const rotationFix = alignment - currentRotation;
+    const rotation = (-alignment - currentRotation) * _radian;
 
     const directionIsLtr = direction === LTR;
 
-    const step = fontSizeValue * lineSpacing;
+    const step = (fontSizeValue * lineSpacing) * currentScale;
 
     const [constX, constY] = currentStampPosition;
     const [width,] = currentDimensions;
@@ -1649,6 +1692,65 @@ P.calculateLines = function () {
     releaseCell(mycell);
 };
 
+P.finalizeForSpace = function () {
+
+// console.log(this.name, 'finalizeForSpace (trigger: none - called by positionTextUnitsInSpace');
+
+    const {
+        lines,
+        textUnits,
+        defaultTextStyle,
+        textHandle,
+        getTextHandleX: getX,
+        getTextHandleY: getY,
+    } = this;
+
+    const direction = defaultTextStyle.direction;
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+
+    this.updateWorkingTextStyle(currentTextStyle, Ωempty);
+
+    let unit, unitData, style, lineOffset, len,
+        ox = 0,
+        oy = 0,
+        fontSizeValue = 0;
+
+    const [hx, hy] = textHandle;
+
+    fontSizeValue = parseFloat(currentTextStyle.fontSize);
+    oy = getY.call(this, hy, fontSizeValue, currentTextStyle.fontFamily);
+
+    lines.forEach(line => {
+
+        unitData = line.unitData;
+
+        unitData.forEach(u => {
+
+            if (u.toFixed) {
+
+                unit = textUnits[u];
+
+                ({style, lineOffset} = unit);
+
+                if (style) {
+
+                    this.updateWorkingTextStyle(currentTextStyle, style);
+                    fontSizeValue = parseFloat(currentTextStyle.fontSize);
+                    oy = getY.call(this, hy, fontSizeValue, currentTextStyle.fontFamily);
+                }
+
+                if (unit.stampFlag) {
+
+                    ox = getX.call(this, hx, len, direction);
+
+                    unit.stampPos[0] = lineOffset - ox;
+                    unit.stampPos[1] = -oy;
+                }
+            }
+        });
+    });
+};
+
 
 // #### Display cycle functions
 
@@ -1659,9 +1761,17 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
-    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
+    if (this.dirtyScale) {
 
         this.dirtyScale = false;
+
+        this.dirtyFont = true;
+        this.dirtyPathObject = true;
+        this.dirtyLayout = true;
+    }
+
+    if (this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
+
         this.dirtyDimensions = false;
         this.dirtyStart = false;
         this.dirtyOffset = false;
@@ -1769,9 +1879,6 @@ P.regularStampInSpace = function () {
                 truncateString,
                 hyphenString,
                 showGuidelines,
-                textHandle,
-                getTextHandleX: getX,
-                getTextHandleY: getY,
             } = this;
 
             const currentRotation = layout.currentRotation;
@@ -1780,11 +1887,7 @@ P.regularStampInSpace = function () {
 
             const coord = requestCoordinate();
 
-            let sx, sy, unitData, unit, style, lineOffset, chars, len, replaceLen,
-                ox = 0, 
-                oy = 0;
-
-            const [hx, hy] = textHandle;
+            let sx, sy, unitData, unit, style, chars, stampPos, len, replaceLen, ox, oy;
 
             engine.save();
 
@@ -1804,9 +1907,7 @@ P.regularStampInSpace = function () {
 
             this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
 
-            oy = getY.call(this, hy, currentTextStyle.fontSizeValue, currentTextStyle.fontFamily);
-
-            const rotation = (alignment - currentRotation) * _radian;
+            const rotation = alignment * _radian;
 
             lines.forEach(line => {
 
@@ -1827,22 +1928,25 @@ P.regularStampInSpace = function () {
                             // We're at the end of the line but need to add something additional:
                             // + For the last line, this will be the default truncation copy (eg: `...`)
                             // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
+                            // + For the edge case where the last line is a word which has broken on a soft hyphen, we show the hyphen, not the truncation.
                             unit = textUnits[unitData[uIndex - 1]];
 
-                            ({ lineOffset, len, replaceLen } = unit);
-                            ox = getX.call(this, hx, len, direction);
-                            // oy = getY.call(this, hy, currentTextStyle.fontSizeValue, currentTextStyle.fontFamily);
+                            if (unit) {
 
-                            // TODO - this currently has a minor bug, where the truncation and soft hyphens appear "beyond the border" - for instance when text is end aligned. We need to correct this at the point when we determine the line will have a hyphen/truncation (when we stick the string letter into the line's unitData array). Reducing the spaces equally by small amounts should be a good fix?
-                            if (u === TEXT_TYPE_TRUNCATE) {
+                                ({ len, replaceLen, stampPos } = unit);
 
-                                if (directionIsLtr) engine.fillText(truncateString, lineOffset + len -ox, -oy);
-                                else engine.fillText(truncateString, lineOffset - replaceLen -ox, -oy);
-                            }
-                            else if (u === TEXT_TYPE_SOFT_HYPHEN) {
+                                [ox, oy] = stampPos;
 
-                                if (directionIsLtr) engine.fillText(hyphenString, lineOffset + len - ox, -oy);
-                                else engine.fillText(hyphenString, lineOffset - replaceLen -ox, -oy);
+                                if (u === TEXT_TYPE_TRUNCATE) {
+
+                                    if (directionIsLtr) engine.fillText(truncateString, ox + len, oy);
+                                    else engine.fillText(truncateString, ox - replaceLen, oy);
+                                }
+                                else if (u === TEXT_TYPE_SOFT_HYPHEN) {
+
+                                    if (directionIsLtr) engine.fillText(hyphenString, ox, oy);
+                                    else engine.fillText(hyphenString, ox - replaceLen, oy);
+                                }
                             }
                         }
                     }
@@ -1851,19 +1955,11 @@ P.regularStampInSpace = function () {
                         // TODO: currently only implementing the `fill` method. Need to include `draw`, and possibly `fillAndDraw` and `drawAndFill`
                         unit = textUnits[u];
 
-                        ({style, lineOffset, chars} = unit);
+                        ({style, chars, stampPos} = unit);
 
-                        if (style) {
+                        if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, dest);
 
-                            this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, dest);
-                            oy = getY.call(this, hy, currentTextStyle.fontSizeValue, currentTextStyle.fontFamily);
-                        }
-
-                        if (unit.stampFlag) {
-
-                            ox = getX.call(this, hx, len, direction);
-                            engine.fillText(chars, lineOffset - ox, -oy);
-                        }
+                        if (unit.stampFlag) engine.fillText(chars, ...unit.stampPos);
                     }
                 });
             });

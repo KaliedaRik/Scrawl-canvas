@@ -416,6 +416,8 @@ export default function (P = Ωempty) {
     // `updateTextStyle` - manipulate the user-supplied font string to create a font string the canvas engine can use
     P.updateTextStyle = function (textStyle, calculator, results) {
 
+// console.log(this.name, 'P.updateTextStyle (in label mixin)')
+
         let fontSize = textStyle.fontSize;
         const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = textStyle;
         const { currentScale, lineSpacing, updateUsingFontParts, updateUsingFontString } = this;

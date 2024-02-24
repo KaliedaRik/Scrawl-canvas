@@ -395,13 +395,7 @@ S.fontString = function (item) {
 
 S.fontSize = function (item) {
 
-    const val = (!item?.toFixed) ? parseFloat(item) : item;
-
-    if (_isFinite(val)) {
-
-        this.fontSizeValue = val;
-        this.fontSize = `${val}px`;
-    }
+    if (item?.substring) this.fontSize = item.toLowerCase();
 };
 
 S.fontStyle = function (item) {
