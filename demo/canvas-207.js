@@ -68,8 +68,6 @@ const mylabel = scrawl.makeEnhancedLabel({
     fontString: '16px serif',
     text: westernText,
 
-    showBoundingBox: true,
-
     layoutEngine: name('block-layout-engine'),
 });
 

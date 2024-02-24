@@ -103,6 +103,7 @@ export default function (P = Ωempty) {
 // + We also strip the supplied text of all HTML markup
     P.convertTextEntityCharacters = function (item) {
 
+console.log(this.name, 'convertTextEntityCharacters');
         textEntityConverter.innerHTML = item;
         return textEntityConverter.textContent;
     };

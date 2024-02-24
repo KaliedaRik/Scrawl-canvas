@@ -1267,54 +1267,38 @@ type TextLineJustifyValues = 'start' | 'end' | 'center' | 'space-between';
 type EnhancedLabelTextUnitHandleXValues = 'left' | 'right' | 'center';
 type EnhancedLabelTextUnitHandleYValues = 'top' | 'hanging' | 'center' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
 
-interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {
-    lineSpacing?: number;
+interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextStyleFactoryDeltaInputs {
     alignment?: number;
     layoutEngineLineOffset?: number;
+    lineSpacing?: number;
 }
 
-interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
-
-    text?: string;
-
-    layoutEngine?: ArtefactInstance | string;
-    useLayoutEngineAsPath?: boolean;
-    layoutEnginePathStart?: number;
-    constantPathSpeed?: boolean;
-
-    textHandleX?: EnhancedLabelTextUnitHandleXValues | number | string; 
-    textHandleY?: EnhancedLabelTextUnitHandleYValues | number | string; 
-    textHandle?: [EnhancedLabelTextUnitHandleXValues | number | string, EnhancedLabelTextUnitHandleYValues | number | string]; 
-
-    textUnitDirection?: TextUnitDirectionValues;
-
+interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
+    accessibleText?: string;
+    accessibleTextOrder?: number;
+    accessibleTextPlaceholder?: string;
+    allowSubUnitStyling?: boolean;
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
-
-    justifyLine?: TextLineJustifyValues;
-    allowSubUnitStyling?: boolean;
-
-    useDocumentStyling?: boolean;
-
-    hyphenString?: string;
-    truncateString?: string;
-
+    calculateOrder?: number;
+    constantPathSpeed?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
     group?: GroupInstance | string;
+    hyphenString?: string;
+    justifyLine?: TextLineJustifyValues;
+    layoutEngine?: ArtefactInstance | string;
+    layoutEnginePathStart?: number;
     method?: MethodValues;
     noDeltaUpdates?: boolean;
     order?: number;
-    calculateOrder?: number;
     stampOrder?: number;
-    visibility?: boolean;
-
-    useMimicDimensions?: boolean;               // use updateOnLayoutDimensionsChange
-    useMimicFlip?: boolean;                     // use updateOnLayoutFlipChange
-    useMimicHandle?: boolean;                   // use updateOnLayoutHandleChange
-    useMimicOffset?: boolean;                   // use updateOnLayoutOffsetChange
-    useMimicRotation?: boolean;                 // use updateOnLayoutRotationChange
-    useMimicScale?: boolean;                    // use updateOnLayoutScaleChange
-    useMimicStart?: boolean;                    // use updateOnLayoutStartChange
+    text?: string;
+    textHandle?: [EnhancedLabelTextUnitHandleXValues | number | string, EnhancedLabelTextUnitHandleYValues | number | string]; 
+    textHandleX?: EnhancedLabelTextUnitHandleXValues | number | string; 
+    textHandleY?: EnhancedLabelTextUnitHandleYValues | number | string; 
+    textIsAccessible?: boolean;
+    textUnitDirection?: TextUnitDirectionValues;
+    truncateString?: string;
     updateOnLayoutDimensionsChange?: boolean;
     updateOnLayoutFlipChange?: boolean;
     updateOnLayoutHandleChange?: boolean;
@@ -1322,12 +1306,25 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     updateOnLayoutRotationChange?: boolean;
     updateOnLayoutScaleChange?: boolean;
     updateOnLayoutStartChange?: boolean;
+    useDocumentStyling?: boolean;
+    useLayoutEngineAsPath?: boolean;
+    useMimicDimensions?: boolean;               // use updateOnLayoutDimensionsChange
+    useMimicFlip?: boolean;                     // use updateOnLayoutFlipChange
+    useMimicHandle?: boolean;                   // use updateOnLayoutHandleChange
+    useMimicOffset?: boolean;                   // use updateOnLayoutOffsetChange
+    useMimicRotation?: boolean;                 // use updateOnLayoutRotationChange
+    useMimicScale?: boolean;                    // use updateOnLayoutScaleChange
+    useMimicStart?: boolean;                    // use updateOnLayoutStartChange
+    visibility?: boolean;
 }
 
 interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}
 
-interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions, TextMixinFunctions, LabelMixinFunctions {
+interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions {
     clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
+    convertTextEntityCharacters: (item: string) => string;
+    getAccessibleText: () => string;
+    recalculateFont: () => void;
     saveAsPacket: (item?: EnhancedLabelSaveInputs | boolean) => string;
     set: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
@@ -1638,7 +1635,7 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
 
 interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
-    delta?: EnhancedLabelFactoryDeltaInputs;
+    delta?: LabelFactoryDeltaInputs;
     text?: string;
 }
 

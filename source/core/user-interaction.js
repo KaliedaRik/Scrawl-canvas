@@ -473,8 +473,8 @@ const updateTextBasedEntitys = function () {
             ent.dirtyDimensions = true;
             ent.dirtyFont = true;
         }
-        else if (FONT_USERS.includes(ent.type)) ent.recalculateFont();
-    })
+        else if (FONT_USERS.includes(ent.type)) ent.recalculateFont(true);
+    });
 };
 
 // Internal functions that get triggered when setting a DOM-based artefact's `trackHere` attribute. They add/remove an event listener to the artefact's domElement.
@@ -544,6 +544,8 @@ const coreListenersTracker = makeAnimation({
         if (viewportChanged) {
 
             setViewportChanged(false);
+
+            // This is to capture changes in the browser viewport size which can affect Label-related text using a font size measured relative to the viewport size
             updateTextBasedEntitys();
         }
     },
