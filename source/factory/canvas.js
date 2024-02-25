@@ -524,35 +524,6 @@ G.baseName = function () {
 
 // #### Prototype functions
 
-// P.updateElementToInherit = function (el) {
-
-//     el.style.borderTopColor = INHERIT;
-//     el.style.borderTopWidth = INHERIT;
-//     el.style.direction = INHERIT;
-//     el.style.fontFamily = INHERIT;
-//     el.style.fontKerning = INHERIT;
-//     el.style.fontLanguageOverride = INHERIT;
-//     el.style.fontOpticalSizing = INHERIT;
-//     el.style.fontSize = INHERIT;
-//     el.style.fontSizeAdjust = INHERIT;
-//     el.style.fontStretch = INHERIT;
-//     el.style.fontStyle = INHERIT;
-//     el.style.fontVariant = INHERIT;
-//     el.style.fontVariantCaps = INHERIT;
-//     el.style.fontWeight = INHERIT;
-//     el.style.color = INHERIT;
-//     el.style.hyphenateCharacter = INHERIT;
-//     el.style.hyphens = INHERIT;
-//     el.style.letterSpacing = INHERIT;
-//     el.style.lineHeight = INHERIT;
-//     el.style.textAlign = INHERIT;
-//     el.style.textAlignLast = INHERIT;
-//     el.style.textDecorationColor = INHERIT;
-//     el.style.textDecorationThickness = INHERIT;
-//     el.style.textUnderlineOffset = INHERIT;
-//     el.style.wordSpacing = INHERIT;
-// };
-
 // `setAsCurrentCanvas` - invoke function (without arguments) to make this Canvas wrapper the __current canvas__ for future entity generation operations. This is additional to the `scrawl.setCurrentCanvas` function.
 P.setAsCurrentCanvas = function () {
 

@@ -59,6 +59,10 @@ const EnhancedLabel = function (items = Ωempty) {
     this.lines = [];
     this.textUnits = [];
 
+    this.underlinePaths = [];
+    this.overlinePaths = [];
+    this.highlightPaths = [];
+
     this.set(items);
 
     this.dirtyFont = true;
@@ -967,10 +971,18 @@ console.log(this.name, 'temperFont (trigger: none - called by cleanFont once fon
 // `checkFontIsLoaded` - chcks the document object to check if the supplied font has been loaded by the browser and is ready to use
 P.checkFontIsLoaded = function (font) {
 
-console.log(this.name, 'checkFontIsLoaded (trigger: cleanFont)', font);
+    console.log('checkFontIsLoaded (trigger: cleanFont)', font);
 
-    if (font == null) this.currentFontIsLoaded = false;
-    else if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;
+    if (font == null) {
+
+        this.currentFontIsLoaded = false;
+        console.log('checkFontIsLoaded error: argument is undefined');
+    }
+    else if (SYSTEM_FONTS.includes(font)) {
+
+        console.log('checkFontIsLoaded success: system font detected');
+        this.currentFontIsLoaded = true;
+    }
     else {
 
         if (this.currentFontIsLoaded != null && !this.currentFontIsLoaded) {
@@ -979,12 +991,23 @@ console.log(this.name, 'checkFontIsLoaded (trigger: cleanFont)', font);
 
             const fonts = document.fonts;
 
+            console.log('checkFontIsLoaded update: invoking async load check');
+
             fonts.load(font)
-            .then (() => this.currentFontIsLoaded = true)
+            .then (() => {
+
+                this.currentFontIsLoaded = true;
+                console.log('checkFontIsLoaded load invocation completed successfully:', font);
+            })
             .catch ((e) => {
+
                 this.currentFontIsLoaded = false;
-                console.log('checkFontIsLoaded error:', font, e);
+                console.log('checkFontIsLoaded load invocation error:', font, e);
             });
+        }
+        else {
+
+            console.log('checkFontIsLoaded issue: prior check is still progressing');
         }
     }
 };
@@ -1216,7 +1239,7 @@ P.getAccessibleText = function () {
 // `cleanFont` - Performs a check to make sure we have a font to process
 P.cleanFont = function () {
 
-console.log(this.name, 'cleanFont (trigger: dirtyFont', this.dirtyFont);
+console.log(this.name, 'cleanFont (trigger: dirtyFont)', this.dirtyFont);
 
     if (this.currentFontIsLoaded) {
 
@@ -1234,7 +1257,7 @@ console.log(this.name, `cleanFont - looking to see if ${this.defaultTextStyle.fo
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
-console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutEngine?.pathObject}`);
+console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutEngine?.pathObject})`);
 
     const layout = this.layoutEngine;
 
@@ -1250,7 +1273,7 @@ console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPa
 // `cleanLayout` - recalculate the positioning of all TextUnits in the space or along the path
 P.cleanLayout = function () {
 
-console.log(this.name, `cleanLayout (triggers: dirtyLayout ${this.dirtyLayout}, checks: currentFontIsLoaded ${this.currentFontIsLoaded}`);
+console.log(this.name, `cleanLayout (triggers: dirtyLayout ${this.dirtyLayout}, checks: currentFontIsLoaded ${this.currentFontIsLoaded})`);
 
     if (this.currentFontIsLoaded) {
 
@@ -1376,7 +1399,7 @@ P.calculateLines = function () {
     let flag = false,
         path = '',
         beginX, beginY,
-        lineResults, lineData, lineLength, lineVal,
+        lineResults, lineData, lineVal,
         sx, sy, ex, ey, i, iz,
         counter;
 
@@ -1416,7 +1439,6 @@ P.calculateLines = function () {
 
     // Push line data into the `this.lines` array
     lines.length = 0;
-    lineLength = 0;
     lineProcessing.length = 0;
 
     rawData.forEach(d => {
@@ -1435,7 +1457,6 @@ P.calculateLines = function () {
             lineVal = _hypot(sx - ex, sy - ey);
 
             lineProcessing.push(lineVal);
-            lineLength += lineVal;
         }
     });
 
@@ -1459,11 +1480,9 @@ P.calculateLines = function () {
             // Currently storing as an object. Need to turn it into an array for more efficient processing
             lines.push({
                 length: _ceil(lineResults),
-                lengthRatio: lineResults / lineLength,
-                startPositionInPath: lineVal / lineLength,
                 startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
-                endAt: [...coord.set([ex, ey]).add(currentStampPosition)],
                 unitData: [],
+                maxHeight: 0,
             });
 
             lineVal += lineResults;
@@ -1503,7 +1522,7 @@ P.calculateLines = function () {
 // `cleanText` - Break the entity's text into smaller TextUnit objects which can be positioned within, or along, the layout entity's shape
 P.cleanText = function () {
 
-console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded}`);
+console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded})`);
 
     const makeUnitObject = (chars, type) => {
 
@@ -1517,6 +1536,13 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
             replaceLen: 0,
             stampFlag: true,
             stampPos: [0, 0],
+            underlineOut: [],
+            underlineBack: [],
+            overlineOut: [],
+            overlineBack: [],
+            highlightOut: [],
+            highlightBack: [],
+            highlightStyle: '',
         };
     };
 
@@ -1620,7 +1646,7 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
 // + Note that styling on a per-TextUnit basis requires CSS code; there is no way to directly style a TextUnit in SC except by manually replacing its `style` attribute object in code (which is dangerous and definitely not guaranteed to work!)
 P.assessTextForStyle = function () {
 
-console.log(this.name, `assessTextForStyle (trigger: none - called directly by cleanText`);
+console.log(this.name, `assessTextForStyle (trigger: none - called directly by cleanText)`);
 
     const tester = this.getTester();
 
@@ -1858,7 +1884,7 @@ console.log(this.name, `assessTextForStyle (trigger: none - called directly by c
 // + Takes into account the styling for each TextUnit, which can have a significant impact on the amount of space it requires on a line.
 P.measureTextUnits = function () {
 
-// console.log(this.name, 'MEASURE_TEXT_UNITS (trigger: none - called by cleanText');
+console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)');
 
     const { textUnits, defaultTextStyle, state, hyphenString, truncateString } = this;
 
@@ -1943,7 +1969,7 @@ P.measureTextUnits = function () {
 // + TODO: The assumption here is that if we are laying text along a path, there will only be one line with a length equal to the layout engine's path length. In such cases we won't need to care about soft hyphens, but will need to care about truncation (regardless of whether we allow the text to wrap itself along the line)
 P.layoutText = function () {
 
-console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLayout}, checks: currentFontIsLoaded' ${this.currentFontIsLoaded}`);
+console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLayout}, checks: currentFontIsLoaded' ${this.currentFontIsLoaded})`);
 
     if (this.currentFontIsLoaded) {
 
@@ -1973,7 +1999,7 @@ console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLay
 // + TODO: The assumption here is that if we are laying text along a path, there will only be one line with a length equal to the layout engine's path length. In such cases we won't need to care about soft hyphens, but will need to care about truncation (regardless of whether we allow the text to wrap itself along the line)
 P.assignTextUnitsToLines = function () {
 
-// console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layoutText');
+console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layoutText)');
 
     const {
         lines,
@@ -2152,7 +2178,7 @@ P.assignTextUnitsToLines = function () {
 // + Position each TextUnit within the space contained by the layout entity, along multiple lines
 P.positionTextUnits = function () {
 
-// console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText');
+console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText)');
 
     if (this.useLayoutEngineAsPath) this.positionTextUnitsAlongPath();
     else this.positionTextUnitsInSpace();
@@ -2162,7 +2188,7 @@ P.positionTextUnits = function () {
 // `positionTextUnitsAlongPath` - Position each TextUnit along a single-line path of the layout entity (if possible)
 P.positionTextUnitsAlongPath = function () {
 
-// console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits');
+console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits)');
 
 };
 
@@ -2172,7 +2198,7 @@ P.positionTextUnitsAlongPath = function () {
 // + Line justification requirements
 P.positionTextUnitsInSpace = function () {
 
-// console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits');
+console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits)');
 
     const {
         lines,
@@ -2308,13 +2334,18 @@ P.positionTextUnitsInSpace = function () {
     });
 
     // Generating the final positional data for TextUnits has been separated into its own function, for clarity
-    this.finalizeForSpace();
+    // + Work to identify underline, overline and highlight sections of the text also happens here
+    this.finalizeCoordinatesForSpace();
+
+    // Generating the underline, overline and highlight paths for TextUnits have been separated into their own functions, for clarity
+    this.buildHighlightPaths();
 };
 
 
-P.finalizeForSpace = function () {
+// `finalizeCoordinatesForSpace` - Position each TextUnit within the space contained by the layout entity, along multiple lines. This work takes into account:
+P.finalizeCoordinatesForSpace = function () {
 
-console.log(this.name, 'finalizeForSpace (trigger: none - called by positionTextUnitsInSpace');
+console.log(this.name, 'finalizeForSpace (trigger: none - called by positionTextUnitsInSpace)');
 
     const {
         lines,
@@ -2323,26 +2354,31 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
         textHandle,
         getTextHandleX: getX,
         getTextHandleY: getY,
+        layoutEngine,
     } = this;
 
     const direction = defaultTextStyle.direction;
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
-
-    this.updateWorkingTextStyle(currentTextStyle, Ωempty);
-
-    let unit, unitData, style, lineOffset, len,
-        ox = 0,
-        oy = 0,
-        fontSizeValue = 0;
+    const currentScale = layoutEngine.currentScale;
 
     const [hx, hy] = textHandle;
 
-    fontSizeValue = parseFloat(currentTextStyle.fontSize);
-    oy = getY.call(this, hy, fontSizeValue, currentTextStyle.fontFamily);
+    this.updateWorkingTextStyle(currentTextStyle, Ωempty);
+
+    let { fontFamily, includeUnderline, includeOverline, includeHighlight, highlightStyle } = currentTextStyle;
+
+    let unit, unitData, style, lineOffset, len,
+        highlightOut, highlightBack,
+        fontSizeValue = parseFloat(currentTextStyle.fontSize),
+        verticalOffset, ratio,
+        ox = 0,
+        oy = getY.call(this, hy, fontSizeValue, currentTextStyle.fontFamily);
 
     lines.forEach(line => {
 
         unitData = line.unitData;
+
+        line.maxHeight = fontSizeValue;
 
         unitData.forEach(u => {
 
@@ -2350,13 +2386,21 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
 
                 unit = textUnits[u];
 
-                ({style, lineOffset} = unit);
+                ({style, lineOffset, len, highlightOut, highlightBack} = unit);
 
                 if (style) {
 
                     this.updateWorkingTextStyle(currentTextStyle, style);
                     fontSizeValue = parseFloat(currentTextStyle.fontSize);
+                    fontFamily = currentTextStyle.fontFamily;
                     oy = getY.call(this, hy, fontSizeValue, currentTextStyle.fontFamily);
+
+                    includeUnderline = currentTextStyle.includeUnderline;
+                    includeOverline = currentTextStyle.includeOverline;
+                    includeHighlight = currentTextStyle.includeHighlight;
+                    highlightStyle = currentTextStyle.highlightStyle;
+
+                    if (line.maxHeight < fontSizeValue) line.maxHeight = fontSizeValue;
                 }
 
                 if (unit.stampFlag) {
@@ -2365,10 +2409,187 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
 
                     unit.stampPos[0] = lineOffset - ox;
                     unit.stampPos[1] = -oy;
+
+                    if (includeUnderline) {
+
+                        // do something fabulous
+                    }
+
+                    if (includeOverline) {
+
+                        // do something fabulous
+                    }
+
+                    if (includeHighlight) {
+
+                        unit.highlightStyle = highlightStyle;
+
+                        ratio = fontSizeValue / 100;
+                        verticalOffset = this.getFontMetadata(fontFamily)?.verticalOffset * ratio * currentScale|| 0;
+
+                        highlightOut.length = 0;
+
+                        highlightOut.push([lineOffset - ox, -oy - verticalOffset], [lineOffset - ox + len, -oy - verticalOffset]);
+
+                        highlightBack.length = 0;
+
+                        // Magic number warning! Multiplying `fontSizeValue` by `1.1` seems to give the "most pleasing" highlight effect, leaving just enough space between the lowest character and the bottom of the highlight (in problematic fonts like "Mountains of Christmas").
+                        // + TODO: consider making this inflation factor - `1.1` - a settable TextStyle attribute.
+                        highlightBack.push([lineOffset - ox, -oy + (fontSizeValue * currentScale * 1.1)], [lineOffset - ox + len, -oy + (fontSizeValue * currentScale * 1.1)]);
+                    }
                 }
             }
         });
     });
+};
+
+P.buildHighlightPaths = function () {
+
+console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
+
+    const { lines, textUnits, layoutEngine, highlightPaths } = this;
+    const { currentRotation, currentStampPosition } = layoutEngine;
+
+    const coord = requestCoordinate();
+
+    let lineX, lineY, unitStartX, unitStartY, unitPreviousX, unitPreviousY, unitNextX, unitNextY,
+        startAt, unitData, unit, path,
+        highlightOut, highlightBack, highlightStyle,
+        i, iz, processFlag;
+
+    const currentOut = [],
+        currentBack = [];
+
+    let [previousLineX, previousLineY] = currentStampPosition;
+
+    highlightPaths.length = 0;
+
+    lines.forEach(line => {
+
+        ({ startAt, unitData } = line);
+
+        currentOut.length = 0;
+        currentBack.length = 0;
+
+        unitData.forEach((u, unitIndex) => {
+
+            if (u.toFixed) {
+
+                unit = textUnits[u];
+
+                if (unit.highlightStyle) highlightStyle = unit.highlightStyle;
+
+                processFlag = unitIndex + 1 === unitData.length;
+
+                if (unit.stampFlag) {
+
+                    ({ highlightOut, highlightBack } = unit);
+
+                    if (highlightOut.length) {
+
+                        currentOut.push(...highlightOut);
+                        currentBack.push(...highlightBack);
+                    }
+                    else processFlag = true;
+
+                    if (processFlag) {
+
+                        if (currentOut.length) {
+
+                            path = '';
+
+                            [lineX, lineY] = coord.set(startAt).subtract(currentStampPosition).rotate(currentRotation).add(currentStampPosition);
+
+                            path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
+
+                            previousLineX = lineX;
+                            previousLineY = lineY;
+
+                            [unitStartX, unitStartY] = coord.set(currentOut.shift()).subtract(startAt).rotate(currentRotation).add(startAt);
+
+                            path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
+
+                            unitPreviousX = unitStartX;
+                            unitPreviousY = unitStartY;
+
+                            for (i = 0, iz = currentOut.length; i < iz; i++) {
+
+                                [unitNextX, unitNextY] = currentOut.shift();
+
+                                path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+                                unitPreviousX = unitNextX;
+                                unitPreviousY = unitNextY;
+                            }
+
+                            for (i = 0, iz = currentBack.length; i < iz; i++) {
+
+                                [unitNextX, unitNextY] = currentBack.pop();
+
+                                path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+                                unitPreviousX = unitNextX;
+                                unitPreviousY = unitNextY;
+                            }
+                            path += 'z ';
+
+                            highlightPaths.push([highlightStyle, new Path2D(path)]);
+                        }
+                    }
+                }
+            }
+        });
+
+        // Capturing anything at the end of the line
+        if (processFlag) {
+
+            if (currentOut.length) {
+
+                path = '';
+
+                [lineX, lineY] = coord.set(startAt).subtract(currentStampPosition).rotate(currentRotation).add(currentStampPosition);
+
+                path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
+
+                previousLineX = lineX;
+                previousLineY = lineY;
+
+                [unitStartX, unitStartY] = coord.set(currentOut.shift()).subtract(startAt).rotate(currentRotation).add(startAt);
+
+                path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
+
+                unitPreviousX = unitStartX;
+                unitPreviousY = unitStartY;
+
+                for (i = 0, iz = currentOut.length; i < iz; i++) {
+
+                    [unitNextX, unitNextY] = currentOut.shift();
+
+                    path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+                    unitPreviousX = unitNextX;
+                    unitPreviousY = unitNextY;
+                }
+
+                for (i = 0, iz = currentBack.length; i < iz; i++) {
+
+                    [unitNextX, unitNextY] = currentBack.pop();
+
+                    path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+                    unitPreviousX = unitNextX;
+                    unitPreviousY = unitNextY;
+                }
+                path += 'z ';
+
+                highlightPaths.push([highlightStyle, new Path2D(path)]);
+            }
+        }
+    });
+
+    console.log(highlightPaths);
+
+    releaseCoordinate(coord);
 };
 
 
@@ -2414,7 +2635,7 @@ P.prepareStamp = function() {
 
     if (!this.dirtyPathObject && this.currentFontIsLoaded) {
 
-        // cleanText and cleanLayout will check to see if font has uploaded before performing their work
+        // `cleanText`, `cleanLayout` and `layoutText` functions will also check to see if font has uploaded before performing their work
         if (this.dirtyText) {
 
             this.updateAccessibleTextHold();
@@ -2427,7 +2648,9 @@ P.prepareStamp = function() {
     }
 };
 
-// `stamp` - All EnhancedLabel entity stamping, except for simple stamps, goes through this function.
+// `stamp` - Invoked by the entity's Group
+// + Nothing gets displayed until all the moving parts are present and settled
+// + EnhancedLabel entitys don't have a `simpleStamp` function, by design.
 P.stamp = function (force = false, host, changes) {
 
     if (!this.dirtyFont && !this.dirtyText && !this.dirtyLayout) {
@@ -2449,26 +2672,9 @@ P.stamp = function (force = false, host, changes) {
 };
 
 
-// `simpleStamp` - bypassing the stamp functionality
-// + (probably not needed?)
-P.simpleStamp = function (host, changes) {
-
-    if (host && GOOD_HOST.includes(host.type)) {
-
-        this.currentHost = host;
-
-        if (changes) {
-
-            this.set(changes);
-            this.prepareStamp();
-        }
-        this.regularStamp();
-    }
-};
-
-
-// `regularStamp` - overwrites mixin/entity.js function.
-// + If decide to pass host instead of host.engine to method functions for all entitys, then this may be a temporary fix
+// `regularStamp` - A small, internal function to direct stamping towards the correct functionality
+// + regularStampInSpace for text inside the layoutEngine artefact's enclosed space
+// + regularStampAlongPath for text positioned along a path-based entity's perimeter
 P.regularStamp = function () {
 
     if (this.currentHost && this.layoutEngine) {
@@ -2478,6 +2684,7 @@ P.regularStamp = function () {
     }
 };
 
+// `regularStampInSpace` - For text inside the layoutEngine artefact's enclosed space
 P.regularStampInSpace = function () {
 
     const dest = this.currentHost;
@@ -2585,6 +2792,20 @@ P.regularStampInSpace = function () {
                 });
             });
 
+            if (this.highlightPaths.length) {
+
+                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
+                engine.rotate(rotation);
+
+                engine.globalCompositeOperation = 'destination-over';
+
+                this.highlightPaths.forEach(data => {
+
+                    engine.fillStyle = this.getStyle(data[0], 'fillStyle', dest);
+                    engine.fill(data[1]);
+                });
+            }
+
             engine.restore();
 
             releaseCoordinate(coord);
@@ -2592,6 +2813,7 @@ P.regularStampInSpace = function () {
     }
 };
 
+// `regularStampAlongPath` - For text positioned along a path-based entity's perimeter
 P.regularStampAlongPath = function () {
 
     const dest = this.currentHost;

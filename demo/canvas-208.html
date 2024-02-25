@@ -132,9 +132,11 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
       & strong {
         --SC-include-highlight: true;
-        --SC-highlight-style: honeydew;
+        --SC-highlight-style: darkblue;
+        --SC-fill-style: lightblue;
 
         font-weight: bold;
+        color: var(--SC-fill-style);
         background-color: var(--SC-highlight-style);
       }
 
@@ -196,6 +198,15 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
         --SC-fill-style: red;
 
         color: var(--SC-fill-style);
+      }
+
+      & .green-highlight {
+        --SC-include-highlight: true;
+        --SC-highlight-style: darkgreen;
+        --SC-fill-style: lightgreen;
+
+        color: var(--SC-fill-style);
+        background-color: var(--SC-highlight-style);
       }
 
       & .letter-spaced {
