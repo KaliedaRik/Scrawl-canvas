@@ -166,6 +166,9 @@ const TextStyle = function (items = Ωempty) {
         this.set(this.defs);
 
         this.set(items);
+
+        this.letterSpacing = `${this.letterSpaceValue}px`;
+        this.wordSpacing = `${this.wordSpaceValue}px`;
     }
     else this.set(items, true);
 

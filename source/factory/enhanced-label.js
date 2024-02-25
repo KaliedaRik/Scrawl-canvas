@@ -1900,7 +1900,7 @@ console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)')
 
         ({chars, type, style} = t);
 
-        if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
+        if (style)  this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
 
         res = engine.measureText(chars);
 
@@ -2447,20 +2447,65 @@ P.buildHighlightPaths = function () {
 
 console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
 
-    const { lines, textUnits, layoutEngine, highlightPaths } = this;
-    const { currentRotation, currentStampPosition } = layoutEngine;
+    const generatePath = (out, back, style) => {
+
+        let previousLineX, previousLineY,
+            unitPreviousX, unitPreviousY,
+            unitNextX, unitNextY;
+
+        let path = '';
+
+        [previousLineX, previousLineY] = currentStampPosition;
+
+        const [lineX, lineY] = coord.set(startAt).subtract(currentStampPosition).rotate(-alignment).add(currentStampPosition);
+
+        path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
+
+        previousLineX = lineX;
+        previousLineY = lineY;
+
+        const [unitStartX, unitStartY] = out.shift();
+
+        path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
+
+        unitPreviousX = unitStartX;
+        unitPreviousY = unitStartY;
+
+        for (i = 0, iz = out.length; i < iz; i++) {
+
+            [unitNextX, unitNextY] = out.shift();
+
+            path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+            unitPreviousX = unitNextX;
+            unitPreviousY = unitNextY;
+        }
+
+        for (i = 0, iz = back.length; i < iz; i++) {
+
+            [unitNextX, unitNextY] = back.pop();
+
+            path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+            unitPreviousX = unitNextX;
+            unitPreviousY = unitNextY;
+        }
+        path += 'z ';
+
+        highlightPaths.push([style, new Path2D(path)]);
+    }
+
+    const { lines, textUnits, layoutEngine, highlightPaths, alignment } = this;
+    const { currentStampPosition } = layoutEngine;
 
     const coord = requestCoordinate();
 
-    let lineX, lineY, unitStartX, unitStartY, unitPreviousX, unitPreviousY, unitNextX, unitNextY,
-        startAt, unitData, unit, path,
+    let startAt, unitData, unit,
         highlightOut, highlightBack, highlightStyle,
         i, iz, processFlag;
 
     const currentOut = [],
         currentBack = [];
-
-    let [previousLineX, previousLineY] = currentStampPosition;
 
     highlightPaths.length = 0;
 
@@ -2492,102 +2537,14 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
                     }
                     else processFlag = true;
 
-                    if (processFlag) {
-
-                        if (currentOut.length) {
-
-                            path = '';
-
-                            [lineX, lineY] = coord.set(startAt).subtract(currentStampPosition).rotate(currentRotation).add(currentStampPosition);
-
-                            path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
-
-                            previousLineX = lineX;
-                            previousLineY = lineY;
-
-                            [unitStartX, unitStartY] = coord.set(currentOut.shift()).subtract(startAt).rotate(currentRotation).add(startAt);
-
-                            path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
-
-                            unitPreviousX = unitStartX;
-                            unitPreviousY = unitStartY;
-
-                            for (i = 0, iz = currentOut.length; i < iz; i++) {
-
-                                [unitNextX, unitNextY] = currentOut.shift();
-
-                                path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-                                unitPreviousX = unitNextX;
-                                unitPreviousY = unitNextY;
-                            }
-
-                            for (i = 0, iz = currentBack.length; i < iz; i++) {
-
-                                [unitNextX, unitNextY] = currentBack.pop();
-
-                                path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-                                unitPreviousX = unitNextX;
-                                unitPreviousY = unitNextY;
-                            }
-                            path += 'z ';
-
-                            highlightPaths.push([highlightStyle, new Path2D(path)]);
-                        }
-                    }
+                    if (processFlag && currentOut.length) generatePath(currentOut, currentBack, highlightStyle);
                 }
             }
         });
 
         // Capturing anything at the end of the line
-        if (processFlag) {
-
-            if (currentOut.length) {
-
-                path = '';
-
-                [lineX, lineY] = coord.set(startAt).subtract(currentStampPosition).rotate(currentRotation).add(currentStampPosition);
-
-                path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
-
-                previousLineX = lineX;
-                previousLineY = lineY;
-
-                [unitStartX, unitStartY] = coord.set(currentOut.shift()).subtract(startAt).rotate(currentRotation).add(startAt);
-
-                path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
-
-                unitPreviousX = unitStartX;
-                unitPreviousY = unitStartY;
-
-                for (i = 0, iz = currentOut.length; i < iz; i++) {
-
-                    [unitNextX, unitNextY] = currentOut.shift();
-
-                    path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-                    unitPreviousX = unitNextX;
-                    unitPreviousY = unitNextY;
-                }
-
-                for (i = 0, iz = currentBack.length; i < iz; i++) {
-
-                    [unitNextX, unitNextY] = currentBack.pop();
-
-                    path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-                    unitPreviousX = unitNextX;
-                    unitPreviousY = unitNextY;
-                }
-                path += 'z ';
-
-                highlightPaths.push([highlightStyle, new Path2D(path)]);
-            }
-        }
+        if (processFlag && currentOut.length) generatePath(currentOut, currentBack, highlightStyle);
     });
-
-    console.log(highlightPaths);
 
     releaseCoordinate(coord);
 };

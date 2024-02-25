@@ -92,7 +92,8 @@ const updateDisplayText = () => {
         if (dims[1]) displayText.style.height = `${dims[1]}px`;
 // @ts-expect-error
         displayText.style.textAlign = justify;
-
+// @ts-expect-error
+        displayText.style.transform = `rotate(${myLayout.get('roll')}deg) scale(${myLayout.get('scale')})`;
     }, 50);
 };
 
