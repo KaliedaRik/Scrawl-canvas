@@ -1528,23 +1528,24 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
 
         return {
             chars,
-            len: 0,
-            type,
-            style: null,
-            lineOffset: 0,
+            highlightBack: [],
+            highlightOut: [],
+            highlightStyle: '',
             kernOffset: 0,
+            len: 0,
+            lineOffset: 0,
+            overlineBack: [],
+            overlineOut: [],
+            overlineStyle: '',
             replaceLen: 0,
             stampFlag: true,
             stampPos: [0, 0],
-            underlineOut: [],
+            style: null,
+            type,
             underlineBack: [],
+            underlineOut: [],
             underlineStyle: '',
-            overlineOut: [],
-            overlineBack: [],
-            overlineStyle: '',
-            highlightOut: [],
-            highlightBack: [],
-            highlightStyle: '',
+            underlineGap: 0,
         };
     };
 
@@ -2342,6 +2343,7 @@ console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by posi
     // Generating the underline, overline and highlight paths for TextUnits have been separated into their own functions, for clarity
     this.buildHighlightPaths();
     this.buildOverlinePaths();
+    this.buildUnderlinePaths();
 };
 
 
@@ -2371,15 +2373,16 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
     let {
         fontFamily,
         fontSize,
-        includeUnderline,
+        includeUnderline, underlineStyle, underlineOffset, underlineWidth, underlineGap,
         includeOverline, overlineStyle, overlineOffset, overlineWidth,
         includeHighlight, highlightStyle,
-        localOffset, localDepth, localGap,
     } = currentTextStyle;
 
     let unit, unitData, style, lineOffset, len,
         highlightOut, highlightBack,
+        underlineOut, underlineBack,
         overlineOut, overlineBack,
+        localOffset, localDepth,
         fontSizeValue = parseFloat(fontSize),
         ox = 0,
         oy = getY.call(this, hy, fontSizeValue, fontFamily);
@@ -2400,7 +2403,13 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
 
                 unit = textUnits[u];
 
-                ({style, lineOffset, len, overlineOut, overlineBack, highlightOut, highlightBack} = unit);
+                ({
+                    style, lineOffset, len,
+                    underlineOut, underlineBack,
+                    overlineOut, overlineBack,
+                    highlightOut, highlightBack,
+
+                } = unit);
 
                 if (style) {
 
@@ -2408,7 +2417,7 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
 
                     ({
                         fontFamily, fontSize,
-                        includeUnderline,
+                        includeUnderline, underlineStyle, underlineOffset, underlineWidth, underlineGap,
                         includeOverline, overlineStyle, overlineOffset, overlineWidth,
                         includeHighlight, highlightStyle,
 
@@ -2432,7 +2441,35 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
 
                     if (includeUnderline) {
 
-                        // do something fabulous
+                        unit.underlineStyle = underlineStyle;
+                        unit.underlineGap = underlineGap;
+
+                        underlineOut.length = 0;
+
+                        localOffset = underlineOffset * fontSizeValue * currentScale;
+                        localDepth = underlineWidth * currentScale;
+
+                        underlineOut.push(
+                            [
+                                lineOffset - ox,
+                                -oy - verticalOffset + localOffset
+                            ], [
+                                lineOffset - ox + len,
+                                -oy - verticalOffset + localOffset
+                            ]
+                        );
+
+                        underlineBack.length = 0;
+
+                        underlineBack.push(
+                            [
+                                lineOffset - ox,
+                                -oy - verticalOffset + localOffset + localDepth
+                            ], [
+                                lineOffset - ox + len,
+                                -oy - verticalOffset + localOffset + localDepth
+                            ]
+                        );
                     }
 
                     if (includeOverline) {
@@ -2451,18 +2488,20 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
                             ], [
                                 lineOffset - ox + len,
                                 -oy - verticalOffset + localOffset
-                                ]
+                            ]
                         );
 
                         overlineBack.length = 0;
 
-                        overlineBack.push([
-                            lineOffset - ox,
-                            -oy - verticalOffset + localOffset + localDepth
-                        ], [
-                            lineOffset - ox + len,
-                            -oy - verticalOffset + localOffset + localDepth
-                        ]);
+                        overlineBack.push(
+                            [
+                                lineOffset - ox,
+                                -oy - verticalOffset + localOffset + localDepth
+                            ], [
+                                lineOffset - ox + len,
+                                -oy - verticalOffset + localOffset + localDepth
+                            ]
+                        );
                     }
 
                     if (includeHighlight) {
@@ -2471,13 +2510,31 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
 
                         highlightOut.length = 0;
 
-                        highlightOut.push([lineOffset - ox, -oy - verticalOffset], [lineOffset - ox + len, -oy - verticalOffset]);
+                        localDepth = fontSizeValue * currentScale * 1.1;
+
+                        highlightOut.push(
+                            [
+                                lineOffset - ox,
+                                -oy - verticalOffset
+                            ], [
+                                lineOffset - ox + len,
+                                -oy - verticalOffset
+                            ]
+                        );
 
                         highlightBack.length = 0;
 
                         // Magic number warning! Multiplying `fontSizeValue` by `1.1` seems to give the "most pleasing" highlight effect, leaving just enough space between the lowest character and the bottom of the highlight (in problematic fonts like "Mountains of Christmas").
                         // + TODO: consider making this inflation factor - `1.1` - a settable TextStyle attribute.
-                        highlightBack.push([lineOffset - ox, -oy + (fontSizeValue * currentScale * 1.1)], [lineOffset - ox + len, -oy + (fontSizeValue * currentScale * 1.1)]);
+                        highlightBack.push(
+                            [
+                                lineOffset - ox,
+                                -oy + localDepth
+                            ], [
+                                lineOffset - ox + len,
+                                -oy + localDepth
+                            ]
+                        );
                     }
                 }
             }
@@ -2485,57 +2542,61 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
     });
 };
 
+// `generatePath` - a local function (not attached to the prototype)
+// + Used by `buildHighlightPaths`, `buildHighlightPaths` and `buildHighlightPaths` for generating their path data
+const generatePath = (coord, out, back, style, pos, start, rot, paths, gap) => {
+
+    let previousLineX, previousLineY,
+        unitPreviousX, unitPreviousY,
+        unitNextX, unitNextY,
+        i, iz;
+
+    let path = '';
+
+    [previousLineX, previousLineY] = pos;
+
+    const [lineX, lineY] = coord.set(start).subtract(pos).rotate(-rot).add(pos);
+
+    path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
+
+    previousLineX = lineX;
+    previousLineY = lineY;
+
+    const [unitStartX, unitStartY] = out.shift();
+
+    path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
+
+    unitPreviousX = unitStartX;
+    unitPreviousY = unitStartY;
+
+    for (i = 0, iz = out.length; i < iz; i++) {
+
+        [unitNextX, unitNextY] = out.shift();
+
+        path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+        unitPreviousX = unitNextX;
+        unitPreviousY = unitNextY;
+    }
+
+    for (i = 0, iz = back.length; i < iz; i++) {
+
+        [unitNextX, unitNextY] = back.pop();
+
+        path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+        unitPreviousX = unitNextX;
+        unitPreviousY = unitNextY;
+    }
+    path += 'z ';
+
+    if (gap != null) paths.push([gap, style, new Path2D(path)]);
+    else paths.push([style, new Path2D(path)]);
+};
+
 P.buildHighlightPaths = function () {
 
 console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
-
-    const generatePath = (out, back, style) => {
-
-        let previousLineX, previousLineY,
-            unitPreviousX, unitPreviousY,
-            unitNextX, unitNextY;
-
-        let path = '';
-
-        [previousLineX, previousLineY] = currentStampPosition;
-
-        const [lineX, lineY] = coord.set(startAt).subtract(currentStampPosition).rotate(-alignment).add(currentStampPosition);
-
-        path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
-
-        previousLineX = lineX;
-        previousLineY = lineY;
-
-        const [unitStartX, unitStartY] = out.shift();
-
-        path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
-
-        unitPreviousX = unitStartX;
-        unitPreviousY = unitStartY;
-
-        for (i = 0, iz = out.length; i < iz; i++) {
-
-            [unitNextX, unitNextY] = out.shift();
-
-            path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-            unitPreviousX = unitNextX;
-            unitPreviousY = unitNextY;
-        }
-
-        for (i = 0, iz = back.length; i < iz; i++) {
-
-            [unitNextX, unitNextY] = back.pop();
-
-            path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-            unitPreviousX = unitNextX;
-            unitPreviousY = unitNextY;
-        }
-        path += 'z ';
-
-        highlightPaths.push([style, new Path2D(path)]);
-    }
 
     const { lines, textUnits, layoutEngine, highlightPaths, alignment } = this;
     const { currentStampPosition } = layoutEngine;
@@ -2544,7 +2605,7 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
 
     let startAt, unitData, unit,
         highlightOut, highlightBack, highlightStyle,
-        i, iz, processFlag;
+        processFlag;
 
     const currentOut = [],
         currentBack = [];
@@ -2579,13 +2640,13 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
                     }
                     else processFlag = true;
 
-                    if (processFlag && currentOut.length) generatePath(currentOut, currentBack, highlightStyle);
+                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, highlightStyle, currentStampPosition, startAt, alignment, highlightPaths);
                 }
             }
         });
 
         // Capturing anything at the end of the line
-        if (processFlag && currentOut.length) generatePath(currentOut, currentBack, highlightStyle);
+        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, highlightStyle, currentStampPosition, startAt, alignment, highlightPaths);
     });
 
     releaseCoordinate(coord);
@@ -2595,54 +2656,6 @@ P.buildOverlinePaths = function () {
 
 console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInSpace)');
 
-    const generatePath = (out, back, style) => {
-
-        let previousLineX, previousLineY,
-            unitPreviousX, unitPreviousY,
-            unitNextX, unitNextY;
-
-        let path = '';
-
-        [previousLineX, previousLineY] = currentStampPosition;
-
-        const [lineX, lineY] = coord.set(startAt).subtract(currentStampPosition).rotate(-alignment).add(currentStampPosition);
-
-        path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
-
-        previousLineX = lineX;
-        previousLineY = lineY;
-
-        const [unitStartX, unitStartY] = out.shift();
-
-        path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
-
-        unitPreviousX = unitStartX;
-        unitPreviousY = unitStartY;
-
-        for (i = 0, iz = out.length; i < iz; i++) {
-
-            [unitNextX, unitNextY] = out.shift();
-
-            path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-            unitPreviousX = unitNextX;
-            unitPreviousY = unitNextY;
-        }
-
-        for (i = 0, iz = back.length; i < iz; i++) {
-
-            [unitNextX, unitNextY] = back.pop();
-
-            path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-            unitPreviousX = unitNextX;
-            unitPreviousY = unitNextY;
-        }
-        path += 'z ';
-
-        overlinePaths.push([style, new Path2D(path)]);
-    }
-
     const { lines, textUnits, layoutEngine, overlinePaths, alignment } = this;
     const { currentStampPosition } = layoutEngine;
 
@@ -2650,7 +2663,7 @@ console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTe
 
     let startAt, unitData, unit,
         overlineOut, overlineBack, overlineStyle,
-        i, iz, processFlag;
+        processFlag;
 
     const currentOut = [],
         currentBack = [];
@@ -2685,13 +2698,72 @@ console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTe
                     }
                     else processFlag = true;
 
-                    if (processFlag && currentOut.length) generatePath(currentOut, currentBack, overlineStyle);
+                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, overlineStyle, currentStampPosition, startAt, alignment, overlinePaths);
                 }
             }
         });
 
         // Capturing anything at the end of the line
-        if (processFlag && currentOut.length) generatePath(currentOut, currentBack, overlineStyle);
+        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, overlineStyle, currentStampPosition, startAt, alignment, overlinePaths);
+    });
+
+    releaseCoordinate(coord);
+};
+
+P.buildUnderlinePaths = function () {
+
+console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInSpace)');
+
+    const { lines, textUnits, layoutEngine, underlinePaths, alignment } = this;
+    const { currentStampPosition } = layoutEngine;
+
+    const coord = requestCoordinate();
+
+    let startAt, unitData, unit,
+        underlineOut, underlineBack, underlineStyle, underlineGap,
+        processFlag;
+
+    const currentOut = [],
+        currentBack = [];
+
+    underlinePaths.length = 0;
+
+    lines.forEach(line => {
+
+        ({ startAt, unitData } = line);
+
+        currentOut.length = 0;
+        currentBack.length = 0;
+
+        unitData.forEach((u, unitIndex) => {
+
+            if (u.toFixed) {
+
+                unit = textUnits[u];
+
+                if (unit.underlineStyle) underlineStyle = unit.underlineStyle;
+                if (unit.underlineGap) underlineGap = unit.underlineGap;
+
+                processFlag = unitIndex + 1 === unitData.length;
+
+                if (unit.stampFlag) {
+
+                    ({ underlineOut, underlineBack } = unit);
+
+                    if (underlineOut.length) {
+
+                        currentOut.push(...underlineOut);
+                        currentBack.push(...underlineBack);
+                    }
+                    else processFlag = true;
+
+                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths, underlineGap);
+                }
+            }
+        });
+
+        // Capturing anything at the end of the line
+        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths, underlineGap);
     });
 
     releaseCoordinate(coord);
@@ -2841,6 +2913,20 @@ P.regularStampInSpace = function () {
             this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
 
             const rotation = alignment * _radian;
+
+            if (this.underlinePaths.length) {
+
+                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
+                engine.rotate(rotation);
+
+                // engine.globalCompositeOperation = 'source-over';
+
+                this.underlinePaths.forEach(data => {
+
+                    engine.fillStyle = this.getStyle(data[1], 'fillStyle', dest);
+                    engine.fill(data[2]);
+                });
+            }
 
             lines.forEach(line => {
 
