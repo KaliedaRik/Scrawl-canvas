@@ -237,12 +237,15 @@ export const requestQuaternion = function (items) {
 };
 
 // `exported function` - return a Quaternion to the quaternion pool. Failing to return Quaternion to the pool may lead to more inefficient code and possible memory leaks.
-export const releaseQuaternion = function (q) {
+export const releaseQuaternion = function (...args) {
 
-    if (q && q.type === T_QUATERNION) {
+    args.forEach(q => {
 
-        quaternionPool.push(q.zero());
-    }
+        if (q && q.type === T_QUATERNION) {
+
+            quaternionPool.push(q.zero());
+        }
+    });
 };
 
 

@@ -155,6 +155,11 @@ export const observeAndUpdate = function (items = Ωempty) {
                         val = targetVal;
                         break;
 
+                    // Supplied value not modified in any way
+                    case 'parse' :
+                        val = (targetVal.substring) ? JSON.parse(targetVal) : targetVal;
+                        break;
+
                     // Supplied value converted to String
                     case 'string' :
                         val = `${targetVal}`;

@@ -4,7 +4,7 @@
 
 
 // #### Imports
-import { fontfamilymetadata, fontfamilymetadatanames, textstyle, textstylenames } from '../core/library.js';
+import { fontfamilymetadata, fontfamilymetadatanames } from '../core/library.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 

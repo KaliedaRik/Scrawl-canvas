@@ -9,7 +9,7 @@ import { getPixelRatio } from '../core/user-interaction.js';
 import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../untracked-factory/state.js';
-import { makeTextStyle } from '../factory/text-style.js';
+import { makeTextStyle } from '../untracked-factory/text-style.js';
 import { currentGroup } from '../factory/canvas.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';

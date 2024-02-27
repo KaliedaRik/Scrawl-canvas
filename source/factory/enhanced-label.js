@@ -5,10 +5,10 @@
 
 
 // #### Imports
-import { artefact, constructors, cell, cellnames, fontfamilymetadata, fontfamilymetadatanames, group, styles, stylesnames, textstyle, textstylenames } from '../core/library.js';
+import { artefact, constructors, cell, cellnames, fontfamilymetadata, fontfamilymetadatanames, group, styles, stylesnames } from '../core/library.js';
 
 import { makeState } from '../untracked-factory/state.js';
-import { makeTextStyle } from '../factory/text-style.js';
+import { makeTextStyle } from '../untracked-factory/text-style.js';
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import { currentGroup } from './canvas.js';
@@ -22,7 +22,7 @@ import deltaMix from '../mixin/delta.js';
 
 import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _create, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, END, ENTITY, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, ROW_REVERSE, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _create, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, ROW_REVERSE, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Local variables
@@ -62,6 +62,8 @@ const EnhancedLabel = function (items = Ωempty) {
     this.underlinePaths = [];
     this.overlinePaths = [];
     this.highlightPaths = [];
+
+    this.guidelineDash = [];
 
     this.set(items);
 
@@ -147,6 +149,9 @@ const defaultAttributes = {
 
 // __showGuidelines__ - boolean.
     showGuidelines: false,
+    guidelineStyle: 'rgb(0 0 0 / 0.5)',
+    guidelineWidth: 1,
+    guidelineDash: null,
 
 // The EnhancedLabel entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
@@ -158,7 +163,7 @@ const defaultAttributes = {
     group: null,
     anchor: null,
 
-    method: 'fill',
+    method: FILL,
 
     alignment: 0,
 
@@ -204,6 +209,7 @@ P.finalizePacketOut = function (copy, items) {
         lineDash: defaultTextCopy.lineDash,
         lineDashOffset: defaultTextCopy.lineDashOffset,
         lineWidth: defaultTextCopy.lineWidth,
+        method: defaultTextCopy.method,
         overlineOffset: defaultTextCopy.overlineOffset,
         overlineStyle: defaultTextCopy.overlineStyle,
         overlineWidth: defaultTextCopy.overlineWidth,
@@ -753,6 +759,17 @@ S.textIsAccessible = function (item) {
     this.dirtyText = true;
 };
 
+S.guidelineDash = function (item) {
+
+    if (_isArray(item)) this.guidelineDash = item;
+}
+
+S.guidelineStyle = function (item) {
+
+    if (!item) this.guidelineStyle = this.defs.guidelineStyle;
+    else if (item.substring) this.guidelineStyle = item;
+}
+
 
 // #### Prototype functions
 
@@ -791,6 +808,22 @@ console.log(this.name, 'getTester (trigger: none. Called by: assessTextForStyle,
 
             if (controller) return controller.labelStylesCalculator;
         }
+    }
+    return null;
+};
+
+// `getControllerCell` - Retrieve the entity's controller Cell wrapper
+P.getControllerCell = function () {
+
+console.log(this.name, 'getControllerCell (trigger: none. Called by: assessTextForStyle, S.text)');
+
+    const group = this.group;
+
+    if (group) {
+
+        const host = (group && group.getHost) ? group.getHost() : null;
+
+        if (host) return host.getController();
     }
     return null;
 };
@@ -1105,12 +1138,10 @@ P.getFontMetadata = function (fontFamily) {
 
         if (fontfamilymetadatanames.includes(font)) return fontfamilymetadata[font];
 
-        const mycell = requestCell();
-        const engine = mycell.engine;
+        const mycell = requestCell(),
+            engine = mycell.engine;
 
         engine.font = font;
-        engine.textBaseline = TOP;
-
 
         const metrics = engine.measureText(SPACE);
 
@@ -1356,10 +1387,10 @@ P.calculateLines = function () {
 
 
     // Main functionality
-    const mycell = requestCell();
     const coord = requestCoordinate();
 
-    const engine = mycell.engine;
+    const mycell = requestCell(),
+        engine = mycell.engine;
 
     const {
         alignment,
@@ -1833,6 +1864,11 @@ console.log(this.name, `assessTextForStyle (trigger: none - called directly by c
 // if (oldVal !== newVal) console.log(`underlineWidth | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.underlineWidth = newVal;
 
+        oldVal = currentTextStyle.method;
+        newVal = nodeVals.getPropertyValue('--SC-method');
+if (oldVal !== newVal) console.log(`method | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.method = newVal;
+
         unit.style.set(unitSet, true);
         currentTextStyle.set(unitSet, true);
     };
@@ -1864,6 +1900,7 @@ console.log(this.name, `assessTextForStyle (trigger: none - called directly by c
         tester.style.setProperty('--SC-underline-offset', defaultTextStyle.underlineOffset);
         tester.style.setProperty('--SC-underline-style', defaultTextStyle.underlineStyle);
         tester.style.setProperty('--SC-underline-width', defaultTextStyle.underlineWidth);
+        tester.style.setProperty('--SC-method', defaultTextStyle.method);
 
         tester.className = this.name;
         tester.innerHTML = rawText;
@@ -2196,7 +2233,7 @@ console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by po
 };
 
 
-// `positionTextUnitsInSpace` - Position each TextUnit within the space contained by the layout entity, along multiple lines. This work takes into account:
+// `positionTextUnitsInSpace` - Position each TextUnit along the line it has been assigned to. This work takes into account:
 // + Language direction
 // + Line justification requirements
 P.positionTextUnitsInSpace = function () {
@@ -2336,21 +2373,18 @@ console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by posi
         }
     });
 
-    // Generating the final positional data for TextUnits has been separated into its own function, for clarity
-    // + Work to identify underline, overline and highlight sections of the text also happens here
-    this.finalizeCoordinatesForSpace();
-
-    // Generating the underline, overline and highlight paths for TextUnits have been separated into their own functions, for clarity
+    // Code to identify and generate paths for underlines, overlines and highlights is in separate functions, for clarity
+    this.positionTextDecoration();
     this.buildHighlightPaths();
     this.buildOverlinePaths();
     this.buildUnderlinePaths();
 };
 
 
-// `finalizeCoordinatesForSpace` - Position each TextUnit within the space contained by the layout entity, along multiple lines. This work takes into account:
-P.finalizeCoordinatesForSpace = function () {
+// `positionTextDecoration` - Recovers data which can be used for building underline, overline and highlight Path2D objects
+P.positionTextDecoration = function () {
 
-console.log(this.name, 'finalizeForSpace (trigger: none - called by positionTextUnitsInSpace)');
+console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInSpace)');
 
     const {
         lines,
@@ -2391,6 +2425,8 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
         ratio = fontSizeValue / 100,
         verticalOffset = (metadata != null) ? metadata.verticalOffset * ratio * currentScale : 0;
 
+    // Process each line separately
+    // + Decorations that break across lines will have separate Path2D objects for each line
     lines.forEach(line => {
 
         unitData = line.unitData;
@@ -2411,6 +2447,7 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
 
                 } = unit);
 
+                // Update styling data as required by each TextUnit
                 if (style) {
 
                     this.updateWorkingTextStyle(currentTextStyle, style);
@@ -2432,6 +2469,7 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
                     verticalOffset = (metadata != null) ? metadata.verticalOffset * ratio * currentScale : 0;
                 }
 
+                // Only process visible TextUnits
                 if (unit.stampFlag) {
 
                     ox = getX.call(this, hx, len, direction);
@@ -2439,6 +2477,7 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
                     unit.stampPos[0] = lineOffset - ox;
                     unit.stampPos[1] = -oy;
 
+                    // Calculate coordinates for underlined TextUnits
                     if (includeUnderline) {
 
                         unit.underlineStyle = underlineStyle;
@@ -2472,6 +2511,7 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
                         );
                     }
 
+                    // Calculate coordinates for overlined TextUnits
                     if (includeOverline) {
 
                         unit.overlineStyle = overlineStyle;
@@ -2504,6 +2544,7 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
                         );
                     }
 
+                    // Calculate coordinates for highlighted TextUnits
                     if (includeHighlight) {
 
                         unit.highlightStyle = highlightStyle;
@@ -2542,9 +2583,9 @@ console.log(this.name, 'finalizeForSpace (trigger: none - called by positionText
     });
 };
 
-// `generatePath` - a local function (not attached to the prototype)
-// + Used by `buildHighlightPaths`, `buildHighlightPaths` and `buildHighlightPaths` for generating their path data
-const generatePath = (coord, out, back, style, pos, start, rot, paths, gap) => {
+// `generatePath` - an internal, local function to create Path2D objects from a given set of data
+// + Used by `buildUnderlinePaths`, `buildOverlinePaths` and `buildHighlightPaths`
+const generatePath = (coord, out, back, style, pos, start, rot, paths) => {
 
     let previousLineX, previousLineY,
         unitPreviousX, unitPreviousY,
@@ -2557,14 +2598,14 @@ const generatePath = (coord, out, back, style, pos, start, rot, paths, gap) => {
 
     const [lineX, lineY] = coord.set(start).subtract(pos).rotate(-rot).add(pos);
 
-    path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
+    path += `m ${_round(lineX - previousLineX)}, ${_round(lineY - previousLineY)} `;
 
     previousLineX = lineX;
     previousLineY = lineY;
 
     const [unitStartX, unitStartY] = out.shift();
 
-    path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
+    path += `m ${_round(unitStartX)}, ${_round(unitStartY)} `;
 
     unitPreviousX = unitStartX;
     unitPreviousY = unitStartY;
@@ -2573,7 +2614,7 @@ const generatePath = (coord, out, back, style, pos, start, rot, paths, gap) => {
 
         [unitNextX, unitNextY] = out.shift();
 
-        path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+        path += `l ${_round(unitNextX - unitPreviousX)}, ${_round(unitNextY - unitPreviousY)} `;
 
         unitPreviousX = unitNextX;
         unitPreviousY = unitNextY;
@@ -2583,17 +2624,71 @@ const generatePath = (coord, out, back, style, pos, start, rot, paths, gap) => {
 
         [unitNextX, unitNextY] = back.pop();
 
-        path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+        path += `l ${_round(unitNextX - unitPreviousX)}, ${_round(unitNextY - unitPreviousY)} `;
 
         unitPreviousX = unitNextX;
         unitPreviousY = unitNextY;
     }
     path += 'z ';
 
-    if (gap != null) paths.push([gap, style, new Path2D(path)]);
-    else paths.push([style, new Path2D(path)]);
+    paths.push([style, new Path2D(path)]);
 };
 
+
+
+
+
+
+// const generatePath = (coord, out, back, style, pos, start, rot, paths) => {
+
+//     let previousLineX, previousLineY,
+//         unitPreviousX, unitPreviousY,
+//         unitNextX, unitNextY,
+//         i, iz;
+
+//     let path = '';
+
+//     [previousLineX, previousLineY] = pos;
+
+//     const [lineX, lineY] = coord.set(start).subtract(pos).rotate(-rot).add(pos);
+
+//     path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
+
+//     previousLineX = lineX;
+//     previousLineY = lineY;
+
+//     const [unitStartX, unitStartY] = out.shift();
+
+//     path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
+
+//     unitPreviousX = unitStartX;
+//     unitPreviousY = unitStartY;
+
+//     for (i = 0, iz = out.length; i < iz; i++) {
+
+//         [unitNextX, unitNextY] = out.shift();
+
+//         path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+//         unitPreviousX = unitNextX;
+//         unitPreviousY = unitNextY;
+//     }
+
+//     for (i = 0, iz = back.length; i < iz; i++) {
+
+//         [unitNextX, unitNextY] = back.pop();
+
+//         path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
+
+//         unitPreviousX = unitNextX;
+//         unitPreviousY = unitNextY;
+//     }
+//     path += 'z ';
+
+//     paths.push([style, new Path2D(path)]);
+// };
+
+// `buildHighlightPaths` - internal function. Calculates a set of coordinates for contiguous blocks of highlight areas on a line
 P.buildHighlightPaths = function () {
 
 console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
@@ -2652,6 +2747,7 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
     releaseCoordinate(coord);
 };
 
+// `buildOverlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of overline areas on a line
 P.buildOverlinePaths = function () {
 
 console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInSpace)');
@@ -2710,6 +2806,7 @@ console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTe
     releaseCoordinate(coord);
 };
 
+// `buildUnderlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of underline areas on a line
 P.buildUnderlinePaths = function () {
 
 console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInSpace)');
@@ -2720,7 +2817,7 @@ console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionT
     const coord = requestCoordinate();
 
     let startAt, unitData, unit,
-        underlineOut, underlineBack, underlineStyle, underlineGap,
+        underlineOut, underlineBack, underlineStyle,
         processFlag;
 
     const currentOut = [],
@@ -2742,7 +2839,6 @@ console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionT
                 unit = textUnits[u];
 
                 if (unit.underlineStyle) underlineStyle = unit.underlineStyle;
-                if (unit.underlineGap) underlineGap = unit.underlineGap;
 
                 processFlag = unitIndex + 1 === unitData.length;
 
@@ -2757,13 +2853,13 @@ console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionT
                     }
                     else processFlag = true;
 
-                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths, underlineGap);
+                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths);
                 }
             }
         });
 
         // Capturing anything at the end of the line
-        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths, underlineGap);
+        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths);
     });
 
     releaseCoordinate(coord);
@@ -2861,162 +2957,341 @@ P.regularStamp = function () {
     }
 };
 
-// `regularStampInSpace` - For text inside the layoutEngine artefact's enclosed space
+
 P.regularStampInSpace = function () {
 
-    const dest = this.currentHost;
+    const currentHost = this.currentHost;
 
-    if (dest) {
+    if (currentHost) {
 
-        const layout = this.layoutEngine;
+        const rotation = this.alignment * _radian;
 
-        if (layout) {
+        const workingCells = this.createTextCells(currentHost, rotation);
 
-            const engine = dest.engine;
+        if (workingCells) {
 
-            const {
-                state,
-                lines,
-                localPath,
-                textUnits,
-                defaultTextStyle,
-                alignment,
-                truncateString,
-                hyphenString,
-                showGuidelines,
-            } = this;
+            const { element, engine } = currentHost;
+            const { copyCell, mainCell } = workingCells;
 
-            const currentRotation = layout.currentRotation;
-            const direction = defaultTextStyle.direction;
-            const directionIsLtr = direction === LTR;
+            const finalCell = requestCell(element.width, element.height);
 
-            const coord = requestCoordinate();
+            const finalElement = finalCell.element;
+            const finalEngine = finalCell.engine;
 
-            let sx, sy, unitData, unit, style, chars, stampPos, len, replaceLen, ox, oy;
+            const underlineCell = this.createUnderlineCell(currentHost, copyCell, rotation);
+            const overlineCell = this.createOverlineCell(currentHost, rotation);
+            const highlightCell = this.createHighlightCell(currentHost, rotation);
 
-            engine.save();
+            if (this.showGuidelines && this.localPath) this.stampGuidelinesOnCell(finalCell);
 
-            if (showGuidelines && localPath) {
+            if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
 
-                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
+            finalEngine.drawImage(mainCell.element, 0, 0);
 
-                const alpha = engine.globalAlpha;
+            if (overlineCell) finalEngine.drawImage(overlineCell.element, 0, 0);
 
-                engine.globalAlpha = 0.3;
-                engine.stroke(localPath);
+            if (highlightCell) {
 
-                engine.globalAlpha = alpha;
+                finalEngine.globalCompositeOperation = 'destination-over';
+                finalEngine.drawImage(highlightCell.element, 0, 0);
             }
 
-            const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.drawImage(finalElement, 0, 0);
 
-            this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, dest);
+            releaseCell(copyCell, mainCell, overlineCell, highlightCell, finalCell);
+        }
+    }
+};
 
-            const rotation = alignment * _radian;
+P.stampGuidelinesOnCell = function (cell) {
 
-            if (this.underlinePaths.length) {
+    if (cell?.engine) {
 
-                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
-                engine.rotate(rotation);
+        const {
+            layoutEngine,
+            localPath,
+            guidelineStyle,
+            guidelineWidth,
+            guidelineDash,
+        } = this;
 
-                // engine.globalCompositeOperation = 'source-over';
+        const engine = cell.engine;
 
-                this.underlinePaths.forEach(data => {
+        engine.save();
 
-                    engine.fillStyle = this.getStyle(data[1], 'fillStyle', dest);
-                    engine.fill(data[2]);
-                });
-            }
+        cell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
 
-            lines.forEach(line => {
+        engine.setLineDash(guidelineDash);
 
-                [sx, sy] = coord.set(line.startAt).subtract(layout.currentStampPosition).rotate(currentRotation).add(layout.currentStampPosition);
+        engine.strokeStyle = guidelineStyle;
+        engine.lineWidth = guidelineWidth;
 
-                unitData = line.unitData;
+        engine.stroke(localPath);
 
-                dest.rotateDestination(engine, sx, sy, layout);
-                engine.rotate(rotation);
+        engine.restore();
+    }
+};
 
-                unitData.forEach((u, uIndex) => {
+P.createTextCells = function (host, rotation) {
 
-                    if (u.substring) {
+    const el = host.element;
+    const uCell = requestCell(el.width, el.height);
+    const mCell = requestCell(el.width, el.height);
 
-                        // Truncations and hyphens have to hang off of something. They can't appear on their own line
-                        if (unitData.length > 1) {
+    if (uCell && mCell) {
 
-                            // We're at the end of the line but need to add something additional:
-                            // + For the last line, this will be the default truncation copy (eg: `...`)
-                            // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
-                            // + For the edge case where the last line is a word which has broken on a soft hyphen, we show the hyphen, not the truncation.
-                            unit = textUnits[unitData[uIndex - 1]];
+        const uEngine = uCell.engine;
+        const mEngine = mCell.engine;
 
-                            if (unit) {
+        const {
+            state,
+            layoutEngine,
+            lines,
+            textUnits,
+            defaultTextStyle,
+            truncateString,
+            hyphenString,
+        } = this;
 
-                                ({ len, replaceLen, stampPos } = unit);
+        const currentRotation = layoutEngine.currentRotation;
+        const currentStampPosition = layoutEngine.currentStampPosition;
+        const direction = defaultTextStyle.direction;
+        const directionIsLtr = direction === LTR;
 
-                                [ox, oy] = stampPos;
+        const coord = requestCoordinate();
 
-                                if (u === TEXT_TYPE_TRUNCATE) {
+        let sx, sy, unitData, unit, style, chars, stampFlag, type, stampPos, len, replaceLen, ox, oy, fx, fy;
 
-                                    if (directionIsLtr) engine.fillText(truncateString, ox + len, oy);
-                                    else engine.fillText(truncateString, ox - replaceLen, oy);
+        const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+
+        this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
+        this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
+
+        lines.forEach(line => {
+
+            [sx, sy] = coord.set(line.startAt).subtract(currentStampPosition).rotate(currentRotation).add(currentStampPosition);
+
+            unitData = line.unitData;
+
+            uCell.rotateDestination(uEngine, sx, sy, layoutEngine);
+            uEngine.rotate(rotation);
+
+            mCell.rotateDestination(mEngine, sx, sy, layoutEngine);
+            mEngine.rotate(rotation);
+
+            unitData.forEach((u, uIndex) => {
+
+                if (u.substring) {
+
+                    // Truncations and hyphens have to hang off of something. They can't appear on their own line
+                    if (unitData.length > 1) {
+
+                        // We're at the end of the line but need to add something additional:
+                        // + For the last line, this will be the default truncation copy (eg: `...`)
+                        // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
+                        // + For the edge case where the last line is a word which has broken on a soft hyphen, we show the hyphen, not the truncation.
+                        unit = textUnits[unitData[uIndex - 1]];
+
+                        if (unit) {
+
+                            ({ len, replaceLen, stampPos } = unit);
+
+                            [ox, oy] = stampPos;
+
+                            fy = oy;
+
+                            if (u === TEXT_TYPE_TRUNCATE) {
+
+                                if (directionIsLtr) {
+
+                                    fx = ox + len;
+
+                                    uEngine.strokeText(truncateString, fx, fy);
+                                    uEngine.fillText(truncateString, fx, fy);
+
+                                    mEngine.fillText(truncateString, fx, fy);
                                 }
-                                else if (u === TEXT_TYPE_SOFT_HYPHEN) {
+                                else {
 
-                                    if (directionIsLtr) engine.fillText(hyphenString, ox, oy);
-                                    else engine.fillText(hyphenString, ox - replaceLen, oy);
+                                    fx = ox - replaceLen;
+
+                                    uEngine.strokeText(truncateString, fx, fy);
+                                    uEngine.fillText(truncateString, fx, fy);
+
+                                    mEngine.fillText(truncateString, fx, fy);
+                                }
+                            }
+                            else if (u === TEXT_TYPE_SOFT_HYPHEN) {
+
+                                if (directionIsLtr) {
+
+                                    fx = ox;
+
+                                    uEngine.strokeText(hyphenString, fx, fy);
+                                    uEngine.fillText(hyphenString, fx, fy);
+
+                                    mEngine.fillText(hyphenString, fx, fy);
+                                }
+                                else {
+
+                                    fx = ox - replaceLen;
+
+                                    uEngine.strokeText(hyphenString, fx, fy);
+                                    uEngine.fillText(hyphenString, fx, fy);
+
+                                    mEngine.fillText(hyphenString, fx, fy);
                                 }
                             }
                         }
                     }
-                    else {
+                }
+                else {
 
-                        // TODO: currently only implementing the `fill` method. Need to include `draw`, and possibly `fillAndDraw` and `drawAndFill`
-                        unit = textUnits[u];
+                    unit = textUnits[u];
 
-                        ({style, chars, stampPos} = unit);
+                    ({style, chars, stampPos, stampFlag, type} = unit);
 
-                        if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, dest);
+                    if (style) {
 
-                        if (unit.stampFlag) engine.fillText(chars, ...unit.stampPos);
+                        this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, uCell);
+                        uEngine.lineWidth = currentTextStyle.underlineGap;
+
+                        this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mCell);
                     }
-                });
+
+                    if (stampFlag && type !== TEXT_TYPE_SPACE) {
+
+                        [ox, oy] = unit.stampPos;
+
+                        uEngine.strokeText(chars, ox, oy);
+                        uEngine.fillText(chars, ox, oy);
+
+                        switch (currentTextStyle.method) {
+
+                        case DRAW :
+                            mEngine.strokeText(chars, ox, oy);
+                            break;
+
+                        case FILL_AND_DRAW :
+                            mEngine.fillText(chars, ox, oy);
+                            mEngine.strokeText(chars, ox, oy);
+                            break;
+
+                        case DRAW_AND_FILL :
+                            mEngine.strokeText(chars, ox, oy);
+                            mEngine.fillText(chars, ox, oy);
+                            break;
+
+                        default:
+                            mEngine.fillText(chars, ox, oy);
+                        }
+                    }
+                }
+            });
+        });
+
+        releaseCoordinate(coord);
+
+        return {
+            copyCell: uCell,
+            mainCell: mCell,
+        };
+    }
+    return null;
+};
+
+P.createUnderlineCell = function (host, textCell, rotation) {
+
+    const { layoutEngine, underlinePaths } = this;
+
+    if (underlinePaths.length) {
+
+        const el = host.element;
+        const mycell = requestCell(el.width, el.height);
+
+        if (mycell) {
+
+            const engine = mycell.engine;
+            const textEngine = textCell.engine;
+
+            mycell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
+            engine.rotate(rotation);
+
+            underlinePaths.forEach(data => {
+
+                engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
+                engine.fill(data[1]);
             });
 
-            if (this.overlinePaths.length) {
+            textEngine.globalCompositeOperation = 'source-out';
+            textEngine.setTransform(1, 0, 0, 1, 0, 0);
+            textEngine.drawImage(mycell.element, 0, 0);
 
-                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
-                engine.rotate(rotation);
+            releaseCell(mycell);
 
-                engine.globalCompositeOperation = 'source-over';
-
-                this.overlinePaths.forEach(data => {
-
-                    engine.fillStyle = this.getStyle(data[0], 'fillStyle', dest);
-                    engine.fill(data[1]);
-                });
-            }
-
-            if (this.highlightPaths.length) {
-
-                dest.rotateDestination(engine, ...layout.currentStampPosition, layout);
-                engine.rotate(rotation);
-
-                engine.globalCompositeOperation = 'destination-over';
-
-                this.highlightPaths.forEach(data => {
-
-                    engine.fillStyle = this.getStyle(data[0], 'fillStyle', dest);
-                    engine.fill(data[1]);
-                });
-            }
-
-            engine.restore();
-
-            releaseCoordinate(coord);
+            return textCell;
         }
     }
+    return null;
 };
+
+P.createOverlineCell = function (host, rotation) {
+
+    const { layoutEngine, overlinePaths } = this;
+
+    if (overlinePaths.length) {
+
+        const el = host.element;
+        const mycell = requestCell(el.width, el.height);
+
+        if (mycell) {
+
+            const engine = mycell.engine;
+
+            mycell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
+            engine.rotate(rotation);
+
+            overlinePaths.forEach(data => {
+
+                engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
+                engine.fill(data[1]);
+            });
+
+            return mycell;
+        }
+    }
+    return null;
+};
+
+P.createHighlightCell = function (host, rotation) {
+
+    const { layoutEngine, highlightPaths } = this;
+
+    if (highlightPaths.length) {
+
+        const el = host.element;
+        const mycell = requestCell(el.width, el.height);
+
+        if (mycell) {
+
+            const engine = mycell.engine;
+
+            mycell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
+            engine.rotate(rotation);
+
+            this.highlightPaths.forEach(data => {
+
+                engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
+                engine.fill(data[1]);
+            });
+
+            return mycell;
+        }
+    }
+    return null;
+};
+
 
 // `regularStampAlongPath` - For text positioned along a path-based entity's perimeter
 P.regularStampAlongPath = function () {

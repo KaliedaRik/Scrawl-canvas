@@ -84,6 +84,7 @@
       justify-items: center;
       align-items: center;
       margin-top: 1em;
+      overflow: hidden;
     }
 
     #preload-fonts {
@@ -122,6 +123,8 @@ CSS custom property --SC-underline-offset   maps to TextStyle underlineOffset
 CSS custom property --SC-underline-style    maps to TextStyle underlineStyle
 CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
+CSS custom property --SC-method             maps to TextStyle method
+
 */
 
     .demo-my-label, .demo-explanation-styles, #preload-fonts {
@@ -153,7 +156,8 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
       
       & u {
         --SC-include-underline: true;
-        --SC-underline-offset: 1;
+        --SC-underline-offset: 1.025;
+        --SC-underline-gap: 3;
         text-decoration: underline;
       }
       
@@ -225,6 +229,20 @@ CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
 
       & .make-monospace {
         font-family: monospace;
+      }
+
+      & .stamp-outlined {
+        --SC-fill-style: yellow;
+        --SC-stroke-width: 3;
+        --SC-method: drawAndFill;
+
+        color: var(--SC-fill-style);
+
+        text-shadow:
+          -1px -1px 0 black,  
+          1px -1px 0 black,
+          -1px 1px 0 black,
+          1px 1px 0 black;
       }
     }
   </style>

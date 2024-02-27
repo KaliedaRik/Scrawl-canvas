@@ -149,6 +149,8 @@ scrawl.makeUpdater({
         hyphenString: ['hyphenString', 'raw'],
         truncateString: ['truncateString', 'raw'],
         showGuidelines: ['showGuidelines', 'boolean'],
+        guidelineStyle: ['guidelineStyle', 'raw'],
+        guidelineDash: ['guidelineDash', 'parse'],
         textHandleY: ['textHandleY', 'raw'],
     },
 
@@ -646,6 +648,10 @@ document.querySelector('#truncateString').options.selectedIndex = 0;
 document.querySelector('#textHandleY').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#showGuidelines').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#guidelineStyle').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#guidelineDash').options.selectedIndex = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

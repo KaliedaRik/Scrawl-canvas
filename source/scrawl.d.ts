@@ -1284,6 +1284,9 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     constantPathSpeed?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
     group?: GroupInstance | string;
+    guidelineDash?: number[];
+    guidelineStyle?: StylesInstance | string;
+    guidelineWidth?: number;
     hyphenString?: string;
     justifyLine?: TextLineJustifyValues;
     layoutEngine?: ArtefactInstance | string;
@@ -1291,6 +1294,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     method?: MethodValues;
     noDeltaUpdates?: boolean;
     order?: number;
+    showGuidelines?: boolean;
     stampOrder?: number;
     text?: string;
     textHandle?: [EnhancedLabelTextUnitHandleXValues | number | string, EnhancedLabelTextUnitHandleYValues | number | string]; 

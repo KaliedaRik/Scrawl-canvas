@@ -145,6 +145,10 @@ export { makeWheel } from './factory/wheel.js';
 export { makeWorld } from './factory/particle-world.js';
 
 export {
+    requestCell,
+    releaseCell,
+} from './untracked-factory/cell-fragment.js';
+export {
     requestCoordinate,
     releaseCoordinate,
 } from './untracked-factory/coordinate.js';

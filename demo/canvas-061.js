@@ -1,4 +1,4 @@
-// # Demo Canvas 065
+// # Demo Canvas 061
 // Wide Gamut 2D Graphics using HTML Canvas
 
 // [Run code](../../demo/filters-064.html)

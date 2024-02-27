@@ -33,6 +33,8 @@
 // CSS custom property `--SC-underline-offset`   maps to TextStyle `underlineOffset`
 // CSS custom property `--SC-underline-style`    maps to TextStyle `underlineStyle`
 // CSS custom property `--SC-underline-width`    maps to TextStyle `underlineWidth`
+//
+// CSS custom property `--SC-method`             maps to TextStyle `method`
 // ```
 // <!-- Example CSS markup -->
 // <style>
@@ -151,13 +153,10 @@ import { addStrings, doCreate, mergeOver, λnull, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _isArray, _isFinite, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, FONT_STRETCH_VALS, LINE_DASH, LTR, NAME, NORMAL, PC, SANS_SERIF, T_TEXT_STYLE, TEXTSTYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, FILL, FONT_STRETCH_VALS, LINE_DASH, LTR, NAME, NORMAL, PC, SANS_SERIF, T_TEXT_STYLE, TEXTSTYLE, TRANSPARENT, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
 
 // #### Wheel constructor
 const TextStyle = function (items = Ωempty) {
-
-    this.makeName(items.name);
-    this.register();
 
     this.isDefaultTextStyle = !!items.isDefaultTextStyle;
 
@@ -169,6 +168,11 @@ const TextStyle = function (items = Ωempty) {
 
         this.letterSpacing = `${this.letterSpaceValue}px`;
         this.wordSpacing = `${this.wordSpaceValue}px`;
+
+        this.shadowBlur = 0;
+        this.shadowOffsetX = 0;
+        this.shadowOffsetY = 0;
+        this.shadowColor = TRANSPARENT;
     }
     else this.set(items, true);
 
@@ -179,9 +183,6 @@ const TextStyle = function (items = Ωempty) {
 // #### TextStyle prototype
 const P = TextStyle.prototype = doCreate();
 P.type = T_TEXT_STYLE;
-P.lib = TEXTSTYLE;
-P.isArtefact = false;
-P.isAsset = false;
 
 
 // #### Mixins
@@ -273,6 +274,11 @@ const defaultAttributes = {
     // + Supports gradients, patterns and CSS color strings
     highlightStyle: YELLOW,
     includeHighlight: false,
+
+    // #### Unit stamp method
+    // One from: 'fill' (default), 'draw', 'fillAndDraw', 'drawAndFill'
+    // + Other method values ('fillThenDraw', 'drawThenFill', 'clear', 'clip', 'none') will default to 'fill'
+    method: FILL,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -584,7 +590,7 @@ S.textBaseline = λnull;
 
 
 // #### Prototype functions
-
+// No additional functionality defined
 
 
 // #### Factory

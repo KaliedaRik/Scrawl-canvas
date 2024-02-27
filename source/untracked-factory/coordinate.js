@@ -231,9 +231,12 @@ export const requestCoordinate = function (items, y) {
 };
 
 // `exported function` - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.
-export const releaseCoordinate = function (c) {
+export const releaseCoordinate = function (...args) {
 
-    if (c && c.type === T_COORDINATE) coordinatePool.push(c.zero());
+    args.forEach(c => {
+
+        if (c && c.type === T_COORDINATE) coordinatePool.push(c.zero());
+    });
 };
 
 
