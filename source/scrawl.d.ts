@@ -1262,14 +1262,13 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 // EnhancedLabelInstance factory
 // -------------------------------------
-type TextUnitDirectionValues = 'row' | 'row-reverse' | 'column' | 'column-reverse';
 type TextLineJustifyValues = 'start' | 'end' | 'center' | 'space-between';
 type EnhancedLabelTextUnitHandleXValues = 'left' | 'right' | 'center';
 type EnhancedLabelTextUnitHandleYValues = 'top' | 'hanging' | 'center' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
 
 interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextStyleFactoryDeltaInputs {
     alignment?: number;
-    layoutEngineLineOffset?: number;
+    layoutTemplateLineOffset?: number;
     lineSpacing?: number;
 }
 
@@ -1289,8 +1288,8 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     guidelineWidth?: number;
     hyphenString?: string;
     justifyLine?: TextLineJustifyValues;
-    layoutEngine?: ArtefactInstance | string;
-    layoutEnginePathStart?: number;
+    layoutTemplate?: ArtefactInstance | string;
+    layoutTemplatePathStart?: number;
     method?: MethodValues;
     noDeltaUpdates?: boolean;
     order?: number;
@@ -1301,7 +1300,6 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     textHandleX?: EnhancedLabelTextUnitHandleXValues | number | string; 
     textHandleY?: EnhancedLabelTextUnitHandleYValues | number | string; 
     textIsAccessible?: boolean;
-    textUnitDirection?: TextUnitDirectionValues;
     truncateString?: string;
     updateOnLayoutDimensionsChange?: boolean;
     updateOnLayoutFlipChange?: boolean;
@@ -1311,7 +1309,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     updateOnLayoutScaleChange?: boolean;
     updateOnLayoutStartChange?: boolean;
     useDocumentStyling?: boolean;
-    useLayoutEngineAsPath?: boolean;
+    useLayoutTemplateAsPath?: boolean;
     useMimicDimensions?: boolean;               // use updateOnLayoutDimensionsChange
     useMimicFlip?: boolean;                     // use updateOnLayoutFlipChange
     useMimicHandle?: boolean;                   // use updateOnLayoutHandleChange

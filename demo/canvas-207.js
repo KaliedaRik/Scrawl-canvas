@@ -68,7 +68,7 @@ const mylabel = scrawl.makeEnhancedLabel({
     fontString: '16px serif',
     text: westernText,
 
-    layoutEngine: name('block-layout-engine'),
+    layoutTemplate: name('block-layout-engine'),
 });
 
 
@@ -139,10 +139,9 @@ scrawl.makeUpdater({
 
     updates: {
 
-        layoutEngineLineOffset: ['layoutEngineLineOffset', 'float'],
+        layoutTemplateLineOffset: ['layoutTemplateLineOffset', 'float'],
         alignment: ['alignment', 'float'],
         justifyLine: ['justifyLine', 'raw'],
-        textUnitDirection: ['textUnitDirection', 'raw'],
         lineSpacing: ['lineSpacing', 'float'],
         breakTextOnSpaces: ['breakTextOnSpaces', 'boolean'],
         breakWordsOnHyphens: ['breakWordsOnHyphens', 'boolean'],
@@ -179,8 +178,8 @@ scrawl.makeUpdater({
 });
 
 
-const layoutEngineSelector = document.querySelector('#layoutEngine');
-const updateLayoutEngine = (event) => {
+const layoutTemplateSelector = document.querySelector('#layoutTemplate');
+const updateLayoutTemplate = (event) => {
 
     const engine = event.target.value;
 
@@ -192,24 +191,24 @@ const updateLayoutEngine = (event) => {
 
             case 'wheel-engine' :
 
-                mylabel.set({ layoutEngine: wheelEngine });
+                mylabel.set({ layoutTemplate: wheelEngine });
                 wheelEngine.set({ visibility: true });
                 break;
 
             case 'crescent-engine' :
 
-                mylabel.set({ layoutEngine: crescentEngine });
+                mylabel.set({ layoutTemplate: crescentEngine });
                 crescentEngine.set({ visibility: true });
                 break;
 
             default :
 
-                mylabel.set({ layoutEngine: blockEngine });
+                mylabel.set({ layoutTemplate: blockEngine });
                 blockEngine.set({ visibility: true });
             }
     }
 };
-scrawl.addNativeListener('change', (e) => updateLayoutEngine(e), layoutEngineSelector);
+scrawl.addNativeListener('change', (e) => updateLayoutTemplate(e), layoutTemplateSelector);
 
 
 const fontSelector = document.querySelector('#font');
@@ -614,7 +613,7 @@ scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
 // @ts-expect-error
 fontSelector.options.selectedIndex = 0;
 // @ts-expect-error
-layoutEngineSelector.options.selectedIndex = 0;
+layoutTemplateSelector.options.selectedIndex = 0;
 // @ts-expect-error
 lineSpacingSelector.value = 1.5;
 // @ts-expect-error
@@ -631,13 +630,11 @@ document.querySelector('#scale').value = 1;
 // @ts-expect-error
 document.querySelector('#roll').value = 0;
 // @ts-expect-error
-document.querySelector('#layoutEngineLineOffset').value = 0;
+document.querySelector('#layoutTemplateLineOffset').value = 0;
 // @ts-expect-error
 document.querySelector('#justifyLine').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#alignment').value = 0;
-// @ts-expect-error
-document.querySelector('#textUnitDirection').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#breakWordsOnHyphens').options.selectedIndex = 0;
 // @ts-expect-error

@@ -39,7 +39,7 @@ const myLabel = scrawl.makeEnhancedLabel({
     name: name('my-label'),
     fontString: '16px "Roboto Sans"',
     text: westernText,
-    layoutEngine: name('wheel-layout-engine'),
+    layoutTemplate: name('wheel-layout-engine'),
     textHandleY: 'alphabetic',
     breakWordsOnHyphens: true,
 });
@@ -112,7 +112,7 @@ scrawl.makeUpdater({
 
     updates: {
 
-        layoutEngineLineOffset: ['layoutEngineLineOffset', 'float'],
+        layoutTemplateLineOffset: ['layoutTemplateLineOffset', 'float'],
         alignment: ['alignment', 'float'],
         justifyLine: ['justifyLine', 'raw'],
         lineSpacing: ['lineSpacing', 'float'],
@@ -195,7 +195,7 @@ document.querySelector('#scale').value = 1;
 // @ts-expect-error
 document.querySelector('#roll').value = 0;
 // @ts-expect-error
-document.querySelector('#layoutEngineLineOffset').value = 0;
+document.querySelector('#layoutTemplateLineOffset').value = 0;
 // @ts-expect-error
 document.querySelector('#justifyLine').options.selectedIndex = 0;
 // @ts-expect-error

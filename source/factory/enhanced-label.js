@@ -22,7 +22,7 @@ import deltaMix from '../mixin/delta.js';
 
 import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _create, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, ROW_REVERSE, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_UNIT_DIRECTION_VALUES, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _create, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Local variables
@@ -100,23 +100,17 @@ const defaultAttributes = {
 // + Default value is set to `1.5` for accessibility reasons
     lineSpacing: 1.5,
 
-// __layoutEngine__ - artefact object, or artefact's string name attribute.
-    layoutEngine: null,
+// __layoutTemplate__ - artefact object, or artefact's string name attribute.
+    layoutTemplate: null,
 
-// __useLayoutEngineAsPath__ - boolean. If layout engine entity is a path-based entity, then we can either fit the text within it, or use its path for positioning.
-    useLayoutEngineAsPath: false,
+// __useLayoutTemplateAsPath__ - boolean. If layout engine entity is a path-based entity, then we can either fit the text within it, or use its path for positioning.
+    useLayoutTemplateAsPath: false,
 
-// __layoutEnginePathStart__ - where to start text positioning along the layout engine path.
-    layoutEnginePathStart: 0,
+// __layoutTemplatePathStart__ - where to start text positioning along the layout engine path.
+    layoutTemplatePathStart: 0,
 
-// __layoutEngineLineOffset__ - how far away from the origin point the initial line should be.
-    layoutEngineLineOffset: 0,
-
-// __textUnitDirection__ - orientation of text units within the layout engine space. Values follows the CSS flexbox _flex-direction_ attribute's example:
-// + `row` - left to right where `direction = 'ltr'`; right to left where `direction = 'rtl'`
-// + `column` - top to bottom where `direction = 'ltr'`; bottom to top where `direction = 'rtl'`
-// + Columns differ from rows in that TextUnits in a row are spaced along a line using their widths, whereas in columns they are spaced using their heights
-    textUnitDirection: ROW,
+// __layoutTemplateLineOffset__ - how far away from the origin point the initial line should be.
+    layoutTemplateLineOffset: 0,
 
 // __breakTextOnSpaces__ - boolean.
 // + When `true` (default), the textUnits will consist of words which are stamped as a unit (which preserves ligatures and kerning within the word).
@@ -187,7 +181,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, ['layoutEngine']);
+P.packetObjects = pushUnique(P.packetObjects, ['layoutTemplate']);
 
 P.finalizePacketOut = function (copy, items) {
 
@@ -426,41 +420,41 @@ const G = P.getters,
 // __Note that__ dimensions (width, height) cannot be set on labels as the entity's dimensional values will depend entirely on the `font`, `text` and `scale` attributes
 G.width = function () {
 
-    return this?.layoutEngine.get('width');
+    return this?.layoutTemplate.get('width');
 };
 S.width = function (item) {
 
-    this?.layoutEngine.set({width: item});
+    this?.layoutTemplate.set({width: item});
 };
 D.width = function (item) {
 
-    this?.layoutEngine.deltaSet({width: item});
+    this?.layoutTemplate.deltaSet({width: item});
 };
 
 G.height = function () {
 
-    return this?.layoutEngine.get('height');
+    return this?.layoutTemplate.get('height');
 };
 S.height = function (item) {
 
-    this?.layoutEngine.set({height: item});
+    this?.layoutTemplate.set({height: item});
 };
 D.height = function (item) {
 
-    this?.layoutEngine.deltaSet({height: item});
+    this?.layoutTemplate.deltaSet({height: item});
 };
 
 G.dimensions = function () {
 
-    return this?.layoutEngine.get('dimensions');
+    return this?.layoutTemplate.get('dimensions');
 };
 S.dimensions = function (item) {
 
-    this?.layoutEngine.set({dimensions: item});
+    this?.layoutTemplate.set({dimensions: item});
 };
 D.dimensions = function (item) {
 
-    this?.layoutEngine.deltaSet({dimensions: item});
+    this?.layoutTemplate.deltaSet({dimensions: item});
 };
 
 // __group__ - copied over from the position mixin.
@@ -553,41 +547,32 @@ S.updateOnLayoutStartChange = function (item) {
     this.useMimicStart = !!item;
 };
 
-// __layoutEngine__ - TODO: documentation
-S.layoutEngine = function (item) {
+// __layoutTemplate__ - TODO: documentation
+S.layoutTemplate = function (item) {
 
-// console.log(this.name, 'S.layoutEngine', item)
+// console.log(this.name, 'S.layoutTemplate', item)
     if (item) {
 
-        const oldEngine = this.layoutEngine,
-            newEngine = (item.substring) ? artefact[item] : item,
+        const oldTemplate = this.layoutTemplate,
+            newTemplate = (item.substring) ? artefact[item] : item,
             name = this.name;
 
-        if (newEngine && newEngine.name) {
+        if (newTemplate && newTemplate.name) {
 
-            if (oldEngine && oldEngine.name !== newEngine.name) {
+            if (oldTemplate && oldTemplate.name !== newTemplate.name) {
 
-                if (oldEngine.mimicked) removeItem(oldEngine.mimicked, name);
-                if (oldEngine.pathed) removeItem(oldEngine.pathed, name);
+                if (oldTemplate.mimicked) removeItem(oldTemplate.mimicked, name);
+                if (oldTemplate.pathed) removeItem(oldTemplate.pathed, name);
             }
 
-            if (newEngine.mimicked) pushUnique(newEngine.mimicked, name);
-            if (newEngine.pathed) pushUnique(newEngine.pathed, name);
+            if (newTemplate.mimicked) pushUnique(newTemplate.mimicked, name);
+            if (newTemplate.pathed) pushUnique(newTemplate.pathed, name);
 
-            this.layoutEngine = newEngine;
+            this.layoutTemplate = newTemplate;
 
             this.dirtyPathObject = true;
             this.dirtyLayout = true;
         }
-    }
-};
-
-S.textUnitDirection = function (item) {
-
-    if (TEXT_UNIT_DIRECTION_VALUES.includes(item)) {
-
-        this.textUnitDirection = item;
-        this.dirtyLayout = true;
     }
 };
 
@@ -608,19 +593,19 @@ S.lineSpacing = function (item) {
     this.dirtyLayout = true;
 };
 
-D.layoutEngineLineOffset = function (item) {
+D.layoutTemplateLineOffset = function (item) {
 
     if (item.toFixed) {
 
-        this.layoutEngineLineOffset += item;
+        this.layoutTemplateLineOffset += item;
         this.dirtyLayout = true;
     }
 };
-S.layoutEngineLineOffset = function (item) {
+S.layoutTemplateLineOffset = function (item) {
 
     if (item.toFixed) {
 
-        this.layoutEngineLineOffset = item;
+        this.layoutTemplateLineOffset = item;
         this.dirtyLayout = true;
     }
 };
@@ -857,7 +842,7 @@ P.updateWorkingTextStyle = function (worker, style) {
 
 // console.log(this.name, 'updateWorkingTextStyle (trigger: various)');
 
-    const scale = this.layoutEngine?.currentScale || 1;
+    const scale = this.layoutTemplate?.currentScale || 1;
     worker.set(style, true);
     this.updateCanvasFont(worker, scale);
     this.updateFontString(worker);
@@ -904,7 +889,7 @@ P.getTextHandleX = function (val, dim, dir) {
 
 // console.log(this.name, 'getTextHandleX (trigger: various)');
 
-    const scale = this.layoutEngine?.currentScale || 1;
+    const scale = this.layoutTemplate?.currentScale || 1;
 
     if (val.toFixed) return val * scale;
 
@@ -931,7 +916,7 @@ P.getTextHandleY = function (val, size, font) {
     const { height, hangingBaseline, alphabeticBaseline, ideographicBaseline, verticalOffset } = this.getFontMetadata(font);
 
     const ratio = size / 100;
-    const scale = this.layoutEngine?.currentScale || 1;
+    const scale = this.layoutTemplate?.currentScale || 1;
 
     const dim = (height - verticalOffset) * ratio;
 
@@ -1050,9 +1035,9 @@ console.log(this.name, 'calculateTextStyleFontStrings (trigger: none - called by
 
     let fontSize = textStyle.fontSize;
     const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = textStyle;
-    const { lineSpacing, updateUsingFontParts, updateUsingFontString, layoutEngine } = this;
+    const { lineSpacing, updateUsingFontParts, updateUsingFontString, layoutTemplate } = this;
 
-    const scale = layoutEngine?.currentScale || 1;
+    const scale = layoutTemplate?.currentScale || 1;
 
     // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
     calculator.style.font = fontString;
@@ -1284,9 +1269,9 @@ console.log(this.name, `cleanFont - looking to see if ${this.defaultTextStyle.fo
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
-console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutEngine?.pathObject})`);
+console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutTemplate?.pathObject})`);
 
-    const layout = this.layoutEngine;
+    const layout = this.layoutTemplate;
 
     if (this.dirtyPathObject && layout?.pathObject) {
 
@@ -1306,9 +1291,9 @@ console.log(this.name, `cleanLayout (triggers: dirtyLayout ${this.dirtyLayout}, 
 
         this.dirtyLayout = false;
 
-        const { useLayoutEngineAsPath } = this;
+        const { useLayoutTemplateAsPath } = this;
 
-        if (useLayoutEngineAsPath) {
+        if (useLayoutTemplateAsPath) {
 
             // TODO: Path-related positioning stuff
         }
@@ -1391,11 +1376,10 @@ P.calculateLines = function () {
     const {
         alignment,
         defaultTextStyle,
-        layoutEngine,
-        layoutEngineLineOffset,
+        layoutTemplate,
+        layoutTemplateLineOffset,
         lines,
         lineSpacing,
-        textUnitDirection,
     } = this;
 
     const {
@@ -1405,7 +1389,7 @@ P.calculateLines = function () {
         currentStampPosition,
         pathObject,
         winding,
-    } = layoutEngine;
+    } = layoutTemplate;
 
     const {
         fontSizeValue,
@@ -1432,11 +1416,11 @@ P.calculateLines = function () {
         counter;
 
     // Prepare canvas for work
-    mycell.rotateDestination(engine, constX, constY, layoutEngine);
+    mycell.rotateDestination(engine, constX, constY, layoutTemplate);
     engine.rotate(rotation);
 
     // Main calculations: start with the line closest to the layout engine's `currentStampPosition` attribute
-    beginY = constY + layoutEngineLineOffset;
+    beginY = constY + layoutTemplateLineOffset;
     rawData.push([beginY, getEndPoints(constX, beginY)]);
 
     // Find lines above the first line
@@ -1451,7 +1435,7 @@ P.calculateLines = function () {
     }
 
     // Find lines below the first line
-    beginY = constY + layoutEngineLineOffset;
+    beginY = constY + layoutTemplateLineOffset;
     flag = true;
     while (flag) {
 
@@ -1463,14 +1447,7 @@ P.calculateLines = function () {
     }
 
     // Sort the raw line data
-    if (textUnitDirection === ROW_REVERSE || textUnitDirection === COLUMN_REVERSE) {
-
-        rawData.sort((a, b) => b[0] - a[0]);
-    }
-    else {
-
-        rawData.sort((a, b) => a[0] - b[0]);
-    }
+    rawData.sort((a, b) => a[0] - b[0]);
 
     // Push line data into the `this.lines` array
     lines.length = 0;
@@ -1974,7 +1951,7 @@ console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)')
     });
 
     // Gather kerning data (if required) - only applies to rows
-    if (this.textUnitDirection === ROW && (this.useLayoutEngineAsPath || !this.breakTextOnSpaces || this.allowSubUnitStyling)) {
+    if (this.useLayoutTemplateAsPath || !this.breakTextOnSpaces || this.allowSubUnitStyling) {
 
         // Reset things back to initial before starting the second walk-through
         this.setEngineFromWorkingTextStyle(currentTextStyle, defaultTextStyle, state, mycell);
@@ -2055,7 +2032,6 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
     const {
         lines,
         textUnits,
-        textUnitDirection,
         breakWordsOnHyphens,
     } = this;
 
@@ -2063,7 +2039,7 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
 
     let unitCursor = 0,
         lengthRemaining,
-        i, unit, unitData, unitAfter, len, height, lineLength, type;
+        i, unit, unitData, unitAfter, len, lineLength, type;
 
     const addUnit = function (len) {
 
@@ -2072,165 +2048,138 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
         ++unitCursor;
     };
 
-    if (textUnitDirection === COLUMN) {
+    lines.forEach(line => {
 
-        lines.forEach(line => {
+        ({
+            length: lineLength,
+            unitData,
+        } = line);
 
-            ({
-                length: lineLength,
-                unitData,
-            } = line);
+        lengthRemaining = lineLength;
 
-            lengthRemaining = lineLength;
+        for (i = unitCursor; i < unitArrayLength; i++) {
 
-            for (i = unitCursor; i < unitArrayLength; i++) {
+            unit = textUnits[i];
 
-                unit = textUnits[i];
+            ({ len, type } = unit);
 
-                height = unit.height;
+            // Check: is there room for the text unit
+            if (len < lengthRemaining) {
 
-                if (height < lengthRemaining) addUnit(height);
+                if (breakWordsOnHyphens) {
 
-                // There's no room left on this line for the TextUnit
-                else break;
-            }
-        });
-    }
-    else {
+                    // We need to do a look-forward for soft hyphens
+                    unit = textUnits[i + 1];
 
-        lines.forEach(line => {
+                    // Next text unit is a soft hyphen
+                    if (unit && unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
 
-            ({
-                length: lineLength,
-                unitData,
-            } = line);
+                        unitAfter = textUnits[i + 2];
 
-            lengthRemaining = lineLength;
+                        // Check: this text unit and the next significant one will fit on line
+                        if (unitAfter && len + unitAfter.len < lengthRemaining) addUnit(len);
 
-            for (i = unitCursor; i < unitArrayLength; i++) {
+                        // Check: this text unit and the visible hyphen will fit on line
+                        else if (len + unit.replaceLen < lengthRemaining) {
 
-                unit = textUnits[i];
-
-                ({ len, type } = unit);
-
-                // Check: is there room for the text unit
-                if (len < lengthRemaining) {
-
-                    if (breakWordsOnHyphens) {
-
-                        // We need to do a look-forward for soft hyphens
-                        unit = textUnits[i + 1];
-
-                        // Next text unit is a soft hyphen
-                        if (unit && unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
-
-                            unitAfter = textUnits[i + 2];
-
-                            // Check: this text unit and the next significant one will fit on line
-                            if (unitAfter && len + unitAfter.len < lengthRemaining) addUnit(len);
-
-                            // Check: this text unit and the visible hyphen will fit on line
-                            else if (len + unit.replaceLen < lengthRemaining) {
-
-                                addUnit(len);
-                                addUnit(unit.replaceLen);
-                                unitData.push(TEXT_TYPE_SOFT_HYPHEN);
-                                break;
-                            }
-
-                            // Check: there's no room for this text unit and its soft hyphen
-                            else break;
+                            addUnit(len);
+                            addUnit(unit.replaceLen);
+                            unitData.push(TEXT_TYPE_SOFT_HYPHEN);
+                            break;
                         }
 
-                        // Next text unit is not a soft hyphen; add this text unit to the array
-                        else addUnit(len);
+                        // Check: there's no room for this text unit and its soft hyphen
+                        else break;
                     }
+
+                    // Next text unit is not a soft hyphen; add this text unit to the array
                     else addUnit(len);
                 }
-
-                // There's no room left on this line for the TextUnit
-                // + There is a dilemma here, concerning lines where the first TextUnit available to add to the line is too long to fit.
-                // + Currently, we just leave the line empty and move onto the next line (which might be able to fit the long TextUnit)
-                // + If the offending TextUnit is too long for all subsequent lines then neither it nor any of the following TextUnits will appear.
-                // + An alternative approach could be to allow the overlong TextUnit to appear on a line if it's the only TextUnit on that line, thus removing the display block for subsequent TextUnits
-                // + For the moment, we will not implement this alternative approach. It's up to developers and designers to use words that can fit into the available line space. Overlong words can be hyphenated with soft (&amp;shy;) hyphens if required.
-                else break;
-            }
-        });
-
-        // Truncation check
-        if (unitArrayLength !== unitCursor) {
-
-            let currentLine, replaceLen,
-                acc, mutableUnitData;
-
-            for (currentLine = lines.length - 1; currentLine >= 0; currentLine--) {
-
-                ({
-                    length: lineLength,
-                    unitData,
-                } = lines[currentLine]);
-
-                acc = unitData.reduce((a, v) => {
-
-                    if (textUnits[v] && textUnits[v].type === TEXT_TYPE_CHARS) a++
-                    return a;
-
-                }, 0);
-
-                if (acc) {
-
-                    mutableUnitData = [...unitData];
-                    break;
-                }
-                else unitData.length = 0;
+                else addUnit(len);
             }
 
-            if (mutableUnitData?.length) {
+            // There's no room left on this line for the TextUnit
+            // + There is a dilemma here, concerning lines where the first TextUnit available to add to the line is too long to fit.
+            // + Currently, we just leave the line empty and move onto the next line (which might be able to fit the long TextUnit)
+            // + If the offending TextUnit is too long for all subsequent lines then neither it nor any of the following TextUnits will appear.
+            // + An alternative approach could be to allow the overlong TextUnit to appear on a line if it's the only TextUnit on that line, thus removing the display block for subsequent TextUnits
+            // + For the moment, we will not implement this alternative approach. It's up to developers and designers to use words that can fit into the available line space. Overlong words can be hyphenated with soft (&amp;shy;) hyphens if required.
+            else break;
+        }
+    });
 
-                ({
-                    length: lineLength,
-                    unitData,
-                } = lines[currentLine]);
+    // Truncation check
+    if (unitArrayLength !== unitCursor) {
 
-                acc = unitData.reduce((a, v) => {
+        let currentLine, replaceLen,
+            acc, mutableUnitData;
 
-                    if (textUnits[v]?.len) a += textUnits[v].len;
-                    return a;
+        for (currentLine = lines.length - 1; currentLine >= 0; currentLine--) {
 
-                }, 0);
+            ({
+                length: lineLength,
+                unitData,
+            } = lines[currentLine]);
 
-                for (i = unitData.length - 1; i >= 0; i--) {
+            acc = unitData.reduce((a, v) => {
 
-                    unit = textUnits[unitData[i]];
+                if (textUnits[v] && textUnits[v].type === TEXT_TYPE_CHARS) a++
+                return a;
 
-                    if (unit) {
+            }, 0);
 
-                        ({ len, replaceLen, type } = unit);
+            if (acc) {
 
-                        if (type !== TEXT_TYPE_CHARS && type !== TEXT_TYPE_SOFT_HYPHEN) {
+                mutableUnitData = [...unitData];
+                break;
+            }
+            else unitData.length = 0;
+        }
+
+        if (mutableUnitData?.length) {
+
+            ({
+                length: lineLength,
+                unitData,
+            } = lines[currentLine]);
+
+            acc = unitData.reduce((a, v) => {
+
+                if (textUnits[v]?.len) a += textUnits[v].len;
+                return a;
+
+            }, 0);
+
+            for (i = unitData.length - 1; i >= 0; i--) {
+
+                unit = textUnits[unitData[i]];
+
+                if (unit) {
+
+                    ({ len, replaceLen, type } = unit);
+
+                    if (type !== TEXT_TYPE_CHARS && type !== TEXT_TYPE_SOFT_HYPHEN) {
+
+                        acc -= len;
+                        mutableUnitData.pop();
+                    }
+                    else {
+
+                        if (acc + replaceLen < lineLength) {
+
+                            mutableUnitData.push(TEXT_TYPE_TRUNCATE);
+                            break;
+                        }
+                        else {
 
                             acc -= len;
                             mutableUnitData.pop();
                         }
-                        else {
-
-                            if (acc + replaceLen < lineLength) {
-
-                                mutableUnitData.push(TEXT_TYPE_TRUNCATE);
-                                break;
-                            }
-                            else {
-
-                                acc -= len;
-                                mutableUnitData.pop();
-                            }
-                        }
                     }
                 }
-                unitData.length = 0;
-                unitData.push(...mutableUnitData);
             }
+            unitData.length = 0;
+            unitData.push(...mutableUnitData);
         }
     }
 };
@@ -2243,9 +2192,8 @@ P.positionTextUnits = function () {
 
 console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText)');
 
-    if (this.useLayoutEngineAsPath) this.positionTextUnitsAlongPath();
-    else if (this.textUnitDirection === COLUMN) this.positionTextUnitsInColumnSpace();
-    else this.positionTextUnitsInRowSpace();
+    if (this.useLayoutTemplateAsPath) this.positionTextUnitsAlongPath();
+    else this.positionTextUnitsInSpace();
 };
 
 
@@ -2257,47 +2205,12 @@ console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by po
 };
 
 
-// `positionTextUnitsInColumnSpace` - Position each TextUnit along the line it has been assigned to. This work does not care about language direction or line justification requirements.
-P.positionTextUnitsInColumnSpace = function () {
-
-console.log(this.name, 'positionTextUnitsInColumnSpace (trigger: none - called by positionTextUnits)');
-
-    const { lines, textUnits } = this;
-
-    let offset, unit;
-
-    lines.forEach(line => {
-
-        offset = 0;
-
-        line.unitData.forEach(u => {
-
-            if (u.toFixed) {
-
-                unit = textUnits[u];
-
-                unit.lineOffset = offset;
-                unit.rotation -= 90;
-
-                offset += unit.height;
-            }
-        });
-    });
-
-    // Code to identify and generate paths for underlines, overlines and highlights is in separate functions, for clarity
-    this.positionTextDecoration();
-    this.buildHighlightPaths();
-    this.buildOverlinePaths();
-    this.buildUnderlinePaths();
-};
-
-
-// `positionTextUnitsInRowSpace` - Position each TextUnit along the line it has been assigned to. This work takes into account:
+// `positionTextUnitsInSpace` - Position each TextUnit along the line it has been assigned to. This work takes into account:
 // + Language direction
 // + Line justification requirements
-P.positionTextUnitsInRowSpace = function () {
+P.positionTextUnitsInSpace = function () {
 
-console.log(this.name, 'positionTextUnitsInRowSpace (trigger: none - called by positionTextUnits)');
+console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits)');
 
     const {
         lines,
@@ -2443,7 +2356,7 @@ console.log(this.name, 'positionTextUnitsInRowSpace (trigger: none - called by p
 // `positionTextDecoration` - Recovers data which can be used for building underline, overline and highlight Path2D objects
 P.positionTextDecoration = function () {
 
-console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInRowSpace)');
+console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInSpace)');
 
     const {
         lines,
@@ -2452,12 +2365,12 @@ console.log(this.name, 'positionTextDecoration (trigger: none - called by positi
         textHandle,
         getTextHandleX: getX,
         getTextHandleY: getY,
-        layoutEngine,
+        layoutTemplate,
     } = this;
 
     const direction = defaultTextStyle.direction;
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
-    const currentScale = layoutEngine.currentScale;
+    const currentScale = layoutTemplate.currentScale;
 
     const [hx, hy] = textHandle;
 
@@ -2697,10 +2610,10 @@ const generatePath = (coord, out, back, style, pos, start, rot, paths) => {
 // `buildHighlightPaths` - internal function. Calculates a set of coordinates for contiguous blocks of highlight areas on a line
 P.buildHighlightPaths = function () {
 
-console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInRowSpace)');
+console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
 
-    const { lines, textUnits, layoutEngine, highlightPaths, alignment } = this;
-    const { currentStampPosition } = layoutEngine;
+    const { lines, textUnits, layoutTemplate, highlightPaths, alignment } = this;
+    const { currentStampPosition } = layoutTemplate;
 
     const coord = requestCoordinate();
 
@@ -2756,10 +2669,10 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
 // `buildOverlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of overline areas on a line
 P.buildOverlinePaths = function () {
 
-console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInRowSpace)');
+console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInSpace)');
 
-    const { lines, textUnits, layoutEngine, overlinePaths, alignment } = this;
-    const { currentStampPosition } = layoutEngine;
+    const { lines, textUnits, layoutTemplate, overlinePaths, alignment } = this;
+    const { currentStampPosition } = layoutTemplate;
 
     const coord = requestCoordinate();
 
@@ -2815,10 +2728,10 @@ console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTe
 // `buildUnderlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of underline areas on a line
 P.buildUnderlinePaths = function () {
 
-console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInRowSpace)');
+console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInSpace)');
 
-    const { lines, textUnits, layoutEngine, underlinePaths, alignment } = this;
-    const { currentStampPosition } = layoutEngine;
+    const { lines, textUnits, layoutTemplate, underlinePaths, alignment } = this;
+    const { currentStampPosition } = layoutTemplate;
 
     const coord = requestCoordinate();
 
@@ -2952,13 +2865,13 @@ P.stamp = function (force = false, host, changes) {
 
 
 // `regularStamp` - A small, internal function to direct stamping towards the correct functionality
-// + regularStampInSpace for text inside the layoutEngine artefact's enclosed space
+// + regularStampInSpace for text inside the layoutTemplate artefact's enclosed space
 // + regularStampAlongPath for text positioned along a path-based entity's perimeter
 P.regularStamp = function () {
 
-    if (this.currentHost && this.layoutEngine) {
+    if (this.currentHost && this.layoutTemplate) {
 
-        if (this.useLayoutEngineAsPath) this.regularStampAlongPath();
+        if (this.useLayoutTemplateAsPath) this.regularStampAlongPath();
         else this.regularStampInSpace();
     }
 };
@@ -2972,7 +2885,7 @@ P.regularStampInSpace = function () {
 
         const rotation = this.alignment * _radian;
 
-        const workingCells = this.createTextCellsForRows(currentHost, rotation);
+        const workingCells = this.createTextCells(currentHost, rotation);
 
         if (workingCells) {
 
@@ -3015,7 +2928,7 @@ P.stampGuidelinesOnCell = function (cell) {
     if (cell?.engine) {
 
         const {
-            layoutEngine,
+            layoutTemplate,
             localPath,
             guidelineStyle,
             guidelineWidth,
@@ -3026,7 +2939,7 @@ P.stampGuidelinesOnCell = function (cell) {
 
         engine.save();
 
-        cell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
+        cell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
 
         engine.setLineDash(guidelineDash);
 
@@ -3039,7 +2952,7 @@ P.stampGuidelinesOnCell = function (cell) {
     }
 };
 
-P.createTextCellsForRows = function (host, rotation) {
+P.createTextCells = function (host, rotation) {
 
     const el = host.element;
     const uCell = requestCell(el.width, el.height);
@@ -3052,7 +2965,7 @@ P.createTextCellsForRows = function (host, rotation) {
 
         const {
             state,
-            layoutEngine,
+            layoutTemplate,
             lines,
             textUnits,
             defaultTextStyle,
@@ -3060,8 +2973,8 @@ P.createTextCellsForRows = function (host, rotation) {
             hyphenString,
         } = this;
 
-        const currentRotation = layoutEngine.currentRotation;
-        const currentStampPosition = layoutEngine.currentStampPosition;
+        const currentRotation = layoutTemplate.currentRotation;
+        const currentStampPosition = layoutTemplate.currentStampPosition;
         const direction = defaultTextStyle.direction;
         const directionIsLtr = direction === LTR;
 
@@ -3080,10 +2993,10 @@ P.createTextCellsForRows = function (host, rotation) {
 
             unitData = line.unitData;
 
-            uCell.rotateDestination(uEngine, sx, sy, layoutEngine);
+            uCell.rotateDestination(uEngine, sx, sy, layoutTemplate);
             uEngine.rotate(rotation);
 
-            mCell.rotateDestination(mEngine, sx, sy, layoutEngine);
+            mCell.rotateDestination(mEngine, sx, sy, layoutTemplate);
             mEngine.rotate(rotation);
 
             unitData.forEach((u, uIndex) => {
@@ -3209,7 +3122,7 @@ P.createTextCellsForRows = function (host, rotation) {
 
 P.createUnderlineCell = function (host, textCell, rotation) {
 
-    const { layoutEngine, underlinePaths } = this;
+    const { layoutTemplate, underlinePaths } = this;
 
     if (underlinePaths.length) {
 
@@ -3221,7 +3134,7 @@ P.createUnderlineCell = function (host, textCell, rotation) {
             const engine = mycell.engine;
             const textEngine = textCell.engine;
 
-            mycell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
+            mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
             engine.rotate(rotation);
 
             underlinePaths.forEach(data => {
@@ -3244,7 +3157,7 @@ P.createUnderlineCell = function (host, textCell, rotation) {
 
 P.createOverlineCell = function (host, rotation) {
 
-    const { layoutEngine, overlinePaths } = this;
+    const { layoutTemplate, overlinePaths } = this;
 
     if (overlinePaths.length) {
 
@@ -3255,7 +3168,7 @@ P.createOverlineCell = function (host, rotation) {
 
             const engine = mycell.engine;
 
-            mycell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
+            mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
             engine.rotate(rotation);
 
             overlinePaths.forEach(data => {
@@ -3272,7 +3185,7 @@ P.createOverlineCell = function (host, rotation) {
 
 P.createHighlightCell = function (host, rotation) {
 
-    const { layoutEngine, highlightPaths } = this;
+    const { layoutTemplate, highlightPaths } = this;
 
     if (highlightPaths.length) {
 
@@ -3283,7 +3196,7 @@ P.createHighlightCell = function (host, rotation) {
 
             const engine = mycell.engine;
 
-            mycell.rotateDestination(engine, ...layoutEngine.currentStampPosition, layoutEngine);
+            mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
             engine.rotate(rotation);
 
             this.highlightPaths.forEach(data => {
@@ -3306,7 +3219,7 @@ P.regularStampAlongPath = function () {
 
     if (dest) {
 
-        const layout = this.layoutEngine;
+        const layout = this.layoutTemplate;
 
         if (layout) {
 
