@@ -627,7 +627,6 @@ export const TEXT_TYPE_SOFT_HYPHEN = 'h';
 export const TEXT_TYPE_SPACE = 'S';
 export const TEXT_TYPE_TRUNCATE = 'T';
 export const TEXTAREA = 'textarea';
-export const TEXTSTYLE = 'textstyle';
 export const THRESHOLD = 'threshold';
 export const TICKERUPDATE = 'tickerupdate';
 export const TILE_PICTURE = 'tilePicture';

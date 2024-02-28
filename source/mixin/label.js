@@ -8,7 +8,7 @@ import { fontfamilymetadata, fontfamilymetadatanames } from '../core/library.js'
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { addStrings, mergeOver, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { _abs, _ceil, _freeze, _isFinite, _keys, _parse, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, ITALIC, LEFT, NAME, NORMAL, OBLIQUE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, TOP, UNDEF } from '../helper/shared-vars.js';
 
@@ -82,9 +82,6 @@ export default function (P = Ωempty) {
 
 // #### Kill management
     P.factoryKill = function () {
-
-        delete textstyle[`${this.name}_default-textstyle`];
-        removeItem(textstylenames, `${this.name}_default-textstyle`);
 
         if (this.accessibleTextHold) this.accessibleTextHold.remove();
 

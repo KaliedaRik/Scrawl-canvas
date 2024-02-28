@@ -114,9 +114,8 @@ const defaultAttributes = {
 
 // __textUnitDirection__ - orientation of text units within the layout engine space. Values follows the CSS flexbox _flex-direction_ attribute's example:
 // + `row` - left to right where `direction = 'ltr'`; right to left where `direction = 'rtl'`
-// + `row-reverse` - right to left where `direction = 'ltr'`; left to right where `direction = 'rtl'`
 // + `column` - top to bottom where `direction = 'ltr'`; bottom to top where `direction = 'rtl'`
-// + `column-reverse` - bottom to top where `direction = 'ltr'`; top to bottom where `direction = 'rtl'`
+// + Columns differ from rows in that TextUnits in a row are spaced along a line using their widths, whereas in columns they are spaced using their heights
     textUnitDirection: ROW,
 
 // __breakTextOnSpaces__ - boolean.
@@ -251,9 +250,6 @@ P.clone = λthis;
 
 // #### Kill management
 P.factoryKill = function () {
-
-    delete textstyle[`${this.name}_default-textstyle`];
-    removeItem(textstylenames, `${this.name}_default-textstyle`);
 
     if (this.accessibleTextHold) this.accessibleTextHold.remove();
 
@@ -1399,6 +1395,7 @@ P.calculateLines = function () {
         layoutEngineLineOffset,
         lines,
         lineSpacing,
+        textUnitDirection,
     } = this;
 
     const {
@@ -1466,7 +1463,14 @@ P.calculateLines = function () {
     }
 
     // Sort the raw line data
-    rawData.sort((a, b) => a[0] - b[0]);
+    if (textUnitDirection === ROW_REVERSE || textUnitDirection === COLUMN_REVERSE) {
+
+        rawData.sort((a, b) => b[0] - a[0]);
+    }
+    else {
+
+        rawData.sort((a, b) => a[0] - b[0]);
+    }
 
     // Push line data into the `this.lines` array
     lines.length = 0;
@@ -1564,11 +1568,15 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
             highlightStyle: '',
             kernOffset: 0,
             len: 0,
+            height: 0,
             lineOffset: 0,
+            localOffsetX: 0,
+            localOffsetY: 0,
             overlineBack: [],
             overlineOut: [],
             overlineStyle: '',
             replaceLen: 0,
+            rotation: 0,
             stampFlag: true,
             stampPos: [0, 0],
             style: null,
@@ -1866,7 +1874,7 @@ console.log(this.name, `assessTextForStyle (trigger: none - called directly by c
 
         oldVal = currentTextStyle.method;
         newVal = nodeVals.getPropertyValue('--SC-method');
-if (oldVal !== newVal) console.log(`method | [${oldVal}] -> [${newVal}]`);
+// if (oldVal !== newVal) console.log(`method | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.method = newVal;
 
         unit.style.set(unitSet, true);
@@ -1949,21 +1957,24 @@ console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)')
         if (type === TEXT_TYPE_SPACE) {
 
             t.len += currentTextStyle.wordSpaceValue;
+            t.height = 0;
         }
         else if (type === TEXT_TYPE_SOFT_HYPHEN) {
 
             res = engine.measureText(hyphenString);
             t.replaceLen = res.width;
+            t.height = 0;
         }
         else {
 
             res = engine.measureText(truncateString);
             t.replaceLen = res.width;
+            t.height = parseFloat(currentTextStyle.fontSize);
         }
     });
 
-    // Gather kerning data (if required)
-    if (this.useLayoutEngineAsPath || !this.breakTextOnSpaces || this.allowSubUnitStyling) {
+    // Gather kerning data (if required) - only applies to rows
+    if (this.textUnitDirection === ROW && (this.useLayoutEngineAsPath || !this.breakTextOnSpaces || this.allowSubUnitStyling)) {
 
         // Reset things back to initial before starting the second walk-through
         this.setEngineFromWorkingTextStyle(currentTextStyle, defaultTextStyle, state, mycell);
@@ -2052,25 +2063,42 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
 
     let unitCursor = 0,
         lengthRemaining,
-        i, unit, unitData, unitAfter, len, lineLength, type;
+        i, unit, unitData, unitAfter, len, height, lineLength, type;
 
-    // TODO: The following code is good only for `textUnitDirection: ROW` situations. We also need code for:
-    // + `COLUMN` - where we will 'stack' the text units along the length of the line, rather than laying them out end-to-end.
-    // + `ROW_REVERSE` - reverse the layout order (but not the contents) of the text units along the line.
-    // + `COLUMN_REVERSE` - reverse the stack order of the text units along the line.
-    if (textUnitDirection === COLUMN || textUnitDirection === COLUMN_REVERSE) {
-        console.log('TODO - columns');
+    const addUnit = function (len) {
+
+        lengthRemaining -= len;
+        unitData.push(unitCursor);
+        ++unitCursor;
+    };
+
+    if (textUnitDirection === COLUMN) {
+
+        lines.forEach(line => {
+
+            ({
+                length: lineLength,
+                unitData,
+            } = line);
+
+            lengthRemaining = lineLength;
+
+            for (i = unitCursor; i < unitArrayLength; i++) {
+
+                unit = textUnits[i];
+
+                height = unit.height;
+
+                if (height < lengthRemaining) addUnit(height);
+
+                // There's no room left on this line for the TextUnit
+                else break;
+            }
+        });
     }
     else {
 
         lines.forEach(line => {
-
-            const addUnit = function (len) {
-
-                lengthRemaining -= len;
-                unitData.push(unitCursor);
-                ++unitCursor;
-            };
 
             ({
                 length: lineLength,
@@ -2205,11 +2233,6 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
             }
         }
     }
-
-    // Will need to do look-aheads for soft hyphens as units connected by them can't be reversed
-    if (textUnitDirection === ROW_REVERSE || textUnitDirection === COLUMN_REVERSE) {
-        console.log('TODO - reverse text units');
-    }
 };
 
 
@@ -2221,7 +2244,8 @@ P.positionTextUnits = function () {
 console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText)');
 
     if (this.useLayoutEngineAsPath) this.positionTextUnitsAlongPath();
-    else this.positionTextUnitsInSpace();
+    else if (this.textUnitDirection === COLUMN) this.positionTextUnitsInColumnSpace();
+    else this.positionTextUnitsInRowSpace();
 };
 
 
@@ -2233,12 +2257,47 @@ console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by po
 };
 
 
-// `positionTextUnitsInSpace` - Position each TextUnit along the line it has been assigned to. This work takes into account:
+// `positionTextUnitsInColumnSpace` - Position each TextUnit along the line it has been assigned to. This work does not care about language direction or line justification requirements.
+P.positionTextUnitsInColumnSpace = function () {
+
+console.log(this.name, 'positionTextUnitsInColumnSpace (trigger: none - called by positionTextUnits)');
+
+    const { lines, textUnits } = this;
+
+    let offset, unit;
+
+    lines.forEach(line => {
+
+        offset = 0;
+
+        line.unitData.forEach(u => {
+
+            if (u.toFixed) {
+
+                unit = textUnits[u];
+
+                unit.lineOffset = offset;
+                unit.rotation -= 90;
+
+                offset += unit.height;
+            }
+        });
+    });
+
+    // Code to identify and generate paths for underlines, overlines and highlights is in separate functions, for clarity
+    this.positionTextDecoration();
+    this.buildHighlightPaths();
+    this.buildOverlinePaths();
+    this.buildUnderlinePaths();
+};
+
+
+// `positionTextUnitsInRowSpace` - Position each TextUnit along the line it has been assigned to. This work takes into account:
 // + Language direction
 // + Line justification requirements
-P.positionTextUnitsInSpace = function () {
+P.positionTextUnitsInRowSpace = function () {
 
-console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits)');
+console.log(this.name, 'positionTextUnitsInRowSpace (trigger: none - called by positionTextUnits)');
 
     const {
         lines,
@@ -2384,7 +2443,7 @@ console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by posi
 // `positionTextDecoration` - Recovers data which can be used for building underline, overline and highlight Path2D objects
 P.positionTextDecoration = function () {
 
-console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInSpace)');
+console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInRowSpace)');
 
     const {
         lines,
@@ -2551,6 +2610,8 @@ console.log(this.name, 'positionTextDecoration (trigger: none - called by positi
 
                         highlightOut.length = 0;
 
+                        // Magic number warning! Multiplying `fontSizeValue` by `1.1` seems to give the "most pleasing" highlight effect, leaving just enough space between the lowest character and the bottom of the highlight (in problematic fonts like "Mountains of Christmas").
+                        // + TODO: consider making this inflation factor - `1.1` - a settable TextStyle attribute.
                         localDepth = fontSizeValue * currentScale * 1.1;
 
                         highlightOut.push(
@@ -2565,8 +2626,6 @@ console.log(this.name, 'positionTextDecoration (trigger: none - called by positi
 
                         highlightBack.length = 0;
 
-                        // Magic number warning! Multiplying `fontSizeValue` by `1.1` seems to give the "most pleasing" highlight effect, leaving just enough space between the lowest character and the bottom of the highlight (in problematic fonts like "Mountains of Christmas").
-                        // + TODO: consider making this inflation factor - `1.1` - a settable TextStyle attribute.
                         highlightBack.push(
                             [
                                 lineOffset - ox,
@@ -2635,63 +2694,10 @@ const generatePath = (coord, out, back, style, pos, start, rot, paths) => {
 };
 
 
-
-
-
-
-// const generatePath = (coord, out, back, style, pos, start, rot, paths) => {
-
-//     let previousLineX, previousLineY,
-//         unitPreviousX, unitPreviousY,
-//         unitNextX, unitNextY,
-//         i, iz;
-
-//     let path = '';
-
-//     [previousLineX, previousLineY] = pos;
-
-//     const [lineX, lineY] = coord.set(start).subtract(pos).rotate(-rot).add(pos);
-
-//     path += `m ${(lineX - previousLineX).toFixed(2)}, ${(lineY - previousLineY).toFixed(2)} `;
-
-//     previousLineX = lineX;
-//     previousLineY = lineY;
-
-//     const [unitStartX, unitStartY] = out.shift();
-
-//     path += `m ${unitStartX.toFixed(2)}, ${unitStartY.toFixed(2)} `;
-
-//     unitPreviousX = unitStartX;
-//     unitPreviousY = unitStartY;
-
-//     for (i = 0, iz = out.length; i < iz; i++) {
-
-//         [unitNextX, unitNextY] = out.shift();
-
-//         path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-//         unitPreviousX = unitNextX;
-//         unitPreviousY = unitNextY;
-//     }
-
-//     for (i = 0, iz = back.length; i < iz; i++) {
-
-//         [unitNextX, unitNextY] = back.pop();
-
-//         path += `l ${(unitNextX - unitPreviousX).toFixed(2)}, ${(unitNextY - unitPreviousY).toFixed(2)} `;
-
-//         unitPreviousX = unitNextX;
-//         unitPreviousY = unitNextY;
-//     }
-//     path += 'z ';
-
-//     paths.push([style, new Path2D(path)]);
-// };
-
 // `buildHighlightPaths` - internal function. Calculates a set of coordinates for contiguous blocks of highlight areas on a line
 P.buildHighlightPaths = function () {
 
-console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
+console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInRowSpace)');
 
     const { lines, textUnits, layoutEngine, highlightPaths, alignment } = this;
     const { currentStampPosition } = layoutEngine;
@@ -2716,13 +2722,13 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
 
         unitData.forEach((u, unitIndex) => {
 
+            processFlag = unitIndex + 1 === unitData.length;
+
             if (u.toFixed) {
 
                 unit = textUnits[u];
 
                 if (unit.highlightStyle) highlightStyle = unit.highlightStyle;
-
-                processFlag = unitIndex + 1 === unitData.length;
 
                 if (unit.stampFlag) {
 
@@ -2750,7 +2756,7 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
 // `buildOverlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of overline areas on a line
 P.buildOverlinePaths = function () {
 
-console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInSpace)');
+console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInRowSpace)');
 
     const { lines, textUnits, layoutEngine, overlinePaths, alignment } = this;
     const { currentStampPosition } = layoutEngine;
@@ -2775,13 +2781,13 @@ console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTe
 
         unitData.forEach((u, unitIndex) => {
 
+            processFlag = unitIndex + 1 === unitData.length;
+
             if (u.toFixed) {
 
                 unit = textUnits[u];
 
                 if (unit.overlineStyle) overlineStyle = unit.overlineStyle;
-
-                processFlag = unitIndex + 1 === unitData.length;
 
                 if (unit.stampFlag) {
 
@@ -2809,7 +2815,7 @@ console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTe
 // `buildUnderlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of underline areas on a line
 P.buildUnderlinePaths = function () {
 
-console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInSpace)');
+console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInRowSpace)');
 
     const { lines, textUnits, layoutEngine, underlinePaths, alignment } = this;
     const { currentStampPosition } = layoutEngine;
@@ -2834,13 +2840,13 @@ console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionT
 
         unitData.forEach((u, unitIndex) => {
 
+            processFlag = unitIndex + 1 === unitData.length;
+
             if (u.toFixed) {
 
                 unit = textUnits[u];
 
                 if (unit.underlineStyle) underlineStyle = unit.underlineStyle;
-
-                processFlag = unitIndex + 1 === unitData.length;
 
                 if (unit.stampFlag) {
 
@@ -2966,7 +2972,7 @@ P.regularStampInSpace = function () {
 
         const rotation = this.alignment * _radian;
 
-        const workingCells = this.createTextCells(currentHost, rotation);
+        const workingCells = this.createTextCellsForRows(currentHost, rotation);
 
         if (workingCells) {
 
@@ -3033,7 +3039,7 @@ P.stampGuidelinesOnCell = function (cell) {
     }
 };
 
-P.createTextCells = function (host, rotation) {
+P.createTextCellsForRows = function (host, rotation) {
 
     const el = host.element;
     const uCell = requestCell(el.width, el.height);
