@@ -1088,11 +1088,12 @@ console.log(this.name, 'calculateTextStyleFontStrings (trigger: none - called by
 
     textStyle.fontSizeValue = elSizeValue;
 
-    // Work specifically for EnhancedLabel entitys, but performed here for efficiency
-    if (lineSpacing != null && fontString.includes('/')) {
+    // User can set lineSpacing attribute via the font string
+    if (fontString.includes('/')) {
 
         const lh = parseFloat(results.lineHeight);
         this.lineSpacing = (_isFinite(lh)) ? lh / elSizeValue : this.defs.lineSpacing;
+        this.dirtyLayout = true;
     }
 
     // Update `textStyle` attributes
