@@ -19,14 +19,11 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
+import textMix from '../mixin/text.js';
 
-import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _create, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
-
-
-// #### Local variables
-const textEntityConverter = document.createElement(DIV);
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -51,13 +48,24 @@ const EnhancedLabel = function (items = Ωempty) {
     this.updateUsingFontString = false;
     this.usingViewportFontSizing = false;
 
-    this.currentStampPosition = makeCoordinate();
-    this.textHandle = makeCoordinate();
+    this.useMimicDimensions = true;
+    this.useMimicFlip = true;
+    this.useMimicHandle = true;
+    this.useMimicOffset = true;
+    this.useMimicRotation = true;
+    this.useMimicScale = true;
+    this.useMimicStart = true;
 
     this.delta = {};
+    this.deltaConstraints = {};
+
+    this.currentStampPosition = makeCoordinate();
+
+    this.textHandle = makeCoordinate();
+    this.textOffset = makeCoordinate();
 
     this.lines = [];
-    this.textUnits = [];
+    this.textUnits = makeTextUnitArray();
 
     this.underlinePaths = [];
     this.overlinePaths = [];
@@ -85,6 +93,7 @@ P.isAsset = false;
 // #### Mixins
 baseMix(P);
 deltaMix(P);
+textMix(P);
 
 
 // #### EnhancedLabel attributes
@@ -106,8 +115,8 @@ const defaultAttributes = {
 // __useLayoutTemplateAsPath__ - boolean. If layout engine entity is a path-based entity, then we can either fit the text within it, or use its path for positioning.
     useLayoutTemplateAsPath: false,
 
-// __layoutTemplatePathStart__ - where to start text positioning along the layout engine path.
-    layoutTemplatePathStart: 0,
+// __pathStart__ - where to start text positioning along the layout engine path.
+    pathPosition: 0,
 
 // __layoutTemplateLineOffset__ - how far away from the origin point the initial line should be.
     layoutTemplateLineOffset: 0,
@@ -139,6 +148,7 @@ const defaultAttributes = {
 
 // __textHandle__ - Coordinate.
     textHandle: null,
+    textOffset: null,
 
 // __showGuidelines__ - boolean.
     showGuidelines: false,
@@ -154,28 +164,10 @@ const defaultAttributes = {
     stampOrder: 0,
     host: null,
     group: null,
-    anchor: null,
 
     method: FILL,
 
     alignment: 0,
-
-// __noDeltaUpdates__ - Boolean flag - EnhancedLabel entitys support delta animation - achieved by updating the `...path` attributes by appropriate (and small!) values. If the EnhancedLabel is not going to be animated by delta values, setting the flag to `true` may help improve rendering efficiency.
-    noDeltaUpdates: false,
-
-    useMimicDimensions: true,
-    useMimicFlip: true,
-    useMimicHandle: true,
-    useMimicOffset: true,
-    useMimicRotation: true,
-    useMimicScale: true,
-    useMimicStart: true,
-
-    textIsAccessible: true,
-    accessibleText: DEF_SECTION_PLACEHOLDER,
-    accessibleTextPlaceholder: DEF_SECTION_PLACEHOLDER,
-    accessibleTextOrder: 0,
-
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -254,6 +246,8 @@ P.factoryKill = function () {
 
 // #### Get, Set, deltaSet
 // Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
+const TEMPLATE_PASS_THROUGH_KEYS = _freeze(['width', 'height', 'dimensions', 'startX', 'startY', 'start', 'position', 'handleX', 'handleY', 'handle', 'offsetX', 'offsetY', 'offset', 'roll', 'scale']);
+
 const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
 
 const LABEL_DIRTY_FONT_KEYS = _freeze(['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing']);
@@ -266,7 +260,7 @@ const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
 
 P.get = function (key) {
 
-    const {defs, getters, state, defaultTextStyle} = this;
+    const {defs, getters, state, defaultTextStyle, layoutTemplate} = this;
 
     const defaultTextStyleGetters = (defaultTextStyle) ? defaultTextStyle.getters : Ωempty;
     const defaultTextStyleDefs = (defaultTextStyle) ? defaultTextStyle.defs : Ωempty;
@@ -276,6 +270,10 @@ P.get = function (key) {
 
     let fn;
 
+    if (layoutTemplate && TEMPLATE_PASS_THROUGH_KEYS.includes(key)) {
+
+        return layoutTemplate.get(key);
+    }
     if (TEXTSTYLE_KEYS.includes(key)) {
 
         fn = defaultTextStyleGetters[key];
@@ -283,20 +281,19 @@ P.get = function (key) {
         if (fn) return fn.call(defaultTextStyle);
         else if (typeof defaultTextStyleDefs[key] != UNDEF) return defaultTextStyle[key];
     }
-    else if (STATE_KEYS.includes(key)) {
+    if (STATE_KEYS.includes(key)) {
 
         fn = stateGetters[key];
 
         if (fn) return fn.call(state);
         else if (typeof stateDefs[key] != UNDEF) return state[key];
     }
-    else {
 
-        fn = getters[key];
+    fn = getters[key];
 
-        if (fn) return fn.call(this);
-        else if (typeof defs[key] != UNDEF) return this[key];
-    }
+    if (fn) return fn.call(this);
+    else if (typeof defs[key] != UNDEF) return this[key];
+
     return null;
 };
 
@@ -307,7 +304,7 @@ P.set = function (items = Ωempty) {
 
     if (len) {
 
-        const {defs, setters, state, defaultTextStyle} = this;
+        const {defs, setters, state, defaultTextStyle, layoutTemplate} = this;
 
         const defaultTextStyleSetters = (defaultTextStyle) ? defaultTextStyle.setters : Ωempty;
         const defaultTextStyleDefs = (defaultTextStyle) ? defaultTextStyle.defs : Ωempty;
@@ -324,7 +321,11 @@ P.set = function (items = Ωempty) {
 
             if (key && key != NAME && val != null) {
 
-                if (TEXTSTYLE_KEYS.includes(key)) {
+                if (layoutTemplate && TEMPLATE_PASS_THROUGH_KEYS.includes(key)) {
+
+                    layoutTemplate.set({[key]: val});
+                }
+                else if (TEXTSTYLE_KEYS.includes(key)) {
 
                     fn = defaultTextStyleSetters[key];
 
@@ -363,7 +364,7 @@ P.setDelta = function (items = Ωempty) {
 
     if (len) {
 
-        const {defs, deltaSetters:setters, state, defaultTextStyle} = this;
+        const {defs, deltaSetters:setters, state, defaultTextStyle, layoutTemplate} = this;
 
         const defaultTextStyleSetters = (defaultTextStyle) ? defaultTextStyle.deltaSetters : Ωempty;
         const defaultTextStyleDefs = (defaultTextStyle) ? defaultTextStyle.defs : Ωempty;
@@ -380,7 +381,11 @@ P.setDelta = function (items = Ωempty) {
 
             if (key && key != NAME && val != null) {
 
-                if (TEXTSTYLE_KEYS.includes(key)) {
+                if (layoutTemplate && TEMPLATE_PASS_THROUGH_KEYS.includes(key)) {
+
+                    layoutTemplate.setDelta({[key]: val});
+                }
+                else if (TEXTSTYLE_KEYS.includes(key)) {
 
                     fn = defaultTextStyleSetters[key];
 
@@ -417,46 +422,6 @@ const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// __Note that__ dimensions (width, height) cannot be set on labels as the entity's dimensional values will depend entirely on the `font`, `text` and `scale` attributes
-G.width = function () {
-
-    return this?.layoutTemplate.get('width');
-};
-S.width = function (item) {
-
-    this?.layoutTemplate.set({width: item});
-};
-D.width = function (item) {
-
-    this?.layoutTemplate.deltaSet({width: item});
-};
-
-G.height = function () {
-
-    return this?.layoutTemplate.get('height');
-};
-S.height = function (item) {
-
-    this?.layoutTemplate.set({height: item});
-};
-D.height = function (item) {
-
-    this?.layoutTemplate.deltaSet({height: item});
-};
-
-G.dimensions = function () {
-
-    return this?.layoutTemplate.get('dimensions');
-};
-S.dimensions = function (item) {
-
-    this?.layoutTemplate.set({dimensions: item});
-};
-D.dimensions = function (item) {
-
-    this?.layoutTemplate.deltaSet({dimensions: item});
-};
-
 // __group__ - copied over from the position mixin.
 G.group = function () {
 
@@ -481,70 +446,6 @@ S.group = function (item) {
     }
 
     if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
-};
-
-// __delta__ - copied over from the position mixin.
-S.delta = function (items) {
-
-    if (items) this.delta = mergeDiscard(this.delta, items);
-};
-
-
-// Pseudo-attributes mapping to mimic-related attribute, to provide a clearer understanding of how EnhancedLabel entitys use these attributes
-// + __updateOnLayoutDimensionsChange__
-// + __updateOnLayoutFlipChange__
-// + __updateOnLayoutHandleChange__
-// + __updateOnLayoutOffsetChange__
-// + __updateOnLayoutRotationChange__
-// + __updateOnLayoutScaleChange__
-// + __updateOnLayoutStartChange__
-G.updateOnLayoutDimensionsChange = function () {
-    return this.useMimicDimensions;
-};
-S.updateOnLayoutDimensionsChange = function (item) {
-    this.useMimicDimensions = !!item;
-};
-
-G.updateOnLayoutFlipChange = function () {
-    return this.useMimicFlip;
-};
-S.updateOnLayoutFlipChange = function (item) {
-    this.useMimicFlip = !!item;
-};
-
-G.updateOnLayoutHandleChange = function () {
-    return this.useMimicHandle;
-};
-S.updateOnLayoutHandleChange = function (item) {
-    this.useMimicHandle = !!item;
-};
-
-G.updateOnLayoutOffsetChange = function () {
-    return this.useMimicOffset;
-};
-S.updateOnLayoutOffsetChange = function (item) {
-    this.useMimicOffset = !!item;
-};
-
-G.updateOnLayoutRotationChange = function () {
-    return this.useMimicRotation;
-};
-S.updateOnLayoutRotationChange = function (item) {
-    this.useMimicRotation = !!item;
-};
-
-G.updateOnLayoutScaleChange = function () {
-    return this.useMimicScale;
-};
-S.updateOnLayoutScaleChange = function (item) {
-    this.useMimicScale = !!item;
-};
-
-G.updateOnLayoutStartChange = function () {
-    return this.useMimicStart;
-};
-S.updateOnLayoutStartChange = function (item) {
-    this.useMimicStart = !!item;
 };
 
 // __layoutTemplate__ - TODO: documentation
@@ -645,7 +546,7 @@ G.rawText = function () {
 };
 S.text = function (item) {
 
-console.log(this.name, 'S.text')
+// console.log(this.name, 'S.text')
     this.rawText = (item.substring) ? item : item.toString();
     this.text = this.convertTextEntityCharacters(this.rawText);
 
@@ -656,7 +557,7 @@ console.log(this.name, 'S.text')
 
 S.truncateString = function (item) {
 
-console.log(this.name, 'S.truncateString')
+// console.log(this.name, 'S.truncateString')
     if (item.substring) {
 
         this.truncateString = this.convertTextEntityCharacters(item);
@@ -666,7 +567,7 @@ console.log(this.name, 'S.truncateString')
 
 S.hyphenString = function (item) {
 
-console.log(this.name, 'S.hyphenString')
+// console.log(this.name, 'S.hyphenString')
     if (item.substring) {
 
         this.hyphenString = this.convertTextEntityCharacters(item);
@@ -681,6 +582,25 @@ S.justifyLine = function (item) {
         this.justifyLine = item;
         this.dirtyLayout = true;
     }
+};
+
+S.pathPosition = function (item) {
+
+    if (item < 0) item = _abs(item);
+    if (item > 1) item = item % 1;
+
+    this.pathPosition = parseFloat(item.toFixed(6));
+    this.dirtyLayout = true;
+};
+D.pathPosition = function (item) {
+
+    let pos = this.pathPosition + item
+
+    if (pos < 0) pos += 1;
+    if (pos > 1) pos = pos % 1;
+
+    this.pathPosition = parseFloat(pos.toFixed(6));
+    this.dirtyLayout = true;
 };
 
 S.textHandleX = function (item) {
@@ -703,43 +623,6 @@ S.textHandle = function (item) {
     }
 };
 
-G.accessibleText = function () {
-
-    return this.getAccessibleText();
-};
-S.accessibleText = function (item) {
-
-    if (item?.substring) {
-
-        this.accessibleText = item;
-        this.dirtyText = true;
-    }
-};
-
-S.accessibleTextPlaceholder = function (item) {
-
-    if (item?.substring) {
-
-        this.accessibleTextPlaceholder = item;
-        this.dirtyText = true;
-    }
-};
-
-S.accessibleTextOrder = function (item) {
-
-    if (item?.toFixed) {
-
-        this.accessibleTextOrder = item;
-        this.dirtyText = true;
-    }
-};
-
-S.textIsAccessible = function (item) {
-
-    this.textIsAccessible = !!item;
-    this.dirtyText = true;
-};
-
 S.guidelineDash = function (item) {
 
     if (_isArray(item)) this.guidelineDash = item;
@@ -749,6 +632,24 @@ S.guidelineStyle = function (item) {
 
     if (!item) this.guidelineStyle = this.defs.guidelineStyle;
     else if (item.substring) this.guidelineStyle = item;
+}
+
+S.flipReverse = function (item) {
+
+    if (this.layoutTemplate != null) {
+
+        this.layoutTemplate.set({'flipReverse': item});
+        this.dirtyLayout = true;
+    }
+}
+
+S.flipUpend = function (item) {
+
+    if (this.layoutTemplate != null) {
+
+        this.layoutTemplate.set({'flipUpend': item});
+        this.dirtyLayout = true;
+    }
 }
 
 
@@ -762,20 +663,15 @@ P.recalculateFont = function (fromUserInteractionListener = false) {
 
     if (fromUserInteractionListener) {
 
-console.log(this.name, 'recalculateFont (trigger: userInteractionListener)');
         if (this.usingViewportFontSizing) this.dirtyFont = true;
     }
-    else {
-
-console.log(this.name, 'recalculateFont (trigger: external code)');
-        this.dirtyFont = true;
-    }
+    else this.dirtyFont = true;
 };
 
 // `getTester` - Retrieve the DOM labelStylesCalculator &lt;div> element
 P.getTester = function () {
 
-console.log(this.name, 'getTester (trigger: none. Called by: assessTextForStyle, S.text)');
+// console.log(this.name, 'getTester (trigger: none. Called by: assessTextForStyle, S.text)');
 
     const group = this.group;
 
@@ -796,7 +692,7 @@ console.log(this.name, 'getTester (trigger: none. Called by: assessTextForStyle,
 // `getControllerCell` - Retrieve the entity's controller Cell wrapper
 P.getControllerCell = function () {
 
-console.log(this.name, 'getControllerCell (trigger: none. Called by: assessTextForStyle, S.text)');
+// console.log(this.name, 'getControllerCell (trigger: none. Called by: assessTextForStyle, S.text)');
 
     const group = this.group;
 
@@ -889,23 +785,21 @@ P.getTextHandleX = function (val, dim, dir) {
 
 // console.log(this.name, 'getTextHandleX (trigger: various)');
 
-    const scale = this.layoutTemplate?.currentScale || 1;
+    if (val.toFixed) return val;
 
-    if (val.toFixed) return val * scale;
+    if (val === START) return (dir === LTR) ? 0 : dim;
 
-    if (val === START) return (dir === LTR) ? 0 : dim * scale;
+    if (val === CENTER) return dim / 2;
 
-    if (val === CENTER) return (dim / 2) * scale;
-
-    if (val === END) return (dir === LTR) ? dim * scale : 0;
+    if (val === END) return (dir === LTR) ? dim : 0;
 
     if (val === LEFT) return 0;
 
-    if (val === RIGHT) return dim * scale;
+    if (val === RIGHT) return dim;
 
     if (!_isFinite(parseFloat(val))) return 0;
 
-    return ((parseFloat(val) / 100) * dim) * scale;
+    return (parseFloat(val) / 100) * dim;
 };
 
 // `getTextHandleY` - Calculate the vertical offset required for a given TextUnit
@@ -947,12 +841,24 @@ P.getTextHandleY = function (val, size, font) {
     return (parseFloat(val) / 100) * dim;
 };
 
+// `getTextOffset` - Calculate the horizontal offset required for a given TextUnit
+P.getTextOffset = function (val, dim) {
+
+// console.log(this.name, 'getTextOffset (trigger: various)');
+
+    if (val.toFixed) return val;
+
+    if (!_isFinite(parseFloat(val))) return 0;
+
+    return (parseFloat(val) / 100) * dim;
+};
+
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
 // + This is the preparation step
 P.temperFont = function () {
 
-console.log(this.name, 'temperFont (trigger: none - called by cleanFont once font has loaded)');
+// console.log(this.name, 'temperFont (trigger: none - called by cleanFont once font has loaded)');
 
     const { group, defaultTextStyle } = this;
 
@@ -985,16 +891,16 @@ console.log(this.name, 'temperFont (trigger: none - called by cleanFont once fon
 // `checkFontIsLoaded` - chcks the document object to check if the supplied font has been loaded by the browser and is ready to use
 P.checkFontIsLoaded = function (font) {
 
-    console.log('checkFontIsLoaded (trigger: cleanFont)', font);
+    // console.log('checkFontIsLoaded (trigger: cleanFont)', font);
 
     if (font == null) {
 
         this.currentFontIsLoaded = false;
-        console.log('checkFontIsLoaded error: argument is undefined');
+        // console.log('checkFontIsLoaded error: argument is undefined');
     }
     else if (SYSTEM_FONTS.includes(font)) {
 
-        console.log('checkFontIsLoaded success: system font detected');
+        // console.log('checkFontIsLoaded success: system font detected');
         this.currentFontIsLoaded = true;
     }
     else {
@@ -1005,23 +911,23 @@ P.checkFontIsLoaded = function (font) {
 
             const fonts = document.fonts;
 
-            console.log('checkFontIsLoaded update: invoking async load check');
+            // console.log('checkFontIsLoaded update: invoking async load check');
 
             fonts.load(font)
             .then (() => {
 
                 this.currentFontIsLoaded = true;
-                console.log('checkFontIsLoaded load invocation completed successfully:', font);
+                // console.log('checkFontIsLoaded load invocation completed successfully:', font);
             })
-            .catch ((e) => {
+            .catch (() => {
 
                 this.currentFontIsLoaded = false;
-                console.log('checkFontIsLoaded load invocation error:', font, e);
+                // console.log('checkFontIsLoaded load invocation error:', font, e);
             });
         }
         else {
 
-            console.log('checkFontIsLoaded issue: prior check is still progressing');
+            // console.log('checkFontIsLoaded issue: prior check is still progressing');
         }
     }
 };
@@ -1031,11 +937,11 @@ P.checkFontIsLoaded = function (font) {
 // + Once we have that data, we can clone the default TextStyle object to perform dynamic updates as calculations, and then the stamp process proceed
 P.calculateTextStyleFontStrings = function (textStyle, calculator, results) {
 
-console.log(this.name, 'calculateTextStyleFontStrings (trigger: none - called by temperFont)');
+// console.log(this.name, 'calculateTextStyleFontStrings (trigger: none - called by temperFont)');
 
     let fontSize = textStyle.fontSize;
     const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = textStyle;
-    const { lineSpacing, updateUsingFontParts, updateUsingFontString, layoutTemplate } = this;
+    const { updateUsingFontParts, updateUsingFontString, layoutTemplate } = this;
 
     const scale = layoutTemplate?.currentScale || 1;
 
@@ -1147,12 +1053,12 @@ P.getFontMetadata = function (fontFamily) {
     }
 };
 
-// `convertTextEntityCharacters`, `textEntityConverter` - (not part of the Label prototype!) - a &lt;textarea> element not attached to the DOM which we can use to temper user-supplied text
-// + Tempering includes converting HTMLentity copy - such as changing `&epsilon;` to an &epsilon; letter
+// `convertTextEntityCharacters`
+// + Converts HTMLentity copy - such as changing `&epsilon;` to an &epsilon; letter
 // + We also strip the supplied text of all HTML markup
 P.convertTextEntityCharacters = function (item) {
 
-console.log(this.name, 'convertTextEntityCharacters');
+// console.log(this.name, 'convertTextEntityCharacters');
     textEntityConverter.innerHTML = item;
     return textEntityConverter.textContent;
 };
@@ -1252,25 +1158,21 @@ P.getAccessibleText = function () {
 // `cleanFont` - Performs a check to make sure we have a font to process
 P.cleanFont = function () {
 
-console.log(this.name, 'cleanFont (trigger: dirtyFont)', this.dirtyFont);
+// console.log(this.name, 'cleanFont (trigger: dirtyFont)', this.dirtyFont);
 
     if (this.currentFontIsLoaded) {
 
         this.dirtyFont = false;
         this.temperFont();
     }
-    else {
-
-console.log(this.name, `cleanFont - looking to see if ${this.defaultTextStyle.fontString} has been loaded`);
-        this.checkFontIsLoaded(this.defaultTextStyle.fontString);
-    }
+    else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
 };
 
 
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
-console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutTemplate?.pathObject})`);
+// console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutTemplate?.pathObject})`);
 
     const layout = this.layoutTemplate;
 
@@ -1286,19 +1188,13 @@ console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPa
 // `cleanLayout` - recalculate the positioning of all TextUnits in the space or along the path
 P.cleanLayout = function () {
 
-console.log(this.name, `cleanLayout (triggers: dirtyLayout ${this.dirtyLayout}, checks: currentFontIsLoaded ${this.currentFontIsLoaded})`);
+// console.log(this.name, `cleanLayout (triggers: dirtyLayout ${this.dirtyLayout}, checks: currentFontIsLoaded ${this.currentFontIsLoaded})`);
 
     if (this.currentFontIsLoaded) {
 
         this.dirtyLayout = false;
 
-        const { useLayoutTemplateAsPath } = this;
-
-        if (useLayoutTemplateAsPath) {
-
-            // TODO: Path-related positioning stuff
-        }
-        else this.calculateLines();
+        if (!this.useLayoutTemplateAsPath) this.calculateLines();
 
         this.dirtyTextLayout = true;
     }
@@ -1451,6 +1347,7 @@ P.calculateLines = function () {
     rawData.sort((a, b) => a[0] - b[0]);
 
     // Push line data into the `this.lines` array
+    releaseLine(...lines);
     lines.length = 0;
     lineProcessing.length = 0;
 
@@ -1491,12 +1388,10 @@ P.calculateLines = function () {
             lineResults = lineProcessing.shift();
 
             // Currently storing as an object. Need to turn it into an array for more efficient processing
-            lines.push({
+            lines.push(requestLine({
                 length: _ceil(lineResults),
                 startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
-                unitData: [],
-                maxHeight: 0,
-            });
+            }));
 
             lineVal += lineResults;
         }
@@ -1535,36 +1430,7 @@ P.calculateLines = function () {
 // `cleanText` - Break the entity's text into smaller TextUnit objects which can be positioned within, or along, the layout entity's shape
 P.cleanText = function () {
 
-console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded})`);
-
-    const makeUnitObject = (chars, type) => {
-
-        return {
-            chars,
-            highlightBack: [],
-            highlightOut: [],
-            highlightStyle: '',
-            kernOffset: 0,
-            len: 0,
-            height: 0,
-            lineOffset: 0,
-            localOffsetX: 0,
-            localOffsetY: 0,
-            overlineBack: [],
-            overlineOut: [],
-            overlineStyle: '',
-            replaceLen: 0,
-            rotation: 0,
-            stampFlag: true,
-            stampPos: [0, 0],
-            style: null,
-            type,
-            underlineBack: [],
-            underlineOut: [],
-            underlineStyle: '',
-            underlineGap: 0,
-        };
-    };
+// console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded})`);
 
     if (this.currentFontIsLoaded) {
 
@@ -1578,6 +1444,7 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
 
         let noBreak = false;
 
+        releaseUnit(...textUnits);
         textUnits.length = 0;
 
         if (!allowSubUnitStyling && breakTextOnSpaces) {
@@ -1588,27 +1455,48 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
 
                     if (TEXT_SPACES_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
-                        textUnits.push(makeUnitObject(c, TEXT_TYPE_SPACE));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                        }));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: c,
+                            [UNIT_TYPE]: TEXT_TYPE_SPACE,
+                        }));
                         unit.length = 0;
                     }
                     else if (TEXT_HARD_HYPHEN_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
-                        textUnits.push(makeUnitObject(c, TEXT_TYPE_HYPHEN));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                        }));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: c,
+                            [UNIT_TYPE]: TEXT_TYPE_HYPHEN,
+                        }));
                         unit.length = 0;
                     }
                     else if (TEXT_SOFT_HYPHEN_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
-                        textUnits.push(makeUnitObject(c, TEXT_TYPE_SOFT_HYPHEN));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                        }));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: c,
+                            [UNIT_TYPE]: TEXT_TYPE_SOFT_HYPHEN,
+                        }));
                         unit.length = 0;
                     }
                     else unit.push(c);
                 });
 
                 // Capturing the last word
-                if (unit.length) textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
+                if (unit.length) textUnits.push(requestUnit({
+                    [UNIT_CHARS]: unit.join(ZERO_STR),
+                    [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                }));
             }
             else {
 
@@ -1616,15 +1504,24 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
 
                     if (TEXT_SPACES_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
-                        textUnits.push(makeUnitObject(c, TEXT_TYPE_SPACE));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                        }));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: c,
+                            [UNIT_TYPE]: TEXT_TYPE_SPACE
+                        }));
                         unit.length = 0;
                     }
                     else unit.push(c);
                 });
 
                 // Capturing the last word
-                if (unit.length) textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
+                if (unit.length) textUnits.push(requestUnit({
+                    [UNIT_CHARS]: unit.join(ZERO_STR),
+                    [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                }));
             }
         }
         else {
@@ -1641,12 +1538,18 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
 
                     if (TEXT_SPACES_REGEX.test(c)) {
 
-                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_SPACE));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_SPACE,
+                        }));
                         unit.length = 0;
                     }
                     else  {
 
-                        textUnits.push(makeUnitObject(unit.join(ZERO_STR), TEXT_TYPE_CHARS));
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                        }));
                         unit.length = 0;
                     }
                 }
@@ -1654,9 +1557,7 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
         }
 
         this.assessTextForStyle();
-
         this.measureTextUnits();
-
         this.dirtyTextLayout = true;
     }
 };
@@ -1666,7 +1567,7 @@ console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks:
 // + Note that styling on a per-TextUnit basis requires CSS code; there is no way to directly style a TextUnit in SC except by manually replacing its `style` attribute object in code (which is dangerous and definitely not guaranteed to work!)
 P.assessTextForStyle = function () {
 
-console.log(this.name, `assessTextForStyle (trigger: none - called directly by cleanText)`);
+// console.log(this.name, `assessTextForStyle (trigger: none - called directly by cleanText)`);
 
     const tester = this.getTester();
 
@@ -1910,21 +1811,21 @@ console.log(this.name, `assessTextForStyle (trigger: none - called directly by c
 // + Takes into account the styling for each TextUnit, which can have a significant impact on the amount of space it requires on a line.
 P.measureTextUnits = function () {
 
-console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)');
+// console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)');
 
     const { textUnits, defaultTextStyle, state, hyphenString, truncateString } = this;
 
     const mycell = requestCell(),
         engine = mycell.engine;
 
-    let res, chars, type, style, len, nextUnit, nextStyle, nextChars, nextType, nextLen, unkernedLen;
+    let res, chars, charType, style, len, nextUnit, nextStyle, nextChars, nextType, nextLen, unkernedLen;
 
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'measure-worker');
     this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mycell);
 
     textUnits.forEach(t => {
 
-        ({chars, type, style} = t);
+        ({chars, charType, style} = t);
 
         if (style)  this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
 
@@ -1932,12 +1833,12 @@ console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)')
 
         t.len = res.width;
 
-        if (type === TEXT_TYPE_SPACE) {
+        if (charType === TEXT_TYPE_SPACE) {
 
             t.len += currentTextStyle.wordSpaceValue;
             t.height = 0;
         }
-        else if (type === TEXT_TYPE_SOFT_HYPHEN) {
+        else if (charType === TEXT_TYPE_SOFT_HYPHEN) {
 
             res = engine.measureText(hyphenString);
             t.replaceLen = res.width;
@@ -1959,7 +1860,7 @@ console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)')
 
         textUnits.forEach((unit, index) => {
 
-            ({chars, type, style, len} = unit);
+            ({chars, charType, style, len} = unit);
 
             if (style) this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mycell);
 
@@ -1971,10 +1872,10 @@ console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)')
                 // No need to kern the last textUnit
                 if (nextUnit) {
 
-                    ({ style: nextStyle, chars: nextChars, type: nextType, len: nextLen} = nextUnit);
+                    ({ style: nextStyle, chars: nextChars, charType: nextType, len: nextLen} = nextUnit);
 
                     // We don't need to kern anything next to a space, or the space itself
-                    if (type !== TEXT_TYPE_SPACE && nextType !== TEXT_TYPE_SPACE) {
+                    if (charType !== TEXT_TYPE_SPACE && nextType !== TEXT_TYPE_SPACE) {
 
                         // We won't kern anything that's changing style in significant ways
                         if (!nextStyle || !(nextStyle.fontFamily || nextStyle.fontSize || nextStyle.fontVariantCaps)) {
@@ -1998,27 +1899,50 @@ console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)')
 // + TODO: The assumption here is that if we are laying text along a path, there will only be one line with a length equal to the layout engine's path length. In such cases we won't need to care about soft hyphens, but will need to care about truncation (regardless of whether we allow the text to wrap itself along the line)
 P.layoutText = function () {
 
-console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLayout}, checks: currentFontIsLoaded' ${this.currentFontIsLoaded})`);
+// console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLayout}, checks: currentFontIsLoaded' ${this.currentFontIsLoaded})`, this.lines.length, this.textUnits.length);
 
     if (this.currentFontIsLoaded) {
 
-        if (this?.lines.length && this?.textUnits.length) {
+        const { useLayoutTemplateAsPath, lines, textUnits, layoutTemplate } = this;
 
-            this.dirtyTextLayout = false;
+        if (useLayoutTemplateAsPath) {
 
-            this.lines.forEach(line => {
+            if (layoutTemplate && layoutTemplate.useAsPath) {
 
-                line.unitData.length = 0;
-            });
+                this.dirtyTextLayout = false;
 
-            this.textUnits.forEach(unit => {
+                releaseLine(...lines);
+                lines.length = 0;
 
-                unit.stampFlag = true;
-                unit.lineOffset = 0;
-            });
+                lines.push(requestLine({
+                    length: layoutTemplate.length,
+                    isPathEntity: true,
+                }));
 
-            this.assignTextUnitsToLines();
-            this.positionTextUnits();
+                this.assignTextUnitsToLines();
+                this.positionTextUnits();
+            }
+        }
+        else {
+
+            if (lines.length && textUnits.length) {
+
+                this.dirtyTextLayout = false;
+
+                lines.forEach(line => {
+
+                    line.unitData.length = 0;
+                });
+
+                textUnits.forEach(unit => {
+
+                    unit.stampFlag = true;
+                    unit.lineOffset = 0;
+                });
+
+                this.assignTextUnitsToLines();
+                this.positionTextUnits();
+            }
         }
     }
 };
@@ -2028,7 +1952,7 @@ console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLay
 // + TODO: The assumption here is that if we are laying text along a path, there will only be one line with a length equal to the layout engine's path length. In such cases we won't need to care about soft hyphens, but will need to care about truncation (regardless of whether we allow the text to wrap itself along the line)
 P.assignTextUnitsToLines = function () {
 
-console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layoutText)');
+// console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layoutText)');
 
     const {
         lines,
@@ -2040,7 +1964,7 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
 
     let unitCursor = 0,
         lengthRemaining,
-        i, unit, unitData, unitAfter, len, lineLength, type;
+        i, unit, unitData, unitAfter, len, lineLength, charType;
 
     const addUnit = function (len) {
 
@@ -2062,7 +1986,7 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
 
             unit = textUnits[i];
 
-            ({ len, type } = unit);
+            ({ len, charType } = unit);
 
             // Check: is there room for the text unit
             if (len < lengthRemaining) {
@@ -2073,7 +1997,7 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
                     unit = textUnits[i + 1];
 
                     // Next text unit is a soft hyphen
-                    if (unit && unit?.type === TEXT_TYPE_SOFT_HYPHEN) {
+                    if (unit && unit?.charType === TEXT_TYPE_SOFT_HYPHEN) {
 
                         unitAfter = textUnits[i + 2];
 
@@ -2124,7 +2048,7 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
 
             acc = unitData.reduce((a, v) => {
 
-                if (textUnits[v] && textUnits[v].type === TEXT_TYPE_CHARS) a++
+                if (textUnits[v] && textUnits[v].charType === TEXT_TYPE_CHARS) a++
                 return a;
 
             }, 0);
@@ -2157,9 +2081,9 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
 
                 if (unit) {
 
-                    ({ len, replaceLen, type } = unit);
+                    ({ len, replaceLen, charType } = unit);
 
-                    if (type !== TEXT_TYPE_CHARS && type !== TEXT_TYPE_SOFT_HYPHEN) {
+                    if (charType !== TEXT_TYPE_CHARS && charType !== TEXT_TYPE_SOFT_HYPHEN) {
 
                         acc -= len;
                         mutableUnitData.pop();
@@ -2191,7 +2115,7 @@ console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layout
 // + Position each TextUnit within the space contained by the layout entity, along multiple lines
 P.positionTextUnits = function () {
 
-console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText)');
+// console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText)');
 
     if (this.useLayoutTemplateAsPath) this.positionTextUnitsAlongPath();
     else this.positionTextUnitsInSpace();
@@ -2201,8 +2125,91 @@ console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText)
 // `positionTextUnitsAlongPath` - Position each TextUnit along a single-line path of the layout entity (if possible)
 P.positionTextUnitsAlongPath = function () {
 
-console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits)');
+// console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits)');
 
+    const {
+        lines,
+        textUnits,
+        layoutTemplate,
+        pathPosition,
+        defaultTextStyle,
+        textHandle,
+        textOffset,
+        alignment,
+    } = this;
+
+    const { length, unitData } = lines[0];
+    const dir = defaultTextStyle.direction;
+
+    let currentPos = pathPosition,
+        currentLen = length * currentPos,
+        accumulatedLen = 0,
+        u, unit,
+        len, height, kernOffset, localHandle, localOffset,
+        startData, startCorrection, boxData, localAlignment,
+        temp, tempX, tempY,
+        x, y, angle,
+        handleX, handleY,
+        offsetX, offsetY;
+
+    for (let i = 0, iz = unitData.length; i < iz; i++) {
+
+        u = unitData[i];
+
+        if (u.toFixed) {
+
+            unit = textUnits[unitData[i]];
+
+            ({ len, height, kernOffset, localHandle, localOffset, startData, startCorrection, boxData, localAlignment } = unit);
+
+            accumulatedLen += len;
+
+            if (accumulatedLen < length) {
+
+                temp = localHandle[0] || textHandle[0] || 0;
+                handleX = this.getTextHandleX(temp, len, dir);
+
+                temp = localHandle[1] || textHandle[1] || 0;
+                handleY = this.getTextHandleY(temp, height, dir);
+
+                temp = localOffset[0] || textOffset[0] || 0;
+                offsetX = this.getTextOffset(temp, len);
+
+                temp = localOffset[1] || textOffset[1] || 0;
+                offsetY = this.getTextOffset(temp, height);
+
+                currentLen += handleX;
+                if (currentLen >= length) currentLen -= length;
+                currentPos = currentLen / length;
+
+                unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
+                ({x, y, angle} = unit.pathData);
+
+                tempX = x + offsetX - handleX;
+                tempY = y + offsetY - handleY;
+
+                startData[0] = x;
+                startData[1] = y;
+
+                startCorrection[0] = tempX - x;
+                startCorrection[1] = tempY - y;
+
+                unit.startRotation = (localAlignment + alignment + angle) * _radian;
+
+                boxData.length = 0;
+                boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
+
+                currentLen += len - kernOffset - handleX;
+            }
+            else {
+
+                // Attempt to add the truncation chars to the output
+
+                // And then get out - nothing else will fit on the path
+                break;
+            }
+        }
+    }
 };
 
 
@@ -2211,7 +2218,7 @@ console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by po
 // + Line justification requirements
 P.positionTextUnitsInSpace = function () {
 
-console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits)');
+// console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits)');
 
     const {
         lines,
@@ -2251,7 +2258,7 @@ console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by posi
                     unit = textUnits[unitIndex];
 
                     // We ignore spaces at the start/end of the line
-                    if ((dataIndex === 0 || dataIndex === unitIndices) && unit.type === TEXT_TYPE_SPACE) unit.stampFlag = false;
+                    if ((dataIndex === 0 || dataIndex === unitIndices) && unit.charType === TEXT_TYPE_SPACE) unit.stampFlag = false;
 
                     // Populate the initialDistances array, and keep a running total of the current length used
                     if (unit.stampFlag) {
@@ -2260,7 +2267,7 @@ console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by posi
                         unitLengths += unit.len - unit.kernOffset;
 
                         // keep a count of the number of spaces within the line
-                        if (justifyLine === SPACE_BETWEEN && unit.type === TEXT_TYPE_SPACE) noOfSpaces++;
+                        if (justifyLine === SPACE_BETWEEN && unit.charType === TEXT_TYPE_SPACE) noOfSpaces++;
                     }
                 }
             });
@@ -2318,7 +2325,7 @@ console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by posi
 
                         unitIndices++
 
-                        if (unit.type === TEXT_TYPE_SPACE) {
+                        if (unit.charType === TEXT_TYPE_SPACE) {
 
                             for (let i = unitIndices, iz = adjustedDistances.length; i < iz; i++) {
 
@@ -2357,7 +2364,7 @@ console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by posi
 // `positionTextDecoration` - Recovers data which can be used for building underline, overline and highlight Path2D objects
 P.positionTextDecoration = function () {
 
-console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInSpace)');
+// console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInSpace)');
 
     const {
         lines,
@@ -2403,8 +2410,6 @@ console.log(this.name, 'positionTextDecoration (trigger: none - called by positi
     lines.forEach(line => {
 
         unitData = line.unitData;
-
-        line.maxHeight = fontSizeValue;
 
         unitData.forEach(u => {
 
@@ -2611,7 +2616,7 @@ const generatePath = (coord, out, back, style, pos, start, rot, paths) => {
 // `buildHighlightPaths` - internal function. Calculates a set of coordinates for contiguous blocks of highlight areas on a line
 P.buildHighlightPaths = function () {
 
-console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
+// console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
 
     const { lines, textUnits, layoutTemplate, highlightPaths, alignment } = this;
     const { currentStampPosition } = layoutTemplate;
@@ -2670,7 +2675,7 @@ console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionT
 // `buildOverlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of overline areas on a line
 P.buildOverlinePaths = function () {
 
-console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInSpace)');
+// console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInSpace)');
 
     const { lines, textUnits, layoutTemplate, overlinePaths, alignment } = this;
     const { currentStampPosition } = layoutTemplate;
@@ -2729,7 +2734,7 @@ console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTe
 // `buildUnderlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of underline areas on a line
 P.buildUnderlinePaths = function () {
 
-console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInSpace)');
+// console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInSpace)');
 
     const { lines, textUnits, layoutTemplate, underlinePaths, alignment } = this;
     const { currentStampPosition } = layoutTemplate;
@@ -2878,6 +2883,232 @@ P.regularStamp = function () {
 };
 
 
+// `regularStampAlongPath` - For text positioned along a path-based entity's perimeter
+P.regularStampAlongPath = function () {
+
+    const currentHost = this.currentHost;
+
+    if (currentHost) {
+
+        const workingCells = this.createTextCellsForPath(currentHost);
+
+        if (workingCells) {
+
+            const { element, engine } = currentHost;
+            const { copyCell, mainCell } = workingCells;
+
+            const finalCell = requestCell(element.width, element.height);
+
+            const finalElement = finalCell.element;
+            const finalEngine = finalCell.engine;
+
+            const underlineCell = this.createUnderlineCellForPath(currentHost, copyCell);
+            const overlineCell = this.createOverlineCellForPath(currentHost);
+            const highlightCell = this.createHighlightCellForPath(currentHost);
+
+            if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
+
+            finalEngine.drawImage(mainCell.element, 0, 0);
+
+            if (overlineCell) finalEngine.drawImage(overlineCell.element, 0, 0);
+
+            if (highlightCell) {
+
+                finalEngine.globalCompositeOperation = 'destination-over';
+                finalEngine.drawImage(highlightCell.element, 0, 0);
+            }
+
+            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.drawImage(finalElement, 0, 0);
+
+            releaseCell(copyCell, mainCell, overlineCell, highlightCell, finalCell);
+        }
+    }
+};
+
+P.createTextCellsForPath = function (host) {
+
+    const el = host.element;
+    const uCell = requestCell(el.width, el.height);
+    const mCell = requestCell(el.width, el.height);
+
+    if (uCell && mCell) {
+
+        const uEngine = uCell.engine;
+        const mEngine = mCell.engine;
+
+        const {
+            state,
+            lines,
+            textUnits,
+            defaultTextStyle,
+        } = this;
+
+        const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+
+        this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
+        this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
+
+        const line = lines[0];
+
+        if (line) {
+
+            const { unitData } = line;
+
+            let unit, startData, startCorrection, chars, style, x, y, dx, dy, startRotation, cos, sin;
+
+            unitData.forEach(u => {
+
+                unit = textUnits[u];
+
+                if (unit) {
+
+                    ({ startData, startCorrection, startRotation, chars, style } = unit);
+
+                    if (style) {
+
+                        this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, uCell);
+                        uEngine.lineWidth = currentTextStyle.underlineGap;
+
+                        this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mCell);
+                    }
+
+                    [x, y] = startData;
+                    [dx, dy] = startCorrection;
+
+                    cos = _cos(startRotation);
+                    sin = _sin(startRotation);
+
+                    uEngine.setTransform(cos, sin, -sin, cos, x, y);
+                    mEngine.setTransform(cos, sin, -sin, cos, x, y);
+
+                    // This is where we'd add in any special local additional rotations
+
+                    uEngine.strokeText(chars, dx, dy);
+                    uEngine.fillText(chars, dx, dy);
+
+                    switch (currentTextStyle.method) {
+
+                        case DRAW :
+                            mEngine.strokeText(chars, dx, dy);
+                            break;
+
+                        case FILL_AND_DRAW :
+                            mEngine.fillText(chars, dx, dy);
+                            mEngine.strokeText(chars, dx, dy);
+                            break;
+
+                        case DRAW_AND_FILL :
+                            mEngine.strokeText(chars, dx, dy);
+                            mEngine.fillText(chars, dx, dy);
+                            break;
+
+                        default:
+                            mEngine.fillText(chars, dx, dy);
+                    }
+                }
+            });
+        }
+
+        return {
+            copyCell: uCell,
+            mainCell: mCell,
+        };
+    }
+    return null;
+};
+
+P.createUnderlineCellForPath = function (host, textCell) {
+
+    // const { layoutTemplate, underlinePaths } = this;
+
+    // if (underlinePaths.length) {
+
+    //     const el = host.element;
+    //     const mycell = requestCell(el.width, el.height);
+
+    //     if (mycell) {
+
+    //         const engine = mycell.engine;
+    //         const textEngine = textCell.engine;
+
+    //         mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
+    //         engine.rotate(rotation);
+
+    //         underlinePaths.forEach(data => {
+
+    //             engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
+    //             engine.fill(data[1]);
+    //         });
+
+    //         textEngine.globalCompositeOperation = 'source-out';
+    //         textEngine.setTransform(1, 0, 0, 1, 0, 0);
+    //         textEngine.drawImage(mycell.element, 0, 0);
+
+    //         releaseCell(mycell);
+
+    //         return textCell;
+    //     }
+    // }
+    return null;
+};
+
+P.createOverlineCellForPath = function (host) {
+
+    // const { layoutTemplate, overlinePaths } = this;
+
+    // if (overlinePaths.length) {
+
+    //     const el = host.element;
+    //     const mycell = requestCell(el.width, el.height);
+
+    //     if (mycell) {
+
+    //         const engine = mycell.engine;
+
+    //         mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
+    //         engine.rotate(rotation);
+
+    //         overlinePaths.forEach(data => {
+
+    //             engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
+    //             engine.fill(data[1]);
+    //         });
+
+    //         return mycell;
+    //     }
+    // }
+    return null;
+};
+
+P.createHighlightCellForPath = function (host) {
+
+    // const { layoutTemplate, highlightPaths } = this;
+
+    // if (highlightPaths.length) {
+
+    //     const el = host.element;
+    //     const mycell = requestCell(el.width, el.height);
+
+    //     if (mycell) {
+
+    //         const engine = mycell.engine;
+
+    //         mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
+    //         engine.rotate(rotation);
+
+    //         this.highlightPaths.forEach(data => {
+
+    //             engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
+    //             engine.fill(data[1]);
+    //         });
+
+    //         return mycell;
+    //     }
+    // }
+    return null;
+};
+
 P.regularStampInSpace = function () {
 
     const currentHost = this.currentHost;
@@ -2981,7 +3212,7 @@ P.createTextCells = function (host, rotation) {
 
         const coord = requestCoordinate();
 
-        let sx, sy, unitData, unit, style, chars, stampFlag, type, stampPos, len, replaceLen, ox, oy, fx, fy;
+        let sx, sy, unitData, unit, style, chars, stampFlag, charType, stampPos, len, replaceLen, ox, oy, fx, fy;
 
         const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
 
@@ -3070,7 +3301,7 @@ P.createTextCells = function (host, rotation) {
 
                     unit = textUnits[u];
 
-                    ({style, chars, stampPos, stampFlag, type} = unit);
+                    ({style, chars, stampPos, stampFlag, charType} = unit);
 
                     if (style) {
 
@@ -3080,7 +3311,7 @@ P.createTextCells = function (host, rotation) {
                         this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mCell);
                     }
 
-                    if (stampFlag && type !== TEXT_TYPE_SPACE) {
+                    if (stampFlag && charType !== TEXT_TYPE_SPACE) {
 
                         [ox, oy] = unit.stampPos;
 
@@ -3213,25 +3444,6 @@ P.createHighlightCell = function (host, rotation) {
 };
 
 
-// `regularStampAlongPath` - For text positioned along a path-based entity's perimeter
-P.regularStampAlongPath = function () {
-
-    const dest = this.currentHost;
-
-    if (dest) {
-
-        const layout = this.layoutTemplate;
-
-        if (layout) {
-
-            // const engine = dest.engine;
-
-            // const { lines, textUnits } = this;
-        }
-    }
-};
-
-
 // #### Factory
 // ```
 // scrawl.makeEnhancedLabel({
@@ -3250,3 +3462,347 @@ export const makeEnhancedLabel = function (items) {
 };
 
 constructors.EnhancedLabel = EnhancedLabel;
+
+
+// #### Module variables and functions
+const textEntityConverter = document.createElement(DIV);
+
+// UnitObject pool
+const UNIT_CHARS = 'chars',
+    UNIT_TYPE = 'charType';
+
+const UnitObject = function () {
+
+    this.stampPos = makeCoordinate();
+    this.startData = makeCoordinate();
+    this.startCorrection = makeCoordinate();
+
+    this.boxData = [];
+
+    this.localHandle = [];
+    this.localOffset = [];
+
+    this.highlightBack = [];
+    this.highlightOut = [];
+
+    this.overlineBack = [];
+    this.overlineOut = [];
+
+    this.underlineBack = [];
+    this.underlineOut = [];
+
+    this.set(this.defs);
+
+    return this;
+};
+
+const U = UnitObject.prototype = doCreate();
+U.type = T_ENHANCED_LABEL_UNIT;
+
+U.defs = {
+    chars: ZERO_STR,
+    charType: ZERO_STR,
+    index: 0,
+
+    style: null,
+
+    pathData: null,
+    pathPos: 0,
+
+    stampFlag: true,
+    startData: null,
+    startCorrection: null,
+
+    // Want to deprecate in favour of startData
+    stampPos: null,
+
+    localHandle: null,
+    localOffset: null,
+
+    boxData: null,
+
+    localAlignment: 0,
+    startRotation: 0,
+
+    lineOffset: 0,
+
+    len: 0,
+    height: 0,
+    kernOffset: 0,
+    replaceLen: 0,
+
+    highlightBack: null,
+    highlightOut: null,
+    highlightStyle: ZERO_STR,
+
+    overlineBack: null,
+    overlineOut: null,
+    overlineStyle: ZERO_STR,
+
+    underlineBack: null,
+    underlineOut: null,
+    underlineStyle: ZERO_STR,
+    underlineGap: 0,
+};
+U.defKeys = _keys(U.defs);
+
+U.set = function (items = Ωempty) {
+
+    for (const [key, value] of _entries(items)) {
+
+        if (this.defKeys.includes(key)) {
+
+            switch (key) {
+
+                case 'stampPos' :
+                case 'startData' :
+                case 'startCorrection' :
+
+                    if (value != null) this[key].set(value);
+                    else this[key].zero();
+                    break;
+
+                case 'localHandleX' :
+
+                    if (value != null) this.localHandle[0] = value;
+                    else this.localHandle[0] = null;
+                    break;
+
+                case 'localHandleY' :
+
+                    if (value != null) this.localHandle[1] = value;
+                    else this.localHandle[1] = null;
+                    break;
+
+                case 'localHandle' :
+
+                    if (value != null) {
+
+                        this.localHandle[0] = value[0];
+                        this.localHandle[1] = value[1];
+                    }
+                    else {
+
+                        this.localHandle[0] = null;
+                        this.localHandle[1] = null;
+                    }
+                    break;
+
+                case 'localOffsetX' :
+
+                    if (value != null) this.localOffset[0] = value;
+                    else this.localOffset[0] = null;
+                    break;
+
+                case 'localOffsetY' :
+
+                    if (value != null) this.localOffset[1] = value;
+                    else this.localOffset[1] = null;
+                    break;
+
+                case 'localOffset' :
+
+                    if (value != null) {
+
+                        this.localOffset[0] = value[0];
+                        this.localOffset[1] = value[1];
+                    }
+                    else {
+
+                        this.localOffset[0] = null;
+                        this.localOffset[1] = null;
+                    }
+                    break;
+
+                case 'highlightBack' :
+                case 'highlightOut' :
+                case 'overlineBack' :
+                case 'overlineOut' :
+                case 'underlineBack' :
+                case 'underlineOut' :
+                case 'boxData' :
+
+                    this[key].length = 0;
+                    if (value != null) this[key].push(...value);
+                    break;
+
+                default :
+                    if (value != null) this[key] = value;
+                    else this[key] = this.defs[key];
+            }
+        }
+    }
+    return this;
+};
+
+U.reset = function () {
+
+    this.set(this.defs);
+    return this;
+};
+
+// const makeUnitObject = (chars, type) => new LineObject(chars, type);
+
+const unitPool = [];
+
+const requestUnit = function (items = Ωempty) {
+
+    if (!unitPool.length) unitPool.push(new UnitObject());
+
+    const u = unitPool.shift();
+    u.set(items);
+
+    return u
+};
+
+// `exported function` - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.
+const releaseUnit = function (...args) {
+
+    args.forEach(u => {
+
+        if (u && u.type === T_ENHANCED_LABEL_UNIT) unitPool.push(u.reset());
+    });
+};
+
+
+// UnitObject pool
+const LineObject = function () {
+
+    this.startAt = makeCoordinate();
+    this.endAt = makeCoordinate();
+
+    this.unitData = [];
+
+    this.set(this.defs);
+
+    return this;
+};
+const L = LineObject.prototype = doCreate();
+L.type = T_ENHANCED_LABEL_LINE;
+
+L.defs = {
+    length: 0,
+    isPathEntity: false,
+    startAt: null,
+    endAt: null,
+    unitData: null,
+};
+L.defKeys = _keys(L.defs);
+
+L.set = function (items = Ωempty) {
+
+    for (const [key, value] of _entries(items)) {
+
+        if (this.defKeys.includes(key)) {
+
+            switch (key) {
+
+                case 'startAt' :
+                case 'endAt' :
+
+                    if (value != null) this[key].set(value);
+                    else this[key].zero();
+                    break;
+
+                case 'unitData' :
+
+                    this[key].length = 0;
+                    if (value != null) this[key].push(...value);
+                    break;
+
+                default :
+                    if (value != null) this[key] = value;
+                    else this[key] = this.defs[key];
+            }
+        }
+    }
+    return this;
+};
+
+L.reset = function () {
+
+    this.set(this.defs);
+    return this;
+};
+
+// Line object pool
+const linePool = [];
+
+const requestLine = function (items = Ωempty) {
+
+    if (!linePool.length) linePool.push(new LineObject());
+
+    const l = linePool.shift();
+    l.set(items);
+
+    return l;
+};
+
+const releaseLine = function (...args) {
+
+    args.forEach(l => {
+
+        if (l && l.type === T_ENHANCED_LABEL_LINE) linePool.push(l.reset());
+    });
+};
+
+
+// Line object pool
+const TextUnitArray = function () {
+
+    const arr = [];
+
+    _setPrototypeOf(arr, TextUnitArray.prototype);
+
+    return arr;
+};
+
+
+// #### Coordinate prototype
+const A = TextUnitArray.prototype = _create(Array.prototype);
+A.constructor = TextUnitArray;
+A.type = T_ENHANCED_LABEL_UNITARRAY;
+
+const makeTextUnitArray = () => new TextUnitArray();
+
+A.findByIndex = function (index) {
+
+    let item;
+
+    for (let i = 0, iz = this.length; i < iz; i++) {
+
+        item = this[i];
+
+        if (item.index === index) return item;
+    }
+    return null;
+};
+
+A.findFirstByChars = function (chars) {
+
+    let item;
+
+    for (let i = 0, iz = this.length; i < iz; i++) {
+
+        item = this[i];
+
+        if (item.chars.includes(chars)) return item;
+    }
+    return null;
+};
+
+A.findAllByChars = function (chars) {
+
+    let item;
+
+    const res = [];
+
+    for (let i = 0, iz = this.length; i < iz; i++) {
+
+        item = this[i];
+
+        if (item.chars.includes(chars)) res.push(item);
+    }
+    return res;
+};
+

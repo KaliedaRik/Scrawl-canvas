@@ -355,17 +355,6 @@ interface FilterMixinFunctions {
 
 
 
-// Label mixin
-// -------------------------------------
-interface LabelMixinDeltaInputs {}
-
-interface LabelMixinInputs {}
-
-interface LabelMixinFunctions {
-    recalculateFont: () => void;
-}
-
-
 
 // Mimic mixin
 // -------------------------------------
@@ -1270,6 +1259,7 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
     alignment?: number;
     layoutTemplateLineOffset?: number;
     lineSpacing?: number;
+    pathPosition?: number;
 }
 
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
@@ -1289,7 +1279,6 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     hyphenString?: string;
     justifyLine?: TextLineJustifyValues;
     layoutTemplate?: ArtefactInstance | string;
-    layoutTemplatePathStart?: number;
     method?: MethodValues;
     noDeltaUpdates?: boolean;
     order?: number;
@@ -1634,16 +1623,16 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 
 // LabelInstance factory
 // -------------------------------------
-interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, LabelMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
+interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
 
-interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
+interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
     delta?: LabelFactoryDeltaInputs;
     text?: string;
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
 
-interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions, LabelMixinFunctions {
+interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
     clone: (item?: LabelFactoryInputs) => LabelInstance;
     saveAsPacket: (item?: LabelSaveInputs | boolean) => string;
     set: (item?: LabelFactoryInputs) => LabelInstance;

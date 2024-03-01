@@ -9,46 +9,18 @@
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <link href="css/fontface-declarations.css" rel="stylesheet" />
 
   <style>
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
-
-/*
-EB Garamond (common alphabetic) - Serif, with regular, bold, italic and bolditalic versions
-*/
-    @font-face {
-      font-family: "Garamond";
-      src: url("fonts/EBGaramond-Regular.ttf") format("opentype");
+    .controls.position {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
     }
-    @font-face {
-      font-family: "Garamond";
-      src: url("fonts/EBGaramond-Bold.ttf") format("opentype");
-      font-weight: bold;
-    }
-    @font-face {
-      font-family: "Garamond";
-      src: url("fonts/EBGaramond-Italic.ttf") format("opentype");
-      font-style: italic;
-    }
-    @font-face {
-      font-family: "Garamond";
-      src: url("fonts/EBGaramond-BoldItalic.ttf") format("opentype");
-      font-weight: bold;
-      font-style: italic;
-    }
-
-/*
-Roboto Flex (common alphabetic) - variable font
-See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
-*/
-    @font-face {
-      font-family: "Roboto Flex";
-      src: url("fonts/RobotoFlex-VariableFont.ttf") format("opentype");
-      font-weight: 100 900;
-      font-stretch: 25% 150%;
-      font-style: oblique 0deg 10deg;
+    #preload-fonts {
+      height: 0;
+      overflow: hidden;
     }
   </style>
 </head>
@@ -63,109 +35,176 @@ See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
   <h3>Drag and drop the Label around the canvas</h3>
 
   <div class="controls">
-    <div class="green label">Font</div>
-    <div class="green">
-      <select class="controlItem" id="fontString">
-        <option value="40px Garamond">Garamond (normal)</option>
-        <option value="bold 40px Garamond">Garamond (bold)</option>
-        <option value="italic 40px Garamond">Garamond (italic)</option>
-        <option value="bold italic 40px Garamond">Garamond (bold italic)</option>
-        <option value="40px 'Roboto Flex'">Roboto Flex (variable)</option>
+    <div class="pink label">Select font</div>
+    <div class="pink">
+      <select class="controlItem" id="font">
+        <option value="serif">serif</option>
+        <option value="sans-serif">sans-serif</option>
+        <option value="monospace">monospace</option>
+        <option value="cursive">cursive</option>
+        <option value="fantasy">fantasy</option>
+        <option value="garamond">Garamond</option>
+        <option value="roboto">Roboto</option>
+        <option value="roboto-serif">Roboto Serif</option>
+        <option value="roboto-mono">Roboto Mono</option>
+        <option value="noto-arabic-sans">Noto Arabic Sans</option>
+        <option value="noto-arabic-naskh">Noto Arabic Naskh</option>
+        <option value="noto-urdu-nastaliq">Noto Urdu Nastaliq</option>
+        <option value="noto-chinese-simple-sans">Noto Chinese Simple Sans</option>
+        <option value="noto-chinese-simple-serif">Noto Chinese Simple Serif</option>
+        <option value="noto-devangari-sans">Noto Devangari Sans</option>
+        <option value="noto-devangari-serif">Noto Devangari Serif</option>
+        <option value="noto-hebrew-sans">Noto Hebrew Sans</option>
+        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
+        <option value="noto-japanese-sans">Noto Japanese Sans</option>
+        <option value="noto-japanese-serif">Noto Japanese Serif</option>
+        <option value="noto-korean-sans">Noto Korean Sans</option>
+        <option value="noto-korean-serif">Noto Korean Serif</option>
+        <option value="noto-mongolian-sans">Noto Mongolian Sans</option>
+        <option value="noto-tai-le-sans">Noto Tai Le Sans</option>
+        <option value="noto-tai-tham-sans">Noto Tai Tham Sans</option>
+        <option value="noto-thai-sans">Noto Thai Sans</option>
+        <option value="noto-thai-serif">Noto Thai Serif</option>
+        <option value="noto-tirhuta-sans">Noto Tirhuta Sans</option>
+        <option value="bungee">Bungee</option>
+        <option value="carter-one">Carter One</option>
+        <option value="mountains-of-christmas">Mountains Of Christmas</option>
       </select>
     </div>
 
-    <div class="green label">Font size</div>
-    <div class="green">
-      <select class="controlItem" id="fontSize">
-        <option value="40px">40px</option>
-        <option value="3em">3em</option>
-        <option value="280%">280%</option>
-        <option value="5vmax">5vmax</option>
-        <option value="5cap">5cap</option>
+    <div class="pink label">Animation</div>
+    <div class="pink">
+      <select class="controlItem" id="animation">
+        <option value="">off</option>
+        <option value="on">on</option>
+      </select>
+    </div>
+    
+    <div class="pink label">Text handle X</div>
+    <div class="pink">
+      <select class="controlItem" id="textHandleX">
+        <option value="left">left</option>
+        <option value="start">start</option>
+        <option value="center">center</option>
+        <option value="end">end</option>
+        <option value="right">right</option>
       </select>
     </div>
 
-    <div class="green label">Font weight (string)</div>
-    <div class="green">
-      <select class="controlItem" id="fontWeight-string">
-        <option value="normal">normal</option>
-        <option value="bold">bold</option>
-        <option value="bolder">bolder</option>
-        <option value="lighter">lighter</option>
+    <div class="pink label">Text handle Y</div>
+    <div class="pink">
+      <select class="controlItem" id="textHandleY">
+        <option value="top">top</option>
+        <option value="hanging">hanging</option>
+        <option value="middle">middle</option>
+        <option value="center">center</option>
+        <option value="alphabetic">alphabetic</option>
+        <option value="ideographic">ideographic</option>
+        <option value="bottom">bottom</option>
       </select>
     </div>
 
-    <div class="green label">Font weight (number)</div>
-    <div class="green">
-      <input class="controlItem" id="fontWeight-number" type="range" value="400" min="100" max="900" step="10" />
+    <div class="pink label">Alignment</div>
+    <div class="pink">
+      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
     </div>
 
-    <div class="green label">Font variant caps</div>
-    <div class="green">
-      <select class="controlItem" id="fontVariantCaps">
-        <option value="normal">normal</option>
-        <option value="small-caps">small-caps</option>
-        <option value="all-small-caps">all-small-caps</option>
-        <option value="petite-caps">petite-caps</option>
-        <option value="all-petite-caps">all-petite-caps</option>
-        <option value="unicase">unicase</option>
-        <option value="titling-caps">titling-caps</option>
+    <div class="pink label">Break text on spaces</div>
+    <div class="pink">
+      <select class="controlItem" id="breakTextOnSpaces">
+        <option value="false">false</option>
+        <option value="true">true</option>
       </select>
     </div>
-
-    <div class="green label">Font style</div>
-    <div class="green">
-      <select class="controlItem" id="fontStyle">
-        <option value="normal">normal</option>
-        <option value="italic">italic</option>
-        <option value="oblique">oblique</option>
-        <option value="oblique 2deg">oblique 2deg</option>
-        <option value="oblique 4deg">oblique 4deg</option>
-        <option value="oblique 6deg">oblique 6deg</option>
-        <option value="oblique 8deg">oblique 8deg</option>
-        <option value="oblique 10deg">oblique 10deg</option>
-      </select>
-    </div>
-
-    <div class="green label">Font stretch (string)</div>
-    <div class="green">
-      <select class="controlItem" id="fontStretch-string">
-        <option value="ultra-condensed">ultra-condensed</option>
-        <option value="extra-condensed">extra-condensed</option>
-        <option value="condensed">condensed</option>
-        <option value="semi-condensed">semi-condensed</option>
-        <option value="normal">normal</option>
-        <option value="semi-expanded">semi-expanded</option>
-        <option value="expanded">expanded</option>
-        <option value="extra-expanded">extra-expanded</option>
-        <option value="ultra-expanded">ultra-expanded</option>
-      </select>
-    </div>
-
-    <div class="green label">Font stretch (%)</div>
-    <div class="green">
-      <input class="controlItem" id="fontStretch-percent" type="range" value="100" min="25" max="150" step="1" />
-    </div>
-
+    
   </div>
 
   <canvas 
     id="mycanvas" 
     width="600" 
-    height="400"
+    height="600"
     data-scrawl-canvas
   ></canvas>
 
-  <div class="controls">
-    <div class="yellow label">Scale</div>
-    <div class="yellow">
-      <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
+  <div class="controls position">
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
     </div>
 
-    <div class="yellow label">Roll</div>
-    <div class="yellow">
-      <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
     </div>
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Offset ('n%')</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+
+    <div class="lavender label">Offset (n)</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipReverse">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipUpend">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
   </div>
 
   <p id="reportmessage"></p>
@@ -194,6 +233,35 @@ See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
     <p><b>Touch test:</b> should work as expected.</p>
 
     <p><a href="../docs/demo/canvas-206.html">Annotated code</a></p>
+  </div>
+
+  <div id="preload-fonts" aria-hidden="true">
+    <div style='font-family: "Garamond"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto Mono"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Arabic Naskh"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Urdu Nastaliq"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Chinese Simple Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Devangari Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Devangari Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Hebrew Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Hebrew Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Japanese Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Japanese Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Korean Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Korean Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Mongolian Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tai Le Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tai Tham Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Thai Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Thai Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tirhuta Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Bungee"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Carter One"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Mountains Of Christmas"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
   </div>
 
   <script src="canvas-206.js" type="module"></script>

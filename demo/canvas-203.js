@@ -428,9 +428,9 @@ const updateFont = (event) => {
                 });
                 break;
 
-            case 'noto-thai-looped-sans' :
+            case 'noto-thai-sans' :
                 mylabel.set({
-                    fontString: '50px "Noto Thai Looped Sans"',
+                    fontString: '50px "Noto Thai Sans"',
                     text: 'โดยที่การยอมรับศักดิ์ศ',
                     direction: 'ltr',
                 });

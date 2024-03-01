@@ -8,7 +8,7 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, POLITE, SOURCE_OVER, SYSTEM_FONTS, T_CANVAS, T_CELL } from '../helper/shared-vars.js';
+import { ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, POLITE, SYSTEM_FONTS, T_CANVAS, T_CELL } from '../helper/shared-vars.js';
 
 
 // #### Local variables
@@ -26,12 +26,6 @@ export default function (P = Ωempty) {
         accessibleText: DEF_SECTION_PLACEHOLDER,
         accessibleTextPlaceholder: DEF_SECTION_PLACEHOLDER,
         accessibleTextOrder: 0,
-
-        showBoundingBox: false,
-        boundingBoxStyle: BLACK,
-        boundingBoxLineWidth: 1,
-        boundingBoxLineDash: null,
-        boundingBoxLineDashOffset: 0,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -106,30 +100,6 @@ export default function (P = Ωempty) {
 console.log(this.name, 'convertTextEntityCharacters');
         textEntityConverter.innerHTML = item;
         return textEntityConverter.textContent;
-    };
-
-
-// `drawBoundingBox` - internal helper function called by `method` functions
-    P.drawBoundingBox = function (host) {
-
-        if (this.pathObject) {
-
-            const uStroke = this.getStyle(this.boundingBoxStyle, 'fillStyle', host);
-            const engine = host.engine;
-
-            engine.save();
-            engine.strokeStyle = uStroke;
-            engine.lineWidth = this.boundingBoxLineWidth;
-            engine.setLineDash(this.boundingBoxLineDash || []);
-            engine.lineDashOffset = this.boundingBoxLineDashOffset || 0;
-            engine.globalCompositeOperation = SOURCE_OVER;
-            engine.globalAlpha = 1;
-            engine.shadowOffsetX = 0;
-            engine.shadowOffsetY = 0;
-            engine.shadowBlur = 0;
-            engine.stroke(this.pathObject);
-            engine.restore();
-        }
     };
 
 

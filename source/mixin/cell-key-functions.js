@@ -303,6 +303,7 @@ export default function (P = Ωempty) {
     };
 
     // `getComputedFontSizes` - internal function - the Cell wrapper gets passed by Phrase entitys to its fontAttributes object, which then invokes it when calculating font sizes
+    // + TO BE DEPRECATED!
     P.getComputedFontSizes = function () {
 
         const host = this.getHost();
