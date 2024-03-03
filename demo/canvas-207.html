@@ -94,14 +94,21 @@
     <div class="lavender label">Layout template</div>
     <div class="lavender">
       <select class="controlItem" id="layoutTemplate">
-        <option value="block-engine">Block entity</option>
-        <option value="wheel-engine">Wheel entity</option>
-        <option value="crescent-engine">Crescent entity</option>
+        <option value="block-template">Block template</option>
+        <option value="wheel-template">Wheel template</option>
+        <option value="crescent-template">Crescent template</option>
       </select>
     </div>
 
-    <div class="lavender label">&nbsp;</div>
-    <div class="lavender">&nbsp;</div>
+    <div class="lavender label">Text unit flow</div>
+    <div class="lavender">
+      <select class="controlItem" id="textUnitFlow">
+        <option value="row">row</option>
+        <option value="row-reverse">row-reverse</option>
+        <option value="column">column</option>
+        <option value="column-reverse">column-reverse</option>
+      </select>
+    </div>
 
     <div class="lavender label">Justify line</div>
     <div class="lavender">
@@ -113,47 +120,97 @@
       </select>
     </div>
 
-    <div class="lavender label">Break text on spaces</div>
+    <div class="lavender label">Line spacing</div>
     <div class="lavender">
+      <input class="controlItem" id="lineSpacing" type="range" value="1.5" min="0" max="3" step="0.01" />
+    </div>
+
+    <div class="lavender label">Line adjustment</div>
+    <div class="lavender">
+      <input class="controlItem" id="lineAdjustment" type="range" value="0" min="-50" max="50" step="1" />
+    </div>
+
+    <div class="blue label">Break text on spaces</div>
+    <div class="blue">
       <select class="controlItem" id="breakTextOnSpaces">
         <option value="0">false</option>
         <option value="1" selected>true</option>
       </select>
     </div>
 
-    <div class="lavender label">Break word on hyphens</div>
-    <div class="lavender">
+    <div class="blue label">Break word on hyphens</div>
+    <div class="blue">
       <select class="controlItem" id="breakWordsOnHyphens">
         <option value="0">false</option>
         <option value="1" selected>true</option>
       </select>
     </div>
 
-    <div class="lavender label">Alignment</div>
-    <div class="lavender">
-      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
-    </div>
-
-    <div class="lavender label">Direction</div>
-    <div class="lavender">
-      <select class="controlItem" id="direction">
-        <option value="ltr">ltr</option>
-        <option value="rtl">rtl</option>
+    <div class="blue label">Truncate string</div>
+    <div class="blue">
+      <select class="controlItem" id="truncateString">
+        <option value="...">...</option>
+        <option value=" &darr;"> &darr;</option>
+        <option value="..ℹ️">..ℹ️</option>
       </select>
     </div>
 
-    <div class="lavender label">Line spacing</div>
-    <div class="lavender">
-      <input class="controlItem" id="lineSpacing" type="range" value="1.5" min="0" max="3" step="0.01" />
+    <div class="blue label">Hyphen string</div>
+    <div class="blue">
+      <select class="controlItem" id="hyphenString">
+        <option value="-">-</option>
+        <option value="~">~</option>
+        <option value="👉🏽">👉🏽</option>
+      </select>
     </div>
 
-    <div class="lavender label">Line offset</div>
-    <div class="lavender">
-      <input class="controlItem" id="layoutTemplateLineOffset" type="range" value="0.1" min="-20" max="20" step="1" />
+    <div class="green label">Alignment</div>
+    <div class="green">
+      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
     </div>
 
-    <div class="lavender label">Text handle Y</div>
-    <div class="lavender">
+    <div class="pink label">Show guidelines</div>
+    <div class="pink">
+      <select class="controlItem" id="showGuidelines">
+        <option value="0">false</option>
+        <option value="1" selected>true</option>
+      </select>
+    </div>
+
+    <div class="green label">Local alignment</div>
+    <div class="green">
+      <input class="controlItem" id="localAlignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
+    <div class="pink label">Guideline style</div>
+    <div class="pink">
+      <select class="controlItem" id="guidelineStyle">
+        <option value="">default</option>
+        <option value="red">red</option>
+        <option value="rgb(0 160 0 / 0.6)">rgb(0 160 0 / 0.6)</option>
+      </select>
+    </div>
+
+    <div class="green label">Text handle X</div>
+    <div class="green">
+      <select class="controlItem" id="textHandleX">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+
+    <div class="pink label">Guideline dash</div>
+    <div class="pink">
+      <select class="controlItem" id="guidelineDash">
+        <option value="[]">solid</option>
+        <option value="[8, 6, 4, 6]">dash</option>
+        <option value="[1, 5]">dots</option>
+      </select>
+    </div>
+
+    <div class="green label">Text handle Y</div>
+    <div class="green">
       <select class="controlItem" id="textHandleY">
         <option value="top">top</option>
         <option value="hanging">hanging</option>
@@ -162,50 +219,6 @@
         <option value="alphabetic">alphabetic</option>
         <option value="ideographic">ideographic</option>
         <option value="bottom">bottom</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Show guidelines</div>
-    <div class="lavender">
-      <select class="controlItem" id="showGuidelines">
-        <option value="0">false</option>
-        <option value="1" selected>true</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Guideline style</div>
-    <div class="lavender">
-      <select class="controlItem" id="guidelineStyle">
-        <option value="">default</option>
-        <option value="red">red</option>
-        <option value="rgb(0 160 0 / 0.6)">rgb(0 160 0 / 0.6)</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Guideline dash</div>
-    <div class="lavender">
-      <select class="controlItem" id="guidelineDash">
-        <option value="[]">solid</option>
-        <option value="[8, 6, 4, 6]">dash</option>
-        <option value="[1, 5]">dots</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Hyphen string</div>
-    <div class="lavender">
-      <select class="controlItem" id="hyphenString">
-        <option value="-">-</option>
-        <option value="~">~</option>
-        <option value="👉🏽">👉🏽</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Truncate string</div>
-    <div class="lavender">
-      <select class="controlItem" id="truncateString">
-        <option value="...">...</option>
-        <option value=" &darr;"> &darr;</option>
-        <option value="..ℹ️">..ℹ️</option>
       </select>
     </div>
 

@@ -27,6 +27,8 @@ const name = (n) => `${namespace}-${n}`;
 // Create Shape entity
 const arrow = makeShape({
 
+    name: name('arrow-path'),
+
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
     /*
@@ -60,6 +62,8 @@ const arrow = makeShape({
 // Create Wheel entity to pivot to the arrow
 makeWheel({
 
+    name: name('arrow-pin'),
+
     fillStyle: 'blue',
     radius: 5,
     handleX: 'center',
@@ -72,6 +76,8 @@ makeWheel({
 // Create the Wheel entitys that will use the arrow as their path
 // + This Wheel is a template from which we clone the other Wheels
 const myWheel = makeWheel({
+
+    name: name('bead-template'),
 
     fillStyle: 'red',
     radius: 3,
@@ -108,6 +114,7 @@ for (let i = 0.01; i < 1; i += 0.01) {
     else col = 'purple';
 
     myWheel.clone({
+        name: name(`bead-${col}-${parseInt(i * 100, 10)}`),
         pathPosition: i,
         fillStyle: col,
     });

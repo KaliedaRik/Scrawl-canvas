@@ -1252,21 +1252,18 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 // EnhancedLabelInstance factory
 // -------------------------------------
 type TextLineJustifyValues = 'start' | 'end' | 'center' | 'space-between';
+type TextUnitFlowValues = 'row' | 'row-reverse' | 'column' | 'column-reverse';
 type EnhancedLabelTextUnitHandleXValues = 'left' | 'right' | 'center';
 type EnhancedLabelTextUnitHandleYValues = 'top' | 'hanging' | 'center' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
 
 interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextStyleFactoryDeltaInputs {
     alignment?: number;
-    layoutTemplateLineOffset?: number;
+    lineAdjustment?: number;
     lineSpacing?: number;
     pathPosition?: number;
 }
 
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
-    accessibleText?: string;
-    accessibleTextOrder?: number;
-    accessibleTextPlaceholder?: string;
-    allowSubUnitStyling?: boolean;
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
     calculateOrder?: number;
@@ -1289,23 +1286,9 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     textHandleX?: EnhancedLabelTextUnitHandleXValues | number | string; 
     textHandleY?: EnhancedLabelTextUnitHandleYValues | number | string; 
     textIsAccessible?: boolean;
+    textUnitFlow?: TextUnitFlowValues;
     truncateString?: string;
-    updateOnLayoutDimensionsChange?: boolean;
-    updateOnLayoutFlipChange?: boolean;
-    updateOnLayoutHandleChange?: boolean;
-    updateOnLayoutOffsetChange?: boolean;
-    updateOnLayoutRotationChange?: boolean;
-    updateOnLayoutScaleChange?: boolean;
-    updateOnLayoutStartChange?: boolean;
-    useDocumentStyling?: boolean;
     useLayoutTemplateAsPath?: boolean;
-    useMimicDimensions?: boolean;               // use updateOnLayoutDimensionsChange
-    useMimicFlip?: boolean;                     // use updateOnLayoutFlipChange
-    useMimicHandle?: boolean;                   // use updateOnLayoutHandleChange
-    useMimicOffset?: boolean;                   // use updateOnLayoutOffsetChange
-    useMimicRotation?: boolean;                 // use updateOnLayoutRotationChange
-    useMimicScale?: boolean;                    // use updateOnLayoutScaleChange
-    useMimicStart?: boolean;                    // use updateOnLayoutStartChange
     visibility?: boolean;
 }
 
@@ -1319,6 +1302,8 @@ interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFu
     saveAsPacket: (item?: EnhancedLabelSaveInputs | boolean) => string;
     set: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
+    setTextUnit: (index: number, items: CommonObjectInput) => void;
+    setAllTextUnits: (items: CommonObjectInput) => void;
     simpleStamp: (host: CellInstance, items?: EnhancedLabelFactoryInputs) => void;
 }
 

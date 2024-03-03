@@ -15,7 +15,7 @@ import { currentGroup } from './canvas.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
-// import { releaseArray, requestArray } from '../helper/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
@@ -23,7 +23,7 @@ import textMix from '../mixin/text.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, ROW_REVERSE, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -118,8 +118,8 @@ const defaultAttributes = {
 // __pathStart__ - where to start text positioning along the layout engine path.
     pathPosition: 0,
 
-// __layoutTemplateLineOffset__ - how far away from the origin point the initial line should be.
-    layoutTemplateLineOffset: 0,
+// __lineAdjustment__ - how far away from the origin point the initial line should be.
+    lineAdjustment: 0,
 
 // __breakTextOnSpaces__ - boolean.
 // + When `true` (default), the textUnits will consist of words which are stamped as a unit (which preserves ligatures and kerning within the word).
@@ -133,12 +133,12 @@ const defaultAttributes = {
     breakWordsOnHyphens: false,
 
 // __justifyLine__ - string enum. Allowed values are 'start', 'end', 'center' (default), 'space-between'
-// + Determines the positioning of text units along the line. Has nothing to do with the `direction` attribute.
+// + Determines the positioning of text units along the space layout line. Has nothing to do with the `direction` attribute.
     justifyLine: CENTER,
 
-// __allowSubUnitStyling__ - boolean.
-// + When `true`, forces space-hyphen-broken text to become single-character text units, with kerning (if required) handled manually. This will break heavily ligatured fonts (such as Arabic and Devangari fonts) in unexpected and unpleasant ways. Default: `false`
-    allowSubUnitStyling: false,
+// __textUnitFlow__ - string enum. Allowed values are 'row' (default), 'row-reverse', 'column' (for vertical text), 'column-reverse'
+// + Determines the ordering of text units along the space layout line. Has nothing to do with the `direction` attribute.
+    textUnitFlow: ROW,
 
 // __truncateString__ - string.
     truncateString: '…',
@@ -246,7 +246,7 @@ P.factoryKill = function () {
 
 // #### Get, Set, deltaSet
 // Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
-const TEMPLATE_PASS_THROUGH_KEYS = _freeze(['width', 'height', 'dimensions', 'startX', 'startY', 'start', 'position', 'handleX', 'handleY', 'handle', 'offsetX', 'offsetY', 'offset', 'roll', 'scale']);
+const TEMPLATE_PASS_THROUGH_KEYS = _freeze(['width', 'height', 'dimensions', 'startX', 'startY', 'start', 'position', 'handleX', 'handleY', 'handle', 'offsetX', 'offsetY', 'offset', 'roll', 'scale', 'flipReverse', 'flipUpend']);
 
 const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
 
@@ -257,6 +257,8 @@ const LABEL_UPDATE_PARTS_KEYS = _freeze(['fontFamily', 'fontSize', 'fontStretch'
 const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
 
 const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
+
+const LAYOUT_KEYS = _freeze(['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'pathPosition', 'flipReverse', 'flipUpend']);
 
 P.get = function (key) {
 
@@ -320,6 +322,8 @@ P.set = function (items = Ωempty) {
             val = items[key];
 
             if (key && key != NAME && val != null) {
+
+                if (LAYOUT_KEYS.includes(key)) this.dirtyLayout = true;
 
                 if (layoutTemplate && TEMPLATE_PASS_THROUGH_KEYS.includes(key)) {
 
@@ -477,57 +481,6 @@ S.layoutTemplate = function (item) {
     }
 };
 
-D.lineSpacing = function (item) {
-
-    if (item.toFixed) this.lineSpacing += item;
-
-    if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
-
-    this.dirtyLayout = true;
-};
-S.lineSpacing = function (item) {
-
-    if (item.toFixed) this.lineSpacing = item;
-
-    if (this.lineSpacing <= 0) this.lineSpacing = 0.1;
-
-    this.dirtyLayout = true;
-};
-
-D.layoutTemplateLineOffset = function (item) {
-
-    if (item.toFixed) {
-
-        this.layoutTemplateLineOffset += item;
-        this.dirtyLayout = true;
-    }
-};
-S.layoutTemplateLineOffset = function (item) {
-
-    if (item.toFixed) {
-
-        this.layoutTemplateLineOffset = item;
-        this.dirtyLayout = true;
-    }
-};
-
-D.alignment = function (item) {
-
-    if (item.toFixed) {
-
-        this.alignment += item;
-        this.dirtyLayout = true;
-    }
-};
-S.alignment = function (item) {
-
-    if (item.toFixed) {
-
-        this.alignment = item;
-        this.dirtyLayout = true;
-    }
-};
-
 S.breakTextOnSpaces = function (item) {
 
     this.breakTextOnSpaces = !!item;
@@ -575,34 +528,6 @@ S.hyphenString = function (item) {
     }
 };
 
-S.justifyLine = function (item) {
-
-    if (item.substring) {
-
-        this.justifyLine = item;
-        this.dirtyLayout = true;
-    }
-};
-
-S.pathPosition = function (item) {
-
-    if (item < 0) item = _abs(item);
-    if (item > 1) item = item % 1;
-
-    this.pathPosition = parseFloat(item.toFixed(6));
-    this.dirtyLayout = true;
-};
-D.pathPosition = function (item) {
-
-    let pos = this.pathPosition + item
-
-    if (pos < 0) pos += 1;
-    if (pos > 1) pos = pos % 1;
-
-    this.pathPosition = parseFloat(pos.toFixed(6));
-    this.dirtyLayout = true;
-};
-
 S.textHandleX = function (item) {
 
     this.textHandle[0] = item;
@@ -632,24 +557,6 @@ S.guidelineStyle = function (item) {
 
     if (!item) this.guidelineStyle = this.defs.guidelineStyle;
     else if (item.substring) this.guidelineStyle = item;
-}
-
-S.flipReverse = function (item) {
-
-    if (this.layoutTemplate != null) {
-
-        this.layoutTemplate.set({'flipReverse': item});
-        this.dirtyLayout = true;
-    }
-}
-
-S.flipUpend = function (item) {
-
-    if (this.layoutTemplate != null) {
-
-        this.layoutTemplate.set({'flipUpend': item});
-        this.dirtyLayout = true;
-    }
 }
 
 
@@ -1206,77 +1113,14 @@ P.calculateLines = function () {
 
 // console.log(this.name, 'calculateLines (trigger: none - called by cleanLayout');
 
-    // Local functions to find the points where a given line crosses the layout engine's shape border
-    const getEndPoints = (x, y) => {
-
-        const results = [];
-
-        const edgePoints = walkTheLine(x, y, width);
-
-        const len = edgePoints.length;
-
-        if (len && len % 2 === 0) {
-
-            for (let i = 0; i < len; i++) {
-
-                coord.set(edgePoints[i]);
-                coord.subtract(currentStampPosition);
-                coord.rotate(alignment);
-                results.push(...coord);
-            }
-        }
-        return results;
-    };
-
-    const walkTheLine = (x, y, dim) => {
-
-        // We always walk the line from left to right
-        const startAt = x + (-dim * 3),
-            endAt = x + (dim * 3),
-            res = [];
-
-        let isInLayout = false,
-            check = false;
-
-        for (let i = startAt; i < endAt; i++) {
-
-            check = engine.isPointInPath(pathObject, i, y, winding);
-
-            if (check !== isInLayout) {
-
-                res.push([check === false ? i - 1 : i, y]);
-                isInLayout = check;
-            }
-        }
-
-        // In RTL script situations, the line partials need to be in RTL order
-        if (directionIsLtr) return res;
-        else {
-
-            const rtlRes = [];
-
-            for (i = res.length - 1; i >= 0; i -= 2) {
-
-                rtlRes.push(res[i - 1], res[i]);
-            }
-            return rtlRes;
-        }
-    }
-
-
-    // Main functionality
-    const coord = requestCoordinate();
-
-    const mycell = requestCell(),
-        engine = mycell.engine;
-
     const {
         alignment,
         defaultTextStyle,
         layoutTemplate,
-        layoutTemplateLineOffset,
+        lineAdjustment,
         lines,
         lineSpacing,
+        textUnitFlow,
     } = this;
 
     const {
@@ -1284,6 +1128,7 @@ P.calculateLines = function () {
         currentScale,
         currentRotation,
         currentStampPosition,
+        currentStampHandlePosition,
         pathObject,
         winding,
     } = layoutTemplate;
@@ -1293,138 +1138,152 @@ P.calculateLines = function () {
         direction,
     } = defaultTextStyle;
 
+
     const rotation = (-alignment - currentRotation) * _radian;
 
-    const directionIsLtr = direction === LTR;
+    const languageDirectionIsLtr = direction === LTR;
 
-    const step = (fontSizeValue * lineSpacing) * currentScale;
+    const [layoutStartX, layoutStartY] = currentStampPosition;
+    const [layoutHandleX, layoutHandleY] = currentStampHandlePosition;
+    const [layoutWidth, layoutHeight] = currentDimensions;
 
-    const [constX, constY] = currentStampPosition;
-    const [width,] = currentDimensions;
+    const coord = requestCoordinate();
 
-    const rawData = [],
-        lineProcessing = [];
-
-    let flag = false,
-        path = '',
-        beginX, beginY,
-        lineResults, lineData, lineVal,
-        sx, sy, ex, ey, i, iz,
-        counter;
+    const mycell = requestCell(),
+        engine = mycell.engine;
 
     // Prepare canvas for work
-    mycell.rotateDestination(engine, constX, constY, layoutTemplate);
+    mycell.rotateDestination(engine, layoutStartX, layoutStartY, layoutTemplate);
     engine.rotate(rotation);
 
-    // Main calculations: start with the line closest to the layout engine's `currentStampPosition` attribute
-    beginY = constY + layoutTemplateLineOffset;
-    rawData.push([beginY, getEndPoints(constX, beginY)]);
+    const rawLines = requestArray();
 
-    // Find lines above the first line
-    flag = true;
-    while (flag) {
+    let isInLayout, check, sx, sy, ex, ey;
 
-        beginY -= step;
-        lineResults = getEndPoints(constX, beginY);
+    const step = _ceil(fontSizeValue * lineSpacing * currentScale);
 
-        if (!lineResults.length) flag = false;
-        else rawData.push([beginY, lineResults]);
+    const rrpX = _round(layoutStartX),
+        xLeft = _round(rrpX - (layoutWidth * currentScale * 2)),
+        xRight = _round(rrpX + (layoutWidth * currentScale * 2)),
+        rrpY = _round(layoutStartY + (lineAdjustment  * currentScale)),
+        yTop = _round(rrpY - (layoutHeight * currentScale * 2)),
+        yBase = _round(rrpY + (layoutHeight * currentScale * 2));
+
+    for (let i = rrpY; i > yTop; i -= step) {
+
+        const rawLineData = requestArray();
+
+        isInLayout = false;
+        check = false;
+
+        for (let j = xLeft; j < xRight; j++) {
+
+            check = engine.isPointInPath(pathObject, j, i, winding);
+
+            if (check !== isInLayout) {
+
+                rawLineData.push([check === false ? j - 1 : j, i]);
+                isInLayout = check;
+            }
+        }
+
+        rawLines.push([i, [...rawLineData]]);
+    }
+    for (let i = rrpY + step; i < yBase; i += step) {
+
+        const rawLineData = requestArray();
+
+        isInLayout = false;
+        check = false;
+
+        for (let j = xLeft; j < xRight; j++) {
+
+            check = engine.isPointInPath(pathObject, j, i, winding);
+
+            if (check !== isInLayout) {
+
+                rawLineData.push([check === false ? j - 1 : j, i]);
+                isInLayout = check;
+            }
+        }
+
+        rawLines.push([i, [...rawLineData]]);
     }
 
-    // Find lines below the first line
-    beginY = constY + layoutTemplateLineOffset;
-    flag = true;
-    while (flag) {
+    const relevantLines = requestArray();
+    relevantLines.push(...rawLines.filter(l => l[1].length));
 
-        beginY += step;
-        lineResults = getEndPoints(constX, beginY);
+    releaseArray(...rawLines, rawLines);
 
-        if (!lineResults.length) flag = false;
-        else rawData.push([beginY, lineResults]);
-    }
+    relevantLines.sort((a, b) => {
 
-    // Sort the raw line data
-    rawData.sort((a, b) => a[0] - b[0]);
+        if (a[0] > b[0]) return 1; 
+        if (a[0] < b[0]) return -1; 
+        return 0;
+    });
 
-    // Push line data into the `this.lines` array
+    const selectedLines = relevantLines.map(l => l[1]);
+
+    if (textUnitFlow === ROW_REVERSE || textUnitFlow === COLUMN_REVERSE) selectedLines.reverse();
+
+    releaseArray(relevantLines);
+
+    selectedLines.forEach(data => {
+
+        data.forEach(d => {
+
+            coord.set(d).subtract(currentStampPosition).rotate(alignment + currentRotation).add(currentStampPosition);
+
+            d[0] = _round(coord[0]);
+            d[1] = _round(coord[1]);
+        });
+    });
+
     releaseLine(...lines);
     lines.length = 0;
-    lineProcessing.length = 0;
 
-    rawData.forEach(d => {
+    selectedLines.forEach(data => {
 
-        lineData = d[1];
-        counter = 0;
+        if (languageDirectionIsLtr) {
 
-        // There can be 1 or more "partial" lines along a line (eg: crescent shape horns)
-        for (i = 0, iz = lineData.length; i < iz; i += 4) {
+            for (let i = 0, iz = data.length; i < iz; i += 2) {
 
-            sx = lineData[counter++];
-            sy = lineData[counter++];
-            ex = lineData[counter++];
-            ey = lineData[counter++];
+                lines.push(requestLine().set({
 
-            lineVal = _hypot(sx - ex, sy - ey);
+                    startAt: data[i],
+                    endAt: data[i + 1],
+                }));
+            }
+        }
+        else {
 
-            lineProcessing.push(lineVal);
+            for (let i = data.length - 1; i >= 0; i -= 2) {
+
+                lines.push(requestLine().set({
+
+                    startAt: data[i - 1],
+                    endAt: data[i],
+                }));
+            }
         }
     });
 
-    lineVal = 0;
+    let path = '';
 
-    rawData.forEach(d => {
+    lines.forEach(line => {
 
-        lineData = d[1];
-        counter = 0;
+        [sx, sy] = line.startAt;
+        [ex, ey] = line.endAt;
 
-        // There can be 1 or more "partial" lines along a line (eg: crescent shape horns)
-        for (i = 0, iz = lineData.length; i < iz; i += 4) {
+        line.length = _hypot(sx - ex, sy - ey);
 
-            sx = lineData[counter++];
-            sy = lineData[counter++];
-            ex = lineData[counter++];
-            ey = lineData[counter++];
-
-            lineResults = lineProcessing.shift();
-
-            // Currently storing as an object. Need to turn it into an array for more efficient processing
-            lines.push(requestLine({
-                length: _ceil(lineResults),
-                startAt: [...coord.set([sx, sy]).add(currentStampPosition)],
-            }));
-
-            lineVal += lineResults;
-        }
+        path += `M ${sx}, ${sy} ${ex}, ${ey} `;
     });
 
-    // Generate the path string
-    beginX = 0;
-    beginY = 0;
+    this.guidelinesPath = new Path2D(path);
 
-    rawData.forEach(data => {
-
-        lineData = data[1];
-        counter = 0;
-
-        for (i = 0, iz = lineData.length; i < iz; i += 4) {
-
-            sx = lineData[counter++];
-            sy = lineData[counter++];
-            ex = lineData[counter++];
-            ey = lineData[counter++];
-
-            path += `m${sx - beginX},${sy - beginY}l${ex - sx},${ey - sy}`;
-
-            beginX = ex;
-            beginY = ey;
-        }
-    });
-
-    this.localPath = new Path2D(`${path}z`);
-
-    // Clean up
-    releaseCoordinate(coord);
     releaseCell(mycell);
+    releaseCoordinate(coord);
 };
 
 // `cleanText` - Break the entity's text into smaller TextUnit objects which can be positioned within, or along, the layout entity's shape
@@ -1436,9 +1295,17 @@ P.cleanText = function () {
 
         this.dirtyText = false;
 
-        const { text, textUnits, breakTextOnSpaces, breakWordsOnHyphens, allowSubUnitStyling } = this;
+        const { 
+            text, 
+            textUnits, 
+            breakTextOnSpaces, 
+            breakWordsOnHyphens,
+            defaultTextStyle,
+        } = this;
 
         const textCharacters = [...text];
+
+        const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
 
         const unit = [];
 
@@ -1447,9 +1314,10 @@ P.cleanText = function () {
         releaseUnit(...textUnits);
         textUnits.length = 0;
 
-        if (!allowSubUnitStyling && breakTextOnSpaces) {
+        if (breakTextOnSpaces) {
 
-            if (breakWordsOnHyphens) {
+            // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
+            if (languageDirectionIsLtr && breakWordsOnHyphens) {
 
                 textCharacters.forEach(c => {
 
@@ -1534,7 +1402,6 @@ P.cleanText = function () {
                 noBreak = TEXT_NO_BREAK_REGEX.test(c) || TEXT_NO_BREAK_REGEX.test(textCharacters[index + 1]);
 
                 if (!noBreak) {
-
 
                     if (TEXT_SPACES_REGEX.test(c)) {
 
@@ -1836,24 +1703,22 @@ P.measureTextUnits = function () {
         if (charType === TEXT_TYPE_SPACE) {
 
             t.len += currentTextStyle.wordSpaceValue;
-            t.height = 0;
         }
         else if (charType === TEXT_TYPE_SOFT_HYPHEN) {
 
             res = engine.measureText(hyphenString);
             t.replaceLen = res.width;
-            t.height = 0;
         }
         else {
 
             res = engine.measureText(truncateString);
             t.replaceLen = res.width;
-            t.height = parseFloat(currentTextStyle.fontSize);
         }
+        t.height = parseFloat(currentTextStyle.fontSize);
     });
 
     // Gather kerning data (if required) - only applies to rows
-    if (this.useLayoutTemplateAsPath || !this.breakTextOnSpaces || this.allowSubUnitStyling) {
+    if (this.useLayoutTemplateAsPath || !this.breakTextOnSpaces) {
 
         // Reset things back to initial before starting the second walk-through
         this.setEngineFromWorkingTextStyle(currentTextStyle, defaultTextStyle, state, mycell);
@@ -1958,7 +1823,10 @@ P.assignTextUnitsToLines = function () {
         lines,
         textUnits,
         breakWordsOnHyphens,
+        defaultTextStyle,
     } = this;
+
+    const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
 
     const unitArrayLength = textUnits.length;
 
@@ -1991,7 +1859,8 @@ P.assignTextUnitsToLines = function () {
             // Check: is there room for the text unit
             if (len < lengthRemaining) {
 
-                if (breakWordsOnHyphens) {
+                // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
+                if (languageDirectionIsLtr && breakWordsOnHyphens) {
 
                     // We need to do a look-forward for soft hyphens
                     unit = textUnits[i + 1];
@@ -2034,7 +1903,8 @@ P.assignTextUnitsToLines = function () {
     });
 
     // Truncation check
-    if (unitArrayLength !== unitCursor) {
+    // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
+    if (languageDirectionIsLtr && unitArrayLength !== unitCursor) {
 
         let currentLine, replaceLen,
             acc, mutableUnitData;
@@ -2139,7 +2009,16 @@ P.positionTextUnitsAlongPath = function () {
     } = this;
 
     const { length, unitData } = lines[0];
-    const dir = defaultTextStyle.direction;
+    const direction = defaultTextStyle.direction;
+    const languageDirectionIsLtr = (direction === LTR);
+
+    const data = requestArray();
+
+    data.push(...unitData);
+
+    // TODO: this is an ugly fix for making RTL words appear correctly along the line
+    // + Does mean that the entire text's `pathPosition` is at the end of the text, not the start of it.
+    if (!languageDirectionIsLtr) data.reverse();
 
     let currentPos = pathPosition,
         currentLen = length * currentPos,
@@ -2152,13 +2031,13 @@ P.positionTextUnitsAlongPath = function () {
         handleX, handleY,
         offsetX, offsetY;
 
-    for (let i = 0, iz = unitData.length; i < iz; i++) {
+    for (let i = 0, iz = data.length; i < iz; i++) {
 
-        u = unitData[i];
+        u = data[i];
 
         if (u.toFixed) {
 
-            unit = textUnits[unitData[i]];
+            unit = textUnits[data[i]];
 
             ({ len, height, kernOffset, localHandle, localOffset, startData, startCorrection, boxData, localAlignment } = unit);
 
@@ -2167,10 +2046,10 @@ P.positionTextUnitsAlongPath = function () {
             if (accumulatedLen < length) {
 
                 temp = localHandle[0] || textHandle[0] || 0;
-                handleX = this.getTextHandleX(temp, len, dir);
+                handleX = this.getTextHandleX(temp, len, direction);
 
                 temp = localHandle[1] || textHandle[1] || 0;
-                handleY = this.getTextHandleY(temp, height, dir);
+                handleY = this.getTextHandleY(temp, height, direction);
 
                 temp = localOffset[0] || textOffset[0] || 0;
                 offsetX = this.getTextOffset(temp, len);
@@ -2201,15 +2080,16 @@ P.positionTextUnitsAlongPath = function () {
 
                 currentLen += len - kernOffset - handleX;
             }
+
+            // TODO: Attempt to add the truncation chars to the output in the `else` block
+            // + Else block only reached if there are more words than space available to fit them all on the line
             else {
 
-                // Attempt to add the truncation chars to the output
-
-                // And then get out - nothing else will fit on the path
                 break;
             }
         }
     }
+    releaseArray(data);
 };
 
 
@@ -2221,26 +2101,41 @@ P.positionTextUnitsInSpace = function () {
 // console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits)');
 
     const {
-        lines,
-        textUnits,
-        justifyLine,
+        alignment,
         defaultTextStyle,
+        getTextHandleX: getX,
+        getTextHandleY: getY,
+        getTextOffset,
+        justifyLine,
+        layoutTemplate,
+        lines,
+        textHandle,
+        textOffset,
+        textUnits,
     } = this;
 
-    // We're justifying text, thus we need to know what direction the language/font considers to be its natural starting side (left/right) which we can then use when determining what justifying to start/end means
-    const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
+    const coord = requestCoordinate();
 
-    let unit, length, unitData, unitLengths, unitIndices, noOfSpaces, spaceStep, spaceRemaining;
+    const direction = defaultTextStyle.direction;
+    const languageDirectionIsLtr = (direction === LTR);
+    const currentRotation = layoutTemplate.currentRotation;
 
-    const initialDistances = [],
-        adjustedDistances = [];
+    let unit, length, unitData, unitLengths, unitIndices,
+        noOfSpaces, spaceStep, spaceRemaining,
+        len, height, startData, startCorrection, boxData,
+        localHandle, localOffset, localAlignment, lineOffset,
+        temp, tempX, tempY, handleX, handleY, offsetX, offsetY,
+        startAtX, startAtY, startAt, localX, localY, localAngle;
 
     lines.forEach(line => {
 
-        ({ length, unitData } = line);
+        ({ length, unitData, startAt } = line);
 
         // only process lines that have textUnits
         if (unitData.length) {
+
+            const initialDistances = requestArray(),
+                adjustedDistances = requestArray();
 
             unitIndices = unitData.length - 1;
 
@@ -2249,6 +2144,8 @@ P.positionTextUnitsInSpace = function () {
             spaceStep = 0;
             initialDistances.length = 0;
             adjustedDistances.length = 0;
+
+            [startAtX, startAtY] = startAt;
 
             // Get distances that need to be processed
             unitData.forEach((unitIndex, dataIndex) => {
@@ -2276,7 +2173,8 @@ P.positionTextUnitsInSpace = function () {
             spaceRemaining = length - unitLengths;
 
             // Adjustment for dynamic inputs (soft hyphen, truncation chars)
-            if (unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE)) {
+            // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
+            if (languageDirectionIsLtr && unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE)) {
 
                 unit = textUnits[unitData[unitData.length - 2]];
                 spaceRemaining -= unit?.replaceLen || 0;
@@ -2343,15 +2241,61 @@ P.positionTextUnitsInSpace = function () {
 
                     unit = textUnits[u];
 
+                    ({
+                        len,
+                        height,
+                        startData,
+                        startCorrection,
+                        boxData,
+                        localHandle,
+                        localOffset,
+                        localAlignment,
+                    } = unit);
+
                     if (unit.stampFlag) {
 
-                        if (languageDirectionIsLtr) unit.lineOffset = adjustedDistances.shift();
-                        else unit.lineOffset = length - unit.len - adjustedDistances.shift();
+                        if (languageDirectionIsLtr) lineOffset = adjustedDistances.shift();
+                        else lineOffset = length - len - adjustedDistances.shift();
+
+                        temp = localHandle[0] || textHandle[0] || 0;
+                        handleX = getX.call(this, temp, len, direction);
+
+                        temp = localHandle[1] || textHandle[1] || 0;
+                        handleY = getY.call(this, temp, height, direction);
+
+                        temp = localOffset[0] || textOffset[0] || 0;
+                        offsetX = this.getTextOffset(temp, len);
+
+                        temp = localOffset[1] || textOffset[1] || 0;
+                        offsetY = getTextOffset.call(this, temp, height);
+
+                        localAngle = localAlignment + alignment + currentRotation;
+                        coord.set(lineOffset, 0).rotate(localAngle);
+
+                        localX = startAtX + coord[0];
+                        localY = startAtY + coord[1];
+
+                        tempX = localX + offsetX - handleX;
+                        tempY = localY + offsetY - handleY;
+
+                        startData[0] = localX;
+                        startData[1] = localY;
+
+                        startCorrection[0] = tempX - localX;
+                        startCorrection[1] = tempY - localY;
+
+                        unit.startRotation = (localAngle) * _radian;
+
+                        boxData.length = 0;
+                        boxData.push(localX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
                     }
                 }
             });
+            releaseArray(initialDistances, adjustedDistances);
         }
     });
+
+    releaseCoordinate(coord);
 
     // Code to identify and generate paths for underlines, overlines and highlights is in separate functions, for clarity
     this.positionTextDecoration();
@@ -2451,9 +2395,6 @@ P.positionTextDecoration = function () {
                 if (unit.stampFlag) {
 
                     ox = getX.call(this, hx, len, direction);
-
-                    unit.stampPos[0] = lineOffset - ox;
-                    unit.stampPos[1] = -oy;
 
                     // Calculate coordinates for underlined TextUnits
                     if (includeUnderline) {
@@ -2982,8 +2923,6 @@ P.createTextCellsForPath = function (host) {
                     uEngine.setTransform(cos, sin, -sin, cos, x, y);
                     mEngine.setTransform(cos, sin, -sin, cos, x, y);
 
-                    // This is where we'd add in any special local additional rotations
-
                     uEngine.strokeText(chars, dx, dy);
                     uEngine.fillText(chars, dx, dy);
 
@@ -3117,7 +3056,7 @@ P.regularStampInSpace = function () {
 
         const rotation = this.alignment * _radian;
 
-        const workingCells = this.createTextCells(currentHost, rotation);
+        const workingCells = this.createTextCells(currentHost);
 
         if (workingCells) {
 
@@ -3133,7 +3072,7 @@ P.regularStampInSpace = function () {
             const overlineCell = this.createOverlineCell(currentHost, rotation);
             const highlightCell = this.createHighlightCell(currentHost, rotation);
 
-            if (this.showGuidelines && this.localPath) this.stampGuidelinesOnCell(finalCell);
+            if (this.showGuidelines && this.guidelinesPath) this.stampGuidelinesOnCell(finalCell);
 
             if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
 
@@ -3160,8 +3099,7 @@ P.stampGuidelinesOnCell = function (cell) {
     if (cell?.engine) {
 
         const {
-            layoutTemplate,
-            localPath,
+            guidelinesPath,
             guidelineStyle,
             guidelineWidth,
             guidelineDash,
@@ -3171,20 +3109,17 @@ P.stampGuidelinesOnCell = function (cell) {
 
         engine.save();
 
-        cell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
-
         engine.setLineDash(guidelineDash);
-
         engine.strokeStyle = guidelineStyle;
         engine.lineWidth = guidelineWidth;
 
-        engine.stroke(localPath);
+        engine.stroke(guidelinesPath);
 
         engine.restore();
     }
 };
 
-P.createTextCells = function (host, rotation) {
+P.createTextCells = function (host) {
 
     const el = host.element;
     const uCell = requestCell(el.width, el.height);
@@ -3197,23 +3132,14 @@ P.createTextCells = function (host, rotation) {
 
         const {
             state,
-            layoutTemplate,
             lines,
             textUnits,
             defaultTextStyle,
-            truncateString,
             hyphenString,
+            truncateString,
         } = this;
 
-        const currentRotation = layoutTemplate.currentRotation;
-        const currentStampPosition = layoutTemplate.currentStampPosition;
-        const direction = defaultTextStyle.direction;
-        const directionIsLtr = direction === LTR;
-
-        const coord = requestCoordinate();
-
-        let sx, sy, unitData, unit, style, chars, stampFlag, charType, stampPos, len, replaceLen, ox, oy, fx, fy;
-
+        const directionIsLtr = defaultTextStyle.direction === LTR;
         const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
@@ -3221,87 +3147,19 @@ P.createTextCells = function (host, rotation) {
 
         lines.forEach(line => {
 
-            [sx, sy] = coord.set(line.startAt).subtract(currentStampPosition).rotate(currentRotation).add(currentStampPosition);
+            const { unitData } = line;
 
-            unitData = line.unitData;
+            let unit, startData, startCorrection, chars, charType, style,
+                x, y, dx, dy, startRotation, cos, sin,
+                lookAhead, text;
 
-            uCell.rotateDestination(uEngine, sx, sy, layoutTemplate);
-            uEngine.rotate(rotation);
+            unitData.forEach((u, index) => {
 
-            mCell.rotateDestination(mEngine, sx, sy, layoutTemplate);
-            mEngine.rotate(rotation);
+                unit = textUnits[u];
 
-            unitData.forEach((u, uIndex) => {
+                if (unit) {
 
-                if (u.substring) {
-
-                    // Truncations and hyphens have to hang off of something. They can't appear on their own line
-                    if (unitData.length > 1) {
-
-                        // We're at the end of the line but need to add something additional:
-                        // + For the last line, this will be the default truncation copy (eg: `...`)
-                        // + For other lines, this will be displaying a hyphen (eg: `-`) where the word - which included the soft hyphen - has broken across lines.
-                        // + For the edge case where the last line is a word which has broken on a soft hyphen, we show the hyphen, not the truncation.
-                        unit = textUnits[unitData[uIndex - 1]];
-
-                        if (unit) {
-
-                            ({ len, replaceLen, stampPos } = unit);
-
-                            [ox, oy] = stampPos;
-
-                            fy = oy;
-
-                            if (u === TEXT_TYPE_TRUNCATE) {
-
-                                if (directionIsLtr) {
-
-                                    fx = ox + len;
-
-                                    uEngine.strokeText(truncateString, fx, fy);
-                                    uEngine.fillText(truncateString, fx, fy);
-
-                                    mEngine.fillText(truncateString, fx, fy);
-                                }
-                                else {
-
-                                    fx = ox - replaceLen;
-
-                                    uEngine.strokeText(truncateString, fx, fy);
-                                    uEngine.fillText(truncateString, fx, fy);
-
-                                    mEngine.fillText(truncateString, fx, fy);
-                                }
-                            }
-                            else if (u === TEXT_TYPE_SOFT_HYPHEN) {
-
-                                if (directionIsLtr) {
-
-                                    fx = ox;
-
-                                    uEngine.strokeText(hyphenString, fx, fy);
-                                    uEngine.fillText(hyphenString, fx, fy);
-
-                                    mEngine.fillText(hyphenString, fx, fy);
-                                }
-                                else {
-
-                                    fx = ox - replaceLen;
-
-                                    uEngine.strokeText(hyphenString, fx, fy);
-                                    uEngine.fillText(hyphenString, fx, fy);
-
-                                    mEngine.fillText(hyphenString, fx, fy);
-                                }
-                            }
-                        }
-                    }
-                }
-                else {
-
-                    unit = textUnits[u];
-
-                    ({style, chars, stampPos, stampFlag, charType} = unit);
+                    ({ startData, startCorrection, startRotation, chars, style } = unit);
 
                     if (style) {
 
@@ -3311,38 +3169,64 @@ P.createTextCells = function (host, rotation) {
                         this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mCell);
                     }
 
-                    if (stampFlag && charType !== TEXT_TYPE_SPACE) {
+                    // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
+                    if (directionIsLtr) {
 
-                        [ox, oy] = unit.stampPos;
+                        lookAhead = unitData[index + 1];
 
-                        uEngine.strokeText(chars, ox, oy);
-                        uEngine.fillText(chars, ox, oy);
+                        if (lookAhead?.substring) {
+
+                            if (lookAhead === TEXT_TYPE_SOFT_HYPHEN) text = `${chars}${hyphenString}`;
+                            else text = `${chars}${truncateString}`;
+                        }
+                        else text = chars;
+                    }
+                    else text = chars;
+
+                    if (text !== SPACE) {
+
+                        [x, y] = startData;
+                        [dx, dy] = startCorrection;
+
+                        cos = _cos(startRotation);
+                        sin = _sin(startRotation);
+
+                        uEngine.setTransform(cos, sin, -sin, cos, x, y);
+                        mEngine.setTransform(cos, sin, -sin, cos, x, y);
+
+                        uEngine.strokeText(text, dx, dy);
+                        uEngine.fillText(text, dx, dy);
 
                         switch (currentTextStyle.method) {
 
-                        case DRAW :
-                            mEngine.strokeText(chars, ox, oy);
-                            break;
+                            case DRAW :
+                                mEngine.strokeText(text, dx, dy);
+                                break;
 
-                        case FILL_AND_DRAW :
-                            mEngine.fillText(chars, ox, oy);
-                            mEngine.strokeText(chars, ox, oy);
-                            break;
+                            case FILL_AND_DRAW :
+                                mEngine.fillText(text, dx, dy);
+                                mEngine.strokeText(text, dx, dy);
+                                break;
 
-                        case DRAW_AND_FILL :
-                            mEngine.strokeText(chars, ox, oy);
-                            mEngine.fillText(chars, ox, oy);
-                            break;
+                            case DRAW_AND_FILL :
+                                mEngine.strokeText(text, dx, dy);
+                                mEngine.fillText(text, dx, dy);
+                                break;
 
-                        default:
-                            mEngine.fillText(chars, ox, oy);
+                            default:
+                                mEngine.fillText(text, dx, dy);
                         }
+
+                        mEngine.save();
+                        mEngine.fillStyle = 'rgb(0 180 0 / 1)';
+                        mEngine.fillRect(-1, - 1, 3, 3);
+                        mEngine.fillStyle = 'rgb(255 0 0 / 1)';
+                        mEngine.fillRect(dx - 1, dy - 1, 3, 3);
+                        mEngine.restore();
                     }
                 }
             });
         });
-
-        releaseCoordinate(coord);
 
         return {
             copyCell: uCell,
@@ -3469,11 +3353,11 @@ const textEntityConverter = document.createElement(DIV);
 
 // UnitObject pool
 const UNIT_CHARS = 'chars',
-    UNIT_TYPE = 'charType';
+    UNIT_TYPE = 'charType',
+    UNIT_SETTABLE_KEYS = _freeze(['localHandle', 'localHandleX', 'localHandleY', 'localOffset', 'localOffsetX', 'localOffsetY', 'localAlignment']);
 
 const UnitObject = function () {
 
-    this.stampPos = makeCoordinate();
     this.startData = makeCoordinate();
     this.startCorrection = makeCoordinate();
 
@@ -3513,9 +3397,6 @@ U.defs = {
     startData: null,
     startCorrection: null,
 
-    // Want to deprecate in favour of startData
-    stampPos: null,
-
     localHandle: null,
     localOffset: null,
 
@@ -3554,7 +3435,6 @@ U.set = function (items = Ωempty) {
 
             switch (key) {
 
-                case 'stampPos' :
                 case 'startData' :
                 case 'startCorrection' :
 
@@ -3627,6 +3507,7 @@ U.set = function (items = Ωempty) {
                     break;
 
                 default :
+
                     if (value != null) this[key] = value;
                     else this[key] = this.defs[key];
             }
@@ -3639,6 +3520,41 @@ U.reset = function () {
 
     this.set(this.defs);
     return this;
+};
+
+P.setTextUnit = function (index, items) {
+
+    const unit = this.textUnits[index];
+
+    if (unit !== null) {
+
+        for (const [key, val] of _entries(items)) {
+
+            if (UNIT_SETTABLE_KEYS.includes(key)) {
+
+                unit.set({ [key]: val});
+            }
+        }
+    }
+    this.dirtyLayout = true;
+};
+
+P.setAllTextUnits = function (items) {
+
+    this.textUnits.forEach(unit => {
+
+        if (unit !== null) {
+
+            for (const [key, val] of _entries(items)) {
+
+                if (UNIT_SETTABLE_KEYS.includes(key)) {
+
+                    unit.set({ [key]: val});
+                }
+            }
+        }
+    });
+    this.dirtyLayout = true;
 };
 
 // const makeUnitObject = (chars, type) => new LineObject(chars, type);

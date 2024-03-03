@@ -22,44 +22,36 @@ const displayText = document.querySelector('.demo-explanation-styles');
 const westernText = 'Lorem ipsum dolor sit amet, con&shy;sectetur 😀 adi&shy;piscing &eacute;lit, sed do eius-mod tempor in&shy;cididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit-ation ullamco laboris nisi ut aliquip ex ea "commodo" consequat. Duis (aute irure d&ouml;lor) in reprehenderit 🤖&icirc;n voluptate velit &copy;2024 esse &lt;cillum&gt; dolore eu fug🎻iat nulla pariatur. Excepteur sint occaecat &iexcl;cupidatat! non proident, sunt in culpa qui offici&thorn;a deserunt mollit anim id est laborum.';
 
 
-const blockEngine = scrawl.makeBlock({
+const blockTemplate = scrawl.makeBlock({
 
-    name: name('block-layout-engine'),
+    name: name('block-layout-template'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
     dimensions: ['60%', '80%'],
-    fillStyle: 'transparent',
+    fillStyle: 'rgb(255 240 240 / 0.2)',
 });
 
-const wheelEngine = scrawl.makeWheel({
+const wheelTemplate = scrawl.makeWheel({
 
-    name: name('wheel-layout-engine'),
+    name: name('wheel-layout-template'),
     width: '60%',
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    fillStyle: 'transparent',
+    fillStyle: 'rgb(255 240 240 / 0.2)',
     visibility: false,
 });
 
-const crescentEngine = scrawl.makeCrescent({
+const crescentTemplate = scrawl.makeCrescent({
 
-    name: name('crescent-layout-engine'),
+    name: name('crescent-layout-template'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
     outerRadius: 200,
     innerRadius: 150,
     displacement: 150,
-    fillStyle: 'transparent',
+    fillStyle: 'rgb(255 240 240 / 0.2)',
     visibility: false,
 });
-
-
-
-const engineGroup = scrawl.makeGroup({
-
-    name: name('layout-engines'),
-
-}).addArtefacts(blockEngine, wheelEngine, crescentEngine);
 
 
 const mylabel = scrawl.makeEnhancedLabel({
@@ -68,7 +60,8 @@ const mylabel = scrawl.makeEnhancedLabel({
     fontString: '16px serif',
     text: westernText,
 
-    layoutTemplate: name('block-layout-engine'),
+    layoutTemplate: name('block-layout-template'),
+    textHandle: ['center', 'alphabetic'],
 });
 
 
@@ -99,7 +92,7 @@ scrawl.makeRender({
 // #### User interaction
 const updateDisplayText = () => {
 
-    const dims = blockEngine.get('dimensions');
+    const dims = blockTemplate.get('dimensions');
 
     let justify = mylabel.get('justifyLine');
     if (justify === 'space-between') justify = 'justify';
@@ -107,8 +100,6 @@ const updateDisplayText = () => {
     setTimeout(() => {
 
         displayText.innerHTML = mylabel.get('rawText');
-// @ts-expect-error
-        displayText.style.direction = mylabel.get('direction');
 // @ts-expect-error
         displayText.style.font = mylabel.get('fontString');
 // @ts-expect-error
@@ -120,7 +111,7 @@ const updateDisplayText = () => {
 // @ts-expect-error
         displayText.style.textAlign = justify;
 // @ts-expect-error
-        displayText.style.transform = `rotate(${blockEngine.get('roll')}deg) scale(${blockEngine.get('scale')})`;
+        displayText.style.transform = `rotate(${blockTemplate.get('roll')}deg) scale(${blockTemplate.get('scale')})`;
     }, 50);
 };
 
@@ -139,7 +130,7 @@ scrawl.makeUpdater({
 
     updates: {
 
-        layoutTemplateLineOffset: ['layoutTemplateLineOffset', 'float'],
+        lineAdjustment: ['lineAdjustment', 'float'],
         alignment: ['alignment', 'float'],
         justifyLine: ['justifyLine', 'raw'],
         lineSpacing: ['lineSpacing', 'float'],
@@ -150,18 +141,29 @@ scrawl.makeUpdater({
         showGuidelines: ['showGuidelines', 'boolean'],
         guidelineStyle: ['guidelineStyle', 'raw'],
         guidelineDash: ['guidelineDash', 'parse'],
+        textHandleX: ['textHandleX', 'raw'],
         textHandleY: ['textHandleY', 'raw'],
+        textUnitFlow: ['textUnitFlow', 'raw'],
     },
 
     callback: updateDisplayText,
 });
+
+// We could push these attribute changes through the EnhancedLabel entity, which passes them on to its current layoutTemplate entity
+// + But in this case we want all the template entitys to update at the same time
+// + So we add them to a dedicated Group and push the changes through that instead
+const templateGroup = scrawl.makeGroup({
+
+    name: name('layout-templates'),
+
+}).addArtefacts(blockTemplate, wheelTemplate, crescentTemplate);
 
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: engineGroup,
+    target: templateGroup,
 
     useNativeListener: true,
     preventDefault: true,
@@ -178,33 +180,50 @@ scrawl.makeUpdater({
 });
 
 
+const localAlignmentSelector = document.querySelector('#localAlignment');
+const updateLocalAlignment = (event) => {
+
+    const val = parseFloat(event.target.value);
+
+console.log('updateLocalAlignment', val)
+    if (Number.isFinite(val)) {
+
+        mylabel.setAllTextUnits({
+
+            localAlignment: val,
+        });
+    }
+};
+scrawl.addNativeListener(['change', 'input'], (e) => updateLocalAlignment(e), localAlignmentSelector);
+
+
 const layoutTemplateSelector = document.querySelector('#layoutTemplate');
 const updateLayoutTemplate = (event) => {
 
-    const engine = event.target.value;
+    const template = event.target.value;
 
-    if (engine) {
+    if (template) {
 
-        engineGroup.setArtefacts({ visibility: false });
+        templateGroup.setArtefacts({ visibility: false });
 
-        switch (engine) {
+        switch (template) {
 
-            case 'wheel-engine' :
+            case 'wheel-template' :
 
-                mylabel.set({ layoutTemplate: wheelEngine });
-                wheelEngine.set({ visibility: true });
+                mylabel.set({ layoutTemplate: wheelTemplate });
+                wheelTemplate.set({ visibility: true });
                 break;
 
-            case 'crescent-engine' :
+            case 'crescent-template' :
 
-                mylabel.set({ layoutTemplate: crescentEngine });
-                crescentEngine.set({ visibility: true });
+                mylabel.set({ layoutTemplate: crescentTemplate });
+                crescentTemplate.set({ visibility: true });
                 break;
 
             default :
 
-                mylabel.set({ layoutTemplate: blockEngine });
-                blockEngine.set({ visibility: true });
+                mylabel.set({ layoutTemplate: blockTemplate });
+                blockTemplate.set({ visibility: true });
             }
     }
 };
@@ -213,7 +232,6 @@ scrawl.addNativeListener('change', (e) => updateLayoutTemplate(e), layoutTemplat
 
 const fontSelector = document.querySelector('#font');
 const lineSpacingSelector = document.querySelector('#lineSpacing');
-const directionSelector = document.querySelector('#direction');
 const breakTextOnSpacesSelector = document.querySelector('#breakTextOnSpaces');
 
 const updateFont = (event) => {
@@ -591,11 +609,6 @@ const updateFont = (event) => {
         }
 
 // @ts-expect-error
-        if (mylabel.get('direction') === 'ltr') directionSelector.options.selectedIndex = 0;
-// @ts-expect-error
-        else directionSelector.options.selectedIndex = 1;
-
-// @ts-expect-error
         if (mylabel.get('breakTextOnSpaces')) breakTextOnSpacesSelector.options.selectedIndex = 1;
 // @ts-expect-error
         else breakTextOnSpacesSelector.options.selectedIndex = 0;
@@ -617,9 +630,9 @@ layoutTemplateSelector.options.selectedIndex = 0;
 // @ts-expect-error
 lineSpacingSelector.value = 1.5;
 // @ts-expect-error
-directionSelector.options.selectedIndex = 0;
-// @ts-expect-error
 breakTextOnSpacesSelector.options.selectedIndex = 1;
+// @ts-expect-error
+localAlignmentSelector.value = 0;
 
 // @ts-expect-error
 document.querySelector('#width').value = 60;
@@ -630,7 +643,7 @@ document.querySelector('#scale').value = 1;
 // @ts-expect-error
 document.querySelector('#roll').value = 0;
 // @ts-expect-error
-document.querySelector('#layoutTemplateLineOffset').value = 0;
+document.querySelector('#lineAdjustment').value = 0;
 // @ts-expect-error
 document.querySelector('#justifyLine').options.selectedIndex = 0;
 // @ts-expect-error
@@ -642,13 +655,17 @@ document.querySelector('#hyphenString').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#truncateString').options.selectedIndex = 0;
 // @ts-expect-error
-document.querySelector('#textHandleY').options.selectedIndex = 0;
+document.querySelector('#textHandleX').options.selectedIndex = 1;
+// @ts-expect-error
+document.querySelector('#textHandleY').options.selectedIndex = 4;
 // @ts-expect-error
 document.querySelector('#showGuidelines').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#guidelineStyle').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#guidelineDash').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#textUnitFlow').options.selectedIndex = 0;
 
 // #### Development and testing
 console.log(scrawl.library);
