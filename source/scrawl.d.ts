@@ -1251,7 +1251,7 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 // EnhancedLabelInstance factory
 // -------------------------------------
-type TextLineJustifyValues = 'start' | 'end' | 'center' | 'space-between';
+type TextLineJustifyValues = 'start' | 'end' | 'center' | 'space-between' | 'space-around';
 type TextUnitFlowValues = 'row' | 'row-reverse' | 'column' | 'column-reverse';
 type EnhancedLabelTextUnitHandleXValues = 'left' | 'right' | 'center';
 type EnhancedLabelTextUnitHandleYValues = 'top' | 'hanging' | 'center' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
@@ -1264,6 +1264,7 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
 }
 
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
+    alignTextUnitsToPath?: boolean;
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
     calculateOrder?: number;

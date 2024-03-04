@@ -23,7 +23,7 @@ import textMix from '../mixin/text.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, COLUMN, COLUMN_REVERSE, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, ROW_REVERSE, SMALL_CAPS, SPACE, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -115,10 +115,16 @@ const defaultAttributes = {
 // __useLayoutTemplateAsPath__ - boolean. If layout engine entity is a path-based entity, then we can either fit the text within it, or use its path for positioning.
     useLayoutTemplateAsPath: false,
 
-// __pathStart__ - where to start text positioning along the layout engine path.
+// __pathPosition__ - number. Where to start text positioning along the layout engine path.
     pathPosition: 0,
 
-// __lineAdjustment__ - how far away from the origin point the initial line should be.
+// __alignment__ - number. Rotational positioning of the text units along a path or guideline
+    alignment: 0,
+
+// __alignTextUnitsToPath__ - boolean. Forces layout to take into account the path angle. When set to false, all text units will have the same alignment, whose value is set by the `alignment` attribute
+    alignTextUnitsToPath: true,
+
+// __lineAdjustment__ - number. Determines the fine-scale positioning of the guidelines within a space
     lineAdjustment: 0,
 
 // __breakTextOnSpaces__ - boolean.
@@ -132,7 +138,7 @@ const defaultAttributes = {
 // + Attribute has no effect if `breakTextOnSpaces` is `false`.
     breakWordsOnHyphens: false,
 
-// __justifyLine__ - string enum. Allowed values are 'start', 'end', 'center' (default), 'space-between'
+// __justifyLine__ - string enum. Allowed values are 'start', 'end', 'center' (default), 'space-between', 'space-around'
 // + Determines the positioning of text units along the space layout line. Has nothing to do with the `direction` attribute.
     justifyLine: CENTER,
 
@@ -166,8 +172,6 @@ const defaultAttributes = {
     group: null,
 
     method: FILL,
-
-    alignment: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -258,7 +262,7 @@ const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
 
 const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
 
-const LAYOUT_KEYS = _freeze(['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'pathPosition', 'flipReverse', 'flipUpend']);
+const LAYOUT_KEYS = _freeze(['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'pathPosition', 'flipReverse', 'flipUpend', 'alignTextUnitsToPath']);
 
 P.get = function (key) {
 
@@ -423,8 +427,7 @@ P.setDelta = function (items = Ωempty) {
 
 
 const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+    S = P.setters;
 
 // __group__ - copied over from the position mixin.
 G.group = function () {
@@ -1128,23 +1131,16 @@ P.calculateLines = function () {
         currentScale,
         currentRotation,
         currentStampPosition,
-        currentStampHandlePosition,
         pathObject,
         winding,
     } = layoutTemplate;
 
-    const {
-        fontSizeValue,
-        direction,
-    } = defaultTextStyle;
+    const { fontSizeValue } = defaultTextStyle;
 
 
     const rotation = (-alignment - currentRotation) * _radian;
 
-    const languageDirectionIsLtr = direction === LTR;
-
     const [layoutStartX, layoutStartY] = currentStampPosition;
-    const [layoutHandleX, layoutHandleY] = currentStampHandlePosition;
     const [layoutWidth, layoutHeight] = currentDimensions;
 
     const coord = requestCoordinate();
@@ -1169,27 +1165,53 @@ P.calculateLines = function () {
         yTop = _round(rrpY - (layoutHeight * currentScale * 2)),
         yBase = _round(rrpY + (layoutHeight * currentScale * 2));
 
-    for (let i = rrpY; i > yTop; i -= step) {
+    if (step) {
 
-        const rawLineData = requestArray();
+        for (let i = rrpY; i > yTop; i -= step) {
 
-        isInLayout = false;
-        check = false;
+            const rawLineData = requestArray();
 
-        for (let j = xLeft; j < xRight; j++) {
+            isInLayout = false;
+            check = false;
 
-            check = engine.isPointInPath(pathObject, j, i, winding);
+            for (let j = xLeft; j < xRight; j++) {
 
-            if (check !== isInLayout) {
+                check = engine.isPointInPath(pathObject, j, i, winding);
 
-                rawLineData.push([check === false ? j - 1 : j, i]);
-                isInLayout = check;
+                if (check !== isInLayout) {
+
+                    rawLineData.push([check === false ? j - 1 : j, i]);
+                    isInLayout = check;
+                }
             }
+
+            rawLines.push([i, [...rawLineData]]);
         }
 
-        rawLines.push([i, [...rawLineData]]);
+        for (let i = rrpY + step; i < yBase; i += step) {
+
+            const rawLineData = requestArray();
+
+            isInLayout = false;
+            check = false;
+
+            for (let j = xLeft; j < xRight; j++) {
+
+                check = engine.isPointInPath(pathObject, j, i, winding);
+
+                if (check !== isInLayout) {
+
+                    rawLineData.push([check === false ? j - 1 : j, i]);
+                    isInLayout = check;
+                }
+            }
+
+            rawLines.push([i, [...rawLineData]]);
+        }
     }
-    for (let i = rrpY + step; i < yBase; i += step) {
+
+    // Protecting against a zero value step
+    else {
 
         const rawLineData = requestArray();
 
@@ -1198,16 +1220,16 @@ P.calculateLines = function () {
 
         for (let j = xLeft; j < xRight; j++) {
 
-            check = engine.isPointInPath(pathObject, j, i, winding);
+            check = engine.isPointInPath(pathObject, j, rrpY, winding);
 
             if (check !== isInLayout) {
 
-                rawLineData.push([check === false ? j - 1 : j, i]);
+                rawLineData.push([check === false ? j - 1 : j, rrpY]);
                 isInLayout = check;
             }
         }
 
-        rawLines.push([i, [...rawLineData]]);
+        rawLines.push([rrpY, [...rawLineData]]);
     }
 
     const relevantLines = requestArray();
@@ -1217,14 +1239,14 @@ P.calculateLines = function () {
 
     relevantLines.sort((a, b) => {
 
-        if (a[0] > b[0]) return 1; 
-        if (a[0] < b[0]) return -1; 
+        if (a[0] > b[0]) return 1;
+        if (a[0] < b[0]) return -1;
         return 0;
     });
 
     const selectedLines = relevantLines.map(l => l[1]);
 
-    if (textUnitFlow === ROW_REVERSE || textUnitFlow === COLUMN_REVERSE) selectedLines.reverse();
+    if (TEXT_LAYOUT_FLOW_REVERSE.includes(textUnitFlow)) selectedLines.reverse();
 
     releaseArray(relevantLines);
 
@@ -1281,10 +1303,10 @@ P.cleanText = function () {
 
         this.dirtyText = false;
 
-        const { 
-            text, 
-            textUnits, 
-            breakTextOnSpaces, 
+        const {
+            text,
+            textUnits,
+            breakTextOnSpaces,
             breakWordsOnHyphens,
             defaultTextStyle,
         } = this;
@@ -1796,29 +1818,30 @@ P.layoutText = function () {
 
 
 // `assignTextUnitsToLines` - Assign sufficient text units to each line to fill the line's length
-// + TODO: The assumption here is that if we are laying text along a path, there will only be one line with a length equal to the layout engine's path length. In such cases we won't need to care about soft hyphens, but will need to care about truncation (regardless of whether we allow the text to wrap itself along the line)
 P.assignTextUnitsToLines = function () {
 
 // console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layoutText)');
 
     const {
-        lines,
-        textUnits,
         breakWordsOnHyphens,
         defaultTextStyle,
+        lines,
+        textUnitFlow,
+        textUnits,
     } = this;
 
     const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
+    const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
 
     const unitArrayLength = textUnits.length;
 
     let unitCursor = 0,
         lengthRemaining,
-        i, unit, unitData, unitAfter, len, lineLength, charType;
+        i, unit, unitData, unitAfter, len, height, lineLength, charType, check;
 
-    const addUnit = function (len) {
+    const addUnit = function (val) {
 
-        lengthRemaining -= len;
+        lengthRemaining -= val;
         unitData.push(unitCursor);
         ++unitCursor;
     };
@@ -1836,13 +1859,17 @@ P.assignTextUnitsToLines = function () {
 
             unit = textUnits[i];
 
-            ({ len, charType } = unit);
+            ({ len, height, charType } = unit);
 
             // Check: is there room for the text unit
-            if (len < lengthRemaining) {
+            check = (layoutFlowIsColumns) ? height : len;
 
+            if (check < lengthRemaining) {
+
+                // Hyphens capture
                 // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
-                if (languageDirectionIsLtr && breakWordsOnHyphens) {
+                // + We don't care about hyphens or truncation in columnar layouts
+                if (languageDirectionIsLtr && !layoutFlowIsColumns && breakWordsOnHyphens) {
 
                     // We need to do a look-forward for soft hyphens
                     unit = textUnits[i + 1];
@@ -1858,7 +1885,7 @@ P.assignTextUnitsToLines = function () {
                         // Check: this text unit and the visible hyphen will fit on line
                         else if (len + unit.replaceLen < lengthRemaining) {
 
-                            addUnit(len);
+                            addUnit(check);
                             addUnit(unit.replaceLen);
                             unitData.push(TEXT_TYPE_SOFT_HYPHEN);
                             break;
@@ -1869,9 +1896,9 @@ P.assignTextUnitsToLines = function () {
                     }
 
                     // Next text unit is not a soft hyphen; add this text unit to the array
-                    else addUnit(len);
+                    else addUnit(check);
                 }
-                else addUnit(len);
+                else addUnit(check);
             }
 
             // There's no room left on this line for the TextUnit
@@ -1886,7 +1913,8 @@ P.assignTextUnitsToLines = function () {
 
     // Truncation check
     // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
-    if (languageDirectionIsLtr && unitArrayLength !== unitCursor) {
+    // + We still don't care about hyphens or truncation in columnar layouts
+    if (languageDirectionIsLtr && !layoutFlowIsColumns && unitArrayLength !== unitCursor) {
 
         let currentLine, replaceLen,
             acc, mutableUnitData;
@@ -1980,19 +2008,22 @@ P.positionTextUnitsAlongPath = function () {
 // console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits)');
 
     const {
-        lines,
-        textUnits,
-        layoutTemplate,
-        pathPosition,
+        alignment,
+        alignTextUnitsToPath,
         defaultTextStyle,
+        layoutTemplate,
+        lines,
+        pathPosition,
         textHandle,
         textOffset,
-        alignment,
+        textUnitFlow,
+        textUnits,
     } = this;
 
     const { length, unitData } = lines[0];
     const direction = defaultTextStyle.direction;
     const languageDirectionIsLtr = (direction === LTR);
+    const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
 
     const data = requestArray();
 
@@ -2023,51 +2054,109 @@ P.positionTextUnitsAlongPath = function () {
 
             ({ len, height, kernOffset, localHandle, localOffset, startData, startCorrection, boxData, localAlignment } = unit);
 
-            accumulatedLen += len;
+            if (layoutFlowIsColumns) {
 
-            if (accumulatedLen < length) {
+                accumulatedLen += height;
 
-                temp = localHandle[0] || textHandle[0] || 0;
-                handleX = this.getTextHandleX(temp, len, direction);
+                if (accumulatedLen < length) {
 
-                temp = localHandle[1] || textHandle[1] || 0;
-                handleY = this.getTextHandleY(temp, height, direction);
+                    temp = localHandle[0] || textHandle[0] || 0;
+                    handleX = this.getTextHandleX(temp, len, direction);
 
-                temp = localOffset[0] || textOffset[0] || 0;
-                offsetX = this.getTextOffset(temp, len);
+                    temp = localHandle[1] || textHandle[1] || 0;
+                    handleY = this.getTextHandleY(temp, height, direction);
 
-                temp = localOffset[1] || textOffset[1] || 0;
-                offsetY = this.getTextOffset(temp, height);
+                    temp = localOffset[0] || textOffset[0] || 0;
+                    offsetX = this.getTextOffset(temp, len);
 
-                currentLen += handleX;
-                if (currentLen >= length) currentLen -= length;
-                currentPos = currentLen / length;
+                    temp = localOffset[1] || textOffset[1] || 0;
+                    offsetY = this.getTextOffset(temp, height);
 
-                unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
-                ({x, y, angle} = unit.pathData);
+                    currentLen += handleY;
+                    if (currentLen >= length) currentLen -= length;
+                    currentPos = currentLen / length;
 
-                tempX = x + offsetX - handleX;
-                tempY = y + offsetY - handleY;
+                    unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
+                    ({x, y, angle} = unit.pathData);
 
-                startData[0] = x;
-                startData[1] = y;
+                    tempX = x + offsetX - handleX;
+                    tempY = y + offsetY - handleY;
 
-                startCorrection[0] = tempX - x;
-                startCorrection[1] = tempY - y;
+                    startData[0] = x;
+                    startData[1] = y;
 
-                unit.startRotation = (localAlignment + alignment + angle) * _radian;
+                    startCorrection[0] = tempX - x;
+                    startCorrection[1] = tempY - y;
 
-                boxData.length = 0;
-                boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
+                    if (alignTextUnitsToPath) unit.startRotation = (alignment + angle - 90) * _radian;
+                    else unit.startRotation = (alignment - 90) * _radian;
 
-                currentLen += len - kernOffset - handleX;
+                    unit.localRotation = localAlignment * _radian;
+
+                    boxData.length = 0;
+                    boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
+
+                    currentLen += height - handleY;
+                }
+
+                // TODO: Attempt to add the truncation chars to the output in the `else` block
+                // + Else block only reached if there are more words than space available to fit them all on the line
+                else {
+
+                    break;
+                }
             }
-
-            // TODO: Attempt to add the truncation chars to the output in the `else` block
-            // + Else block only reached if there are more words than space available to fit them all on the line
             else {
 
-                break;
+                accumulatedLen += len;
+
+                if (accumulatedLen < length) {
+
+                    temp = localHandle[0] || textHandle[0] || 0;
+                    handleX = this.getTextHandleX(temp, len, direction);
+
+                    temp = localHandle[1] || textHandle[1] || 0;
+                    handleY = this.getTextHandleY(temp, height, direction);
+
+                    temp = localOffset[0] || textOffset[0] || 0;
+                    offsetX = this.getTextOffset(temp, len);
+
+                    temp = localOffset[1] || textOffset[1] || 0;
+                    offsetY = this.getTextOffset(temp, height);
+
+                    currentLen += handleX;
+                    if (currentLen >= length) currentLen -= length;
+                    currentPos = currentLen / length;
+
+                    unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
+                    ({x, y, angle} = unit.pathData);
+
+                    tempX = x + offsetX - handleX;
+                    tempY = y + offsetY - handleY;
+
+                    startData[0] = x;
+                    startData[1] = y;
+
+                    startCorrection[0] = tempX - x;
+                    startCorrection[1] = tempY - y;
+
+                    if (alignTextUnitsToPath) unit.startRotation = (alignment + angle) * _radian;
+                    else unit.startRotation = alignment * _radian;
+
+                    unit.localRotation = localAlignment * _radian;
+
+                    boxData.length = 0;
+                    boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
+
+                    currentLen += len - kernOffset - handleX;
+                }
+
+                // TODO: Attempt to add the truncation chars to the output in the `else` block
+                // + Else block only reached if there are more words than space available to fit them all on the line
+                else {
+
+                    break;
+                }
             }
         }
     }
@@ -2093,6 +2182,7 @@ P.positionTextUnitsInSpace = function () {
         lines,
         textHandle,
         textOffset,
+        textUnitFlow,
         textUnits,
     } = this;
 
@@ -2100,6 +2190,7 @@ P.positionTextUnitsInSpace = function () {
 
     const direction = defaultTextStyle.direction;
     const languageDirectionIsLtr = (direction === LTR);
+    const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
     const currentRotation = layoutTemplate.currentRotation;
 
     let unit, length, unitData, unitLengths, unitIndices,
@@ -2107,7 +2198,7 @@ P.positionTextUnitsInSpace = function () {
         len, height, startData, startCorrection, boxData,
         localHandle, localOffset, localAlignment, lineOffset,
         temp, tempX, tempY, handleX, handleY, offsetX, offsetY,
-        startAtX, startAtY, startAt, localX, localY, localAngle, localJustifyX;
+        startAtX, startAtY, startAt, localX, localY, localAngle;
 
     lines.forEach(line => {
 
@@ -2142,11 +2233,13 @@ P.positionTextUnitsInSpace = function () {
                     // Populate the initialDistances array, and keep a running total of the current length used
                     if (unit.stampFlag) {
 
-                        initialDistances.push(unitLengths)
-                        unitLengths += unit.len - unit.kernOffset;
+                        initialDistances.push(unitLengths);
+
+                        if (layoutFlowIsColumns) unitLengths += unit.height;
+                        else unitLengths += unit.len - unit.kernOffset;
 
                         // keep a count of the number of spaces within the line
-                        if (justifyLine === SPACE_BETWEEN && unit.charType === TEXT_TYPE_SPACE) noOfSpaces++;
+                        if ((justifyLine === SPACE_BETWEEN || justifyLine === SPACE_AROUND) && unit.charType === TEXT_TYPE_SPACE) noOfSpaces++;
                     }
                 }
             });
@@ -2156,7 +2249,7 @@ P.positionTextUnitsInSpace = function () {
 
             // Adjustment for dynamic inputs (soft hyphen, truncation chars)
             // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
-            if (languageDirectionIsLtr && unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE)) {
+            if (languageDirectionIsLtr && (unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE))) {
 
                 unit = textUnits[unitData[unitData.length - 2]];
                 spaceRemaining -= unit?.replaceLen || 0;
@@ -2178,10 +2271,17 @@ P.positionTextUnitsInSpace = function () {
                     adjustedDistances.push(...initialDistances.map(d => d + spaceRemaining));
                     break;
 
-                // If justify is 'space-between' ... we handle this case below
+                // If justify is 'space-between' or 'space-around' ... we handle this case below
                 case SPACE_BETWEEN :
 
                     if (noOfSpaces) spaceStep = spaceRemaining / noOfSpaces;
+
+                    adjustedDistances.push(...initialDistances);
+                    break;
+
+                case SPACE_AROUND :
+
+                    spaceStep = spaceRemaining / (noOfSpaces + 2);
 
                     adjustedDistances.push(...initialDistances);
                     break;
@@ -2216,6 +2316,33 @@ P.positionTextUnitsInSpace = function () {
                 });
             }
 
+            if (justifyLine === SPACE_AROUND) {
+
+                unitIndices = 0;
+
+                unitData.forEach(unitIndex => {
+
+                    unit = textUnits[unitIndex];
+
+                    if (unit?.stampFlag) {
+
+                        unitIndices++
+
+                        if (unit.charType === TEXT_TYPE_SPACE) {
+
+                            for (let i = unitIndices, iz = adjustedDistances.length; i < iz; i++) {
+
+                                adjustedDistances[i] += spaceStep;
+                            }
+                        }
+                    }
+                });
+
+                const temp = [...adjustedDistances];
+                adjustedDistances.length = 0;
+                adjustedDistances.push(...temp.map(d => d + spaceStep));
+            }
+
             // Now we can update the relevant textUnit objects. This is where we take into account the language/font preference for what they consider to be their natural start/end sides
             unitData.forEach(u => {
 
@@ -2236,50 +2363,83 @@ P.positionTextUnitsInSpace = function () {
 
                     if (unit.stampFlag) {
 
-                        if (languageDirectionIsLtr) lineOffset = adjustedDistances.shift();
-                        else lineOffset = length - len - adjustedDistances.shift();
+                        if (layoutFlowIsColumns) {
 
-                        temp = localHandle[0] || textHandle[0] || 0;
-                        handleX = getX.call(this, temp, len, direction);
+                            lineOffset = adjustedDistances.shift();
 
-                        temp = localHandle[1] || textHandle[1] || 0;
-                        handleY = getY.call(this, temp, height, direction);
+                            temp = localHandle[0] || textHandle[0] || 0;
+                            handleX = getX.call(this, temp, len, direction);
 
-                        temp = localOffset[0] || textOffset[0] || 0;
-                        offsetX = this.getTextOffset(temp, len);
+                            temp = localHandle[1] || textHandle[1] || 0;
+                            handleY = getY.call(this, temp, height, direction);
 
-                        temp = localOffset[1] || textOffset[1] || 0;
-                        offsetY = getTextOffset.call(this, temp, height);
+                            temp = localOffset[0] || textOffset[0] || 0;
+                            offsetX = this.getTextOffset(temp, len);
 
-                        localAngle = alignment + currentRotation;
-                        coord.set(lineOffset + handleX, 0).rotate(localAngle);
+                            temp = localOffset[1] || textOffset[1] || 0;
+                            offsetY = getTextOffset.call(this, temp, height);
 
-                        localX = startAtX + coord[0];
-                        localY = startAtY + coord[1];
+                            localAngle = alignment + currentRotation;
+                            coord.set(lineOffset + handleY, 0).rotate(localAngle);
 
-                        tempX = localX + offsetX;
-                        tempY = localY + offsetY - handleY;
+                            localX = startAtX + coord[0];
+                            localY = startAtY + coord[1];
 
-                        startData[0] = localX;
-                        startData[1] = localY;
+                            tempX = localX + offsetX;
+                            tempY = localY + offsetY - handleY;
 
-                        startCorrection[0] = tempX - localX - handleX;
-                        startCorrection[1] = tempY - localY;
+                            startData[0] = localX;
+                            startData[1] = localY;
 
-                        // tempX = localX + offsetX - handleX;
-                        // tempY = localY + offsetY - handleY;
+                            startCorrection[0] = tempX - localX - handleX;
+                            startCorrection[1] = tempY - localY;
 
-                        // startData[0] = localX;
-                        // startData[1] = localY;
+                            unit.startRotation = (localAngle - 90) * _radian;
 
-                        // startCorrection[0] = tempX - localX;
-                        // startCorrection[1] = tempY - localY;
+                            unit.localRotation = localAlignment * _radian;
 
-                        unit.startRotation = localAngle * _radian;
-                        unit.localRotation = localAlignment * _radian;
+                            boxData.length = 0;
+                            boxData.push(localX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
+                        }
+                        else {
 
-                        boxData.length = 0;
-                        boxData.push(localX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
+                            if (languageDirectionIsLtr) lineOffset = adjustedDistances.shift();
+                            else lineOffset = length - len - adjustedDistances.shift();
+
+                            temp = localHandle[0] || textHandle[0] || 0;
+                            handleX = getX.call(this, temp, len, direction);
+
+                            temp = localHandle[1] || textHandle[1] || 0;
+                            handleY = getY.call(this, temp, height, direction);
+
+                            temp = localOffset[0] || textOffset[0] || 0;
+                            offsetX = this.getTextOffset(temp, len);
+
+                            temp = localOffset[1] || textOffset[1] || 0;
+                            offsetY = getTextOffset.call(this, temp, height);
+
+                            localAngle = alignment + currentRotation;
+                            coord.set(lineOffset + handleX, 0).rotate(localAngle);
+
+                            localX = startAtX + coord[0];
+                            localY = startAtY + coord[1];
+
+                            tempX = localX + offsetX;
+                            tempY = localY + offsetY - handleY;
+
+                            startData[0] = localX;
+                            startData[1] = localY;
+
+                            startCorrection[0] = tempX - localX - handleX;
+                            startCorrection[1] = tempY - localY;
+
+                            unit.startRotation = localAngle * _radian;
+
+                            unit.localRotation = localAlignment * _radian;
+
+                            boxData.length = 0;
+                            boxData.push(localX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
+                        }
                     }
                 }
             });
@@ -2888,7 +3048,7 @@ P.createTextCellsForPath = function (host) {
 
             const { unitData } = line;
 
-            let unit, startData, startCorrection, chars, style, x, y, dx, dy, startRotation, cos, sin;
+            let unit, startData, startCorrection, localRotation, chars, style, x, y, dx, dy, startRotation, cos, sin;
 
             unitData.forEach(u => {
 
@@ -2896,7 +3056,14 @@ P.createTextCellsForPath = function (host) {
 
                 if (unit) {
 
-                    ({ startData, startCorrection, startRotation, chars, style } = unit);
+                    ({
+                        chars,
+                        localRotation,
+                        startCorrection,
+                        startData,
+                        startRotation,
+                        style,
+                    } = unit);
 
                     if (style) {
 
@@ -2914,6 +3081,9 @@ P.createTextCellsForPath = function (host) {
 
                     uEngine.setTransform(cos, sin, -sin, cos, x, y);
                     mEngine.setTransform(cos, sin, -sin, cos, x, y);
+
+                    uEngine.rotate(localRotation);
+                    mEngine.rotate(localRotation);
 
                     uEngine.strokeText(chars, dx, dy);
                     uEngine.fillText(chars, dx, dy);
@@ -3141,7 +3311,7 @@ P.createTextCells = function (host) {
 
             const { unitData } = line;
 
-            let unit, startData, startCorrection, chars, charType, style,
+            let unit, startData, startCorrection, chars, style,
                 x, y, dx, dy, startRotation, localRotation, cos, sin,
                 lookAhead, text;
 

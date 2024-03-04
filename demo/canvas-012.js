@@ -114,6 +114,7 @@ for (let i = 0.01; i < 1; i += 0.01) {
     else col = 'purple';
 
     myWheel.clone({
+// @ts-expect-error
         name: name(`bead-${col}-${parseInt(i * 100, 10)}`),
         pathPosition: i,
         fillStyle: col,

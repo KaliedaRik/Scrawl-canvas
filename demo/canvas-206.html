@@ -72,14 +72,16 @@
       </select>
     </div>
 
-    <div class="pink label">Animation</div>
+    <div class="pink label">Text unit flow</div>
     <div class="pink">
-      <select class="controlItem" id="animation">
-        <option value="">off</option>
-        <option value="on">on</option>
+      <select class="controlItem" id="textUnitFlow">
+        <option value="row">row</option>
+        <option value="row-reverse">row-reverse</option>
+        <option value="column">column</option>
+        <option value="column-reverse">column-reverse</option>
       </select>
     </div>
-    
+
     <div class="pink label">Text handle X</div>
     <div class="pink">
       <select class="controlItem" id="textHandleX">
@@ -104,9 +106,27 @@
       </select>
     </div>
 
+    <div class="pink label">Align text units to path</div>
+    <div class="pink">
+      <select class="controlItem" id="alignTextUnitsToPath">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
     <div class="pink label">Alignment</div>
     <div class="pink">
       <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
+    <div class="pink label">Letter spacing</div>
+    <div class="pink">
+      <input class="controlItem" id="letterSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
+    </div>
+
+    <div class="pink label">Word spacing</div>
+    <div class="pink">
+      <input class="controlItem" id="wordSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
     </div>
 
     <div class="pink label">Break text on spaces</div>
@@ -114,6 +134,14 @@
       <select class="controlItem" id="breakTextOnSpaces">
         <option value="false">false</option>
         <option value="true">true</option>
+      </select>
+    </div>
+    
+    <div class="pink label">Animation</div>
+    <div class="pink">
+      <select class="controlItem" id="animation">
+        <option value="">off</option>
+        <option value="on">on</option>
       </select>
     </div>
     

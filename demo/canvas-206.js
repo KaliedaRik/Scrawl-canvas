@@ -433,14 +433,20 @@ scrawl.makeUpdater({
         offset_yPercent: ['offsetY', '%'],
         offset_yAbsolute: ['offsetY', 'round'],
 
+        letterSpacing: ['letterSpacing', 'px'],
+        wordSpacing: ['wordSpacing', 'px'],
+
         roll: ['roll', 'float'],
         scale: ['scale', 'float'],
 
         textHandleX: ['textHandleX', 'raw'],
         textHandleY: ['textHandleY', 'raw'],
 
+        textUnitFlow: ['textUnitFlow', 'raw'],
+
         alignment: ['alignment', 'float'],
 
+        alignTextUnitsToPath: ['alignTextUnitsToPath', 'boolean'],
         breakTextOnSpaces: ['breakTextOnSpaces', 'boolean'],
 
         flipReverse: ['flipReverse', 'boolean'],
@@ -503,7 +509,14 @@ document.querySelector('#alignment').value = 0;
 document.querySelector('#flipReverse').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#flipUpend').options.selectedIndex = 0;
-
+// @ts-expect-error
+document.querySelector('#alignTextUnitsToPath').options.selectedIndex = 1;
+// @ts-expect-error
+document.querySelector('#letterSpacing').value = 0;
+// @ts-expect-error
+document.querySelector('#wordSpacing').value = 0;
+// @ts-expect-error
+document.querySelector('#textUnitFlow').options.selectedIndex = 0;
 
 
 // #### Development and testing
