@@ -28,7 +28,7 @@ const blockTemplate = scrawl.makeBlock({
     start: ['center', 'center'],
     handle: ['center', 'center'],
     dimensions: ['60%', '80%'],
-    fillStyle: 'rgb(255 240 240 / 0.2)',
+    fillStyle: 'rgb(255 255 100 / 0.2)',
 });
 
 const wheelTemplate = scrawl.makeWheel({
@@ -37,7 +37,7 @@ const wheelTemplate = scrawl.makeWheel({
     width: '60%',
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    fillStyle: 'rgb(255 240 240 / 0.2)',
+    fillStyle: 'rgb(255 255 100 / 0.2)',
     visibility: false,
 });
 
@@ -46,10 +46,10 @@ const crescentTemplate = scrawl.makeCrescent({
     name: name('crescent-layout-template'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    outerRadius: 200,
-    innerRadius: 150,
+    outerRadius: 180,
+    innerRadius: 140,
     displacement: 150,
-    fillStyle: 'rgb(255 240 240 / 0.2)',
+    fillStyle: 'rgb(255 255 100 / 0.2)',
     visibility: false,
 });
 
@@ -185,14 +185,7 @@ const updateLocalAlignment = (event) => {
 
     const val = parseFloat(event.target.value);
 
-console.log('updateLocalAlignment', val)
-    if (Number.isFinite(val)) {
-
-        mylabel.setAllTextUnits({
-
-            localAlignment: val,
-        });
-    }
+    if (Number.isFinite(val)) mylabel.setAllTextUnits({ localAlignment: val });
 };
 scrawl.addNativeListener(['change', 'input'], (e) => updateLocalAlignment(e), localAlignmentSelector);
 

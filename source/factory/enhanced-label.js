@@ -1234,8 +1234,8 @@ P.calculateLines = function () {
 
             coord.set(d).subtract(currentStampPosition).rotate(alignment + currentRotation).add(currentStampPosition);
 
-            d[0] = _round(coord[0]);
-            d[1] = _round(coord[1]);
+            d[0] = coord[0];
+            d[1] = coord[1];
         });
     });
 
@@ -1244,27 +1244,13 @@ P.calculateLines = function () {
 
     selectedLines.forEach(data => {
 
-        if (languageDirectionIsLtr) {
+        for (let i = 0, iz = data.length; i < iz; i += 2) {
 
-            for (let i = 0, iz = data.length; i < iz; i += 2) {
+            lines.push(requestLine().set({
 
-                lines.push(requestLine().set({
-
-                    startAt: data[i],
-                    endAt: data[i + 1],
-                }));
-            }
-        }
-        else {
-
-            for (let i = data.length - 1; i >= 0; i -= 2) {
-
-                lines.push(requestLine().set({
-
-                    startAt: data[i - 1],
-                    endAt: data[i],
-                }));
-            }
+                startAt: data[i],
+                endAt: data[i + 1],
+            }));
         }
     });
 
@@ -1783,9 +1769,6 @@ P.layoutText = function () {
                     length: layoutTemplate.length,
                     isPathEntity: true,
                 }));
-
-                this.assignTextUnitsToLines();
-                this.positionTextUnits();
             }
         }
         else {
@@ -1804,11 +1787,10 @@ P.layoutText = function () {
                     unit.stampFlag = true;
                     unit.lineOffset = 0;
                 });
-
-                this.assignTextUnitsToLines();
-                this.positionTextUnits();
             }
         }
+        this.assignTextUnitsToLines();
+        this.positionTextUnits();
     }
 };
 
@@ -1897,7 +1879,7 @@ P.assignTextUnitsToLines = function () {
             // + Currently, we just leave the line empty and move onto the next line (which might be able to fit the long TextUnit)
             // + If the offending TextUnit is too long for all subsequent lines then neither it nor any of the following TextUnits will appear.
             // + An alternative approach could be to allow the overlong TextUnit to appear on a line if it's the only TextUnit on that line, thus removing the display block for subsequent TextUnits
-            // + For the moment, we will not implement this alternative approach. It's up to developers and designers to use words that can fit into the available line space. Overlong words can be hyphenated with soft (&amp;shy;) hyphens if required.
+            // + For the moment, we will not implement this alternative approach. It's up to developers and designers to use words that can fit into the available line space. Overlong words can be hyphenated with soft (&amp;shy;) hyphens, or zero-width spaces, if required.
             else break;
         }
     });
@@ -2125,7 +2107,7 @@ P.positionTextUnitsInSpace = function () {
         len, height, startData, startCorrection, boxData,
         localHandle, localOffset, localAlignment, lineOffset,
         temp, tempX, tempY, handleX, handleY, offsetX, offsetY,
-        startAtX, startAtY, startAt, localX, localY, localAngle;
+        startAtX, startAtY, startAt, localX, localY, localAngle, localJustifyX;
 
     lines.forEach(line => {
 
@@ -2269,22 +2251,32 @@ P.positionTextUnitsInSpace = function () {
                         temp = localOffset[1] || textOffset[1] || 0;
                         offsetY = getTextOffset.call(this, temp, height);
 
-                        localAngle = localAlignment + alignment + currentRotation;
-                        coord.set(lineOffset, 0).rotate(localAngle);
+                        localAngle = alignment + currentRotation;
+                        coord.set(lineOffset + handleX, 0).rotate(localAngle);
 
                         localX = startAtX + coord[0];
                         localY = startAtY + coord[1];
 
-                        tempX = localX + offsetX - handleX;
+                        tempX = localX + offsetX;
                         tempY = localY + offsetY - handleY;
 
                         startData[0] = localX;
                         startData[1] = localY;
 
-                        startCorrection[0] = tempX - localX;
+                        startCorrection[0] = tempX - localX - handleX;
                         startCorrection[1] = tempY - localY;
 
-                        unit.startRotation = (localAngle) * _radian;
+                        // tempX = localX + offsetX - handleX;
+                        // tempY = localY + offsetY - handleY;
+
+                        // startData[0] = localX;
+                        // startData[1] = localY;
+
+                        // startCorrection[0] = tempX - localX;
+                        // startCorrection[1] = tempY - localY;
+
+                        unit.startRotation = localAngle * _radian;
+                        unit.localRotation = localAlignment * _radian;
 
                         boxData.length = 0;
                         boxData.push(localX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
@@ -3150,7 +3142,7 @@ P.createTextCells = function (host) {
             const { unitData } = line;
 
             let unit, startData, startCorrection, chars, charType, style,
-                x, y, dx, dy, startRotation, cos, sin,
+                x, y, dx, dy, startRotation, localRotation, cos, sin,
                 lookAhead, text;
 
             unitData.forEach((u, index) => {
@@ -3159,7 +3151,7 @@ P.createTextCells = function (host) {
 
                 if (unit) {
 
-                    ({ startData, startCorrection, startRotation, chars, style } = unit);
+                    ({ startData, startCorrection, startRotation, localRotation, chars, style } = unit);
 
                     if (style) {
 
@@ -3193,6 +3185,9 @@ P.createTextCells = function (host) {
 
                         uEngine.setTransform(cos, sin, -sin, cos, x, y);
                         mEngine.setTransform(cos, sin, -sin, cos, x, y);
+
+                        uEngine.rotate(localRotation);
+                        mEngine.rotate(localRotation);
 
                         uEngine.strokeText(text, dx, dy);
                         uEngine.fillText(text, dx, dy);
@@ -3403,6 +3398,7 @@ U.defs = {
     boxData: null,
 
     localAlignment: 0,
+    localRotation: 0,
     startRotation: 0,
 
     lineOffset: 0,
