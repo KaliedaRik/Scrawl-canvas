@@ -13,7 +13,7 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
     .demo-explanation-styles {
       width: calc(600px * 0.6);
@@ -123,7 +123,7 @@
 
     <div class="lavender label">Line spacing</div>
     <div class="lavender">
-      <input class="controlItem" id="lineSpacing" type="range" value="1.5" min="0" max="3" step="0.01" />
+      <input class="controlItem" id="lineSpacing" type="range" value="1.5" min="0" max="4" step="0.01" />
     </div>
 
     <div class="lavender label">Line adjustment</div>
@@ -147,6 +147,11 @@
       </select>
     </div>
 
+    <div class="green label">Alignment</div>
+    <div class="green">
+      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
     <div class="blue label">Truncate string</div>
     <div class="blue">
       <select class="controlItem" id="truncateString">
@@ -165,9 +170,9 @@
       </select>
     </div>
 
-    <div class="green label">Alignment</div>
+    <div class="green label">Local alignment</div>
     <div class="green">
-      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
+      <input class="controlItem" id="localAlignment" type="range" value="0" min="-180" max="180" step="1" />
     </div>
 
     <div class="pink label">Show guidelines</div>
@@ -178,26 +183,12 @@
       </select>
     </div>
 
-    <div class="green label">Local alignment</div>
-    <div class="green">
-      <input class="controlItem" id="localAlignment" type="range" value="0" min="-180" max="180" step="1" />
-    </div>
-
     <div class="pink label">Guideline style</div>
     <div class="pink">
       <select class="controlItem" id="guidelineStyle">
         <option value="">default</option>
         <option value="red">red</option>
         <option value="rgb(0 160 0 / 0.6)">rgb(0 160 0 / 0.6)</option>
-      </select>
-    </div>
-
-    <div class="green label">Text handle X</div>
-    <div class="green">
-      <select class="controlItem" id="textHandleX">
-        <option value="left">left</option>
-        <option value="center">center</option>
-        <option value="right">right</option>
       </select>
     </div>
 
@@ -210,8 +201,17 @@
       </select>
     </div>
 
-    <div class="green label">Text handle Y</div>
-    <div class="green">
+    <div class="bluegreen label">Text handle X</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="textHandleX">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Text handle Y</div>
+    <div class="bluegreen">
       <select class="controlItem" id="textHandleY">
         <option value="top">top</option>
         <option value="hanging">hanging</option>
@@ -242,15 +242,18 @@
 
   <div class="controls">
 
-    <div class="yellow label">Scale</div>
-    <div class="yellow">
+    <div class="orange label">Scale</div>
+    <div class="orange">
       <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />
     </div>
 
-    <div class="yellow label">Roll</div>
-    <div class="yellow">
+    <div class="orange label">Roll</div>
+    <div class="orange">
       <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
     </div>
+
+    <div class="orange">&nbsp;</div>
+    <div class="orange">&nbsp;</div>
 
     <div class="yellow label">Width (Radius)</div>
     <div class="yellow">
@@ -261,6 +264,10 @@
     <div class="yellow">
       <input class="controlItem" id="height" type="range" value="80" min="20" max="100" step="1" />
     </div>
+
+    <div class="yellow">&nbsp;</div>
+    <div class="yellow">&nbsp;</div>
+
   </div>
 
   <p id="reportmessage"></p>

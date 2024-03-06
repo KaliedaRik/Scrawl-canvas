@@ -13,7 +13,7 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
     .controls.position {
       grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
@@ -31,8 +31,7 @@
     <a href="canvas-207.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 206</h1>
-  <h2>Label entity - overline and highlight</h2>
-  <h3>Drag and drop the Label around the canvas</h3>
+  <h2>EnhancedLabel entity - text along a path</h2>
 
   <div class="controls">
     <div class="pink label">Select font</div>
@@ -82,8 +81,16 @@
       </select>
     </div>
 
-    <div class="pink label">Text handle X</div>
-    <div class="pink">
+    <div class="green label">Align text units to path</div>
+    <div class="green">
+      <select class="controlItem" id="alignTextUnitsToPath">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Text handle X</div>
+    <div class="yellow">
       <select class="controlItem" id="textHandleX">
         <option value="left">left</option>
         <option value="start">start</option>
@@ -93,8 +100,8 @@
       </select>
     </div>
 
-    <div class="pink label">Text handle Y</div>
-    <div class="pink">
+    <div class="yellow label">Text handle Y</div>
+    <div class="yellow">
       <select class="controlItem" id="textHandleY">
         <option value="top">top</option>
         <option value="hanging">hanging</option>
@@ -106,39 +113,31 @@
       </select>
     </div>
 
-    <div class="pink label">Align text units to path</div>
-    <div class="pink">
-      <select class="controlItem" id="alignTextUnitsToPath">
-        <option value="false">false</option>
-        <option value="true">true</option>
-      </select>
-    </div>
-
-    <div class="pink label">Alignment</div>
-    <div class="pink">
+    <div class="green label">Alignment</div>
+    <div class="green">
       <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
     </div>
 
-    <div class="pink label">Letter spacing</div>
-    <div class="pink">
+    <div class="blue label">Letter spacing</div>
+    <div class="blue">
       <input class="controlItem" id="letterSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
     </div>
 
-    <div class="pink label">Word spacing</div>
-    <div class="pink">
+    <div class="blue label">Word spacing</div>
+    <div class="blue">
       <input class="controlItem" id="wordSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
     </div>
 
-    <div class="pink label">Break text on spaces</div>
-    <div class="pink">
+    <div class="green label">Break text on spaces</div>
+    <div class="green">
       <select class="controlItem" id="breakTextOnSpaces">
         <option value="false">false</option>
         <option value="true">true</option>
       </select>
     </div>
     
-    <div class="pink label">Animation</div>
-    <div class="pink">
+    <div class="orange label">Animation</div>
+    <div class="orange">
       <select class="controlItem" id="animation">
         <option value="">off</option>
         <option value="on">on</option>

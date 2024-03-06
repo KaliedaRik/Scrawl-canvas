@@ -1,5 +1,5 @@
 // # Demo Canvas 206
-// Label entity - overline and highlight
+// EnhancedLabel entity - text along a path
 
 // [Run code](../../demo/canvas-206.html)
 import * as scrawl from '../source/scrawl.js';

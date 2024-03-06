@@ -262,7 +262,7 @@ const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
 
 const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
 
-const LAYOUT_KEYS = _freeze(['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'pathPosition', 'flipReverse', 'flipUpend', 'alignTextUnitsToPath']);
+const LAYOUT_KEYS = _freeze(['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'flipReverse', 'flipUpend', 'alignTextUnitsToPath']);
 
 P.get = function (key) {
 
@@ -427,7 +427,8 @@ P.setDelta = function (items = Ωempty) {
 
 
 const G = P.getters,
-    S = P.setters;
+    S = P.setters,
+    D = P.deltaSetters;
 
 // __group__ - copied over from the position mixin.
 G.group = function () {
@@ -562,6 +563,26 @@ S.guidelineStyle = function (item) {
     else if (item.substring) this.guidelineStyle = item;
 }
 
+S.pathPosition = function (item) {
+
+    if (item < 0) item = _abs(item);
+    if (item > 1) item = item % 1;
+
+    this.pathPosition = parseFloat(item.toFixed(6));
+
+    this.dirtyTextLayout = true;
+};
+D.pathPosition = function (item) {
+
+    let pos = this.pathPosition + item
+
+    if (pos < 0) pos += 1;
+    if (pos > 1) pos = pos % 1;
+
+    this.pathPosition = parseFloat(pos.toFixed(6));
+
+    this.dirtyTextLayout = true;
+};
 
 // #### Prototype functions
 
@@ -1304,16 +1325,18 @@ P.cleanText = function () {
         this.dirtyText = false;
 
         const {
-            text,
-            textUnits,
             breakTextOnSpaces,
             breakWordsOnHyphens,
             defaultTextStyle,
+            text,
+            textUnitFlow,
+            textUnits,
         } = this;
 
         const textCharacters = [...text];
 
         const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
+        const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
 
         const unit = [];
 
@@ -1406,8 +1429,9 @@ P.cleanText = function () {
 
                 unit.push(c);
 
-                // Some Chinese/Japanese characters simply have to stick together!
-                noBreak = TEXT_NO_BREAK_REGEX.test(c) || TEXT_NO_BREAK_REGEX.test(textCharacters[index + 1]);
+                // Some Chinese/Japanese characters simply have to stick together (but not in columns)!
+                if (!layoutFlowIsColumns) noBreak = TEXT_NO_BREAK_REGEX.test(c) || TEXT_NO_BREAK_REGEX.test(textCharacters[index + 1]);
+                else noBreak = true;
 
                 if (!noBreak) {
 
@@ -1427,6 +1451,14 @@ P.cleanText = function () {
                         }));
                         unit.length = 0;
                     }
+                }
+                else  {
+
+                    textUnits.push(requestUnit({
+                        [UNIT_CHARS]: unit.join(ZERO_STR),
+                        [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                    }));
+                    unit.length = 0;
                 }
             });
         }
@@ -1825,6 +1857,7 @@ P.assignTextUnitsToLines = function () {
     const {
         breakWordsOnHyphens,
         defaultTextStyle,
+        layoutTemplate,
         lines,
         textUnitFlow,
         textUnits,
@@ -1862,7 +1895,7 @@ P.assignTextUnitsToLines = function () {
             ({ len, height, charType } = unit);
 
             // Check: is there room for the text unit
-            check = (layoutFlowIsColumns) ? height : len;
+            check = (layoutFlowIsColumns) ? height * layoutTemplate.currentScale : len;
 
             if (check < lengthRemaining) {
 
@@ -2024,6 +2057,7 @@ P.positionTextUnitsAlongPath = function () {
     const direction = defaultTextStyle.direction;
     const languageDirectionIsLtr = (direction === LTR);
     const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
+    const currentScale = layoutTemplate.currentScale;
 
     const data = requestArray();
 
@@ -2035,9 +2069,8 @@ P.positionTextUnitsAlongPath = function () {
 
     let currentPos = pathPosition,
         currentLen = length * currentPos,
-        accumulatedLen = 0,
         u, unit,
-        len, height, kernOffset, localHandle, localOffset,
+        len, height, kernOffset, localHandle, localOffset, scaledHeight,
         startData, startCorrection, boxData, localAlignment,
         temp, tempX, tempY,
         x, y, angle,
@@ -2054,109 +2087,87 @@ P.positionTextUnitsAlongPath = function () {
 
             ({ len, height, kernOffset, localHandle, localOffset, startData, startCorrection, boxData, localAlignment } = unit);
 
+            scaledHeight = height * currentScale;
+
             if (layoutFlowIsColumns) {
 
-                accumulatedLen += height;
+                temp = localHandle[0] || textHandle[0] || 0;
+                handleX = this.getTextHandleX(temp, len, direction);
 
-                if (accumulatedLen < length) {
+                temp = localHandle[1] || textHandle[1] || 0;
+                handleY = this.getTextHandleY(temp, height, direction);
 
-                    temp = localHandle[0] || textHandle[0] || 0;
-                    handleX = this.getTextHandleX(temp, len, direction);
+                temp = localOffset[0] || textOffset[0] || 0;
+                offsetX = this.getTextOffset(temp, len);
 
-                    temp = localHandle[1] || textHandle[1] || 0;
-                    handleY = this.getTextHandleY(temp, height, direction);
+                temp = localOffset[1] || textOffset[1] || 0;
+                offsetY = this.getTextOffset(temp, height);
 
-                    temp = localOffset[0] || textOffset[0] || 0;
-                    offsetX = this.getTextOffset(temp, len);
+                currentLen += handleY;
+                if (currentLen >= length) currentLen -= length;
+                currentPos = currentLen / length;
 
-                    temp = localOffset[1] || textOffset[1] || 0;
-                    offsetY = this.getTextOffset(temp, height);
+                unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
+                ({x, y, angle} = unit.pathData);
 
-                    currentLen += handleY;
-                    if (currentLen >= length) currentLen -= length;
-                    currentPos = currentLen / length;
+                tempX = x + offsetX - handleX;
+                tempY = y + offsetY - handleY;
 
-                    unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
-                    ({x, y, angle} = unit.pathData);
+                startData[0] = x;
+                startData[1] = y;
 
-                    tempX = x + offsetX - handleX;
-                    tempY = y + offsetY - handleY;
+                startCorrection[0] = tempX - x;
+                startCorrection[1] = tempY - y;
 
-                    startData[0] = x;
-                    startData[1] = y;
+                if (alignTextUnitsToPath) unit.startRotation = (alignment + angle - 90) * _radian;
+                else unit.startRotation = (alignment - 90) * _radian;
 
-                    startCorrection[0] = tempX - x;
-                    startCorrection[1] = tempY - y;
+                unit.localRotation = localAlignment * _radian;
 
-                    if (alignTextUnitsToPath) unit.startRotation = (alignment + angle - 90) * _radian;
-                    else unit.startRotation = (alignment - 90) * _radian;
+                boxData.length = 0;
+                boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
 
-                    unit.localRotation = localAlignment * _radian;
-
-                    boxData.length = 0;
-                    boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
-
-                    currentLen += height - handleY;
-                }
-
-                // TODO: Attempt to add the truncation chars to the output in the `else` block
-                // + Else block only reached if there are more words than space available to fit them all on the line
-                else {
-
-                    break;
-                }
+                currentLen += scaledHeight - handleY;
             }
             else {
 
-                accumulatedLen += len;
+                temp = localHandle[0] || textHandle[0] || 0;
+                handleX = this.getTextHandleX(temp, len, direction);
 
-                if (accumulatedLen < length) {
+                temp = localHandle[1] || textHandle[1] || 0;
+                handleY = this.getTextHandleY(temp, height, direction);
 
-                    temp = localHandle[0] || textHandle[0] || 0;
-                    handleX = this.getTextHandleX(temp, len, direction);
+                temp = localOffset[0] || textOffset[0] || 0;
+                offsetX = this.getTextOffset(temp, len);
 
-                    temp = localHandle[1] || textHandle[1] || 0;
-                    handleY = this.getTextHandleY(temp, height, direction);
+                temp = localOffset[1] || textOffset[1] || 0;
+                offsetY = this.getTextOffset(temp, height);
 
-                    temp = localOffset[0] || textOffset[0] || 0;
-                    offsetX = this.getTextOffset(temp, len);
+                currentLen += handleX;
+                if (currentLen >= length) currentLen -= length;
+                currentPos = currentLen / length;
 
-                    temp = localOffset[1] || textOffset[1] || 0;
-                    offsetY = this.getTextOffset(temp, height);
+                unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
+                ({x, y, angle} = unit.pathData);
 
-                    currentLen += handleX;
-                    if (currentLen >= length) currentLen -= length;
-                    currentPos = currentLen / length;
+                tempX = x + offsetX - handleX;
+                tempY = y + offsetY - handleY;
 
-                    unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
-                    ({x, y, angle} = unit.pathData);
+                startData[0] = x;
+                startData[1] = y;
 
-                    tempX = x + offsetX - handleX;
-                    tempY = y + offsetY - handleY;
+                startCorrection[0] = tempX - x;
+                startCorrection[1] = tempY - y;
 
-                    startData[0] = x;
-                    startData[1] = y;
+                if (alignTextUnitsToPath) unit.startRotation = (alignment + angle) * _radian;
+                else unit.startRotation = alignment * _radian;
 
-                    startCorrection[0] = tempX - x;
-                    startCorrection[1] = tempY - y;
+                unit.localRotation = localAlignment * _radian;
 
-                    if (alignTextUnitsToPath) unit.startRotation = (alignment + angle) * _radian;
-                    else unit.startRotation = alignment * _radian;
+                boxData.length = 0;
+                boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
 
-                    unit.localRotation = localAlignment * _radian;
-
-                    boxData.length = 0;
-                    boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
-
-                    currentLen += len - kernOffset - handleX;
-                }
-
-                // TODO: Attempt to add the truncation chars to the output in the `else` block
-                // + Else block only reached if there are more words than space available to fit them all on the line
-                else {
-
-                    break;
-                }
+                currentLen += len - kernOffset - handleX;
             }
         }
     }
@@ -2893,6 +2904,8 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
+    if (!this.noDeltaUpdates) 
+
     if (this.dirtyScale) {
 
         this.dirtyScale = false;
@@ -3381,13 +3394,6 @@ P.createTextCells = function (host) {
                             default:
                                 mEngine.fillText(text, dx, dy);
                         }
-
-                        mEngine.save();
-                        mEngine.fillStyle = 'rgb(0 180 0 / 1)';
-                        mEngine.fillRect(-1, - 1, 3, 3);
-                        mEngine.fillStyle = 'rgb(255 0 0 / 1)';
-                        mEngine.fillRect(dx - 1, dy - 1, 3, 3);
-                        mEngine.restore();
                     }
                 }
             });
