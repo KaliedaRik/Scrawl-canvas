@@ -156,14 +156,15 @@ CSS custom property --SC-method             maps to TextStyle method
       
       & u {
         --SC-include-underline: true;
-        --SC-underline-offset: 1.025;
-        --SC-underline-gap: 3;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
+
         text-decoration: underline;
       }
       
       & s {
         --SC-include-overline: true;
-        --SC-overline-offset: 0.5;
+        --SC-overline-offset: 0.4;
         --SC-overline-style: red;
         --SC-overline-width: 5px;
 
@@ -180,7 +181,8 @@ CSS custom property --SC-method             maps to TextStyle method
       
       & .underline {
         --SC-include-underline: true;
-        --SC-underline-offset: 1;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
 
         text-decoration: underline;
         font-variant: small-caps;
@@ -190,7 +192,7 @@ CSS custom property --SC-method             maps to TextStyle method
         --SC-fill-style: gray;
 
         --SC-include-overline: true;
-        --SC-overline-offset: 0.57;
+        --SC-overline-offset: 0.5;
         --SC-overline-style: gray;
         --SC-overline-width: 2px;
 
@@ -276,6 +278,7 @@ CSS custom property --SC-method             maps to TextStyle method
         <option value="start">start</option>
         <option value="end">end</option>
         <option value="space-between">space-between</option>
+        <option value="space-around">space-around</option>
       </select>
     </div>
 

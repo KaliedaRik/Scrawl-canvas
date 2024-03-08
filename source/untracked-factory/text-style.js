@@ -153,7 +153,7 @@ import { addStrings, doCreate, mergeOver, λnull, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _isArray, _isFinite, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, FILL, FONT_STRETCH_VALS, LINE_DASH, LTR, NAME, NORMAL, PC, SANS_SERIF, T_TEXT_STYLE, UNDEF, YELLOW, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, FILL, FONT_STRETCH_VALS, LINE_DASH, LTR, NAME, NORMAL, PC, SANS_SERIF, T_TEXT_STYLE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // #### Wheel constructor
 const TextStyle = function (items = Ωempty) {
@@ -267,7 +267,7 @@ const defaultAttributes = {
     // #### Unit highlight styling
     // Highlight goes behind the text and any underline, with no guttering provided. It is the full font height.
     // + Supports gradients, patterns and CSS color strings
-    highlightStyle: YELLOW,
+    highlightStyle: ZERO_STR,
     includeHighlight: false,
 
     // #### Unit stamp method

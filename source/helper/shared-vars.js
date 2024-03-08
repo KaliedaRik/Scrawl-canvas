@@ -691,7 +691,6 @@ export const XX_LARGE = 'xx-large';
 export const XX_SMALL = 'xx-small';
 export const XXX_LARGE = 'xxx-large';
 export const XYZ = 'XYZ';
-export const YELLOW = 'rgb(255 255 0 / 1)';
 export const Z_INDEX = 'zIndex';
 export const ZERO = 'zero';
 export const ZERO_PATH = 'M0,0';

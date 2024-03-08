@@ -40,7 +40,7 @@ const myLabel = scrawl.makeEnhancedLabel({
     fontString: '16px "Roboto Sans"',
     text: westernText,
     layoutTemplate: name('wheel-layout-engine'),
-    textHandleY: 'alphabetic',
+    textHandle: ['center', 'alphabetic'],
     breakWordsOnHyphens: true,
 });
 

@@ -638,14 +638,13 @@ P.getControllerCell = function () {
 
 
 // `makeWorkingTextStyle` - Clone a TextStyle object
-P.makeWorkingTextStyle = function (template, name) {
+P.makeWorkingTextStyle = function (template) {
 
 // console.log(this.name, 'makeWorkingTextStyle (trigger: various)');
 
     const workStyle = _create(template);
     _assign(workStyle, template);
 
-    workStyle.name = name;
     workStyle.isDefaultTextStyle = false;
 
     return workStyle;
@@ -736,7 +735,7 @@ P.getTextHandleX = function (val, dim, dir) {
 // `getTextHandleY` - Calculate the vertical offset required for a given TextUnit
 P.getTextHandleY = function (val, size, font) {
 
-// console.log(this.name, 'getTextHandleY (trigger: various)');
+// console.log(this.name, 'getTextHandleY (trigger: various)', val, size, font);
 
     const { height, hangingBaseline, alphabeticBaseline, ideographicBaseline, verticalOffset } = this.getFontMetadata(font);
 
@@ -1704,7 +1703,7 @@ P.assessTextForStyle = function () {
     // Start processing data here
     const { rawText, defaultTextStyle, textUnits } = this;
 
-    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'style-worker');
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
 
     let cursor = 0;
 
@@ -1727,7 +1726,7 @@ P.measureTextUnits = function () {
 
     let res, chars, charType, style, len, nextUnit, nextStyle, nextChars, nextType, nextLen, unkernedLen;
 
-    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'measure-worker');
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
     this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mycell);
 
     textUnits.forEach(t => {
@@ -2057,9 +2056,10 @@ P.positionTextUnitsAlongPath = function () {
     const direction = defaultTextStyle.direction;
     const languageDirectionIsLtr = (direction === LTR);
     const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
-    const currentScale = layoutTemplate.currentScale;
+    const currentScale = layoutTemplate.currentScale || 1;
 
     const data = requestArray();
+    const coord = requestCoordinate();
 
     data.push(...unitData);
 
@@ -2072,10 +2072,14 @@ P.positionTextUnitsAlongPath = function () {
         u, unit,
         len, height, kernOffset, localHandle, localOffset, scaledHeight,
         startData, startCorrection, boxData, localAlignment,
-        temp, tempX, tempY,
+        temp, tempX, tempY, localAngle, style,
         x, y, angle,
         handleX, handleY,
         offsetX, offsetY;
+
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
+    this.updateWorkingTextStyle(currentTextStyle, Ωempty);
+    let fontFamily, verticalOffset;
 
     for (let i = 0, iz = data.length; i < iz; i++) {
 
@@ -2085,7 +2089,14 @@ P.positionTextUnitsAlongPath = function () {
 
             unit = textUnits[data[i]];
 
-            ({ len, height, kernOffset, localHandle, localOffset, startData, startCorrection, boxData, localAlignment } = unit);
+            ({ len, height, kernOffset, localHandle, localOffset, startData, startCorrection, boxData, localAlignment, style } = unit);
+
+            if (style) {
+
+                this.updateWorkingTextStyle(currentTextStyle, style);
+                fontFamily = currentTextStyle.fontFamily;
+                verticalOffset = this.getFontMetadata(fontFamily).verticalOffset * (height / 100);
+            }
 
             scaledHeight = height * currentScale;
 
@@ -2095,7 +2106,7 @@ P.positionTextUnitsAlongPath = function () {
                 handleX = this.getTextHandleX(temp, len, direction);
 
                 temp = localHandle[1] || textHandle[1] || 0;
-                handleY = this.getTextHandleY(temp, height, direction);
+                handleY = this.getTextHandleY(temp, height, fontFamily);
 
                 temp = localOffset[0] || textOffset[0] || 0;
                 offsetX = this.getTextOffset(temp, len);
@@ -2119,13 +2130,12 @@ P.positionTextUnitsAlongPath = function () {
                 startCorrection[0] = tempX - x;
                 startCorrection[1] = tempY - y;
 
-                if (alignTextUnitsToPath) unit.startRotation = (alignment + angle - 90) * _radian;
-                else unit.startRotation = (alignment - 90) * _radian;
+                if (alignTextUnitsToPath) localAngle = alignment + angle - 90;
+                else localAngle = alignment - 90;
 
+                unit.startAlignment = localAngle;
+                unit.startRotation = localAngle * _radian;
                 unit.localRotation = localAlignment * _radian;
-
-                boxData.length = 0;
-                boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
 
                 currentLen += scaledHeight - handleY;
             }
@@ -2135,7 +2145,7 @@ P.positionTextUnitsAlongPath = function () {
                 handleX = this.getTextHandleX(temp, len, direction);
 
                 temp = localHandle[1] || textHandle[1] || 0;
-                handleY = this.getTextHandleY(temp, height, direction);
+                handleY = this.getTextHandleY(temp, height, fontFamily);
 
                 temp = localOffset[0] || textOffset[0] || 0;
                 offsetX = this.getTextOffset(temp, len);
@@ -2159,18 +2169,46 @@ P.positionTextUnitsAlongPath = function () {
                 startCorrection[0] = tempX - x;
                 startCorrection[1] = tempY - y;
 
-                if (alignTextUnitsToPath) unit.startRotation = (alignment + angle) * _radian;
-                else unit.startRotation = alignment * _radian;
+                if (alignTextUnitsToPath) localAngle = (alignment + angle);
+                else localAngle = alignment;
+
+                unit.startAlignment = localAngle;
+                unit.startRotation = localAngle * _radian;
 
                 unit.localRotation = localAlignment * _radian;
 
-                boxData.length = 0;
-                boxData.push(tempX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
-
                 currentLen += len - kernOffset - handleX;
             }
+
+            unit.set({ boxData: null });
+
+            coord.setFromArray([tempX - handleX, tempY - verticalOffset])
+                .subtract(startData)
+                .rotate(localAngle + localAlignment)
+                .add(startData);
+            boxData.tl.push(coord[0], coord[1]);
+
+            coord.setFromArray([tempX - handleX + len, tempY - verticalOffset])
+                .subtract(startData)
+                .rotate(localAngle + localAlignment)
+                .add(startData);
+            boxData.tr.push(coord[0], coord[1]);
+
+            coord.setFromArray([tempX - handleX + len, tempY + (height * currentScale)])
+                .subtract(startData)
+                .rotate(localAngle + localAlignment)
+                .add(startData);
+            boxData.br.push(coord[0], coord[1]);
+
+            coord.setFromArray([tempX - handleX, tempY + (height * currentScale)])
+                .subtract(startData)
+                .rotate(localAngle + localAlignment)
+                .add(startData);
+            boxData.bl.push(coord[0], coord[1]);
         }
     }
+
+    releaseCoordinate(coord);
     releaseArray(data);
 };
 
@@ -2185,8 +2223,8 @@ P.positionTextUnitsInSpace = function () {
     const {
         alignment,
         defaultTextStyle,
-        getTextHandleX: getX,
-        getTextHandleY: getY,
+        getTextHandleX,
+        getTextHandleY,
         getTextOffset,
         justifyLine,
         layoutTemplate,
@@ -2202,14 +2240,19 @@ P.positionTextUnitsInSpace = function () {
     const direction = defaultTextStyle.direction;
     const languageDirectionIsLtr = (direction === LTR);
     const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
-    const currentRotation = layoutTemplate.currentRotation;
+
+    const {currentRotation, currentScale} = layoutTemplate;
 
     let unit, length, unitData, unitLengths, unitIndices,
         noOfSpaces, spaceStep, spaceRemaining,
-        len, height, startData, startCorrection, boxData,
+        len, height, style, startData, startCorrection, boxData,
         localHandle, localOffset, localAlignment, lineOffset,
         temp, tempX, tempY, handleX, handleY, offsetX, offsetY,
         startAtX, startAtY, startAt, localX, localY, localAngle;
+
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
+    this.updateWorkingTextStyle(currentTextStyle, Ωempty);
+    let fontFamily, verticalOffset;
 
     lines.forEach(line => {
 
@@ -2327,7 +2370,7 @@ P.positionTextUnitsInSpace = function () {
                 });
             }
 
-            if (justifyLine === SPACE_AROUND) {
+            else if (justifyLine === SPACE_AROUND) {
 
                 unitIndices = 0;
 
@@ -2362,15 +2405,23 @@ P.positionTextUnitsInSpace = function () {
                     unit = textUnits[u];
 
                     ({
-                        len,
-                        height,
-                        startData,
-                        startCorrection,
                         boxData,
+                        height,
+                        len,
+                        localAlignment,
                         localHandle,
                         localOffset,
-                        localAlignment,
+                        startCorrection,
+                        startData,
+                        style,
                     } = unit);
+
+                    if (style) {
+
+                        this.updateWorkingTextStyle(currentTextStyle, style);
+                        fontFamily = currentTextStyle.fontFamily;
+                        verticalOffset = this.getFontMetadata(fontFamily).verticalOffset * (height / 100) * currentScale;
+                    }
 
                     if (unit.stampFlag) {
 
@@ -2379,10 +2430,10 @@ P.positionTextUnitsInSpace = function () {
                             lineOffset = adjustedDistances.shift();
 
                             temp = localHandle[0] || textHandle[0] || 0;
-                            handleX = getX.call(this, temp, len, direction);
+                            handleX = getTextHandleX.call(this, temp, len, direction);
 
                             temp = localHandle[1] || textHandle[1] || 0;
-                            handleY = getY.call(this, temp, height, direction);
+                            handleY = getTextHandleY.call(this, temp, height, fontFamily);
 
                             temp = localOffset[0] || textOffset[0] || 0;
                             offsetX = this.getTextOffset(temp, len);
@@ -2405,12 +2456,10 @@ P.positionTextUnitsInSpace = function () {
                             startCorrection[0] = tempX - localX - handleX;
                             startCorrection[1] = tempY - localY;
 
+                            unit.startAlignment = (localAngle - 90);
                             unit.startRotation = (localAngle - 90) * _radian;
 
                             unit.localRotation = localAlignment * _radian;
-
-                            boxData.length = 0;
-                            boxData.push(localX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
                         }
                         else {
 
@@ -2418,10 +2467,10 @@ P.positionTextUnitsInSpace = function () {
                             else lineOffset = length - len - adjustedDistances.shift();
 
                             temp = localHandle[0] || textHandle[0] || 0;
-                            handleX = getX.call(this, temp, len, direction);
+                            handleX = getTextHandleX.call(this, temp, len, direction);
 
                             temp = localHandle[1] || textHandle[1] || 0;
-                            handleY = getY.call(this, temp, height, direction);
+                            handleY = getTextHandleY.call(this, temp, height, fontFamily);
 
                             temp = localOffset[0] || textOffset[0] || 0;
                             offsetX = this.getTextOffset(temp, len);
@@ -2444,13 +2493,37 @@ P.positionTextUnitsInSpace = function () {
                             startCorrection[0] = tempX - localX - handleX;
                             startCorrection[1] = tempY - localY;
 
+                            unit.startAlignment = localAngle;
                             unit.startRotation = localAngle * _radian;
 
                             unit.localRotation = localAlignment * _radian;
-
-                            boxData.length = 0;
-                            boxData.push(localX, tempY, tempX + len, tempY, tempX + len, tempY + height, tempX, tempY + height);
                         }
+
+                        unit.set({ boxData: null });
+
+                        coord.setFromArray([tempX - handleX, tempY - verticalOffset])
+                            .subtract(startData)
+                            .rotate(localAngle + localAlignment)
+                            .add(startData);
+                        boxData.tl.push(coord[0], coord[1]);
+
+                        coord.setFromArray([tempX - handleX + len, tempY - verticalOffset])
+                            .subtract(startData)
+                            .rotate(localAngle + localAlignment)
+                            .add(startData);
+                        boxData.tr.push(coord[0], coord[1]);
+
+                        coord.setFromArray([tempX - handleX + len, tempY + (height * currentScale)])
+                            .subtract(startData)
+                            .rotate(localAngle + localAlignment)
+                            .add(startData);
+                        boxData.br.push(coord[0], coord[1]);
+
+                        coord.setFromArray([tempX - handleX, tempY + (height * currentScale)])
+                            .subtract(startData)
+                            .rotate(localAngle + localAlignment)
+                            .add(startData);
+                        boxData.bl.push(coord[0], coord[1]);
                     }
                 }
             });
@@ -2460,11 +2533,7 @@ P.positionTextUnitsInSpace = function () {
 
     releaseCoordinate(coord);
 
-    // Code to identify and generate paths for underlines, overlines and highlights is in separate functions, for clarity
     this.positionTextDecoration();
-    this.buildHighlightPaths();
-    this.buildOverlinePaths();
-    this.buildUnderlinePaths();
 };
 
 
@@ -2473,50 +2542,200 @@ P.positionTextDecoration = function () {
 
 // console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInSpace)');
 
+    const correctCoordinates = function (out, back, start, width) {
+
+        if (out.length && out.length === back.length && width) {
+
+            const workOut = requestArray(),
+                workBack = requestArray(),
+                workHold = requestArray();
+
+            let cx, cy, px, py, i, iz, item, itemOut, itemBack,
+                fullLen, topLen, baseRatio;
+
+            cx = cy = px = py = null;
+
+            for (i = 0, iz = out.length; i < iz; i++) {
+
+                item = out[i];
+                [cx, cy] = out[i];
+
+                cx = parseFloat(cx.toFixed(2));
+                cy = parseFloat(cy.toFixed(2));
+
+                if (cx !== px || cy !== py) {
+
+                    workOut.push(item);
+                    px = cx;
+                    py = cy;
+                }
+            }
+
+            cx = cy = px = py = null;
+
+            for (i = 0, iz = back.length; i < iz; i++) {
+
+                item = back[i];
+                [cx, cy] = back[i];
+
+                cx = parseFloat(cx.toFixed(2));
+                cy = parseFloat(cy.toFixed(2));
+
+                if (cx !== px || cy !== py) {
+
+                    workBack.push(item);
+                    px = cx;
+                    py = cy;
+                }
+            }
+
+            if (workOut.length === workBack.length) {
+
+                for (i = 0, iz = workOut.length; i < iz; i++) {
+
+                    itemOut = workOut[i];
+                    itemBack = workBack[i];
+
+                    workHold.length = 0;
+
+                    fullLen = coord.setFromArray(itemBack).subtract(itemOut).getMagnitude();
+                    topLen = coord.scalarMultiply(start).getMagnitude();
+
+                    workHold.push(...coord.add(itemOut));
+
+                    baseRatio = (topLen + (width * currentScale)) / fullLen;
+
+                    coord.setFromArray(itemBack).subtract(itemOut).scalarMultiply(baseRatio).add(itemOut);
+
+                    itemOut[0] = parseFloat(workHold[0].toFixed(2));
+                    itemOut[1] = parseFloat(workHold[1].toFixed(0));
+
+                    itemBack[0] = parseFloat(coord[0].toFixed(2));
+                    itemBack[1] = parseFloat(coord[1].toFixed(0));
+                }
+
+                out.length = 0;
+                out.push(...workOut);
+
+                back.length = 0;
+                back.push(...workBack);
+            }
+
+            releaseArray(workOut, workBack, workHold);
+        }
+    };
+
+    const buildPath = function (out, back, style, paths) {
+
+        iz = out.length;
+
+        if (iz) {
+
+            path = `M ${out[0][0]}, ${out[0][1]} `;
+
+            for (i = 1; i < iz; i++) {
+
+                path += `${out[i][0]}, ${out[i][1]} `;
+            }
+
+            for (i = iz - 1; i >= 0; i--) {
+
+                path += `${back[i][0]}, ${back[i][1]} `;
+            }
+
+            path += 'Z';
+
+            paths.push([style, new Path2D(path)]);
+        }
+    };
+
+    const buildUnderline = function () {
+
+        if (underlineOut.length) {
+
+            correctCoordinates(underlineOut, underlineBack, underlineOffset, underlineWidth);
+            buildPath(underlineOut, underlineBack, underlineStyle, underlinePaths);
+
+            underlineOut.length = 0;
+            underlineBack.length = 0;
+        }
+    };
+
+    const buildOverline = function () {
+
+        if (overlineOut.length) {
+
+            correctCoordinates(overlineOut, overlineBack, overlineOffset, overlineWidth);
+            buildPath(overlineOut, overlineBack, overlineStyle, overlinePaths);
+
+            overlineOut.length = 0;
+            overlineBack.length = 0;
+        }
+    };
+
+    const buildHighlight = function () {
+
+        if (highlightOut.length) {
+
+            buildPath(highlightOut, highlightBack, highlightStyle, highlightPaths);
+
+            highlightOut.length = 0;
+            highlightBack.length = 0;
+        }
+    };
+
     const {
         lines,
         textUnits,
         defaultTextStyle,
-        textHandle,
-        getTextHandleX: getX,
-        getTextHandleY: getY,
         layoutTemplate,
+        underlinePaths,
+        overlinePaths,
+        highlightPaths,
     } = this;
 
-    const direction = defaultTextStyle.direction;
-    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+    let unitData, unit, style, boxData, tl, tr, br, bl, path, i, iz,
+        includeUnderline, underlineStyle, underlineOffset, underlineWidth,
+        includeOverline, overlineStyle, overlineOffset, overlineWidth,
+        includeHighlight, highlightStyle;
+
+    const underlineOut = requestArray();
+    const underlineBack = requestArray();
+    const overlineOut = requestArray();
+    const overlineBack = requestArray();
+    const highlightOut = requestArray();
+    const highlightBack = requestArray();
+
+    const coord = requestCoordinate();
+
     const currentScale = layoutTemplate.currentScale;
 
-    const [hx, hy] = textHandle;
+    underlinePaths.length = 0;
+    overlinePaths.length = 0;
+    highlightPaths.length = 0;
 
+    const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
     this.updateWorkingTextStyle(currentTextStyle, Ωempty);
 
-    let {
-        fontFamily,
-        fontSize,
-        includeUnderline, underlineStyle, underlineOffset, underlineWidth, underlineGap,
+    ({
+        includeUnderline, underlineStyle, underlineOffset, underlineWidth,
         includeOverline, overlineStyle, overlineOffset, overlineWidth,
         includeHighlight, highlightStyle,
-    } = currentTextStyle;
 
-    let unit, unitData, style, lineOffset, len,
-        highlightOut, highlightBack,
-        underlineOut, underlineBack,
-        overlineOut, overlineBack,
-        localOffset, localDepth,
-        fontSizeValue = parseFloat(fontSize),
-        ox = 0,
-        oy = getY.call(this, hy, fontSizeValue, fontFamily);
-
-    let metadata = this.getFontMetadata(fontFamily),
-        ratio = fontSizeValue / 100,
-        verticalOffset = (metadata != null) ? metadata.verticalOffset * ratio * currentScale : 0;
+    } = currentTextStyle);
 
     // Process each line separately
     // + Decorations that break across lines will have separate Path2D objects for each line
-    lines.forEach(line => {
+    lines.forEach(l => {
 
-        unitData = line.unitData;
+        unitData = l.unitData;
+
+        underlineOut.length = 0;
+        underlineBack.length = 0;
+        overlineOut.length = 0;
+        overlineBack.length = 0;
+        highlightOut.length = 0;
+        highlightBack.length = 0;
 
         unitData.forEach(u => {
 
@@ -2524,374 +2743,62 @@ P.positionTextDecoration = function () {
 
                 unit = textUnits[u];
 
-                ({
-                    style, lineOffset, len,
-                    underlineOut, underlineBack,
-                    overlineOut, overlineBack,
-                    highlightOut, highlightBack,
-
-                } = unit);
+                ({ style, boxData } = unit);
 
                 // Update styling data as required by each TextUnit
                 if (style) {
 
                     this.updateWorkingTextStyle(currentTextStyle, style);
 
-                    ({
-                        fontFamily, fontSize,
-                        includeUnderline, underlineStyle, underlineOffset, underlineWidth, underlineGap,
-                        includeOverline, overlineStyle, overlineOffset, overlineWidth,
-                        includeHighlight, highlightStyle,
+                    ({includeUnderline, includeOverline, includeHighlight} = currentTextStyle);
 
-                    } = currentTextStyle);
+                    // We're only interested in updating additional attributes if the relevant style is active
+                    if (includeUnderline) ({underlineStyle, underlineOffset, underlineWidth} = currentTextStyle);
 
-                    fontSizeValue = parseFloat(fontSize);
-                    oy = getY.call(this, hy, fontSizeValue, fontFamily);
+                    if (includeOverline) ({overlineStyle, overlineOffset, overlineWidth} = currentTextStyle);
 
-                    metadata = this.getFontMetadata(fontFamily);
-
-                    ratio = fontSizeValue / 100;
-                    verticalOffset = (metadata != null) ? metadata.verticalOffset * ratio * currentScale : 0;
+                    if (includeHighlight) ({highlightStyle} = currentTextStyle);
                 }
 
                 // Only process visible TextUnits
                 if (unit.stampFlag) {
 
-                    ox = getX.call(this, hx, len, direction);
+                    ({tl, tr, br, bl} = boxData);
 
                     // Calculate coordinates for underlined TextUnits
                     if (includeUnderline) {
 
-                        unit.underlineStyle = underlineStyle;
-                        unit.underlineGap = underlineGap;
-
-                        underlineOut.length = 0;
-
-                        localOffset = underlineOffset * fontSizeValue * currentScale;
-                        localDepth = underlineWidth * currentScale;
-
-                        underlineOut.push(
-                            [
-                                lineOffset - ox,
-                                -oy - verticalOffset + localOffset
-                            ], [
-                                lineOffset - ox + len,
-                                -oy - verticalOffset + localOffset
-                            ]
-                        );
-
-                        underlineBack.length = 0;
-
-                        underlineBack.push(
-                            [
-                                lineOffset - ox,
-                                -oy - verticalOffset + localOffset + localDepth
-                            ], [
-                                lineOffset - ox + len,
-                                -oy - verticalOffset + localOffset + localDepth
-                            ]
-                        );
+                        underlineOut.push(tl, tr);
+                        underlineBack.push(bl, br);
                     }
+                    else buildUnderline();
 
                     // Calculate coordinates for overlined TextUnits
                     if (includeOverline) {
 
-                        unit.overlineStyle = overlineStyle;
-
-                        overlineOut.length = 0;
-
-                        localOffset = overlineOffset * fontSizeValue * currentScale;
-                        localDepth = overlineWidth * currentScale;
-
-                        overlineOut.push(
-                            [
-                                lineOffset - ox,
-                                -oy - verticalOffset + localOffset
-                            ], [
-                                lineOffset - ox + len,
-                                -oy - verticalOffset + localOffset
-                            ]
-                        );
-
-                        overlineBack.length = 0;
-
-                        overlineBack.push(
-                            [
-                                lineOffset - ox,
-                                -oy - verticalOffset + localOffset + localDepth
-                            ], [
-                                lineOffset - ox + len,
-                                -oy - verticalOffset + localOffset + localDepth
-                            ]
-                        );
+                        overlineOut.push(tl, tr);
+                        overlineBack.push(bl, br);
                     }
+                    else buildOverline();
 
                     // Calculate coordinates for highlighted TextUnits
                     if (includeHighlight) {
 
-                        unit.highlightStyle = highlightStyle;
-
-                        highlightOut.length = 0;
-
-                        // Magic number warning! Multiplying `fontSizeValue` by `1.1` seems to give the "most pleasing" highlight effect, leaving just enough space between the lowest character and the bottom of the highlight (in problematic fonts like "Mountains of Christmas").
-                        // + TODO: consider making this inflation factor - `1.1` - a settable TextStyle attribute.
-                        localDepth = fontSizeValue * currentScale * 1.1;
-
-                        highlightOut.push(
-                            [
-                                lineOffset - ox,
-                                -oy - verticalOffset
-                            ], [
-                                lineOffset - ox + len,
-                                -oy - verticalOffset
-                            ]
-                        );
-
-                        highlightBack.length = 0;
-
-                        highlightBack.push(
-                            [
-                                lineOffset - ox,
-                                -oy + localDepth
-                            ], [
-                                lineOffset - ox + len,
-                                -oy + localDepth
-                            ]
-                        );
+                        highlightOut.push(tl, tr);
+                        highlightBack.push(bl, br);
                     }
-                }
-            }
-        });
-    });
-};
-
-// `generatePath` - an internal, local function to create Path2D objects from a given set of data
-// + Used by `buildUnderlinePaths`, `buildOverlinePaths` and `buildHighlightPaths`
-const generatePath = (coord, out, back, style, pos, start, rot, paths) => {
-
-    let previousLineX, previousLineY,
-        unitPreviousX, unitPreviousY,
-        unitNextX, unitNextY,
-        i, iz;
-
-    let path = '';
-
-    [previousLineX, previousLineY] = pos;
-
-    const [lineX, lineY] = coord.set(start).subtract(pos).rotate(-rot).add(pos);
-
-    path += `m ${_round(lineX - previousLineX)}, ${_round(lineY - previousLineY)} `;
-
-    previousLineX = lineX;
-    previousLineY = lineY;
-
-    const [unitStartX, unitStartY] = out.shift();
-
-    path += `m ${_round(unitStartX)}, ${_round(unitStartY)} `;
-
-    unitPreviousX = unitStartX;
-    unitPreviousY = unitStartY;
-
-    for (i = 0, iz = out.length; i < iz; i++) {
-
-        [unitNextX, unitNextY] = out.shift();
-
-        path += `l ${_round(unitNextX - unitPreviousX)}, ${_round(unitNextY - unitPreviousY)} `;
-
-        unitPreviousX = unitNextX;
-        unitPreviousY = unitNextY;
-    }
-
-    for (i = 0, iz = back.length; i < iz; i++) {
-
-        [unitNextX, unitNextY] = back.pop();
-
-        path += `l ${_round(unitNextX - unitPreviousX)}, ${_round(unitNextY - unitPreviousY)} `;
-
-        unitPreviousX = unitNextX;
-        unitPreviousY = unitNextY;
-    }
-    path += 'z ';
-
-    paths.push([style, new Path2D(path)]);
-};
-
-
-// `buildHighlightPaths` - internal function. Calculates a set of coordinates for contiguous blocks of highlight areas on a line
-P.buildHighlightPaths = function () {
-
-// console.log(this.name, 'buildHighlightPaths (trigger: none - called by positionTextUnitsInSpace)');
-
-    const { lines, textUnits, layoutTemplate, highlightPaths, alignment } = this;
-    const { currentStampPosition } = layoutTemplate;
-
-    const coord = requestCoordinate();
-
-    let startAt, unitData, unit,
-        highlightOut, highlightBack, highlightStyle,
-        processFlag;
-
-    const currentOut = [],
-        currentBack = [];
-
-    highlightPaths.length = 0;
-
-    lines.forEach(line => {
-
-        ({ startAt, unitData } = line);
-
-        currentOut.length = 0;
-        currentBack.length = 0;
-
-        unitData.forEach((u, unitIndex) => {
-
-            processFlag = unitIndex + 1 === unitData.length;
-
-            if (u.toFixed) {
-
-                unit = textUnits[u];
-
-                if (unit.highlightStyle) highlightStyle = unit.highlightStyle;
-
-                if (unit.stampFlag) {
-
-                    ({ highlightOut, highlightBack } = unit);
-
-                    if (highlightOut.length) {
-
-                        currentOut.push(...highlightOut);
-                        currentBack.push(...highlightBack);
-                    }
-                    else processFlag = true;
-
-                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, highlightStyle, currentStampPosition, startAt, alignment, highlightPaths);
+                    else buildHighlight();
                 }
             }
         });
 
-        // Capturing anything at the end of the line
-        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, highlightStyle, currentStampPosition, startAt, alignment, highlightPaths);
+        if (underlineOut.length) buildUnderline();
+        if (overlineOut.length) buildOverline();
+        if (highlightOut.length) buildHighlight();
     });
 
     releaseCoordinate(coord);
-};
-
-// `buildOverlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of overline areas on a line
-P.buildOverlinePaths = function () {
-
-// console.log(this.name, 'buildOverlinePaths (trigger: none - called by positionTextUnitsInSpace)');
-
-    const { lines, textUnits, layoutTemplate, overlinePaths, alignment } = this;
-    const { currentStampPosition } = layoutTemplate;
-
-    const coord = requestCoordinate();
-
-    let startAt, unitData, unit,
-        overlineOut, overlineBack, overlineStyle,
-        processFlag;
-
-    const currentOut = [],
-        currentBack = [];
-
-    overlinePaths.length = 0;
-
-    lines.forEach(line => {
-
-        ({ startAt, unitData } = line);
-
-        currentOut.length = 0;
-        currentBack.length = 0;
-
-        unitData.forEach((u, unitIndex) => {
-
-            processFlag = unitIndex + 1 === unitData.length;
-
-            if (u.toFixed) {
-
-                unit = textUnits[u];
-
-                if (unit.overlineStyle) overlineStyle = unit.overlineStyle;
-
-                if (unit.stampFlag) {
-
-                    ({ overlineOut, overlineBack } = unit);
-
-                    if (overlineOut.length) {
-
-                        currentOut.push(...overlineOut);
-                        currentBack.push(...overlineBack);
-                    }
-                    else processFlag = true;
-
-                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, overlineStyle, currentStampPosition, startAt, alignment, overlinePaths);
-                }
-            }
-        });
-
-        // Capturing anything at the end of the line
-        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, overlineStyle, currentStampPosition, startAt, alignment, overlinePaths);
-    });
-
-    releaseCoordinate(coord);
-};
-
-// `buildUnderlinePaths` - internal function. Calculates a set of coordinates for contiguous blocks of underline areas on a line
-P.buildUnderlinePaths = function () {
-
-// console.log(this.name, 'buildUnderlinePaths (trigger: none - called by positionTextUnitsInSpace)');
-
-    const { lines, textUnits, layoutTemplate, underlinePaths, alignment } = this;
-    const { currentStampPosition } = layoutTemplate;
-
-    const coord = requestCoordinate();
-
-    let startAt, unitData, unit,
-        underlineOut, underlineBack, underlineStyle,
-        processFlag;
-
-    const currentOut = [],
-        currentBack = [];
-
-    underlinePaths.length = 0;
-
-    lines.forEach(line => {
-
-        ({ startAt, unitData } = line);
-
-        currentOut.length = 0;
-        currentBack.length = 0;
-
-        unitData.forEach((u, unitIndex) => {
-
-            processFlag = unitIndex + 1 === unitData.length;
-
-            if (u.toFixed) {
-
-                unit = textUnits[u];
-
-                if (unit.underlineStyle) underlineStyle = unit.underlineStyle;
-
-                if (unit.stampFlag) {
-
-                    ({ underlineOut, underlineBack } = unit);
-
-                    if (underlineOut.length) {
-
-                        currentOut.push(...underlineOut);
-                        currentBack.push(...underlineBack);
-                    }
-                    else processFlag = true;
-
-                    if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths);
-                }
-            }
-        });
-
-        // Capturing anything at the end of the line
-        if (processFlag && currentOut.length) generatePath(coord, currentOut, currentBack, underlineStyle, currentStampPosition, startAt, alignment, underlinePaths);
-    });
-
-    releaseCoordinate(coord);
+    releaseArray(underlineOut, underlineBack, overlineOut, overlineBack, highlightOut, highlightBack);
 };
 
 
@@ -2904,7 +2811,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
-    if (!this.noDeltaUpdates) 
+    if (!this.noDeltaUpdates)
 
     if (this.dirtyScale) {
 
@@ -2983,20 +2890,11 @@ P.regularStamp = function () {
 
     if (this.currentHost && this.layoutTemplate) {
 
-        if (this.useLayoutTemplateAsPath) this.regularStampAlongPath();
-        else this.regularStampInSpace();
-    }
-};
+        const { currentHost, showGuidelines, guidelinesPath, useLayoutTemplateAsPath} = this;
 
-
-// `regularStampAlongPath` - For text positioned along a path-based entity's perimeter
-P.regularStampAlongPath = function () {
-
-    const currentHost = this.currentHost;
-
-    if (currentHost) {
-
-        const workingCells = this.createTextCellsForPath(currentHost);
+        const workingCells = (useLayoutTemplateAsPath) ?
+            this.createTextCellsForPath(currentHost) :
+            this.createTextCells(currentHost);
 
         if (workingCells) {
 
@@ -3008,9 +2906,11 @@ P.regularStampAlongPath = function () {
             const finalElement = finalCell.element;
             const finalEngine = finalCell.engine;
 
-            const underlineCell = this.createUnderlineCellForPath(currentHost, copyCell);
-            const overlineCell = this.createOverlineCellForPath(currentHost);
-            const highlightCell = this.createHighlightCellForPath(currentHost);
+            const underlineCell = this.createUnderlineCell(currentHost, copyCell);
+            const overlineCell = this.createOverlineCell(currentHost);
+            const highlightCell = this.createHighlightCell(currentHost);
+
+            if (!useLayoutTemplateAsPath && showGuidelines && guidelinesPath) this.stampGuidelinesOnCell(finalCell);
 
             if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
 
@@ -3029,6 +2929,7 @@ P.regularStampAlongPath = function () {
 
             releaseCell(copyCell, mainCell, overlineCell, highlightCell, finalCell);
         }
+
     }
 };
 
@@ -3043,6 +2944,11 @@ P.createTextCellsForPath = function (host) {
         const uEngine = uCell.engine;
         const mEngine = mCell.engine;
 
+        uEngine.lineJoin = ROUND;
+        uEngine.lineCap = ROUND;
+        mEngine.lineJoin = ROUND;
+        mEngine.lineCap = ROUND;
+
         const {
             state,
             lines,
@@ -3050,7 +2956,7 @@ P.createTextCellsForPath = function (host) {
             defaultTextStyle,
         } = this;
 
-        const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+        const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
@@ -3132,168 +3038,6 @@ P.createTextCellsForPath = function (host) {
     return null;
 };
 
-P.createUnderlineCellForPath = function (host, textCell) {
-
-    // const { layoutTemplate, underlinePaths } = this;
-
-    // if (underlinePaths.length) {
-
-    //     const el = host.element;
-    //     const mycell = requestCell(el.width, el.height);
-
-    //     if (mycell) {
-
-    //         const engine = mycell.engine;
-    //         const textEngine = textCell.engine;
-
-    //         mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
-    //         engine.rotate(rotation);
-
-    //         underlinePaths.forEach(data => {
-
-    //             engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
-    //             engine.fill(data[1]);
-    //         });
-
-    //         textEngine.globalCompositeOperation = 'source-out';
-    //         textEngine.setTransform(1, 0, 0, 1, 0, 0);
-    //         textEngine.drawImage(mycell.element, 0, 0);
-
-    //         releaseCell(mycell);
-
-    //         return textCell;
-    //     }
-    // }
-    return null;
-};
-
-P.createOverlineCellForPath = function (host) {
-
-    // const { layoutTemplate, overlinePaths } = this;
-
-    // if (overlinePaths.length) {
-
-    //     const el = host.element;
-    //     const mycell = requestCell(el.width, el.height);
-
-    //     if (mycell) {
-
-    //         const engine = mycell.engine;
-
-    //         mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
-    //         engine.rotate(rotation);
-
-    //         overlinePaths.forEach(data => {
-
-    //             engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
-    //             engine.fill(data[1]);
-    //         });
-
-    //         return mycell;
-    //     }
-    // }
-    return null;
-};
-
-P.createHighlightCellForPath = function (host) {
-
-    // const { layoutTemplate, highlightPaths } = this;
-
-    // if (highlightPaths.length) {
-
-    //     const el = host.element;
-    //     const mycell = requestCell(el.width, el.height);
-
-    //     if (mycell) {
-
-    //         const engine = mycell.engine;
-
-    //         mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
-    //         engine.rotate(rotation);
-
-    //         this.highlightPaths.forEach(data => {
-
-    //             engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
-    //             engine.fill(data[1]);
-    //         });
-
-    //         return mycell;
-    //     }
-    // }
-    return null;
-};
-
-P.regularStampInSpace = function () {
-
-    const currentHost = this.currentHost;
-
-    if (currentHost) {
-
-        const rotation = this.alignment * _radian;
-
-        const workingCells = this.createTextCells(currentHost);
-
-        if (workingCells) {
-
-            const { element, engine } = currentHost;
-            const { copyCell, mainCell } = workingCells;
-
-            const finalCell = requestCell(element.width, element.height);
-
-            const finalElement = finalCell.element;
-            const finalEngine = finalCell.engine;
-
-            const underlineCell = this.createUnderlineCell(currentHost, copyCell, rotation);
-            const overlineCell = this.createOverlineCell(currentHost, rotation);
-            const highlightCell = this.createHighlightCell(currentHost, rotation);
-
-            if (this.showGuidelines && this.guidelinesPath) this.stampGuidelinesOnCell(finalCell);
-
-            if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
-
-            finalEngine.drawImage(mainCell.element, 0, 0);
-
-            if (overlineCell) finalEngine.drawImage(overlineCell.element, 0, 0);
-
-            if (highlightCell) {
-
-                finalEngine.globalCompositeOperation = 'destination-over';
-                finalEngine.drawImage(highlightCell.element, 0, 0);
-            }
-
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.drawImage(finalElement, 0, 0);
-
-            releaseCell(copyCell, mainCell, overlineCell, highlightCell, finalCell);
-        }
-    }
-};
-
-P.stampGuidelinesOnCell = function (cell) {
-
-    if (cell?.engine) {
-
-        const {
-            guidelinesPath,
-            guidelineStyle,
-            guidelineWidth,
-            guidelineDash,
-        } = this;
-
-        const engine = cell.engine;
-
-        engine.save();
-
-        engine.setLineDash(guidelineDash);
-        engine.strokeStyle = guidelineStyle;
-        engine.lineWidth = guidelineWidth;
-
-        engine.stroke(guidelinesPath);
-
-        engine.restore();
-    }
-};
-
 P.createTextCells = function (host) {
 
     const el = host.element;
@@ -3305,6 +3049,11 @@ P.createTextCells = function (host) {
         const uEngine = uCell.engine;
         const mEngine = mCell.engine;
 
+        uEngine.lineJoin = ROUND;
+        uEngine.lineCap = ROUND;
+        mEngine.lineJoin = ROUND;
+        mEngine.lineCap = ROUND;
+
         const {
             state,
             lines,
@@ -3315,7 +3064,7 @@ P.createTextCells = function (host) {
         } = this;
 
         const directionIsLtr = defaultTextStyle.direction === LTR;
-        const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle, 'stamp-worker');
+        const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
@@ -3407,9 +3156,9 @@ P.createTextCells = function (host) {
     return null;
 };
 
-P.createUnderlineCell = function (host, textCell, rotation) {
+P.createUnderlineCell = function (host, textCell) {
 
-    const { layoutTemplate, underlinePaths } = this;
+    const underlinePaths = this.underlinePaths;
 
     if (underlinePaths.length) {
 
@@ -3420,9 +3169,6 @@ P.createUnderlineCell = function (host, textCell, rotation) {
 
             const engine = mycell.engine;
             const textEngine = textCell.engine;
-
-            mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
-            engine.rotate(rotation);
 
             underlinePaths.forEach(data => {
 
@@ -3442,9 +3188,9 @@ P.createUnderlineCell = function (host, textCell, rotation) {
     return null;
 };
 
-P.createOverlineCell = function (host, rotation) {
+P.createOverlineCell = function (host) {
 
-    const { layoutTemplate, overlinePaths } = this;
+    const overlinePaths = this.overlinePaths;
 
     if (overlinePaths.length) {
 
@@ -3454,9 +3200,6 @@ P.createOverlineCell = function (host, rotation) {
         if (mycell) {
 
             const engine = mycell.engine;
-
-            mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
-            engine.rotate(rotation);
 
             overlinePaths.forEach(data => {
 
@@ -3470,9 +3213,9 @@ P.createOverlineCell = function (host, rotation) {
     return null;
 };
 
-P.createHighlightCell = function (host, rotation) {
+P.createHighlightCell = function (host) {
 
-    const { layoutTemplate, highlightPaths } = this;
+    const highlightPaths = this.highlightPaths;
 
     if (highlightPaths.length) {
 
@@ -3483,10 +3226,7 @@ P.createHighlightCell = function (host, rotation) {
 
             const engine = mycell.engine;
 
-            mycell.rotateDestination(engine, ...layoutTemplate.currentStampPosition, layoutTemplate);
-            engine.rotate(rotation);
-
-            this.highlightPaths.forEach(data => {
+            highlightPaths.forEach(data => {
 
                 engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
                 engine.fill(data[1]);
@@ -3496,6 +3236,31 @@ P.createHighlightCell = function (host, rotation) {
         }
     }
     return null;
+};
+
+P.stampGuidelinesOnCell = function (cell) {
+
+    if (cell?.engine) {
+
+        const {
+            guidelinesPath,
+            guidelineStyle,
+            guidelineWidth,
+            guidelineDash,
+        } = this;
+
+        const engine = cell.engine;
+
+        engine.save();
+
+        engine.setLineDash(guidelineDash);
+        engine.strokeStyle = guidelineStyle;
+        engine.lineWidth = guidelineWidth;
+
+        engine.stroke(guidelinesPath);
+
+        engine.restore();
+    }
 };
 
 
@@ -3532,19 +3297,15 @@ const UnitObject = function () {
     this.startData = makeCoordinate();
     this.startCorrection = makeCoordinate();
 
-    this.boxData = [];
+    this.boxData = {
+        tl: [],
+        tr: [],
+        br: [],
+        bl: [],
+    };
 
     this.localHandle = [];
     this.localOffset = [];
-
-    this.highlightBack = [];
-    this.highlightOut = [];
-
-    this.overlineBack = [];
-    this.overlineOut = [];
-
-    this.underlineBack = [];
-    this.underlineOut = [];
 
     this.set(this.defs);
 
@@ -3557,7 +3318,6 @@ U.type = T_ENHANCED_LABEL_UNIT;
 U.defs = {
     chars: ZERO_STR,
     charType: ZERO_STR,
-    index: 0,
 
     style: null,
 
@@ -3577,29 +3337,16 @@ U.defs = {
     localRotation: 0,
     startRotation: 0,
 
-    lineOffset: 0,
-
     len: 0,
     height: 0,
     kernOffset: 0,
     replaceLen: 0,
-
-    highlightBack: null,
-    highlightOut: null,
-    highlightStyle: ZERO_STR,
-
-    overlineBack: null,
-    overlineOut: null,
-    overlineStyle: ZERO_STR,
-
-    underlineBack: null,
-    underlineOut: null,
-    underlineStyle: ZERO_STR,
-    underlineGap: 0,
 };
 U.defKeys = _keys(U.defs);
 
 U.set = function (items = Ωempty) {
+
+    let box, tl, tr, br, bl;
 
     for (const [key, value] of _entries(items)) {
 
@@ -3666,19 +3413,56 @@ U.set = function (items = Ωempty) {
                     }
                     break;
 
-                case 'highlightBack' :
-                case 'highlightOut' :
-                case 'overlineBack' :
-                case 'overlineOut' :
-                case 'underlineBack' :
-                case 'underlineOut' :
                 case 'boxData' :
 
-                    this[key].length = 0;
-                    if (value != null) this[key].push(...value);
+                    box = this.boxData;
+
+                    if (value != null) {
+
+                        ({ tl, tr, br, bl } = value);
+
+                        if (tl != null && _isArray(tl)) {
+
+                            box.tl.length = 0;
+                            box.tl.push(...tl);
+                        }
+                        if (tr != null && _isArray(tr)) {
+
+                            box.tr.length = 0;
+                            box.tr.push(...tr);
+                        }
+                        if (br != null && _isArray(br)) {
+
+                            box.br.length = 0;
+                            box.br.push(...br);
+                        }
+                        if (bl != null && _isArray(bl)) {
+
+                            box.bl.length = 0;
+                            box.bl.push(...bl);
+                        }
+                    }
+                    else {
+                        box.tl.length = 0;
+                        box.tr.length = 0;
+                        box.br.length = 0;
+                        box.bl.length = 0;
+                    }
                     break;
 
-                default :
+                case 'chars' :
+                case 'charType' :
+                case 'height' :
+                case 'kernOffset' :
+                case 'len' :
+                case 'localAlignment' :
+                case 'localRotation' :
+                case 'pathData' :
+                case 'pathPos' :
+                case 'replaceLen' :
+                case 'stampFlag' :
+                case 'startRotation' :
+                case 'style' :
 
                     if (value != null) this[key] = value;
                     else this[key] = this.defs[key];
