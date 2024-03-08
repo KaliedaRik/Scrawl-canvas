@@ -2031,6 +2031,8 @@ P.positionTextUnits = function () {
 
     if (this.useLayoutTemplateAsPath) this.positionTextUnitsAlongPath();
     else this.positionTextUnitsInSpace();
+
+    this.positionTextDecoration();
 };
 
 
@@ -2059,7 +2061,9 @@ P.positionTextUnitsAlongPath = function () {
     const currentScale = layoutTemplate.currentScale || 1;
 
     const data = requestArray();
-    const coord = requestCoordinate();
+
+    const coord = requestCoordinate(),
+        boxCoord = requestCoordinate();
 
     data.push(...unitData);
 
@@ -2075,11 +2079,13 @@ P.positionTextUnitsAlongPath = function () {
         temp, tempX, tempY, localAngle, style,
         x, y, angle,
         handleX, handleY,
-        offsetX, offsetY;
+        offsetX, offsetY,
+        fontFamily, verticalOffset;
 
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
     this.updateWorkingTextStyle(currentTextStyle, Ωempty);
-    let fontFamily, verticalOffset;
+    fontFamily = currentTextStyle.fontFamily;
+    verticalOffset = this.getFontMetadata(fontFamily).verticalOffset * (height / 100);
 
     for (let i = 0, iz = data.length; i < iz; i++) {
 
@@ -2121,14 +2127,14 @@ P.positionTextUnitsAlongPath = function () {
                 unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
                 ({x, y, angle} = unit.pathData);
 
-                tempX = x + offsetX - handleX;
-                tempY = y + offsetY - handleY;
+                tempX = offsetX - handleX;
+                tempY = offsetY - handleY;
 
                 startData[0] = x;
                 startData[1] = y;
 
-                startCorrection[0] = tempX - x;
-                startCorrection[1] = tempY - y;
+                startCorrection[0] = tempX;
+                startCorrection[1] = tempY;
 
                 if (alignTextUnitsToPath) localAngle = alignment + angle - 90;
                 else localAngle = alignment - 90;
@@ -2160,17 +2166,17 @@ P.positionTextUnitsAlongPath = function () {
                 unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
                 ({x, y, angle} = unit.pathData);
 
-                tempX = x + offsetX - handleX;
-                tempY = y + offsetY - handleY;
+                tempX = offsetX - handleX;
+                tempY = offsetY - handleY;
 
                 startData[0] = x;
                 startData[1] = y;
 
-                startCorrection[0] = tempX - x;
-                startCorrection[1] = tempY - y;
+                startCorrection[0] = tempX;
+                startCorrection[1] = tempY;
 
-                if (alignTextUnitsToPath) localAngle = (alignment + angle);
-                else localAngle = alignment;
+                if (alignTextUnitsToPath) localAngle = alignment + localAlignment + angle;
+                else localAngle = alignment + localAlignment;
 
                 unit.startAlignment = localAngle;
                 unit.startRotation = localAngle * _radian;
@@ -2182,33 +2188,30 @@ P.positionTextUnitsAlongPath = function () {
 
             unit.set({ boxData: null });
 
-            coord.setFromArray([tempX - handleX, tempY - verticalOffset])
-                .subtract(startData)
-                .rotate(localAngle + localAlignment)
-                .add(startData);
+            boxCoord[0] = x + tempX;
+            boxCoord[1] = y + tempY - verticalOffset
+
+            coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
             boxData.tl.push(coord[0], coord[1]);
 
-            coord.setFromArray([tempX - handleX + len, tempY - verticalOffset])
-                .subtract(startData)
-                .rotate(localAngle + localAlignment)
-                .add(startData);
+            boxCoord[0] += len;
+
+            coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
             boxData.tr.push(coord[0], coord[1]);
 
-            coord.setFromArray([tempX - handleX + len, tempY + (height * currentScale)])
-                .subtract(startData)
-                .rotate(localAngle + localAlignment)
-                .add(startData);
+            boxCoord[1] = y + tempY + (height * currentScale);
+
+            coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
             boxData.br.push(coord[0], coord[1]);
 
-            coord.setFromArray([tempX - handleX, tempY + (height * currentScale)])
-                .subtract(startData)
-                .rotate(localAngle + localAlignment)
-                .add(startData);
+            boxCoord[0] -= len;
+
+            coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
             boxData.bl.push(coord[0], coord[1]);
         }
     }
 
-    releaseCoordinate(coord);
+    releaseCoordinate(coord, boxCoord);
     releaseArray(data);
 };
 
@@ -2234,8 +2237,6 @@ P.positionTextUnitsInSpace = function () {
         textUnitFlow,
         textUnits,
     } = this;
-
-    const coord = requestCoordinate();
 
     const direction = defaultTextStyle.direction;
     const languageDirectionIsLtr = (direction === LTR);
@@ -2263,6 +2264,9 @@ P.positionTextUnitsInSpace = function () {
 
             const initialDistances = requestArray(),
                 adjustedDistances = requestArray();
+
+            const coord = requestCoordinate(),
+                boxCoord = requestCoordinate();
 
             unitIndices = unitData.length - 1;
 
@@ -2501,39 +2505,35 @@ P.positionTextUnitsInSpace = function () {
 
                         unit.set({ boxData: null });
 
-                        coord.setFromArray([tempX - handleX, tempY - verticalOffset])
-                            .subtract(startData)
-                            .rotate(localAngle + localAlignment)
-                            .add(startData);
+                        boxCoord[0] = tempX - handleX;
+                        boxCoord[1] = tempY - verticalOffset;
+                        localAngle += localAlignment;
+
+                        coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
                         boxData.tl.push(coord[0], coord[1]);
 
-                        coord.setFromArray([tempX - handleX + len, tempY - verticalOffset])
-                            .subtract(startData)
-                            .rotate(localAngle + localAlignment)
-                            .add(startData);
+                        boxCoord[0] += len;
+
+                        coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
                         boxData.tr.push(coord[0], coord[1]);
 
-                        coord.setFromArray([tempX - handleX + len, tempY + (height * currentScale)])
-                            .subtract(startData)
-                            .rotate(localAngle + localAlignment)
-                            .add(startData);
+                        boxCoord[1] = tempY + (height * currentScale);
+
+                        coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
                         boxData.br.push(coord[0], coord[1]);
 
-                        coord.setFromArray([tempX - handleX, tempY + (height * currentScale)])
-                            .subtract(startData)
-                            .rotate(localAngle + localAlignment)
-                            .add(startData);
+                        boxCoord[0] -= len;
+
+                        coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
                         boxData.bl.push(coord[0], coord[1]);
                     }
                 }
             });
+
             releaseArray(initialDistances, adjustedDistances);
+            releaseCoordinate(coord, boxCoord);
         }
     });
-
-    releaseCoordinate(coord);
-
-    this.positionTextDecoration();
 };
 
 
@@ -2685,16 +2685,19 @@ P.positionTextDecoration = function () {
     };
 
     const {
-        lines,
-        textUnits,
+        breakTextOnSpaces,
         defaultTextStyle,
-        layoutTemplate,
-        underlinePaths,
-        overlinePaths,
         highlightPaths,
+        layoutTemplate,
+        lines,
+        overlinePaths,
+        textUnitFlow,
+        textUnits,
+        underlinePaths,
+        useLayoutTemplateAsPath,
     } = this;
 
-    let unitData, unit, style, boxData, tl, tr, br, bl, path, i, iz,
+    let unitData, unit, style, boxData, tl, tr, br, bl, path, i, iz, charType,
         includeUnderline, underlineStyle, underlineOffset, underlineWidth,
         includeOverline, overlineStyle, overlineOffset, overlineWidth,
         includeHighlight, highlightStyle;
@@ -2743,7 +2746,7 @@ P.positionTextDecoration = function () {
 
                 unit = textUnits[u];
 
-                ({ style, boxData } = unit);
+                ({ style, boxData, charType } = unit);
 
                 // Update styling data as required by each TextUnit
                 if (style) {
@@ -2765,29 +2768,78 @@ P.positionTextDecoration = function () {
 
                     ({tl, tr, br, bl} = boxData);
 
-                    // Calculate coordinates for underlined TextUnits
-                    if (includeUnderline) {
+                    // Three different code blocks for differing combinations of `useLayoutTemplateAsPath`, `textUnitFlow` and `breakTextOnSpaces`
+                    // + We have to do this because styling that looks good in a space layout along rows may look awful when the same text flows instead along columns
+                    // + Text-along-a-path is its own world of styling horrors!
+                    if (!useLayoutTemplateAsPath && !TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
 
-                        underlineOut.push(tl, tr);
-                        underlineBack.push(bl, br);
+                        if (includeUnderline) {
+
+                            underlineOut.push(tl, tr);
+                            underlineBack.push(bl, br);
+                        }
+                        else buildUnderline();
+
+                        if (includeOverline) {
+
+                            overlineOut.push(tl, tr);
+                            overlineBack.push(bl, br);
+                        }
+                        else buildOverline();
+
+                        if (includeHighlight) {
+
+                            highlightOut.push(tl, tr);
+                            highlightBack.push(bl, br);
+                        }
+                        else buildHighlight();
                     }
-                    else buildUnderline();
+                    else if (!breakTextOnSpaces && TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
 
-                    // Calculate coordinates for overlined TextUnits
-                    if (includeOverline) {
+                        if (includeUnderline) {
 
-                        overlineOut.push(tl, tr);
-                        overlineBack.push(bl, br);
+                            underlineOut.push(tl, tr);
+                            underlineBack.push(bl, br);
+                            buildUnderline();
+                        }
+
+                        if (includeOverline) {
+
+                            overlineOut.push(tl, tr);
+                            overlineBack.push(bl, br);
+                            buildOverline();
+                        }
+
+                        if (includeHighlight) {
+
+                            highlightOut.push(tl, tr);
+                            highlightBack.push(bl, br);
+                            buildHighlight();
+                        }
                     }
-                    else buildOverline();
+                    else {
 
-                    // Calculate coordinates for highlighted TextUnits
-                    if (includeHighlight) {
+                        if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
 
-                        highlightOut.push(tl, tr);
-                        highlightBack.push(bl, br);
+                            underlineOut.push(tl, tr);
+                            underlineBack.push(bl, br);
+                        }
+                        else buildUnderline();
+
+                        if (charType !== TEXT_TYPE_SPACE && includeOverline) {
+
+                            overlineOut.push(tl, tr);
+                            overlineBack.push(bl, br);
+                        }
+                        else buildOverline();
+
+                        if (charType !== TEXT_TYPE_SPACE && includeHighlight) {
+
+                            highlightOut.push(tl, tr);
+                            highlightBack.push(bl, br);
+                        }
+                        else buildHighlight();
                     }
-                    else buildHighlight();
                 }
             }
         });
