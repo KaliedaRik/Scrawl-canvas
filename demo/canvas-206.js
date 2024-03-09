@@ -144,6 +144,8 @@ scrawl.makeUpdater({
         textHandleX: ['textHandleX', 'raw'],
         textHandleY: ['textHandleY', 'raw'],
         textUnitFlow: ['textUnitFlow', 'raw'],
+        letterSpacing: ['letterSpacing', 'px'],
+        wordSpacing: ['wordSpacing', 'px'],
     },
 
     callback: updateDisplayText,
@@ -659,6 +661,10 @@ document.querySelector('#guidelineStyle').options.selectedIndex = 0;
 document.querySelector('#guidelineDash').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#textUnitFlow').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#letterSpacing').value = 0;
+// @ts-expect-error
+document.querySelector('#wordSpacing').value = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

@@ -116,11 +116,26 @@ scrawl.makeUpdater({
         alignment: ['alignment', 'float'],
         justifyLine: ['justifyLine', 'raw'],
         lineSpacing: ['lineSpacing', 'float'],
+        letterSpacing: ['letterSpacing', 'float'],
+        wordSpacing: ['wordSpacing', 'float'],
+        textHandleX: ['textHandleX', 'raw'],
         textHandleY: ['textHandleY', 'raw'],
+        textUnitFlow: ['textUnitFlow', 'raw'],
+        breakTextOnSpaces: ['breakTextOnSpaces', 'boolean'],
     },
 
     callback: updateDisplayText,
 });
+
+const localAlignmentSelector = document.querySelector('#localAlignment');
+const updateLocalAlignment = (event) => {
+
+    const val = parseFloat(event.target.value);
+
+    if (Number.isFinite(val)) myLabel.setAllTextUnits({ localAlignment: val });
+};
+scrawl.addNativeListener(['change', 'input'], (e) => updateLocalAlignment(e), localAlignmentSelector);
+
 
 scrawl.makeUpdater({
 
@@ -159,7 +174,11 @@ const updateFont = (event) => {
                 break;
 
             case 'roboto' :
-                myLabel.set({ fontString: '16px "Roboto Sans"'});
+                myLabel.set({ fontString: '16px "Roboto Sans"' });
+                break;
+
+            case 'roboto-mono' :
+                myLabel.set({ fontString: '16px "Roboto Mono"' });
                 break;
 
             case 'bungee' :
@@ -167,14 +186,14 @@ const updateFont = (event) => {
                 break;
 
             case 'carter-one' :
-                myLabel.set({ fontString: '16px "Carter One"'});
+                myLabel.set({ fontString: '16px "Carter One"' });
                 break;
 
             case 'mountains-of-christmas' :
-                myLabel.set({ fontString: '16px "Mountains Of Christmas"'});
+                myLabel.set({ fontString: '16px "Mountains Of Christmas"' });
                 break;
 
-            default : myLabel.set({ fontString: '16px serif'});
+            default : myLabel.set({ fontString: '16px serif' });
         }
         updateDisplayText();
     }
@@ -185,6 +204,8 @@ scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
 // Setup form
 // @ts-expect-error
 fontSelector.options.selectedIndex = 0;
+// @ts-expect-error
+localAlignmentSelector.value = 0;
 
 // @ts-expect-error
 document.querySelector('#width').value = 60;
@@ -201,7 +222,17 @@ document.querySelector('#justifyLine').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#alignment').value = 0;
 // @ts-expect-error
+document.querySelector('#textHandleX').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#textHandleY').options.selectedIndex = 4;
+// @ts-expect-error
+document.querySelector('#letterSpacing').value = 0;
+// @ts-expect-error
+document.querySelector('#wordSpacing').value = 0;
+// @ts-expect-error
+document.querySelector('#textUnitFlow').options.selectedIndex = 0;
+
+document.querySelector('#breakTextOnSpaces').options.selectedIndex = 1;
 
 // #### Development and testing
 console.log(scrawl.library);

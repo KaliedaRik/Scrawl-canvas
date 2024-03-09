@@ -23,7 +23,7 @@ import textMix from '../mixin/text.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -555,13 +555,13 @@ S.textHandle = function (item) {
 S.guidelineDash = function (item) {
 
     if (_isArray(item)) this.guidelineDash = item;
-}
+};
 
 S.guidelineStyle = function (item) {
 
     if (!item) this.guidelineStyle = this.defs.guidelineStyle;
     else if (item.substring) this.guidelineStyle = item;
-}
+};
 
 S.pathPosition = function (item) {
 
@@ -583,6 +583,14 @@ D.pathPosition = function (item) {
 
     this.dirtyTextLayout = true;
 };
+
+S.textUnitFlow = function (item) {
+
+    this.textUnitFlow = item;
+    this.dirtyText = true;
+};
+
+
 
 // #### Prototype functions
 
@@ -1429,16 +1437,53 @@ P.cleanText = function () {
                 unit.push(c);
 
                 // Some Chinese/Japanese characters simply have to stick together (but not in columns)!
-                if (!layoutFlowIsColumns) noBreak = TEXT_NO_BREAK_REGEX.test(c) || TEXT_NO_BREAK_REGEX.test(textCharacters[index + 1]);
-                else noBreak = true;
+                if (!layoutFlowIsColumns) {
 
-                if (!noBreak) {
+                    noBreak = TEXT_NO_BREAK_REGEX.test(c) || TEXT_NO_BREAK_REGEX.test(textCharacters[index + 1]);
+
+                    if (!noBreak) {
+
+                        if (TEXT_SPACES_REGEX.test(c)) {
+
+                            textUnits.push(requestUnit({
+                                [UNIT_CHARS]: unit.join(ZERO_STR),
+                                [UNIT_TYPE]: TEXT_TYPE_SPACE,
+                            }));
+                            unit.length = 0;
+                        }
+                        else  {
+
+                            textUnits.push(requestUnit({
+                                [UNIT_CHARS]: unit.join(ZERO_STR),
+                                [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                            }));
+                            unit.length = 0;
+                        }
+                    }
+                }
+                else {
 
                     if (TEXT_SPACES_REGEX.test(c)) {
 
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_SPACE,
+                        }));
+                        unit.length = 0;
+                    }
+                    else if (TEXT_NO_BREAK_REGEX.test(c)) {
+
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_NO_BREAK,
+                        }));
+                        unit.length = 0;
+                    }
+                    else if (TEXT_ZERO_SPACE_REGEX.test(c)) {
+
+                        textUnits.push(requestUnit({
+                            [UNIT_CHARS]: unit.join(ZERO_STR),
+                            [UNIT_TYPE]: TEXT_TYPE_ZERO_SPACE,
                         }));
                         unit.length = 0;
                     }
@@ -1450,14 +1495,6 @@ P.cleanText = function () {
                         }));
                         unit.length = 0;
                     }
-                }
-                else  {
-
-                    textUnits.push(requestUnit({
-                        [UNIT_CHARS]: unit.join(ZERO_STR),
-                        [UNIT_TYPE]: TEXT_TYPE_CHARS,
-                    }));
-                    unit.length = 0;
                 }
             });
         }
@@ -1719,7 +1756,15 @@ P.measureTextUnits = function () {
 
 // console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)');
 
-    const { textUnits, defaultTextStyle, state, hyphenString, truncateString } = this;
+    const { 
+        defaultTextStyle,
+        hyphenString,
+        state,
+        textUnitFlow,
+        textUnits,
+        truncateString,
+        breakTextOnSpaces,
+    } = this;
 
     const mycell = requestCell(),
         engine = mycell.engine;
@@ -1728,6 +1773,8 @@ P.measureTextUnits = function () {
 
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
     this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mycell);
+
+    const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
 
     textUnits.forEach(t => {
 
@@ -1739,21 +1786,33 @@ P.measureTextUnits = function () {
 
         t.len = res.width;
 
+        // Add word spacing to space chars
         if (charType === TEXT_TYPE_SPACE) {
 
             t.len += currentTextStyle.wordSpaceValue;
         }
+
+        // Prep soft hyphens
         else if (charType === TEXT_TYPE_SOFT_HYPHEN) {
 
             res = engine.measureText(hyphenString);
             t.replaceLen = res.width;
         }
+
+        // Prep truncation
         else {
 
             res = engine.measureText(truncateString);
             t.replaceLen = res.width;
         }
-        t.height = parseFloat(currentTextStyle.fontSize);
+
+        // No gaps between CJK chars and punctuation when textUnitFlow is columnar
+        if (layoutFlowIsColumns && !breakTextOnSpaces) {
+
+            if (charType === TEXT_TYPE_ZERO_SPACE || charType === TEXT_TYPE_NO_BREAK) t.height = 0;
+            else t.height = parseFloat(currentTextStyle.fontSize);
+        }
+        else t.height = parseFloat(currentTextStyle.fontSize);
     });
 
     // Gather kerning data (if required) - only applies to rows
@@ -2507,7 +2566,9 @@ P.positionTextUnitsInSpace = function () {
 
                         boxCoord[0] = tempX - handleX;
                         boxCoord[1] = tempY - verticalOffset;
-                        localAngle += localAlignment;
+
+                        localAngle += localAlignment
+                        if (layoutFlowIsColumns) localAngle -= 90;
 
                         coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
                         boxData.tl.push(coord[0], coord[1]);
@@ -2540,7 +2601,7 @@ P.positionTextUnitsInSpace = function () {
 // `positionTextDecoration` - Recovers data which can be used for building underline, overline and highlight Path2D objects
 P.positionTextDecoration = function () {
 
-// console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnitsInSpace)');
+// console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnits)');
 
     const correctCoordinates = function (out, back, start, width) {
 
@@ -2608,10 +2669,10 @@ P.positionTextDecoration = function () {
                     coord.setFromArray(itemBack).subtract(itemOut).scalarMultiply(baseRatio).add(itemOut);
 
                     itemOut[0] = parseFloat(workHold[0].toFixed(2));
-                    itemOut[1] = parseFloat(workHold[1].toFixed(0));
+                    itemOut[1] = parseFloat(workHold[1].toFixed(2));
 
                     itemBack[0] = parseFloat(coord[0].toFixed(2));
-                    itemBack[1] = parseFloat(coord[1].toFixed(0));
+                    itemBack[1] = parseFloat(coord[1].toFixed(2));
                 }
 
                 out.length = 0;
@@ -2768,11 +2829,12 @@ P.positionTextDecoration = function () {
 
                     ({tl, tr, br, bl} = boxData);
 
-                    // Three different code blocks for differing combinations of `useLayoutTemplateAsPath`, `textUnitFlow` and `breakTextOnSpaces`
-                    // + We have to do this because styling that looks good in a space layout along rows may look awful when the same text flows instead along columns
-                    // + Text-along-a-path is its own world of styling horrors!
+                    // We want to style row-flowed units
+                    // + Style blocks to terminate at end of line 
+                    // + Capture spaces within the style block
                     if (!useLayoutTemplateAsPath && !TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
 
+// console.log(this.name, 'positionTextDecoration - code block #1');
                         if (includeUnderline) {
 
                             underlineOut.push(tl, tr);
@@ -2794,8 +2856,13 @@ P.positionTextDecoration = function () {
                         }
                         else buildHighlight();
                     }
+
+                    // We want to style column-flowed units
+                    // + Each character to be its own style block
+                    // + Include spaces in the styling
                     else if (!breakTextOnSpaces && TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
 
+// console.log(this.name, 'positionTextDecoration - code block #2');
                         if (includeUnderline) {
 
                             underlineOut.push(tl, tr);
@@ -2817,8 +2884,40 @@ P.positionTextDecoration = function () {
                             buildHighlight();
                         }
                     }
+                    // We want to style column-flowed units
+                    // + Each text unit to be its own style block
+                    // + Exclude spaces from the styling
+                    else if (TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
+
+// console.log(this.name, 'positionTextDecoration - code block #3');
+                        if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
+
+                            underlineOut.push(tl, tr);
+                            underlineBack.push(bl, br);
+                            buildUnderline();
+                        }
+
+                        if (charType !== TEXT_TYPE_SPACE && includeOverline) {
+
+                            overlineOut.push(tl, tr);
+                            overlineBack.push(bl, br);
+                            buildOverline();
+                        }
+
+                        if (charType !== TEXT_TYPE_SPACE && includeHighlight) {
+
+                            highlightOut.push(tl, tr);
+                            highlightBack.push(bl, br);
+                            buildHighlight();
+                        }
+                    }
+
+                    // Default - textUnitFlow irrelevant
+                    // + Style blocks to terminate at end of line 
+                    // + Exclude spaces from the styling
                     else {
 
+// console.log(this.name, 'positionTextDecoration - code block #4');
                         if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
 
                             underlineOut.push(tl, tr);
@@ -2946,7 +3045,7 @@ P.regularStamp = function () {
 
         const workingCells = (useLayoutTemplateAsPath) ?
             this.createTextCellsForPath(currentHost) :
-            this.createTextCells(currentHost);
+            this.createTextCellsForSpace(currentHost);
 
         if (workingCells) {
 
@@ -3090,7 +3189,7 @@ P.createTextCellsForPath = function (host) {
     return null;
 };
 
-P.createTextCells = function (host) {
+P.createTextCellsForSpace = function (host) {
 
     const el = host.element;
     const uCell = requestCell(el.width, el.height);
