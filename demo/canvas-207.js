@@ -231,7 +231,7 @@ document.querySelector('#letterSpacing').value = 0;
 document.querySelector('#wordSpacing').value = 0;
 // @ts-expect-error
 document.querySelector('#textUnitFlow').options.selectedIndex = 0;
-
+// @ts-expect-error
 document.querySelector('#breakTextOnSpaces').options.selectedIndex = 1;
 
 // #### Development and testing

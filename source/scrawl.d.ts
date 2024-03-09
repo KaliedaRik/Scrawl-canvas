@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.12.0
+// Type definitions for Scrawl-canvas 8.13.0
 
 
 
@@ -2990,7 +2990,7 @@ export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction |
 
 
 
-// makeDragZone factory (not stored in library)
+// MakeKeyboardZoneInputs factory (not stored in library)
 // -------------------------------------
 interface MakeKeyboardZoneInputs {
     zone: StackInstance | CanvasInstance | string;

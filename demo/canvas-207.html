@@ -188,8 +188,13 @@ CSS custom property --SC-method             maps to TextStyle method
         --SC-overline-offset: 0.4;
         --SC-overline-style: red;
         --SC-overline-width: 5px;
-
+/*
+        For reasons, Safari doesn't render the overline (in HTML) when declared in the shorthand form
         text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
+*/
+        text-decoration-line: line-through;
+        text-decoration-color: var(--SC-overline-style);
+        text-decoration-thickness: var(--SC-overline-width);
       }
 
       & .bold {

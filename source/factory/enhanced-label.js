@@ -459,7 +459,6 @@ S.group = function (item) {
 // __layoutTemplate__ - TODO: documentation
 S.layoutTemplate = function (item) {
 
-// console.log(this.name, 'S.layoutTemplate', item)
     if (item) {
 
         const oldTemplate = this.layoutTemplate,
@@ -503,7 +502,6 @@ G.rawText = function () {
 };
 S.text = function (item) {
 
-// console.log(this.name, 'S.text')
     this.rawText = (item.substring) ? item : item.toString();
     this.text = this.convertTextEntityCharacters(this.rawText);
 
@@ -514,7 +512,6 @@ S.text = function (item) {
 
 S.truncateString = function (item) {
 
-// console.log(this.name, 'S.truncateString')
     if (item.substring) {
 
         this.truncateString = this.convertTextEntityCharacters(item);
@@ -524,7 +521,6 @@ S.truncateString = function (item) {
 
 S.hyphenString = function (item) {
 
-// console.log(this.name, 'S.hyphenString')
     if (item.substring) {
 
         this.hyphenString = this.convertTextEntityCharacters(item);
@@ -745,12 +741,19 @@ P.getTextHandleY = function (val, size, font) {
 
 // console.log(this.name, 'getTextHandleY (trigger: various)', val, size, font);
 
-    const { height, hangingBaseline, alphabeticBaseline, ideographicBaseline, verticalOffset } = this.getFontMetadata(font);
+    const meta = this.getFontMetadata(font);
+
+    const {
+        alphabeticRatio,
+        hangingRatio,
+        height,
+        ideographicRatio,
+    } = meta;
 
     const ratio = size / 100;
     const scale = this.layoutTemplate?.currentScale || 1;
 
-    const dim = (height - verticalOffset) * ratio;
+    const dim = height * ratio;
 
     if (val.toFixed) return val * scale;
 
@@ -760,17 +763,11 @@ P.getTextHandleY = function (val, size, font) {
 
     if (val === CENTER) return (dim / 2) * scale;
 
-    if (val === ALPHABETIC) return (_isFinite(alphabeticBaseline)) ?
-        (alphabeticBaseline * ratio) * scale :
-        0;
+    if (val === ALPHABETIC) return dim * alphabeticRatio * scale;
 
-    if (val === HANGING) return (_isFinite(hangingBaseline)) ?
-        (hangingBaseline * ratio) * scale :
-        0;
+    if (val === HANGING) return dim * hangingRatio * scale;
 
-    if (val === IDEOGRAPHIC) return (_isFinite(ideographicBaseline)) ?
-        (ideographicBaseline * ratio) * scale :
-        0;
+    if (val === IDEOGRAPHIC) return dim * ideographicRatio * scale;
 
     if (val === MIDDLE) return (dim / 2) * scale;
 
@@ -967,6 +964,8 @@ P.getFontMetadata = function (fontFamily) {
         const mycell = requestCell(),
             engine = mycell.engine;
 
+        engine.textAlign = LEFT;
+        engine.textBaseline = TOP;
         engine.font = font;
 
         const metrics = engine.measureText(SPACE);
@@ -974,15 +973,18 @@ P.getFontMetadata = function (fontFamily) {
         const { actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxAscent, fontBoundingBoxDescent, alphabeticBaseline, hangingBaseline, ideographicBaseline} = metrics;
 
         let height = fontBoundingBoxAscent + fontBoundingBoxDescent;
+
         if (!_isFinite(height)) height = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
+
+        const verticalOffset = _isFinite(fontBoundingBoxAscent) ? fontBoundingBoxAscent : actualBoundingBoxAscent
 
         fontfamilymetadatanames.push(font);
         fontfamilymetadata[font] = {
             height,
-            alphabeticBaseline: -alphabeticBaseline,
-            hangingBaseline: -hangingBaseline,
-            ideographicBaseline: -ideographicBaseline,
-            verticalOffset: _isFinite(fontBoundingBoxAscent) ? fontBoundingBoxAscent : actualBoundingBoxAscent,
+            alphabeticRatio: _abs((alphabeticBaseline - verticalOffset) / height),
+            hangingRatio: _abs((hangingBaseline - verticalOffset) / height),
+            ideographicRatio: _abs((ideographicBaseline - verticalOffset) / height),
+            verticalOffset,
         }
 
         releaseCell(mycell);
@@ -1756,7 +1758,7 @@ P.measureTextUnits = function () {
 
 // console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)');
 
-    const { 
+    const {
         defaultTextStyle,
         hyphenString,
         state,
@@ -2139,12 +2141,15 @@ P.positionTextUnitsAlongPath = function () {
         x, y, angle,
         handleX, handleY,
         offsetX, offsetY,
-        fontFamily, verticalOffset;
+        meta, fontFamily, fontDepth, verticalOffset;
 
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
     this.updateWorkingTextStyle(currentTextStyle, Ωempty);
+
     fontFamily = currentTextStyle.fontFamily;
-    verticalOffset = this.getFontMetadata(fontFamily).verticalOffset * (height / 100);
+    meta = this.getFontMetadata(fontFamily);
+    verticalOffset = meta.verticalOffset * (currentTextStyle.fontSizeValue / 100) * currentScale;
+    fontDepth = meta.height * (currentTextStyle.fontSizeValue / 100) * currentScale;
 
     for (let i = 0, iz = data.length; i < iz; i++) {
 
@@ -2159,8 +2164,11 @@ P.positionTextUnitsAlongPath = function () {
             if (style) {
 
                 this.updateWorkingTextStyle(currentTextStyle, style);
+
                 fontFamily = currentTextStyle.fontFamily;
-                verticalOffset = this.getFontMetadata(fontFamily).verticalOffset * (height / 100);
+                meta = this.getFontMetadata(fontFamily);
+                verticalOffset = meta.verticalOffset * (height / 100) * currentScale;
+                fontDepth = meta.height * (height / 100) * currentScale;
             }
 
             scaledHeight = height * currentScale;
@@ -2193,7 +2201,7 @@ P.positionTextUnitsAlongPath = function () {
                 startData[1] = y;
 
                 startCorrection[0] = tempX;
-                startCorrection[1] = tempY;
+                startCorrection[1] = tempY + verticalOffset;
 
                 if (alignTextUnitsToPath) localAngle = alignment + angle - 90;
                 else localAngle = alignment - 90;
@@ -2232,7 +2240,7 @@ P.positionTextUnitsAlongPath = function () {
                 startData[1] = y;
 
                 startCorrection[0] = tempX;
-                startCorrection[1] = tempY;
+                startCorrection[1] = tempY + verticalOffset;
 
                 if (alignTextUnitsToPath) localAngle = alignment + localAlignment + angle;
                 else localAngle = alignment + localAlignment;
@@ -2251,22 +2259,22 @@ P.positionTextUnitsAlongPath = function () {
             boxCoord[1] = y + tempY - verticalOffset
 
             coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-            boxData.tl.push(coord[0], coord[1]);
+            boxData.tl.push(...coord);
 
             boxCoord[0] += len;
 
             coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-            boxData.tr.push(coord[0], coord[1]);
+            boxData.tr.push(...coord);
 
-            boxCoord[1] = y + tempY + (height * currentScale);
+            boxCoord[1] = y + tempY + fontDepth;
 
             coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-            boxData.br.push(coord[0], coord[1]);
+            boxData.br.push(...coord);
 
             boxCoord[0] -= len;
 
             coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-            boxData.bl.push(coord[0], coord[1]);
+            boxData.bl.push(...coord);
         }
     }
 
@@ -2310,9 +2318,15 @@ P.positionTextUnitsInSpace = function () {
         temp, tempX, tempY, handleX, handleY, offsetX, offsetY,
         startAtX, startAtY, startAt, localX, localY, localAngle;
 
+    let fontFamily, meta, verticalOffset, fontDepth;
+
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
     this.updateWorkingTextStyle(currentTextStyle, Ωempty);
-    let fontFamily, verticalOffset;
+
+    fontFamily = currentTextStyle.fontFamily;
+    meta = this.getFontMetadata(fontFamily);
+    verticalOffset = meta.verticalOffset * (currentTextStyle.fontSizeValue / 100) * currentScale;
+    fontDepth = meta.height * (currentTextStyle.fontSizeValue / 100) * currentScale;
 
     lines.forEach(line => {
 
@@ -2483,7 +2497,9 @@ P.positionTextUnitsInSpace = function () {
 
                         this.updateWorkingTextStyle(currentTextStyle, style);
                         fontFamily = currentTextStyle.fontFamily;
-                        verticalOffset = this.getFontMetadata(fontFamily).verticalOffset * (height / 100) * currentScale;
+                        meta = this.getFontMetadata(fontFamily);
+                        verticalOffset = meta.verticalOffset * (height / 100) * currentScale;
+                        fontDepth = meta.height * (height / 100) * currentScale;
                     }
 
                     if (unit.stampFlag) {
@@ -2511,7 +2527,7 @@ P.positionTextUnitsInSpace = function () {
                             localY = startAtY + coord[1];
 
                             tempX = localX + offsetX;
-                            tempY = localY + offsetY - handleY;
+                            tempY = localY + offsetY - handleY + verticalOffset;
 
                             startData[0] = localX;
                             startData[1] = localY;
@@ -2548,7 +2564,7 @@ P.positionTextUnitsInSpace = function () {
                             localY = startAtY + coord[1];
 
                             tempX = localX + offsetX;
-                            tempY = localY + offsetY - handleY;
+                            tempY = localY + offsetY - handleY + verticalOffset;
 
                             startData[0] = localX;
                             startData[1] = localY;
@@ -2571,22 +2587,22 @@ P.positionTextUnitsInSpace = function () {
                         if (layoutFlowIsColumns) localAngle -= 90;
 
                         coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-                        boxData.tl.push(coord[0], coord[1]);
+                        boxData.tl.push(...coord);
 
                         boxCoord[0] += len;
 
                         coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-                        boxData.tr.push(coord[0], coord[1]);
+                        boxData.tr.push(...coord);
 
-                        boxCoord[1] = tempY + (height * currentScale);
+                        boxCoord[1] = tempY + fontDepth - verticalOffset;
 
                         coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-                        boxData.br.push(coord[0], coord[1]);
+                        boxData.br.push(...coord);
 
                         boxCoord[0] -= len;
 
                         coord.setFromArray(boxCoord).subtract(startData).rotate(localAngle).add(startData);
-                        boxData.bl.push(coord[0], coord[1]);
+                        boxData.bl.push(...coord);
                     }
                 }
             });
@@ -2829,67 +2845,8 @@ P.positionTextDecoration = function () {
 
                     ({tl, tr, br, bl} = boxData);
 
-                    // We want to style row-flowed units
-                    // + Style blocks to terminate at end of line 
-                    // + Capture spaces within the style block
-                    if (!useLayoutTemplateAsPath && !TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
+                    if (TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
 
-// console.log(this.name, 'positionTextDecoration - code block #1');
-                        if (includeUnderline) {
-
-                            underlineOut.push(tl, tr);
-                            underlineBack.push(bl, br);
-                        }
-                        else buildUnderline();
-
-                        if (includeOverline) {
-
-                            overlineOut.push(tl, tr);
-                            overlineBack.push(bl, br);
-                        }
-                        else buildOverline();
-
-                        if (includeHighlight) {
-
-                            highlightOut.push(tl, tr);
-                            highlightBack.push(bl, br);
-                        }
-                        else buildHighlight();
-                    }
-
-                    // We want to style column-flowed units
-                    // + Each character to be its own style block
-                    // + Include spaces in the styling
-                    else if (!breakTextOnSpaces && TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
-
-// console.log(this.name, 'positionTextDecoration - code block #2');
-                        if (includeUnderline) {
-
-                            underlineOut.push(tl, tr);
-                            underlineBack.push(bl, br);
-                            buildUnderline();
-                        }
-
-                        if (includeOverline) {
-
-                            overlineOut.push(tl, tr);
-                            overlineBack.push(bl, br);
-                            buildOverline();
-                        }
-
-                        if (includeHighlight) {
-
-                            highlightOut.push(tl, tr);
-                            highlightBack.push(bl, br);
-                            buildHighlight();
-                        }
-                    }
-                    // We want to style column-flowed units
-                    // + Each text unit to be its own style block
-                    // + Exclude spaces from the styling
-                    else if (TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
-
-// console.log(this.name, 'positionTextDecoration - code block #3');
                         if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
 
                             underlineOut.push(tl, tr);
@@ -2911,33 +2868,80 @@ P.positionTextDecoration = function () {
                             buildHighlight();
                         }
                     }
-
-                    // Default - textUnitFlow irrelevant
-                    // + Style blocks to terminate at end of line 
-                    // + Exclude spaces from the styling
                     else {
 
-// console.log(this.name, 'positionTextDecoration - code block #4');
-                        if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
+                        if (useLayoutTemplateAsPath) {
 
-                            underlineOut.push(tl, tr);
-                            underlineBack.push(bl, br);
+                            if (!breakTextOnSpaces) {
+
+                                if (includeUnderline) {
+
+                                    underlineOut.push(tl, tr);
+                                    underlineBack.push(bl, br);
+                                }
+                                else buildUnderline();
+
+                                if (includeOverline) {
+
+                                    overlineOut.push(tl, tr);
+                                    overlineBack.push(bl, br);
+                                }
+                                else buildOverline();
+
+                                if (includeHighlight) {
+
+                                    highlightOut.push(tl, tr);
+                                    highlightBack.push(bl, br);
+                                }
+                                else buildHighlight();
+                            }
+                            else {
+
+                                if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
+
+                                    underlineOut.push(tl, tr);
+                                    underlineBack.push(bl, br);
+                                    buildUnderline();
+                                }
+
+                                if (charType !== TEXT_TYPE_SPACE && includeOverline) {
+
+                                    overlineOut.push(tl, tr);
+                                    overlineBack.push(bl, br);
+                                    buildOverline();
+                                }
+
+                                if (charType !== TEXT_TYPE_SPACE && includeHighlight) {
+
+                                    highlightOut.push(tl, tr);
+                                    highlightBack.push(bl, br);
+                                    buildHighlight();
+                                }
+                            }
                         }
-                        else buildUnderline();
+                        else {
 
-                        if (charType !== TEXT_TYPE_SPACE && includeOverline) {
+                            if (includeUnderline) {
 
-                            overlineOut.push(tl, tr);
-                            overlineBack.push(bl, br);
+                                underlineOut.push(tl, tr);
+                                underlineBack.push(bl, br);
+                            }
+                            else buildUnderline();
+
+                            if (includeOverline) {
+
+                                overlineOut.push(tl, tr);
+                                overlineBack.push(bl, br);
+                            }
+                            else buildOverline();
+
+                            if (includeHighlight) {
+
+                                highlightOut.push(tl, tr);
+                                highlightBack.push(bl, br);
+                            }
+                            else buildHighlight();
                         }
-                        else buildOverline();
-
-                        if (charType !== TEXT_TYPE_SPACE && includeHighlight) {
-
-                            highlightOut.push(tl, tr);
-                            highlightBack.push(bl, br);
-                        }
-                        else buildHighlight();
                     }
                 }
             }

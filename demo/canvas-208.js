@@ -19,7 +19,6 @@ const name = (n) => `${namespace}-${n}`;
 
 scrawl.makeSpiral({
     name: name('spiral-track'),
-    strokeStyle: 'darkgreen',
     strokeStyle: 'rgb(0 0 0 / 0.2)',
     method: 'draw',
     start: ['center', 'center'],
