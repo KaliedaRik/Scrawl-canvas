@@ -23,7 +23,7 @@ import textMix from '../mixin/text.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -1946,7 +1946,7 @@ P.assignTextUnitsToLines = function () {
             unitData,
         } = line);
 
-        lengthRemaining = lineLength;
+        lengthRemaining = _ceil(lineLength);
 
         for (i = unitCursor; i < unitArrayLength; i++) {
 
@@ -1955,9 +1955,15 @@ P.assignTextUnitsToLines = function () {
             ({ len, height, charType } = unit);
 
             // Check: is there room for the text unit
-            check = (layoutFlowIsColumns) ? height * layoutTemplate.currentScale : len;
+            // + TODO: find out the algorithms used by various browsers to assign words to a given length of line.
+            // + At the moment, the SC layout doesn't exactly match the DOM layout - the occasional word will fall over into the next line - this becomes very noticable when scaling
+            // + Ideally, the words-per-line in SC vs DOM should match, but if push comes to shove, would much prefer to keep lines stable when scaling
+            // + The current solution fixes the worst of the movement, but is not good enough
+            check = (layoutFlowIsColumns) ?
+                height * layoutTemplate.currentScale :
+                _floor(len * 100) / 100;
 
-            if (check < lengthRemaining) {
+            if (check <= lengthRemaining + 1) {
 
                 // Hyphens capture
                 // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
@@ -2366,7 +2372,7 @@ P.positionTextUnitsInSpace = function () {
 
                         initialDistances.push(unitLengths);
 
-                        if (layoutFlowIsColumns) unitLengths += unit.height;
+                        if (layoutFlowIsColumns) unitLengths += unit.height * currentScale;
                         else unitLengths += unit.len - unit.kernOffset;
 
                         // keep a count of the number of spaces within the line
@@ -2627,76 +2633,40 @@ P.positionTextDecoration = function () {
                 workBack = requestArray(),
                 workHold = requestArray();
 
-            let cx, cy, px, py, i, iz, item, itemOut, itemBack,
+            let i, iz, itemOut, itemBack,
                 fullLen, topLen, baseRatio;
 
-            cx = cy = px = py = null;
+            workOut.push(...out);
+            workBack.push(...back);
 
-            for (i = 0, iz = out.length; i < iz; i++) {
+            for (i = 0, iz = workOut.length; i < iz; i++) {
 
-                item = out[i];
-                [cx, cy] = out[i];
+                itemOut = workOut[i];
+                itemBack = workBack[i];
 
-                cx = parseFloat(cx.toFixed(2));
-                cy = parseFloat(cy.toFixed(2));
+                workHold.length = 0;
 
-                if (cx !== px || cy !== py) {
+                fullLen = coord.setFromArray(itemBack).subtract(itemOut).getMagnitude();
+                topLen = coord.scalarMultiply(start).getMagnitude();
 
-                    workOut.push(item);
-                    px = cx;
-                    py = cy;
-                }
+                workHold.push(...coord.add(itemOut));
+
+                baseRatio = (topLen + (width * currentScale)) / fullLen;
+
+                coord.setFromArray(itemBack).subtract(itemOut).scalarMultiply(baseRatio).add(itemOut);
+
+                itemOut[0] = workHold[0];
+                itemOut[1] = workHold[1];
+
+                itemBack[0] = coord[0];
+                itemBack[1] = coord[1];
             }
 
-            cx = cy = px = py = null;
+            out.length = 0;
+            out.push(...workOut);
 
-            for (i = 0, iz = back.length; i < iz; i++) {
-
-                item = back[i];
-                [cx, cy] = back[i];
-
-                cx = parseFloat(cx.toFixed(2));
-                cy = parseFloat(cy.toFixed(2));
-
-                if (cx !== px || cy !== py) {
-
-                    workBack.push(item);
-                    px = cx;
-                    py = cy;
-                }
-            }
-
-            if (workOut.length === workBack.length) {
-
-                for (i = 0, iz = workOut.length; i < iz; i++) {
-
-                    itemOut = workOut[i];
-                    itemBack = workBack[i];
-
-                    workHold.length = 0;
-
-                    fullLen = coord.setFromArray(itemBack).subtract(itemOut).getMagnitude();
-                    topLen = coord.scalarMultiply(start).getMagnitude();
-
-                    workHold.push(...coord.add(itemOut));
-
-                    baseRatio = (topLen + (width * currentScale)) / fullLen;
-
-                    coord.setFromArray(itemBack).subtract(itemOut).scalarMultiply(baseRatio).add(itemOut);
-
-                    itemOut[0] = parseFloat(workHold[0].toFixed(2));
-                    itemOut[1] = parseFloat(workHold[1].toFixed(2));
-
-                    itemBack[0] = parseFloat(coord[0].toFixed(2));
-                    itemBack[1] = parseFloat(coord[1].toFixed(2));
-                }
-
-                out.length = 0;
-                out.push(...workOut);
-
-                back.length = 0;
-                back.push(...workBack);
-            }
+            back.length = 0;
+            back.push(...workBack);
 
             releaseArray(workOut, workBack, workHold);
         }
@@ -2704,18 +2674,21 @@ P.positionTextDecoration = function () {
 
     const buildPath = function (out, back, style, paths) {
 
-        iz = out.length;
+        const iOut = out.length,
+            iBack = back.length;
 
-        if (iz) {
+        let i;
+
+        if (iOut && iBack) {
 
             path = `M ${out[0][0]}, ${out[0][1]} `;
 
-            for (i = 1; i < iz; i++) {
+            for (i = 1; i < iOut; i++) {
 
                 path += `${out[i][0]}, ${out[i][1]} `;
             }
 
-            for (i = iz - 1; i >= 0; i--) {
+            for (i = iBack - 1; i >= 0; i--) {
 
                 path += `${back[i][0]}, ${back[i][1]} `;
             }
@@ -2774,7 +2747,7 @@ P.positionTextDecoration = function () {
         useLayoutTemplateAsPath,
     } = this;
 
-    let unitData, unit, style, boxData, tl, tr, br, bl, path, i, iz, charType,
+    let unitData, unit, style, boxData, tl, tr, br, bl, path, charType,
         includeUnderline, underlineStyle, underlineOffset, underlineWidth,
         includeOverline, overlineStyle, overlineOffset, overlineWidth,
         includeHighlight, highlightStyle;
@@ -2845,6 +2818,7 @@ P.positionTextDecoration = function () {
 
                     ({tl, tr, br, bl} = boxData);
 
+                    // TextUnits along a column never style spaces
                     if (TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
 
                         if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
@@ -2872,6 +2846,7 @@ P.positionTextDecoration = function () {
 
                         if (useLayoutTemplateAsPath) {
 
+                            // TextUnits that are all single chars will style spaces
                             if (!breakTextOnSpaces) {
 
                                 if (includeUnderline) {
@@ -2895,6 +2870,7 @@ P.positionTextDecoration = function () {
                                 }
                                 else buildHighlight();
                             }
+                            // TextUnits that are blocks of chars chars will not style spaces
                             else {
 
                                 if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
@@ -2919,6 +2895,7 @@ P.positionTextDecoration = function () {
                                 }
                             }
                         }
+                        // Non-pathed TextUnits along a row will style spaces
                         else {
 
                             if (includeUnderline) {
@@ -3122,7 +3099,8 @@ P.createTextCellsForPath = function (host) {
 
             const { unitData } = line;
 
-            let unit, startData, startCorrection, localRotation, chars, style, x, y, dx, dy, startRotation, cos, sin;
+            let unit, startData, startCorrection, localRotation,
+                chars, charType, style, x, y, dx, dy, startRotation, cos, sin;
 
             unitData.forEach(u => {
 
@@ -3132,6 +3110,7 @@ P.createTextCellsForPath = function (host) {
 
                     ({
                         chars,
+                        charType,
                         localRotation,
                         startCorrection,
                         startData,
@@ -3147,39 +3126,42 @@ P.createTextCellsForPath = function (host) {
                         this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mCell);
                     }
 
-                    [x, y] = startData;
-                    [dx, dy] = startCorrection;
+                    if (charType !== TEXT_TYPE_SPACE) {
 
-                    cos = _cos(startRotation);
-                    sin = _sin(startRotation);
+                        [x, y] = startData;
+                        [dx, dy] = startCorrection;
 
-                    uEngine.setTransform(cos, sin, -sin, cos, x, y);
-                    mEngine.setTransform(cos, sin, -sin, cos, x, y);
+                        cos = _cos(startRotation);
+                        sin = _sin(startRotation);
 
-                    uEngine.rotate(localRotation);
-                    mEngine.rotate(localRotation);
+                        uEngine.setTransform(cos, sin, -sin, cos, x, y);
+                        mEngine.setTransform(cos, sin, -sin, cos, x, y);
 
-                    uEngine.strokeText(chars, dx, dy);
-                    uEngine.fillText(chars, dx, dy);
+                        uEngine.rotate(localRotation);
+                        mEngine.rotate(localRotation);
 
-                    switch (currentTextStyle.method) {
+                        uEngine.strokeText(chars, dx, dy);
+                        uEngine.fillText(chars, dx, dy);
 
-                        case DRAW :
-                            mEngine.strokeText(chars, dx, dy);
-                            break;
+                        switch (currentTextStyle.method) {
 
-                        case FILL_AND_DRAW :
-                            mEngine.fillText(chars, dx, dy);
-                            mEngine.strokeText(chars, dx, dy);
-                            break;
+                            case DRAW :
+                                mEngine.strokeText(chars, dx, dy);
+                                break;
 
-                        case DRAW_AND_FILL :
-                            mEngine.strokeText(chars, dx, dy);
-                            mEngine.fillText(chars, dx, dy);
-                            break;
+                            case FILL_AND_DRAW :
+                                mEngine.fillText(chars, dx, dy);
+                                mEngine.strokeText(chars, dx, dy);
+                                break;
 
-                        default:
-                            mEngine.fillText(chars, dx, dy);
+                            case DRAW_AND_FILL :
+                                mEngine.strokeText(chars, dx, dy);
+                                mEngine.fillText(chars, dx, dy);
+                                break;
+
+                            default:
+                                mEngine.fillText(chars, dx, dy);
+                        }
                     }
                 }
             });
