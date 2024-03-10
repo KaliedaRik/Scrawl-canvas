@@ -622,7 +622,8 @@ export const TEXT_LAYOUT_FLOW_COLUMNS = _freeze(['column', 'column-reverse']);
 export const TEXT_LAYOUT_FLOW_REVERSE = _freeze(['row-reverse', 'column-reverse']);
 export const TEXT_NO_BREAK_REGEX = /[\u2060]/;
 export const TEXT_SOFT_HYPHEN_REGEX = /[\u00ad]/;
-export const TEXT_SPACES_REGEX = /[\s\u200b]/;
+// Excludes \u00A0 (no-break-space) and includes \u200b
+export const TEXT_SPACES_REGEX = /[ \f\n\r\t\v\u2028\u2029\u200b]/;
 export const TEXT_TYPE_CHARS = 'C';
 export const TEXT_TYPE_HYPHEN = 'H';
 export const TEXT_TYPE_NO_BREAK = 'B';

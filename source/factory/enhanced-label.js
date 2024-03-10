@@ -23,7 +23,7 @@ import textMix from '../mixin/text.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LOCKTO, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -179,10 +179,36 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, ['layoutTemplate']);
+P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'mimicked', 'pivoted', 'state']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
+P.packetCoordinates = pushUnique(P.packetCoordinates, ['start', 'handle', 'offset']);
+P.packetObjects = pushUnique(P.packetObjects, ['group', 'layoutTemplate']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
-// Not sure this is needed?
-// P.packetExclusions = pushUnique(P.packetObjects, ['cache']);
+P.processPacketOut = function (key, value, inc) {
+
+    return this.processEntityPacketOut(key, value, inc);
+};
+
+// handles both anchor and button objects
+P.handlePacketAnchor = function (copy, items) {
+
+    return copy;
+}
+
+P.processEntityPacketOut = function (key, value, incs) {
+
+    return this.processFactoryPacketOut(key, value, incs);
+};
+
+P.processFactoryPacketOut = function (key, value, incs) {
+
+    let result = true;
+
+    if(!incs.indexOf(key) && value === this.defs[key]) result = false;
+
+    return result;
+};
 
 P.finalizePacketOut = function (copy, items) {
 
@@ -232,18 +258,71 @@ P.finalizePacketOut = function (copy, items) {
         textBaseline: TOP,
     });
 
-    copy = this.handlePacketAnchor(copy, items);
-
     return copy;
 };
 
 
 // #### Clone management
-// TODO - this functionality is currently disabled, need to enable it and make it work properly
-P.clone = λthis;
+P.postCloneAction = function(clone, items) {
+
+    return clone;
+};
 
 
 // #### Kill management
+P.kill = function (flag1 = false, flag2 = false) {
+
+    const name = this.name;
+
+    // Remove artefact from all groups
+    _values(group).forEach(val => {
+
+        if (val.artefacts.includes(name)) val.removeArtefacts(name);
+    });
+
+    // If the artefact has an anchor, it needs to be removed
+    if (this.anchor) this.demolishAnchor();
+
+    // If the artefact has a button, it needs to be removed
+    if (this.button) this.demolishButton();
+
+    // Remove from other artefacts
+    _values(artefact).forEach(val => {
+
+        if (val.name !== name) {
+
+            if (val.pivot && val.pivot.name === name) val.set({ pivot: false});
+            if (val.mimic && val.mimic.name === name) val.set({ mimic: false});
+            if (val.path && val.path.name === name) val.set({ path: false});
+            if (val.generateAlongPath && val.generateAlongPath.name === name) val.set({ generateAlongPath: false});
+            if (val.generateInArea && val.generateInArea.name === name) val.set({ generateInArea: false});
+            if (val.artefact && val.artefact.name === name) val.set({ artefact: false});
+
+            if (_isArray(val.pins)) {
+
+                val.pins.forEach((item, index) => {
+
+                    if (isa_obj(item) && item.name === name) val.removePinAt(index);
+                });
+            }
+        }
+    });
+
+    // Remove from tweens and actions targets arrays
+    _values(tween).forEach(val => {
+
+        if (val.checkForTarget(name)) val.removeFromTargets(this);
+    });
+
+    // Factory-specific actions required to complete the kill
+    this.factoryKill(flag1, flag2);
+
+    // Remove artefact from the Scrawl-canvas library
+    this.deregister();
+
+    return this;
+};
+
 P.factoryKill = function () {
 
     if (this.cache) {
@@ -3688,6 +3767,12 @@ P.setAllTextUnits = function (items) {
         }
     });
     this.dirtyLayout = true;
+};
+
+
+P.checkHit = function (items = [], mycell) {
+
+    return false;
 };
 
 // const makeUnitObject = (chars, type) => new LineObject(chars, type);

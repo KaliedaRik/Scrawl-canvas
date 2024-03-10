@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 209</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    @font-face {
+      font-family: "Roboto Serif";
+      src: url("fonts/RobotoSerif-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Roboto Serif";
+      src: url("fonts/RobotoSerif-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: "Roboto Serif";
+      src: url("fonts/RobotoSerif-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Roboto Serif";
+      src: url("fonts/RobotoSerif-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    @font-face {
+      font-family: "Noto Thai Sans";
+      src: url("fonts/NotoSansThai-Regular.ttf") format("opentype");
+    }
+
+    @font-face {
+      font-family: "Noto Arabic Sans";
+      src: url("fonts/NotoSansArabic-Regular.ttf") format("opentype");
+    }
+
+    @font-face {
+      font-family: "Noto Arabic Naskh";
+      src: url("fonts/NotoNaskhArabic-Regular.ttf") format("opentype");
+    }
+
+    #preload-fonts {
+      height: 0;
+      overflow: hidden;
+    }
+
+/*
+CSS property direction                      maps to TextStyle direction
+CSS property font-family                    maps to TextStyle fontFamily
+CSS property font-kerning                   maps to TextStyle fontKerning
+CSS property font-size                      maps to TextStyle fontSize
+CSS property font-stretch                   maps to TextStyle fontStretch
+CSS property font-style                     maps to TextStyle fontStyle
+CSS property font-variant-caps              maps to TextStyle fontVariantCaps
+CSS property font-weight                    maps to TextStyle fontWeight
+CSS property letter-spacing                 maps to TextStyle letterSpacing
+CSS property text-rendering                 maps to TextStyle textRendering
+CSS property word-spacing                   maps to TextStyle wordSpacing
+
+CSS custom property --SC-fill-style         maps to TextStyle fillStyle
+CSS custom property --SC-stroke-style       maps to TextStyle strokeStyle
+CSS custom property --SC-stroke-width       maps to TextStyle lineWidth
+
+CSS custom property --SC-include-highlight  maps to TextStyle includeHighlight
+CSS custom property --SC-highlight-style    maps to TextStyle highlightStyle
+
+CSS custom property --SC-include-overline   maps to TextStyle includeOverline
+CSS custom property --SC-overline-offset    maps to TextStyle overlineOffset
+CSS custom property --SC-overline-style     maps to TextStyle overlineStyle
+CSS custom property --SC-overline-width     maps to TextStyle overlineWidth
+
+CSS custom property --SC-include-underline  maps to TextStyle includeUnderline
+CSS custom property --SC-underline-gap      maps to TextStyle underlineGap
+CSS custom property --SC-underline-offset   maps to TextStyle underlineOffset
+CSS custom property --SC-underline-style    maps to TextStyle underlineStyle
+CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
+
+CSS custom property --SC-method             maps to TextStyle method
+
+*/
+
+    .demo-Britain-message {
+
+      & .message {
+        --SC-fill-style: rgb(40 40 100);
+
+        font-family: "Roboto Serif";
+        font-size: 1rem;
+        line-height: 2;
+        font-weight: bold;
+        color: var(--SC-fill-style);
+        letter-spacing: 0.15rem;
+        word-spacing: 0.5rem;
+      }
+
+      & .country-name {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.7;
+        --SC-underline-width: 16;
+        --SC-underline-style: black;
+        --SC-underline-gap: 5;
+
+        text-decoration: underline;
+        font-size: 200%;
+      }
+    }
+
+    .demo-Thailand-message {
+
+      & .message {
+        --SC-fill-style: rgb(40 40 100);
+
+        font-family: "Noto Thai Sans";
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--SC-fill-style);
+        letter-spacing: 0.15rem;
+        word-spacing: 0.5rem;
+      }
+
+      & .country-name {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.65;
+        --SC-underline-width: 16;
+        --SC-underline-style: black;
+        --SC-underline-gap: 5;
+
+        text-decoration: underline;
+        font-size: 125%;
+      }
+    }
+
+    .demo-China-message {
+
+      & .message {
+        --SC-fill-style: rgb(40 40 100);
+
+        font-family: "Roboto Serif";
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--SC-fill-style);
+        letter-spacing: 0.15rem;
+        word-spacing: 0.5rem;
+      }
+
+      & .country-name {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.8;
+        --SC-underline-width: 16;
+        --SC-underline-style: black;
+        --SC-underline-gap: 5;
+
+        text-decoration: underline;
+        font-size: 180%;
+      }
+    }
+
+    .demo-Egypt-message {
+
+      & .message {
+        --SC-fill-style: rgb(40 40 100);
+
+        font-family: "Noto Arabic Naskh";
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: var(--SC-fill-style);
+        word-spacing: 0.5rem;
+      }
+
+      & .country-name {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.64;
+        --SC-underline-width: 16;
+        --SC-underline-style: black;
+        --SC-underline-gap: 5;
+
+        text-decoration: underline;
+        font-size: 160%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-208.html">&larr; Previous</a>
+    <a href="filters-001.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 209</h1>
+  <h2>EnhancedLabel - clone entity, drag-drop, gradients and patterns</h2>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required.</p>
+
+    <p><a href="../docs/demo/canvas-209.html">Annotated code</a></p>
+  </div>
+
+  <div id="preload-fonts" aria-hidden="true">
+    <div style='font-family: "Garamond"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto Mono"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Arabic Naskh"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Urdu Nastaliq"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Chinese Simple Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Devangari Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Devangari Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Hebrew Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Hebrew Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Japanese Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Japanese Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Korean Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Korean Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Mongolian Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tai Le Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tai Tham Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Thai Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Thai Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tirhuta Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Bungee"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Carter One"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Mountains Of Christmas"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+  </div>
+
+  <script src="canvas-209.js" type="module"></script>
+
+</body>
+
+</html>
