@@ -39,6 +39,8 @@ const EnhancedLabel = function (items = Ωempty) {
         isDefaultTextStyle: true,
     });
 
+    this.cache = null;
+
     this.set(this.defs);
 
     if (!items.group) items.group = currentGroup;
@@ -179,6 +181,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // #### Packet management
 P.packetObjects = pushUnique(P.packetObjects, ['layoutTemplate']);
 
+// Not sure this is needed?
+// P.packetExclusions = pushUnique(P.packetObjects, ['cache']);
+
 P.finalizePacketOut = function (copy, items) {
 
     const defaultTextCopy = _parse(this.defaultTextStyle.saveAsPacket(items))[3];
@@ -240,6 +245,12 @@ P.clone = λthis;
 
 // #### Kill management
 P.factoryKill = function () {
+
+    if (this.cache) {
+
+        releaseCell(this.cache);
+        this.cache = null;
+    }
 
     if (this.accessibleTextHold) this.accessibleTextHold.remove();
 
@@ -310,6 +321,9 @@ P.set = function (items = Ωempty) {
 
     if (len) {
 
+        releaseCell(this.cache);
+        this.cache = null;
+
         const {defs, setters, state, defaultTextStyle, layoutTemplate} = this;
 
         const defaultTextStyleSetters = (defaultTextStyle) ? defaultTextStyle.setters : Ωempty;
@@ -371,6 +385,9 @@ P.setDelta = function (items = Ωempty) {
         len = keys.length;
 
     if (len) {
+
+        releaseCell(this.cache);
+        this.cache = null;
 
         const {defs, deltaSetters:setters, state, defaultTextStyle, layoutTemplate} = this;
 
@@ -2943,9 +2960,13 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
-    if (!this.noDeltaUpdates)
-
     if (this.dirtyScale) {
+
+        if (this.cache) {
+
+            releaseCell(this.cache);
+            this.cache = null;
+        }
 
         this.dirtyScale = false;
 
@@ -2955,6 +2976,12 @@ P.prepareStamp = function() {
     }
 
     if (this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
+
+        if (this.cache) {
+
+            releaseCell(this.cache);
+            this.cache = null;
+        }
 
         this.dirtyDimensions = false;
         this.dirtyStart = false;
@@ -3020,48 +3047,61 @@ P.stamp = function (force = false, host, changes) {
 // + regularStampAlongPath for text positioned along a path-based entity's perimeter
 P.regularStamp = function () {
 
-    if (this.currentHost && this.layoutTemplate) {
+    const { currentHost, layoutTemplate, cache } = this;
 
-        const { currentHost, showGuidelines, guidelinesPath, useLayoutTemplateAsPath} = this;
+    if (currentHost && layoutTemplate) {
 
-        const workingCells = (useLayoutTemplateAsPath) ?
-            this.createTextCellsForPath(currentHost) :
-            this.createTextCellsForSpace(currentHost);
+        const { element, engine } = currentHost;
 
-        if (workingCells) {
-
-            const { element, engine } = currentHost;
-            const { copyCell, mainCell } = workingCells;
-
-            const finalCell = requestCell(element.width, element.height);
-
-            const finalElement = finalCell.element;
-            const finalEngine = finalCell.engine;
-
-            const underlineCell = this.createUnderlineCell(currentHost, copyCell);
-            const overlineCell = this.createOverlineCell(currentHost);
-            const highlightCell = this.createHighlightCell(currentHost);
-
-            if (!useLayoutTemplateAsPath && showGuidelines && guidelinesPath) this.stampGuidelinesOnCell(finalCell);
-
-            if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
-
-            finalEngine.drawImage(mainCell.element, 0, 0);
-
-            if (overlineCell) finalEngine.drawImage(overlineCell.element, 0, 0);
-
-            if (highlightCell) {
-
-                finalEngine.globalCompositeOperation = 'destination-over';
-                finalEngine.drawImage(highlightCell.element, 0, 0);
-            }
-
+        if (cache) {
+            
             engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.drawImage(finalElement, 0, 0);
-
-            releaseCell(copyCell, mainCell, overlineCell, highlightCell, finalCell);
+            engine.drawImage(cache.element, 0, 0);
         }
+        else {
 
+            const { showGuidelines, guidelinesPath, useLayoutTemplateAsPath} = this;
+
+            const workingCells = (useLayoutTemplateAsPath) ?
+                this.createTextCellsForPath(currentHost) :
+                this.createTextCellsForSpace(currentHost);
+
+            if (workingCells) {
+
+                const { copyCell, mainCell } = workingCells;
+
+                const finalCell = requestCell(element.width, element.height);
+
+                const finalElement = finalCell.element;
+                const finalEngine = finalCell.engine;
+
+                const underlineCell = this.createUnderlineCell(currentHost, copyCell);
+                const overlineCell = this.createOverlineCell(currentHost);
+                const highlightCell = this.createHighlightCell(currentHost);
+
+                if (!useLayoutTemplateAsPath && showGuidelines && guidelinesPath) this.stampGuidelinesOnCell(finalCell);
+
+                if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
+
+                finalEngine.drawImage(mainCell.element, 0, 0);
+
+                if (overlineCell) finalEngine.drawImage(overlineCell.element, 0, 0);
+
+                if (highlightCell) {
+
+                    finalEngine.globalCompositeOperation = 'destination-over';
+                    finalEngine.drawImage(highlightCell.element, 0, 0);
+                }
+
+                engine.setTransform(1, 0, 0, 1, 0, 0);
+                engine.drawImage(finalElement, 0, 0);
+
+                // releaseCell(copyCell, mainCell, overlineCell, highlightCell, finalCell);
+
+                this.cache = finalCell;
+                releaseCell(copyCell, mainCell, overlineCell, highlightCell);
+            }
+        }
     }
 };
 
