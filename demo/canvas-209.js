@@ -16,29 +16,58 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
+// Create gradient and pattern
+scrawl.makeGradient({
+    name: name('linear-gradient'),
+    endX: '100%',
+
+    colors: [
+        [0, 'blue'],
+        [495, 'red'],
+        [500, 'yellow'],
+        [505, 'red'],
+        [999, 'green'],
+    ],
+    colorSpace: 'OKLAB',
+    precision: 5,
+});
+
+scrawl.makePattern({
+
+    name: name('leaves-pattern'),
+    imageSource: 'img/leaves.png',
+});
+
+
 // Create the template entitys that will be used by our EnhancedLabel entitys
+const createInitialRoll = () => Math.random() * 360;
+
 scrawl.makeWheel({
 
     name: name('Britain-button'),
     radius: 80,
-    start: ['25%', '25%'],
+    start: ['30%', '25%'],
     handle: ['center', 'center'],
+    roll: createInitialRoll(),
     method: 'none',
 
 }).clone({
 
     name: name('Thailand-button'),
-    startX: '75%',
+    roll: createInitialRoll(),
+    startX: '70%',
 
 }).clone({
     
     name: name('China-button'),
+    roll: createInitialRoll(),
     startY: '75%',
 
 }).clone({
     
     name: name('Egypt-button'),
-    startX: '25%',
+    roll: createInitialRoll(),
+    startX: '30%',
 
 // Create the background entitys
 }).clone({
@@ -78,36 +107,64 @@ scrawl.makeWheel({
 
 
 // Create the EnhancedLabel entitys
+// - We finesse the word sizes and vertical positioning (including the underline) using CSS
+const createDeltaRoll = () => {
+
+    let d = Math.random() - 0.5;
+    d += (d > 0) ? 0.2 : -0.2;
+
+    return { roll: d };
+};
+
 scrawl.makeEnhancedLabel({
 
     name: name('Britain-message'),
-    text: '<p class="message">Welcome&nbsp;to <span class="country-name">Britain</span></p>',
     layoutTemplate: name('Britain-button'),
+    text: '<p class="welcome-text">Welcome&nbsp;to <span class="country-name country-underline">Britain</span></p>',
+    textHandle: ['center', 'alphabetic'],
+    fontString: 'bold 24px "Roboto Serif',
+    lineSpacing: 2,
+    lineAdjustment: 28,
+    letterSpacing: '2px',
+    wordSpacing: '2px',
+
+    fillStyle: `rgb(80 80 160)`,
+
+    delta: createDeltaRoll(),
+    noDeltaUpdates: true,
 
 }).clone({
 
     name: name('Thailand-message'),
-    text: '<p class="message">ยินดีต้อนรับสู่&#x200B<span class="country-name">ประเทศไทย</span></p>',
     layoutTemplate: name('Thailand-button'),
+    text: '<p class="welcome-text">ยินดีต้อนรับสู่ <span class="country-name country-underline">ประเทศไทย</span></p>',
 
-    lineSpacing: 2,
-    lineAdjustment: 8,
+    fontString: 'bold 24px "Noto Thai Sans',
+
+    delta: createDeltaRoll(),
 
 }).clone({
 
     name: name('China-message'),
-    text: '<p class="message">欢迎来到 <span class="country-name">中国</span></p>',
     layoutTemplate: name('China-button'),
+    text: '<p class="welcome-text">欢迎来到 <span class="country-name country-underline">中国</span></p>',
+
+    fontString: 'bold 24px "Noto Chinese Simple Sans',
+
+    delta: createDeltaRoll(),
 
 }).clone({
 
     name: name('Egypt-message'),
-    text: '<p class="message">نوّرت <span class="country-name">مصر</span></p>',
     layoutTemplate: name('Egypt-button'),
+    text: '<p class="welcome-text">مرحبا&nbsp;بكم&nbsp;فى <span class="country-name country-underline">مصر</span></p>',
 
-    lineSpacing: 1.4,
     direction: 'rtl',
+    letterSpacing: '0px',
+    wordSpacing: '4px',
+    fontString: 'bold 24px "Noto Arabic Sans',
 
+    delta: createDeltaRoll(),
 });
 
 
@@ -284,6 +341,46 @@ scrawl.makeRender({
     commence: () => canvas.checkHover(),
     afterShow: report,
 });
+
+
+// #### User controls
+// Create a update group for the user controls.
+const labelsGroup = scrawl.makeGroup({ name: name('labels-group') })
+    .addArtefacts(
+        name('Britain-message'),
+        name('Thailand-message'),
+        name('China-message'),
+        name('Egypt-message'),
+    );
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: labelsGroup,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
+        noDeltaUpdates: ['noDeltaUpdates', 'boolean'],
+        ['text-fillStyle']: ['fillStyle', 'raw'],
+        ['underline-fillStyle']: ['underlineStyle', 'raw'],
+    },
+});
+
+
+// Setup form
+// @ts-expect-error
+document.querySelector('#text-fillStyle').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#underline-fillStyle').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#lockFillStyleToEntity').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#noDeltaUpdates').options.selectedIndex = 0;
 
 
 // #### Development and testing

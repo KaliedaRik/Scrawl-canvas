@@ -11,6 +11,7 @@ import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
+import { getPixelRatio } from '../core/user-interaction.js';
 import { currentGroup } from './canvas.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
@@ -35,12 +36,10 @@ const EnhancedLabel = function (items = Ωempty) {
     this.state = makeState(Ωempty);
 
     this.defaultTextStyle = makeTextStyle({
-        name: `${this.name}_default-textstyle`,
         isDefaultTextStyle: true,
     });
 
     this.cache = null;
-
     this.set(this.defs);
 
     if (!items.group) items.group = currentGroup;
@@ -174,6 +173,9 @@ const defaultAttributes = {
     group: null,
 
     method: FILL,
+
+    lockFillStyleToEntity: false,
+    lockStrokeStyleToEntity: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -342,7 +344,7 @@ P.factoryKill = function () {
 // Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
 const TEMPLATE_PASS_THROUGH_KEYS = _freeze(['width', 'height', 'dimensions', 'startX', 'startY', 'start', 'position', 'handleX', 'handleY', 'handle', 'offsetX', 'offsetY', 'offset', 'roll', 'scale', 'flipReverse', 'flipUpend']);
 
-const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
+const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing', 'method']);
 
 const LABEL_DIRTY_FONT_KEYS = _freeze(['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing']);
 
@@ -352,7 +354,7 @@ const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
 
 const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
 
-const LAYOUT_KEYS = _freeze(['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'flipReverse', 'flipUpend', 'alignTextUnitsToPath']);
+const LAYOUT_KEYS = _freeze(['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'flipReverse', 'flipUpend', 'alignTextUnitsToPath', 'lockFillStyleToEntity', 'lockStrokeStyleToEntity']);
 
 P.get = function (key) {
 
@@ -816,17 +818,11 @@ P.getTextHandleX = function (val, dim, dir) {
 // console.log(this.name, 'getTextHandleX (trigger: various)');
 
     if (val.toFixed) return val;
-
     if (val === START) return (dir === LTR) ? 0 : dim;
-
     if (val === CENTER) return dim / 2;
-
     if (val === END) return (dir === LTR) ? dim : 0;
-
     if (val === LEFT) return 0;
-
     if (val === RIGHT) return dim;
-
     if (!_isFinite(parseFloat(val))) return 0;
 
     return (parseFloat(val) / 100) * dim;
@@ -852,21 +848,13 @@ P.getTextHandleY = function (val, size, font) {
     const dim = height * ratio;
 
     if (val.toFixed) return val * scale;
-
     if (val === TOP) return 0;
-
     if (val === BOTTOM) return dim * scale;
-
     if (val === CENTER) return (dim / 2) * scale;
-
     if (val === ALPHABETIC) return dim * alphabeticRatio * scale;
-
     if (val === HANGING) return dim * hangingRatio * scale;
-
     if (val === IDEOGRAPHIC) return dim * ideographicRatio * scale;
-
     if (val === MIDDLE) return (dim / 2) * scale;
-
     if (!_isFinite(parseFloat(val))) return 0;
 
     return (parseFloat(val) / 100) * dim;
@@ -878,7 +866,6 @@ P.getTextOffset = function (val, dim) {
 // console.log(this.name, 'getTextOffset (trigger: various)');
 
     if (val.toFixed) return val;
-
     if (!_isFinite(parseFloat(val))) return 0;
 
     return (parseFloat(val) / 100) * dim;
@@ -1102,23 +1089,36 @@ P.convertTextEntityCharacters = function (item) {
 // `getStyle` - internal helper function to find a gradient, pattern, cell or string style
 P.getStyle = function (val, stateAlternative, host) {
 
+    // Always return opaque black if the `host` argument is missing
     if (host == null) return BLACK;
 
+    // When the supplied `val` is an empty string (eg for an underline) we use the default state value for it
+    // + Where `stateAlternative` is either 'fillStyle' or 'strokeStyle'
     if (!val) val = this.state[stateAlternative];
 
+    // Always return opaque black if the `val` argument was undefined
+    // + Or we can't locate a substitute for a falsy `val` argument.
     if (val == null) return BLACK;
 
+    // The supplied val is either a color string, or the `name` attribute of a gradient/pattern/Cell object
     if (val.substring) {
 
         let brokenStyle = null;
 
+        // Refers to a gradient or pattern object
         if (stylesnames.includes(val)) brokenStyle = styles[val];
+
+        // Refers to a Cell wrapper being used as a pattern
         else if (cellnames.includes(val)) brokenStyle = cell[val];
 
+        // `val` is not a color string, so we generate the gradient/pattern to be applied to the host
         if (brokenStyle != null) val = brokenStyle.getData(this, host);
     }
+    // `val` is a gradient/pattern/Cell object. Do the work required
     else val = val.getData(this, host);
 
+    // Return the results of our work
+    // + If `val` was a color string, it gets returned as-is
     return val;
 };
 
@@ -2773,25 +2773,39 @@ P.positionTextDecoration = function () {
         const iOut = out.length,
             iBack = back.length;
 
-        let i;
+        let i, dx, dy;
 
         if (iOut && iBack) {
 
-            path = `M ${out[0][0]}, ${out[0][1]} `;
+            dx = out[0][0] - currentStampPosition[0];
+            dy = out[0][1] - currentStampPosition[1];
+
+            path = `m ${dx}, ${dy} `;
 
             for (i = 1; i < iOut; i++) {
 
-                path += `${out[i][0]}, ${out[i][1]} `;
+                dx = out[i][0] - out[i - 1][0];
+                dy = out[i][1] - out[i - 1][1];
+
+                path += `${dx}, ${dy} `;
             }
 
-            for (i = iBack - 1; i >= 0; i--) {
+            dx = back[back.length - 1][0] - out[out.length - 1][0];
+            dy = back[back.length - 1][1] - out[out.length - 1][1];
 
-                path += `${back[i][0]}, ${back[i][1]} `;
+            path += `${dx}, ${dy} `;
+
+            for (i = iBack - 2; i >= 0; i--) {
+
+                dx = back[i][0] - back[i + 1][0];
+                dy = back[i][1] - back[i + 1][1];
+
+                path += `${dx}, ${dy} `;
             }
 
-            path += 'Z';
+            path += 'z';
 
-            paths.push([style, new Path2D(path)]);
+            paths.push([style, new Path2D(path), [...currentStampPosition]]);
         }
     };
 
@@ -2857,7 +2871,7 @@ P.positionTextDecoration = function () {
 
     const coord = requestCoordinate();
 
-    const currentScale = layoutTemplate.currentScale;
+    const {currentScale, currentStampPosition} = layoutTemplate;
 
     underlinePaths.length = 0;
     overlinePaths.length = 0;
@@ -3039,6 +3053,13 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
+    const layoutTemplate = this.layoutTemplate;
+
+    this.currentDimensions = layoutTemplate.currentDimensions;
+    this.currentScale = layoutTemplate.currentScale;
+    this.currentStampHandlePosition = layoutTemplate.currentStampHandlePosition;
+    this.currentStampPosition = layoutTemplate.currentStampPosition;
+
     if (this.dirtyScale) {
 
         if (this.cache) {
@@ -3113,7 +3134,6 @@ P.stamp = function (force = false, host, changes) {
                 this.set(changes);
                 this.prepareStamp();
             }
-
             this.regularStamp();
         }
         else if (this.visibility) this.regularStamp();
@@ -3134,12 +3154,16 @@ P.regularStamp = function () {
 
         if (cache) {
             
-            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.resetTransform();
             engine.drawImage(cache.element, 0, 0);
         }
         else {
 
-            const { showGuidelines, guidelinesPath, useLayoutTemplateAsPath} = this;
+            const {
+                guidelinesPath,
+                showGuidelines,
+                useLayoutTemplateAsPath,
+            } = this;
 
             const workingCells = (useLayoutTemplateAsPath) ?
                 this.createTextCellsForPath(currentHost) :
@@ -3172,10 +3196,8 @@ P.regularStamp = function () {
                     finalEngine.drawImage(highlightCell.element, 0, 0);
                 }
 
-                engine.setTransform(1, 0, 0, 1, 0, 0);
+                engine.resetTransform();
                 engine.drawImage(finalElement, 0, 0);
-
-                // releaseCell(copyCell, mainCell, overlineCell, highlightCell, finalCell);
 
                 this.cache = finalCell;
                 releaseCell(copyCell, mainCell, overlineCell, highlightCell);
@@ -3296,9 +3318,13 @@ P.createTextCellsForPath = function (host) {
 
 P.createTextCellsForSpace = function (host) {
 
-    const el = host.element;
-    const uCell = requestCell(el.width, el.height);
-    const mCell = requestCell(el.width, el.height);
+    const ratio = getPixelRatio(),
+        el = host.element,
+        w = el.width / ratio,
+        h = el.height / ratio;
+
+    const uCell = requestCell(w, h);
+    const mCell = requestCell(w, h);
 
     if (uCell && mCell) {
 
@@ -3414,12 +3440,14 @@ P.createTextCellsForSpace = function (host) {
 
 P.createUnderlineCell = function (host, textCell) {
 
-    const underlinePaths = this.underlinePaths;
+    const { lockFillStyleToEntity, underlinePaths } = this;
 
     if (underlinePaths.length) {
 
-        const el = host.element;
-        const mycell = requestCell(el.width, el.height);
+        const ratio = getPixelRatio(),
+            el = host.element;
+
+        const mycell = requestCell(el.width / ratio, el.height / ratio);
 
         if (mycell) {
 
@@ -3428,12 +3456,14 @@ P.createUnderlineCell = function (host, textCell) {
 
             underlinePaths.forEach(data => {
 
+                engine.resetTransform();
+                engine.translate(...data[2]);
                 engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
                 engine.fill(data[1]);
             });
 
             textEngine.globalCompositeOperation = 'source-out';
-            textEngine.setTransform(1, 0, 0, 1, 0, 0);
+            textEngine.resetTransform();
             textEngine.drawImage(mycell.element, 0, 0);
 
             releaseCell(mycell);
@@ -3450,8 +3480,10 @@ P.createOverlineCell = function (host) {
 
     if (overlinePaths.length) {
 
+        const ratio = getPixelRatio();
         const el = host.element;
-        const mycell = requestCell(el.width, el.height);
+
+        const mycell = requestCell(el.width / ratio, el.height / ratio);
 
         if (mycell) {
 
@@ -3459,6 +3491,8 @@ P.createOverlineCell = function (host) {
 
             overlinePaths.forEach(data => {
 
+                engine.resetTransform();
+                engine.translate(...data[2]);
                 engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
                 engine.fill(data[1]);
             });
@@ -3475,8 +3509,10 @@ P.createHighlightCell = function (host) {
 
     if (highlightPaths.length) {
 
+        const ratio = getPixelRatio();
         const el = host.element;
-        const mycell = requestCell(el.width, el.height);
+
+        const mycell = requestCell(el.width / ratio, el.height / ratio);
 
         if (mycell) {
 
@@ -3484,6 +3520,8 @@ P.createHighlightCell = function (host) {
 
             highlightPaths.forEach(data => {
 
+                engine.resetTransform();
+                engine.translate(...data[2]);
                 engine.fillStyle = this.getStyle(data[0], 'fillStyle', mycell);
                 engine.fill(data[1]);
             });

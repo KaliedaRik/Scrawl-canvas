@@ -95,7 +95,7 @@ scrawl.makeRender({
 });
 
 
-// #### User interaction
+// #### User controls
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
