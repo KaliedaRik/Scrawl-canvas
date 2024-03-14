@@ -58,20 +58,20 @@ scrawl.makeWheel({
     startX: '70%',
 
 }).clone({
-    
+
     name: name('China-button'),
     roll: createInitialRoll(),
     startY: '75%',
 
 }).clone({
-    
+
     name: name('Egypt-button'),
     roll: createInitialRoll(),
     startX: '30%',
 
 // Create the background entitys
 }).clone({
-    
+
     name: name('Britain-border'),
     pivot: name('Britain-button'),
     lockTo: 'pivot',
@@ -84,21 +84,21 @@ scrawl.makeWheel({
     method: 'fillThenDraw',
 
 }).clone({
-    
+
     name: name('Thailand-border'),
     pivot: name('Thailand-button'),
     strokeStyle: 'rgb(150 150 0)',
     fillStyle: 'rgb(255 255 200)',
 
 }).clone({
-    
+
     name: name('China-border'),
     pivot: name('China-button'),
     strokeStyle: 'rgb(150 0 0)',
     fillStyle: 'rgb(255 200 200)',
 
 }).clone({
-    
+
     name: name('Egypt-border'),
     pivot: name('Egypt-button'),
     strokeStyle: 'rgb(0 150 0)',
@@ -178,7 +178,7 @@ scrawl.makeEnhancedLabel({
 
 // #### User interaction
 // Create a drag group - EnhancedLabel entitys cannot be dragged, but their layoutTemplate entitys can.
-const dragGroup = scrawl.makeGroup({ name: name('buttons-group') })
+scrawl.makeGroup({ name: name('buttons-group') })
     .addArtefacts(
         name('Britain-button'),
         name('Thailand-button'),

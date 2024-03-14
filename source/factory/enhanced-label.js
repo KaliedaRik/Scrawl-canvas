@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { artefact, constructors, cell, cellnames, fontfamilymetadata, fontfamilymetadatanames, group, styles, stylesnames } from '../core/library.js';
+import { artefact, constructors, cell, cellnames, fontfamilymetadata, fontfamilymetadatanames, group, styles, stylesnames, tween } from '../core/library.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
@@ -14,6 +14,7 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 import { currentGroup } from './canvas.js';
 import { filterEngine } from '../helper/filter-engine.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
@@ -24,9 +25,9 @@ import deltaMix from '../mixin/delta.js';
 import filterMix from '../mixin/filter.js';
 import textMix from '../mixin/text.js';
 
-import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DESTINATION_OVER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LOCKTO, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SOURCE_OUT, SOURCE_OVER, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DESTINATION_OVER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -198,7 +199,7 @@ P.processPacketOut = function (key, value, inc) {
 };
 
 // handles both anchor and button objects
-P.handlePacketAnchor = function (copy, items) {
+P.handlePacketAnchor = function (copy) {
 
     return copy;
 }
@@ -270,7 +271,7 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Clone management
-P.postCloneAction = function(clone, items) {
+P.postCloneAction = function(clone) {
 
     return clone;
 };
@@ -3246,7 +3247,7 @@ P.regularStamp = function () {
         const { element, engine } = currentHost;
 
         if (cacheOutput && cache) {
-            
+
             engine.save();
 
             engine.shadowOffsetX = state.shadowOffsetX;
@@ -3374,12 +3375,10 @@ P.regularStamp = function () {
 
                         const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
 
-                        // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
                         this.stashOutputAsAsset = false;
 
-                        finalElement.width = stashWidth;
-                        finalElement.height = stashHeight;
-                        finalEngine.putImageData(this.stashedImageData, 0, 0);
+                        const stashCell = requestCell(stashWidth / ratio, stashHeight / ratio);
+                        stashCell.engine.putImageData(this.stashedImageData, 0, 0);
 
                         if (!this.stashedImage) {
 
@@ -3400,10 +3399,12 @@ P.regularStamp = function () {
                                     importDomImage(`#${stashId}`);
                                 };
 
-                                newimg.src = finalElement.toDataURL();
+                                newimg.src = stashCell.element.toDataURL();
                             }
                         }
-                        else this.stashedImage.src = finalElement.toDataURL();
+                        else this.stashedImage.src = stashCell.element.toDataURL();
+
+                        releaseCell(stashCell);
                     }
                 }
 
@@ -3655,7 +3656,7 @@ P.createTextCellsForSpace = function (host) {
 
 P.addUnderlinesToCopyCell = function (host, copy) {
 
-    const { lockFillStyleToEntity, underlinePaths } = this;
+    const underlinePaths = this.underlinePaths;
 
     if (underlinePaths.length) {
 
@@ -4029,10 +4030,10 @@ P.setAllTextUnits = function (items) {
 };
 
 
-P.checkHit = function (items = [], mycell) {
+// P.checkHit = function (items = [], mycell) {
 
-    return false;
-};
+//     return false;
+// };
 
 
 // #### TextUnit pool

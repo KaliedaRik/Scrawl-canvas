@@ -50,7 +50,7 @@ import { addStrings, doCreate, mergeOver, λnull, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _isArray, _isFinite, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, FILL, FONT_STRETCH_VALS, LINE_DASH, LTR, NAME, NORMAL, PC, SANS_SERIF, T_TEXT_STYLE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _keys, AUTO, BLACK, DEFAULT_FONT_SIZE, DEFAULT_FONT, FILL, FONT_STRETCH_VALS, LINE_DASH, LTR, NAME, NORMAL, PC, SANS_SERIF, T_TEXT_STYLE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // #### Wheel constructor
 const TextStyle = function (items = Ωempty) {
