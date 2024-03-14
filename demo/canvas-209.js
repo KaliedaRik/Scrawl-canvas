@@ -1,5 +1,5 @@
 // # Demo Canvas 209
-// EnhancedLabel - clone entity, drag-drop, gradients and patterns
+// EnhancedLabel - clone entity, drag-drop; shadows, gradients and patterns
 
 // [Run code](../../demo/canvas-209.html)
 import * as scrawl from '../source/scrawl.js';
@@ -34,8 +34,8 @@ scrawl.makeGradient({
 
 scrawl.makePattern({
 
-    name: name('leaves-pattern'),
-    imageSource: 'img/leaves.png',
+    name: name('brick-pattern'),
+    imageSource: 'img/brick.png',
 });
 
 
@@ -120,7 +120,7 @@ scrawl.makeEnhancedLabel({
 
     name: name('Britain-message'),
     layoutTemplate: name('Britain-button'),
-    text: '<p class="welcome-text">Welcome&nbsp;to <span class="country-name country-underline">Britain</span></p>',
+    text: '<p class="welcome-text">Welcome&nbsp;to <span class="country-name">Britain</span></p>',
     textHandle: ['center', 'alphabetic'],
     fontString: 'bold 24px "Roboto Serif',
     lineSpacing: 2,
@@ -128,16 +128,24 @@ scrawl.makeEnhancedLabel({
     letterSpacing: '2px',
     wordSpacing: '2px',
 
-    fillStyle: `rgb(80 80 160)`,
+    fillStyle: `rgb(220 170 140)`,
 
     delta: createDeltaRoll(),
     noDeltaUpdates: true,
+
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+    shadowBlur: 1,
+    shadowColor: 'black',
+
+    globalAlpha: 1,
+    globalCompositeOperation: 'source-over',
 
 }).clone({
 
     name: name('Thailand-message'),
     layoutTemplate: name('Thailand-button'),
-    text: '<p class="welcome-text">ยินดีต้อนรับสู่ <span class="country-name country-underline">ประเทศไทย</span></p>',
+    text: '<p class="welcome-text">ยินดีต้อนรับสู่ <span class="country-name">ประเทศไทย</span></p>',
 
     fontString: 'bold 24px "Noto Thai Sans',
 
@@ -147,7 +155,7 @@ scrawl.makeEnhancedLabel({
 
     name: name('China-message'),
     layoutTemplate: name('China-button'),
-    text: '<p class="welcome-text">欢迎来到 <span class="country-name country-underline">中国</span></p>',
+    text: '<p class="welcome-text">欢迎来到 <span class="country-name">中国</span></p>',
 
     fontString: 'bold 24px "Noto Chinese Simple Sans',
 
@@ -157,7 +165,7 @@ scrawl.makeEnhancedLabel({
 
     name: name('Egypt-message'),
     layoutTemplate: name('Egypt-button'),
-    text: '<p class="welcome-text">مرحبا&nbsp;بكم&nbsp;فى <span class="country-name country-underline">مصر</span></p>',
+    text: '<p class="welcome-text">مرحبا&nbsp;بكم&nbsp;فى <span class="country-name">مصر</span></p>',
 
     direction: 'rtl',
     letterSpacing: '0px',
@@ -368,6 +376,8 @@ scrawl.makeUpdater({
         noDeltaUpdates: ['noDeltaUpdates', 'boolean'],
         ['text-fillStyle']: ['fillStyle', 'raw'],
         ['underline-fillStyle']: ['underlineStyle', 'raw'],
+        globalCompositeOperation: ['globalCompositeOperation', 'raw'],
+        globalAlpha: ['globalAlpha', 'float'],
     },
 });
 
@@ -381,6 +391,10 @@ document.querySelector('#underline-fillStyle').options.selectedIndex = 0;
 document.querySelector('#lockFillStyleToEntity').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#noDeltaUpdates').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#globalCompositeOperation').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#globalAlpha').value = 1;
 
 
 // #### Development and testing

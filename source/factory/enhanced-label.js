@@ -24,7 +24,7 @@ import textMix from '../mixin/text.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LOCKTO, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DESTINATION_OVER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LOCKTO, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SOURCE_OUT, SOURCE_OVER, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -176,6 +176,8 @@ const defaultAttributes = {
 
     lockFillStyleToEntity: false,
     lockStrokeStyleToEntity: false,
+
+    cacheOutput: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -327,11 +329,7 @@ P.kill = function (flag1 = false, flag2 = false) {
 
 P.factoryKill = function () {
 
-    if (this.cache) {
-
-        releaseCell(this.cache);
-        this.cache = null;
-    }
+    this.dirtyCache();
 
     if (this.accessibleTextHold) this.accessibleTextHold.remove();
 
@@ -402,8 +400,7 @@ P.set = function (items = Ωempty) {
 
     if (len) {
 
-        releaseCell(this.cache);
-        this.cache = null;
+        this.dirtyCache();
 
         const {defs, setters, state, defaultTextStyle, layoutTemplate} = this;
 
@@ -421,8 +418,6 @@ P.set = function (items = Ωempty) {
             val = items[key];
 
             if (key && key != NAME && val != null) {
-
-                if (LAYOUT_KEYS.includes(key)) this.dirtyLayout = true;
 
                 if (layoutTemplate && TEMPLATE_PASS_THROUGH_KEYS.includes(key)) {
 
@@ -450,6 +445,8 @@ P.set = function (items = Ωempty) {
                     else if (typeof defs[key] != UNDEF) this[key] = val;
                 }
 
+                if (LAYOUT_KEYS.includes(key) || TEXTSTYLE_KEYS.includes(key)) this.dirtyLayout = true;
+
                 if (LABEL_DIRTY_FONT_KEYS.includes(key)) this.dirtyFont = true;
                 if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
                 if (LABEL_UPDATE_FONTSTRING_KEYS.includes(key)) this.updateUsingFontString = true;
@@ -467,8 +464,7 @@ P.setDelta = function (items = Ωempty) {
 
     if (len) {
 
-        releaseCell(this.cache);
-        this.cache = null;
+        this.dirtyCache();
 
         const {defs, deltaSetters:setters, state, defaultTextStyle, layoutTemplate} = this;
 
@@ -512,6 +508,8 @@ P.setDelta = function (items = Ωempty) {
                     if (fn) fn.call(this, val);
                     else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
                 }
+
+                if (LAYOUT_KEYS.includes(key) || TEXTSTYLE_KEYS.includes(key)) this.dirtyLayout = true;
 
                 if (LABEL_DIRTY_FONT_KEYS.includes(key)) this.dirtyFont = true;
                 if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
@@ -869,6 +867,12 @@ P.getTextOffset = function (val, dim) {
     if (!_isFinite(parseFloat(val))) return 0;
 
     return (parseFloat(val) / 100) * dim;
+};
+
+P.dirtyCache = function () {
+
+    releaseCell(this.cache);
+    this.cache = null;
 };
 
 
@@ -1657,6 +1661,17 @@ P.assessTextForStyle = function () {
         return null;
     };
 
+    const localState = {
+
+        localHandleX: '',
+        localHandleY: '',
+
+        localOffsetX: 0,
+        localOffsetY: 0,
+
+        localAlignment: 0,
+    };
+
     // Local helper function `diffStyles`
     // + called by `processNode`, diffs required styles against existing ones
     const diffStyles = (node, unit) => {
@@ -1797,6 +1812,32 @@ P.assessTextForStyle = function () {
 // if (oldVal !== newVal) console.log(`method | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.method = newVal;
 
+        oldVal = localState.localHandleX;
+        newVal = nodeVals.getPropertyValue('--SC-local-handle-x');
+// if (oldVal !== newVal) console.log(`--SC-local-handle-x | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.localHandleX = newVal;
+
+        oldVal = localState.localHandleY;
+        newVal = nodeVals.getPropertyValue('--SC-local-handle-y');
+// if (oldVal !== newVal) console.log(`--SC-local-handle-y | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.localHandleY = newVal;
+
+        oldVal = localState.localOffsetX;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-x'));
+// if (oldVal !== newVal) console.log(`--SC-local-offset-x | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.localOffsetX = newVal;
+
+        oldVal = localState.localOffsetY;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-y'));
+// if (oldVal !== newVal) console.log(`--SC-local-offset-y | [${oldVal}] -> [${newVal}]`);
+        if (oldVal !== newVal) unitSet.localOffsetY = newVal;
+
+        oldVal = localState.localAlignment;
+        newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-alignment'));
+// if (oldVal !== newVal) console.log(`--SC-local-alignment | ${typeof oldVal} [${oldVal}] -> ${typeof newVal} [${newVal}]`);
+        if (oldVal !== newVal) unitSet.localAlignment = newVal;
+
+        unit.set(unitSet);
         unit.style.set(unitSet, true);
         currentTextStyle.set(unitSet, true);
     };
@@ -1828,6 +1869,13 @@ P.assessTextForStyle = function () {
         tester.style.setProperty('--SC-underline-offset', defaultTextStyle.underlineOffset);
         tester.style.setProperty('--SC-underline-style', defaultTextStyle.underlineStyle);
         tester.style.setProperty('--SC-underline-width', defaultTextStyle.underlineWidth);
+
+        tester.style.setProperty('--SC-local-handle-x', localState.localHandleX);
+        tester.style.setProperty('--SC-local-handle-y', localState.localHandleY);
+        tester.style.setProperty('--SC-local-offset-x', localState.localOffsetX);
+        tester.style.setProperty('--SC-local-offset-y', localState.localOffsetY);
+        tester.style.setProperty('--SC-local-alignment', localState.localAlignment);
+
         tester.style.setProperty('--SC-method', defaultTextStyle.method);
 
         tester.className = this.name;
@@ -3062,11 +3110,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyScale) {
 
-        if (this.cache) {
-
-            releaseCell(this.cache);
-            this.cache = null;
-        }
+        this.dirtyCache();
 
         this.dirtyScale = false;
 
@@ -3077,11 +3121,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
 
-        if (this.cache) {
-
-            releaseCell(this.cache);
-            this.cache = null;
-        }
+        this.dirtyCache();
 
         this.dirtyDimensions = false;
         this.dirtyStart = false;
@@ -3141,21 +3181,54 @@ P.stamp = function (force = false, host, changes) {
 };
 
 
+P.removeShadowAndAlpha = function (engine) {
+
+    engine.shadowOffsetX = 0;
+    engine.shadowOffsetY = 0;
+    engine.shadowBlur = 0;
+    engine.shadowColor = 'rgb(0 0 0 / 0)';
+
+    engine.globalAlpha = 1;
+    engine.globalCompositeOperation = SOURCE_OVER;
+
+    engine.lineJoin = ROUND;
+    engine.lineCap = ROUND;
+};
+
+
 // `regularStamp` - A small, internal function to direct stamping towards the correct functionality
 // + regularStampInSpace for text inside the layoutTemplate artefact's enclosed space
 // + regularStampAlongPath for text positioned along a path-based entity's perimeter
 P.regularStamp = function () {
 
-    const { currentHost, layoutTemplate, cache } = this;
+    const {
+        cache,
+        cacheOutput,
+        currentHost,
+        layoutTemplate,
+        state,
+    } = this;
 
     if (currentHost && layoutTemplate) {
 
         const { element, engine } = currentHost;
 
-        if (cache) {
+        if (cacheOutput && cache) {
             
+            engine.save();
+
+            engine.shadowOffsetX = state.shadowOffsetX;
+            engine.shadowOffsetY = state.shadowOffsetY;
+            engine.shadowBlur = state.shadowBlur;
+            engine.shadowColor = state.shadowColor;
+
+            engine.globalAlpha = state.globalAlpha;
+            engine.globalCompositeOperation = state.globalCompositeOperation;
+
             engine.resetTransform();
             engine.drawImage(cache.element, 0, 0);
+
+            engine.restore();
         }
         else {
 
@@ -3173,18 +3246,23 @@ P.regularStamp = function () {
 
                 const { copyCell, mainCell } = workingCells;
 
-                const finalCell = requestCell(element.width, element.height);
+                const ratio = getPixelRatio();
+
+                const finalCell = requestCell(element.width / ratio, element.height / ratio);
 
                 const finalElement = finalCell.element;
                 const finalEngine = finalCell.engine;
 
-                const underlineCell = this.createUnderlineCell(currentHost, copyCell);
+                this.removeShadowAndAlpha(finalEngine);
+
+                const copyCellHasUnderlines = this.addUnderlinesToCopyCell(currentHost, copyCell);
+
                 const overlineCell = this.createOverlineCell(currentHost);
                 const highlightCell = this.createHighlightCell(currentHost);
 
                 if (!useLayoutTemplateAsPath && showGuidelines && guidelinesPath) this.stampGuidelinesOnCell(finalCell);
 
-                if (underlineCell) finalEngine.drawImage(underlineCell.element, 0, 0);
+                if (copyCellHasUnderlines) finalEngine.drawImage(copyCell.element, 0, 0);
 
                 finalEngine.drawImage(mainCell.element, 0, 0);
 
@@ -3192,14 +3270,31 @@ P.regularStamp = function () {
 
                 if (highlightCell) {
 
-                    finalEngine.globalCompositeOperation = 'destination-over';
+                    finalEngine.save();
+                    finalEngine.globalCompositeOperation = DESTINATION_OVER;
                     finalEngine.drawImage(highlightCell.element, 0, 0);
+                    finalEngine.restore();
                 }
 
+                engine.save();
+
                 engine.resetTransform();
+
+                engine.shadowOffsetX = state.shadowOffsetX;
+                engine.shadowOffsetY = state.shadowOffsetY;
+                engine.shadowBlur = state.shadowBlur;
+                engine.shadowColor = state.shadowColor;
+
+                engine.globalAlpha = state.globalAlpha;
+                engine.globalCompositeOperation = state.globalCompositeOperation;
+
                 engine.drawImage(finalElement, 0, 0);
 
-                this.cache = finalCell;
+                engine.restore();
+
+                if (cacheOutput) this.cache = finalCell;
+                else releaseCell(finalCell);
+
                 releaseCell(copyCell, mainCell, overlineCell, highlightCell);
             }
         }
@@ -3208,19 +3303,18 @@ P.regularStamp = function () {
 
 P.createTextCellsForPath = function (host) {
 
-    const el = host.element;
-    const uCell = requestCell(el.width, el.height);
-    const mCell = requestCell(el.width, el.height);
+    const ratio = getPixelRatio(),
+        el = host.element,
+        w = el.width / ratio,
+        h = el.height / ratio;
+
+    const uCell = requestCell(w, h);
+    const mCell = requestCell(w, h);
 
     if (uCell && mCell) {
 
         const uEngine = uCell.engine;
         const mEngine = mCell.engine;
-
-        uEngine.lineJoin = ROUND;
-        uEngine.lineCap = ROUND;
-        mEngine.lineJoin = ROUND;
-        mEngine.lineCap = ROUND;
 
         const {
             state,
@@ -3232,7 +3326,11 @@ P.createTextCellsForPath = function (host) {
         const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
+        this.removeShadowAndAlpha(uEngine);
+
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
+        this.removeShadowAndAlpha(mEngine);
+
 
         const line = lines[0];
 
@@ -3262,9 +3360,11 @@ P.createTextCellsForPath = function (host) {
                     if (style) {
 
                         this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, uCell);
+                        this.removeShadowAndAlpha(uEngine);
                         uEngine.lineWidth = currentTextStyle.underlineGap;
 
                         this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mCell);
+                        this.removeShadowAndAlpha(mEngine);
                     }
 
                     if (charType !== TEXT_TYPE_SPACE) {
@@ -3331,11 +3431,6 @@ P.createTextCellsForSpace = function (host) {
         const uEngine = uCell.engine;
         const mEngine = mCell.engine;
 
-        uEngine.lineJoin = ROUND;
-        uEngine.lineCap = ROUND;
-        mEngine.lineJoin = ROUND;
-        mEngine.lineCap = ROUND;
-
         const {
             state,
             lines,
@@ -3349,7 +3444,10 @@ P.createTextCellsForSpace = function (host) {
         const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
+        this.removeShadowAndAlpha(uEngine);
+
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
+        this.removeShadowAndAlpha(mEngine);
 
         lines.forEach(line => {
 
@@ -3370,9 +3468,11 @@ P.createTextCellsForSpace = function (host) {
                     if (style) {
 
                         this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, uCell);
+                        this.removeShadowAndAlpha(uEngine);
                         uEngine.lineWidth = currentTextStyle.underlineGap;
 
                         this.setEngineFromWorkingTextStyle(currentTextStyle, style, state, mCell);
+                        this.removeShadowAndAlpha(mEngine);
                     }
 
                     // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
@@ -3438,7 +3538,7 @@ P.createTextCellsForSpace = function (host) {
     return null;
 };
 
-P.createUnderlineCell = function (host, textCell) {
+P.addUnderlinesToCopyCell = function (host, copy) {
 
     const { lockFillStyleToEntity, underlinePaths } = this;
 
@@ -3452,7 +3552,9 @@ P.createUnderlineCell = function (host, textCell) {
         if (mycell) {
 
             const engine = mycell.engine;
-            const textEngine = textCell.engine;
+            this.removeShadowAndAlpha(engine);
+
+            const copyEngine = copy.engine;
 
             underlinePaths.forEach(data => {
 
@@ -3462,16 +3564,19 @@ P.createUnderlineCell = function (host, textCell) {
                 engine.fill(data[1]);
             });
 
-            textEngine.globalCompositeOperation = 'source-out';
-            textEngine.resetTransform();
-            textEngine.drawImage(mycell.element, 0, 0);
+            copyEngine.save();
+            this.removeShadowAndAlpha(copyEngine);
+            copyEngine.globalCompositeOperation = SOURCE_OUT;
+            copyEngine.resetTransform();
+            copyEngine.drawImage(mycell.element, 0, 0);
+            copyEngine.restore();
 
             releaseCell(mycell);
 
-            return textCell;
+            return true;
         }
     }
-    return null;
+    return false;
 };
 
 P.createOverlineCell = function (host) {
@@ -3488,6 +3593,7 @@ P.createOverlineCell = function (host) {
         if (mycell) {
 
             const engine = mycell.engine;
+            this.removeShadowAndAlpha(engine);
 
             overlinePaths.forEach(data => {
 
@@ -3517,6 +3623,7 @@ P.createHighlightCell = function (host) {
         if (mycell) {
 
             const engine = mycell.engine;
+            this.removeShadowAndAlpha(engine);
 
             highlightPaths.forEach(data => {
 
@@ -3578,13 +3685,13 @@ export const makeEnhancedLabel = function (items) {
 constructors.EnhancedLabel = EnhancedLabel;
 
 
-// #### Module variables and functions
+// ### Module variables and functions
 const textEntityConverter = document.createElement(DIV);
 
-// UnitObject pool
+// #### TextUnit objects
 const UNIT_CHARS = 'chars',
     UNIT_TYPE = 'charType',
-    UNIT_SETTABLE_KEYS = _freeze(['localHandle', 'localHandleX', 'localHandleY', 'localOffset', 'localOffsetX', 'localOffsetY', 'localAlignment']);
+    UNIT_SETTABLE_KEYS = _freeze(['localHandleX', 'localHandleY', 'localOffsetX', 'localOffsetY', 'localAlignment']);
 
 const UnitObject = function () {
 
@@ -3644,7 +3751,7 @@ U.set = function (items = Ωempty) {
 
     for (const [key, value] of _entries(items)) {
 
-        if (this.defKeys.includes(key)) {
+        if (this.defKeys.includes(key) || UNIT_SETTABLE_KEYS.includes(key)) {
 
             switch (key) {
 
@@ -3787,6 +3894,7 @@ P.setTextUnit = function (index, items) {
         }
     }
     this.dirtyLayout = true;
+    this.dirtyCache();
 };
 
 P.setAllTextUnits = function (items) {
@@ -3797,14 +3905,12 @@ P.setAllTextUnits = function (items) {
 
             for (const [key, val] of _entries(items)) {
 
-                if (UNIT_SETTABLE_KEYS.includes(key)) {
-
-                    unit.set({ [key]: val});
-                }
+                if (UNIT_SETTABLE_KEYS.includes(key)) unit.set({ [key]: val});
             }
         }
     });
     this.dirtyLayout = true;
+    this.dirtyCache();
 };
 
 
@@ -3813,8 +3919,8 @@ P.checkHit = function (items = [], mycell) {
     return false;
 };
 
-// const makeUnitObject = (chars, type) => new LineObject(chars, type);
 
+// #### TextUnit pool
 const unitPool = [];
 
 const requestUnit = function (items = Ωempty) {
@@ -3837,7 +3943,7 @@ const releaseUnit = function (...args) {
 };
 
 
-// UnitObject pool
+// #### Line objects
 const LineObject = function () {
 
     this.startAt = makeCoordinate();
@@ -3897,7 +4003,7 @@ L.reset = function () {
     return this;
 };
 
-// Line object pool
+// #### LineObject pool
 const linePool = [];
 
 const requestLine = function (items = Ωempty) {
@@ -3930,7 +4036,7 @@ const TextUnitArray = function () {
 };
 
 
-// #### Coordinate prototype
+// #### TextUnit array
 const A = TextUnitArray.prototype = _create(Array.prototype);
 A.constructor = TextUnitArray;
 A.type = T_ENHANCED_LABEL_UNITARRAY;

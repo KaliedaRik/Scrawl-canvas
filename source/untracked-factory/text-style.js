@@ -4,146 +4,43 @@
 // + __immutable__ - set once and used by EnhancedText entitys to amend the styling of their default TextStyle as the text string requires
 
 
-// CSS property `direction`                      maps to TextStyle `direction`
-// CSS property `font-family`                    maps to TextStyle `fontFamily`
-// CSS property `font-kerning`                   maps to TextStyle `fontKerning`
-// CSS property `font-size`                      maps to TextStyle `fontSize`
-// CSS property `font-stretch`                   maps to TextStyle `fontStretch`
-// CSS property `font-style`                     maps to TextStyle `fontStyle`
-// CSS property `font-variant-caps`              maps to TextStyle `fontVariantCaps`
-// CSS property `font-weight`                    maps to TextStyle `fontWeight`
-// CSS property `letter-spacing`                 maps to TextStyle `letterSpacing`
-// CSS property `text-rendering`                 maps to TextStyle `textRendering`
-// CSS property `word-spacing`                   maps to TextStyle `wordSpacing`
+// CSS property `direction`                      maps to TextStyle `direction` (string)
+// CSS property `font-family`                    maps to TextStyle `fontFamily` (string)
+// CSS property `font-kerning`                   maps to TextStyle `fontKerning` (string)
+// CSS property `font-size`                      maps to TextStyle `fontSize` (string)
+// CSS property `font-stretch`                   maps to TextStyle `fontStretch` (string)
+// CSS property `font-style`                     maps to TextStyle `fontStyle` (string)
+// CSS property `font-variant-caps`              maps to TextStyle `fontVariantCaps` (string)
+// CSS property `font-weight`                    maps to TextStyle `fontWeight` (string)
+// CSS property `letter-spacing`                 maps to TextStyle `letterSpacing` (string)
+// CSS property `text-rendering`                 maps to TextStyle `textRendering` (string)
+// CSS property `word-spacing`                   maps to TextStyle `wordSpacing` (string)
 //
-// CSS custom property `--SC-fill-style`         maps to TextStyle `fillStyle`
-// CSS custom property `--SC-stroke-style`       maps to TextStyle `strokeStyle`
-// CSS custom property `--SC-stroke-width`       maps to TextStyle `lineWidth`
+// CSS custom property `--SC-fill-style`         maps to TextStyle `fillStyle` (string)
+// CSS custom property `--SC-stroke-style`       maps to TextStyle `strokeStyle` (string)
+// CSS custom property `--SC-stroke-width`       maps to TextStyle `lineWidth` (number)
 //
-// CSS custom property `--SC-include-highlight`  maps to TextStyle `includeHighlight`
-// CSS custom property `--SC-highlight-style`    maps to TextStyle `highlightStyle`
+// CSS custom property `--SC-include-highlight`  maps to TextStyle `includeHighlight` (boolean)
+// CSS custom property `--SC-highlight-style`    maps to TextStyle `highlightStyle` (string)
 //
-// CSS custom property `--SC-include-overline`   maps to TextStyle `includeOverline`
-// CSS custom property `--SC-overline-offset`    maps to TextStyle `overlineOffset`
-// CSS custom property `--SC-overline-style`     maps to TextStyle `overlineStyle`
-// CSS custom property `--SC-overline-width`     maps to TextStyle `overlineWidth`
+// CSS custom property `--SC-include-overline`   maps to TextStyle `includeOverline` (boolean)
+// CSS custom property `--SC-overline-offset`    maps to TextStyle `overlineOffset` (number)
+// CSS custom property `--SC-overline-style`     maps to TextStyle `overlineStyle` (string)
+// CSS custom property `--SC-overline-width`     maps to TextStyle `overlineWidth` (number)
 //
-// CSS custom property `--SC-include-underline`  maps to TextStyle `includeUnderline`
-// CSS custom property `--SC-underline-gap`      maps to TextStyle `underlineGap`
-// CSS custom property `--SC-underline-offset`   maps to TextStyle `underlineOffset`
-// CSS custom property `--SC-underline-style`    maps to TextStyle `underlineStyle`
-// CSS custom property `--SC-underline-width`    maps to TextStyle `underlineWidth`
+// CSS custom property `--SC-include-underline`  maps to TextStyle `includeUnderline` (boolean)
+// CSS custom property `--SC-underline-gap`      maps to TextStyle `underlineGap` (number)
+// CSS custom property `--SC-underline-offset`   maps to TextStyle `underlineOffset` (number)
+// CSS custom property `--SC-underline-style`    maps to TextStyle `underlineStyle` (string)
+// CSS custom property `--SC-underline-width`    maps to TextStyle `underlineWidth` (number)
 //
-// CSS custom property `--SC-method`             maps to TextStyle `method`
-// ```
-// <!-- Example CSS markup -->
-// <style>
-// /*
-//    SC will expose each EnhancedLabel entity
-//    by adding its name as a class to a hidden <div> element
-//    when processing its text attribute (whenever updated)
-//
-//    Styling for the text string can take place within this class.
-//    SC checks/imports/uses the attributes and custom properties listed above.
-//    The custom properties can also be used as normal, for text displayed in non-JS environments.
-// */
-// .demo-my-label {
-//
-//     /* bold, italic, etc */
-//     & b {
-//         font-weight: bold;
-//     }
-//
-//     & .bold {
-//         font-weight: bold;
-//     }
-//
-//     & strong {
-//         --SC-include-highlight: true;
-//         --SC-highlight-style: honeydew;
-//
-//         font-weight: bold;
-//         background-color: var(--SC-highlight-style);
-//     }
-//
-//     & i {
-//         font-style: italic;
-//     }
-//
-//     & em {
-//         --SC-fill-style: blue;
-//
-//         font-style: italic;
-//         color: var(--SC-fill-style);
-//     }
-//
-//     & .italic {
-//         font-style: italic;
-//     }
-//
-//     & u {
-//         --SC-include-underline: true;
-//         text-decoration: underline;
-//     }
-//
-//     /* underline, strikethrough */
-//     & s {
-//         --SC-include-overline: true;
-//         --SC-overline-offset: 0.4;
-//         --SC-overline-style: red;
-//         --SC-overline-width: 5px;
-//
-//         text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
-//     }
-//
-//     & .underline {
-//         --SC-include-underline: true;
-//
-//         text-decoration: underline;
-//         font-variant: small-caps;
-//     }
-//
-//     & .strike {
-//         --SC-fill-style: gray;
-//
-//         --SC-include-overline: true;
-//         --SC-overline-offset: 0.5;
-//         --SC-overline-style: gray;
-//         --SC-overline-width: 2px;
-//
-//         color: var(--SC-fill-style);
-//         text-decoration-line: line-through;
-//         text-decoration-color: var(--SC-overline-style);
-//         text-decoration-thickness: var(--SC-overline-width);
-//     }
-//
-//     /* letter- and word-spacing */
-//     & .letter-spaced {
-//         letter-spacing: 10px;
-//     }
-//
-//     & .word-spaced {
-//         word-spacing: 0.8rem;
-//     }
-//
-//     /*.fonts */
-//     & .make-bigger {
-//         font-size: 120%;
-//     }
-//
-//     & .make-monospace {
-//         font-family: monospace;
-//     }
-//
-//     /* colors */
-//     & .red {
-//         --SC-fill-style: red;
-//
-//         color: var(--SC-fill-style);
-//     }
-// }
-// </style>
-// ```
+// CSS custom property `--SC-method`             maps to TextStyle `method` (string)
+
+// CSS custom property `--SC-local-handle-x`     maps to TextUnit `localHandleX` (string)
+// CSS custom property `--SC-local-handle-y`     maps to TextUnit `localHandleY` (string)
+// CSS custom property `--SC-local-offset-x`     maps to TextUnit `localOffsetX` (number)
+// CSS custom property `--SC-local-offset-y`     maps to TextUnit `localOffsetY` (number)
+// CSS custom property `--SC-local-alignment`    maps to TextUnit `localAlignment` (number)
 
 
 // #### Imports
@@ -527,55 +424,6 @@ S.wordSpacing = function (item) {
 S.textRendering = function (item) {
 
     if (item?.substring) this.textRendering = item;
-};
-
-G.unitOffset = function () {
-
-    return [...this.unitOffset];
-};
-G.unitOffsetX = function () {
-
-    return this.unitOffset[0];
-};
-G.unitOffsetY = function () {
-
-    return this.unitOffset[1];
-};
-S.unitOffset = function (item) {
-
-    if (_isArray(item) && item.length === 2) {
-
-        if (this.unitOffset == null) this.createUnitOffset();
-
-        this.unitOffset[0] = item[0];
-        this.unitOffset[1] = item[1];
-    }
-};
-S.unitOffsetX = function (item) {
-
-    if (this.unitOffset == null) this.createUnitOffset();
-
-    this.unitOffset[0] = item;
-};
-S.unitOffsetY = function (item) {
-
-    if (this.unitOffset == null) this.createUnitOffset();
-
-    this.unitOffset[1] = item;
-};
-
-P.createUnitOffset = function () {
-
-    this.unitOffset = ['top', 'left'];
-};
-
-D.unitRotation = function (item) {
-
-    if (item.toFixed) this.unitRotation += item;
-};
-S.unitRotation = function (item) {
-
-    if (item.toFixed) this.unitRotation = item;
 };
 
 G.textAlign = λnull;
