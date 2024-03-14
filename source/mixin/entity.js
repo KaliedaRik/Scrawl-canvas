@@ -586,14 +586,14 @@ export default function (P = Ωempty) {
                     filterEng.save();
                     filterEng.globalCompositeOperation = SOURCE_IN;
                     filterEng.globalAlpha = 1;
-                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.resetTransform();
                     filterEng.drawImage(currEl, 0, 0);
                     filterEng.restore();
 
                     this.dirtyFilterIdentifier = true;
                 }
 
-                filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                filterEng.resetTransform();
 
                 const myimage = filterEng.getImageData(0, 0, w, h);
 
@@ -609,7 +609,7 @@ export default function (P = Ωempty) {
 
                     filterEng.globalCompositeOperation = SOURCE_OVER;
                     filterEng.globalAlpha = 1;
-                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.resetTransform();
                     filterEng.putImageData(img, 0, 0);
                 }
             }
@@ -618,7 +618,7 @@ export default function (P = Ωempty) {
             currEng.globalAlpha = (state && state.globalAlpha) ? state.globalAlpha : 1;
             currEng.globalCompositeOperation = (state && state.globalCompositeOperation) ? state.globalCompositeOperation : SOURCE_OVER;
 
-            currEng.setTransform(1, 0, 0, 1, 0, 0);
+            currEng.resetTransform();
 
             currEng.drawImage(filterEl, 0, 0);
 

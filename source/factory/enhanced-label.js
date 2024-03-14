@@ -13,6 +13,7 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import { getPixelRatio } from '../core/user-interaction.js';
 import { currentGroup } from './canvas.js';
+import { filterEngine } from '../helper/filter-engine.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
@@ -20,6 +21,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
+import filterMix from '../mixin/filter.js';
 import textMix from '../mixin/text.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, removeItem, xta, λthis, Ωempty } from '../helper/utilities.js';
@@ -94,6 +96,7 @@ P.isAsset = false;
 // #### Mixins
 baseMix(P);
 deltaMix(P);
+filterMix(P);
 textMix(P);
 
 
@@ -3119,7 +3122,7 @@ P.prepareStamp = function() {
         this.dirtyLayout = true;
     }
 
-    if (this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
+    if (this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation || this.dirtyFilters) {
 
         this.dirtyCache();
 
@@ -3195,6 +3198,35 @@ P.removeShadowAndAlpha = function (engine) {
     engine.lineCap = ROUND;
 };
 
+P.getCellCoverage = function (img) {
+
+    const { width, height, data } = img;
+
+    let maxX = 0,
+        maxY = 0,
+        minX = width,
+        minY = height,
+        counter = 3,
+        x, y, i, iz;
+
+    for (i = 0, iz = width * height; i < iz; i++) {
+
+        if (data[counter]) {
+
+            y = _floor(i / width);
+            x = i - (y * width);
+
+            if (minX > x) minX = x;
+            if (maxX < x) maxX = x;
+            if (minY > y) minY = y;
+            if (maxY < y) maxY = y;
+        }
+        counter += 4;
+    }
+    if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
+    else return [0, 0, width, height];
+};
+
 
 // `regularStamp` - A small, internal function to direct stamping towards the correct functionality
 // + regularStampInSpace for text inside the layoutTemplate artefact's enclosed space
@@ -3246,9 +3278,11 @@ P.regularStamp = function () {
 
                 const { copyCell, mainCell } = workingCells;
 
-                const ratio = getPixelRatio();
+                const ratio = getPixelRatio(),
+                    w = element.width / ratio,
+                    h = element.height / ratio;
 
-                const finalCell = requestCell(element.width / ratio, element.height / ratio);
+                const finalCell = requestCell(w, h);
 
                 const finalElement = finalCell.element;
                 const finalEngine = finalCell.engine;
@@ -3276,21 +3310,102 @@ P.regularStamp = function () {
                     finalEngine.restore();
                 }
 
+                const filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
+
+                if (filterTest) {
+
+                    if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+
+                    const filters = this.currentFilters;
+
+                    if (this.isStencil) {
+
+                        finalEngine.save();
+                        finalEngine.globalCompositeOperation = SOURCE_IN;
+                        finalEngine.globalAlpha = 1;
+                        finalEngine.resetTransform();
+                        finalEngine.drawImage(element, 0, 0);
+                        finalEngine.restore();
+
+                        this.dirtyFilterIdentifier = true;
+                    }
+
+                    finalEngine.resetTransform();
+
+                    const myimage = finalEngine.getImageData(0, 0, w, h);
+
+                    this.preprocessFilters(filters);
+
+                    const img = filterEngine.action({
+                        identifier: this.filterIdentifier,
+                        image: myimage,
+                        filters,
+                    });
+
+                    if (img) {
+
+                        finalEngine.globalCompositeOperation = SOURCE_OVER;
+                        finalEngine.globalAlpha = 1;
+                        finalEngine.resetTransform();
+                        finalEngine.putImageData(img, 0, 0);
+                    }
+                }
+
                 engine.save();
-
                 engine.resetTransform();
-
                 engine.shadowOffsetX = state.shadowOffsetX;
                 engine.shadowOffsetY = state.shadowOffsetY;
                 engine.shadowBlur = state.shadowBlur;
                 engine.shadowColor = state.shadowColor;
-
                 engine.globalAlpha = state.globalAlpha;
                 engine.globalCompositeOperation = state.globalCompositeOperation;
-
                 engine.drawImage(finalElement, 0, 0);
-
                 engine.restore();
+
+                if (this.stashOutput) {
+
+                    this.stashOutput = false;
+
+                    const [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(finalEngine.getImageData(0, 0, w, h));
+
+                    this.stashedImageData = finalEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+
+                    if (this.stashOutputAsAsset) {
+
+                        const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
+
+                        // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
+                        this.stashOutputAsAsset = false;
+
+                        finalElement.width = stashWidth;
+                        finalElement.height = stashHeight;
+                        finalEngine.putImageData(this.stashedImageData, 0, 0);
+
+                        if (!this.stashedImage) {
+
+                            const control = this.group.currentHost.getController();
+
+                            if (control) {
+
+                                const that = this;
+
+                                const newimg = document.createElement(IMG);
+                                newimg.id = stashId;
+                                newimg.alt = `A cached image of the ${this.name} ${this.type} entity`;
+
+                                newimg.onload = function () {
+
+                                    control.canvasHold.appendChild(newimg);
+                                    that.stashedImage = newimg;
+                                    importDomImage(`#${stashId}`);
+                                };
+
+                                newimg.src = finalElement.toDataURL();
+                            }
+                        }
+                        else this.stashedImage.src = finalElement.toDataURL();
+                    }
+                }
 
                 if (cacheOutput) this.cache = finalCell;
                 else releaseCell(finalCell);
