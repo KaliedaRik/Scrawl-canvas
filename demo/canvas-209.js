@@ -290,9 +290,11 @@ const userInteraction = scrawl.makeDragZone({
     updateOnStart: () => {
 
         // Invoking the function that `makeDragZone` returns gives us access to the entity being dragged (if any)
+// @ts-expect-error
         currentlyDragging = userInteraction();
 
         // Invoke the stampOrder promotion
+// @ts-expect-error
         if (currentlyDragging) promoteStampOrders(currentlyDragging.artefact.name);
 
         // Update the cursor to show we're dragging something
@@ -326,6 +328,7 @@ canvas.set({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+// @ts-expect-error
     const dragReport = `Currently dragging: ${(typeof currentlyDragging !== 'boolean' && currentlyDragging) ? currentlyDragging.artefact.name : 'nothing'}`;
 
     let fontReadout = `

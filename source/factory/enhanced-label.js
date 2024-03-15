@@ -25,7 +25,7 @@ import deltaMix from '../mixin/delta.js';
 import filterMix from '../mixin/filter.js';
 import textMix from '../mixin/text.js';
 
-import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, ARIA_LIVE, BLACK, BOTTOM, CENTER, DATA_TAB_ORDER, DESTINATION_OVER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, ITALIC, LEFT, LTR, MIDDLE, NAME, NONE, NORMAL, OBLIQUE, POLITE, PX0, RIGHT, ROUND, ROW, SMALL_CAPS, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, STATE_KEYS, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, SYSTEM_FONTS, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
@@ -3183,6 +3183,8 @@ P.stamp = function (force = false, host, changes) {
         else if (this.visibility) this.regularStamp();
     }
 };
+
+P.simpleStamp = λnull;
 
 
 P.removeShadowAndAlpha = function (engine) {

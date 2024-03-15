@@ -14,6 +14,9 @@ interface CommonObjectInput {
 
 type StringOrNumberInput = string | number;
 
+type Percentage = `${number}%`;
+type PercentOrNumberInput = Percentage | number;
+
 interface CommonHereObjectInput {
     x?: StringOrNumberInput;
     y?: StringOrNumberInput;
@@ -601,19 +604,12 @@ interface StylesMixinFunctions {
 
 // Text mixin
 // -------------------------------------
-interface TextMixinDeltaInputs {
-    boundingBoxLineWidth?: number;
-    boundingBoxLineDashOffset?: number;
-}
+interface TextMixinDeltaInputs {}
 
 interface TextMixinInputs {
     accessibleText?: string;
     accessibleTextOrder?: number;
     accessibleTextPlaceholder?: string;
-    boundingBoxLineDash?: number[];
-    boundingBoxColor?: string;
-    boundingBoxStyle?: StylesInstance | string;
-    showBoundingBox?: boolean;
     textIsAccessible?: boolean;
 }
 
@@ -656,7 +652,7 @@ type ControlsShapeInstance = BezierInstance | LineInstance | QuadraticInstance;
 
 type ShapeBasedInstance = ControlsShapeInstance | CogInstance | LineSpiralInstance | OvalInstance | PolygonInstance | PolylineInstance | RectangleInstance | ShapeInstance | SpiralInstance | StarInstance | TetragonInstance;
 
-type EntityInstance = ShapeBasedInstance | BlockInstance | CrescentInstance | EmitterInstance | GridInstance | LoomInstance | MeshInstance | NetInstance | PhraseInstance | PictureInstance | TracerInstance | WheelInstance;
+type EntityInstance = ShapeBasedInstance | BlockInstance | CrescentInstance | EmitterInstance | EnhancedLabelInstance | GridInstance | LabelInstance | LoomInstance | MeshInstance | NetInstance | PhraseInstance | PictureInstance | TracerInstance | WheelInstance;
 
 type ArtefactInstance = EntityInstance | StackInstance | CanvasInstance | ElementInstance | UnstackedElementInstance;
 
@@ -1251,42 +1247,61 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 // EnhancedLabelInstance factory
 // -------------------------------------
-type TextLineJustifyValues = 'start' | 'end' | 'center' | 'space-between' | 'space-around';
+type TextLineJustifyValues = 'start' | 'end' | 'left' | 'right' | 'center' | 'space-between' | 'space-around';
 type TextUnitFlowValues = 'row' | 'row-reverse' | 'column' | 'column-reverse';
-type EnhancedLabelTextUnitHandleXValues = 'left' | 'right' | 'center';
-type EnhancedLabelTextUnitHandleYValues = 'top' | 'hanging' | 'center' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
+type EnhancedLabelTextUnitHandleXValues = 'start' | 'end' | 'left' | 'right' | 'center' | PercentOrNumberInput;
+type EnhancedLabelTextUnitHandleYValues = 'top' | 'hanging' | 'center' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom' | PercentOrNumberInput;
 
-interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, TextStyleFactoryDeltaInputs {
+interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, FilterMixinDeltaInputs, TextMixinDeltaInputs, TextStyleFactoryDeltaInputs, StateFactoryDeltaInputs {
     alignment?: number;
+    guidelineWidth?: number;
+    handleX?: StringOrNumberInput; 
+    handleY?: StringOrNumberInput; 
+    height?: StringOrNumberInput; 
     lineAdjustment?: number;
     lineSpacing?: number;
+    offsetX?: StringOrNumberInput; 
+    offsetY?: StringOrNumberInput; 
     pathPosition?: number;
+    roll?: number; 
+    scale?: number; 
+    startX?: StringOrNumberInput; 
+    startY?: StringOrNumberInput; 
+    width?: StringOrNumberInput; 
 }
 
-interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, TextStyleFactoryInputs, EnhancedLabelFactoryDeltaInputs {
+interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, FilterMixinInputs, TextMixinInputs, TextStyleFactoryInputs, StateFactoryInputs, EnhancedLabelFactoryDeltaInputs {
     alignTextUnitsToPath?: boolean;
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
+    cacheOutput?: boolean;
     calculateOrder?: number;
-    constantPathSpeed?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
+    dimensions?: CommonTwoElementArrayInput; 
+    flipReverse?: boolean;
+    flipUpend?: boolean;
     group?: GroupInstance | string;
     guidelineDash?: number[];
-    guidelineStyle?: StylesInstance | string;
-    guidelineWidth?: number;
+    guidelineStyle?: string;
+    handle?: CommonTwoElementArrayInput; 
     hyphenString?: string;
     justifyLine?: TextLineJustifyValues;
     layoutTemplate?: ArtefactInstance | string;
-    method?: MethodValues;
-    noDeltaUpdates?: boolean;
+    lockFillStyleToEntity?: boolean;
+    lockStrokeStyleToEntity?: boolean;
+    method?: 'fill' | 'draw' | 'fillAndDraw' | 'drawAndFill';
+    offset?: CommonTwoElementArrayInput; 
     order?: number;
     showGuidelines?: boolean;
     stampOrder?: number;
+    start?: CommonTwoElementArrayInput; 
     text?: string;
-    textHandle?: [EnhancedLabelTextUnitHandleXValues | number | string, EnhancedLabelTextUnitHandleYValues | number | string]; 
-    textHandleX?: EnhancedLabelTextUnitHandleXValues | number | string; 
-    textHandleY?: EnhancedLabelTextUnitHandleYValues | number | string; 
-    textIsAccessible?: boolean;
+    textHandle?: [EnhancedLabelTextUnitHandleXValues, EnhancedLabelTextUnitHandleYValues];
+    textHandleX?: EnhancedLabelTextUnitHandleXValues;
+    textHandleY?: EnhancedLabelTextUnitHandleYValues;
+    textOffset?: [PercentOrNumberInput, PercentOrNumberInput];
+    textOffsetX?: PercentOrNumberInput;
+    textOffsetY?: PercentOrNumberInput;
     textUnitFlow?: TextUnitFlowValues;
     truncateString?: string;
     useLayoutTemplateAsPath?: boolean;
@@ -1295,7 +1310,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
 
 interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}
 
-interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions {
+interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions, FilterMixinFunctions, TextMixinFunctions, TextStyleFactoryFunctions, StateFactoryFunctions {
     clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     convertTextEntityCharacters: (item: string) => string;
     getAccessibleText: () => string;
@@ -1305,7 +1320,7 @@ interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFu
     setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
     setTextUnit: (index: number, items: CommonObjectInput) => void;
     setAllTextUnits: (items: CommonObjectInput) => void;
-    simpleStamp: (host: CellInstance, items?: EnhancedLabelFactoryInputs) => void;
+    simpleStamp: (host: CellInstance, items?: CommonObjectInput) => void;
 }
 
 interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, EnhancedLabelFactoryFunctions {}
@@ -1609,10 +1624,16 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 
 // LabelInstance factory
 // -------------------------------------
-interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, TextStyleFactoryDeltaInputs {}
+interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, TextStyleFactoryDeltaInputs {
+    boundingBoxLineDashOffset?: number;
+    boundingBoxLineWidth?: number;
+}
 
 interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
+    boundingBoxLineDash?: number[];
+    boundingBoxStyle?: StylesInstance | string;
     delta?: LabelFactoryDeltaInputs;
+    showBoundingBox?: boolean;
     text?: string;
 }
 
@@ -2616,37 +2637,38 @@ interface TetragonInstance extends TetragonFactoryInputs, TetragonFactoryFunctio
 // TextStyleInstance factory
 // -------------------------------------
 interface TextStyleFactoryDeltaInputs extends BaseMixinDeltaInputs {
-    letterSpacing?: number;
     lineDashOffset?: number;
     lineWidth?: number;
     overlineOffset?: number;
     overlineWidth?: number;
+    underlineGap?: number;
     underlineOffset?: number;
     underlineWidth?: number;
-    unitRotation?: number
-    wordSpacing?: number;
 }
 
 interface TextStyleFactoryInputs extends BaseMixinInputs, TextStyleFactoryDeltaInputs {
     direction?: string;
     fillStyle?: StylesInstance | string;
+    fontFamily?: string;
     fontKerning?: string;
+    fontSize?: string;
     fontStretch?: string;
     fontString?: string;
+    fontStyle?: string;
     fontVariantCaps?: string;
+    fontWeight?: string;
     highlightStyle?: StylesInstance | string;
     includeHighlight?: boolean;
     includeOverline?: boolean;
     includeUnderline?: boolean;
-    lineDash?: number[],
+    letterSpacing?: StringOrNumberInput;
+    lineDash?: number[];
+    method?: MethodValues;
     overlineStyle?: StylesInstance | string;
     strokeStyle?: StylesInstance | string;
     textRendering?: string;
-    underlineGap?: number;
     underlineStyle?: StylesInstance | string;
-    unitOffset?: CommonTwoElementArrayInput;
-    unitOffsetX?: StringOrNumberInput;
-    unitOffsetY?: StringOrNumberInput;
+    wordSpacing?: StringOrNumberInput;
 }
 
 interface TextStyleSaveInputs extends TextStyleFactoryFunctions, SaveInputs {}
