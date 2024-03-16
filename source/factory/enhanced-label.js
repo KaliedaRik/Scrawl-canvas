@@ -182,6 +182,8 @@ const defaultAttributes = {
     lockStrokeStyleToEntity: false,
 
     cacheOutput: true,
+
+    checkHitUseTemplate: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -4032,10 +4034,14 @@ P.setAllTextUnits = function (items) {
 };
 
 
-// P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = [], mycell) {
 
-//     return false;
-// };
+    const {checkHitUseTemplate, layoutTemplate} = this;
+
+    if (checkHitUseTemplate && layoutTemplate) return layoutTemplate.checkHit(items, mycell);
+
+    return false;
+};
 
 
 // #### TextUnit pool

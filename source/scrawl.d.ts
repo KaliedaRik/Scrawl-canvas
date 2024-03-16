@@ -1276,6 +1276,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     breakWordsOnHyphens?: boolean;
     cacheOutput?: boolean;
     calculateOrder?: number;
+    checkHitUseTemplate?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
     dimensions?: CommonTwoElementArrayInput; 
     flipReverse?: boolean;

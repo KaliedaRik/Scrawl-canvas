@@ -16,6 +16,7 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
+// #### Styling
 // Create gradient and pattern
 scrawl.makeGradient({
     name: name('linear-gradient'),
@@ -39,155 +40,8 @@ scrawl.makePattern({
 });
 
 
-// Create the template entitys that will be used by our EnhancedLabel entitys
-const createInitialRoll = () => Math.random() * 360;
-
-scrawl.makeWheel({
-
-    name: name('Britain-button'),
-    radius: 80,
-    start: ['30%', '25%'],
-    handle: ['center', 'center'],
-    roll: createInitialRoll(),
-    method: 'none',
-
-}).clone({
-
-    name: name('Thailand-button'),
-    roll: createInitialRoll(),
-    startX: '70%',
-
-}).clone({
-
-    name: name('China-button'),
-    roll: createInitialRoll(),
-    startY: '75%',
-
-}).clone({
-
-    name: name('Egypt-button'),
-    roll: createInitialRoll(),
-    startX: '30%',
-
-// Create the background entitys
-}).clone({
-
-    name: name('Britain-border'),
-    pivot: name('Britain-button'),
-    lockTo: 'pivot',
-
-    radius: 90,
-
-    strokeStyle: 'rgb(0 0 150)',
-    fillStyle: 'rgb(200 200 255)',
-    lineWidth: 5,
-    method: 'fillThenDraw',
-
-}).clone({
-
-    name: name('Thailand-border'),
-    pivot: name('Thailand-button'),
-    strokeStyle: 'rgb(150 150 0)',
-    fillStyle: 'rgb(255 255 200)',
-
-}).clone({
-
-    name: name('China-border'),
-    pivot: name('China-button'),
-    strokeStyle: 'rgb(150 0 0)',
-    fillStyle: 'rgb(255 200 200)',
-
-}).clone({
-
-    name: name('Egypt-border'),
-    pivot: name('Egypt-button'),
-    strokeStyle: 'rgb(0 150 0)',
-    fillStyle: 'rgb(200 255 200)',
-});
-
-
-// Create the EnhancedLabel entitys
-// - We finesse the word sizes and vertical positioning (including the underline) using CSS
-const createDeltaRoll = () => {
-
-    let d = Math.random() - 0.5;
-    d += (d > 0) ? 0.2 : -0.2;
-
-    return { roll: d };
-};
-
-scrawl.makeEnhancedLabel({
-
-    name: name('Britain-message'),
-    layoutTemplate: name('Britain-button'),
-    text: '<p class="welcome-text">Welcome&nbsp;to <span class="country-name">Britain</span></p>',
-    textHandle: ['center', 'alphabetic'],
-    fontString: 'bold 24px "Roboto Serif',
-    lineSpacing: 2,
-    lineAdjustment: 28,
-    letterSpacing: '2px',
-    wordSpacing: '2px',
-
-    fillStyle: `rgb(220 170 140)`,
-
-    delta: createDeltaRoll(),
-    noDeltaUpdates: true,
-
-    shadowOffsetX: 2,
-    shadowOffsetY: 2,
-    shadowBlur: 1,
-    shadowColor: 'black',
-
-    globalAlpha: 1,
-    globalCompositeOperation: 'source-over',
-
-}).clone({
-
-    name: name('Thailand-message'),
-    layoutTemplate: name('Thailand-button'),
-    text: '<p class="welcome-text">ยินดีต้อนรับสู่ <span class="country-name">ประเทศไทย</span></p>',
-
-    fontString: 'bold 24px "Noto Thai Sans',
-
-    delta: createDeltaRoll(),
-
-}).clone({
-
-    name: name('China-message'),
-    layoutTemplate: name('China-button'),
-    text: '<p class="welcome-text">欢迎来到 <span class="country-name">中国</span></p>',
-
-    fontString: 'bold 24px "Noto Chinese Simple Sans',
-
-    delta: createDeltaRoll(),
-
-}).clone({
-
-    name: name('Egypt-message'),
-    layoutTemplate: name('Egypt-button'),
-    text: '<p class="welcome-text">مرحبا&nbsp;بكم&nbsp;فى <span class="country-name">مصر</span></p>',
-
-    direction: 'rtl',
-    letterSpacing: '0px',
-    wordSpacing: '4px',
-    fontString: 'bold 24px "Noto Arabic Sans',
-
-    delta: createDeltaRoll(),
-});
-
-
-// #### User interaction
-// Create a drag group - EnhancedLabel entitys cannot be dragged, but their layoutTemplate entitys can.
-scrawl.makeGroup({ name: name('buttons-group') })
-    .addArtefacts(
-        name('Britain-button'),
-        name('Thailand-button'),
-        name('China-button'),
-        name('Egypt-button'),
-    );
-
-
-// Make an object to hold functions we'll use for UI
+// #### User interaction: drag-drop
+// Make an object to hold functions we'll use for group-based UI
 const setCursorTo = {
 
     auto: () => {
@@ -213,76 +67,45 @@ const setCursorTo = {
     },
 };
 
-
-// The entity we're dragging is the enhancedLabel's `layoutTemplate` entity
-// + When dragging an entity, its `stampOrder` attribute gets massively inflated to make sure it displays over all other entitys.
-// + But in this scenario, we never see the layoutTemplate. The entitys whose stampOrder value needs to increase are the EnhancedLabel using it, and the background wheel pivoted to it.
-// + To achieve this, we need to do some work.
-
-
-// First: set up groups for each nation's visible entitys
-const britainGroup = scrawl.makeGroup({ name: name('Britain-group') })
+// Create a drag group
+// + We define the EnhancedLabel entitys later - for now we just need their names
+const buttons = scrawl.makeGroup({ name: name('buttons-group') })
     .addArtefacts(
-        name('Britain-button'),
-        name('Britain-border'),
-        name('Britain-message'),
+        name('Britain-label'),
+        name('Thailand-label'),
+        name('China-label'),
+        name('Egypt-label'),
     );
-britainGroup.setArtefacts({ stampOrder: 0});
 
-const thailandGroup = scrawl.makeGroup({ name: name('Thailand-group') })
-    .addArtefacts(
-        name('Thailand-button'),
-        name('Thailand-border'),
-        name('Thailand-message'),
-    );
-thailandGroup.setArtefacts({ stampOrder: 1});
-
-const chinaGroup = scrawl.makeGroup({ name: name('China-group') })
-    .addArtefacts(
-        name('China-button'),
-        name('China-border'),
-        name('China-message'),
-    );
-chinaGroup.setArtefacts({ stampOrder: 2});
-
-const egyptGroup = scrawl.makeGroup({ name: name('Egypt-group') })
-    .addArtefacts(
-        name('Egypt-button'),
-        name('Egypt-border'),
-        name('Egypt-message'),
-    );
-egyptGroup.setArtefacts({ stampOrder: 3});
-
-
-// Second: create two functions to do the `stampOrder` manipulation via the groups
+// Create two functions to do the `stampOrder` manipulation via the groups
+// + We create these button groups below
 const promoteStampOrders = (name) => {
 
     // Promote the ones that match the name
-    if (name.includes('Britain')) britainGroup.setArtefacts({ stampOrder: 9999 });
-    else if (name.includes('Thailand')) thailandGroup.setArtefacts({ stampOrder: 9999 });
-    else if (name.includes('China')) chinaGroup.setArtefacts({ stampOrder: 9999 });
-    else if (name.includes('Egypt')) egyptGroup.setArtefacts({ stampOrder: 9999 });
+    if (name.includes('Britain')) britainGroup.set({ order: 9999 });
+    else if (name.includes('Thailand')) thailandGroup.set({ order: 9999 });
+    else if (name.includes('China')) chinaGroup.set({ order: 9999 });
+    else if (name.includes('Egypt')) egyptGroup.set({ order: 9999 });
 };
 
 const demoteStampOrders = () => {
 
     // Demote them all!
-    britainGroup.setArtefacts({ stampOrder: 0 });
-    thailandGroup.setArtefacts({ stampOrder: 1 });
-    chinaGroup.setArtefacts({ stampOrder: 2 });
-    egyptGroup.setArtefacts({ stampOrder: 3 });
+    britainGroup.set({ order: 1 });
+    thailandGroup.set({ order: 2 });
+    chinaGroup.set({ order: 3 });
+    egyptGroup.set({ order: 4 });
 };
 
-
-// Third: use a state variable to keep track of which button is being dragged
-// + We also make use of this in the report functionality
+// Use a state variable to keep track of which button is being dragged
+// + We also make use of this in the Display cycle report functionality
 let currentlyDragging = false;
 
 // With all the above in place, we can now create the drag-and-drop zone
 const userInteraction = scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: name('buttons-group'),
+    collisionGroup: buttons,
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
@@ -315,12 +138,184 @@ const userInteraction = scrawl.makeDragZone({
 });
 
 
-// Finally: implement the hover check on the Canvas wrapper
-canvas.set({
+// #### Groups
+// Each button gets its own group
+const britainGroup = scrawl.makeGroup({
+    name: name('Britain-group'),
+    order: 1,
+    host: canvas.base,
 
     checkForEntityHover: true,
     onEntityHover: setCursorTo.pointer,
     onEntityNoHover: setCursorTo.auto,
+});
+
+const thailandGroup = britainGroup.clone({
+    name: name('Thailand-group'),
+    order: 2,
+});
+
+const chinaGroup = britainGroup.clone({
+    name: name('China-group'),
+    order: 3,
+});
+
+const egyptGroup = britainGroup.clone({
+    name: name('Egypt-group'),
+    order: 4,
+});
+
+
+// #### Entity generation
+// Helper functions
+const calculateInitialRoll = () => Math.random() * 360;
+
+const calculateInitialDeltaObject = () => {
+
+    let d = Math.random() - 0.5;
+    d += (d > 0) ? 0.2 : -0.2;
+
+    return { roll: d };
+};
+
+// Create the template entitys that will be used by our EnhancedLabel entitys
+scrawl.makeWheel({
+
+    name: name('Britain-template'),
+    group: name('Britain-group'),
+    radius: 80,
+    start: ['30%', '25%'],
+    handle: ['center', 'center'],
+    roll: calculateInitialRoll(),
+    method: 'none',
+
+}).clone({
+
+    name: name('Thailand-template'),
+    group: name('Thailand-group'),
+    roll: calculateInitialRoll(),
+    startX: '70%',
+
+}).clone({
+
+    name: name('China-template'),
+    group: name('China-group'),
+    roll: calculateInitialRoll(),
+    startY: '75%',
+
+}).clone({
+
+    name: name('Egypt-template'),
+    group: name('Egypt-group'),
+    roll: calculateInitialRoll(),
+    startX: '30%',
+
+// Create the background entitys
+}).clone({
+
+    name: name('Britain-background'),
+    group: name('Britain-group'),
+    pivot: name('Britain-template'),
+    lockTo: 'pivot',
+
+    radius: 90,
+
+    strokeStyle: 'rgb(0 0 150)',
+    fillStyle: 'rgb(200 200 255)',
+    lineWidth: 5,
+    method: 'fillThenDraw',
+
+}).clone({
+
+    name: name('Thailand-background'),
+    group: name('Thailand-group'),
+    pivot: name('Thailand-template'),
+    strokeStyle: 'rgb(150 150 0)',
+    fillStyle: 'rgb(255 255 200)',
+
+}).clone({
+
+    name: name('China-background'),
+    group: name('China-group'),
+    pivot: name('China-template'),
+    strokeStyle: 'rgb(150 0 0)',
+    fillStyle: 'rgb(255 200 200)',
+
+}).clone({
+
+    name: name('Egypt-background'),
+    group: name('Egypt-group'),
+    pivot: name('Egypt-template'),
+    strokeStyle: 'rgb(0 150 0)',
+    fillStyle: 'rgb(200 255 200)',
+});
+
+// Create the EnhancedLabel entitys
+// + We finesse the word sizes and vertical positioning (including the underline) using CSS
+scrawl.makeEnhancedLabel({
+
+    name: name('Britain-label'),
+    group: name('Britain-group'),
+    layoutTemplate: name('Britain-template'),
+
+    fontString: 'bold 24px "Roboto Serif',
+    text: '<p class="welcome-text">Welcome&nbsp;to <span class="country-name">Britain</span></p>',
+
+    delta: calculateInitialDeltaObject(),
+    noDeltaUpdates: true,
+
+    textHandle: ['center', 'alphabetic'],
+    lineSpacing: 2,
+    lineAdjustment: 28,
+    letterSpacing: '2px',
+    wordSpacing: '2px',
+
+    fillStyle: `rgb(220 170 140)`,
+
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+    shadowBlur: 1,
+    shadowColor: 'black',
+
+    globalAlpha: 1,
+    globalCompositeOperation: 'source-over',
+
+}).clone({
+
+    name: name('Thailand-label'),
+    group: name('Thailand-group'),
+    layoutTemplate: name('Thailand-template'),
+
+    fontString: 'bold 24px "Noto Thai Sans',
+    text: '<p class="welcome-text">ยินดีต้อนรับสู่ <span class="country-name">ประเทศไทย</span></p>',
+
+    delta: calculateInitialDeltaObject(),
+
+}).clone({
+
+    name: name('China-label'),
+    group: name('China-group'),
+    layoutTemplate: name('China-template'),
+
+    fontString: 'bold 24px "Noto Chinese Simple Sans',
+    text: '<p class="welcome-text">欢迎来到 <span class="country-name">中国</span></p>',
+
+    delta: calculateInitialDeltaObject(),
+
+}).clone({
+
+    name: name('Egypt-label'),
+    group: name('Egypt-group'),
+    layoutTemplate: name('Egypt-template'),
+
+    fontString: 'bold 24px "Noto Arabic Sans',
+    text: '<p class="welcome-text">مرحبا&nbsp;بكم&nbsp;فى <span class="country-name">مصر</span></p>',
+
+    delta: calculateInitialDeltaObject(),
+
+    direction: 'rtl',
+    letterSpacing: '0px',
+    wordSpacing: '4px',
 });
 
 
@@ -355,21 +350,12 @@ scrawl.makeRender({
 
 
 // #### User controls
-// Create a update group for the user controls.
-const labelsGroup = scrawl.makeGroup({ name: name('labels-group') })
-    .addArtefacts(
-        name('Britain-message'),
-        name('Thailand-message'),
-        name('China-message'),
-        name('Egypt-message'),
-    );
-
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: labelsGroup,
+    target: buttons,
 
     useNativeListener: true,
     preventDefault: true,

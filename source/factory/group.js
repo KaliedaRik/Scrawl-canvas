@@ -98,7 +98,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactCalculateBuckets', 'artefactStampBuckets', 'batchResort']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEntityHover', 'onEntityNoHover']);
 
-
 // #### Clone management
 P.postCloneAction = function(clone, items) {
 
@@ -106,11 +105,17 @@ P.postCloneAction = function(clone, items) {
 
     if (items.host) {
 
-        host = artefact[items.host];
+        if (items.host.substring) host = artefact[items.host];
+        else if (items.host.type && ACCEPTED_OWNERS.includes(item.host.type)) host = items.host;
     }
     else {
 
-        host = (this.currentHost) ? this.currentHost : (this.host) ? artefact[this.host] : false;
+        if (this.currentHost) host = this.currentHost;
+        else if (this.host) {
+
+            if (this.host.substring) host = artefact[this.host];
+            else if (this.host.type && ACCEPTED_OWNERS.includes(this.host.type)) host = this.host;
+        }        
     }
 
     if (host) {
