@@ -106,7 +106,7 @@ P.postCloneAction = function(clone, items) {
     if (items.host) {
 
         if (items.host.substring) host = artefact[items.host];
-        else if (items.host.type && ACCEPTED_OWNERS.includes(item.host.type)) host = items.host;
+        else if (items.host.type && ACCEPTED_OWNERS.includes(items.host.type)) host = items.host;
     }
     else {
 
@@ -115,7 +115,7 @@ P.postCloneAction = function(clone, items) {
 
             if (this.host.substring) host = artefact[this.host];
             else if (this.host.type && ACCEPTED_OWNERS.includes(this.host.type)) host = this.host;
-        }        
+        }
     }
 
     if (host) {

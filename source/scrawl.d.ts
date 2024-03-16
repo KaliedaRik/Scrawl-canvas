@@ -1312,6 +1312,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
 interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}
 
 interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions, FilterMixinFunctions, TextMixinFunctions, TextStyleFactoryFunctions, StateFactoryFunctions {
+    applyTextUnitUpdates: () => void;
     clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     convertTextEntityCharacters: (item: string) => string;
     getAccessibleText: () => string;

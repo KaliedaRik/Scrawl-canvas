@@ -688,6 +688,16 @@ S.textUnitFlow = function (item) {
     this.dirtyText = true;
 };
 
+G.textUnits = function () {
+
+    return this.textUnits;
+};
+
+G.textLines = function () {
+
+    return this.lines;
+};
+
 
 
 // #### Prototype functions
@@ -867,7 +877,7 @@ P.getTextHandleY = function (val, size, font) {
 // `getTextOffset` - Calculate the horizontal offset required for a given TextUnit
 P.getTextOffset = function (val, dim) {
 
-// console.log(this.name, 'getTextOffset (trigger: various)');
+// if (val) console.log(this.name, 'getTextOffset (trigger: various)', val, !!val.toFixed, dim);
 
     if (val.toFixed) return val;
     if (!_isFinite(parseFloat(val))) return 0;
@@ -2671,7 +2681,7 @@ P.positionTextUnitsInSpace = function () {
                             handleY = getTextHandleY.call(this, temp, height, fontFamily);
 
                             temp = localOffset[0] || textOffset[0] || 0;
-                            offsetX = this.getTextOffset(temp, len);
+                            offsetX = getTextOffset.call(this, temp, len);
 
                             temp = localOffset[1] || textOffset[1] || 0;
                             offsetY = getTextOffset.call(this, temp, height);
@@ -2708,7 +2718,7 @@ P.positionTextUnitsInSpace = function () {
                             handleY = getTextHandleY.call(this, temp, height, fontFamily);
 
                             temp = localOffset[0] || textOffset[0] || 0;
-                            offsetX = this.getTextOffset(temp, len);
+                            offsetX = getTextOffset.call(this, temp, len);
 
                             temp = localOffset[1] || textOffset[1] || 0;
                             offsetY = getTextOffset.call(this, temp, height);
@@ -3987,6 +3997,7 @@ U.set = function (items = Ωempty) {
 
                     if (value != null) this[key] = value;
                     else this[key] = this.defs[key];
+                    break;
             }
         }
     }
@@ -4033,6 +4044,12 @@ P.setAllTextUnits = function (items) {
     this.dirtyCache();
 };
 
+P.applyTextUnitUpdates = function () {
+
+    this.dirtyLayout = true;
+    this.dirtyCache();
+};
+
 
 P.checkHit = function (items = [], mycell) {
 
@@ -4054,10 +4071,10 @@ const requestUnit = function (items = Ωempty) {
     const u = unitPool.shift();
     u.set(items);
 
-    return u
+    return u;
 };
 
-// `exported function` - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.
+// `exported function` - return a TextUnit to the text unit pool. Failing to return text units to the pool may lead to more inefficient code and possible memory leaks.
 const releaseUnit = function (...args) {
 
     args.forEach(u => {
