@@ -63,8 +63,10 @@ P.clone = λthis;
 
 P.setDimensions = function (w, h) {
 
-    this.w = this.element.width = w;
-    this.h = this.element.height = h;
+    this.w = w;
+    this.h = h;
+    this.element.width = w;
+    this.element.height = h;
 
     // Resetting canvas dimensions sets the canvas engine back to system default values
     // + As we always require `textAlign` and `textBaseline` to be 'left' and 'top' respectively, we reset them here.
@@ -109,8 +111,7 @@ export const releaseCell = function (...args) {
 
         if (a && a.type === T_CELLFRAGMENT) {
 
-            a.element.width = 1;
-            a.element.height = 1;
+            a.setDimensions(1, 1);
             a.engine.restore();
             a.state.setStateFromEngine(a.engine);
 

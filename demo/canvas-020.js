@@ -133,7 +133,7 @@ const words = scrawl.makeEnhancedLabel({
     lineSpacing: 1.2,
     lineAdjustment: 20,
     lockFillStyleToEntity: true,
-    memoizeFilterOutput: false,
+    // memoizeFilterOutput: false,
     shadowOffsetX: 1.5,
     shadowOffsetY: 1.5,
 });

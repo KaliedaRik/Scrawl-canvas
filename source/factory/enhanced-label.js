@@ -2085,12 +2085,13 @@ P.assignTextUnitsToLines = function () {
 
     const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
     const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
+    const currentScale = layoutTemplate.currentScale;
 
     const unitArrayLength = textUnits.length;
 
     let unitCursor = 0,
         lengthRemaining,
-        i, unit, unitData, unitAfter, len, height, lineLength, charType, check;
+        i, unit, unitData, unitAfter, len, height, lineLength, charType, check, firstOnLineCheck;
 
     const addUnit = function (val) {
 
@@ -2108,6 +2109,8 @@ P.assignTextUnitsToLines = function () {
 
         lengthRemaining = _ceil(lineLength);
 
+        firstOnLineCheck = true;
+
         for (i = unitCursor; i < unitArrayLength; i++) {
 
             unit = textUnits[i];
@@ -2115,15 +2118,12 @@ P.assignTextUnitsToLines = function () {
             ({ len, height, charType } = unit);
 
             // Check: is there room for the text unit
-            // + TODO: find out the algorithms used by various browsers to assign words to a given length of line.
-            // + At the moment, the SC layout doesn't exactly match the DOM layout - the occasional word will fall over into the next line - this becomes very noticable when scaling
-            // + Ideally, the words-per-line in SC vs DOM should match, but if push comes to shove, would much prefer to keep lines stable when scaling
-            // + The current solution fixes the worst of the movement, but is not good enough
-            check = (layoutFlowIsColumns) ?
-                height * layoutTemplate.currentScale :
-                _floor(len * 100) / 100;
+            check = (layoutFlowIsColumns) ? height * currentScale : len;
 
-            if (check <= lengthRemaining + 1) {
+            // We need to discount the length of spaces that end up at the beginning of the line
+            if (firstOnLineCheck && !layoutFlowIsColumns && unit.charType === TEXT_TYPE_SPACE) check = 0;
+
+            if (check <= lengthRemaining) {
 
                 // Hyphens capture
                 // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
@@ -2157,7 +2157,11 @@ P.assignTextUnitsToLines = function () {
                     // Next text unit is not a soft hyphen; add this text unit to the array
                     else addUnit(check);
                 }
+
+                // Everything else, including all TextUnits with an `rtl` direction, and all along a column
                 else addUnit(check);
+
+                firstOnLineCheck = false;
             }
 
             // There's no room left on this line for the TextUnit
@@ -4197,7 +4201,7 @@ A.findByIndex = function (index) {
     return null;
 };
 
-A.findFirstByChars = function (chars) {
+A.findFirstWithChar = function (chars) {
 
     let item;
 
@@ -4210,7 +4214,7 @@ A.findFirstByChars = function (chars) {
     return null;
 };
 
-A.findAllByChars = function (chars) {
+A.findAllWithChar = function (chars) {
 
     let item;
 
@@ -4221,6 +4225,21 @@ A.findAllByChars = function (chars) {
         item = this[i];
 
         if (item.chars.includes(chars)) res.push(item);
+    }
+    return res;
+};
+
+A.findAllDisplayedChars = function () {
+
+    let item;
+
+    const res = [];
+
+    for (let i = 0, iz = this.length; i < iz; i++) {
+
+        item = this[i];
+
+        if (item.stampFlag && item.charType !== TEXT_TYPE_SPACE) res.push(item);
     }
     return res;
 };
