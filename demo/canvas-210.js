@@ -51,8 +51,7 @@ const effect = scrawl.makeEnhancedLabel({
 
     textHandle: ['center', 'center'],
     wordSpacing: '5px',
-    // justifyLine: 'space-around',
-    justifyLine: 'left',
+    justifyLine: 'space-around',
 });
 
 
@@ -75,7 +74,7 @@ const updateTextUnits = () => {
 
         const coord = scrawl.requestCoordinate();
 
-        let distance, x, y, angle, style;
+        let distance, x, y, angle, arrowStyle;
 
         const displayedUnits = units.findAllDisplayedChars();
 
@@ -88,34 +87,39 @@ const updateTextUnits = () => {
 // @ts-expect-error
             angle = Math.atan2(y, x) * radToDeg;
 
-            style = {};
+            arrowStyle = {};
 // @ts-expect-error
-            if (x < 0 && y < 0) style.fillStyle = 'rgb(255 140 140)';
+            if (x < 0 && y < 0) arrowStyle.fillStyle = 'rgb(255 140 140)';
 // @ts-expect-error
-            if (x > 0 && y < 0) style.fillStyle = 'rgb(140 140 255)';
+            else if (x > 0 && y < 0) arrowStyle.fillStyle = 'rgb(140 140 255)';
 // @ts-expect-error
-            if (x < 0 && y > 0) style.fillStyle = 'rgb(140 255 140)';
+            else if (x < 0 && y > 0) arrowStyle.fillStyle = 'rgb(140 255 140)';
 // @ts-expect-error
-            if (x > 0 && y > 0) style.fillStyle = 'rgb(255 255 0)';
+            else arrowStyle.fillStyle = 'rgb(255 255 0)';
 
             if (distance < 80) {
 // @ts-expect-error
-                style.method = 'draw';
+                arrowStyle.method = 'draw';
 // @ts-expect-error
-                style.strokeStyle = 'rgb(255 255 255)';
+                arrowStyle.strokeStyle = 'rgb(255 255 255)';
                 angle += 180;
             }
 // @ts-expect-error
-            else style.method = 'fill';
+            else arrowStyle.method = 'fill';
 
-            unit.set({
+            effect.setTextUnit(unit.index, {
 
+                // `localAlignment` gets added to the entity's alignment value
                 localAlignment: angle,
-                style,
+
+                // `localStyle` can be used to override the following attributes on a per-TextUnit basis:
+                // + `fillStyle`, `strokeStyle`, `method`
+                // + `includeUnderline`, `underlineStyle`, `underlineOffset`, `underlineWidth`
+                // + `includeOverline`, `overlineStyle`, `overlineOffset`, `overlineWidth`
+                // + `includeHighlight`, `highlightStyle`
+                localStyle: arrowStyle,
             });
         });
-
-        effect.applyTextUnitUpdates();
 
         currentX = here.x;
         currentY = here.y;

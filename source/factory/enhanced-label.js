@@ -1470,6 +1470,8 @@ P.cleanText = function () {
         releaseUnit(...textUnits);
         textUnits.length = 0;
 
+        let index = 0;
+
         if (breakTextOnSpaces) {
 
             // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
@@ -1482,36 +1484,48 @@ P.cleanText = function () {
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                            index,
                         }));
+                        index++;
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: c,
                             [UNIT_TYPE]: TEXT_TYPE_SPACE,
+                            index,
                         }));
                         unit.length = 0;
+                        index++;
                     }
                     else if (TEXT_HARD_HYPHEN_REGEX.test(c)) {
 
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                            index,
                         }));
+                        index++;
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: c,
                             [UNIT_TYPE]: TEXT_TYPE_HYPHEN,
+                            index,
                         }));
                         unit.length = 0;
+                        index++;
                     }
                     else if (TEXT_SOFT_HYPHEN_REGEX.test(c)) {
 
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                            index,
                         }));
+                        index++;
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: c,
                             [UNIT_TYPE]: TEXT_TYPE_SOFT_HYPHEN,
+                            index,
                         }));
                         unit.length = 0;
+                        index++;
                     }
                     else unit.push(c);
                 });
@@ -1520,6 +1534,7 @@ P.cleanText = function () {
                 if (unit.length) textUnits.push(requestUnit({
                     [UNIT_CHARS]: unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                    index,
                 }));
             }
             else {
@@ -1531,12 +1546,15 @@ P.cleanText = function () {
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                            index,
                         }));
+                        index++;
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: c,
                             [UNIT_TYPE]: TEXT_TYPE_SPACE
                         }));
                         unit.length = 0;
+                        index++;
                     }
                     else unit.push(c);
                 });
@@ -1545,19 +1563,20 @@ P.cleanText = function () {
                 if (unit.length) textUnits.push(requestUnit({
                     [UNIT_CHARS]: unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                    index,
                 }));
             }
         }
         else {
 
-            textCharacters.forEach((c, index) => {
+            textCharacters.forEach((c, i) => {
 
                 unit.push(c);
 
                 // Some Chinese/Japanese characters simply have to stick together (but not in columns)!
                 if (!layoutFlowIsColumns) {
 
-                    noBreak = TEXT_NO_BREAK_REGEX.test(c) || TEXT_NO_BREAK_REGEX.test(textCharacters[index + 1]);
+                    noBreak = TEXT_NO_BREAK_REGEX.test(c) || TEXT_NO_BREAK_REGEX.test(textCharacters[i + 1]);
 
                     if (!noBreak) {
 
@@ -1566,16 +1585,20 @@ P.cleanText = function () {
                             textUnits.push(requestUnit({
                                 [UNIT_CHARS]: unit.join(ZERO_STR),
                                 [UNIT_TYPE]: TEXT_TYPE_SPACE,
+                                index,
                             }));
                             unit.length = 0;
+                            index++;
                         }
                         else  {
 
                             textUnits.push(requestUnit({
                                 [UNIT_CHARS]: unit.join(ZERO_STR),
                                 [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                                index,
                             }));
                             unit.length = 0;
+                            index++;
                         }
                     }
                 }
@@ -1586,32 +1609,40 @@ P.cleanText = function () {
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_SPACE,
+                            index,
                         }));
                         unit.length = 0;
+                        index++;
                     }
                     else if (TEXT_NO_BREAK_REGEX.test(c)) {
 
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_NO_BREAK,
+                            index,
                         }));
                         unit.length = 0;
+                        index++;
                     }
                     else if (TEXT_ZERO_SPACE_REGEX.test(c)) {
 
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_ZERO_SPACE,
+                            index,
                         }));
                         unit.length = 0;
+                        index++;
                     }
                     else  {
 
                         textUnits.push(requestUnit({
                             [UNIT_CHARS]: unit.join(ZERO_STR),
                             [UNIT_TYPE]: TEXT_TYPE_CHARS,
+                            index,
                         }));
                         unit.length = 0;
+                        index++;
                     }
                 }
             });
@@ -2848,64 +2879,75 @@ P.positionTextDecoration = function () {
             dx = out[0][0] - currentStampPosition[0];
             dy = out[0][1] - currentStampPosition[1];
 
-            path = `m ${dx}, ${dy} `;
+            path = `m ${(dx.toFixed(2))}, ${(dy.toFixed(2))} `;
 
             for (i = 1; i < iOut; i++) {
 
                 dx = out[i][0] - out[i - 1][0];
                 dy = out[i][1] - out[i - 1][1];
 
-                path += `${dx}, ${dy} `;
+                path += `${(dx.toFixed(2))}, ${(dy.toFixed(2))} `;
             }
 
             dx = back[back.length - 1][0] - out[out.length - 1][0];
             dy = back[back.length - 1][1] - out[out.length - 1][1];
 
-            path += `${dx}, ${dy} `;
+            path += `${(dx.toFixed(2))}, ${(dy.toFixed(2))} `;
 
             for (i = iBack - 2; i >= 0; i--) {
 
                 dx = back[i][0] - back[i + 1][0];
                 dy = back[i][1] - back[i + 1][1];
 
-                path += `${dx}, ${dy} `;
+                path += `${(dx.toFixed(2))}, ${(dy.toFixed(2))} `;
             }
 
             path += 'z';
 
+// console.log('BUILDING PATH', style, path);
             paths.push([style, new Path2D(path), [...currentStampPosition]]);
         }
     };
 
-    const buildUnderline = function () {
+    const buildUnderline = function (skipLocal = false) {
 
         if (underlineOut.length) {
 
-            correctCoordinates(underlineOut, underlineBack, underlineOffset, underlineWidth);
-            buildPath(underlineOut, underlineBack, underlineStyle, underlinePaths);
+            realisedStyle = (skipLocal) ? underlineStyle : localStyle.underlineStyle ?? underlineStyle;
+            realisedOffset = (skipLocal) ? underlineOffset : localStyle.underlineOffset ?? underlineOffset;
+            realisedWidth = (skipLocal) ? underlineWidth : localStyle.underlineWidth ?? underlineWidth;
+
+            correctCoordinates(underlineOut, underlineBack, realisedOffset, realisedWidth);
+            buildPath(underlineOut, underlineBack, realisedStyle, underlinePaths);
 
             underlineOut.length = 0;
             underlineBack.length = 0;
         }
     };
 
-    const buildOverline = function () {
+    const buildOverline = function (skipLocal = false) {
 
         if (overlineOut.length) {
 
-            correctCoordinates(overlineOut, overlineBack, overlineOffset, overlineWidth);
-            buildPath(overlineOut, overlineBack, overlineStyle, overlinePaths);
+            realisedStyle = (skipLocal) ? overlineStyle : localStyle.overlineStyle ?? overlineStyle;
+            realisedOffset = (skipLocal) ? overlineOffset : localStyle.overlineOffset ?? overlineOffset;
+            realisedWidth = (skipLocal) ? overlineWidth : localStyle.overlineWidth ?? overlineWidth;
+
+            correctCoordinates(overlineOut, overlineBack, realisedOffset, realisedWidth);
+            buildPath(overlineOut, overlineBack, realisedStyle, overlinePaths);
 
             overlineOut.length = 0;
             overlineBack.length = 0;
         }
     };
 
-    const buildHighlight = function () {
+    const buildHighlight = function (skipLocal = false) {
 
         if (highlightOut.length) {
 
-            buildPath(highlightOut, highlightBack, highlightStyle, highlightPaths);
+            realisedStyle = (skipLocal) ? highlightStyle : localStyle.highlightStyle ?? highlightStyle;
+
+            buildPath(highlightOut, highlightBack, realisedStyle, highlightPaths);
 
             highlightOut.length = 0;
             highlightBack.length = 0;
@@ -2928,7 +2970,8 @@ P.positionTextDecoration = function () {
     let unitData, unit, style, boxData, tl, tr, br, bl, path, charType,
         includeUnderline, underlineStyle, underlineOffset, underlineWidth,
         includeOverline, overlineStyle, overlineOffset, overlineWidth,
-        includeHighlight, highlightStyle;
+        includeHighlight, highlightStyle,
+        localStyle, realisedStyle, realisedOffset, realisedWidth;
 
     const underlineOut = requestArray();
     const underlineBack = requestArray();
@@ -2974,7 +3017,14 @@ P.positionTextDecoration = function () {
 
                 unit = textUnits[u];
 
-                ({ style, boxData, charType } = unit);
+                ({
+                    boxData,
+                    charType,
+                    localStyle,
+                    style,
+                } = unit);
+
+                if (!localStyle) localStyle = Ωempty;
 
                 // Update styling data as required by each TextUnit
                 if (style) {
@@ -2983,7 +3033,6 @@ P.positionTextDecoration = function () {
 
                     ({includeUnderline, includeOverline, includeHighlight} = currentTextStyle);
 
-                    // We're only interested in updating additional attributes if the relevant style is active
                     if (includeUnderline) ({underlineStyle, underlineOffset, underlineWidth} = currentTextStyle);
 
                     if (includeOverline) ({overlineStyle, overlineOffset, overlineWidth} = currentTextStyle);
@@ -2999,25 +3048,28 @@ P.positionTextDecoration = function () {
                     // TextUnits along a column never style spaces
                     if (TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow)) {
 
-                        if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
+                        if (charType !== TEXT_TYPE_SPACE) {
 
-                            underlineOut.push(tl, tr);
-                            underlineBack.push(bl, br);
-                            buildUnderline();
-                        }
+                            if (localStyle.includeUnderline || includeUnderline) {
 
-                        if (charType !== TEXT_TYPE_SPACE && includeOverline) {
+                                underlineOut.push([...tl], [...tr]);
+                                underlineBack.push([...bl], [...br]);
+                                buildUnderline();
+                            }
 
-                            overlineOut.push(tl, tr);
-                            overlineBack.push(bl, br);
-                            buildOverline();
-                        }
+                            if (localStyle.includeOverline || includeOverline) {
 
-                        if (charType !== TEXT_TYPE_SPACE && includeHighlight) {
+                                overlineOut.push([...tl], [...tr]);
+                                overlineBack.push([...bl], [...br]);
+                                buildOverline();
+                            }
 
-                            highlightOut.push(tl, tr);
-                            highlightBack.push(bl, br);
-                            buildHighlight();
+                            if (localStyle.includeHighlight || includeHighlight) {
+
+                                highlightOut.push([...tl], [...tr]);
+                                highlightBack.push([...bl], [...br]);
+                                buildHighlight();
+                            }
                         }
                     }
                     else {
@@ -3027,73 +3079,118 @@ P.positionTextDecoration = function () {
                             // TextUnits that are all single chars will style spaces
                             if (!breakTextOnSpaces) {
 
-                                if (includeUnderline) {
+                                if (localStyle.includeUnderline) {
 
-                                    underlineOut.push(tl, tr);
-                                    underlineBack.push(bl, br);
+                                    buildUnderline(true);
+                                    underlineOut.push([...tl], [...tr]);
+                                    underlineBack.push([...bl], [...br]);
+                                    buildUnderline();
+                                }
+                                else if (includeUnderline) {
+
+                                    underlineOut.push([...tl], [...tr]);
+                                    underlineBack.push([...bl], [...br]);
                                 }
                                 else buildUnderline();
 
-                                if (includeOverline) {
+                                if (localStyle.includeOverline) {
 
-                                    overlineOut.push(tl, tr);
-                                    overlineBack.push(bl, br);
+                                    buildOverline(true);
+                                    overlineOut.push([...tl], [...tr]);
+                                    overlineBack.push([...bl], [...br]);
+                                    buildOverline();
+                                }
+                                else if (includeOverline) {
+
+                                    overlineOut.push([...tl], [...tr]);
+                                    overlineBack.push([...bl], [...br]);
                                 }
                                 else buildOverline();
 
-                                if (includeHighlight) {
+                                if (localStyle.includeHighlight) {
 
-                                    highlightOut.push(tl, tr);
-                                    highlightBack.push(bl, br);
+                                    buildHighlight(true);
+                                    highlightOut.push([...tl], [...tr]);
+                                    highlightBack.push([...bl], [...br]);
+                                    buildHighlight();
+                                }
+                                else if (includeHighlight) {
+
+                                    highlightOut.push([...tl], [...tr]);
+                                    highlightBack.push([...bl], [...br]);
                                 }
                                 else buildHighlight();
                             }
                             // TextUnits that are blocks of chars chars will not style spaces
                             else {
 
-                                if (charType !== TEXT_TYPE_SPACE && includeUnderline) {
+                                if (charType !== TEXT_TYPE_SPACE) {
 
-                                    underlineOut.push(tl, tr);
-                                    underlineBack.push(bl, br);
-                                    buildUnderline();
-                                }
+                                    if (localStyle.includeUnderline || includeUnderline) {
 
-                                if (charType !== TEXT_TYPE_SPACE && includeOverline) {
+                                        underlineOut.push([...tl], [...tr]);
+                                        underlineBack.push([...bl], [...br]);
+                                        buildUnderline();
+                                    }
 
-                                    overlineOut.push(tl, tr);
-                                    overlineBack.push(bl, br);
-                                    buildOverline();
-                                }
+                                    if (localStyle.includeOverline || includeOverline) {
 
-                                if (charType !== TEXT_TYPE_SPACE && includeHighlight) {
+                                        overlineOut.push([...tl], [...tr]);
+                                        overlineBack.push([...bl], [...br]);
+                                        buildOverline();
+                                    }
 
-                                    highlightOut.push(tl, tr);
-                                    highlightBack.push(bl, br);
-                                    buildHighlight();
+                                    if (localStyle.includeHighlight || includeHighlight) {
+
+                                        highlightOut.push([...tl], [...tr]);
+                                        highlightBack.push([...bl], [...br]);
+                                        buildHighlight();
+                                    }
                                 }
                             }
                         }
                         // Non-pathed TextUnits along a row will style spaces
                         else {
 
-                            if (includeUnderline) {
+                            if (localStyle.includeUnderline) {
 
-                                underlineOut.push(tl, tr);
-                                underlineBack.push(bl, br);
+                                buildUnderline(true);
+                                underlineOut.push([...tl], [...tr]);
+                                underlineBack.push([...bl], [...br]);
+                                buildUnderline();
+                            }
+                            else if (includeUnderline) {
+
+                                underlineOut.push([...tl], [...tr]);
+                                underlineBack.push([...bl], [...br]);
                             }
                             else buildUnderline();
 
-                            if (includeOverline) {
+                            if (localStyle.includeOverline) {
 
-                                overlineOut.push(tl, tr);
-                                overlineBack.push(bl, br);
+                                buildOverline(true);
+                                overlineOut.push([...tl], [...tr]);
+                                overlineBack.push([...bl], [...br]);
+                                buildOverline();
+                            }
+                            else if (includeOverline) {
+
+                                overlineOut.push([...tl], [...tr]);
+                                overlineBack.push([...bl], [...br]);
                             }
                             else buildOverline();
 
-                            if (includeHighlight) {
+                            if (localStyle.includeHighlight) {
 
-                                highlightOut.push(tl, tr);
-                                highlightBack.push(bl, br);
+                                buildHighlight(true);
+                                highlightOut.push([...tl], [...tr]);
+                                highlightBack.push([...bl], [...br]);
+                                buildHighlight();
+                            }
+                            else if (includeHighlight) {
+
+                                highlightOut.push([...tl], [...tr]);
+                                highlightBack.push([...bl], [...br]);
                             }
                             else buildHighlight();
                         }
@@ -3323,6 +3420,10 @@ P.regularStamp = function () {
 
                 if (highlightCell) {
 
+// const testImage = document.createElement(IMG);
+// testImage.src = highlightCell.element.toDataURL();
+// document.body.appendChild(testImage);
+
                     finalEngine.save();
                     finalEngine.globalCompositeOperation = DESTINATION_OVER;
                     finalEngine.drawImage(highlightCell.element, 0, 0);
@@ -3465,7 +3566,6 @@ P.createTextCellsForPath = function (host) {
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
         this.removeShadowAndAlpha(mEngine);
 
-
         const line = lines[0];
 
         if (line) {
@@ -3473,7 +3573,8 @@ P.createTextCellsForPath = function (host) {
             const { unitData } = line;
 
             let unit, startData, startCorrection, localRotation,
-                chars, charType, style, x, y, dx, dy, startRotation, cos, sin;
+                chars, charType, style, x, y, dx, dy, startRotation, cos, sin,
+                localStyle, method;
 
             unitData.forEach(u => {
 
@@ -3485,11 +3586,14 @@ P.createTextCellsForPath = function (host) {
                         chars,
                         charType,
                         localRotation,
+                        localStyle,
                         startCorrection,
                         startData,
                         startRotation,
                         style,
                     } = unit);
+
+                    if (!localStyle) localStyle = Ωempty;
 
                     if (style) {
 
@@ -3518,7 +3622,14 @@ P.createTextCellsForPath = function (host) {
                         uEngine.strokeText(chars, dx, dy);
                         uEngine.fillText(chars, dx, dy);
 
-                        switch (currentTextStyle.method) {
+                        mEngine.save();
+
+                        method = localStyle.method || currentTextStyle.method;
+
+                        if (localStyle.fillStyle) mEngine.fillStyle = localStyle.fillStyle;
+                        if (localStyle.strokeStyle) mEngine.strokeStyle = localStyle.strokeStyle;
+
+                        switch (method) {
 
                             case DRAW :
                                 mEngine.strokeText(chars, dx, dy);
@@ -3537,6 +3648,7 @@ P.createTextCellsForPath = function (host) {
                             default:
                                 mEngine.fillText(chars, dx, dy);
                         }
+                        mEngine.restore();
                     }
                 }
             });
@@ -3589,7 +3701,8 @@ P.createTextCellsForSpace = function (host) {
 
             let unit, startData, startCorrection, chars, style,
                 x, y, dx, dy, startRotation, localRotation, cos, sin,
-                lookAhead, text;
+                lookAhead, text,
+                localStyle, method;
 
             unitData.forEach((u, index) => {
 
@@ -3597,7 +3710,18 @@ P.createTextCellsForSpace = function (host) {
 
                 if (unit) {
 
-                    ({ startData, startCorrection, startRotation, localRotation, chars, style } = unit);
+                    ({
+                        startData,
+                        startCorrection,
+                        startRotation,
+                        localRotation,
+                        chars,
+                        style,
+                        localStyle,
+
+                    } = unit);
+
+                    if (!localStyle) localStyle = Ωempty;
 
                     if (style) {
 
@@ -3640,7 +3764,14 @@ P.createTextCellsForSpace = function (host) {
                         uEngine.strokeText(text, dx, dy);
                         uEngine.fillText(text, dx, dy);
 
-                        switch (currentTextStyle.method) {
+                        mEngine.save();
+
+                        method = localStyle.method || currentTextStyle.method;
+
+                        if (localStyle.fillStyle) mEngine.fillStyle = localStyle.fillStyle;
+                        if (localStyle.strokeStyle) mEngine.strokeStyle = localStyle.strokeStyle;
+
+                        switch (method) {
 
                             case DRAW :
                                 mEngine.strokeText(text, dx, dy);
@@ -3659,6 +3790,8 @@ P.createTextCellsForSpace = function (host) {
                             default:
                                 mEngine.fillText(text, dx, dy);
                         }
+
+                        mEngine.restore();
                     }
                 }
             });
@@ -3825,7 +3958,7 @@ const textEntityConverter = document.createElement(DIV);
 // #### TextUnit objects
 const UNIT_CHARS = 'chars',
     UNIT_TYPE = 'charType',
-    UNIT_SETTABLE_KEYS = _freeze(['localHandleX', 'localHandleY', 'localOffsetX', 'localOffsetY', 'localAlignment']);
+    UNIT_SETTABLE_KEYS = _freeze(['localStyle', 'localHandleX', 'localHandleY', 'localOffsetX', 'localOffsetY', 'localAlignment']);
 
 const UnitObject = function () {
 
@@ -3871,11 +4004,14 @@ U.defs = {
     localAlignment: 0,
     localRotation: 0,
     startRotation: 0,
+    localStyle: null,
 
     len: 0,
     height: 0,
     kernOffset: 0,
     replaceLen: 0,
+
+    index: 0,
 };
 U.defKeys = _keys(U.defs);
 
@@ -3988,10 +4124,11 @@ U.set = function (items = Ωempty) {
                 case 'chars' :
                 case 'charType' :
                 case 'height' :
+                case 'index' :
                 case 'kernOffset' :
                 case 'len' :
                 case 'localAlignment' :
-                case 'localRotation' :
+                case 'localStyle' :
                 case 'pathData' :
                 case 'pathPos' :
                 case 'replaceLen' :
@@ -4022,10 +4159,7 @@ P.setTextUnit = function (index, items) {
 
         for (const [key, val] of _entries(items)) {
 
-            if (UNIT_SETTABLE_KEYS.includes(key)) {
-
-                unit.set({ [key]: val});
-            }
+            if (UNIT_SETTABLE_KEYS.includes(key)) unit.set({ [key]: val });
         }
     }
     this.dirtyLayout = true;
@@ -4040,7 +4174,7 @@ P.setAllTextUnits = function (items) {
 
             for (const [key, val] of _entries(items)) {
 
-                if (UNIT_SETTABLE_KEYS.includes(key)) unit.set({ [key]: val});
+                if (UNIT_SETTABLE_KEYS.includes(key)) unit.set({ [key]: val });
             }
         }
     });
