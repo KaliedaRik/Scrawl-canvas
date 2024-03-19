@@ -17,7 +17,7 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
-// #### Accessibility - keyboard
+// #### User interaction: accessibility - keyboard
 canvas.set({
     includeInTabNavigation: true,
 });
@@ -66,9 +66,25 @@ const moveCursor = (direction) => {
     updateTextUnits();
 };
 
-const copySelectionToClipboard = () => {
+const copySelectionToConsole = () => {
 
-    console.log('Will copy selected text to clipboard here');
+    const units = mylabel.get('textUnits'),
+        maxIndex = units.length - 1;
+
+    if (startIndex >= 0 && startIndex <= maxIndex && endIndex >= 0 && endIndex <= maxIndex) {
+
+        const starts = (startIndex > endIndex) ? endIndex : startIndex,
+            ends = (startIndex > endIndex) ? startIndex : endIndex;
+
+        let text = '';
+
+        for (let i = starts; i <= ends; i++) {
+
+            text += units[i].chars;
+        }
+        console.log(`Text to copy: [${text}]`);
+    }
+    else console.log('Nothing to copy');
 }
 
 scrawl.makeKeyboardZone({
@@ -76,7 +92,7 @@ scrawl.makeKeyboardZone({
     zone: canvas,
 
     ctrlOnly: {
-        c: () => copySelectionToClipboard(),
+        c: () => copySelectionToConsole(),
     },
 
     none: {
@@ -116,20 +132,18 @@ const updateTextUnits = (clear = false) => {
 
         const maxIndex = mylabel.get('textUnits').length - 1;
 
-        if (selectionInProgress) {
+        if (startIndex >= 0 && startIndex <= maxIndex && endIndex >= 0 && endIndex <= maxIndex) {
 
-            if (startIndex >= 0 && startIndex <= maxIndex && endIndex >= 0 && endIndex <= maxIndex) {
+            const starts = (startIndex > endIndex) ? endIndex : startIndex,
+                ends = (startIndex > endIndex) ? startIndex : endIndex;
 
-                const starts = (startIndex > endIndex) ? endIndex : startIndex,
-                    ends = (startIndex > endIndex) ? startIndex : endIndex;
+            for (let i = starts; i <= ends; i++) {
 
-                for (let i = starts; i <= ends; i++) {
-
-                    mylabel.setTextUnit(i, selectionHighlight);
-                }
+                mylabel.setTextUnit(i, selectionHighlight);
             }
         }
-        else if (cursorIndex >= 0 && cursorIndex <= maxIndex) mylabel.setTextUnit(cursorIndex, cursorHighlight);
+
+        if (cursorIndex >= 0 && cursorIndex <= maxIndex) mylabel.setTextUnit(cursorIndex, cursorHighlight);
     }
 };
 
@@ -164,6 +178,8 @@ const mylabel = scrawl.makeEnhancedLabel({
 
     breakTextOnSpaces: false,
 
+    checkHitUseTemplate: false,
+
     delta: {
         pathPosition: 0.0005,
     },
@@ -171,8 +187,48 @@ const mylabel = scrawl.makeEnhancedLabel({
 });
 
 
+// #### User interaction: mouse/touch
+const checkMouseHover = () => {
 
-// #### User interaction
+    const hit = mylabel.checkHit(canvas.here);
+
+    if (hit && typeof hit !== 'boolean' && hit.index != null) {
+
+        if (selectionInProgress) endIndex = hit.index;
+        else cursorIndex = hit.index;
+
+        updateTextUnits();
+    }
+};
+
+scrawl.addListener('down', () => {
+
+    updateTextUnits(true);
+
+    const hit = mylabel.checkHit(canvas.here);
+
+    if (hit && typeof hit !== 'boolean' && hit.index != null) {
+
+        cursorIndex = hit.index;
+        startIndex = cursorIndex;
+        endIndex = cursorIndex;
+        selectionInProgress = true;
+    }
+    else {
+
+        cursorIndex = -1;
+        startIndex = -1;
+        endIndex = -1;
+        selectionInProgress = false;
+    }
+
+}, canvas.domElement);
+
+scrawl.addListener(['up', 'leave'], () => {
+
+    selectionInProgress = false;
+
+}, canvas.domElement);
 
 
 // #### Scene animation
@@ -185,6 +241,7 @@ scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
+    commence: checkMouseHover,
     afterShow: report,
 });
 

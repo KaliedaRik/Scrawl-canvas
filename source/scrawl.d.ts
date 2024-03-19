@@ -499,6 +499,7 @@ interface HitOutput {
     x: number;
     y: number;
     tiles?: number[];
+    index?: number;
     particle?: ParticleInstance;
 }
 
@@ -1313,6 +1314,7 @@ interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs
 
 interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions, FilterMixinFunctions, TextMixinFunctions, TextStyleFactoryFunctions, StateFactoryFunctions {
     applyTextUnitUpdates: () => void;
+    checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
     clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     convertTextEntityCharacters: (item: string) => string;
     getAccessibleText: () => string;

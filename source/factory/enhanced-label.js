@@ -43,6 +43,8 @@ const EnhancedLabel = function (items = Ωempty) {
     });
 
     this.cache = null;
+    this.textUnitHitZones = [];
+
     this.set(this.defs);
 
     if (!items.group) items.group = currentGroup;
@@ -889,6 +891,8 @@ P.dirtyCache = function () {
 
     releaseCell(this.cache);
     this.cache = null;
+
+    this.textUnitHitZones.length = 0;
 };
 
 
@@ -2904,7 +2908,6 @@ P.positionTextDecoration = function () {
 
             path += 'z';
 
-// console.log('BUILDING PATH', style, path);
             paths.push([style, new Path2D(path), [...currentStampPosition]]);
         }
     };
@@ -3420,10 +3423,6 @@ P.regularStamp = function () {
 
                 if (highlightCell) {
 
-// const testImage = document.createElement(IMG);
-// testImage.src = highlightCell.element.toDataURL();
-// document.body.appendChild(testImage);
-
                     finalEngine.save();
                     finalEngine.globalCompositeOperation = DESTINATION_OVER;
                     finalEngine.drawImage(highlightCell.element, 0, 0);
@@ -3932,6 +3931,98 @@ P.stampGuidelinesOnCell = function (cell) {
 };
 
 
+P.checkHit = function (items = [], mycell) {
+
+    const getCoords = (coords) => {
+
+        let x, y;
+
+        if (_isArray(coords)) {
+
+            x = coords[0];
+            y = coords[1];
+        }
+        else if (xta(coords, coords.x, coords.y)) {
+
+            x = coords.x;
+            y = coords.y;
+        }
+        else return [false];
+
+        if (!_isFinite(x) || !_isFinite(y)) return [false];
+
+        return [true, x, y];
+    }
+
+    const { checkHitUseTemplate, layoutTemplate, textUnits, textUnitHitZones } = this;
+
+    if (checkHitUseTemplate && layoutTemplate) return layoutTemplate.checkHit(items, mycell);
+
+    else {
+
+        if (!textUnitHitZones.length && textUnits.length) {
+
+            let tl, tr, br, bl;
+
+            textUnits.forEach(unit => {
+
+                ({ tl, tr, br, bl } = unit.boxData);
+
+                textUnitHitZones.push(new Path2D(`M ${tl[0]},${tl[1]} ${tr[0]},${tr[1]} ${br[0]},${br[1]} ${bl[0]},${bl[1]}Z`));
+            });
+        }
+
+        if (textUnitHitZones.length) {
+
+            const tests = (!_isArray(items)) ?  [items] : items;
+            const len = textUnitHitZones.length;
+
+            let res, isGood, tx, ty, index, i, iz;
+
+            let poolCellFlag = false;
+
+            if (!mycell) {
+
+                mycell = requestCell();
+                poolCellFlag = true;
+            }
+
+            const engine = mycell.engine;
+
+            for (i = 0, iz = tests.length; i < iz; i++) {
+
+                [isGood, tx, ty] = getCoords(tests[i]);
+
+                if (isGood) {
+
+                    for (index = 0; index < len; index++) {
+
+                        if (engine.isPointInPath(textUnitHitZones[index], tx, ty)) {
+
+                            res = {
+                                x: tx,
+                                y: ty,
+                                index,
+                                artefact: this,
+                            }
+                            break;
+                        }
+                    }
+
+                    if (res) {
+
+                        if (poolCellFlag) releaseCell(mycell);
+                        return res;
+                    }
+                }
+            }
+            if (poolCellFlag) releaseCell(mycell);
+        }
+        return false;
+    }
+};
+
+
 // #### Factory
 // ```
 // scrawl.makeEnhancedLabel({
@@ -4186,16 +4277,6 @@ P.applyTextUnitUpdates = function () {
 
     this.dirtyLayout = true;
     this.dirtyCache();
-};
-
-
-P.checkHit = function (items = [], mycell) {
-
-    const {checkHitUseTemplate, layoutTemplate} = this;
-
-    if (checkHitUseTemplate && layoutTemplate) return layoutTemplate.checkHit(items, mycell);
-
-    return false;
 };
 
 

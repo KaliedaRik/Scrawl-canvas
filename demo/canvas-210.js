@@ -104,8 +104,6 @@ const updateTextUnits = () => {
                 arrowStyle.strokeStyle = 'rgb(255 255 255)';
                 angle += 180;
             }
-// @ts-expect-error
-            else arrowStyle.method = 'fill';
 
             effect.setTextUnit(unit.index, {
 
