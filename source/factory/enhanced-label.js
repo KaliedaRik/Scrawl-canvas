@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { artefact, constructors, cell, cellnames, fontfamilymetadata, fontfamilymetadatanames, group, styles, stylesnames, tween } from '../core/library.js';
+import { artefact, asset, constructors, cell, cellnames, fontfamilymetadata, fontfamilymetadatanames, group, styles, stylesnames, tween } from '../core/library.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
@@ -44,6 +44,8 @@ const EnhancedLabel = function (items = Ωempty) {
 
     this.cache = null;
     this.textUnitHitZones = [];
+
+    this.pivoted = [];
 
     this.set(this.defs);
 
@@ -893,6 +895,8 @@ P.dirtyCache = function () {
     this.cache = null;
 
     this.textUnitHitZones.length = 0;
+
+    if (this.pivoted.length) this.updatePivotSubscribers();
 };
 
 
@@ -4020,6 +4024,44 @@ P.checkHit = function (items = [], mycell) {
         }
         return false;
     }
+};
+
+// `updatePivotSubscribers`
+P.updatePivotSubscribers = function () {
+
+    let art;
+
+    this.pivoted.forEach(name => {
+
+        art = artefact[name];
+
+        if (!art) {
+
+            art = asset[name];
+
+            if (!art || art.type !== T_CELL) art = false;
+        }
+
+        if (art) art.dirtyStart = true;
+        if (art.addPivotRotation) art.dirtyRotation = true;
+
+    }, this);
+};
+
+P.getUnitStartAt = function (index) {
+
+    const textUnits = this.textUnits;
+
+    if (index >= 0 && index < textUnits.length) return [...textUnits[index].startData];
+    return null;
+};
+
+P.getUnitAlignment = function (index) {
+
+    const {textUnits, alignment} = this;
+
+    if (index >= 0 && index < textUnits.length) return alignment + textUnits[index].localAlignment;
+    else return alignment;
 };
 
 

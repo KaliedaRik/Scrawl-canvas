@@ -444,6 +444,7 @@ interface PivotMixinInputs {
     pivot?: ArtefactInstance | string;
     pivotCorner?: PivotCornerValues;
     pivotPin?: number;
+    pivotIndex?: number;
 }
 
 interface PivotMixinFunctions {}

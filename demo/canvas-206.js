@@ -62,6 +62,21 @@ const mylabel = scrawl.makeEnhancedLabel({
 
     layoutTemplate: name('block-layout-template'),
     textHandle: ['center', 'alphabetic'],
+
+    checkHitUseTemplate: false,
+});
+
+const myball = scrawl.makeWheel({
+
+    name: name('my-ball'),
+    radius: 6,
+    fillStyle: 'rgb(255 0 0 / 0.4)',
+    handle: ['center', 'center'],
+
+    pivot: name('my-label'),
+    pivotIndex: -1,
+
+    lockTo: 'pivot',
 });
 
 
@@ -80,11 +95,26 @@ Loaded fonts:${fontReadout}`;
 });
 
 
+const checkMouseHover = () => {
+
+    const hit = mylabel.checkHit(canvas.here);
+
+    if (hit && typeof hit !== 'boolean' && hit.index != null) myball.set({ pivotIndex: hit.index });
+    else myball.set({ pivotIndex: -1 });
+
+    // This function is internal, thus not covered by the TypeScript definitions
+    // - We invoke it here purely to test that the ball entity is correctly pivoting to text units
+// @ts-expect-error
+    mylabel.updatePivotSubscribers();
+};
+
+
 // Create the Display cycle animation
 scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
+    commence: checkMouseHover,
     afterShow: report,
 });
 
