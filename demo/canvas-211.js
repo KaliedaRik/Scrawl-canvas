@@ -248,7 +248,6 @@ scrawl.makeRender({
 
 // #### User form interaction
 const animationSelector = document.querySelector('#animation');
-
 const updateAnimation = (event) => {
 
     const val = event.target.value;
@@ -257,6 +256,45 @@ const updateAnimation = (event) => {
     else mylabel.set({ noDeltaUpdates: true });
 };
 scrawl.addNativeListener('change', (e) => updateAnimation(e), animationSelector);
+
+
+const fontSelector = document.querySelector('#font');
+const updateFont = (event) => {
+
+    const font = event.target.value;
+
+    if (font) {
+
+        switch (font) {
+
+            case 'roboto-serif' :
+                mylabel.set({
+                    fontString: '16px "Roboto Serif"',
+                    text: westernText,
+                    direction: 'ltr',
+                });
+                break;
+
+            case 'noto-hebrew-serif' :
+                mylabel.set({
+                    fontString: '16px "Noto Hebrew Serif"',
+                    text: 'כל אדם זכאי לחירות הדעה והבטוי, לרבות החירות להחיק בדעות ללא כל הפרעה, ולבקש ידיעות ודעות, ולקבלן ולמסרן בכל הדרכים וללא סייגי גבולות כל אדם, כחבר החברה, זכאי לבטחון סוציאלי וזכאי לתבוע שהזכויות הכלכליות הסוציאליות והתרבותיות, שהן חיוניות לכבודו כאדם ולהתפתחות החופשית של אישיותו, יובטחו במשמץ לאומי ובשיתוף פעולה בינלאומי בהתאם לארגונה ולאוצרותיה של המדינה כל אדם זכאי למנוחה ולפנאי',
+                    direction: 'rtl',
+                });
+                break;
+
+            case 'noto-japanese-sans' :
+                mylabel.set({
+                    fontString: '16px "Noto Japanese Sans"',
+                    text: '人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは&#x2060;、世界における自由&#x2060;、正義及び平和の基礎であるので&#x2060;、 人権の無視及び軽侮が&#x2060;、人類の良心を踏みにじった野蛮行為をもたらし&#x2060;、言論及び信仰の自由が受けられ&#x2060;、恐怖及び欠乏のない世界の到来が&#x2060;、一般の人々の最高の願望として宣言されたので&#x2060;、 人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするためには&#x2060;、法の支配によって人権を保護することが肝要であるので&#x2060;、 諸国間の友好関係の発展を促進することが肝要であるので&#x2060;、',
+                    direction: 'ltr',
+                });
+                break;
+        }
+    }
+};
+scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
+
 
 scrawl.makeUpdater({
 

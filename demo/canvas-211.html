@@ -177,6 +177,15 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 211</h1>
   <h2>EnhancedLabel entity - keyboard navigation; hit tests</h2>
 
+  <p>For keyboard navigation:</p>
+  <ul>
+    <li>Tab to the canvas to focus it.</li>
+    <li>Arrows will move the cursor backwards/forwards.</li>
+    <li>Enter will start a selection.</li>
+    <li>Backspace will clear any selection.</li>
+    <li>[CTRL + c] will print any selected text to the console.</li>
+  </ul> 
+
   <canvas 
     id="mycanvas" 
     width="600" 
@@ -188,11 +197,12 @@
 
   <div class="controls">
 
-    <div class="orange label">Animation</div>
-    <div class="orange">
-      <select class="controlItem" id="animation">
-        <option value="">off</option>
-        <option value="on">on</option>
+    <div class="lavender label">Font string</div>
+    <div class="lavender">
+      <select class="controlItem" id="font">
+        <option value="Roboto Sans">Roboto Sans</option>
+        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
+        <option value="noto-japanese-sans">Noto Japanese Sans</option>
       </select>
     </div>
     
@@ -237,9 +247,14 @@
       </select>
     </div>
     
-    <div class="blue label">&nbsp;</div>
-    <div class="blue">&nbsp;</div>
-
+    <div class="orange label">Animation</div>
+    <div class="orange">
+      <select class="controlItem" id="animation">
+        <option value="">off</option>
+        <option value="on">on</option>
+      </select>
+    </div>
+    
     <div class="yellow label">Roll</div>
     <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
 
@@ -269,6 +284,8 @@
     <ul>
       <li>...</li>
     </ul>
+
+    <p><b>Known issue:</b> copying the Hebrew font text is not correct - the punctuation appears to be wrongly positioned. Needs fixing - either in the Demo copy functionality or in the SC code base (not yet determined where the error happens).</p>
 
     <p><b>Touch test:</b> not required.</p>
 
