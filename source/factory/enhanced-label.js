@@ -891,6 +891,8 @@ P.getTextOffset = function (val, dim) {
 
 P.dirtyCache = function () {
 
+// console.log(this.name, 'dirtyCache invoked');
+
     releaseCell(this.cache);
     this.cache = null;
 
@@ -1256,6 +1258,7 @@ P.cleanLayout = function () {
 
     if (this.currentFontIsLoaded) {
 
+        this.dirtyCache();
         this.dirtyLayout = false;
 
         if (!this.useLayoutTemplateAsPath) this.calculateLines();

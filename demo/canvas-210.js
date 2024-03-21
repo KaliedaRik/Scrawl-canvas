@@ -55,6 +55,74 @@ const effect = scrawl.makeEnhancedLabel({
 });
 
 
+// To test line, quadratic, bezier pivoting
+scrawl.makeLine({
+    name: name('line'),
+
+    useStartAsControlPoint: true,
+    pivot: name('effect'),
+    pivotIndex: 10,
+    lockTo: 'pivot',
+
+    endPivot: name('effect'),
+    endPivotIndex: 200,
+    endLockTo: 'pivot',
+
+    lineWidth: 10,
+    lineCap: 'round',
+    strokeStyle: 'rgb(255 255 255 / 0.4)',
+    method: 'draw',
+});
+
+scrawl.makeQuadratic({
+    name: name('quad'),
+
+    useStartAsControlPoint: true,
+    pivot: name('effect'),
+    pivotIndex: 10,
+    lockTo: 'pivot',
+
+    controlPivot: name('effect'),
+    controlPivotIndex: 290,
+    controlLockTo: 'pivot',
+
+    endPivot: name('effect'),
+    endPivotIndex: 574,
+    endLockTo: 'pivot',
+
+    lineWidth: 10,
+    lineCap: 'round',
+    strokeStyle: 'rgb(255 255 255 / 0.4)',
+    method: 'draw',
+});
+
+scrawl.makeBezier({
+    name: name('bezier'),
+
+    useStartAsControlPoint: true,
+    pivot: name('effect'),
+    pivotIndex: 10,
+    lockTo: 'pivot',
+
+    startControlPivot: name('effect'),
+    startControlPivotIndex: 270,
+    startControlLockTo: 'pivot',
+
+    endControlPivot: name('effect'),
+    endControlPivotIndex: 390,
+    endControlLockTo: 'pivot',
+
+    endPivot: name('effect'),
+    endPivotIndex: 594,
+    endLockTo: 'pivot',
+
+    lineWidth: 10,
+    lineCap: 'round',
+    strokeStyle: 'rgb(255 255 255 / 0.4)',
+    method: 'draw',
+});
+
+
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');

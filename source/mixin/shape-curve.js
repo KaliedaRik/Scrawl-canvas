@@ -11,7 +11,7 @@ import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } f
 
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
-import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
+import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_ENHANCED_LABEL, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 
 
 const capitalize = (s) => {
@@ -36,6 +36,7 @@ export default function (P = Ωempty) {
 // + Like the `start` coordinate, the `end` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
         endPivot: ZERO_STR,
         endPivotCorner: ZERO_STR,
+        endPivotIndex: -1,
         addEndPivotHandle: false,
         addEndPivotOffset: false,
 
@@ -487,6 +488,21 @@ P.factoryKill = function () {
                 if (this.pivotCorner && pivot.getCornerCoordinate) {
 
                     [x, y] = pivot.getCornerCoordinate(this[`${label}PivotCorner`]);
+                }
+                else if (pivot.type === T_ENHANCED_LABEL) {
+
+                    if (this[`${label}PivotIndex`] < 0) {
+
+                        if (pivot.layoutTemplate) [x, y] = pivot.layoutTemplate.currentStampPosition;
+                        else this[`dirty${capLabel}`] = true;
+                    }
+                    else {
+
+                        const check = pivot.getUnitStartAt(this[`${label}PivotIndex`]);
+
+                        if (check) [x, y] = check;
+                        else this[`dirty${capLabel}`] = true;
+                    }
                 }
                 else [x, y] = pivot.currentStampPosition;
 

@@ -85,6 +85,7 @@ const defaultAttributes = {
 // __startControlPivot__, __startControlPivotCorner__, __addStartControlPivotHandle__, __addStartControlPivotOffset__
 // + Like the `start` coordinate, the `startControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
     startControlPivot: ZERO_STR,
+    startControlPivotIndex: -1,
     startControlPivotCorner: ZERO_STR,
     addStartControlPivotHandle: false,
     addStartControlPivotOffset: false,
@@ -106,6 +107,7 @@ const defaultAttributes = {
 // __endControlPivot__, __endControlPivotCorner__, __addEndControlPivotHandle__, __addEndControlPivotOffset__
 // + Like the `start` coordinate, the `endControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
     endControlPivot: ZERO_STR,
+    endControlPivotIndex: -1,
     endControlPivotCorner: ZERO_STR,
     addEndControlPivotHandle: false,
     addEndControlPivotOffset: false,

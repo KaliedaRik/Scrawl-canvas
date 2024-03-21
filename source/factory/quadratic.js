@@ -80,6 +80,7 @@ const defaultAttributes = {
 // + Like the `start` coordinate, the `control` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
     controlPivot: ZERO_STR,
     controlPivotCorner: ZERO_STR,
+    controlPivotIndex: -1,
     addControlPivotHandle: false,
     addControlPivotOffset: false,
 

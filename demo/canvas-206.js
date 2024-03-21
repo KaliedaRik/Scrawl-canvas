@@ -100,12 +100,6 @@ const checkMouseHover = () => {
     const hit = mylabel.checkHit(canvas.here);
 
     if (hit && typeof hit !== 'boolean' && hit.index != null) myball.set({ pivotIndex: hit.index });
-    else myball.set({ pivotIndex: -1 });
-
-    // This function is internal, thus not covered by the TypeScript definitions
-    // - We invoke it here purely to test that the ball entity is correctly pivoting to text units
-// @ts-expect-error
-    mylabel.updatePivotSubscribers();
 };
 
 

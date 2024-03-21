@@ -100,6 +100,14 @@ export default function (P = Ωempty) {
     S.pivotCorner = function (item) {
 
         if (CORNER_LABELS.includes(item)) this.pivotCorner = item;
+        this.dirtyStart = true;
+    };
+
+// __pivotIndex__
+    S.pivotIndex = function (item) {
+
+        this.pivotIndex = item;
+        this.dirtyStart = true;
     };
 
 

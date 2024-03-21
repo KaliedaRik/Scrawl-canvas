@@ -562,6 +562,7 @@ interface ShapeCurveMixinInputs extends ShapeBasicMixinInputs {
     endPivot?: ArtefactInstance | string;
     endPivotCorner?: PivotCornerValues;
     endPivotPin?: number;
+    pivotIndex?: number;
     useStartAsControlPoint?: boolean;
 }
 
@@ -784,6 +785,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     startControlPivot?: ArtefactInstance | string;
     startControlPivotCorner?: PivotCornerValues;
     startControlPivotPin?: number;
+    startControlPivotIndex?: number;
 
     addEndControlPathHandle?: boolean;
     addEndControlPathOffset?: boolean;
@@ -795,6 +797,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     endControlPivot?: ArtefactInstance | string;
     endControlPivotCorner?: PivotCornerValues;
     endControlPivotPin?: number;
+    endControlPivotIndex?: number;
 
     delta?: BezierFactoryDeltaInputs;
 }
@@ -2196,6 +2199,7 @@ interface QuadraticFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs,
     controlPivot?: ArtefactInstance | string;
     controlPivotCorner?: PivotCornerValues;
     controlPivotPin?: number;
+    controlPivotIndex?: number;
     delta?: QuadraticFactoryDeltaInputs;
 }
 
