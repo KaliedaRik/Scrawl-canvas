@@ -15,11 +15,11 @@
 
 // #### Imports
 import { artefact, cell, constructors, entity, group } from '../core/library.js';
+import { getPixelRatio } from "../core/user-interaction.js";
 
 import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
 import { filterEngine } from '../helper/filter-engine.js';
-
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { importDomImage } from '../asset-management/image-asset.js';
@@ -276,22 +276,12 @@ P.stamp = function () {
             // Check if artefacts need to be sorterd and, if yes, sort them by their order attribute
             this.sortArtefacts();
 
-            // Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool
-            const filterCell = (stashOutput || (!noFilters && filters && filters.length)) ?
-                requestCell() :
-                false;
+            // Get a pool cell for the filter/stash functionality, if required
+            let filterCell = null;
 
-            // Setup the pool Cell, if required
-            if (filterCell && filterCell.element) {
+            if (stashOutput || (!noFilters && filters && filters.length)) {
 
-                const dims = currentHost.currentDimensions,
-                    fEl = filterCell.element;
-
-                if (dims && fEl) {
-
-                    fEl.width = dims[0];
-                    fEl.height = dims[1];
-                }
+                filterCell = requestCell(currentHost.element.width, currentHost.element.height);
             }
 
             // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
@@ -385,6 +375,7 @@ P.prepareStamp = function (myCell) {
 
     if (myCell) host = myCell;
 
+// console.log(this.name, 'prepareStamp', myCell.name);
     this.artefactCalculateBuckets.forEach(art => {
 
         if (art.lib === ENTITY) {
@@ -418,8 +409,9 @@ P.stampAction = function (myCell) {
 
         if (!noFilters && filters && filters.length) {
 
+// console.log(this.name, 'stampAction', myCell.name, myCell.w, myCell.h, myCell.element.width, myCell.element.height)
             const img = this.applyFilters(myCell);
-            this.stashAction(img);
+            if (stashOutput) this.stashAction(img);
         }
         else if (stashOutput) {
 
@@ -442,6 +434,7 @@ P.stampAction = function (myCell) {
 
                 const tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
 
+
                 this.stashAction(tempImg);
             }
         }
@@ -452,6 +445,8 @@ P.stampAction = function (myCell) {
 P.applyFilters = function (myCell) {
 
     const currentHost = this.currentHost;
+    const dpr = getPixelRatio();
+
 
     if (!currentHost || !myCell) return false;
 
@@ -492,11 +487,12 @@ P.applyFilters = function (myCell) {
 
         filterCellEngine.globalCompositeOperation = SOURCE_OVER;
         filterCellEngine.globalAlpha = 1;
-        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.setTransform(dpr, 0, 0, dpr, 0, 0);
         filterCellEngine.putImageData(img, 0, 0);
     }
 
     currentEngine.save();
+
     currentEngine.setTransform(1, 0, 0, 1, 0, 0);
     currentEngine.drawImage(filterCellElement, 0, 0);
     currentEngine.restore();

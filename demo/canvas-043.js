@@ -331,106 +331,119 @@ const c3Phrase = scrawl.makeLabel({
 
 const canvasThreePostInitialization = function () {
 
-    console.log('running canvasThreePostInitialization()');
+    // Font loading is async - only run this code if the font has been loaded and measured
+    // + We always measure the font at a size of 100px, whatever value we set the entity's font size to
+    if (scrawl.library.fontfamilymetadatanames.includes('100px serif')) {
 
-    // create our drag group and dragzone
-    const drag = scrawl.makeGroup({
-        name: name3('drag-group'),
-    });
+        console.log('running canvasThreePostInitialization()');
 
-    scrawl.makeDragZone({
-        zone: canvas3,
-        collisionGroup: name3('drag-group'),
-        endOn: ['up', 'leave'],
-        preventTouchDefaultWhenDragging: true,
-    });
+        // create our drag group and dragzone
+        const drag = scrawl.makeGroup({
+            name: name3('drag-group'),
+        });
 
-    // We need to retrieve the Phrase entity's dimensions - which are hard to guess before it's created - and update its surrounding environment to fit.
-    const [width, height] = c3Phrase.get('dimensions');
+        scrawl.makeDragZone({
+            zone: canvas3,
+            collisionGroup: name3('drag-group'),
+            endOn: ['up', 'leave'],
+            preventTouchDefaultWhenDragging: true,
+        });
 
+        // We need to retrieve the Phrase entity's dimensions - which are hard to guess before it's created - and update its surrounding environment to fit.
+        const [width, height] = c3Phrase.get('dimensions');
 
-    // We can use the phrase entity as a stencil by applying a Picture entity over it with a GCO = 'source-atop'
-    scrawl.makePicture({
+        // We can use the phrase entity as a stencil by applying a Picture entity over it with a GCO = 'source-atop'
+        scrawl.makePicture({
 
-        name: name3('serif-image'),
-        group: name3('serif-cell'),
+            name: name3('serif-image'),
+            group: name3('serif-cell'),
 
-        asset: 'factory',
+            asset: 'factory',
 
-        width,
-        height,
-        copyDimensions: [width, height],
-        copyStart: [50, 50],
+            width,
+            height,
+            copyDimensions: [width, height],
+            copyStart: [50, 50],
 
-        method: 'fill',
-        order: 1,
-        globalCompositeOperation: 'source-atop',
-    });
+            method: 'fill',
+            order: 1,
+            globalCompositeOperation: 'source-atop',
+        });
 
-    // We can also add an outline, if we want
-    c3Phrase.clone({
+        // We can also add an outline, if we want
+        c3Phrase.clone({
 
-        name: name3('serif-outline'),
-        order: 2,
-        globalCompositeOperation: 'source-over',
+            name: name3('serif-outline'),
+            order: 2,
+            globalCompositeOperation: 'source-over',
 
-        method: 'draw',
-        lineWidth: 3,
-        strokeStyle: 'coral',
-    });
+            method: 'draw',
+            lineWidth: 3,
+            strokeStyle: 'coral',
+        });
 
-    // We cannot directly drag-and-drop a Cell, but we can create a Block entity and pivot the Cell to it, then drag-and-drop the Block
-    scrawl.makeBlock({
-        name: name3('serif-block'),
-        group: canvas3.get('baseGroup'),
-        width,
-        height,
-        start: ['center', 'center'],
-        handle: ['center', 'center'],
-        delta: {
-            roll: 0.5,
-        },
-        method: 'none',
-    })
+        // We cannot directly drag-and-drop a Cell, but we can create a Block entity and pivot the Cell to it, then drag-and-drop the Block
+        scrawl.makeBlock({
+            name: name3('serif-block'),
+            group: canvas3.get('baseGroup'),
+            width,
+            height,
+            start: ['center', 'center'],
+            handle: ['center', 'center'],
+            delta: {
+                roll: 0.5,
+            },
+            method: 'none',
+        })
 
-    c3Cell.set({
-        width,
-        height,
-        handle: ['center', 'center'],
-        pivot: name3('serif-block'),
-        addPivotRotation: true,
-        lockTo: 'pivot',
-    });
+        // Update our cell
+        c3Cell.set({
+            width,
+            height,
+            handle: ['center', 'center'],
+            pivot: name3('serif-block'),
+            addPivotRotation: true,
+            lockTo: 'pivot',
+        });
 
-    drag.addArtefacts(name3('serif-block'));
+        drag.addArtefacts(name3('serif-block'));
+
+        // Switch off this check
+        canvas3_animation.set({
+            afterShow: () => {},
+        });
+    }
+    else console.log('FAILED TO RUN canvasThreePostInitialization()');
 };
 
 
 // #### Scene animation
-// Function will be called 3 times - once per canvas - so we need to make sure the appropriate function gets invoked for that canvas
-// + Multiple calls invoked because the makeRender function will generate separate animation objects for each canvas target.
-const postInitialization = function (anim) {
-
-    console.log(anim.target.name);
-
-    const target = anim.target.name;
-
-    if ('canvas2' === target) canvasTwoPostInitialization();
-    else if ('canvas3' === target) canvasThreePostInitialization();
-};
-
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
 
+// Canvas 1 animation
 scrawl.makeRender({
-
-    name: 'demo-animation',
-    target: [canvas1, canvas2, canvas3],
-
-    // Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once
-    afterCreated: postInitialization,
+    name: 'demo-animation-canvas-1',
+    target: canvas1,
 });
 
+// Canvas 2 animation
+scrawl.makeRender({
+
+    name: 'demo-animation-canvas-2',
+    target: canvas2,
+    afterCreated: canvasTwoPostInitialization,
+});
+
+// Canvas 3 animation
+const canvas3_animation = scrawl.makeRender({
+
+    name: 'demo-animation-canvas-3',
+    target: canvas3,
+    afterShow: canvasThreePostInitialization,
+});
+
+// Speed report animation
 scrawl.makeRender({
 
     name: 'demo-speed',

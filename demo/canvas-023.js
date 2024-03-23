@@ -458,3 +458,8 @@ document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
+
+
+// #### Development and testing
+// TODO: need to develop a test for killing and resurrecting the Grid entity
+console.log(scrawl.library);

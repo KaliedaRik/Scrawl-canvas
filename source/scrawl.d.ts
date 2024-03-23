@@ -561,6 +561,7 @@ interface ShapeCurveMixinInputs extends ShapeBasicMixinInputs {
     endPath?: ShapeInstance | string;
     endPivot?: ArtefactInstance | string;
     endPivotCorner?: PivotCornerValues;
+    endPivotIndex?: number;
     endPivotPin?: number;
     pivotIndex?: number;
     useStartAsControlPoint?: boolean;

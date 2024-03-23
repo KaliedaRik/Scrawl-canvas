@@ -249,7 +249,7 @@ scrawl.makeLabel({
     group: hold.get('baseGroup'),
 
     text: 'Cell',
-    fontString: '15px Arial, sans-serif',
+    fontString: '15px sans-serif',
 
     startY: '85%',
     pivot: name('cell-image'),

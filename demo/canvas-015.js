@@ -63,6 +63,8 @@ data.forEach((d, index) => {
         text: top,
         accessibleText: 'Color generated: §',
         fillStyle: 'black',
+        shadowColor: 'gray',
+        shadowOffsetY: 1,
         roll: 53,
         order: 1,
     }).clone({
@@ -78,8 +80,20 @@ data.forEach((d, index) => {
 
 
 // #### Scene animation
-// None - rendering once should be sufficient
-scrawl.render();
+// We don't need the scene to render more than necessary. However if we render just once - by invoking `scrawl.render()` - the canvas text won't display. This is because font loading and measuring is asynchronous. So instead we create a Display cycle renderer with an `afterShow` function to check whether our font (in this case the default font, `sans-serif`) has been measured and, if it has, halt the renderer.
+// + Note that all fonts are measured with a font size of `100px`, regardless of the actual font size we will be using in the demo.
+const shutdownRender = () => {
+
+    if (scrawl.library.fontfamilymetadatanames.includes('100px sans-serif')) myRender.halt();
+    else console.log('... waiting for font to load');
+}
+
+const myRender = scrawl.makeRender({
+
+    name: `render`,
+    target: canvas,
+    afterShow: shutdownRender,
+});
 
 
 // #### Development and testing

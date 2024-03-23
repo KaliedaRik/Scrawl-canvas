@@ -85,13 +85,9 @@ const Canvas = function (items = Ωempty) {
 
     this.set(items);
 
-    // Question: why are we invoking `cleanDimensions` here? See if it can be removed
-    this.cleanDimensions();
-
     const el = this.domElement;
 
-    if (!el) this.cleanDimensions();
-    else {
+    if (el) {
 
         const ds = el.dataset;
 
@@ -110,8 +106,8 @@ const Canvas = function (items = Ωempty) {
         this.cellBatchesCompile = [];
         this.cellBatchesShow = [];
 
-        let baseWidth = this.currentDimensions[0],
-            baseHeight = this.currentDimensions[1];
+        let baseWidth = el.width,
+            baseHeight = el.height;
 
         if (ds.isResponsive) {
 
@@ -133,9 +129,9 @@ const Canvas = function (items = Ωempty) {
                 ignoreCanvasCssDimensions: true,
                 fit: ds.fit || this.fit,
             });
-
-            this.cleanDimensions();
         }
+
+        this.cleanDimensions();
 
         // setup base cell
         const cellArgs = {
@@ -606,6 +602,7 @@ P.updateCells = function (items = Ωempty) {
 // `buildCell` - create a Cell wrapper (wrapping a &lt;canvas> element not attached to the DOM) and add it to this Canvas wrapper's complement of Cells
 P.buildCell = function (items = Ωempty) {
 
+// console.log(this.name, 'buildCell', items)
     const host = items.host || null;
 
     if (!host) items.host = this.base.name;
@@ -695,6 +692,7 @@ P.clear = function () {
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesClear;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].clear();
@@ -713,6 +711,7 @@ P.compile = function () {
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesCompile;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].compile();
@@ -739,6 +738,7 @@ P.show = function(){
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesShow;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].show();

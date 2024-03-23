@@ -282,6 +282,42 @@ P.halt = function () {
     return this;
 };
 
+P.updateHook = function (hook = '', func) {
+
+    switch (hook) {
+
+        case 'commence' :
+            if (func) this.commence = func;
+            else this.commence = λnull;
+            break;
+
+        case 'afterClear' :
+            if (func) this.afterClear = func;
+            else this.afterClear = λnull;
+            break;
+
+        case 'afterCompile' :
+            if (func) this.afterCompile = func;
+            else this.afterCompile = λnull;
+            break;
+
+        case 'afterShow' :
+            if (func) this.afterShow = func;
+            else this.afterShow = λnull;
+            break;
+
+        case 'afterCreated' :
+            if (func) this.afterCreated = func;
+            else this.afterCreated = λnull;
+            break;
+
+        case 'error' :
+            if (func) this.error = func;
+            else this.error = λnull;
+            break;
+    }
+};
+
 
 // #### Factory
 // ```

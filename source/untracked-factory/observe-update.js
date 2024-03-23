@@ -203,7 +203,7 @@ export const observeAndUpdate = function (items = Ωempty) {
                     }
 
                     // Invoke any supplied callback function
-                    callback();
+                    callback(e);
                 }
             }
         }

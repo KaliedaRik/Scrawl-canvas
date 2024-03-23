@@ -3290,6 +3290,7 @@ P.prepareStamp = function() {
 // + EnhancedLabel entitys don't have a `simpleStamp` function, by design.
 P.stamp = function (force = false, host, changes) {
 
+// console.log(this.name, 'stamp', !this.dirtyFont, !this.dirtyText, !this.dirtyLayout, this.visibility);
     if (!this.dirtyFont && !this.dirtyText && !this.dirtyLayout) {
 
         if (force) {
@@ -3357,7 +3358,9 @@ P.getCellCoverage = function (img) {
 // `regularStamp` - A small, internal function to direct stamping towards the correct functionality
 // + regularStampInSpace for text inside the layoutTemplate artefact's enclosed space
 // + regularStampAlongPath for text positioned along a path-based entity's perimeter
-P.regularStamp = function () {
+P.regularStamp = function (host) {
+
+// console.log(this.name, 'regularStamp', host?.name);
 
     const {
         cache,
@@ -3367,9 +3370,11 @@ P.regularStamp = function () {
         state,
     } = this;
 
-    if (currentHost && layoutTemplate) {
+    const myHost = host || currentHost;
 
-        const { element, engine } = currentHost;
+    if (myHost && layoutTemplate) {
+
+        const { element, engine } = myHost;
 
         if (cacheOutput && cache) {
 
@@ -3397,16 +3402,15 @@ P.regularStamp = function () {
             } = this;
 
             const workingCells = (useLayoutTemplateAsPath) ?
-                this.createTextCellsForPath(currentHost) :
-                this.createTextCellsForSpace(currentHost);
+                this.createTextCellsForPath(myHost) :
+                this.createTextCellsForSpace(myHost);
 
             if (workingCells) {
 
                 const { copyCell, mainCell } = workingCells;
 
-                const ratio = getPixelRatio(),
-                    w = element.width / ratio,
-                    h = element.height / ratio;
+                const w = element.width,
+                    h = element.height;
 
                 const finalCell = requestCell(w, h);
 
@@ -3415,10 +3419,10 @@ P.regularStamp = function () {
 
                 this.removeShadowAndAlpha(finalEngine);
 
-                const copyCellHasUnderlines = this.addUnderlinesToCopyCell(currentHost, copyCell);
+                const copyCellHasUnderlines = this.addUnderlinesToCopyCell(myHost, copyCell);
 
-                const overlineCell = this.createOverlineCell(currentHost);
-                const highlightCell = this.createHighlightCell(currentHost);
+                const overlineCell = this.createOverlineCell(myHost);
+                const highlightCell = this.createHighlightCell(myHost);
 
                 if (!useLayoutTemplateAsPath && showGuidelines && guidelinesPath) this.stampGuidelinesOnCell(finalCell);
 
@@ -3502,7 +3506,7 @@ P.regularStamp = function () {
 
                         this.stashOutputAsAsset = false;
 
-                        const stashCell = requestCell(stashWidth / ratio, stashHeight / ratio);
+                        const stashCell = requestCell(stashWidth, stashHeight);
                         stashCell.engine.putImageData(this.stashedImageData, 0, 0);
 
                         if (!this.stashedImage) {
