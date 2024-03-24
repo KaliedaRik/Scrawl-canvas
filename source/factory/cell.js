@@ -39,7 +39,7 @@ import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } 
 import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
 
 import { makeGroup } from './group.js';
-import { makeState } from './state.js';
+import { makeState } from '../untracked-factory/state.js';
 
 import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
@@ -63,7 +63,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isFinite, _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _floor, _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Cell constructor
@@ -585,67 +585,79 @@ P.updateArtefacts = function (items = Ωempty) {
 // + Tells all associated artefacts that the Cell's dimensions have changed
 P.cleanDimensionsAdditionalActions = function() {
 
-    const el = this.element;
+    const element = this.element;
 
-    if (el) {
+    // Only proceed if the canvas element is in place
+    if (element) {
 
-        const control = this.controller,
-            current = this.currentDimensions,
-            base = this.isBase,
-            ignoreDpr = getIgnorePixelRatio(),
-            dpr = getPixelRatio();
+        const {
+            cleared,
+            dirtyDimensionsOverride,
+        } = this;
 
-        let controlDims, dims, w, h;
+        const controller = this.getController();
 
-        // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__
-        if (this.cleared || this.dirtyDimensionsOverride) {
+        // Only proceed if we know the Cell has a controller, and its contents don't need to be preserved
+        // + If the user sets the cell to `cleared: false`, then later sets the cell's dimensions via `set()`, that's their problem, not ours
+        if (controller && (cleared || dirtyDimensionsOverride)) {
 
             this.dirtyDimensionsOverride = false;
 
-            if (ignoreDpr) {
+            const {
+                currentDimensions,
+                dimensions,
+                isBase,
+            } = this;
 
-                if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+            const controlDimensions = controller.currentDimensions;
+            const [width, height] = controlDimensions;
 
-                    controlDims = this.controller.currentDimensions;
-                    dims = this.dimensions;
+            // __isComponent__ is DEPRECATED (because it is a really bad name) and replaced by __baseMatchesCanvasDimensions__
+            if (isBase && (controller.baseMatchesCanvasDimensions || controller.isComponent)) {
 
-                    dims[0] = current[0] = controlDims[0];
-                    dims[1] = current[1] = controlDims[1];
-                }
-
-                [w, h] = current;
-
-                el.width = w;
-                el.height = h;
+                dimensions[0] = width;
+                dimensions[1] = height;
+                currentDimensions[0] = width;
+                currentDimensions[1] = height;
             }
             else {
 
-                if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+                let item;
 
-                    controlDims = this.controller.currentDimensions;
-                    dims = this.dimensions;
+                for (let i = 0; i < 2; i++) {
 
-                    dims[0] = current[0] = controlDims[0];
-                    dims[1] = current[1] = controlDims[1];
+                    item = dimensions[i];
+
+                    if (item.substring) {
+
+                        item = parseFloat(item);
+
+                        if (_isFinite(item) && item >= 1) currentDimensions[i] = _floor(controlDimensions[i] * (item / 100));
+                        else currentDimensions[i] = 1;
+                    }
+                    else if (_isFinite(item) && item >= 1) currentDimensions[i] = _floor(item);
+                    else currentDimensions[i] = 1;
                 }
+            }
 
-                [w, h] = current;
+            const [w, h] = currentDimensions;
 
-                if (ignoreDpr) {
+            if (getIgnorePixelRatio()) {
 
-                    el.width = w;
-                    el.height = h;
-                }
-                else {
+                element.width = w;
+                element.height = h;
+            }
+            else {
 
-                    el.width = w * dpr;
-                    el.height = h * dpr;
-                }
+                const dpr = getPixelRatio();
+
+                element.width = w * dpr;
+                element.height = h * dpr;
             }
 
             this.setEngineFromState(this.engine);
 
-            if (base && control) control.updateBaseHere();
+            if (isBase && controller) controller.updateBaseHere();
 
             if (this.groupBuckets) {
 
@@ -687,6 +699,7 @@ P.subscribeAction = function (sub = {}) {
 P.installElement = function (element, colorSpace = SRGB) {
 
     this.element = element;
+
     this.engine = this.element.getContext(_2D, {
         willReadFrequently: this.willReadFrequently,
         colorSpace,
@@ -714,6 +727,110 @@ P.getController = function () {
     if (controller) return controller;
     if (currentHost) return currentHost.getHost();
     return null;
+};
+
+// `getHost` - Internal function - get a reference to the Cell's current host (where it will be stamping itself as part of the Display cycle).
+// + Note that Cells can (in theory: not tested yet) belong to more than one Canvas object Group - they can be used in multiple &lt;canvas> elements, thus the need to check which canvas is the current host at this point in the Display cycle.
+P.getHost = function () {
+
+    if (this.currentHost) return this.currentHost;
+    else if (this.host) {
+
+        const host = asset[this.host] || artefact[this.host];
+
+        if (host) this.currentHost = host;
+
+        return (host) ? this.currentHost : false;
+    }
+    return false;
+};
+
+// `updateBaseHere` - Internal function called by a Canvas wrapper on its base Cell
+P.updateBaseHere = function (controllerHere, fit) {
+
+    if (this.isBase) {
+
+        if (!this.here) this.here = {};
+
+        const here = this.here,
+            dims = this.currentDimensions;
+
+        let active = controllerHere.active;
+
+        const controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
+        const controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
+
+        if (dims[0] !== controllerWidth || dims[1] !== controllerHeight) {
+
+            if (!this.basePaste) this.basePaste = [];
+
+            const pasteX = this.basePaste[0];
+
+            const localWidth = dims[0],
+                localHeight = dims[1],
+                remoteWidth = controllerWidth,
+                remoteHeight = controllerHeight,
+                remoteX = controllerHere.x,
+                remoteY = controllerHere.y;
+
+            const relWidth = localWidth / remoteWidth || 1,
+                relHeight = localHeight / remoteHeight || 1;
+
+            let offsetX, offsetY;
+
+            here.w = localWidth;
+            here.h = localHeight;
+
+            switch (fit) {
+
+                case CONTAIN :
+                case COVER :
+
+                    if (pasteX) {
+
+                        offsetX = (remoteWidth - (localWidth / relHeight)) / 2;
+
+                        here.x = _round((remoteX - offsetX) * relHeight);
+                        here.y = _round(remoteY * relHeight);
+                    }
+                    else {
+
+                        offsetY = (remoteHeight - (localHeight / relWidth)) / 2;
+
+                        here.x = _round(remoteX * relWidth);
+                        here.y = _round((remoteY - offsetY) * relWidth);
+                    }
+                    break;
+
+                case FILL :
+                    here.x = _round(remoteX * relWidth);
+                    here.y = _round(remoteY * relHeight);
+                    break;
+
+                case NONE :
+                default :
+                    offsetX = (remoteWidth - localWidth) / 2;
+                    offsetY = (remoteHeight - localHeight) / 2;
+
+                    here.x = _round(remoteX - offsetX);
+                    here.y = _round(remoteY - offsetY);
+            }
+
+            if (here.x < 0 || here.x > localWidth) active = false;
+            if (here.y < 0 || here.y > localHeight) active = false;
+
+            here.active = active;
+        }
+        else {
+
+            here.x = controllerHere.x;
+            here.y = controllerHere.y;
+            here.w = controllerWidth;
+            here.h = controllerHeight;
+            here.active = active;
+        }
+        controllerHere.baseActive = active;
+    }
 };
 
 // `clear`
@@ -809,6 +926,12 @@ P.compile = function(){
 };
 
 // `show` - Note that functionality here differs for __base cells__ and other Cell wrappers
+P.setImageSmoothing = function (engine) {
+
+    engine.imageSmoothingEnabled = true;
+    engine.imageSmoothingQuality = HIGH;
+};
+
 P.show = function () {
 
     // get the destination cell's canvas context
@@ -818,8 +941,8 @@ P.show = function () {
     if (engine) {
 
         const hostDimensions = host.currentDimensions,
-            destWidth = ~~(hostDimensions[0]),
-            destHeight = ~~(hostDimensions[1]);
+            destWidth = _floor(hostDimensions[0]),
+            destHeight = _floor(hostDimensions[1]);
 
         // Cannot draw to the destination canvas if either of its dimensions === 0
         if (!destWidth || !destHeight) return false;
@@ -836,8 +959,8 @@ P.show = function () {
             currentStampPosition:stamp,
         } = this;
 
-        const curWidth = ~~(currentDimensions[0]),
-            curHeight = ~~(currentDimensions[1]);
+        const curWidth = _floor(currentDimensions[0]),
+            curHeight = _floor(currentDimensions[1]);
 
         let paste;
 
@@ -862,6 +985,8 @@ P.show = function () {
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
+            this.setImageSmoothing(engine);
+
             const fit = (controller) ? controller.fit : NONE;
 
             let relWidth, relHeight;
@@ -875,17 +1000,17 @@ P.show = function () {
 
                     if (relWidth > relHeight) {
 
-                        paste[0] = ~~((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = ~~(curWidth * relHeight);
-                        paste[3] = ~~(curHeight * relHeight);
+                        paste[2] = _floor(curWidth * relHeight);
+                        paste[3] = _floor(curHeight * relHeight);
                     }
                     else {
 
                         paste[0] = 0;
-                        paste[1] = ~~((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = ~~(curWidth * relWidth);
-                        paste[3] = ~~(curHeight * relWidth);
+                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = _floor(curWidth * relWidth);
+                        paste[3] = _floor(curHeight * relWidth);
                     }
                     break;
 
@@ -896,17 +1021,17 @@ P.show = function () {
 
                     if (relWidth < relHeight) {
 
-                        paste[0] = ~~((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = ~~(curWidth * relHeight);
-                        paste[3] = ~~(curHeight * relHeight);
+                        paste[2] = _floor(curWidth * relHeight);
+                        paste[3] = _floor(curHeight * relHeight);
                     }
                     else{
 
                         paste[0] = 0;
-                        paste[1] = ~~((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = ~~(curWidth * relWidth);
-                        paste[3] = ~~(curHeight * relWidth);
+                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = _floor(curWidth * relWidth);
+                        paste[3] = _floor(curHeight * relWidth);
                     }
                     break;
 
@@ -914,15 +1039,15 @@ P.show = function () {
                     // base must copy into display resized, distorting the aspect ratio as necessary
                     paste[0] = 0;
                     paste[1] = 0;
-                    paste[2] = ~~(destWidth);
-                    paste[3] = ~~(destHeight);
+                    paste[2] = _floor(destWidth);
+                    paste[3] = _floor(destHeight);
                     break;
 
                 case NONE :
                 default :
                     // base copies into display as-is, centred, maintaining aspect ratio
-                    paste[0] = ~~((destWidth - curWidth) / 2);
-                    paste[1] = ~~((destHeight - curHeight) / 2);
+                    paste[0] = _floor((destWidth - curWidth) / 2);
+                    paste[1] = _floor((destHeight - curHeight) / 2);
                     paste[2] = curWidth;
                     paste[3] = curHeight;
             }
@@ -941,10 +1066,12 @@ P.show = function () {
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
-            paste[0] = ~~(-handle[0] * scale);
-            paste[1] = ~~(-handle[1] * scale);
-            paste[2] = ~~(curWidth * scale);
-            paste[3] = ~~(curHeight * scale);
+            this.setImageSmoothing(engine);
+
+            paste[0] = _floor(-handle[0] * scale);
+            paste[1] = _floor(-handle[1] * scale);
+            paste[2] = _floor(curWidth * scale);
+            paste[3] = _floor(curHeight * scale);
 
             this.rotateDestination(engine, ...stamp);
         }
@@ -1059,110 +1186,6 @@ P.stashOutputAction = function () {
 
             releaseCell(mycanvas);
         }
-    }
-};
-
-// `getHost` - Internal function - get a reference to the Cell's current host (where it will be stamping itself as part of the Display cycle).
-// + Note that Cells can (in theory: not tested yet) belong to more than one Canvas object Group - they can be used in multiple &lt;canvas> elements, thus the need to check which canvas is the current host at this point in the Display cycle.
-P.getHost = function () {
-
-    if (this.currentHost) return this.currentHost;
-    else if (this.host) {
-
-        const host = asset[this.host] || artefact[this.host];
-
-        if (host) this.currentHost = host;
-
-        return (host) ? this.currentHost : false;
-    }
-    return false;
-};
-
-// `updateBaseHere` - Internal function called by a Canvas wrapper on its base Cell
-P.updateBaseHere = function (controllerHere, fit) {
-
-    if (this.isBase) {
-
-        if (!this.here) this.here = {};
-
-        const here = this.here,
-            dims = this.currentDimensions;
-
-        let active = controllerHere.active;
-
-        const controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
-        const controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
-
-        if (dims[0] !== controllerWidth || dims[1] !== controllerHeight) {
-
-            if (!this.basePaste) this.basePaste = [];
-
-            const pasteX = this.basePaste[0];
-
-            const localWidth = dims[0],
-                localHeight = dims[1],
-                remoteWidth = controllerWidth,
-                remoteHeight = controllerHeight,
-                remoteX = controllerHere.x,
-                remoteY = controllerHere.y;
-
-            const relWidth = localWidth / remoteWidth || 1,
-                relHeight = localHeight / remoteHeight || 1;
-
-            let offsetX, offsetY;
-
-            here.w = localWidth;
-            here.h = localHeight;
-
-            switch (fit) {
-
-                case CONTAIN :
-                case COVER :
-
-                    if (pasteX) {
-
-                        offsetX = (remoteWidth - (localWidth / relHeight)) / 2;
-
-                        here.x = _round((remoteX - offsetX) * relHeight);
-                        here.y = _round(remoteY * relHeight);
-                    }
-                    else {
-
-                        offsetY = (remoteHeight - (localHeight / relWidth)) / 2;
-
-                        here.x = _round(remoteX * relWidth);
-                        here.y = _round((remoteY - offsetY) * relWidth);
-                    }
-                    break;
-
-                case FILL :
-                    here.x = _round(remoteX * relWidth);
-                    here.y = _round(remoteY * relHeight);
-                    break;
-
-                case NONE :
-                default :
-                    offsetX = (remoteWidth - localWidth) / 2;
-                    offsetY = (remoteHeight - localHeight) / 2;
-
-                    here.x = _round(remoteX - offsetX);
-                    here.y = _round(remoteY - offsetY);
-            }
-
-            if (here.x < 0 || here.x > localWidth) active = false;
-            if (here.y < 0 || here.y > localHeight) active = false;
-
-            here.active = active;
-        }
-        else {
-
-            here.x = controllerHere.x;
-            here.y = controllerHere.y;
-            here.w = controllerWidth;
-            here.h = controllerHeight;
-            here.active = active;
-        }
-        controllerHere.baseActive = active;
     }
 };
 
@@ -1316,6 +1339,7 @@ P.updateHere = function () {
 // DPR is detected in the `core/events.js` file, but mainly handled here
 // + We scale the cell by DPR - this should be the only time we touch native scale functionality!
 // + All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the `current` equivalent attributes
+// + Called for every clear, compile and show action
 const checkEngineScale = function (engine) {
 
     if (engine) {

@@ -520,16 +520,6 @@ export default function (P = Ωempty) {
                             });
                         }
 
-
-                        // Specific to Phrase entitys, which doesn't include a simple way to set or update glyphStyle objects
-                        if (update.glyphStyles && obj.glyphStyles) {
-
-                            update.glyphStyles.forEach((gStyle, index) => {
-
-                                if (isa_obj(gStyle)) obj.setGlyphStyles(gStyle, index);
-                            });
-                        }
-
                         if (obj) return obj;
                         else throw new Error('Failed to process supplied packet');
                     }

@@ -3,7 +3,7 @@
 //
 // We define an artefact as something that can be displayed in a Scrawl-canvas [Canvas](../factory/stack.html) or [Stack](../factory/stack.html) wrapper - both of which wrap DOM elements in the web page document - &lt;canvas>, and other DOM elements (most commonly a &lt;div> element), respectively.
 // + We call canvas based artefacts __entity objects__ - these objects represent a shape, path or image drawn in the canvas.
-// + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Phrase](../factory/phrase.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; and [Wheel](../factory/wheel.html).
+// + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Label](../factory/label.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; [Wheel](../factory/wheel.html), etc.
 // + __Other artefacts__ live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and [Element](../factory/element.html) wrappers for other direct child elements.
 //
 // ##### Positioning
@@ -134,7 +134,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untrack
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { _isArray, _isFinite, _keys, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js'
+import { _isArray, _isFinite, _keys, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_ENHANCED_LABEL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -792,6 +792,7 @@ export default function (P = Ωempty) {
                     delete art.pivot;
                     delete art.pivotCorner;
                     delete art.pivotPin;
+                    delete art.pivotIndex;
                     delete art.addPivotHandle;
                     delete art.addPivotOffset;
                     delete art.addPivotRotation;
@@ -1285,7 +1286,11 @@ export default function (P = Ωempty) {
 
             if (pivot && this.addPivotRotation && lock.includes(PIVOT)) {
 
-                if (xt(pivot.currentRotation)) r += pivot.currentRotation;
+                // This only affects artefacts using EnhancedLabel entitys as their pivots
+                if (pivot.type === T_ENHANCED_LABEL) r += pivot.getUnitAlignment(this.pivotIndex);
+
+                else if (xt(pivot.currentRotation)) r += pivot.currentRotation;
+
                 else this.dirtyPivotRotation = true;
             }
         }
@@ -1343,11 +1348,13 @@ export default function (P = Ωempty) {
                 pivot,
                 pivotCorner,
                 pivotPin,
+                pivotIndex,
                 useMimicOffset,
                 useMimicStart,
             } = this;
 
-            let physParticle = this.particle;
+            let physParticle = this.particle,
+                textIndex;
 
             const confirmLock = function (lock) {
 
@@ -1386,6 +1393,18 @@ export default function (P = Ωempty) {
                     else if (pivot.type === T_POLYLINE) {
 
                         coord.setFromArray(pivot.getPinAt(pivotPin));
+                    }
+
+                    // When the pivot is an EnhancedLabel entity, need also to confirm which pin to use (default 0)
+                    else if (pivot.type === T_ENHANCED_LABEL) {
+
+                        if (pivotIndex < 0) coord.setFromArray(pivot.layoutTemplate.currentStampPosition);
+                        else {
+
+                            textIndex = pivot.getUnitStartAt(pivotIndex);
+                            if (textIndex != null) coord.setFromArray(textIndex);
+                            else coord.setFromArray(start).add(offset);
+                        }
                     }
 
                     // Everything else

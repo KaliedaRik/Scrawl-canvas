@@ -57,27 +57,6 @@ const mylabel = scrawl.makeLabel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const boxReadout = `
-    width: ${mylabel.get('width')}
-    height: ${mylabel.get('height')}
-    fontVerticalOffset: ${mylabel.get('fontVerticalOffset')}
-`;
-
-// @ts-expect-error
-    const metrics = mylabel.metrics;
-    const metricsReadout = `
-    abbAscent: ${metrics.actualBoundingBoxAscent}
-    abbDescent: ${metrics.actualBoundingBoxDescent}
-    abbleft: ${metrics.actualBoundingBoxLeft}
-    abbRight: ${metrics.actualBoundingBoxRight}
-    fbbAscent: ${metrics.fontBoundingBoxAscent}
-    fbbDescent: ${metrics.fontBoundingBoxDescent}
-    alphabeticBaseline: ${metrics.alphabeticBaseline}
-    hangingBaseline: ${metrics.hangingBaseline}
-    ideographicBaseline: ${metrics.ideographicBaseline}
-    width: ${metrics.width}
-`;
-
     let fontReadout = `
 `;
     document.fonts.forEach(k => {
@@ -92,10 +71,8 @@ const report = reportSpeed('#reportmessage', function () {
 `;
 
     return `
-Box data:${boxReadout}
-Positioning:${position}
-Font metrics:${metricsReadout}
-Loaded fonts:${fontReadout}`;
+Position:${position}
+Loaded fonts:${fontReadout}`
 });
 
 
@@ -451,9 +428,9 @@ const updateFont = (event) => {
                 });
                 break;
 
-            case 'noto-thai-looped-sans' :
+            case 'noto-thai-sans' :
                 mylabel.set({
-                    fontString: '50px "Noto Thai Looped Sans"',
+                    fontString: '50px "Noto Thai Sans"',
                     text: 'โดยที่การยอมรับศักดิ์ศ',
                     direction: 'ltr',
                 });

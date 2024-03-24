@@ -1,5 +1,5 @@
  // # Entity mixin
-// This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas [Block](../factory/block.html), [Grid](../factory/grid.html), [Loom](../factory/loom.html), [Phrase](../factory/phrase.html), [Picture](../factory/picture.html), [Shape](../factory/shape.html), [Wheel](../factory/wheel.html)) the ability to act as __artefacts__.
+// This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas [Block](../factory/block.html), [Grid](../factory/grid.html), [Loom](../factory/loom.html), [Label](../factory/label.html), [Picture](../factory/picture.html), [Shape](../factory/shape.html), [Wheel](../factory/wheel.html), etc) the ability to act as __artefacts__.
 //
 // Entitys differ from non-entity artefacts in that they are restricted to Cell wrappers (though no harm should come if they are included in Stack-related Groups).
 // + The entity object represents a set of instructions for rendering graphical lines and shapes onto a &lt;canvas> CanvasRenderingContext2D engine, using the Canvas API to do this
@@ -12,7 +12,7 @@
 // #### Imports
 import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
-import { makeState } from '../factory/state.js';
+import { makeState } from '../untracked-factory/state.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -169,7 +169,7 @@ export default function (P = Ωempty) {
 // + CSS format color String - `#fff`, `#ffffff`, `rgb(255 255 255)`, `rgb(255 255 255 / 1)`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
 //
-// __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
+// __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Label and EnhancedLabel entitys use these attributes internally, but have their own set of attributes for defining the font styling used by their text.
 //
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the entity as it is stamped on the canvas.
 // + Be aware that entitys can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!
@@ -501,7 +501,7 @@ export default function (P = Ωempty) {
             else return this.regularStamp();
         }
 
-        if (this.visibility) {
+        else if (this.visibility) {
 
             if (this.stashOutput || filterTest) return this.filteredStamp(filterTest);
             else return this.regularStamp();
@@ -586,14 +586,14 @@ export default function (P = Ωempty) {
                     filterEng.save();
                     filterEng.globalCompositeOperation = SOURCE_IN;
                     filterEng.globalAlpha = 1;
-                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.resetTransform();
                     filterEng.drawImage(currEl, 0, 0);
                     filterEng.restore();
 
                     this.dirtyFilterIdentifier = true;
                 }
 
-                filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                filterEng.resetTransform();
 
                 const myimage = filterEng.getImageData(0, 0, w, h);
 
@@ -609,7 +609,7 @@ export default function (P = Ωempty) {
 
                     filterEng.globalCompositeOperation = SOURCE_OVER;
                     filterEng.globalAlpha = 1;
-                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.resetTransform();
                     filterEng.putImageData(img, 0, 0);
                 }
             }
@@ -618,7 +618,7 @@ export default function (P = Ωempty) {
             currEng.globalAlpha = (state && state.globalAlpha) ? state.globalAlpha : 1;
             currEng.globalCompositeOperation = (state && state.globalCompositeOperation) ? state.globalCompositeOperation : SOURCE_OVER;
 
-            currEng.setTransform(1, 0, 0, 1, 0, 0);
+            currEng.resetTransform();
 
             currEng.drawImage(filterEl, 0, 0);
 

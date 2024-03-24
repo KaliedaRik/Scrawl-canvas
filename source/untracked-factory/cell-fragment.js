@@ -5,12 +5,12 @@
 // #### Imports
 import { doCreate, λnull, λthis } from '../helper/utilities.js';
 
-import { makeState } from '../factory/state.js';
+import { makeState } from './state.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 
-import { _2D, CANVAS, SRGB, T_CELLFRAGMENT } from '../helper/shared-vars.js';
+import { _2D, CANVAS, LEFT, SRGB, T_CELLFRAGMENT, TOP } from '../helper/shared-vars.js';
 
 
 // #### CellFragment constructor
@@ -61,6 +61,26 @@ P.clone = λthis;
 // None required
 
 
+P.setDimensions = function (w, h) {
+
+    this.w = w;
+    this.h = h;
+    this.element.width = w;
+    this.element.height = h;
+
+    // Resetting canvas dimensions sets the canvas engine back to system default values
+    // + As we always require `textAlign` and `textBaseline` to be 'left' and 'top' respectively, we reset them here.
+    // + `requestCell` will always call this function before releasing a pool cell into the wild.
+    this.engine.textAlign = LEFT;
+    this.engine.textBaseline = TOP;
+};
+
+P.clearCell = function () {
+
+    this.engine.clearRect(0, 0, this.w, this.h);
+};
+
+
 // #### Cell pool
 // A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas> element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.
 //
@@ -72,21 +92,30 @@ const cellPool = [];
 let count = 0;
 
 // `Exported function` - __requestCell__
-export const requestCell = function () {
+export const requestCell = function (w = 1, h = 1) {
 
     if (!cellPool.length) cellPool.push(new CellFragment(`pool_${count++}`));
 
     const c = cellPool.shift();
+
+    c.setDimensions(w, h);
+
     c.engine.save();
+
     return c;
 };
 
-// `Exported function` - __releaseCell__
-export const releaseCell = function (c) {
+export const releaseCell = function (...args) {
 
-    if (c && c.type == T_CELLFRAGMENT) {
+    args.forEach(a => {
 
-        c.engine.restore();
-        cellPool.push(c);
-    }
+        if (a && a.type === T_CELLFRAGMENT) {
+
+            a.setDimensions(1, 1);
+            a.engine.restore();
+            a.state.setStateFromEngine(a.engine);
+
+            cellPool.push(a);
+        }
+    });
 };

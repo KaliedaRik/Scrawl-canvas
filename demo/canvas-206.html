@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 206</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <link href="css/fontface-declarations.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
+    .demo-explanation-styles {
+      width: calc(600px * 0.6);
+      height: calc(400px * 0.8);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .comparator {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
+      align-items: center;
+      margin-top: 1em;
+      transform-origin: 50% 50%;
+      overflow: hidden;
+    }
+
+    #preload-fonts {
+      height: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-205.html">&larr; Previous</a>
+    <a href="canvas-207.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 206</h1>
+  <h2>EnhancedLabel entity - basic multiline text</h2>
+
+  <div class="controls">
+
+    <div class="lavender label">Select font</div>
+    <div class="lavender">
+      <select class="controlItem" id="font">
+        <option value="serif">serif</option>
+        <option value="sans-serif">sans-serif</option>
+        <option value="monospace">monospace</option>
+        <option value="cursive">cursive</option>
+        <option value="fantasy">fantasy</option>
+        <option value="garamond">Garamond</option>
+        <option value="roboto">Roboto</option>
+        <option value="roboto-serif">Roboto Serif</option>
+        <option value="roboto-mono">Roboto Mono</option>
+        <option value="noto-arabic-sans">Noto Arabic Sans</option>
+        <option value="noto-arabic-naskh">Noto Arabic Naskh</option>
+        <option value="noto-urdu-nastaliq">Noto Urdu Nastaliq</option>
+        <option value="noto-chinese-simple-sans">Noto Chinese Simple Sans</option>
+        <option value="noto-chinese-simple-serif">Noto Chinese Simple Serif</option>
+        <option value="noto-devangari-sans">Noto Devangari Sans</option>
+        <option value="noto-devangari-serif">Noto Devangari Serif</option>
+        <option value="noto-hebrew-sans">Noto Hebrew Sans</option>
+        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
+        <option value="noto-japanese-sans">Noto Japanese Sans</option>
+        <option value="noto-japanese-serif">Noto Japanese Serif</option>
+        <option value="noto-korean-sans">Noto Korean Sans</option>
+        <option value="noto-korean-serif">Noto Korean Serif</option>
+        <option value="noto-mongolian-sans">Noto Mongolian Sans</option>
+        <option value="noto-tai-le-sans">Noto Tai Le Sans</option>
+        <option value="noto-tai-tham-sans">Noto Tai Tham Sans</option>
+        <option value="noto-thai-sans">Noto Thai Sans</option>
+        <option value="noto-thai-serif">Noto Thai Serif</option>
+        <option value="noto-tirhuta-sans">Noto Tirhuta Sans</option>
+        <option value="bungee">Bungee</option>
+        <option value="carter-one">Carter One</option>
+        <option value="mountains-of-christmas">Mountains Of Christmas</option>
+        <option value="serif-normal">serif (lh: normal)</option>
+        <option value="serif-ratio">serif (lh: ratio)</option>
+        <option value="serif-length">serif (lh: length)</option>
+        <option value="serif-percent">serif (lh: percent)</option>
+        <option value="serif-px">serif (lh: px)</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Layout template</div>
+    <div class="lavender">
+      <select class="controlItem" id="layoutTemplate">
+        <option value="block-template">Block template</option>
+        <option value="wheel-template">Wheel template</option>
+        <option value="crescent-template">Crescent template</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Text unit flow</div>
+    <div class="lavender">
+      <select class="controlItem" id="textUnitFlow">
+        <option value="row">row</option>
+        <option value="row-reverse">row-reverse</option>
+        <option value="column">column</option>
+        <option value="column-reverse">column-reverse</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Justify line</div>
+    <div class="lavender">
+      <select class="controlItem" id="justifyLine">
+        <option value="center">center</option>
+        <option value="start">start</option>
+        <option value="end">end</option>
+        <option value="space-between">space-between</option>
+        <option value="space-around">space-around</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Line spacing</div>
+    <div class="lavender">
+      <input class="controlItem" id="lineSpacing" type="range" value="1.5" min="0" max="4" step="0.01" />
+    </div>
+
+    <div class="lavender label">Line adjustment</div>
+    <div class="lavender">
+      <input class="controlItem" id="lineAdjustment" type="range" value="0" min="-50" max="50" step="1" />
+    </div>
+
+    <div class="blue label">Break text on spaces</div>
+    <div class="blue">
+      <select class="controlItem" id="breakTextOnSpaces">
+        <option value="0">false</option>
+        <option value="1" selected>true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Break word on hyphens</div>
+    <div class="blue">
+      <select class="controlItem" id="breakWordsOnHyphens">
+        <option value="0">false</option>
+        <option value="1" selected>true</option>
+      </select>
+    </div>
+
+    <div class="green label">Alignment</div>
+    <div class="green">
+      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
+    <div class="blue label">Truncate string</div>
+    <div class="blue">
+      <select class="controlItem" id="truncateString">
+        <option value="...">...</option>
+        <option value=" &darr;"> &darr;</option>
+        <option value="..ℹ️">..ℹ️</option>
+      </select>
+    </div>
+
+    <div class="blue label">Hyphen string</div>
+    <div class="blue">
+      <select class="controlItem" id="hyphenString">
+        <option value="-">-</option>
+        <option value="~">~</option>
+        <option value="👉🏽">👉🏽</option>
+      </select>
+    </div>
+
+    <div class="green label">Local alignment</div>
+    <div class="green">
+      <input class="controlItem" id="localAlignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
+    <div class="pink label">Show guidelines</div>
+    <div class="pink">
+      <select class="controlItem" id="showGuidelines">
+        <option value="0">false</option>
+        <option value="1" selected>true</option>
+      </select>
+    </div>
+
+    <div class="pink label">Guideline style</div>
+    <div class="pink">
+      <select class="controlItem" id="guidelineStyle">
+        <option value="">default</option>
+        <option value="red">red</option>
+        <option value="rgb(0 160 0 / 0.6)">rgb(0 160 0 / 0.6)</option>
+      </select>
+    </div>
+
+    <div class="pink label">Guideline dash</div>
+    <div class="pink">
+      <select class="controlItem" id="guidelineDash">
+        <option value="[]">solid</option>
+        <option value="[8, 6, 4, 6]">dash</option>
+        <option value="[1, 5]">dots</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Text handle X</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="textHandleX">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Text handle Y</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="textHandleY">
+        <option value="top">top</option>
+        <option value="hanging">hanging</option>
+        <option value="center">center</option>
+        <option value="middle">middle</option>
+        <option value="alphabetic">alphabetic</option>
+        <option value="ideographic">ideographic</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="none">&nbsp;</div>
+    <div class="none">&nbsp;</div>
+
+    <div class="orange label">Letter spacing</div>
+    <div class="orange">
+      <input class="controlItem" id="letterSpacing" type="range" value="0" min="0" max="20" step="0.1" />
+    </div>
+
+    <div class="orange label">Word spacing</div>
+    <div class="orange">
+      <input class="controlItem" id="wordSpacing" type="range" value="0" min="0" max="20" step="0.1" />
+    </div>
+
+    <div class="none">&nbsp;</div>
+    <div class="none">&nbsp;</div>
+
+
+  </div>
+
+  <div class="comparator">
+    <p>CANVAS</p>
+    <p>HTML</p>
+  </div>
+  <div class="comparator">
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="400"
+      data-scrawl-canvas
+    ></canvas>
+    <p class="demo-explanation-styles"></p>
+  </div>
+
+
+  <div class="controls">
+
+    <div class="orange label">Scale</div>
+    <div class="orange">
+      <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" />
+    </div>
+
+    <div class="orange label">Roll</div>
+    <div class="orange">
+      <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
+    </div>
+
+    <div class="orange">&nbsp;</div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="yellow label">Width (Radius)</div>
+    <div class="yellow">
+      <input class="controlItem" id="width" type="range" value="60" min="20" max="100" step="1" />
+    </div>
+
+    <div class="yellow label">Height</div>
+    <div class="yellow">
+      <input class="controlItem" id="height" type="range" value="80" min="20" max="100" step="1" />
+    </div>
+
+    <div class="yellow">&nbsp;</div>
+    <div class="yellow">&nbsp;</div>
+
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><b>Known issue:</b> When changing the font, or the layout template, the positioning of the red ball breaks down; however that can be fixed by making a small adjustment to another attribute.</p>
+
+    <p><b>Touch test:</b> not required.</p>
+
+    <p><a href="../docs/demo/canvas-206.html">Annotated code</a></p>
+
+    <p><br /><strong>A special note about fonts</strong></p>
+    <p>Because fonts load asynchronously, and SC EnhancedLabel entitys currently have a (near-unsolvable) bug where they will measure a font before the font family's various iterations (if specified in CSS <code style="display: inline">@font-family</code> definitions) have downloaded - they only wait for their default font to download, not any additional fonts included (via CSS) in their text string - it makes sense for us to trigger font downloads as soon as possible. And the simplest way to do that is to include text using those fonts in a <code style="display: inline">"hidden"</code> (actually an <code style="display: inline">aria-hidden="true" style="height: 0; overflow: hidden"</code>) element in the web page, ahead of the <code style="display: inline">&lt;script></code> tag that triggers the SC canvas build.</p>
+    <p>There are, of course, more professional ways for a front-end engineer to manage efficient and timely font downloads ... but this is just a demo and, well, needs must!</p>
+    <div id="preload-fonts" aria-hidden="true">
+      <div style='font-family: "Garamond"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Roboto"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Roboto Mono"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Arabic Naskh"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Urdu Nastaliq"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Chinese Simple Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Devangari Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Devangari Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Hebrew Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Hebrew Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Japanese Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Japanese Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Korean Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Korean Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Mongolian Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Tai Le Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Tai Tham Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Thai Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Thai Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Noto Tirhuta Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Bungee"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Carter One"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+      <div style='font-family: "Mountains Of Christmas"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    </div>
+
+    <p><br /><strong>Another special note about Chinese and Japanese scripts</strong></p>
+    <p>As much as we would like to treat every Chinese and Japanese character as its own thing, both writing systems insist that certain punctuation marks cannot be separated from their preceding character over a line break. Browsers know about this, and make sure it happens in normal HTML. SC, however, makes no effort to guess when this should happen.</p>
+    <p>For this demo, we have manually added word joiner characters - HTML entity <code style="display: inline">&amp;#x2060;</code> - immediately before these punctuation marks. A more robust code solution to pre-process canvas text would be required to handle this sort of thing in production environments. Building such a solution into the SC code is not in scope for the project.</p>
+
+    <p><br /><strong>An even more special note about Thai scripts</strong></p>
+    <p>Breaking Thai "words" across lines is a difficult issue - see the <a href="https://www.w3.org/International/sealreq/thai/">W3C Thai Layout Requirements</a> spec for the latest position.</p>
+    <p>The Thai script is a complex abugida. Spaces are used, but the tendency is to only insert them at natural breath pauses, which means a Thai "word" (as in: a set of characters not separated by spaces) can get exceptionally long.</p>
+    <p>To break such words across lines, one recommendation is to insert zero-space spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. Browser engines seem to do this internally, but getting that data from the text string doesn't seem possible. For the two Thai fonts above, this has been done manually by copying the raw string into a <code style="display: inline">&lt;p style='width: 10px; font: 16px "Noto Thai Looped Sans"'></code> element and then counting the characters. Not recommended for production!</p>
+  </div>
+  <p style='width: 10px; font: 16px "Noto Thai Looped Sans"'>
+    ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้
+  </p>
+
+  <script src="canvas-206.js" type="module"></script>
+
+</body>
+
+</html>

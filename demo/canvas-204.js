@@ -50,7 +50,7 @@ const mylabel = scrawl.makeLabel({
 
     includeUnderline: true,
     underlineWidth: 3,
-    underlineOffset: 0.83,
+    underlineOffset: 0.9,
 });
 
 
@@ -95,7 +95,7 @@ scrawl.makeRender({
 });
 
 
-// #### User interaction
+// #### User controls
 scrawl.makeUpdater({
 
     event: ['input', 'change'],

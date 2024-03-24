@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 208</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <link href="css/fontface-declarations.css" rel="stylesheet" />
+
+  <style>
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
+    .controls.position {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+    #preload-fonts {
+      height: 0;
+      overflow: hidden;
+    }
+
+/*
+CSS property direction                      maps to TextStyle direction
+CSS property font-family                    maps to TextStyle fontFamily
+CSS property font-kerning                   maps to TextStyle fontKerning
+CSS property font-size                      maps to TextStyle fontSize
+CSS property font-stretch                   maps to TextStyle fontStretch
+CSS property font-style                     maps to TextStyle fontStyle
+CSS property font-variant-caps              maps to TextStyle fontVariantCaps
+CSS property font-weight                    maps to TextStyle fontWeight
+CSS property letter-spacing                 maps to TextStyle letterSpacing
+CSS property text-rendering                 maps to TextStyle textRendering
+CSS property word-spacing                   maps to TextStyle wordSpacing
+
+CSS custom property --SC-fill-style         maps to TextStyle fillStyle
+CSS custom property --SC-stroke-style       maps to TextStyle strokeStyle
+CSS custom property --SC-stroke-width       maps to TextStyle lineWidth
+
+CSS custom property --SC-include-highlight  maps to TextStyle includeHighlight
+CSS custom property --SC-highlight-style    maps to TextStyle highlightStyle
+
+CSS custom property --SC-include-overline   maps to TextStyle includeOverline
+CSS custom property --SC-overline-offset    maps to TextStyle overlineOffset
+CSS custom property --SC-overline-style     maps to TextStyle overlineStyle
+CSS custom property --SC-overline-width     maps to TextStyle overlineWidth
+
+CSS custom property --SC-include-underline  maps to TextStyle includeUnderline
+CSS custom property --SC-underline-gap      maps to TextStyle underlineGap
+CSS custom property --SC-underline-offset   maps to TextStyle underlineOffset
+CSS custom property --SC-underline-style    maps to TextStyle underlineStyle
+CSS custom property --SC-underline-width    maps to TextStyle underlineWidth
+
+CSS custom property --SC-method             maps to TextStyle method
+
+*/
+
+    .demo-my-label, .demo-explanation-styles, #preload-fonts {
+
+      & b {
+        font-weight: bold;
+      }
+
+      & strong {
+        --SC-include-highlight: true;
+        --SC-highlight-style: darkblue;
+        --SC-fill-style: lightblue;
+
+        font-weight: bold;
+        color: var(--SC-fill-style);
+        background-color: var(--SC-highlight-style);
+      }
+
+      & i {
+        font-style: italic;
+      }
+
+      & em {
+        --SC-fill-style: blue;
+
+        font-style: italic;
+        color: var(--SC-fill-style);
+      }
+      
+      & u {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
+
+        text-decoration: underline;
+      }
+      
+      & s {
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.4;
+        --SC-overline-style: red;
+        --SC-overline-width: 5px;
+
+        text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
+      }
+
+      & .bold {
+        font-weight: bold;
+      }
+      
+      & .italic {
+        font-style: italic;
+      }
+      
+      & .underline {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
+
+        text-decoration: underline;
+        font-variant: small-caps;
+      }
+
+      & .strike {
+        --SC-fill-style: gray;
+
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.5;
+        --SC-overline-style: gray;
+        --SC-overline-width: 2px;
+
+        color: var(--SC-fill-style);
+        text-decoration-line: line-through;
+        text-decoration-color: var(--SC-overline-style);
+        text-decoration-thickness: var(--SC-overline-width);
+      }
+
+      & .red {
+        --SC-fill-style: red;
+
+        color: var(--SC-fill-style);
+      }
+
+      & .green-highlight {
+        --SC-include-highlight: true;
+        --SC-highlight-style: darkgreen;
+        --SC-fill-style: honeydew;
+
+        color: var(--SC-fill-style);
+        background-color: var(--SC-highlight-style);
+      }
+
+      & .letter-spaced {
+        letter-spacing: 10px;
+      }
+
+      & .word-spaced {
+        word-spacing: 0.8rem;
+      }
+
+      & .make-bigger {
+        font-size: 120%;
+      }
+
+      & .make-monospace {
+        font-family: monospace;
+      }
+
+      & .stamp-outlined {
+        --SC-fill-style: yellow;
+        --SC-stroke-width: 3;
+        --SC-method: drawAndFill;
+
+        color: var(--SC-fill-style);
+
+        text-shadow:
+          -1px -1px 0 black,  
+          1px -1px 0 black,
+          -1px 1px 0 black,
+          1px 1px 0 black;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-207.html">&larr; Previous</a>
+    <a href="canvas-209.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 208</h1>
+  <h2>EnhancedLabel entity - text along a path</h2>
+
+  <div class="controls">
+    <div class="pink label">Select font</div>
+    <div class="pink">
+      <select class="controlItem" id="font">
+        <option value="serif">serif</option>
+        <option value="sans-serif">sans-serif</option>
+        <option value="monospace">monospace</option>
+        <option value="cursive">cursive</option>
+        <option value="fantasy">fantasy</option>
+        <option value="garamond">Garamond</option>
+        <option value="roboto">Roboto</option>
+        <option value="roboto-serif">Roboto Serif</option>
+        <option value="roboto-mono">Roboto Mono</option>
+        <option value="noto-arabic-sans">Noto Arabic Sans</option>
+        <option value="noto-arabic-naskh">Noto Arabic Naskh</option>
+        <option value="noto-urdu-nastaliq">Noto Urdu Nastaliq</option>
+        <option value="noto-chinese-simple-sans">Noto Chinese Simple Sans</option>
+        <option value="noto-chinese-simple-serif">Noto Chinese Simple Serif</option>
+        <option value="noto-devangari-sans">Noto Devangari Sans</option>
+        <option value="noto-devangari-serif">Noto Devangari Serif</option>
+        <option value="noto-hebrew-sans">Noto Hebrew Sans</option>
+        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
+        <option value="noto-japanese-sans">Noto Japanese Sans</option>
+        <option value="noto-japanese-serif">Noto Japanese Serif</option>
+        <option value="noto-korean-sans">Noto Korean Sans</option>
+        <option value="noto-korean-serif">Noto Korean Serif</option>
+        <option value="noto-mongolian-sans">Noto Mongolian Sans</option>
+        <option value="noto-tai-le-sans">Noto Tai Le Sans</option>
+        <option value="noto-tai-tham-sans">Noto Tai Tham Sans</option>
+        <option value="noto-thai-sans">Noto Thai Sans</option>
+        <option value="noto-thai-serif">Noto Thai Serif</option>
+        <option value="noto-tirhuta-sans">Noto Tirhuta Sans</option>
+        <option value="bungee">Bungee</option>
+        <option value="carter-one">Carter One</option>
+        <option value="mountains-of-christmas">Mountains Of Christmas</option>
+      </select>
+    </div>
+
+    <div class="pink label">Text unit flow</div>
+    <div class="pink">
+      <select class="controlItem" id="textUnitFlow">
+        <option value="row">row</option>
+        <option value="row-reverse">row-reverse</option>
+        <option value="column">column</option>
+        <option value="column-reverse">column-reverse</option>
+      </select>
+    </div>
+
+    <div class="green label">Align text units to path</div>
+    <div class="green">
+      <select class="controlItem" id="alignTextUnitsToPath">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Text handle X</div>
+    <div class="yellow">
+      <select class="controlItem" id="textHandleX">
+        <option value="left">left</option>
+        <option value="start">start</option>
+        <option value="center">center</option>
+        <option value="end">end</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Text handle Y</div>
+    <div class="yellow">
+      <select class="controlItem" id="textHandleY">
+        <option value="top">top</option>
+        <option value="hanging">hanging</option>
+        <option value="middle">middle</option>
+        <option value="center">center</option>
+        <option value="alphabetic">alphabetic</option>
+        <option value="ideographic">ideographic</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Alignment</div>
+    <div class="green">
+      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
+    <div class="blue label">Letter spacing</div>
+    <div class="blue">
+      <input class="controlItem" id="letterSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
+    </div>
+
+    <div class="blue label">Word spacing</div>
+    <div class="blue">
+      <input class="controlItem" id="wordSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
+    </div>
+
+    <div class="green label">Break text on spaces</div>
+    <div class="green">
+      <select class="controlItem" id="breakTextOnSpaces">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+    
+    <div class="orange label">Animation</div>
+    <div class="orange">
+      <select class="controlItem" id="animation">
+        <option value="">off</option>
+        <option value="on">on</option>
+      </select>
+    </div>
+    
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="600"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls position">
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Offset ('n%')</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+
+    <div class="lavender label">Offset (n)</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipReverse">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipUpend">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required.</p>
+
+    <p><a href="../docs/demo/canvas-208.html">Annotated code</a></p>
+  </div>
+
+  <div id="preload-fonts" aria-hidden="true">
+    <div style='font-family: "Garamond"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto Mono"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Arabic Naskh"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Urdu Nastaliq"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Chinese Simple Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Devangari Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Devangari Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Hebrew Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Hebrew Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Japanese Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Japanese Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Korean Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Korean Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Mongolian Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tai Le Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tai Tham Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Thai Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Thai Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Tirhuta Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Bungee"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Carter One"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Mountains Of Christmas"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+  </div>
+
+  <script src="canvas-208.js" type="module"></script>
+
+</body>
+
+</html>

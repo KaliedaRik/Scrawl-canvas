@@ -36,17 +36,20 @@ export const requestArray = function () {
     return genericArrayPool.shift();
 };
 
-export const releaseArray = function (a) {
+export const releaseArray = function (...args) {
 
-    if (a && a.type === T_GENERIC_ARRAY) {
+    args.forEach(a => {
 
-        a.length = 0;
-        genericArrayPool.push(a);
+        if (a && a.type === T_GENERIC_ARRAY) {
 
-        if (genericArrayPool.length > 20) {
+            a.length = 0;
+            genericArrayPool.push(a);
 
-            console.log('purging genericArrayPool');
-            genericArrayPool.length = 10;
+            if (genericArrayPool.length > 20) {
+
+                console.log('purging genericArrayPool');
+                genericArrayPool.length = 10;
+            }
         }
-    }
+    });
 };

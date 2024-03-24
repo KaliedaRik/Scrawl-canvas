@@ -63,14 +63,14 @@ canvas.set({
 const report = reportSpeed('#reportmessage', () => {
     return `
 Font.details:
-    Raw font: ${mylabel.get('rawFont')}
-    Default font: ${mylabel.get('defaultFont')}
+    Font string (entity): ${mylabel.get('fontString')}
+    Font string (canvas): ${mylabel.get('canvasFont')}
 
-    Font size: ${mylabel.fontSize}
-    Font style: ${mylabel.fontStyle}
-    Font stretch: ${mylabel.fontStretch}
-    Font variant: ${mylabel.fontVariant}
-    Font weight: ${mylabel.fontWeight}
+    Font size: ${mylabel.get('fontSize')}
+    Font style: ${mylabel.get('fontStyle')}
+    Font stretch: ${mylabel.get('fontStretch')}
+    Font variant: ${mylabel.get('fontVariantCaps')}
+    Font weight: ${mylabel.get('fontWeight')}
     `;
 });
 
@@ -103,7 +103,7 @@ scrawl.makeUpdater({
         scale: ['scale', 'float'],
         'fontWeight-string': ['fontWeight', 'raw'],
         'fontWeight-number': ['fontWeight', 'int'],
-        fontVariant: ['fontVariant', 'raw'],
+        fontVariantCaps: ['fontVariantCaps', 'raw'],
         fontStyle: ['fontStyle', 'raw'],
         'fontStretch-string': ['fontStretch', 'raw'],
         'fontStretch-percent': ['fontStretch', '%'],
@@ -125,7 +125,7 @@ document.querySelector('#fontWeight-string').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#fontWeight-number').value = 400;
 // @ts-expect-error
-document.querySelector('#fontVariant').options.selectedIndex = 0;
+document.querySelector('#fontVariantCaps').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#fontStyle').options.selectedIndex = 0;
 // @ts-expect-error

@@ -50,7 +50,7 @@ const requestScreenCapture = () => {
         name: 'my-screen-capture',
     })
     .then(mycamera => {
-    
+
         requestButton.setAttribute('disabled', '');
 
         // Take the media stream and display it in our canvas element

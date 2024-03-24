@@ -304,9 +304,12 @@ export const requestVector = function (x, y, z) {
 };
 
 // `exported function` - return a Vector to the vector pool. Failing to return Vectors to the pool may lead to more inefficient code and possible memory leaks.
-export const releaseVector = function (item) {
+export const releaseVector = function (...args) {
 
-    if (item && item.type === T_VECTOR) vectorPool.push(item.zero());
+    args.forEach(v => {
+
+        if (v && v.type === T_VECTOR) vectorPool.push(v.zero());
+    });
 };
 
 

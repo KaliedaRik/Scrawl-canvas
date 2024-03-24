@@ -22,19 +22,20 @@ scrawl.makeLabel({
 
     name: name('mylabel_fill'),
 
-    fontString: 'bold 2em / 3 Garamond',
+    fontString: 'bold 2.2em / 3 Roboto',
 
     text: '|H&epsilon;lj&ouml;!',
     accessibleText: `${name('mylabel_fill')} says: §`,
     accessibleTextOrder: 0,
 
-    start: ['14%', '28%'],
+    start: [`${0 + 12.5}%`, '28%'],
     handle: ['center', 'center'],
 
-    fillStyle: 'rgb(40, 180, 40)',
-    strokeStyle: 'gold',
+    fillStyle: 'lightgreen',
+    strokeStyle: 'blue',
 
     lineWidth: 2,
+    lineCap: 'round',
     lineJoin: 'round',
 
     scale: 1.8,
@@ -46,12 +47,20 @@ scrawl.makeLabel({
     shadowColor: 'black',
 
     showBoundingBox: true,
-    boundingBoxStyle: 'rgb(255 0 0 / 0.7)',
+    boundingBoxStyle: 'rgb(255 0 0 / 0.4)',
+
+    lineDash: [5, 5],
+    boundingBoxLineDash: [8, 4, 2, 4],
+
+    delta: {
+        lineDashOffset: -0.1,
+        boundingBoxLineDashOffset: 0.3,
+    },
 
 }).clone({
 
     name: name('mylabel_draw'),
-    startX: '38%',
+    startX: `${25 + 12.5}%`,
     method: 'draw',
     accessibleText: `${name('mylabel_draw')} says: §`,
     accessibleTextOrder: 2,
@@ -59,7 +68,7 @@ scrawl.makeLabel({
 }).clone({
 
     name: name('mylabel_drawAndFill'),
-    startX: '84%',
+    startX: `${50 + 12.5}%`,
     method: 'drawAndFill',
     accessibleText: `${name('mylabel_drawAndFill')} says: §`,
     accessibleTextOrder: 4,
@@ -67,16 +76,15 @@ scrawl.makeLabel({
 }).clone({
 
     name: name('mylabel_fillAndDraw'),
-    startX: '62%',
+    startX: `${75 + 12.5}%`,
     method: 'fillAndDraw',
-    sharedState: true,
     accessibleText: `${name('mylabel_fillAndDraw')} says: §`,
     accessibleTextOrder: 6,
 
 }).clone({
 
     name: name('mylabel_drawThenFill'),
-    startX: '14%',
+    startX: `${0 + 12.5}%`,
     startY: '67%',
     method: 'drawThenFill',
     accessibleText: `§ from ${name('mylabel_drawThenFill')}`,
@@ -85,7 +93,7 @@ scrawl.makeLabel({
 }).clone({
 
     name: name('mylabel_fillThenDraw'),
-    startX: '38%',
+    startX: `${25 + 12.5}%`,
     method: 'fillThenDraw',
     accessibleText: `${name('mylabel_fillThenDraw')} says: §`,
     accessibleTextOrder: 3,
@@ -93,18 +101,11 @@ scrawl.makeLabel({
 }).clone({
 
     name: name('mylabel_clear'),
-    startX: '62%',
+    startX: `${50 + 12.5}%`,
     method: 'clear',
     accessibleText: `${name('mylabel_clear')} says: §`,
     accessibleTextOrder: 1,
     textIsAccessible: false,
-});
-
-
-// Change the fill and stroke styles on one of the Phrase entitys, and any entity sharing that Phrase's state
-scrawl.library.artefact[name('mylabel_fillAndDraw')].set({
-    fillStyle: 'blue',
-    strokeStyle: 'coral',
 });
 
 

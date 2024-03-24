@@ -1,5 +1,5 @@
 // # Group factory
-// Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Phrase, Picture, Shape, Stack, Wheel) for common functions.
+// Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Label, Picture, Shape, Stack, Wheel, etc) for common functions.
 //
 // Groups connect artefacts with controller objects - Stack, Cell - through which the Display cycle can cascade. Each controller object can have more than one Group associated with it. Only Groups whose __visibility__ flag has been set to true will propagate the Display cycle cascade to their member artefacts. The order in which each controller object invokes its Group objects is determined by each Group object's __order__ value.
 //
@@ -15,11 +15,11 @@
 
 // #### Imports
 import { artefact, cell, constructors, entity, group } from '../core/library.js';
+import { getPixelRatio } from "../core/user-interaction.js";
 
 import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
 import { filterEngine } from '../helper/filter-engine.js';
-
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { importDomImage } from '../asset-management/image-asset.js';
@@ -98,7 +98,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactCalculateBuckets', 'artefactStampBuckets', 'batchResort']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEntityHover', 'onEntityNoHover']);
 
-
 // #### Clone management
 P.postCloneAction = function(clone, items) {
 
@@ -106,11 +105,17 @@ P.postCloneAction = function(clone, items) {
 
     if (items.host) {
 
-        host = artefact[items.host];
+        if (items.host.substring) host = artefact[items.host];
+        else if (items.host.type && ACCEPTED_OWNERS.includes(items.host.type)) host = items.host;
     }
     else {
 
-        host = (this.currentHost) ? this.currentHost : (this.host) ? artefact[this.host] : false;
+        if (this.currentHost) host = this.currentHost;
+        else if (this.host) {
+
+            if (this.host.substring) host = artefact[this.host];
+            else if (this.host.type && ACCEPTED_OWNERS.includes(this.host.type)) host = this.host;
+        }
     }
 
     if (host) {
@@ -271,22 +276,12 @@ P.stamp = function () {
             // Check if artefacts need to be sorterd and, if yes, sort them by their order attribute
             this.sortArtefacts();
 
-            // Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool
-            const filterCell = (stashOutput || (!noFilters && filters && filters.length)) ?
-                requestCell() :
-                false;
+            // Get a pool cell for the filter/stash functionality, if required
+            let filterCell = null;
 
-            // Setup the pool Cell, if required
-            if (filterCell && filterCell.element) {
+            if (stashOutput || (!noFilters && filters && filters.length)) {
 
-                const dims = currentHost.currentDimensions,
-                    fEl = filterCell.element;
-
-                if (dims && fEl) {
-
-                    fEl.width = dims[0];
-                    fEl.height = dims[1];
-                }
+                filterCell = requestCell(currentHost.element.width, currentHost.element.height);
             }
 
             // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
@@ -380,6 +375,7 @@ P.prepareStamp = function (myCell) {
 
     if (myCell) host = myCell;
 
+// console.log(this.name, 'prepareStamp', myCell.name);
     this.artefactCalculateBuckets.forEach(art => {
 
         if (art.lib === ENTITY) {
@@ -413,8 +409,9 @@ P.stampAction = function (myCell) {
 
         if (!noFilters && filters && filters.length) {
 
+// console.log(this.name, 'stampAction', myCell.name, myCell.w, myCell.h, myCell.element.width, myCell.element.height)
             const img = this.applyFilters(myCell);
-            this.stashAction(img);
+            if (stashOutput) this.stashAction(img);
         }
         else if (stashOutput) {
 
@@ -437,6 +434,7 @@ P.stampAction = function (myCell) {
 
                 const tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
 
+
                 this.stashAction(tempImg);
             }
         }
@@ -447,6 +445,8 @@ P.stampAction = function (myCell) {
 P.applyFilters = function (myCell) {
 
     const currentHost = this.currentHost;
+    const dpr = getPixelRatio();
+
 
     if (!currentHost || !myCell) return false;
 
@@ -487,11 +487,12 @@ P.applyFilters = function (myCell) {
 
         filterCellEngine.globalCompositeOperation = SOURCE_OVER;
         filterCellEngine.globalAlpha = 1;
-        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.setTransform(dpr, 0, 0, dpr, 0, 0);
         filterCellEngine.putImageData(img, 0, 0);
     }
 
     currentEngine.save();
+
     currentEngine.setTransform(1, 0, 0, 1, 0, 0);
     currentEngine.drawImage(filterCellElement, 0, 0);
     currentEngine.restore();

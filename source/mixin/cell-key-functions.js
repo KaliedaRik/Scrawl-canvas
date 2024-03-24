@@ -302,22 +302,6 @@ export default function (P = Ωempty) {
         return this;
     };
 
-    // `getComputedFontSizes` - internal function - the Cell wrapper gets passed by Phrase entitys to its fontAttributes object, which then invokes it when calculating font sizes
-    P.getComputedFontSizes = function () {
-
-        const host = this.getHost();
-
-        if (host && host.domElement) {
-
-            const em = _computed(host.domElement),
-                rem = _computed(document.documentElement);
-
-            return [parseFloat(em.fontSize), parseFloat(rem.fontSize), window.innerWidth, window.innerHeight];
-        }
-        return false;
-    }
-
-
     // `getEntityHits` - Returns an array of entity Objects responding 'true' to a checkHit call on them, for the Cell's current `.here` attribute coordinates. Used in particular with `Canvas.cascadeEventAction()` function
     P.getEntityHits = function () {
 

@@ -123,27 +123,26 @@
 
 <body>
   <main>
-    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.12.0)</span></h1>
+    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.13.0)</span></h1>
 
-    <p>The Scrawl-canvas library has been developed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
+    <p>The Scrawl-canvas library makes it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 
-    <p><strong>These demos represent the library's testing suite.</strong> They have been designed to cover as much functionality as possible in sets of integration tests. Testing is (currently) conducted by hand: all demos must run as expected before changes can be pushed to the library's v8 or master branches on GitHub.</p>
+    <p><strong>These demos represent the library's testing suite.</strong> They have been designed to cover as much functionality as possible in sets of integration tests. Testing is (currently) conducted by hand: all demos must run as expected before changes can be pushed to the library's v8 branch on GitHub.</p>
 
     <p>Additional (non-testing) demos can be found in this <a href="https://codepen.io/collection/RzzMjw">CodePen collection</a>.</p>
 
     <h2>Core functionality tests:</h2>
 
-    <p>Scrawl-canvas helps developers build graphical representations and scenes that are <strong>real-time responsive</strong> to their DOM environment, and easier to <strong>make accessible</strong> to non-visibility-based technology. The coding paradigm encourages developers to <strong>split their code into ES6 modules</strong>: this makes code easier to maintain and easier to reuse.</p>
+    <p>Scrawl-canvas helps developers build graphical representations and scenes that are <strong>real-time responsive</strong> to their DOM environment, and easier to <strong>make accessible</strong> to non-visual technology. The coding paradigm encourages developers to <strong>split their code into ES6 modules</strong>: this makes code easier to maintain and easier to reuse.</p>
 
-    <p>In essence, Scrawl-canvas represents a system to define a set of <strong>graphical entitys</strong> and their associated <strong>styles</strong> (colors, gradients, patterns) and <strong>assets</strong> (images, spritesheets, video, media stream, noise, other canvas elements), then <strong>position</strong> (absolutely, relatively, by reference to other entitys) and <strong>animate them</strong> (by delta, by tween) across the canvas - often in response to user interaction. Animation can also be extended to styles and asset display.</p>
+    <p>In essence, Scrawl-canvas represents a system to define a set of <strong>graphical entitys</strong> and their associated <strong>styles</strong> (colors, gradients, patterns) and <strong>assets</strong> (images, spritesheets, video, media stream, noise, other canvas elements), then <strong>position</strong> (absolutely, relatively, by reference to other entitys) and <strong>animate</strong> them (by delta, by tween) across the canvas - often in response to user interaction. Animation can also be extended to styles and asset display.</p>
 
     <p>Entitys include:</p>
 
     <ul>
-      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>, <strong>Crescent</strong>) and text (<strong>Label</strong>, <strong>EnhancedLabel</strong>).</li>
+      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>, <strong>Crescent</strong>) and text (<strong>Label</strong>).</li>
       <ul>
         <li>Wheel entitys also include part-circle shapes such as pie slices and truncated circles.</li>
-        <li>EnhancedLabel text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated along (curved) paths.</li>
         <li>CSS font strings are supported as far as possible, including font-sizes declared using suffixes such as 'em', 'rem', 'vw', 'pt', etc.</li>
       </ul>
       <li>Path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Bezier, Cog, Line, LineSpiral, Oval, Polygon, Polyline, Quadratic, Rectangle, Spiral, Star, Tetragon</strong>).</li>
@@ -151,7 +150,10 @@
         <li>Line, Quadratic, and Bezier entitys can have their start, end and control coordinates positioned absolutely, relatively, or by reference to other entitys (including along paths).</li>
       </ul>
       <li>Images, video and related pixel-based image streams (<strong>Picture</strong>), both in whole and in part; the proportion of the image displayed can be controlled and animated.</li>
-      <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort image output (<strong>Loom, Mesh</strong>).</li>
+      <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort image output (<strong>Loom, Mesh</strong>). The <strong>EnhancedLabel</strong> entity is a (basic) text layout engine which uses other artefacts as a template for defining how and where the text will display.</li>
+      <ul>
+        <li>EnhancedLabel text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated in different ways, including along a path.</li>
+      </ul>
     </ul>
 
     <p>Entitys can be stamped onto the canvas in a variety of ways:</p>
@@ -162,6 +164,7 @@
       <ul>
         <li>All gradient styles can be bound to their containing cell, or to particular entitys.</li>
         <li>Entitys can accept all legitimate CSS color strings &ndash; rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklch(), oklab(), color() &ndash; for their fillStyle, strokeStyle and shadowColor input.</li>
+        <li>Wide-gamut color can be displayed on devices that support them.</li>
         <li>Color factories (and thus gradient styles) can work with RGB, HSL, HWB, LAB, LCH, OKLAB and OKLCH <strong>color spaces</strong> internally, and export CSS color strings for each of those spaces; Color factories support <strong>color ranges</strong>. This extends to gradients, which can spread colors defined in any supported color space.</li> 
         <li>Color factories, and gradient styles, can have easing algorithms applied to them &ndash; <strong>eased linear gradients</strong>.</li>
       </ul>
@@ -354,6 +357,7 @@
         Video control and manipulation; chroma-based hit zone
         <br /><span class="responsive">Responsive canvas</span>
         <br /><span class="responsive">Anchor links</span>
+        <br /><span class="responsive">Keyboard zones</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-028.webp" /></div>
@@ -588,12 +592,15 @@
     </div>
 
     <h2>Label and EnhancedLabel entity tests</h2>
+
+    <p>As of Scrawl-canvas v8.13.0, the Phrase entity has been deprecated and removed from the library. The new <strong>Label</strong> and <strong>EnhancedLabel</strong> entitys replace it. All demos that previously used Phrase entitys have been updated to use these new entitys.</p>
     
     <div class="container">
       <div class="no-padding"><img src="thumbs/canvas-201.webp" /></div>
       <div>
         <a href="canvas-201.html">Canvas 201</a>
         Label entity (make, clone, method); Label accessible text
+        <br /><span class="responsive">Drag zones</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-202.webp" /></div>
@@ -612,55 +619,54 @@
       <div>
         <a href="canvas-204.html">Canvas 204</a>
         Label entity - gradients and patterns
+        <br /><span class="responsive">Drag zones</span>
       </div>
       
       <div class="no-padding"><img src="thumbs/canvas-205.webp" /></div>
       <div>
         <a href="canvas-205.html">Canvas 205</a>
         Label entity - updating font parts; experiments with variable font
+        <br /><span class="responsive">Drag zones</span>
       </div>
       
-    </div>
-
-    <h2>Phrase entity tests</h2>
-    <p>Note that Phrase entitys are deprecated and will be removed in a future release. Use Label and EnhancedLabel entitys instead.</p>
-    
-    <div class="container">
-      <div class="no-padding"><img src="thumbs/canvas-301.webp" /></div>
+      <div class="no-padding"><img src="thumbs/canvas-206.webp" /></div>
       <div>
-        <a href="canvas-301.html">Canvas 301</a>
-        Phrase entity (make, clone, method, multiline)
+        <a href="canvas-206.html">Canvas 206</a>
+        EnhancedLabel entity - basic multiline text
       </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-301.webp" /></div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-207.webp" /></div>
       <div>
-        <a href="canvas-302.html">Canvas 302</a>
-        Phrase entity - cache output to improve render speeds
+        <a href="canvas-207.html">Canvas 207</a>
+        EnhancedLabel entity - styling multiline text
       </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-303.webp" /></div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-208.webp" /></div>
       <div>
-        <a href="canvas-303.html">Canvas 303</a>
-        Phrase entity position and font attributes
+        <a href="canvas-208.html">Canvas 208</a>
+        EnhancedLabel entity - text along a path
       </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-304.webp" /></div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-209.webp" /></div>
       <div>
-        <a href="canvas-304.html">Canvas 304</a>
-        Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality
+        <a href="canvas-209.html">Canvas 209</a>
+        EnhancedLabel - clone entity, drag-drop; shadows, gradients and patterns
+        <br /><span class="responsive">Drag zones</span>
       </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-305.webp" /></div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-210.webp" /></div>
       <div>
-        <a href="canvas-305.html">Canvas 305</a>
-        Phrase entity - text along a path
+        <a href="canvas-210.html">Canvas 210</a>
+        EnhancedLabel - TextUnit dynamic manipulation
       </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-306.webp" /></div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-211.webp" /></div>
       <div>
-        <a href="canvas-306.html">Canvas 306</a>
-        Phrase entitys and gradients
+        <a href="canvas-211.html">Canvas 211</a>
+        EnhancedLabel entity - keyboard navigation; hit tests
+        <br /><span class="responsive">Keyboard zones</span>
       </div>
+      
     </div>
 
     <h2>Filters functionality tests</h2>

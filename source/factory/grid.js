@@ -768,7 +768,7 @@ P.checkHit = function (items = [], mycell) {
                     return false;
                 })
             }
-        })
+        });
 
         if (poolCellFlag) releaseCell(mycell);
 

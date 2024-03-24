@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.12.0
+// Type definitions for Scrawl-canvas 8.13.0
 
 
 
@@ -13,6 +13,9 @@ interface CommonObjectInput {
 }
 
 type StringOrNumberInput = string | number;
+
+type Percentage = `${number}%`;
+type PercentOrNumberInput = Percentage | number;
 
 interface CommonHereObjectInput {
     x?: StringOrNumberInput;
@@ -355,6 +358,7 @@ interface FilterMixinFunctions {
 
 
 
+
 // Mimic mixin
 // -------------------------------------
 interface MimicMixinDeltaInputs {}
@@ -440,6 +444,7 @@ interface PivotMixinInputs {
     pivot?: ArtefactInstance | string;
     pivotCorner?: PivotCornerValues;
     pivotPin?: number;
+    pivotIndex?: number;
 }
 
 interface PivotMixinFunctions {}
@@ -495,6 +500,7 @@ interface HitOutput {
     x: number;
     y: number;
     tiles?: number[];
+    index?: number;
     particle?: ParticleInstance;
 }
 
@@ -555,7 +561,9 @@ interface ShapeCurveMixinInputs extends ShapeBasicMixinInputs {
     endPath?: ShapeInstance | string;
     endPivot?: ArtefactInstance | string;
     endPivotCorner?: PivotCornerValues;
+    endPivotIndex?: number;
     endPivotPin?: number;
+    pivotIndex?: number;
     useStartAsControlPoint?: boolean;
 }
 
@@ -600,16 +608,12 @@ interface StylesMixinFunctions {
 
 // Text mixin
 // -------------------------------------
-interface TextMixinDeltaInputs {
-    boundingBoxLineWidth?: number;
-}
+interface TextMixinDeltaInputs {}
 
 interface TextMixinInputs {
     accessibleText?: string;
     accessibleTextOrder?: number;
     accessibleTextPlaceholder?: string;
-    boundingBoxStyle?: StylesInstance | string;
-    showBoundingBox?: boolean;
     textIsAccessible?: boolean;
 }
 
@@ -652,7 +656,7 @@ type ControlsShapeInstance = BezierInstance | LineInstance | QuadraticInstance;
 
 type ShapeBasedInstance = ControlsShapeInstance | CogInstance | LineSpiralInstance | OvalInstance | PolygonInstance | PolylineInstance | RectangleInstance | ShapeInstance | SpiralInstance | StarInstance | TetragonInstance;
 
-type EntityInstance = ShapeBasedInstance | BlockInstance | CrescentInstance | EmitterInstance | GridInstance | LoomInstance | MeshInstance | NetInstance | PhraseInstance | PictureInstance | TracerInstance | WheelInstance;
+type EntityInstance = ShapeBasedInstance | BlockInstance | CrescentInstance | EmitterInstance | EnhancedLabelInstance | GridInstance | LabelInstance | LoomInstance | MeshInstance | NetInstance | PictureInstance | TracerInstance | WheelInstance;
 
 type ArtefactInstance = EntityInstance | StackInstance | CanvasInstance | ElementInstance | UnstackedElementInstance;
 
@@ -782,6 +786,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     startControlPivot?: ArtefactInstance | string;
     startControlPivotCorner?: PivotCornerValues;
     startControlPivotPin?: number;
+    startControlPivotIndex?: number;
 
     addEndControlPathHandle?: boolean;
     addEndControlPathOffset?: boolean;
@@ -793,6 +798,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     endControlPivot?: ArtefactInstance | string;
     endControlPivotCorner?: PivotCornerValues;
     endControlPivotPin?: number;
+    endControlPivotIndex?: number;
 
     delta?: BezierFactoryDeltaInputs;
 }
@@ -1245,6 +1251,92 @@ interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions 
 
 
 
+// EnhancedLabelInstance factory
+// -------------------------------------
+type TextLineJustifyValues = 'start' | 'end' | 'left' | 'right' | 'center' | 'space-between' | 'space-around';
+type TextUnitFlowValues = 'row' | 'row-reverse' | 'column' | 'column-reverse';
+type EnhancedLabelTextUnitHandleXValues = 'start' | 'end' | 'left' | 'right' | 'center' | PercentOrNumberInput;
+type EnhancedLabelTextUnitHandleYValues = 'top' | 'hanging' | 'center' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom' | PercentOrNumberInput;
+
+interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMixinDeltaInputs, FilterMixinDeltaInputs, TextMixinDeltaInputs, TextStyleFactoryDeltaInputs, StateFactoryDeltaInputs {
+    alignment?: number;
+    guidelineWidth?: number;
+    handleX?: StringOrNumberInput; 
+    handleY?: StringOrNumberInput; 
+    height?: StringOrNumberInput; 
+    lineAdjustment?: number;
+    lineSpacing?: number;
+    offsetX?: StringOrNumberInput; 
+    offsetY?: StringOrNumberInput; 
+    pathPosition?: number;
+    roll?: number; 
+    scale?: number; 
+    startX?: StringOrNumberInput; 
+    startY?: StringOrNumberInput; 
+    width?: StringOrNumberInput; 
+}
+
+interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, FilterMixinInputs, TextMixinInputs, TextStyleFactoryInputs, StateFactoryInputs, EnhancedLabelFactoryDeltaInputs {
+    alignTextUnitsToPath?: boolean;
+    breakTextOnSpaces?: boolean;
+    breakWordsOnHyphens?: boolean;
+    cacheOutput?: boolean;
+    calculateOrder?: number;
+    checkHitUseTemplate?: boolean;
+    delta?: EnhancedLabelFactoryDeltaInputs;
+    dimensions?: CommonTwoElementArrayInput; 
+    flipReverse?: boolean;
+    flipUpend?: boolean;
+    group?: GroupInstance | string;
+    guidelineDash?: number[];
+    guidelineStyle?: string;
+    handle?: CommonTwoElementArrayInput; 
+    hyphenString?: string;
+    justifyLine?: TextLineJustifyValues;
+    layoutTemplate?: ArtefactInstance | string;
+    lockFillStyleToEntity?: boolean;
+    lockStrokeStyleToEntity?: boolean;
+    method?: 'fill' | 'draw' | 'fillAndDraw' | 'drawAndFill';
+    offset?: CommonTwoElementArrayInput; 
+    order?: number;
+    showGuidelines?: boolean;
+    stampOrder?: number;
+    start?: CommonTwoElementArrayInput; 
+    text?: string;
+    textHandle?: [EnhancedLabelTextUnitHandleXValues, EnhancedLabelTextUnitHandleYValues];
+    textHandleX?: EnhancedLabelTextUnitHandleXValues;
+    textHandleY?: EnhancedLabelTextUnitHandleYValues;
+    textOffset?: [PercentOrNumberInput, PercentOrNumberInput];
+    textOffsetX?: PercentOrNumberInput;
+    textOffsetY?: PercentOrNumberInput;
+    textUnitFlow?: TextUnitFlowValues;
+    truncateString?: string;
+    useLayoutTemplateAsPath?: boolean;
+    visibility?: boolean;
+}
+
+interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs {}
+
+interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions, FilterMixinFunctions, TextMixinFunctions, TextStyleFactoryFunctions, StateFactoryFunctions {
+    applyTextUnitUpdates: () => void;
+    checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
+    clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
+    convertTextEntityCharacters: (item: string) => string;
+    getAccessibleText: () => string;
+    recalculateFont: () => void;
+    saveAsPacket: (item?: EnhancedLabelSaveInputs | boolean) => string;
+    set: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
+    setDelta: (item?: EnhancedLabelFactoryDeltaInputs) => EnhancedLabelInstance;
+    setTextUnit: (index: number, items: CommonObjectInput) => void;
+    setAllTextUnits: (items: CommonObjectInput) => void;
+    simpleStamp: (host: CellInstance, items?: CommonObjectInput) => void;
+}
+
+interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, EnhancedLabelFactoryFunctions {}
+
+
+
+
 // FilterInstance factory
 // -------------------------------------
 interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
@@ -1541,31 +1633,17 @@ interface ImageAssetInstance extends ImageAssetFactoryInputs, ImageAssetFactoryF
 
 // LabelInstance factory
 // -------------------------------------
-interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
-    letterSpacing?: string | number;
-    underlineGap?: number;
-    underlineOffset?: number;
-    underlineWidth?: number;
-    wordSpacing?: string | number;
+interface LabelFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs, TextStyleFactoryDeltaInputs {
+    boundingBoxLineDashOffset?: number;
+    boundingBoxLineWidth?: number;
 }
 
-interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, LabelFactoryDeltaInputs {
+interface LabelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, TextStyleFactoryInputs, LabelFactoryDeltaInputs {
+    boundingBoxLineDash?: number[];
+    boundingBoxStyle?: StylesInstance | string;
     delta?: LabelFactoryDeltaInputs;
-    direction?: string;
-    fontKerning?: string;
-    fontStretch?: string;
-    fontSize?: string | number;
-    fontVariant?: string;
-    fontWeight?: string;
-    fontStyle?: string;
-    fontString?: string;
-    fontVariantCaps?: string;
-    includeUnderline?: boolean;
+    showBoundingBox?: boolean;
     text?: string;
-    textAlign?: string;
-    textBaseline?: string;
-    textRendering?: string;
-    underlineStyle?: StylesInstance | string;
 }
 
 interface LabelSaveInputs extends LabelFactoryInputs, SaveInputs {}
@@ -1576,7 +1654,6 @@ interface LabelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions
     set: (item?: LabelFactoryInputs) => LabelInstance;
     setDelta: (item?: LabelFactoryDeltaInputs) => LabelInstance;
     simpleStamp: (host: CellInstance, items?: LabelFactoryInputs) => void;
-    recalculateFont: () => void;
 }
 
 interface LabelInstance extends LabelFactoryInputs, LabelFactoryFunctions {}
@@ -1932,83 +2009,6 @@ interface PatternInstance extends PatternFactoryInputs, PatternFactoryFunctions 
 
 
 
-// PhraseInstance factory
-// -------------------------------------
-type PhraseJustifyValues = 'left' | 'center' | 'right' | 'full';
-
-type PhraseTextPathDirection = 'ltr' | 'rtl';
-
-type PhraseStyle = 'normal' | 'italic' | 'oblique';
-
-type PhraseVariant = 'normal' | 'small-caps';
-
-type PhraseWeight = 'normal' | 'bold' | 'lighter' | 'bolder' | number;
-
-type PhraseSize = 'xx-small' | 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'xx-large' | 'xxx-large' | 'smaller' | 'larger' | string;
-
-type PhraseSizeMetric = 'em' | 'rem' | 'lh' | 'rlh' | 'ex' | 'cap' | 'ch' | 'ic' | '%'| 'vw' | 'vh' | 'vmax' | 'vmin' | 'vi' | 'vb' | 'in' | 'cm' | 'mm' | 'Q' | 'pc' | 'pt' | 'px';
-
-type PhraseFamily = 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui' | 'math' | 'emoji' | 'fangsong' | string;
-
-interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
-    letterSpacing?: number;
-    lineHeight?: number;
-    overlinePosition?: number;
-    overlineWidth?: number;
-    sizeValue?: number;
-    textPathPosition?: number;
-    underlinePosition?: number;
-    underlineWidth?: number;
-}
-
-interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, PhraseFactoryDeltaInputs {
-    addTextPathRoll?: boolean;
-    boundingBoxColor?: string;
-    breakOnlyOnBreakGlyphs?: boolean;
-    delta?: PhraseFactoryDeltaInputs;
-    exposeText?: boolean;
-    family?: PhraseFamily;
-    font?: string;
-    highlightStyle?: string;
-    isVerticalText?: boolean;
-    justify?: PhraseJustifyValues;
-    noOverlineGlyphs?: string;
-    noUnderlineGlyphs?: string;
-    overlineStyle?: string;
-    sectionClassMarker?: string;
-    size?: PhraseSize;
-    sizeMetric?: PhraseSizeMetric;
-    sizeValue?: number;
-    style?: PhraseStyle;
-    text?: string;
-    textPath?: ShapeInstance | string;
-    textPathDirection?: PhraseTextPathDirection;
-    textPathLoop?: boolean;
-    treatAsBreakGlyphs?: string[];
-    treatWordAsGlyph?: boolean;
-    underlineStyle?: string;
-    variant?: PhraseVariant;
-    weight?: PhraseWeight;
-    wordSpacing?: number;
-}
-
-interface PhraseSaveInputs extends PhraseFactoryInputs, SaveInputs {}
-
-interface PhraseFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
-    addSectionClass: (label: string, obj: CommonObjectInput) => PhraseInstance;
-    clone: (item?: PhraseFactoryInputs) => PhraseInstance;
-    removeSectionClass: (label: string) => PhraseInstance;
-    saveAsPacket: (item?: PhraseSaveInputs | boolean) => string;
-    set: (item?: PhraseFactoryInputs) => PhraseInstance;
-    setDelta: (item?: PhraseFactoryDeltaInputs) => PhraseInstance;
-    simpleStamp: (host: CellInstance, items?: PhraseFactoryInputs) => void;
-}
-
-interface PhraseInstance extends PhraseFactoryInputs, PhraseFactoryFunctions {}
-
-
-
-
 // PictureInstance factory
 // -------------------------------------
 interface PictureFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, AssetConsumerMixinDeltaInputs {
@@ -2124,6 +2124,7 @@ interface QuadraticFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs,
     controlPivot?: ArtefactInstance | string;
     controlPivotCorner?: PivotCornerValues;
     controlPivotPin?: number;
+    controlPivotIndex?: number;
     delta?: QuadraticFactoryDeltaInputs;
 }
 
@@ -2342,6 +2343,7 @@ interface RenderFactoryFunctions extends BaseMixinFunctions {
     saveAsPacket: (item?: RenderSaveInputs | boolean) => string;
     set: (item?: RenderFactoryInputs) => RenderInstance;
     setDelta: (item?: RenderFactoryDeltaInputs) => RenderInstance;
+    updateHook: (hook: string, func?: DefaultInputFunction) => void;
 }
 
 interface RenderInstance extends RenderFactoryInputs, RenderFactoryFunctions {}
@@ -2564,6 +2566,56 @@ interface TetragonInstance extends TetragonFactoryInputs, TetragonFactoryFunctio
     length: number;
 }
 
+
+
+
+// TextStyleInstance factory
+// -------------------------------------
+interface TextStyleFactoryDeltaInputs extends BaseMixinDeltaInputs {
+    lineDashOffset?: number;
+    lineWidth?: number;
+    overlineOffset?: number;
+    overlineWidth?: number;
+    underlineGap?: number;
+    underlineOffset?: number;
+    underlineWidth?: number;
+}
+
+interface TextStyleFactoryInputs extends BaseMixinInputs, TextStyleFactoryDeltaInputs {
+    direction?: string;
+    fillStyle?: StylesInstance | string;
+    fontFamily?: string;
+    fontKerning?: string;
+    fontSize?: string;
+    fontStretch?: string;
+    fontString?: string;
+    fontStyle?: string;
+    fontVariantCaps?: string;
+    fontWeight?: string;
+    highlightStyle?: StylesInstance | string;
+    includeHighlight?: boolean;
+    includeOverline?: boolean;
+    includeUnderline?: boolean;
+    letterSpacing?: StringOrNumberInput;
+    lineDash?: number[];
+    method?: MethodValues;
+    overlineStyle?: StylesInstance | string;
+    strokeStyle?: StylesInstance | string;
+    textRendering?: string;
+    underlineStyle?: StylesInstance | string;
+    wordSpacing?: StringOrNumberInput;
+}
+
+interface TextStyleSaveInputs extends TextStyleFactoryFunctions, SaveInputs {}
+
+interface TextStyleFactoryFunctions extends BaseMixinFunctions {
+    clone: (item?: TextStyleFactoryInputs) => TextStyleInstance;
+    saveAsPacket: (item?: TextStyleSaveInputs | boolean) => string;
+    set: (item?: TextStyleFactoryInputs) => TextStyleInstance;
+    setDelta: (item?: TextStyleFactoryDeltaInputs) => TextStyleInstance;
+}
+
+interface TextStyleInstance extends TextStyleFactoryInputs, TextStyleFactoryFunctions {}
 
 
 
@@ -2895,7 +2947,7 @@ export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction |
 
 
 
-// makeDragZone factory (not stored in library)
+// MakeKeyboardZoneInputs factory (not stored in library)
 // -------------------------------------
 interface MakeKeyboardZoneInputs {
     zone: StackInstance | CanvasInstance | string;
@@ -3037,6 +3089,7 @@ export function makeColor(items: ColorFactoryInputs): ColorInstance;
 export function makeConicGradient(items: ConicGradientFactoryInputs): ConicGradientInstance;
 export function makeCrescent(items: CrescentFactoryInputs): CrescentInstance;
 export function makeEmitter(items: EmitterFactoryInputs): EmitterInstance;
+export function makeEnhancedLabel(items: EnhancedLabelFactoryInputs): EnhancedLabelInstance;
 export function makeFilter(items: FilterFactoryInputs): FilterInstance;
 export function makeForce(items: ForceFactoryInputs): ForceInstance;
 export function makeGradient(items: GradientFactoryInputs): GradientInstance;
@@ -3052,7 +3105,6 @@ export function makeNoise(items: NoiseAssetFactoryInputs): NoiseAssetInstance;
 export function makeNoiseAsset(items: NoiseAssetFactoryInputs): NoiseAssetInstance;
 export function makeOval(items: OvalFactoryInputs): OvalInstance;
 export function makePattern(items: PatternFactoryInputs): PatternInstance;
-export function makePhrase(items: PhraseFactoryInputs): PhraseInstance;
 export function makePicture(items: PictureFactoryInputs): PictureInstance;
 export function makePolygon(items: PolygonFactoryInputs): PolygonInstance;
 export function makePolyline(items: PolylineFactoryInputs): PolylineInstance;
@@ -3139,6 +3191,8 @@ export function stopCoreListeners(): void;
 export function forceUpdate(): void;
 
 export function recalculateFonts(item?: number): void;
+
+export function purgeFontMetadata(): void;
 
 
 

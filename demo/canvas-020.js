@@ -112,6 +112,32 @@ const wheel2 = wheel1.clone({
     order: 1,
 });
 
+scrawl.makeWheel({
+    name: name('template'),
+    start: ['5%', '35%'],
+    radius: 70,
+    method: 'none',
+    scale: 1.8,
+});
+
+const words = scrawl.makeEnhancedLabel({
+    name: name('words'),
+    group: canvas.base.name,
+
+    layoutTemplate: name('template'),
+    text: 'Lorem ipsum dolorsit amet',
+    fontString: 'bold 26px sans-serif',
+    justifyLine: 'left',
+    fillStyle: name('linear3'),
+    textHandleY: 'center',
+    lineSpacing: 1.2,
+    lineAdjustment: 20,
+    lockFillStyleToEntity: true,
+    // memoizeFilterOutput: false,
+    shadowOffsetX: 1.5,
+    shadowOffsetY: 1.5,
+});
+
 
 // Create the filter
 scrawl.makeFilter({
@@ -149,6 +175,7 @@ const imageCapture = function () {
         scrawl.createImageFromEntity(block2, true);
         scrawl.createImageFromEntity(wheel1, true);
         scrawl.createImageFromEntity(wheel2, true);
+        scrawl.createImageFromEntity(words, true);
 
         captureImages = false;
     }
@@ -164,7 +191,7 @@ scrawl.makePicture({
     width: '13%',
     height: '76%',
 
-    startX: '3%',
+    startX: '1%',
     startY: '2%',
 
     asset: 'mycanvas_base-image',
@@ -181,31 +208,37 @@ scrawl.makePicture({
 
     name: name('group-image'),
     asset: 'mycanvas_base-groupimage',
-    startX: '19%',
+    startX: '15%',
 
 }).clone({
 
     name: name('b1-image'),
     asset: name('b1-image'),
-    startX: '35%',
+    startX: '29%',
 
 }).clone({
 
     name: name('b2-image'),
     asset: name('b2-image'),
-    startX: '51%',
+    startX: '43%',
 
 }).clone({
 
     name: name('w1-image'),
     asset: name('w1-image'),
-    startX: '67%',
+    startX: '57%',
 
 }).clone({
 
     name: name('w2-image'),
     asset: name('w2-image'),
-    startX: '83%',
+    startX: '71%',
+
+}).clone({
+
+    name: name('words-image'),
+    asset: name('words-image'),
+    startX: '85%',
 });
 
 
@@ -216,7 +249,7 @@ scrawl.makeLabel({
     group: hold.get('baseGroup'),
 
     text: 'Cell',
-    fontString: '15px Arial, sans-serif',
+    fontString: '15px sans-serif',
 
     startY: '85%',
     pivot: name('cell-image'),
@@ -251,6 +284,12 @@ scrawl.makeLabel({
     name: name('w2-phrase'),
     text: 'Wheel2',
     pivot: name('w2-image'),
+
+}).clone({
+
+    name: name('words-phrase'),
+    text: 'Words',
+    pivot: name('words-image'),
 });
 
 
@@ -312,6 +351,10 @@ const events = function () {
 
                 case 'wheel2' :
                     wheel2.addFilters(name('myfilter'));
+                    break;
+
+                case 'words' :
+                    words.addFilters(name('myfilter'));
                     break;
 
                 case 'group' :
