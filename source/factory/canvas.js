@@ -302,7 +302,7 @@ const defaultAttributes = {
 //
 // If no label value is supplied to the Canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual `set()` functionality.
 //
-// Beyond the Canvas object, Scrawl-canvas also encourages Phrase entitys (which handle graphical text in the canvas display) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
+// Beyond the Canvas object, Scrawl-canvas also encourages text-based entitys (Label, EnhancedLabel) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
     title: ZERO_STR,
     label: ZERO_STR,
     description: ZERO_STR,
@@ -785,7 +785,7 @@ P.reorderNavElements = function () {
     navEl.setAttribute(ARIA_BUSY, 'false');
 };
 
-// `reorderTextElements` - handle Label and EnhancedLabel (and Phrase) ordering withing the textHold's &lt;div> element
+// `reorderTextElements` - handle Label and EnhancedLabel ordering within the textHold's &lt;div> element
 P.reorderTextElements = function () {
 
     this.dirtyTextTabOrder = false;

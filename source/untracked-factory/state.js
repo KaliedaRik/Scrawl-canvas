@@ -16,7 +16,7 @@ import { doCreate, xt, xtGet } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { AUTO, BLACK, BUTT, DEFAULT_FONT, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, T_COLOR, T_ENHANCED_LABEL, T_LABEL, T_PHRASE, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
+import { AUTO, BLACK, BUTT, DEFAULT_FONT, FONT_ENTITYS, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, T_COLOR, T_ENHANCED_LABEL, T_LABEL, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### State constructor
@@ -326,7 +326,7 @@ P.getChanges = function (ent, engineState) {
     }
 
     // 'font', 'direction', 'fontKerning', 'textRendering', 'letterSpacing', 'wordSpacing'
-    if ([T_PHRASE, T_LABEL, T_ENHANCED_LABEL].includes(ent.type)) {
+    if (FONT_ENTITYS.includes(ent.type)) {
 
         for (i = 0, iz = STATE_LABEL_KEYS.length; i < iz; i++) {
 

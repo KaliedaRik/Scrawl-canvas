@@ -22,7 +22,7 @@
 // + The artefact can then set its `path` attribute to the path-defined entity's name-String (or the entity itself), and set its `lockTo` Array values to `"path"`.
 // + We position the artefact by setting its `pathPosition` attribute to a float Number value between `0.0 - 1.0`, with `0` being the start of the path, and `1` being its end.
 // + Path-defined entitys can use other path-defined entitys as a path.
-// + Phrase entitys can use a path to position their text block; they can also use a path to position each letter individually along the path.
+// + EnhancedLabel entitys can use a path to position their text units; they can also use a path to position each letter individually along the path.
 // + Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - ___tangential rotation___ by setting their `addPathRotation` flag to `true`.
 // + Animate an artefact along the path by either using the artefact's `delta` object, or triggering a Tween to perform the movement.
 

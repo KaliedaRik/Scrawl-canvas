@@ -1,5 +1,5 @@
 // # Text mixin
-// Adds accessibility and bounding box functionality to Phrase, Label and EnhancedLabel entitys. Also includes the functionality to see whether a font has been loaded.
+// Adds accessibility and other shared functionality to Label and EnhancedLabel entitys. Also includes the functionality to see whether a font has been loaded.
 
 
 
