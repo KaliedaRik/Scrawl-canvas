@@ -2419,6 +2419,7 @@ interface RenderFactoryFunctions extends BaseMixinFunctions {
     saveAsPacket: (item?: RenderSaveInputs | boolean) => string;
     set: (item?: RenderFactoryInputs) => RenderInstance;
     setDelta: (item?: RenderFactoryDeltaInputs) => RenderInstance;
+    updateHook: (hook: string, func?: DefaultInputFunction) => void;
 }
 
 interface RenderInstance extends RenderFactoryInputs, RenderFactoryFunctions {}

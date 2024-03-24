@@ -979,6 +979,8 @@ P.show = function () {
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
+            engine.imageSmoothingQuality = 'high';
+
             const fit = (controller) ? controller.fit : NONE;
 
             let relWidth, relHeight;
@@ -1057,6 +1059,8 @@ P.show = function () {
 
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
+
+            engine.imageSmoothingQuality = 'high';
 
             paste[0] = ~~(-handle[0] * scale);
             paste[1] = ~~(-handle[1] * scale);

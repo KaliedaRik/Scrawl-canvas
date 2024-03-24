@@ -27,7 +27,7 @@ import textMix from '../mixin/text.js';
 
 import { doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _parse, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, DIV, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, ROW, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, ROW, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### EnhancedLabel constructor
@@ -222,57 +222,6 @@ P.processFactoryPacketOut = function (key, value, incs) {
     if(!incs.indexOf(key) && value === this.defs[key]) result = false;
 
     return result;
-};
-
-P.finalizePacketOut = function (copy, items) {
-
-    const defaultTextCopy = _parse(this.defaultTextStyle.saveAsPacket(items))[3];
-    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
-
-    copy = mergeOver(copy, {
-        direction: defaultTextCopy.direction,
-        fillStyle: defaultTextCopy.fillStyle,
-        fontKerning: defaultTextCopy.fontKerning,
-        fontStretch: defaultTextCopy.fontStretch,
-        fontString: defaultTextCopy.fontString,
-        fontVariantCaps: defaultTextCopy.fontVariantCaps,
-        highlightStyle: defaultTextCopy.highlightStyle,
-        includeHighlight: defaultTextCopy.includeHighlight,
-        includeUnderline: defaultTextCopy.includeUnderline,
-        letterSpacing: defaultTextCopy.letterSpaceValue,
-        lineDash: defaultTextCopy.lineDash,
-        lineDashOffset: defaultTextCopy.lineDashOffset,
-        lineWidth: defaultTextCopy.lineWidth,
-        method: defaultTextCopy.method,
-        overlineOffset: defaultTextCopy.overlineOffset,
-        overlineStyle: defaultTextCopy.overlineStyle,
-        overlineWidth: defaultTextCopy.overlineWidth,
-        strokeStyle: defaultTextCopy.strokeStyle,
-        textRendering: defaultTextCopy.textRendering,
-        underlineGap: defaultTextCopy.underlineGap,
-        underlineOffset: defaultTextCopy.underlineOffset,
-        underlineStyle: defaultTextCopy.underlineStyle,
-        underlineWidth: defaultTextCopy.underlineWidth,
-        wordSpacing: defaultTextCopy.wordSpaceValue,
-
-        filter: stateCopy.filter,
-        font: null,
-        globalAlpha: stateCopy.globalAlpha,
-        globalCompositeOperation: stateCopy.globalCompositeOperation,
-        imageSmoothingEnabled: stateCopy.imageSmoothingEnabled,
-        imageSmoothingQuality: stateCopy.imageSmoothingQuality,
-        lineCap: ROUND,
-        lineJoin: ROUND,
-        miterLimit: 10,
-        shadowBlur: stateCopy.shadowBlur,
-        shadowColor: stateCopy.shadowColor,
-        shadowOffsetX: stateCopy.shadowOffsetX,
-        shadowOffsetY: stateCopy.shadowOffsetY,
-        textAlign: LEFT,
-        textBaseline: TOP,
-    });
-
-    return copy;
 };
 
 
@@ -502,40 +451,12 @@ G.textLines = function () {
 // `getTester` - Retrieve the DOM labelStylesCalculator &lt;div> element
 P.getTester = function () {
 
-// console.log(this.name, 'getTester (trigger: none. Called by: assessTextForStyle, S.text)');
+    const controller = this.getControllerCell();
 
-    const group = this.group;
+    if (controller) return controller.labelStylesCalculator;
 
-    if (group) {
-
-        const host = (group && group.getHost) ? group.getHost() : null;
-
-        if (host) {
-
-            const controller = host.getController();
-
-            if (controller) return controller.labelStylesCalculator;
-        }
-    }
     return null;
 };
-
-// `getControllerCell` - Retrieve the entity's controller Cell wrapper
-P.getControllerCell = function () {
-
-// console.log(this.name, 'getControllerCell (trigger: none. Called by: assessTextForStyle, S.text)');
-
-    const group = this.group;
-
-    if (group) {
-
-        const host = (group && group.getHost) ? group.getHost() : null;
-
-        if (host) return host.getController();
-    }
-    return null;
-};
-
 
 // `makeWorkingTextStyle` - Clone a TextStyle object
 P.makeWorkingTextStyle = function (template) {
@@ -550,7 +471,6 @@ P.makeWorkingTextStyle = function (template) {
     return workStyle;
 };
 
-
 // `setEngineFromWorkingTextStyle` - Sets the state object to current working requirements, alongside directly updating the Cell's engine to match
 P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
 
@@ -560,7 +480,6 @@ P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
     state.set(worker);
     cell.setEngine(this);
 };
-
 
 // `updateWorkingTextStyle` - Updates the working TextStyle object with a partial TextStyle object, and regenerates font strings from the updated data
 // + Takes into account the layout entity's current scaling factor
@@ -647,68 +566,7 @@ P.dirtyCache = function () {
 };
 
 
-// `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
-// + This is the preparation step
-P.temperFont = function () {
-
-// console.log(this.name, 'temperFont (trigger: none - called by cleanFont once font has loaded)');
-
-    const { group, defaultTextStyle } = this;
-
-    if (xta(group, defaultTextStyle)) {
-
-        const host = (group && group.getHost) ? group.getHost() : false;
-
-        let fontSizeCalculator = null,
-            fontSizeCalculatorValues = null;
-
-        if (host) {
-
-            const controller = host.getController();
-
-            if (controller) {
-
-                fontSizeCalculator = controller.fontSizeCalculator;
-                fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
-            }
-        }
-
-        if (!fontSizeCalculator) this.dirtyFont = true;
-        else {
-
-            this.calculateTextStyleFontStrings(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
-        }
-    }
-};
-
-
-// `convertTextEntityCharacters`
-// + Converts HTMLentity copy - such as changing `&epsilon;` to an &epsilon; letter
-// + We also strip the supplied text of all HTML markup
-P.convertTextEntityCharacters = function (item) {
-
-// console.log(this.name, 'convertTextEntityCharacters');
-    textEntityConverter.innerHTML = item;
-    return textEntityConverter.textContent;
-};
-
-
 // #### Clean functions
-
-// `cleanFont` - Performs a check to make sure we have a font to process
-P.cleanFont = function () {
-
-// console.log(this.name, 'cleanFont (trigger: dirtyFont)', this.dirtyFont);
-
-    if (this.currentFontIsLoaded) {
-
-        this.dirtyFont = false;
-        this.temperFont();
-    }
-    else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
-};
-
-
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
 
@@ -2859,6 +2717,8 @@ P.regularStamp = function (host) {
             engine.shadowBlur = state.shadowBlur;
             engine.shadowColor = state.shadowColor;
 
+            engine.imageSmoothingQuality = 'high';
+
             engine.globalAlpha = state.globalAlpha;
             engine.globalCompositeOperation = state.globalCompositeOperation;
 
@@ -2897,6 +2757,8 @@ P.regularStamp = function (host) {
 
                 const overlineCell = this.createOverlineCell(myHost);
                 const highlightCell = this.createHighlightCell(myHost);
+
+                finalEngine.imageSmoothingQuality = 'high';
 
                 if (!useLayoutTemplateAsPath && showGuidelines && guidelinesPath) this.stampGuidelinesOnCell(finalCell);
 
@@ -2981,11 +2843,13 @@ P.regularStamp = function (host) {
                         this.stashOutputAsAsset = false;
 
                         const stashCell = requestCell(stashWidth, stashHeight);
+
+                        stashCell.engine.imageSmoothingQuality = 'high';
                         stashCell.engine.putImageData(this.stashedImageData, 0, 0);
 
                         if (!this.stashedImage) {
 
-                            const control = this.group.currentHost.getController();
+                            const control = this.getControllerCell();
 
                             if (control) {
 
@@ -3046,9 +2910,11 @@ P.createTextCellsForPath = function (host) {
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
         this.removeShadowAndAlpha(uEngine);
+        uEngine.imageSmoothingQuality = 'high';
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
         this.removeShadowAndAlpha(mEngine);
+        mEngine.imageSmoothingQuality = 'high';
 
         const line = lines[0];
 
@@ -3175,9 +3041,11 @@ P.createTextCellsForSpace = function (host) {
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
         this.removeShadowAndAlpha(uEngine);
+        uEngine.imageSmoothingQuality = 'high';
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
         this.removeShadowAndAlpha(mEngine);
+        mEngine.imageSmoothingQuality = 'high';
 
         lines.forEach(line => {
 
@@ -3235,6 +3103,9 @@ P.createTextCellsForSpace = function (host) {
 
                         [x, y] = startData;
                         [dx, dy] = startCorrection;
+
+                        dx = _floor(dx);
+                        dy = _floor(dy);
 
                         cos = _cos(startRotation);
                         sin = _sin(startRotation);
@@ -3304,6 +3175,7 @@ P.addUnderlinesToCopyCell = function (host, copy) {
 
             const engine = mycell.engine;
             this.removeShadowAndAlpha(engine);
+            engine.imageSmoothingQuality = 'high';
 
             const copyEngine = copy.engine;
 
@@ -3345,6 +3217,7 @@ P.createOverlineCell = function (host) {
 
             const engine = mycell.engine;
             this.removeShadowAndAlpha(engine);
+            engine.imageSmoothingQuality = 'high';
 
             overlinePaths.forEach(data => {
 
@@ -3375,6 +3248,7 @@ P.createHighlightCell = function (host) {
 
             const engine = mycell.engine;
             this.removeShadowAndAlpha(engine);
+            engine.imageSmoothingQuality = 'high';
 
             highlightPaths.forEach(data => {
 
@@ -3408,6 +3282,7 @@ P.stampGuidelinesOnCell = function (cell) {
         engine.setLineDash(guidelineDash);
         engine.strokeStyle = guidelineStyle;
         engine.lineWidth = guidelineWidth;
+        engine.imageSmoothingQuality = 'high';
 
         engine.stroke(guidelinesPath);
 
@@ -3565,9 +3440,6 @@ export const makeEnhancedLabel = function (items) {
 
 constructors.EnhancedLabel = EnhancedLabel;
 
-
-// ### Module variables and functions
-const textEntityConverter = document.createElement(DIV);
 
 // #### TextUnit objects
 const UNIT_CHARS = 'chars',

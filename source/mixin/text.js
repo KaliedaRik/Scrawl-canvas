@@ -8,9 +8,9 @@ import { cell, cellnames, fontfamilymetadata, fontfamilymetadatanames, styles, s
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { addStrings, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _ceil, _isFinite, _keys, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, ITALIC, LABEL_DIRTY_FONT_KEYS, LABEL_UPDATE_FONTSTRING_KEYS, LABEL_UNLOADED_FONT_KEYS, LABEL_UPDATE_PARTS_KEYS, LAYOUT_KEYS, LEFT, NAME, NORMAL, OBLIQUE, POLITE, SMALL_CAPS, SPACE, STATE_KEYS, SYSTEM_FONTS, TEMPLATE_PASS_THROUGH_KEYS, TEXTSTYLE_KEYS, TOP, T_CANVAS, T_CELL, UNDEF } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, ITALIC, LABEL_DIRTY_FONT_KEYS, LABEL_UPDATE_FONTSTRING_KEYS, LABEL_UNLOADED_FONT_KEYS, LABEL_UPDATE_PARTS_KEYS, LAYOUT_KEYS, LEFT, NAME, NORMAL, OBLIQUE, POLITE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, SYSTEM_FONTS, TEMPLATE_PASS_THROUGH_KEYS, TEXTSTYLE_KEYS, TOP, T_CANVAS, T_CELL, T_LABEL, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Local variables
@@ -33,7 +33,58 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-// No additional packet functionality defined here
+    P.finalizePacketOut = function (copy, items) {
+
+        const defaultTextCopy = _parse(this.defaultTextStyle.saveAsPacket(items))[3];
+        const stateCopy = _parse(this.state.saveAsPacket(items))[3];
+
+        copy = mergeOver(copy, {
+            direction: defaultTextCopy.direction,
+            fillStyle: defaultTextCopy.fillStyle,
+            fontKerning: defaultTextCopy.fontKerning,
+            fontStretch: defaultTextCopy.fontStretch,
+            fontString: defaultTextCopy.fontString,
+            fontVariantCaps: defaultTextCopy.fontVariantCaps,
+            highlightStyle: defaultTextCopy.highlightStyle,
+            includeHighlight: defaultTextCopy.includeHighlight,
+            includeUnderline: defaultTextCopy.includeUnderline,
+            letterSpacing: defaultTextCopy.letterSpaceValue,
+            lineDash: defaultTextCopy.lineDash,
+            lineDashOffset: defaultTextCopy.lineDashOffset,
+            lineWidth: defaultTextCopy.lineWidth,
+            method: defaultTextCopy.method,
+            overlineOffset: defaultTextCopy.overlineOffset,
+            overlineStyle: defaultTextCopy.overlineStyle,
+            overlineWidth: defaultTextCopy.overlineWidth,
+            strokeStyle: defaultTextCopy.strokeStyle,
+            textRendering: defaultTextCopy.textRendering,
+            underlineGap: defaultTextCopy.underlineGap,
+            underlineOffset: defaultTextCopy.underlineOffset,
+            underlineStyle: defaultTextCopy.underlineStyle,
+            underlineWidth: defaultTextCopy.underlineWidth,
+            wordSpacing: defaultTextCopy.wordSpaceValue,
+
+            filter: stateCopy.filter,
+            font: null,
+            globalAlpha: stateCopy.globalAlpha,
+            globalCompositeOperation: stateCopy.globalCompositeOperation,
+            imageSmoothingEnabled: stateCopy.imageSmoothingEnabled,
+            imageSmoothingQuality: stateCopy.imageSmoothingQuality,
+            lineCap: ROUND,
+            lineJoin: ROUND,
+            miterLimit: 10,
+            shadowBlur: stateCopy.shadowBlur,
+            shadowColor: stateCopy.shadowColor,
+            shadowOffsetX: stateCopy.shadowOffsetX,
+            shadowOffsetY: stateCopy.shadowOffsetY,
+            textAlign: LEFT,
+            textBaseline: TOP,
+        });
+
+        if (this.type === T_LABEL) copy = this.handlePacketAnchor(copy, items);
+
+        return copy;
+    };
 
 
 // #### Clone management
@@ -307,14 +358,15 @@ export default function (P = Ωempty) {
 // `updateCanvasFont` - Updates the given TextStyle object's canvasFont string attribute'
     P.updateCanvasFont = function (style, scale) {
 
-        const { fontStyle, fontVariantCaps, fontWeight, fontSize, fontFamily } = style;
+        const { fontStyle, fontVariantCaps, fontWeight, fontSize, fontSizeValue, fontFamily } = style;
 
         let f = '';
 
         if (fontStyle == ITALIC || fontStyle.includes(OBLIQUE)) f += `${fontStyle} `;
         if (fontVariantCaps == SMALL_CAPS) f += `${fontVariantCaps} `;
         if (fontWeight != null && fontWeight && fontWeight !== NORMAL && fontWeight !== '400') f += `${fontWeight} `;
-        f += `${parseFloat(fontSize) * scale}px ${fontFamily}`
+        if (this.type === T_LABEL) f += `${fontSizeValue * scale}px ${fontFamily}`;
+        else f += `${parseFloat(fontSize) * scale}px ${fontFamily}`;
 
         style.canvasFont = f;
     };
@@ -334,6 +386,57 @@ export default function (P = Ωempty) {
         f += `${fontSize} ${fontFamily}`;
 
         style.fontString = f;
+    };
+
+// `getControllerCell` - Retrieve the entity's controller Cell wrapper
+    P.getControllerCell = function () {
+
+        const group = this.group;
+
+        if (group) {
+
+            const host = (group && group.getHost) ? group.getHost() : null;
+
+            if (host) return host.getController();
+        }
+        return null;
+    };
+
+// `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
+// + This is the preparation step
+    P.temperFont = function () {
+
+        const { group, defaultTextStyle } = this;
+
+        if (xta(group, defaultTextStyle)) {
+
+            let fontSizeCalculator = null,
+                fontSizeCalculatorValues = null;
+
+            const controller = this.getControllerCell();
+
+            if (controller) {
+
+                fontSizeCalculator = controller.fontSizeCalculator;
+                fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
+            }
+
+            if (!fontSizeCalculator) this.dirtyFont = true;
+            else this.calculateTextStyleFontStrings(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
+        }
+    };
+
+    P.cleanFont = function () {
+
+        if (this.currentFontIsLoaded) {
+
+            this.dirtyFont = false;
+
+            this.temperFont();
+
+            if (this.type === T_LABEL && !this.dirtyFont) this.measureFont();
+        }
+        else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
     };
 
 

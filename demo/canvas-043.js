@@ -409,9 +409,10 @@ const canvasThreePostInitialization = function () {
         drag.addArtefacts(name3('serif-block'));
 
         // Switch off this check
-        canvas3_animation.set({
-            afterShow: () => {},
-        });
+        // + We could do this using the render object's `set` function - `.set({afterShow: () => {}})`
+        // + But render objects also have an `updateHook` function, which takes two args: the hook name, and the new function
+        // + If we don't supply a new function, the existing hook function is just removed
+        canvas3_animation.updateHook('afterShow');
     }
     else console.log('FAILED TO RUN canvasThreePostInitialization()');
 };

@@ -6,7 +6,7 @@
 import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { doCreate, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
@@ -18,7 +18,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
-import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _floor, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -59,57 +59,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-P.finalizePacketOut = function (copy, items) {
-
-    const defaultTextCopy = _parse(this.defaultTextStyle.saveAsPacket(items))[3];
-    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
-
-    copy = mergeOver(copy, {
-        direction: defaultTextCopy.direction,
-        fillStyle: defaultTextCopy.fillStyle,
-        fontKerning: defaultTextCopy.fontKerning,
-        fontStretch: defaultTextCopy.fontStretch,
-        fontString: defaultTextCopy.fontString,
-        fontVariantCaps: defaultTextCopy.fontVariantCaps,
-        highlightStyle: defaultTextCopy.highlightStyle,
-        includeHighlight: defaultTextCopy.includeHighlight,
-        includeUnderline: defaultTextCopy.includeUnderline,
-        letterSpacing: defaultTextCopy.letterSpaceValue,
-        lineDash: defaultTextCopy.lineDash,
-        lineDashOffset: defaultTextCopy.lineDashOffset,
-        lineWidth: defaultTextCopy.lineWidth,
-        overlineOffset: defaultTextCopy.overlineOffset,
-        overlineStyle: defaultTextCopy.overlineStyle,
-        overlineWidth: defaultTextCopy.overlineWidth,
-        strokeStyle: defaultTextCopy.strokeStyle,
-        textRendering: defaultTextCopy.textRendering,
-        underlineGap: defaultTextCopy.underlineGap,
-        underlineOffset: defaultTextCopy.underlineOffset,
-        underlineStyle: defaultTextCopy.underlineStyle,
-        underlineWidth: defaultTextCopy.underlineWidth,
-        wordSpacing: defaultTextCopy.wordSpaceValue,
-
-        filter: stateCopy.filter,
-        font: null,
-        globalAlpha: stateCopy.globalAlpha,
-        globalCompositeOperation: stateCopy.globalCompositeOperation,
-        imageSmoothingEnabled: stateCopy.imageSmoothingEnabled,
-        imageSmoothingQuality: stateCopy.imageSmoothingQuality,
-        lineCap: ROUND,
-        lineJoin: ROUND,
-        miterLimit: 10,
-        shadowBlur: stateCopy.shadowBlur,
-        shadowColor: stateCopy.shadowColor,
-        shadowOffsetX: stateCopy.shadowOffsetX,
-        shadowOffsetY: stateCopy.shadowOffsetY,
-        textAlign: LEFT,
-        textBaseline: TOP,
-    });
-
-    copy = this.handlePacketAnchor(copy, items);
-
-    return copy;
-};
+// No additional packet management functionality required
 
 
 // #### Clone management
@@ -194,39 +144,7 @@ P.entityInit = function (items = Ωempty) {
     this.currentFontIsLoaded = false;
 };
 
-// `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
-P.temperFont = function () {
-
-    const { group, defaultTextStyle } = this;
-
-    if (xta(group, defaultTextStyle)) {
-
-        const host = (group && group.getHost) ? group.getHost() : false;
-
-        let fontSizeCalculator = null,
-            fontSizeCalculatorValues = null;
-
-        if (host) {
-
-            const controller = host.getController();
-
-            if (controller) {
-
-                fontSizeCalculator = controller.fontSizeCalculator;
-                fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
-            }
-        }
-
-        if (!fontSizeCalculator) this.dirtyFont = true;
-        else {
-
-            this.calculateTextStyleFontStrings(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
-        }
-    }
-};
-
-
-// `measureFont` - generate basic font metadata
+// `measureFont` - gather font metadata (uses `getFontMetadata` from text mixin)
 P.measureFont = function () {
 
     const { defaultTextStyle, currentScale, dimensions } = this;
@@ -276,19 +194,6 @@ P.measureFont = function () {
     this.dirtyDimensions = true;
 };
 
-P.cleanFont = function () {
-
-    if (this.currentFontIsLoaded) {
-
-        this.dirtyFont = false;
-
-        this.temperFont();
-
-        if (!this.dirtyFont) this.measureFont();
-    }
-    else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
-};
-
 
 // #### Clean functions
 // `cleanPathObject` - calculate the Label entity's __Path2D object__
@@ -336,7 +241,6 @@ P.cleanHandle = function () {
     this.dirtyHandle = false;
 
     const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle, alphabeticBaseline, hangingBaseline, ideographicBaseline } = this;
-    // const { handle, currentHandle, currentDimensions, mimicked, defaultTextStyle } = this;
 
     const [hx, hy] = handle;
     const [dx, dy] = currentDimensions;
@@ -439,7 +343,7 @@ P.stampPositioningHelper = function () {
     const x = -currentHandle[0],
         y = -currentHandle[1] + fontVerticalOffset * currentScale;
 
-    return [text, x, y];
+    return [text, _floor(x), _floor(y)];
 }
 
 // `underlineEngine` - internal helper function
@@ -468,50 +372,52 @@ P.underlineEngine = function (host, pos) {
     const underlineDepth = underlineWidth * currentScale;
 
     // Setup the cell parts
-    const mycell = requestCell();
-    const { element: canvasEl, engine      } = host;
-    const { element: el,       engine: ctx } = mycell;
-
     const ratio = getPixelRatio();
 
-    mycell.w = el.width = canvasEl.width / ratio;
-    mycell.h = el.height = canvasEl.height / ratio;
+    const { element, engine } = host;
 
-    mycell.rotateDestination(ctx, ...currentStampPosition, this);
+    const mycell = requestCell(element.width / ratio, element.height / ratio);
+
+    const {
+        element: underlineElement,
+        engine: underlineEngine,
+    } = mycell;
+
+    mycell.rotateDestination(underlineEngine, ...currentStampPosition, this);
 
     // Setup the underline context
-    ctx.fillStyle = BLACK;
-    ctx.strokeStyle = BLACK;
-    ctx.font = defaultTextStyle.canvasFont;
-    ctx.fontKerning = defaultTextStyle.fontKerning;
-    ctx.fontStretch = defaultTextStyle.fontStretch;
-    ctx.fontVariantCaps = defaultTextStyle.fontVariant;
-    ctx.textRendering = defaultTextStyle.textRendering;
-    ctx.letterSpacing = defaultTextStyle.letterSpacing;
-    ctx.lineCap = ROUND;
-    ctx.lineJoin = ROUND;
-    ctx.wordSpacing = defaultTextStyle.wordSpacing;
-    ctx.direction = defaultTextStyle.direction;
-    ctx.textAlign = LEFT;
-    ctx.textBaseline = TOP;
-    ctx.lineWidth = (underlineGap * 2) * currentScale;
+    underlineEngine.fillStyle = BLACK;
+    underlineEngine.strokeStyle = BLACK;
+    underlineEngine.font = defaultTextStyle.canvasFont;
+    underlineEngine.fontKerning = defaultTextStyle.fontKerning;
+    underlineEngine.fontStretch = defaultTextStyle.fontStretch;
+    underlineEngine.fontVariantCaps = defaultTextStyle.fontVariant;
+    underlineEngine.textRendering = defaultTextStyle.textRendering;
+    underlineEngine.letterSpacing = defaultTextStyle.letterSpacing;
+    underlineEngine.lineCap = ROUND;
+    underlineEngine.lineJoin = ROUND;
+    underlineEngine.wordSpacing = defaultTextStyle.wordSpacing;
+    underlineEngine.direction = defaultTextStyle.direction;
+    underlineEngine.textAlign = LEFT;
+    underlineEngine.textBaseline = TOP;
+    underlineEngine.lineWidth = (underlineGap * 2) * currentScale;
 
     // Underlines can take their own styling, or use the fillStyle set on the Label entity
     const uStyle = this.getStyle(underlineStyle, 'fillStyle', mycell);
 
     // Generate the underline
-    ctx.strokeText(...pos);
-    ctx.fillText(...pos);
+    underlineEngine.strokeText(...pos);
+    underlineEngine.fillText(...pos);
 
-    ctx.globalCompositeOperation = 'source-out';
-    ctx.fillStyle = uStyle;
+    underlineEngine.globalCompositeOperation = 'source-out';
+    underlineEngine.fillStyle = uStyle;
 
-    ctx.fillRect(x, underlineStartY, localWidth, underlineDepth);
+    underlineEngine.fillRect(x, underlineStartY, localWidth, underlineDepth);
 
     // Copy the underline over to the real cell
     engine.save();
-    engine.setTransform(1, 0, 0, 1, 0, 0);
-    engine.drawImage(el, 0, 0);
+    engine.resetTransform();
+    engine.drawImage(underlineElement, 0, 0);
     engine.restore();
 
     // Release the temporary cell
@@ -673,7 +579,7 @@ P.clear = function (host) {
 };
 
 // `none` - perform all the calculations required, but don't perform the final stamping
-P.none = function () {}
+P.none = λnull;
 
 
 // #### Factory
