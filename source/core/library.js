@@ -9,7 +9,7 @@
 
 
 // Current version
-export const version = '8.12.0';
+export const version = '8.13.0';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -60,11 +60,6 @@ export const entitynames = [];
 // Objects created using the __makeFilter__ factory
 export const filter = {};
 export const filternames = [];
-
-
-// Used internally by Phrase artefacts
-export const fontattribute = {};
-export const fontattributenames = [];
 
 
 // collects metadata of various requested fonts
@@ -169,40 +164,6 @@ export function purge (namespace = '') {
     }
 }
 
-
-// Section classes are used with Phrase entitys - we store the class definitions in the library so that they can be easily shared between Phrases
-export const sectionClasses = {
-    'DEFAULTS': { defaults: true },
-
-    'b': { weight: 'bold' },
-    '/b': { weight: 'normal' },
-    'strong': { weight: 'bold' },
-    '/strong': { weight: 'normal' },
-    'BOLD': { weight: 'bold' },
-    '/BOLD': { weight: 'normal' },
-
-    'i': { style: 'italic' },
-    '/i': { style: 'normal' },
-    'em': { style: 'italic' },
-    '/em': { style: 'normal' },
-    'ITALIC': { style: 'italic' },
-    '/ITALIC': { style: 'normal' },
-
-    'u': { underline: true },
-    '/u': { underline: false },
-    'UNDERLINE': { underline: true },
-    '/UNDERLINE': { underline: false },
-
-    'OVERLINE': { overline: true },
-    '/OVERLINE': { overline: false },
-
-    // Warning: font-variant functionality has been deprecated in SC and should be avoided!
-    'SMALL-CAPS': { variant: 'small-caps' },
-    '/SMALL-CAPS': { variant: 'normal' },
-
-    'HIGHLIGHT': { highlight: true },
-    '/HIGHLIGHT': { highlight: false },
-};
 
 // All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - used mainly as part of Scrawl-canvas cloning functionality.
 export const constructors = {};

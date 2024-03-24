@@ -656,7 +656,7 @@ type ControlsShapeInstance = BezierInstance | LineInstance | QuadraticInstance;
 
 type ShapeBasedInstance = ControlsShapeInstance | CogInstance | LineSpiralInstance | OvalInstance | PolygonInstance | PolylineInstance | RectangleInstance | ShapeInstance | SpiralInstance | StarInstance | TetragonInstance;
 
-type EntityInstance = ShapeBasedInstance | BlockInstance | CrescentInstance | EmitterInstance | EnhancedLabelInstance | GridInstance | LabelInstance | LoomInstance | MeshInstance | NetInstance | PhraseInstance | PictureInstance | TracerInstance | WheelInstance;
+type EntityInstance = ShapeBasedInstance | BlockInstance | CrescentInstance | EmitterInstance | EnhancedLabelInstance | GridInstance | LabelInstance | LoomInstance | MeshInstance | NetInstance | PictureInstance | TracerInstance | WheelInstance;
 
 type ArtefactInstance = EntityInstance | StackInstance | CanvasInstance | ElementInstance | UnstackedElementInstance;
 
@@ -2009,82 +2009,6 @@ interface PatternInstance extends PatternFactoryInputs, PatternFactoryFunctions 
 
 
 
-// PhraseInstance factory
-// -------------------------------------
-type PhraseJustifyValues = 'left' | 'center' | 'right' | 'full';
-
-type PhraseTextPathDirection = 'ltr' | 'rtl';
-
-type PhraseStyle = 'normal' | 'italic' | 'oblique';
-
-type PhraseVariant = 'normal' | 'small-caps';
-
-type PhraseWeight = 'normal' | 'bold' | 'lighter' | 'bolder' | number;
-
-type PhraseSize = 'xx-small' | 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'xx-large' | 'xxx-large' | 'smaller' | 'larger' | string;
-
-type PhraseSizeMetric = 'em' | 'rem' | 'lh' | 'rlh' | 'ex' | 'cap' | 'ch' | 'ic' | '%'| 'vw' | 'vh' | 'vmax' | 'vmin' | 'vi' | 'vb' | 'in' | 'cm' | 'mm' | 'Q' | 'pc' | 'pt' | 'px';
-
-type PhraseFamily = 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui' | 'math' | 'emoji' | 'fangsong' | string;
-
-interface PhraseFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, TextMixinDeltaInputs {
-    letterSpacing?: number;
-    lineHeight?: number;
-    overlinePosition?: number;
-    overlineWidth?: number;
-    sizeValue?: number;
-    textPathPosition?: number;
-    underlinePosition?: number;
-    underlineWidth?: number;
-}
-
-interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TextMixinInputs, PhraseFactoryDeltaInputs {
-    addTextPathRoll?: boolean;
-    breakOnlyOnBreakGlyphs?: boolean;
-    delta?: PhraseFactoryDeltaInputs;
-    exposeText?: boolean;
-    family?: PhraseFamily;
-    font?: string;
-    highlightStyle?: string;
-    isVerticalText?: boolean;
-    justify?: PhraseJustifyValues;
-    noOverlineGlyphs?: string;
-    noUnderlineGlyphs?: string;
-    overlineStyle?: string;
-    sectionClassMarker?: string;
-    size?: PhraseSize;
-    sizeMetric?: PhraseSizeMetric;
-    sizeValue?: number;
-    style?: PhraseStyle;
-    text?: string;
-    textPath?: ShapeInstance | string;
-    textPathDirection?: PhraseTextPathDirection;
-    textPathLoop?: boolean;
-    treatAsBreakGlyphs?: string[];
-    treatWordAsGlyph?: boolean;
-    underlineStyle?: string;
-    variant?: PhraseVariant;
-    weight?: PhraseWeight;
-    wordSpacing?: number;
-}
-
-interface PhraseSaveInputs extends PhraseFactoryInputs, SaveInputs {}
-
-interface PhraseFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, TextMixinFunctions {
-    addSectionClass: (label: string, obj: CommonObjectInput) => PhraseInstance;
-    clone: (item?: PhraseFactoryInputs) => PhraseInstance;
-    removeSectionClass: (label: string) => PhraseInstance;
-    saveAsPacket: (item?: PhraseSaveInputs | boolean) => string;
-    set: (item?: PhraseFactoryInputs) => PhraseInstance;
-    setDelta: (item?: PhraseFactoryDeltaInputs) => PhraseInstance;
-    simpleStamp: (host: CellInstance, items?: PhraseFactoryInputs) => void;
-}
-
-interface PhraseInstance extends PhraseFactoryInputs, PhraseFactoryFunctions {}
-
-
-
-
 // PictureInstance factory
 // -------------------------------------
 interface PictureFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs, AssetConsumerMixinDeltaInputs {
@@ -3181,7 +3105,6 @@ export function makeNoise(items: NoiseAssetFactoryInputs): NoiseAssetInstance;
 export function makeNoiseAsset(items: NoiseAssetFactoryInputs): NoiseAssetInstance;
 export function makeOval(items: OvalFactoryInputs): OvalInstance;
 export function makePattern(items: PatternFactoryInputs): PatternInstance;
-export function makePhrase(items: PhraseFactoryInputs): PhraseInstance;
 export function makePicture(items: PictureFactoryInputs): PictureInstance;
 export function makePolygon(items: PolygonFactoryInputs): PolygonInstance;
 export function makePolyline(items: PolylineFactoryInputs): PolylineInstance;

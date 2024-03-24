@@ -111,8 +111,6 @@ export {
 } from './asset-management/noise-asset.js';
 export { makeOval } from './factory/oval.js';
 export { makePattern } from './factory/pattern.js';
-// Phrase entity is deprecated and will be removed in a future update. Use Label or EnhancedLabel entitys instead.
-export { makePhrase } from './factory/phrase.js';
 export { makePicture } from './factory/picture.js';
 export { makePolygon } from './factory/polygon.js';
 export { makePolyline } from './factory/polyline.js';
