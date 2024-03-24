@@ -2655,6 +2655,8 @@ P.removeShadowAndAlpha = function (engine) {
 
     engine.lineJoin = ROUND;
     engine.lineCap = ROUND;
+
+    this.setImageSmoothing(engine);
 };
 
 P.getCellCoverage = function (img) {
@@ -2717,7 +2719,7 @@ P.regularStamp = function (host) {
             engine.shadowBlur = state.shadowBlur;
             engine.shadowColor = state.shadowColor;
 
-            engine.imageSmoothingQuality = 'high';
+            this.setImageSmoothing(engine);
 
             engine.globalAlpha = state.globalAlpha;
             engine.globalCompositeOperation = state.globalCompositeOperation;
@@ -2757,8 +2759,6 @@ P.regularStamp = function (host) {
 
                 const overlineCell = this.createOverlineCell(myHost);
                 const highlightCell = this.createHighlightCell(myHost);
-
-                finalEngine.imageSmoothingQuality = 'high';
 
                 if (!useLayoutTemplateAsPath && showGuidelines && guidelinesPath) this.stampGuidelinesOnCell(finalCell);
 
@@ -2844,7 +2844,8 @@ P.regularStamp = function (host) {
 
                         const stashCell = requestCell(stashWidth, stashHeight);
 
-                        stashCell.engine.imageSmoothingQuality = 'high';
+                        this.setImageSmoothing(stashCell.engine);
+
                         stashCell.engine.putImageData(this.stashedImageData, 0, 0);
 
                         if (!this.stashedImage) {
@@ -2910,11 +2911,9 @@ P.createTextCellsForPath = function (host) {
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
         this.removeShadowAndAlpha(uEngine);
-        uEngine.imageSmoothingQuality = 'high';
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
         this.removeShadowAndAlpha(mEngine);
-        mEngine.imageSmoothingQuality = 'high';
 
         const line = lines[0];
 
@@ -3041,11 +3040,9 @@ P.createTextCellsForSpace = function (host) {
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, uCell);
         this.removeShadowAndAlpha(uEngine);
-        uEngine.imageSmoothingQuality = 'high';
 
         this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mCell);
         this.removeShadowAndAlpha(mEngine);
-        mEngine.imageSmoothingQuality = 'high';
 
         lines.forEach(line => {
 
@@ -3175,7 +3172,6 @@ P.addUnderlinesToCopyCell = function (host, copy) {
 
             const engine = mycell.engine;
             this.removeShadowAndAlpha(engine);
-            engine.imageSmoothingQuality = 'high';
 
             const copyEngine = copy.engine;
 
@@ -3217,7 +3213,6 @@ P.createOverlineCell = function (host) {
 
             const engine = mycell.engine;
             this.removeShadowAndAlpha(engine);
-            engine.imageSmoothingQuality = 'high';
 
             overlinePaths.forEach(data => {
 
@@ -3248,7 +3243,6 @@ P.createHighlightCell = function (host) {
 
             const engine = mycell.engine;
             this.removeShadowAndAlpha(engine);
-            engine.imageSmoothingQuality = 'high';
 
             highlightPaths.forEach(data => {
 
@@ -3282,7 +3276,8 @@ P.stampGuidelinesOnCell = function (cell) {
         engine.setLineDash(guidelineDash);
         engine.strokeStyle = guidelineStyle;
         engine.lineWidth = guidelineWidth;
-        engine.imageSmoothingQuality = 'high';
+
+        this.setImageSmoothing(engine);
 
         engine.stroke(guidelinesPath);
 

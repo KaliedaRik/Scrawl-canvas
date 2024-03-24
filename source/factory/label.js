@@ -331,6 +331,8 @@ P.regularStamp = function () {
             dest.setEngine(this);
         }
 
+        this.setImageSmoothing(dest.engine);
+
         // Invoke the appropriate __stamping method__ (below)
         this[textStyle.method](dest);
     }
@@ -402,6 +404,8 @@ P.underlineEngine = function (host, pos) {
     underlineEngine.textBaseline = TOP;
     underlineEngine.lineWidth = (underlineGap * 2) * currentScale;
 
+    this.setImageSmoothing(underlineEngine);
+
     // Underlines can take their own styling, or use the fillStyle set on the Label entity
     const uStyle = this.getStyle(underlineStyle, 'fillStyle', mycell);
 
@@ -417,6 +421,9 @@ P.underlineEngine = function (host, pos) {
     // Copy the underline over to the real cell
     engine.save();
     engine.resetTransform();
+
+    this.setImageSmoothing(engine);
+
     engine.drawImage(underlineElement, 0, 0);
     engine.restore();
 
@@ -442,6 +449,9 @@ P.drawBoundingBox = function (host) {
         engine.shadowOffsetX = 0;
         engine.shadowOffsetY = 0;
         engine.shadowBlur = 0;
+
+        this.setImageSmoothing(engine);
+
         engine.stroke(this.pathObject);
         engine.restore();
     }

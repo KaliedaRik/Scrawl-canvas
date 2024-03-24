@@ -63,7 +63,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isFinite, _floor, _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _floor, _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Cell constructor
@@ -926,6 +926,12 @@ P.compile = function(){
 };
 
 // `show` - Note that functionality here differs for __base cells__ and other Cell wrappers
+P.setImageSmoothing = function (engine) {
+
+    engine.imageSmoothingEnabled = true;
+    engine.imageSmoothingQuality = HIGH;
+};
+
 P.show = function () {
 
     // get the destination cell's canvas context
@@ -935,8 +941,8 @@ P.show = function () {
     if (engine) {
 
         const hostDimensions = host.currentDimensions,
-            destWidth = ~~(hostDimensions[0]),
-            destHeight = ~~(hostDimensions[1]);
+            destWidth = _floor(hostDimensions[0]),
+            destHeight = _floor(hostDimensions[1]);
 
         // Cannot draw to the destination canvas if either of its dimensions === 0
         if (!destWidth || !destHeight) return false;
@@ -953,8 +959,8 @@ P.show = function () {
             currentStampPosition:stamp,
         } = this;
 
-        const curWidth = ~~(currentDimensions[0]),
-            curHeight = ~~(currentDimensions[1]);
+        const curWidth = _floor(currentDimensions[0]),
+            curHeight = _floor(currentDimensions[1]);
 
         let paste;
 
@@ -979,7 +985,7 @@ P.show = function () {
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
-            engine.imageSmoothingQuality = 'high';
+            this.setImageSmoothing(engine);
 
             const fit = (controller) ? controller.fit : NONE;
 
@@ -994,17 +1000,17 @@ P.show = function () {
 
                     if (relWidth > relHeight) {
 
-                        paste[0] = ~~((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = ~~(curWidth * relHeight);
-                        paste[3] = ~~(curHeight * relHeight);
+                        paste[2] = _floor(curWidth * relHeight);
+                        paste[3] = _floor(curHeight * relHeight);
                     }
                     else {
 
                         paste[0] = 0;
-                        paste[1] = ~~((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = ~~(curWidth * relWidth);
-                        paste[3] = ~~(curHeight * relWidth);
+                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = _floor(curWidth * relWidth);
+                        paste[3] = _floor(curHeight * relWidth);
                     }
                     break;
 
@@ -1015,17 +1021,17 @@ P.show = function () {
 
                     if (relWidth < relHeight) {
 
-                        paste[0] = ~~((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = ~~(curWidth * relHeight);
-                        paste[3] = ~~(curHeight * relHeight);
+                        paste[2] = _floor(curWidth * relHeight);
+                        paste[3] = _floor(curHeight * relHeight);
                     }
                     else{
 
                         paste[0] = 0;
-                        paste[1] = ~~((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = ~~(curWidth * relWidth);
-                        paste[3] = ~~(curHeight * relWidth);
+                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = _floor(curWidth * relWidth);
+                        paste[3] = _floor(curHeight * relWidth);
                     }
                     break;
 
@@ -1033,15 +1039,15 @@ P.show = function () {
                     // base must copy into display resized, distorting the aspect ratio as necessary
                     paste[0] = 0;
                     paste[1] = 0;
-                    paste[2] = ~~(destWidth);
-                    paste[3] = ~~(destHeight);
+                    paste[2] = _floor(destWidth);
+                    paste[3] = _floor(destHeight);
                     break;
 
                 case NONE :
                 default :
                     // base copies into display as-is, centred, maintaining aspect ratio
-                    paste[0] = ~~((destWidth - curWidth) / 2);
-                    paste[1] = ~~((destHeight - curHeight) / 2);
+                    paste[0] = _floor((destWidth - curWidth) / 2);
+                    paste[1] = _floor((destHeight - curHeight) / 2);
                     paste[2] = curWidth;
                     paste[3] = curHeight;
             }
@@ -1060,12 +1066,12 @@ P.show = function () {
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
-            engine.imageSmoothingQuality = 'high';
+            this.setImageSmoothing(engine);
 
-            paste[0] = ~~(-handle[0] * scale);
-            paste[1] = ~~(-handle[1] * scale);
-            paste[2] = ~~(curWidth * scale);
-            paste[3] = ~~(curHeight * scale);
+            paste[0] = _floor(-handle[0] * scale);
+            paste[1] = _floor(-handle[1] * scale);
+            paste[2] = _floor(curWidth * scale);
+            paste[3] = _floor(curHeight * scale);
 
             this.rotateDestination(engine, ...stamp);
         }
