@@ -3,10 +3,10 @@
 
 
 // #### Imports
-import { constructors, fontfamilymetadata, fontfamilymetadatanames } from '../core/library.js';
+import { constructors } from '../core/library.js';
 import { getPixelRatio } from '../core/user-interaction.js';
 
-import { addStrings, doCreate, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
@@ -18,7 +18,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
-import { _abs, _ceil, _freeze, _isFinite, _keys, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, HANGING, IDEOGRAPHIC, ITALIC, LEFT, LTR, MIDDLE, MOUSE, NAME, NORMAL, OBLIQUE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, SMALL_CAPS, SPACE, START, STATE_KEYS, T_LABEL, TOP, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _parse, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -117,176 +117,10 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Kill management
-P.factoryKill = function () {
-
-    if (this.accessibleTextHold) this.accessibleTextHold.remove();
-
-    const hold = this.getCanvasTextHold(this.currentHost);
-    if (hold) hold.dirtyTextTabOrder = true;
-};
+// No additional kill functionality required
 
 
 // #### Get, Set, deltaSet
-
-// Label-related `get`, `set` and `deltaSet` functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object
-const TEXTSTYLE_KEYS = _freeze([ 'canvasFont', 'direction','fillStyle', 'fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing']);
-
-const LABEL_DIRTY_FONT_KEYS = _freeze(['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing']);
-
-const LABEL_UPDATE_PARTS_KEYS = _freeze(['fontFamily', 'fontSize', 'fontStretch', 'fontStyle', 'fontVariantCaps', 'fontWeight']);
-
-const LABEL_UPDATE_FONTSTRING_KEYS = _freeze(['fontString', 'scale']);
-
-const LABEL_UNLOADED_FONT_KEYS = _freeze(['fontString']);
-
-P.get = function (key) {
-
-    const {defs, getters, state, defaultTextStyle} = this;
-
-    const defaultTextStyleGetters = (defaultTextStyle) ? defaultTextStyle.getters : Ωempty;
-    const defaultTextStyleDefs = (defaultTextStyle) ? defaultTextStyle.defs : Ωempty;
-
-    const stateGetters = (state) ? state.getters : Ωempty;
-    const stateDefs = (state) ? state.defs : Ωempty;
-
-    let fn;
-
-    if (TEXTSTYLE_KEYS.includes(key)) {
-
-        fn = defaultTextStyleGetters[key];
-
-        if (fn) return fn.call(defaultTextStyle);
-        else if (typeof defaultTextStyleDefs[key] != UNDEF) return defaultTextStyle[key];
-    }
-    else if (STATE_KEYS.includes(key)) {
-
-        fn = stateGetters[key];
-
-        if (fn) return fn.call(state);
-        else if (typeof stateDefs[key] != UNDEF) return state[key];
-    }
-    else {
-
-        fn = getters[key];
-
-        if (fn) return fn.call(this);
-        else if (typeof defs[key] != UNDEF) return this[key];
-    }
-    return null;
-};
-
-P.set = function (items = Ωempty) {
-
-    const keys = _keys(items),
-        len = keys.length;
-
-    if (len) {
-
-        const {defs, setters, state, defaultTextStyle} = this;
-
-        const defaultTextStyleSetters = (defaultTextStyle) ? defaultTextStyle.setters : Ωempty;
-        const defaultTextStyleDefs = (defaultTextStyle) ? defaultTextStyle.defs : Ωempty;
-
-        const stateSetters = (state) ? state.setters : Ωempty;
-        const stateDefs = (state) ? state.defs : Ωempty;
-
-        let fn, i, key, val;
-
-        for (i = 0; i < len; i++) {
-
-            key = keys[i];
-            val = items[key];
-
-            if (key && key != NAME && val != null) {
-
-                if (TEXTSTYLE_KEYS.includes(key)) {
-
-                    fn = defaultTextStyleSetters[key];
-
-                    if (fn) fn.call(defaultTextStyle, val);
-                    else if (typeof defaultTextStyleDefs[key] != UNDEF) defaultTextStyle[key] = val;
-                }
-                else if (STATE_KEYS.includes(key)) {
-
-                    fn = stateSetters[key];
-
-                    if (fn) fn.call(state, val);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = val;
-                }
-                else {
-
-                    fn = setters[key];
-
-                    if (fn) fn.call(this, val);
-                    else if (typeof defs[key] != UNDEF) this[key] = val;
-                }
-
-                if (LABEL_DIRTY_FONT_KEYS.includes(key)) this.dirtyFont = true;
-                if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
-                if (LABEL_UPDATE_FONTSTRING_KEYS.includes(key)) this.updateUsingFontString = true;
-                if (LABEL_UNLOADED_FONT_KEYS.includes(key)) this.currentFontIsLoaded = false;
-            }
-        }
-    }
-    return this;
-};
-
-P.setDelta = function (items = Ωempty) {
-
-    const keys = _keys(items),
-        len = keys.length;
-
-    if (len) {
-
-        const {defs, deltaSetters:setters, state, defaultTextStyle} = this;
-
-        const defaultTextStyleSetters = (defaultTextStyle) ? defaultTextStyle.deltaSetters : Ωempty;
-        const defaultTextStyleDefs = (defaultTextStyle) ? defaultTextStyle.defs : Ωempty;
-
-        const stateSetters = (state) ? state.deltaSetters : Ωempty;
-        const stateDefs = (state) ? state.defs : Ωempty;
-
-        let fn, i, key, val;
-
-        for (i = 0; i < len; i++) {
-
-            key = keys[i];
-            val = items[key];
-
-            if (key && key != NAME && val != null) {
-
-                if (TEXTSTYLE_KEYS.includes(key)) {
-
-                    fn = defaultTextStyleSetters[key];
-
-                    if (fn) fn.call(state, val);
-                    else if (typeof defaultTextStyleDefs[key] != UNDEF) defaultTextStyle[key] = addStrings(defaultTextStyle[key], val);
-                }
-                else if (STATE_KEYS.includes(key)) {
-
-                    fn = stateSetters[key];
-
-                    if (fn) fn.call(state, val);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], val);
-                }
-                else {
-
-                    fn = setters[key];
-
-                    if (fn) fn.call(this, val);
-                    else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
-                }
-
-                if (LABEL_DIRTY_FONT_KEYS.includes(key)) this.dirtyFont = true;
-                if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
-                if (LABEL_UPDATE_FONTSTRING_KEYS.includes(key)) this.updateUsingFontString = true;
-                if (LABEL_UNLOADED_FONT_KEYS.includes(key)) this.currentFontIsLoaded = false;
-            }
-        }
-    }
-    return this;
-};
-
 const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
@@ -312,20 +146,6 @@ G.dimensions = function () {
 };
 S.dimensions = λnull;
 D.dimensions = λnull;
-
-G.rawText = function () {
-
-    return this.rawText;
-};
-S.text = function (item) {
-
-    this.rawText = (item.substring) ? item : item.toString();
-    this.text = this.convertTextEntityCharacters(this.rawText);
-
-    this.dirtyFont = true;
-    this.currentFontIsLoaded = false;
-};
-
 
 
 // #### Prototype functions
@@ -358,6 +178,7 @@ P.entityInit = function (items = Ωempty) {
     this.currentFontIsLoaded = false;
     this.updateUsingFontParts = false;
     this.updateUsingFontString = false;
+    this.usingViewportFontSizing = true;
     this.letterSpaceValue = 0;
     this.wordSpaceValue = 0;
 
@@ -372,16 +193,6 @@ P.entityInit = function (items = Ωempty) {
     this.dirtyFont = true;
     this.currentFontIsLoaded = false;
 };
-
-
-// `recalculateFont` - force the entity to recalculate its dimensions without having to set anything.
-// + Can also be invoked via the entity's Group object's `recalculateFonts` function
-// + Can be invoked globally via the `scrawl.recalculateFonts` function
-P.recalculateFont = function () {
-
-    this.dirtyFont = true;
-};
-
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
 P.temperFont = function () {
@@ -409,7 +220,7 @@ P.temperFont = function () {
         if (!fontSizeCalculator) this.dirtyFont = true;
         else {
 
-            this.updateTextStyle(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
+            this.calculateTextStyleFontStrings(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
         }
     }
 };
@@ -463,158 +274,6 @@ P.measureFont = function () {
 
     this.dirtyPathObject = true;
     this.dirtyDimensions = true;
-};
-
-
-// `getFontMetadata` - generate basic font metadata
-P.getFontMetadata = function (fontFamily) {
-
-    if (fontFamily) {
-
-        const font = `100px ${fontFamily}`;
-
-        if (fontfamilymetadatanames.includes(font)) return fontfamilymetadata[font];
-
-        const mycell = requestCell();
-        const engine = mycell.engine;
-
-        engine.font = font;
-        engine.textBaseline = TOP;
-
-
-        const metrics = engine.measureText(SPACE);
-
-        const { actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxAscent, fontBoundingBoxDescent, alphabeticBaseline, hangingBaseline, ideographicBaseline} = metrics;
-
-        let height = fontBoundingBoxAscent + fontBoundingBoxDescent;
-        if (!_isFinite(height)) height = _ceil(_abs(actualBoundingBoxDescent) + _abs(actualBoundingBoxAscent));
-
-        fontfamilymetadatanames.push(font);
-        fontfamilymetadata[font] = {
-            height,
-            alphabeticBaseline: -alphabeticBaseline,
-            hangingBaseline: -hangingBaseline,
-            ideographicBaseline: -ideographicBaseline,
-            verticalOffset: _isFinite(fontBoundingBoxAscent) ? fontBoundingBoxAscent : actualBoundingBoxAscent,
-        }
-
-        releaseCell(mycell);
-
-        return fontfamilymetadata[font];
-    }
-};
-
-
-// `updateTextStyle` - manipulate the user-supplied font string to create a font string the canvas engine can use
-P.updateTextStyle = function (textStyle, calculator, results) {
-
-// console.log(this.name, 'P.updateTextStyle (in label mixin)')
-
-    let fontSize = textStyle.fontSize;
-    const { fontStretch, fontStyle, fontWeight, fontVariantCaps, fontString } = textStyle;
-    const { currentScale, lineSpacing, updateUsingFontParts, updateUsingFontString } = this;
-
-    // We always start with the 'raw' fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)
-    calculator.style.font = fontString;
-
-    const elFamily = results.fontFamily;
-    this.getFontMetadata(elFamily);
-
-    // On initial load `this.fontSize` will be empty or undefined
-    if (updateUsingFontString || fontSize == null || !fontSize) {
-
-        this.updateUsingFontString = false;
-        const foundSize = fontString.match(FONT_LENGTH_REGEX);
-
-        if (foundSize && foundSize[0]) fontSize = foundSize[0];
-
-        calculator.style.fontSize = fontSize;
-        textStyle.fontSize = results.fontSize;
-    }
-
-    // We only adjust if a part of the font string has been recently 'set'
-    if (updateUsingFontParts) {
-
-        this.updateUsingFontParts = false;
-        calculator.style.fontStretch = fontStretch;
-        calculator.style.fontStyle = fontStyle;
-        calculator.style.fontVariantCaps = fontVariantCaps;
-        calculator.style.fontWeight = fontWeight;
-        calculator.style.fontSize = fontSize;
-    }
-    else if (currentScale != 1) calculator.style.fontSize = fontSize;
-
-    // Extract and manipulate data for font weight, variant and style
-    const elWeight = results.fontWeight,
-        elStretch = textStyle.fontStretchHelper(results.fontStretch);
-
-    let elVariant = results.fontVariantCaps,
-        elStyle = results.fontStyle;
-
-    // Update elVariant, if required
-    elVariant = (FONT_VARIANT_VALS.includes(elVariant)) ? elVariant : NORMAL;
-
-    // Update elStyle, if required
-    elStyle = (elStyle == ITALIC || elStyle.includes(OBLIQUE)) ? elStyle : NORMAL;
-
-    // Extract data for font size
-    const elSizeString = results.fontSize,
-        elSizeValue = parseFloat(elSizeString);
-
-    textStyle.fontSizeValue = elSizeValue;
-
-    // Work specifically for EnhancedLabel entitys, but performed here for efficiency
-    if (lineSpacing != null && fontString.includes('/')) {
-
-        const lh = parseFloat(results.lineHeight);
-        this.lineSpacing = (_isFinite(lh)) ? lh / elSizeValue : this.defs.lineSpacing;
-    }
-
-    // Update `textStyle` attributes
-    textStyle.fontStretch = elStretch;
-    textStyle.fontStyle = elStyle;
-    textStyle.fontVariantCaps = elVariant;
-    textStyle.fontWeight = elWeight;
-    textStyle.fontFamily = elFamily;
-
-    // Rebuild font strings
-    this.updateCanvasFont(textStyle);
-    this.updateFontString(textStyle);
-};
-
-P.updateCanvasFont = function (style) {
-
-    const scale = this.currentScale
-
-    const { fontStyle, fontVariantCaps, fontWeight, fontSizeValue, fontFamily } = style
-
-    let f = '';
-
-    if (fontStyle == ITALIC || fontStyle.includes(OBLIQUE)) f += `${fontStyle} `;
-    if (fontVariantCaps == SMALL_CAPS) f += `${fontVariantCaps} `;
-    if (fontWeight != null && fontWeight && fontWeight !== NORMAL && fontWeight !== '400') f += `${fontWeight} `;
-    f += `${fontSizeValue * scale}px ${fontFamily}`
-
-    style.canvasFont = f;
-};
-
-P.updateFontString = function (style) {
-
-    const { fontStretch, fontStyle, fontVariantCaps, fontWeight, fontSize, fontSizeValue, fontFamily } = style
-
-    let f = '';
-
-    if (fontStretch != null && fontStretch && fontStretch !== NORMAL) f += `${fontStretch} `;
-    if (fontStyle != null && fontStyle && fontStyle !== NORMAL) f += `${fontStyle} `;
-    if (fontVariantCaps != null && fontVariantCaps && fontVariantCaps !== NORMAL) f += `${fontVariantCaps} `;
-    if (fontWeight != null && fontWeight && fontWeight !== NORMAL && fontWeight !== '400') f += `${fontWeight} `;
-
-    if (fontSize) f += `${fontSize} `;
-    else f += `${fontSizeValue}px `
-
-    f += `${fontFamily}`;
-
-    style.fontString = f;
 };
 
 P.cleanFont = function () {
@@ -750,9 +409,10 @@ P.prepareStamp = function() {
 // + If decide to pass host instead of host.engine to method functions for all entitys, then this may be a temporary fix
 P.regularStamp = function () {
 
-    const dest = this.currentHost;
+    const dest = this.currentHost,
+        textStyle = this.defaultTextStyle;
 
-    if (dest) {
+    if (dest && textStyle) {
 
         const engine = dest.engine;
         const [x, y] = this.currentStampPosition;
@@ -768,7 +428,7 @@ P.regularStamp = function () {
         }
 
         // Invoke the appropriate __stamping method__ (below)
-        this[this.method](dest);
+        this[textStyle.method](dest);
     }
 };
 

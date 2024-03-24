@@ -590,23 +590,23 @@ P.cleanDimensionsAdditionalActions = function() {
     // Only proceed if the canvas element is in place
     if (element) {
 
-        const { 
+        const {
             cleared,
             dirtyDimensionsOverride,
         } = this;
 
         const controller = this.getController();
 
-        // Only proceed if we know the Cell has a controller, and its contents don't need to be preserved 
+        // Only proceed if we know the Cell has a controller, and its contents don't need to be preserved
         // + If the user sets the cell to `cleared: false`, then later sets the cell's dimensions via `set()`, that's their problem, not ours
         if (controller && (cleared || dirtyDimensionsOverride)) {
 
             this.dirtyDimensionsOverride = false;
 
-            const { 
-                currentDimensions, 
-                dimensions, 
-                isBase, 
+            const {
+                currentDimensions,
+                dimensions,
+                isBase,
             } = this;
 
             const controlDimensions = controller.currentDimensions;
