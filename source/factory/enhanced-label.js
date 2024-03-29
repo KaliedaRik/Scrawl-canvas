@@ -2887,10 +2887,9 @@ P.regularStamp = function (host) {
 
 P.createTextCellsForPath = function (host) {
 
-    const ratio = getPixelRatio(),
-        el = host.element,
-        w = el.width / ratio,
-        h = el.height / ratio;
+    const el = host.element,
+        w = el.width,
+        h = el.height;
 
     const uCell = requestCell(w, h);
     const mCell = requestCell(w, h);
@@ -3013,10 +3012,9 @@ P.createTextCellsForPath = function (host) {
 
 P.createTextCellsForSpace = function (host) {
 
-    const ratio = getPixelRatio(),
-        el = host.element,
-        w = el.width / ratio,
-        h = el.height / ratio;
+    const el = host.element,
+        w = el.width,
+        h = el.height;
 
     const uCell = requestCell(w, h);
     const mCell = requestCell(w, h);
@@ -3163,10 +3161,11 @@ P.addUnderlinesToCopyCell = function (host, copy) {
 
     if (underlinePaths.length) {
 
-        const ratio = getPixelRatio(),
-            el = host.element;
+        const el = host.element,
+            w = el.width,
+            h = el.height;
 
-        const mycell = requestCell(el.width / ratio, el.height / ratio);
+        const mycell = requestCell(w, h);
 
         if (mycell) {
 
@@ -3204,10 +3203,11 @@ P.createOverlineCell = function (host) {
 
     if (overlinePaths.length) {
 
-        const ratio = getPixelRatio();
-        const el = host.element;
+        const el = host.element,
+            w = el.width,
+            h = el.height;
 
-        const mycell = requestCell(el.width / ratio, el.height / ratio);
+        const mycell = requestCell(w, h);
 
         if (mycell) {
 
@@ -3234,10 +3234,11 @@ P.createHighlightCell = function (host) {
 
     if (highlightPaths.length) {
 
-        const ratio = getPixelRatio();
-        const el = host.element;
+        const el = host.element,
+            w = el.width,
+            h = el.height;
 
-        const mycell = requestCell(el.width / ratio, el.height / ratio);
+        const mycell = requestCell(w, h);
 
         if (mycell) {
 

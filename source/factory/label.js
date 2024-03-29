@@ -351,7 +351,6 @@ P.stampPositioningHelper = function () {
 // `underlineEngine` - internal helper function
 P.underlineEngine = function (host, pos) {
 
-console.log('underlineEngine')
     // Setup constants
     const {
         currentDimensions,
@@ -375,11 +374,9 @@ console.log('underlineEngine')
     const underlineDepth = underlineWidth * currentScale;
 
     // Setup the cell parts
-    const ratio = getPixelRatio();
-
     const { element, engine } = host;
 
-    const mycell = requestCell(element.width / ratio, element.height / ratio);
+    const mycell = requestCell(element.width, element.height);
 
     const {
         element: underlineElement,
