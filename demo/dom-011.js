@@ -27,8 +27,8 @@ const mycell = canvas.buildCell({
     start: ['center', 'center'],
     handle: ['center', 'center'],
     backgroundColor: 'blue',
-    // scale: 1.1,
-    // roll: 10,
+    scale: 1.1,
+    roll: 10,
 });
 
 

@@ -602,7 +602,6 @@ P.updateCells = function (items = Ωempty) {
 // `buildCell` - create a Cell wrapper (wrapping a &lt;canvas> element not attached to the DOM) and add it to this Canvas wrapper's complement of Cells
 P.buildCell = function (items = Ωempty) {
 
-// console.log(this.name, 'buildCell', items)
     const host = items.host || null;
 
     if (!host) items.host = this.base.name;
@@ -1242,11 +1241,3 @@ export const addCanvas = function (items = Ωempty) {
 
     return mycanvas;
 };
-
-// // Wide gamut colors helper
-// export const getCanvasColorSpace = (useP3) => {
-
-//     const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
-//     if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
-//     return SRGB;
-// };
