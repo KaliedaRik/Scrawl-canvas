@@ -41,45 +41,33 @@ const tree = scrawl.makeShape({
 // #### Greetings logo
 scrawl.makeQuadratic({
 
-    name: 'text-arch',
+    name: 'message-guideline',
 
-    startX: '10%',
-    startY: '30%',
-    endX: '90%',
-    endY: '30%',
-    controlX: '50%',
-    controlY: '0%',
-
-    method: 'draw',
+    start: [50, 180],
+    control: [300, -20],
+    end: [550, 180],
 
     useAsPath: true,
-    visibility: false,
+    method: 'none',
 });
 
-scrawl.makePhrase({
+scrawl.makeEnhancedLabel({
 
-    name: 'message',
+    name: 'message-text',
+    layoutTemplate: 'message-guideline',
 
+    fontString: '60px "Mountains Of Christmas"',
     text: 'HAPPY HOLIDAYS',
 
-    textPath: 'text-arch',
-    textPathPosition: 0.06,
-    handleY: 'bottom',
+    textHandle: ['center', 'alphabetic'],
 
-    size: '50px',
-    family: '"Brush Script MT", "Brush Script Std", "Lucida Calligraphy", "Lucida Handwriting", "Apple Chancery", cursive',
+    useLayoutTemplateAsPath: true,
+    breakTextOnSpaces: false,
 
-    justify: 'center',
-    lineHeight: 0,
-    letterSpacing: 4,
-
-    fillStyle: 'red',
-    strokeStyle: 'yellow',
-    lineWidth: 4,
-
-    method: 'drawThenFill',
+    fillStyle: 'aliceblue',
+    letterSpacing: '8px',
+    pathPosition: 0.03,
 });
-
 
 // ### Particle physics
 // The world object will be used by multiple Emitter entitys

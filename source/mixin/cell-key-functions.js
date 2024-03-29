@@ -9,7 +9,7 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
+import { _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
 
 
 // #### Export function

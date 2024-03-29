@@ -245,7 +245,7 @@ scrawl.makePicture({
 // Give the hold Picture entitys some labels
 scrawl.makeLabel({
 
-    name: name('cell-phrase'),
+    name: name('cell-label'),
     group: hold.get('baseGroup'),
 
     text: 'Cell',
@@ -257,37 +257,37 @@ scrawl.makeLabel({
 
 }).clone({
 
-    name: name('group-phrase'),
+    name: name('group-label'),
     text: 'Group',
     pivot: name('group-image'),
 
 }).clone({
 
-    name: name('b1-phrase'),
+    name: name('b1-label'),
     text: 'Block1',
     pivot: name('b1-image'),
 
 }).clone({
 
-    name: name('b2-phrase'),
+    name: name('b2-label'),
     text: 'Block2',
     pivot: name('b2-image'),
 
 }).clone({
 
-    name: name('w1-phrase'),
+    name: name('w1-label'),
     text: 'Wheel1',
     pivot: name('w1-image'),
 
 }).clone({
 
-    name: name('w2-phrase'),
+    name: name('w2-label'),
     text: 'Wheel2',
     pivot: name('w2-image'),
 
 }).clone({
 
-    name: name('words-phrase'),
+    name: name('words-label'),
     text: 'Words',
     pivot: name('words-image'),
 });

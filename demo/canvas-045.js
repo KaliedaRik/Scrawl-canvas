@@ -77,17 +77,31 @@ spinFactory('inner-ring', 60, 4, '4s', true);
 spinFactory('center', 20, 5, '4s', false);
 
 
-// Second interaction - when the user moves their mouse across the signature, details about the painting will fade into view
-scrawl.makePhrase({
-  name: 'painting-details',
-  text: `Songbird and flowering camellia §GRAY§(1910 - 1930)
-§ITALIC§Ohara Koson (Japanese, 1877-1945)`,
-  font: '15px Arial, sans-serif',
-  start: ['10%', '72%'],
-  width: '80%',
-  globalAlpha: 0,
-  order: 8,
-}).addSectionClass('GRAY', { fill: 'gray' });
+// Second interaction - when the user moves their mouse across the signature area, details about the painting will fade into view
+scrawl.makeBlock({
+  name: 'details-trigger',
+  start: ['5%', '70%'],
+  dimensions: ['80%', '22%'],
+  method: 'none',
+  onEnter: function () {
+    if (!detailsTween.isRunning()) detailsTween.run();
+  },
+});
+
+scrawl.makeEnhancedLabel({
+    name: 'painting-details',
+    layoutTemplate: 'details-trigger',
+
+    fontString: '15px Arial, sans-serif',
+
+    text: 'Songbird and flowering camellia (1910 - 1930) <span style="font-style: italic;">Ohara Koson (Japanese, 1877-1945)</span>',
+    justifyLine: 'end',
+
+    fillStyle: 'gray',
+
+    globalAlpha: 0,
+    order: 8,
+});
 
 const detailsTween = scrawl.makeTween({
   name: 'show-details',
@@ -103,16 +117,6 @@ const detailsTween = scrawl.makeTween({
       engine: 'easeIn5',
     },
   ],
-});
-
-scrawl.makeBlock({
-  name: 'details-trigger',
-  start: ['72%', '76%'],
-  dimensions: ['12%', '16%'],
-  method: 'none',
-  onEnter: function () {
-    if (!detailsTween.isRunning()) detailsTween.run();
-  },
 });
 
 

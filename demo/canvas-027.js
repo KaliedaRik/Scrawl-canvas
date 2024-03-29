@@ -421,7 +421,7 @@ const vtTime = vtBackground.clone({
 
 const vtLabel = scrawl.makeLabel({
 
-    name: name('test-video-time-phrase'),
+    name: name('test-video-time-label'),
     fontString: 'bold 1rem monospace',
     start: [5, 20],
     fillStyle: 'yellow',

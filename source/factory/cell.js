@@ -36,7 +36,8 @@ import { artefact, asset, canvas, constructors, group } from '../core/library.js
 
 import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { getIgnorePixelRatio, getPixelRatio } from "../core/user-interaction.js";
+import { getIgnorePixelRatio, getPixelRatio, currentCorePosition } from '../core/user-interaction.js';
+
 
 import { makeGroup } from './group.js';
 import { makeState } from '../untracked-factory/state.js';
@@ -63,7 +64,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isFinite, _floor, _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _floor, _round, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, DISPLAY_P3, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Cell constructor
@@ -200,7 +201,11 @@ const defaultAttributes = {
 // __includeInCascadeEventActions__ - if a non-base Cell has its `shown` flag set to true, then it is automatically included in CascadeEventActions functionality. In situations where we don't want the Cell to _directly_ appear in the canvas, but do want to include it in CascadeEventActions, then we can set this flag to `true`
     includeInCascadeEventActions: false,
 
+// __willReadFrequently__ - used only when retrieving the cell's context engine. See the [MDN canvas.getContext page](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#willreadfrequently) for details.
     willReadFrequently: true,
+
+// __setRelativeDimensionsToBase__ - by default, if setting a non-base cell's dimensions using string% relative values, those values will be calculated against the display canvas dimensions. Setting this attribute to `true` will force the Cell to use the Canvas wrapper's base Cell for those calculations. Most oviously comes into effect when the display canvas and base canvas have different dimensions.
+    setRelativeDimensionsUsingBase: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -388,6 +393,12 @@ S.showOrder = function (item) {
 
     this.showOrder = item;
     this.updateControllerCells();
+};
+
+S.setRelativeDimensionsUsingBase = function (item) {
+
+    this.setRelativeDimensionsUsingBase = !!item;
+    this.dirtyDimensions = true;
 };
 
 
@@ -607,9 +618,10 @@ P.cleanDimensionsAdditionalActions = function() {
                 currentDimensions,
                 dimensions,
                 isBase,
+                setRelativeDimensionsUsingBase,
             } = this;
 
-            const controlDimensions = controller.currentDimensions;
+            let controlDimensions = controller.currentDimensions;
             const [width, height] = controlDimensions;
 
             // __isComponent__ is DEPRECATED (because it is a really bad name) and replaced by __baseMatchesCanvasDimensions__
@@ -621,6 +633,8 @@ P.cleanDimensionsAdditionalActions = function() {
                 currentDimensions[1] = height;
             }
             else {
+
+                if (!isBase && setRelativeDimensionsUsingBase) controlDimensions = controller.base.currentDimensions;
 
                 let item;
 
@@ -642,18 +656,8 @@ P.cleanDimensionsAdditionalActions = function() {
 
             const [w, h] = currentDimensions;
 
-            if (getIgnorePixelRatio()) {
-
-                element.width = w;
-                element.height = h;
-            }
-            else {
-
-                const dpr = getPixelRatio();
-
-                element.width = w * dpr;
-                element.height = h * dpr;
-            }
+            element.width = w;
+            element.height = h;
 
             this.setEngineFromState(this.engine);
 
@@ -836,24 +840,12 @@ P.updateBaseHere = function (controllerHere, fit) {
 // `clear`
 P.clear = function () {
 
-    const {element, engine, backgroundColor, clearAlpha, currentDimensions} = this;
-    let [width, height] = currentDimensions;
-
-    width = _trunc(width);
-    height = _trunc(height);
+    const {element, engine, backgroundColor, clearAlpha} = this;
 
     this.prepareStamp();
 
-    const dpr = checkEngineScale(engine);
-
-    const w = _trunc(width * dpr),
-        h = _trunc(height * dpr);
-
-    if (this.useAsPattern) {
-
-        element.width = width;
-        element.height = height;
-    }
+    const width = _floor(element.width),
+        height = _floor(element.height);
 
     if (backgroundColor) {
 
@@ -863,42 +855,31 @@ P.clear = function () {
         engine.globalAlpha = 1;
         engine.fillRect(0, 0, width, height);
         engine.restore();
+
     }
     else if (clearAlpha) {
 
         engine.save();
-        const tempCell = requestCell();
+
+        const tempCell = requestCell(width, height);
 
         const {engine:tempEngine, element:tempEl} = tempCell;
 
-        if (this.useAsPattern) {
+        tempEngine.drawImage(element, 0, 0, width, height, 0, 0, width, height);
 
-            tempEl.width = width;
-            tempEl.height = height;
+        engine.clearRect(0, 0, width, height);
+        engine.globalAlpha = clearAlpha;
 
-            tempEngine.drawImage(element, 0, 0, width, height, 0, 0, width, height);
+        engine.drawImage(tempEl, 0, 0, width, height, 0, 0, width, height);
 
-            engine.clearRect(0, 0, width, height);
-            engine.globalAlpha = clearAlpha;
-
-            engine.drawImage(tempEl, 0, 0, width, height, 0, 0, width, height);
-        }
-        else {
-            tempEl.width = w;
-            tempEl.height = h;
-
-            tempEngine.drawImage(element, 0, 0, width, height, 0, 0, width, height);
-
-            engine.clearRect(0, 0, width, height);
-            engine.globalAlpha = clearAlpha;
-
-            engine.drawImage(tempEl, 0, 0, w, h, 0, 0, width, height);
-        }
         engine.restore();
 
         releaseCell(tempCell);
     }
-    else engine.clearRect(0, 0, width, height);
+    else {
+
+        engine.clearRect(0, 0, width, height);
+    }
 };
 
 // `compile`
@@ -909,8 +890,6 @@ P.compile = function(){
     if (!this.cleared) this.prepareStamp();
 
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
-
-    checkEngineScale(this.engine);
 
     const gb = this.groupBuckets,
         gbLen = gb.length;
@@ -934,22 +913,37 @@ P.setImageSmoothing = function (engine) {
 
 P.show = function () {
 
+    const checkPixelRatio = function () {
+
+        if (getIgnorePixelRatio()) return 1;
+        return getPixelRatio();
+    };
+
     // get the destination cell's canvas context
     const host = this.getHost(),
-        engine = (host && host.engine) ? host.engine : false;
+        displayEngine = (host && host.engine) ? host.engine : false;
 
-    if (engine) {
+    if (host && displayEngine) {
 
-        const hostDimensions = host.currentDimensions,
-            destWidth = _floor(hostDimensions[0]),
-            destHeight = _floor(hostDimensions[1]);
+        let destWidth = 0,
+            destHeight = 0;
+
+        if (host.type === T_CANVAS) {
+
+            destWidth = host.domElement.width;
+            destHeight = host.domElement.height;
+        }
+        else if (host.type === T_CELL) {
+
+            destWidth = host.element.width;
+            destHeight = host.element.height;
+        }
 
         // Cannot draw to the destination canvas if either of its dimensions === 0
         if (!destWidth || !destHeight) return false;
 
         const {
             currentScale:scale,
-            currentDimensions,
             composite,
             alpha,
             controller,
@@ -959,16 +953,16 @@ P.show = function () {
             currentStampPosition:stamp,
         } = this;
 
-        const curWidth = _floor(currentDimensions[0]),
-            curHeight = _floor(currentDimensions[1]);
+        const curWidth = element.width,
+            curHeight = element.height;
 
         let paste;
 
-        engine.save();
+        displayEngine.save();
 
-        checkEngineScale(engine);
+        displayEngine.filter = this.filter;
 
-        engine.filter = this.filter;
+        const dpr = checkPixelRatio();
 
         if (isBase) {
 
@@ -978,14 +972,14 @@ P.show = function () {
             // copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller's fit attribute requirements
             if (!this.cleared && !this.compiled) this.prepareStamp();
 
-            engine.globalCompositeOperation = SOURCE_OVER;
-            engine.globalAlpha = 1;
-            engine.clearRect(0, 0, destWidth, destHeight);
+            displayEngine.globalCompositeOperation = SOURCE_OVER;
+            displayEngine.globalAlpha = 1;
+            displayEngine.clearRect(0, 0, destWidth, destHeight);
 
-            engine.globalCompositeOperation = composite;
-            engine.globalAlpha = alpha;
+            displayEngine.globalCompositeOperation = composite;
+            displayEngine.globalAlpha = alpha;
 
-            this.setImageSmoothing(engine);
+            this.setImageSmoothing(displayEngine);
 
             const fit = (controller) ? controller.fit : NONE;
 
@@ -1046,11 +1040,14 @@ P.show = function () {
                 case NONE :
                 default :
                     // base copies into display as-is, centred, maintaining aspect ratio
-                    paste[0] = _floor((destWidth - curWidth) / 2);
-                    paste[1] = _floor((destHeight - curHeight) / 2);
-                    paste[2] = curWidth;
-                    paste[3] = curHeight;
+                    paste[0] = _floor((destWidth - (curWidth * dpr)) / 2);
+                    paste[1] = _floor((destHeight - (curHeight * dpr)) / 2);
+                    paste[2] = curWidth * dpr;
+                    paste[3] = curHeight * dpr;
             }
+
+            displayEngine.clearRect(0, 0, destWidth, destHeight);
+            displayEngine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
         }
         else if (scale > 0) {
 
@@ -1063,20 +1060,21 @@ P.show = function () {
 
             if (!this.cleared && !this.compiled) this.prepareStamp();
 
-            engine.globalCompositeOperation = composite;
-            engine.globalAlpha = alpha;
+            displayEngine.globalCompositeOperation = composite;
+            displayEngine.globalAlpha = alpha;
 
-            this.setImageSmoothing(engine);
+            this.setImageSmoothing(displayEngine);
 
             paste[0] = _floor(-handle[0] * scale);
             paste[1] = _floor(-handle[1] * scale);
             paste[2] = _floor(curWidth * scale);
             paste[3] = _floor(curHeight * scale);
 
-            this.rotateDestination(engine, ...stamp);
+            this.rotateDestination(displayEngine, ...stamp);
+
+            displayEngine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
         }
-        engine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
-        engine.restore();
+        displayEngine.restore();
     }
 };
 
@@ -1335,28 +1333,6 @@ P.updateHere = function () {
     }
 };
 
-// `checkEngineScale`
-// DPR is detected in the `core/events.js` file, but mainly handled here
-// + We scale the cell by DPR - this should be the only time we touch native scale functionality!
-// + All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the `current` equivalent attributes
-// + Called for every clear, compile and show action
-const checkEngineScale = function (engine) {
-
-    if (engine) {
-
-        engine.setTransform(1,0,0,1,0,0);
-
-        if (getIgnorePixelRatio()) engine.scale(1, 1);
-        else {
-
-            const dpr = getPixelRatio();
-            engine.scale(dpr, dpr);
-            return dpr;
-        }
-    }
-    return 1;
-};
-
 
 // #### Factory
 export const makeCell = function (items) {
@@ -1366,3 +1342,13 @@ export const makeCell = function (items) {
 };
 
 constructors.Cell = Cell;
+
+
+
+// Wide gamut colors helper
+export const getCanvasColorSpace = (useP3) => {
+
+    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
+    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
+    return SRGB;
+};

@@ -109,10 +109,10 @@ let mypicture = scrawl.makePicture({
     globalAlpha: 0.8,
 });
 
-// Test Phrase entity
-let myphrase = scrawl.makeLabel({
+// Test Label entity
+let mylabel = scrawl.makeLabel({
 
-    name: 'phrase-tester',
+    name: 'label-tester',
 
     text: 'H&epsilon;lj&ouml;!',
     fontString: 'bold 40px Garamond, serif',
@@ -564,7 +564,7 @@ const performEntityTests = () => {
     console.log('Creating packets for all entitys in test');
     const myblockPacket = myblock.saveAsPacket();
     const mypicturePacket = mypicture.saveAsPacket();
-    const myphrasePacket = myphrase.saveAsPacket();
+    const mylabelPacket = mylabel.saveAsPacket();
     const mypiePacket = mypie.saveAsPacket();
     const myovalPacket = myoval.saveAsPacket();
     const mybezierPacket = mybezier.saveAsPacket();
@@ -574,7 +574,7 @@ const performEntityTests = () => {
     console.log('Kill all entitys in test');
     myblock.kill();
     mypicture.kill();
-    myphrase.kill();
+    mylabel.kill();
     mypie.kill();
     myoval.kill();
     mybezier.kill();
@@ -596,10 +596,10 @@ const performEntityTests = () => {
     })
     .catch(err => console.log(err));
 
-    canvas.importPacket(myphrasePacket)
+    canvas.importPacket(mylabelPacket)
     .then(res => {
-        myphrase = res;
-        console.log('myphrase resurrected');
+        mylabel = res;
+        console.log('mylabel resurrected');
     })
     .catch(err => console.log(err));
 

@@ -3,14 +3,16 @@
 
 
 // #### Imports
-import { doCreate, λnull, λthis } from '../helper/utilities.js';
+import { doCreate, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from './state.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 
-import { _2D, CANVAS, LEFT, SRGB, T_CELLFRAGMENT, TOP } from '../helper/shared-vars.js';
+import { getCanvasColorSpace } from '../factory/cell.js'
+
+import { _2D, CANVAS, DISPLAY_P3, LEFT, SRGB, T_CELLFRAGMENT, TOP } from '../helper/shared-vars.js';
 
 
 // #### CellFragment constructor
@@ -19,7 +21,8 @@ const CellFragment = function (name, colorSpace = SRGB) {
     this.name = name;
 
     const element = this.element = document.createElement(CANVAS);
-    const engine = this.engine = element.getContext(_2D, {
+
+    this.engine = element.getContext(_2D, {
         willReadFrequently: true,
         colorSpace,
     });
@@ -27,7 +30,7 @@ const CellFragment = function (name, colorSpace = SRGB) {
     element.width = 1;
     element.height = 1;
 
-    const state = this.state = makeState({ engine });
+    const state = this.state = makeState(Ωempty);
 
     state.setStateFromEngine(this.engine);
 
@@ -92,9 +95,12 @@ const cellPool = [];
 let count = 0;
 
 // `Exported function` - __requestCell__
-export const requestCell = function (w = 1, h = 1) {
+export const requestCell = function (w = 1, h = 1, colorSpace = SRGB) {
 
-    if (!cellPool.length) cellPool.push(new CellFragment(`pool_${count++}`));
+    if (!cellPool.length) {
+
+        cellPool.push(new CellFragment(`pool_${count++}`, getCanvasColorSpace(colorSpace === DISPLAY_P3)));
+    }
 
     const c = cellPool.shift();
 

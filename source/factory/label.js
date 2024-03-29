@@ -351,6 +351,7 @@ P.stampPositioningHelper = function () {
 // `underlineEngine` - internal helper function
 P.underlineEngine = function (host, pos) {
 
+console.log('underlineEngine')
     // Setup constants
     const {
         currentDimensions,
@@ -464,6 +465,7 @@ P.draw = function (host) {
     if (this.currentFontIsLoaded) {
 
         const engine = host.engine;
+
         const pos = this.stampPositioningHelper();
 
         if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);

@@ -36,10 +36,10 @@ import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-ele
 
 import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
+import { uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeState } from '../untracked-factory/state.js';
-import { makeCell } from './cell.js';
+import { getCanvasColorSpace, makeCell } from './cell.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
@@ -1243,10 +1243,10 @@ export const addCanvas = function (items = Ωempty) {
     return mycanvas;
 };
 
-// Wide gamut colors helper
-const getCanvasColorSpace = (useP3) => {
+// // Wide gamut colors helper
+// export const getCanvasColorSpace = (useP3) => {
 
-    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
-    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
-    return SRGB;
-};
+//     const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
+//     if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
+//     return SRGB;
+// };

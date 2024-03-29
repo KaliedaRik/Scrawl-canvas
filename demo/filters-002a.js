@@ -185,7 +185,7 @@ const createCachePictures = () => {
 // We will also be displaying labels over each Picture entity to let people know which filter we've used on the Picture entity. We will position these labels using Picture entitys as pivots.
 const addLabels = () => {
 
-    // The Phrase entitys can go in the canvas element's default Group. To make sure they display correctly (after the Picture entitys have been stamped) we'll set the default Group's order attribute to a higher value
+    // The Label entitys can go in the canvas element's default Group. To make sure they display correctly (after the Picture entitys have been stamped) we'll set the default Group's order attribute to a higher value
     canvas.get('baseGroup').set({
         order: 1,
     });
@@ -314,7 +314,7 @@ scrawl.makeRender({
     afterShow: report,
 
     // #### Caching (continued)
-    // Hide the originals group; create the Picture entitys that will display the cached images, alongside the Phrase labels that describe them
+    // Hide the originals group; create the Picture entitys that will display the cached images, alongside the Label labels that describe them
     afterCreated: () => {
         originals.set({ visibility: false });
         createCachePictures();

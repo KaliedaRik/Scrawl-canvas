@@ -17,7 +17,7 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
-// Create and clone Phrase entitys
+// Create and clone Label entitys
 scrawl.makeLabel({
 
     name: name('mylabel_fill'),

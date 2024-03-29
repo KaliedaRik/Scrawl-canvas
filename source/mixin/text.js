@@ -283,7 +283,7 @@ export default function (P = Ωempty) {
     S.text = function (item) {
 
         this.rawText = (item.substring) ? item : item.toString();
-        this.text = this.convertTextEntityCharacters(this.rawText);
+        this.text = this.convertTextEntityCharacters(this.rawText.normalize('NFC'));
 
         this.dirtyText = true;
         this.dirtyFont = true;
