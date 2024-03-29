@@ -25,7 +25,7 @@ import deltaMix from '../mixin/delta.js';
 import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
@@ -473,7 +473,7 @@ export default function (P = Ωempty) {
 // `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-// `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+// `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 

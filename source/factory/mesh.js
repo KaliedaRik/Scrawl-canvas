@@ -33,7 +33,7 @@ import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
@@ -546,7 +546,7 @@ P.prepareStamp = function() {
         }
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 

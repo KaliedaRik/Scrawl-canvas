@@ -32,7 +32,7 @@ import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
 // Question: do DOM elements really need additional anchors and buttons?
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 
@@ -815,7 +815,7 @@ export default function (P = Ωempty) {
 
         if (this.dirtyPathObject) this.cleanPathObject();
 
-        // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+        // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 

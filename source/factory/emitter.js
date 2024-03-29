@@ -487,7 +487,7 @@ P.prepareStamp = function () {
         }
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 

@@ -57,9 +57,6 @@
       <li>library.world</li>
     </ul>
     <ul>
-      <li>library.sectionClasses</li>
-    </ul>
-    <ul>
       <li>library.purge()</li>
     </ul>
   </ul>
@@ -74,7 +71,7 @@
       <li>render</li>
     </ul>
     <li><a href="source/core/document.html">core/document.js</a></li>
-    <li><a href="source/core/document-root-elements.html">core/document-root-elements.js</a></li>
+    <li><a href="source/helper/document-root-elements.html">helper/document-root-elements.js</a></li>
     <li><a href="source/core/events.html">core/events.js</a></li>
     <ul>
       <li>addListener</li>
@@ -127,14 +124,6 @@
     <ul>
       <li>makeCrescent</li>
     </ul>
-    <li><a href="source/factory/enhancedLabel.html">factory/enhancedLabel.js</a></li>
-    <ul>
-      <li>makeEnhancedLabel</li>
-    </ul>
-    <li><a href="source/factory/label.html">factory/label.js</a></li>
-    <ul>
-      <li>makeLabel</li>
-    </ul>
     <li><a href="source/factory/picture.html">factory/picture.js</a></li>
     <ul>
       <li>makePicture</li>
@@ -145,11 +134,25 @@
     </ul>
   </ul>
 
+  <h4>Canvas text entity artefacts</h4>
+  <ul>
+    <li><a href="source/mixin/text.html">mixin/text.js</a></li>
+    <li><a href="source/untracked-factory/text-style.html">untracked-factory/text-style.js</a></li>
+    <li><a href="source/factory/enhancedLabel.html">factory/enhancedLabel.js</a></li>
+    <ul>
+      <li>makeEnhancedLabel</li>
+    </ul>
+    <li><a href="source/factory/label.html">factory/label.js</a></li>
+    <ul>
+      <li>makeLabel</li>
+    </ul>
+  </ul>
+
   <h4>Canvas path-based entity artefacts</h4>
   <ul>
     <li><a href="source/mixin/shape-basic.html">mixin/shape-basic.js</a></li>
     <li><a href="source/mixin/shape-curve.html">mixin/shape-curve.js</a></li>
-    <li><a href="source/mixin/shape-path-calculation.html">mixin/shape-path-calculation.js</a></li>
+    <li><a href="source/helper/shape-path-calculation.html">helper/shape-path-calculation.js</a></li>
     <li><a href="source/factory/bezier.html">factory/bezier.js</a></li>
     <ul>
       <li>makeBezier</li>
@@ -246,8 +249,9 @@
       <li>getCanvas</li>
       <li>setCurrentCanvas</li>
     </ul>
+    <li><a href="source/mixin/cell-key-functions.html">mixin/cell-key-functions.js</a></li>
     <li><a href="source/factory/cell.html">factory/cell.js</a></li>
-    <li><a href="source/factory/cell-fragment.html">factory/cell-fragment.js</a></li>
+    <li><a href="source/untracked-factory/cell-fragment.html">untracked-factory/cell-fragment.js</a></li>
     <li><a href="source/factory/element.html">factory/element.js</a></li>
     <ul>
       <li>makeElement</li>
@@ -264,7 +268,7 @@
     <li><a href="source/mixin/asset.html">mixin/asset.js</a></li>
     <li><a href="source/mixin/asset-consumer.html">mixin/asset-consumer.js</a></li>
     <li><a href="source/mixin/asset-advanced-functionality.html">mixin/asset-advanced-functionality.js</a></li>
-    <li><a href="source/factory/image-asset.html">factory/image-asset.js</a></li>
+    <li><a href="source/asset/image-asset.html">asset/image-asset.js</a></li>
     <ul>
       <li>importImage</li>
       <li>importDomImage</li>
@@ -274,23 +278,23 @@
       <li>createImageFromEntity</li>
       <li>createImageFromGroup</li>
     </ul>
-    <li><a href="source/factory/noise-asset.html">factory/noise-asset.js</a> (for Perlin noise, etc)</li>
+    <li><a href="source/asset/noise-asset.html">asset/noise-asset.js</a> (for Perlin noise, etc)</li>
     <ul>
       <li>makeNoiseAsset</li>
     </ul>
-    <li><a href="source/factory/raw-asset.html">factory/raw-asset.js</a></li>
+    <li><a href="source/asset/raw-asset.html">asset/raw-asset.js</a></li>
     <ul>
       <li>makeRawAsset</li>
     </ul>
-    <li><a href="source/factory/reaction-diffusion-asset.html">factory/reaction-diffusion-asset.js</a></li>
+    <li><a href="source/asset/reaction-diffusion-asset.html">asset/reaction-diffusion-asset.js</a></li>
     <ul>
       <li>makeReactionDiffusionAsset</li>
     </ul>
-    <li><a href="source/factory/sprite-asset.html">factory/sprite-asset.js</a></li>
+    <li><a href="source/asset/sprite-asset.html">asset/sprite-asset.js</a></li>
     <ul>
       <li>importSprite</li>
     </ul>
-    <li><a href="source/factory/video-asset.html">factory/video-asset.js</a></li>
+    <li><a href="source/asset/video-asset.html">asset/video-asset.js</a></li>
     <ul>
       <li>importDomVideo</li>
       <li>importMediaStream</li>
@@ -316,7 +320,7 @@
     <ul>
       <li>makeGradient</li>
     </ul>
-    <li><a href="source/factory/palette.html">factory/palette.js</a></li>
+    <li><a href="source/untracked-factory/palette.html">untracked-factory/palette.js</a></li>
     <li><a href="source/factory/pattern.html">factory/pattern.js</a></li>
     <ul>
       <li>makePattern</li>
@@ -334,7 +338,8 @@
     <ul>
       <li>makeFilter</li>
     </ul>
-    <li><a href="source/factory/filter-engine.html">factory/filter-engine.js</a></li>
+    <li><a href="source/helper/filter-engine.html">helper/filter-engine.js</a></li>
+    <li><a href="source/helper/filter-engine-bluenoise-data.html">helper/filter-engine-bluenoise-data.js</a></li>
   </ul>
 
   <h4>Particles and Physics</h4>
@@ -344,7 +349,7 @@
     <ul>
       <li>makeForce</li>
     </ul>
-    <li><a href="source/factory/particle-history.html">factory/particle-history.js</a></li>
+    <li><a href="source/untracked-factory/particle-history.html">untracked-factory/particle-history.js</a></li>
     <li><a href="source/factory/particle-spring.html">factory/particle-spring.js</a></li>
     <ul>
       <li>makeSpring</li>
@@ -381,6 +386,7 @@
     </ul>
   </ul>
   <ul>
+    <li><a href="source/mixin/tween.html">mixin/tween.js</a></li>
     <li><a href="source/factory/action.html">factory/action.js</a></li>
     <ul>
       <li>makeAction</li>
@@ -401,20 +407,20 @@
     <li><a href="source/factory/anchor.html">factory/anchor.js</a></li>
     <li><a href="source/mixin/button.html">mixin/button.js</a></li>
     <li><a href="source/factory/button.html">factory/button.js</a></li>
-    <li><a href="source/mixin/hiddenDomElements.html">mixin/hiddenDomElements.js</a></li>
+    <li><a href="source/mixin/hidden-dom-elements.html">mixin/hidden-dom-elements.js</a></li>
   </ul>
 
   <h4>User interaction</h4>
   <ul>
-    <li><a href="source/factory/drag-zone.html">factory/drag-zone.js</a></li>
+    <li><a href="source/untracked-factory/drag-zone.html">untracked-factory/drag-zone.js</a></li>
     <ul>
       <li>makeDragZone</li>
     </ul>
-    <li><a href="source/factory/keyboard-zone.html">factory/keyboard-zone.js</a></li>
+    <li><a href="source/untracked-factory/keyboard-zone.html">untracked-factory/keyboard-zone.js</a></li>
     <ul>
       <li>makeKeyboardZone</li>
     </ul>
-    <li><a href="source/factory/observe-update.html">factory/observe-update.js</a></li>
+    <li><a href="source/untracked-factory/observe-update.html">untracked-factory/observe-update.js</a></li>
     <ul>
       <li>makeUpdater</li>
       <li>observeAndUpdate</li>
@@ -433,35 +439,34 @@
 
   <h4>Other modules</h4>
   <ul>
-    <li><a href="source/core/random-seed.html">core/random-seed.js</a></li>
+    <li><a href="source/helper/random-seed.html">helper/random-seed.js</a></li>
     <ul>
       <li>seededRandomNumberGenerator</li>
     </ul>
-    <li><a href="source/core/shared-vars.html">core/shared-vars.js</a></li>
-    <li><a href="source/core/system-flags.html">core/system-flags.js</a></li>
-    <li><a href="source/core/utilities.html">core/utilities.js</a></li>
-    <li><a href="source/core/workstore.html">core/workstore.js</a></li>
+    <li><a href="source/helper/shared-vars.html">helper/shared-vars.js</a></li>
+    <li><a href="source/helper/system-flags.html">helper/system-flags.js</a></li>
+    <li><a href="source/helper/utilities.html">helper/utilities.js</a></li>
+    <li><a href="source/helper/workstore.html">helper/workstore.js</a></li>
     <ul>
       <li>setFilterMemoizationChoke</li>
       <li>setWorkstoreLifetimeLength</li>
       <li>setWorkstorePurgeChoke</li>
     </ul>
-    <li><a href="source/factory/array-pool.html">factory/array-pool.js</a></li>
-    <li><a href="source/factory/font-attributes.html">factory/font-attributes.js</a></li>
-    <li><a href="source/factory/state.html">factory/state.js</a></li>
+    <li><a href="source/helper/array-pool.html">helper/array-pool.js</a></li>
+    <li><a href="source/untracked-factory/state.html">untracked-factory/state.js</a></li>
   </ul>
   <ul>
-    <li><a href="source/factory/coordinate.html">factory/coordinate.js</a></li>
+    <li><a href="source/untracked-factory/coordinate.html">untracked-factory/coordinate.js</a></li>
     <ul>
       <li>requestCoordinate</li>
       <li>releaseCoordinate</li>
     </ul>
-    <li><a href="source/factory/quaternion.html">factory/quaternion.js</a></li>
+    <li><a href="source/untracked-factory/quaternion.html">untracked-factory/quaternion.js</a></li>
     <ul>
       <li>requestQuaternion</li>
       <li>releaseQuaternion</li>
     </ul>
-    <li><a href="source/factory/vector.html">factory/vector.js</a></li>
+    <li><a href="source/untracked-factory/vector.html">untracked-factory/vector.js</a></li>
     <ul>
       <li>requestVector</li>
       <li>releaseVector</li>
