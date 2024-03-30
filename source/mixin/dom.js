@@ -648,22 +648,16 @@ export default function (P = Ωempty) {
     };
 
 // `checkHit`
-    P.checkHit = function (items = [], cell) {
+    P.checkHit = function (items = []) {
 
         if (this.noUserInteraction) return false;
 
         if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
         const tests = (!_isArray(items)) ?  [items] : items;
-        let flag = false;
 
-        if (!cell) {
-
-            cell = requestCell();
-            flag = true;
-        }
-
-        const engine = cell.engine;
+        const mycell = requestCell(),
+            engine = mycell.engine;
 
         let tx, ty;
 
@@ -687,7 +681,7 @@ export default function (P = Ωempty) {
 
         }, this)) {
 
-            if (flag) releaseCell(cell);
+            releaseCell(mycell);
 
             return {
                 x: tx,
@@ -696,8 +690,7 @@ export default function (P = Ωempty) {
             };
         }
 
-        if (flag) releaseCell(cell);
-
+        releaseCell(mycell);
         return false;
     };
 

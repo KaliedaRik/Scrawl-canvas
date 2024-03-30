@@ -821,8 +821,7 @@ P.getArtefactAt = function (items) {
 
     this.sortArtefacts();
 
-    const myCell = requestCell(),
-        artBuckets = this.artefactStampBuckets;
+    const artBuckets = this.artefactStampBuckets;
 
     let art, result;
 
@@ -832,16 +831,11 @@ P.getArtefactAt = function (items) {
 
         if (art) {
 
-            result = art.checkHit(items, myCell);
+            result = art.checkHit(items);
 
-            if (result) {
-
-                releaseCell(myCell);
-                return result;
-            }
+            if (result) return result;
         }
     }
-    releaseCell(myCell);
     return false;
 };
 
@@ -852,8 +846,7 @@ P.getAllArtefactsAt = function (items) {
 
     this.sortArtefacts();
 
-    const myCell = requestCell(),
-        artBuckets = this.artefactStampBuckets,
+    const artBuckets = this.artefactStampBuckets,
         resultNames = requestArray(),
         results = [];
 
@@ -865,7 +858,7 @@ P.getAllArtefactsAt = function (items) {
 
         if (art) {
 
-            result = art.checkHit(items, myCell);
+            result = art.checkHit(items);
 
             if (result && result.artefact) {
 
@@ -879,7 +872,6 @@ P.getAllArtefactsAt = function (items) {
             }
         }
     }
-    releaseCell(myCell);
     releaseArray(resultNames);
 
     if (this.checkForEntityHover) {

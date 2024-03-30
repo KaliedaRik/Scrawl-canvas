@@ -692,7 +692,7 @@ P.fillThenDraw = function (engine) {
 //     artefact: the Grid entity object
 // }
 // ```
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
 
@@ -703,15 +703,8 @@ P.checkHit = function (items = [], mycell) {
 
     const tests = (!_isArray(items)) ?  [items] : items;
 
-    let poolCellFlag = false;
-
-    if (!mycell) {
-
-        mycell = requestCell();
-        poolCellFlag = true;
-    }
-
-    const engine = mycell.engine,
+    const mycell = requestCell(),
+        engine = mycell.engine,
         stamp = this.currentStampPosition,
         x = stamp[0],
         y = stamp[1],
@@ -770,7 +763,7 @@ P.checkHit = function (items = [], mycell) {
             }
         });
 
-        if (poolCellFlag) releaseCell(mycell);
+        releaseCell(mycell);
 
         return {
             x: tx,
@@ -780,8 +773,7 @@ P.checkHit = function (items = [], mycell) {
         };
     }
 
-    if (poolCellFlag) releaseCell(mycell);
-
+    releaseCell(mycell);
     return false;
 };
 

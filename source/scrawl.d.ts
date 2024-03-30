@@ -507,7 +507,7 @@ interface HitOutput {
 type HitTests = CommonTwoElementArrayInput | CommonHereObjectInput | Array<CommonTwoElementArrayInput | CommonHereObjectInput>
 
 interface PositionMixinFunctions {
-    checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
+    checkHit: (tests: HitTests) => HitOutput | boolean;
     dropArtefact: () => ArtefactInstance;
     pickupArtefact: (items: CommonTwoElementArrayInput | CommonHereObjectInput) => ArtefactInstance;
     purgeArtefact: (item: string | string[]) => void;
@@ -1319,7 +1319,7 @@ interface EnhancedLabelSaveInputs extends EnhancedLabelFactoryInputs, SaveInputs
 
 interface EnhancedLabelFactoryFunctions extends BaseMixinFunctions, DeltaMixinFunctions, FilterMixinFunctions, TextMixinFunctions, TextStyleFactoryFunctions, StateFactoryFunctions {
     applyTextUnitUpdates: () => void;
-    checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
+    checkHit: (tests: HitTests) => HitOutput | boolean;
     clone: (item?: EnhancedLabelFactoryInputs) => EnhancedLabelInstance;
     convertTextEntityCharacters: (item: string) => string;
     getAccessibleText: () => string;
@@ -1758,7 +1758,7 @@ interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, ButtonMi
 interface LoomSaveInputs extends LoomFactoryInputs, SaveInputs {}
 
 interface LoomFactoryFunctions extends BaseMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {
-    checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
+    checkHit: (tests: HitTests) => HitOutput | boolean;
     clone: (item?: LoomFactoryInputs) => LoomInstance;
     getBoundingBox: () => number[];
     saveAsPacket: (item?: LoomSaveInputs | boolean) => string;

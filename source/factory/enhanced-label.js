@@ -3287,7 +3287,7 @@ P.stampGuidelinesOnCell = function (cell) {
 };
 
 
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     const getCoords = (coords) => {
 
@@ -3335,15 +3335,8 @@ P.checkHit = function (items = [], mycell) {
 
             let res, isGood, tx, ty, index, i, iz;
 
-            let poolCellFlag = false;
-
-            if (!mycell) {
-
-                mycell = requestCell();
-                poolCellFlag = true;
-            }
-
-            const engine = mycell.engine;
+            const mycell = requestCell(),
+                engine = mycell.engine;
 
             for (i = 0, iz = tests.length; i < iz; i++) {
 
@@ -3367,12 +3360,12 @@ P.checkHit = function (items = [], mycell) {
 
                     if (res) {
 
-                        if (poolCellFlag) releaseCell(mycell);
+                        releaseCell(mycell);
                         return res;
                     }
                 }
             }
-            if (poolCellFlag) releaseCell(mycell);
+            releaseCell(mycell);
         }
         return false;
     }

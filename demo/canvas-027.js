@@ -185,14 +185,12 @@ scrawl.makePicture({
 
     filters: [name('swan-mask')],
 
-    globalAlpha: 0.01,
+    globalAlpha: 0.1,
 
     onEnter: function () {
 
 // @ts-expect-error
-        this.set({
-            globalAlpha: 0.1,
-        });
+        this.set({ globalAlpha: 0.3 });
 
         canvas.set({
             css: {
@@ -204,7 +202,7 @@ scrawl.makePicture({
     onLeave: function () {
 
 // @ts-expect-error
-        this.set({ globalAlpha: 0.01 });
+        this.set({ globalAlpha: 0.1 });
 
         canvas.set({
             css: { cursor: 'auto' }

@@ -1063,23 +1063,17 @@ P.doFill = function (engine) {
 
 // `checkHit`
 // + Overwrites mixin/position.js function
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
 
     if (!this.pathObject) return false;
 
-    const tests = (!_isArray(items)) ?  [items] : items,
-        engine = mycell.engine;
+    const tests = (!_isArray(items)) ?  [items] : items;
 
-    let poolCellFlag = false,
-        tx, ty;
+    let tx, ty;
 
-    if (!mycell) {
-
-        mycell = requestCell();
-        poolCellFlag = true;
-    }
+    const mycell = requestCell();
 
     if (tests.some(test => {
 
@@ -1107,13 +1101,11 @@ P.checkHit = function (items = [], mycell) {
             artefact: this
         };
 
-        if (poolCellFlag) releaseCell(mycell);
-
+        releaseCell(mycell);
         return r;
     }
 
-    if (poolCellFlag) releaseCell(mycell);
-
+    releaseCell(mycell);
     return false;
 };
 

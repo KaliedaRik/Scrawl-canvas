@@ -1578,7 +1578,7 @@ export default function (P = Ωempty) {
 // `checkHit`
 // + We use pool Cells (see [Cell code](../factory/cell.html)) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact.
 // + This works both for entitys and for DOM-based artefacts.
-    P.checkHit = function (items = [], mycell) {
+    P.checkHit = function (items = []) {
 
         if (this.noUserInteraction) return false;
 
@@ -1586,15 +1586,10 @@ export default function (P = Ωempty) {
 
         const tests = (!_isArray(items)) ?  [items] : items;
 
-        let flag = false,
-            x = 0,
+        let x = 0,
             y = 0;
 
-        if (!mycell) {
-
-            mycell = requestCell();
-            flag = true;
-        }
+        const mycell = requestCell();
 
         const engine = mycell.engine,
             stamp = this.currentStampPosition,
@@ -1623,15 +1618,11 @@ export default function (P = Ωempty) {
 
         }, this)) {
 
-            const val = this.checkHitReturn(x, y, mycell);
-
-            if (flag) releaseCell(mycell);
-
-            return val;
+            releaseCell(mycell);
+            return this.checkHitReturn(x, y);
         }
 
-        if (flag) releaseCell(mycell);
-
+        releaseCell(mycell);
         return false;
     };
 
@@ -1639,8 +1630,8 @@ export default function (P = Ωempty) {
     P.checkHitReturn = function (x, y) {
 
         return {
-            x: x,
-            y: y,
+            x,
+            y,
             artefact: this,
         };
     };

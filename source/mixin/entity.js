@@ -551,23 +551,20 @@ export default function (P = Ωempty) {
             currentDimensions: currDims,
         } = currentHost;
 
-        // Get and prepare a pool Cell for the filter operations
-        const filterHost = requestCell();
-
-        const {
-            element: filterEl,
-            engine: filterEng,
-        } = filterHost;
-
-        this.currentHost = filterHost;
-
         const w = currDims ? currDims[0] : currEl.width,
             h = currDims ? currDims[1] : currEl.height;
 
         if (w && h) {
 
-            filterHost.w = filterEl.width = w;
-            filterHost.h = filterEl.height = h;
+            // Get and prepare a pool Cell for the filter operations
+            const filterHost = requestCell(w, h);
+
+            const {
+                element: filterEl,
+                engine: filterEng,
+            } = filterHost;
+
+            this.currentHost = filterHost;
 
             // Switch off fast stamp
             const oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
@@ -671,8 +668,9 @@ export default function (P = Ωempty) {
 
             this.currentHost = currentHost;
             this.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
+
+            releaseCell(filterHost);
         }
-        releaseCell(filterHost);
     };
 
 // `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.
