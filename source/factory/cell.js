@@ -601,73 +601,93 @@ P.cleanDimensionsAdditionalActions = function() {
     // Only proceed if the canvas element is in place
     if (element) {
 
-        const {
-            cleared,
-            dirtyDimensionsOverride,
-        } = this;
+        const { mimic, useMimicDimensions, isBase } = this;
 
-        const controller = this.getController();
+        if (!isBase && mimic && useMimicDimensions) {
 
-        // Only proceed if we know the Cell has a controller, and its contents don't need to be preserved
-        // + If the user sets the cell to `cleared: false`, then later sets the cell's dimensions via `set()`, that's their problem, not ours
-        if (controller && (cleared || dirtyDimensionsOverride)) {
-
-            this.dirtyDimensionsOverride = false;
-
-            const {
-                currentDimensions,
-                dimensions,
-                isBase,
-                setRelativeDimensionsUsingBase,
-            } = this;
-
-            let controlDimensions = controller.currentDimensions;
-            const [width, height] = controlDimensions;
-
-            // __isComponent__ is DEPRECATED (because it is a really bad name) and replaced by __baseMatchesCanvasDimensions__
-            if (isBase && (controller.baseMatchesCanvasDimensions || controller.isComponent)) {
-
-                dimensions[0] = width;
-                dimensions[1] = height;
-                currentDimensions[0] = width;
-                currentDimensions[1] = height;
-            }
-            else {
-
-                if (!isBase && setRelativeDimensionsUsingBase) controlDimensions = controller.base.currentDimensions;
-
-                let item;
-
-                for (let i = 0; i < 2; i++) {
-
-                    item = dimensions[i];
-
-                    if (item.substring) {
-
-                        item = parseFloat(item);
-
-                        if (_isFinite(item) && item >= 1) currentDimensions[i] = _floor(controlDimensions[i] * (item / 100));
-                        else currentDimensions[i] = 1;
-                    }
-                    else if (_isFinite(item) && item >= 1) currentDimensions[i] = _floor(item);
-                    else currentDimensions[i] = 1;
-                }
-            }
-
-            const [w, h] = currentDimensions;
+            const [w, h] = this.currentDimensions;
 
             element.width = w;
             element.height = h;
 
             this.setEngineFromState(this.engine);
 
-            if (isBase && controller) controller.updateBaseHere();
-
             if (this.groupBuckets) {
 
                 this.updateArtefacts({
                     dirtyDimensions: true,
                 });
+            }
+        }
+        else {
+
+            const {
+                cleared,
+                dirtyDimensionsOverride,
+            } = this;
+
+            const controller = this.getController();
+
+            // Only proceed if we know the Cell has a controller, and its contents don't need to be preserved
+            // + If the user sets the cell to `cleared: false`, then later sets the cell's dimensions via `set()`, that's their problem, not ours
+            if (controller && (cleared || dirtyDimensionsOverride)) {
+
+                this.dirtyDimensionsOverride = false;
+
+                const {
+                    currentDimensions,
+                    dimensions,
+                    setRelativeDimensionsUsingBase,
+                } = this;
+
+                let controlDimensions = controller.currentDimensions;
+                const [width, height] = controlDimensions;
+
+                // __isComponent__ is DEPRECATED (because it is a really bad name) and replaced by __baseMatchesCanvasDimensions__
+                if (isBase && (controller.baseMatchesCanvasDimensions || controller.isComponent)) {
+
+                    dimensions[0] = width;
+                    dimensions[1] = height;
+                    currentDimensions[0] = width;
+                    currentDimensions[1] = height;
+                }
+                else {
+
+                    if (!isBase && setRelativeDimensionsUsingBase) controlDimensions = controller.base.currentDimensions;
+
+                    let item;
+
+                    for (let i = 0; i < 2; i++) {
+
+                        item = dimensions[i];
+
+                        if (item.substring) {
+
+                            item = parseFloat(item);
+
+                            if (_isFinite(item) && item >= 1) currentDimensions[i] = _floor(controlDimensions[i] * (item / 100));
+                            else currentDimensions[i] = 1;
+                        }
+                        else if (_isFinite(item) && item >= 1) currentDimensions[i] = _floor(item);
+                        else currentDimensions[i] = 1;
+                    }
+                }
+
+                const [w, h] = currentDimensions;
+
+                element.width = w;
+                element.height = h;
+
+                this.setEngineFromState(this.engine);
+
+                if (isBase && controller) controller.updateBaseHere();
+
+                if (this.groupBuckets) {
+
+                    this.updateArtefacts({
+                        dirtyDimensions: true,
+                    });
+                }
             }
         }
     }

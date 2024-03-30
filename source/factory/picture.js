@@ -38,6 +38,7 @@ import { gettableImageAssetAtributes, settableImageAssetAtributes } from '../ass
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 import { filterEngine } from '../helper/filter-engine.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
@@ -45,7 +46,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, SOURCE_OVER, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
+import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, GOOD_HOST, IMG, MOUSE, NAME, PARTICLE, SOURCE_OVER, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Picture constructor

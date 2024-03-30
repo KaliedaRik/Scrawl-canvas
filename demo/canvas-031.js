@@ -20,6 +20,8 @@ const buildClockface = function (canvas, namespace) {
 
         width: '100%',
         height: '100%',
+
+        setRelativeDimensionsUsingBase: true,
     });
 
 
@@ -148,6 +150,8 @@ const myBackground = canvas.buildCell({
 
     width: '100%',
     height: '100%',
+
+    setRelativeDimensionsUsingBase: true,
 });
 
 // We use a wheel segment as a stencil

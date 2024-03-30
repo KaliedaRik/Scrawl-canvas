@@ -42,8 +42,8 @@
       id="mycanvas" 
       data-scrawl-canvas
       data-is-responsive="true" 
-      data-base-width="400" 
-      data-base-height="400" 
+      data-base-width="800" 
+      data-base-height="800" 
       data-fit="cover"
       data-base-background-color="honeydew"
     ></canvas>
@@ -63,6 +63,8 @@
       <li>Animate the scene so it displays the local time</li>
     </ul>
     
+    <p><b>Known issue:</b> this demo is significantly slower on Chrome browsers, compared to Firefox/Safari. The underlying issue appears to be Chrome's functionality to copy drawImage data from a non-DOM cell over to the (equally non-DOM) base cell - 50ms+ per Display cycle. Performance improves if the base cell dimensions are made smaller (for example: 400px square); however, this issue feels similar to the issue encountered in Demo canvas-009.</p>
+
     <p><b>Touch test:</b> canvas should be resizable</p>
 
     <p><a href="../docs/demo/canvas-031.html">Annotated code</a></p>
