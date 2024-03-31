@@ -461,8 +461,6 @@ P.getTester = function () {
 // `makeWorkingTextStyle` - Clone a TextStyle object
 P.makeWorkingTextStyle = function (template) {
 
-// console.log(this.name, 'makeWorkingTextStyle (trigger: various)');
-
     const workStyle = _create(template);
     _assign(workStyle, template);
 
@@ -474,8 +472,6 @@ P.makeWorkingTextStyle = function (template) {
 // `setEngineFromWorkingTextStyle` - Sets the state object to current working requirements, alongside directly updating the Cell's engine to match
 P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
 
-// console.log(this.name, 'setEngineFromWorkingTextStyle (trigger: various)');
-
     this.updateWorkingTextStyle(worker, style);
     state.set(worker);
     cell.setEngine(this);
@@ -484,8 +480,6 @@ P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
 // `updateWorkingTextStyle` - Updates the working TextStyle object with a partial TextStyle object, and regenerates font strings from the updated data
 // + Takes into account the layout entity's current scaling factor
 P.updateWorkingTextStyle = function (worker, style) {
-
-// console.log(this.name, 'updateWorkingTextStyle (trigger: various)');
 
     const scale = this.layoutTemplate?.currentScale || 1;
     worker.set(style, true);
@@ -496,8 +490,6 @@ P.updateWorkingTextStyle = function (worker, style) {
 
 // `getTextHandleX` - Calculate the horizontal offset required for a given TextUnit
 P.getTextHandleX = function (val, dim, dir) {
-
-// console.log(this.name, 'getTextHandleX (trigger: various)');
 
     if (val.toFixed) return val;
     if (val === START) return (dir === LTR) ? 0 : dim;
@@ -512,8 +504,6 @@ P.getTextHandleX = function (val, dim, dir) {
 
 // `getTextHandleY` - Calculate the vertical offset required for a given TextUnit
 P.getTextHandleY = function (val, size, font) {
-
-// console.log(this.name, 'getTextHandleY (trigger: various)', val, size, font);
 
     const meta = this.getFontMetadata(font);
 
@@ -545,8 +535,6 @@ P.getTextHandleY = function (val, size, font) {
 // `getTextOffset` - Calculate the horizontal offset required for a given TextUnit
 P.getTextOffset = function (val, dim) {
 
-// if (val) console.log(this.name, 'getTextOffset (trigger: various)', val, !!val.toFixed, dim);
-
     if (val.toFixed) return val;
     if (!_isFinite(parseFloat(val))) return 0;
 
@@ -554,8 +542,6 @@ P.getTextOffset = function (val, dim) {
 };
 
 P.dirtyCache = function () {
-
-// console.log(this.name, 'dirtyCache invoked');
 
     releaseCell(this.cache);
     this.cache = null;
@@ -569,8 +555,6 @@ P.dirtyCache = function () {
 // #### Clean functions
 // `cleanPathObject` - calculate the EnhancedLabel entity's __Path2D object__
 P.cleanPathObject = function () {
-
-// console.log(this.name, `cleanPathObject (trigger: dirtyPathObject ${this.dirtyPathObject}, checks: layout.pathObject ${this.layoutTemplate?.pathObject})`);
 
     const layout = this.layoutTemplate;
 
@@ -586,8 +570,6 @@ P.cleanPathObject = function () {
 // `cleanLayout` - recalculate the positioning of all TextUnits in the space or along the path
 P.cleanLayout = function () {
 
-// console.log(this.name, `cleanLayout (triggers: dirtyLayout ${this.dirtyLayout}, checks: currentFontIsLoaded ${this.currentFontIsLoaded})`);
-
     if (this.currentFontIsLoaded) {
 
         this.dirtyCache();
@@ -602,8 +584,6 @@ P.cleanLayout = function () {
 
 // `calculateLines` - calculate the positions and lengths of multiple lines withing a layout entity's enclosed space.
 P.calculateLines = function () {
-
-// console.log(this.name, 'calculateLines (trigger: none - called by cleanLayout');
 
     const {
         alignment,
@@ -785,8 +765,6 @@ P.calculateLines = function () {
 
 // `cleanText` - Break the entity's text into smaller TextUnit objects which can be positioned within, or along, the layout entity's shape
 P.cleanText = function () {
-
-// console.log(this.name, `cleanText (trigger: dirtyText ${this.dirtyText}, checks: currentFontIsLoaded', ${this.currentFontIsLoaded})`);
 
     if (this.currentFontIsLoaded) {
 
@@ -1002,8 +980,6 @@ P.cleanText = function () {
 // + Note that styling on a per-TextUnit basis requires CSS code; there is no way to directly style a TextUnit in SC except by manually replacing its `style` attribute object in code (which is dangerous and definitely not guaranteed to work!)
 P.assessTextForStyle = function () {
 
-// console.log(this.name, `assessTextForStyle (trigger: none - called directly by cleanText)`);
-
     const tester = this.getTester();
 
     // No calculator! Reset dirty flag and return
@@ -1073,22 +1049,18 @@ P.assessTextForStyle = function () {
 
         oldVal = currentTextStyle.direction;
         newVal = nodeVals.getPropertyValue('direction');
-// if (oldVal !== newVal) console.log(`direction | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal)  unitSet.direction = newVal;
 
         oldVal = currentTextStyle.fontFamily;
         newVal = nodeVals.getPropertyValue('font-family');
-// if (oldVal !== newVal) console.log(`fontFamily | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.fontFamily = newVal;
 
         oldVal = currentTextStyle.fontKerning;
         newVal = nodeVals.getPropertyValue('font-kerning');
-// if (oldVal !== newVal) console.log(`fontKerning | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.fontKerning = newVal;
 
         oldVal = currentTextStyle.fontSize;
         newVal = nodeVals.getPropertyValue('font-size');
-// if (oldVal !== newVal) console.log(`fontSize | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) {
 
             unitSet.fontSize = newVal;
@@ -1098,133 +1070,107 @@ P.assessTextForStyle = function () {
         oldVal = currentTextStyle.fontStretch;
         newVal = nodeVals.getPropertyValue('font-stretch');
         if (newVal === '100%') newVal = NORMAL;
-// if (oldVal !== newVal) console.log(`fontStretch | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.fontStretch = newVal;
 
         oldVal = currentTextStyle.fontStyle;
         newVal = nodeVals.getPropertyValue('font-style');
-// if (oldVal !== newVal) console.log(`fontStyle | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.fontStyle = newVal;
 
         oldVal = currentTextStyle.fontVariantCaps;
         newVal = nodeVals.getPropertyValue('font-variant-caps');
-// if (oldVal !== newVal) console.log(`fontVariantCaps | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.fontVariantCaps = newVal;
 
         oldVal = currentTextStyle.fontWeight;
         newVal = nodeVals.getPropertyValue('font-weight');
-// if (oldVal !== newVal) console.log(`fontWeight | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.fontWeight = newVal;
 
         oldVal = currentTextStyle.get('letterSpacing');
         newVal = nodeVals.getPropertyValue('letter-spacing');
         if (newVal === NORMAL) newVal = PX0;
-// if (oldVal !== newVal) console.log(`letterSpacing | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.letterSpacing = newVal;
 
         oldVal = currentTextStyle.textRendering;
         newVal = nodeVals.getPropertyValue('text-rendering');
-// if (oldVal !== newVal) console.log(`textRendering | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.textRendering = newVal;
 
         oldVal = currentTextStyle.get('wordSpacing');
         newVal = nodeVals.getPropertyValue('word-spacing');
-// if (oldVal !== newVal) console.log(`wordSpacing | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.wordSpacing = newVal;
 
         oldVal = currentTextStyle.fillStyle;
         newVal = nodeVals.getPropertyValue('--SC-fill-style');
-// if (oldVal !== newVal) console.log(`fillStyle | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.fillStyle = newVal;
 
         oldVal = currentTextStyle.includeHighlight;
         newVal = !!nodeVals.getPropertyValue('--SC-include-highlight');
-// if (oldVal !== newVal) console.log(`includeHighlight | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.includeHighlight = newVal;
 
         oldVal = currentTextStyle.highlightStyle;
         newVal = nodeVals.getPropertyValue('--SC-highlight-style');
-// if (oldVal !== newVal) console.log(`highlightStyle | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.highlightStyle = newVal;
 
         oldVal = currentTextStyle.lineWidth;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
-// if (oldVal !== newVal) console.log(`lineWidth | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.lineWidth = newVal;
 
         oldVal = currentTextStyle.includeOverline;
         newVal = !!nodeVals.getPropertyValue('--SC-include-overline');
-// if (oldVal !== newVal) console.log(`includeOverline | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.includeOverline = newVal;
 
         oldVal = currentTextStyle.overlineOffset;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-offset'));
-// if (oldVal !== newVal) console.log(`overlineOffset | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.overlineOffset = newVal;
 
         oldVal = currentTextStyle.overlineStyle;
         newVal = nodeVals.getPropertyValue('--SC-overline-style');
-// if (oldVal !== newVal) console.log(`overlineStyle | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.overlineStyle = newVal;
 
         oldVal = currentTextStyle.overlineWidth;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-width'));
-// if (oldVal !== newVal) console.log(`overlineWidth | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.overlineWidth = newVal;
 
         oldVal = currentTextStyle.includeUnderline;
         newVal = !!nodeVals.getPropertyValue('--SC-include-underline');
-// if (oldVal !== newVal) console.log(`includeUnderline | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.includeUnderline = newVal;
 
         oldVal = currentTextStyle.underlineGap;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-gap'));
-// if (oldVal !== newVal) console.log(`underlineGap | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.underlineGap = newVal;
 
         oldVal = currentTextStyle.underlineOffset;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-offset'));
-// if (oldVal !== newVal) console.log(`underlineOffset | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.underlineOffset = newVal;
 
         oldVal = currentTextStyle.underlineStyle;
         newVal = nodeVals.getPropertyValue('--SC-underline-style');
-// if (oldVal !== newVal) console.log(`underlineStyle | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.underlineStyle = newVal;
 
         oldVal = currentTextStyle.underlineWidth;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-width'));
-// if (oldVal !== newVal) console.log(`underlineWidth | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.underlineWidth = newVal;
 
         oldVal = currentTextStyle.method;
         newVal = nodeVals.getPropertyValue('--SC-method');
-// if (oldVal !== newVal) console.log(`method | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.method = newVal;
 
         oldVal = localState.localHandleX;
         newVal = nodeVals.getPropertyValue('--SC-local-handle-x');
-// if (oldVal !== newVal) console.log(`--SC-local-handle-x | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.localHandleX = newVal;
 
         oldVal = localState.localHandleY;
         newVal = nodeVals.getPropertyValue('--SC-local-handle-y');
-// if (oldVal !== newVal) console.log(`--SC-local-handle-y | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.localHandleY = newVal;
 
         oldVal = localState.localOffsetX;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-x'));
-// if (oldVal !== newVal) console.log(`--SC-local-offset-x | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.localOffsetX = newVal;
 
         oldVal = localState.localOffsetY;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-y'));
-// if (oldVal !== newVal) console.log(`--SC-local-offset-y | [${oldVal}] -> [${newVal}]`);
         if (oldVal !== newVal) unitSet.localOffsetY = newVal;
 
         oldVal = localState.localAlignment;
         newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-alignment'));
-// if (oldVal !== newVal) console.log(`--SC-local-alignment | ${typeof oldVal} [${oldVal}] -> ${typeof newVal} [${newVal}]`);
         if (oldVal !== newVal) unitSet.localAlignment = newVal;
 
         unit.set(unitSet);
@@ -1289,8 +1235,6 @@ P.assessTextForStyle = function () {
 // `measureTextUnits` - TextUnit lengths represent the amount of space they will need to take along the line they will (eventually) be assigned to.
 // + Takes into account the styling for each TextUnit, which can have a significant impact on the amount of space it requires on a line.
 P.measureTextUnits = function () {
-
-// console.log(this.name, 'measureTextUnits (trigger: none - called by cleanText)');
 
     const {
         defaultTextStyle,
@@ -1398,8 +1342,6 @@ P.measureTextUnits = function () {
 // + TODO: The assumption here is that if we are laying text along a path, there will only be one line with a length equal to the layout engine's path length. In such cases we won't need to care about soft hyphens, but will need to care about truncation (regardless of whether we allow the text to wrap itself along the line)
 P.layoutText = function () {
 
-// console.log(this.name, `layoutText (trigger: dirtyTextLayout ${this.dirtyTextLayout}, checks: currentFontIsLoaded' ${this.currentFontIsLoaded})`, this.lines.length, this.textUnits.length);
-
     if (this.currentFontIsLoaded) {
 
         const { useLayoutTemplateAsPath, lines, textUnits, layoutTemplate } = this;
@@ -1445,8 +1387,6 @@ P.layoutText = function () {
 
 // `assignTextUnitsToLines` - Assign sufficient text units to each line to fill the line's length
 P.assignTextUnitsToLines = function () {
-
-// console.log(this.name, 'assignTextUnitsToLines (trigger: none - called by layoutText)');
 
     const {
         breakWordsOnHyphens,
@@ -1632,8 +1572,6 @@ P.assignTextUnitsToLines = function () {
 // + Position each TextUnit within the space contained by the layout entity, along multiple lines
 P.positionTextUnits = function () {
 
-// console.log(this.name, 'positionTextUnits (trigger: none - called by layoutText)');
-
     if (this.useLayoutTemplateAsPath) this.positionTextUnitsAlongPath();
     else this.positionTextUnitsInSpace();
 
@@ -1643,8 +1581,6 @@ P.positionTextUnits = function () {
 
 // `positionTextUnitsAlongPath` - Position each TextUnit along a single-line path of the layout entity (if possible)
 P.positionTextUnitsAlongPath = function () {
-
-// console.log(this.name, 'positionTextUnitsAlongPath (trigger: none - called by positionTextUnits)');
 
     const {
         alignment,
@@ -1831,8 +1767,6 @@ P.positionTextUnitsAlongPath = function () {
 // + Language direction
 // + Line justification requirements
 P.positionTextUnitsInSpace = function () {
-
-// console.log(this.name, 'positionTextUnitsInSpace (trigger: none - called by positionTextUnits)');
 
     const {
         alignment,
@@ -2160,8 +2094,6 @@ P.positionTextUnitsInSpace = function () {
 
 // `positionTextDecoration` - Recovers data which can be used for building underline, overline and highlight Path2D objects
 P.positionTextDecoration = function () {
-
-// console.log(this.name, 'positionTextDecoration (trigger: none - called by positionTextUnits)');
 
     const correctCoordinates = function (out, back, start, width) {
 
@@ -2555,9 +2487,6 @@ P.positionTextDecoration = function () {
 
 P.prepareStamp = function() {
 
-// console.log(`
-// ${this.name} prepareStamp`);
-
     if (this.dirtyHost) this.dirtyHost = false;
 
     const layoutTemplate = this.layoutTemplate;
@@ -2622,7 +2551,6 @@ P.prepareStamp = function() {
 // + EnhancedLabel entitys don't have a `simpleStamp` function, by design.
 P.stamp = function (force = false, host, changes) {
 
-// console.log(this.name, 'stamp', !this.dirtyFont, !this.dirtyText, !this.dirtyLayout, this.visibility);
     if (!this.dirtyFont && !this.dirtyText && !this.dirtyLayout) {
 
         if (force) {
@@ -2693,8 +2621,6 @@ P.getCellCoverage = function (img) {
 // + regularStampInSpace for text inside the layoutTemplate artefact's enclosed space
 // + regularStampAlongPath for text positioned along a path-based entity's perimeter
 P.regularStamp = function (host) {
-
-// console.log(this.name, 'regularStamp', host?.name);
 
     const {
         cache,
@@ -3412,14 +3338,7 @@ P.getUnitAlignment = function (index) {
 
 // #### Factory
 // ```
-// scrawl.makeEnhancedLabel({
-//
-//     name: 'mylabel-fill',
-//
-// }).clone({
-//
-//     name: 'mylabel-draw',
-// });
+// TODO...
 // ```
 export const makeEnhancedLabel = function (items) {
 
@@ -3800,6 +3719,7 @@ A.findByIndex = function (index) {
     return null;
 };
 
+// Note: this could be more sophisticated if we allowed regexes ...
 A.findFirstWithChar = function (chars) {
 
     let item;
@@ -3813,6 +3733,7 @@ A.findFirstWithChar = function (chars) {
     return null;
 };
 
+// Note: this could be more sophisticated if we allowed regexes ...
 A.findAllWithChar = function (chars) {
 
     let item;
