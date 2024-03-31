@@ -3312,7 +3312,7 @@ P.checkHit = function (items = []) {
 
     const { checkHitUseTemplate, layoutTemplate, textUnits, textUnitHitZones } = this;
 
-    if (checkHitUseTemplate && layoutTemplate) return layoutTemplate.checkHit(items, mycell);
+    if (checkHitUseTemplate && layoutTemplate) return layoutTemplate.checkHit(items);
 
     else {
 

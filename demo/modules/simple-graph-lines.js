@@ -173,6 +173,7 @@ api.build = function (items) {
 
 
         // #### User interaction
+        const redSpan = 'style="color: red; --SC-fill-style: red"';
         const updateSelected = () => {
 
             const { yearLabels, data } = currentData;
@@ -184,7 +185,7 @@ api.build = function (items) {
                 fillStyle: 'aliceblue',
             });
 
-            frame.updateSubtitle(`${yearLabels[selectedColumn]}: §RED§${data[selectedColumn].toLocaleString()}`);
+            frame.updateSubtitle(`${yearLabels[selectedColumn]}: <span ${redSpan}>${data[selectedColumn].toLocaleString()}</span>`);
 
             entity.set({
                 scale: 1.5,

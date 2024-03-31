@@ -976,6 +976,10 @@ P.show = function () {
         const curWidth = element.width,
             curHeight = element.height;
 
+        // Cannot draw from the source canvas if either of its dimensions === 0
+        // + Can happen eg when using the Popover API - see demo DOM-021
+        if (!curWidth || !curHeight) return false;
+
         let paste;
 
         displayEngine.save();
