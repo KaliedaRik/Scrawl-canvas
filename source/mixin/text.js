@@ -11,7 +11,7 @@ import { getPixelRatio } from '../core/user-interaction.js';
 
 import { addStrings, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, HIGH, ITALIC, LABEL_DIRTY_FONT_KEYS, LABEL_UPDATE_FONTSTRING_KEYS, LABEL_UNLOADED_FONT_KEYS, LABEL_UPDATE_PARTS_KEYS, LAYOUT_KEYS, LEFT, NAME, NORMAL, OBLIQUE, POLITE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, SYSTEM_FONTS, TEMPLATE_PASS_THROUGH_KEYS, TEXTSTYLE_KEYS, TOP, T_CANVAS, T_CELL, T_LABEL, UNDEF } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, HIGH, ITALIC, LABEL_DIRTY_FONT_KEYS, LABEL_UPDATE_FONTSTRING_KEYS, LABEL_UNLOADED_FONT_KEYS, LABEL_UPDATE_PARTS_KEYS, LAYOUT_KEYS, LEFT, NAME, NORMAL, OBLIQUE, POLITE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, SYSTEM_FONTS, TEMPLATE_PASS_THROUGH_KEYS, TEXTSTYLE_KEYS, TOP, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_LABEL, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Local variables
@@ -286,8 +286,12 @@ export default function (P = Ωempty) {
         this.text = this.convertTextEntityCharacters(this.rawText.normalize('NFC'));
 
         this.dirtyText = true;
-        this.dirtyFont = true;
-        this.currentFontIsLoaded = false;
+
+        if (this.type === T_ENHANCED_LABEL) {
+
+            this.dirtyFont = true;
+            this.currentFontIsLoaded = false;
+        }
     };
 
     G.accessibleText = function () {
@@ -416,22 +420,31 @@ export default function (P = Ωempty) {
 
 // `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
 // + This is the preparation step
+    P.getCalculators = function () {
+
+        let fontSizeCalculator = null,
+            fontSizeCalculatorValues = null;
+
+        const controller = this.getControllerCell();
+
+        if (controller) {
+
+            fontSizeCalculator = controller.fontSizeCalculator;
+            fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
+        }
+
+        return [fontSizeCalculator, fontSizeCalculatorValues];
+    };
+
+// `temperFont` - manipulate the user-supplied font string to create a font string the canvas engine can use
+// + This is the preparation step
     P.temperFont = function () {
 
         const { group, defaultTextStyle } = this;
 
         if (xta(group, defaultTextStyle)) {
 
-            let fontSizeCalculator = null,
-                fontSizeCalculatorValues = null;
-
-            const controller = this.getControllerCell();
-
-            if (controller) {
-
-                fontSizeCalculator = controller.fontSizeCalculator;
-                fontSizeCalculatorValues = controller.fontSizeCalculatorValues;
-            }
+            const [fontSizeCalculator, fontSizeCalculatorValues] = this.getCalculators();
 
             if (!fontSizeCalculator) this.dirtyFont = true;
             else this.calculateTextStyleFontStrings(defaultTextStyle, fontSizeCalculator, fontSizeCalculatorValues);
@@ -448,7 +461,30 @@ export default function (P = Ωempty) {
 
             if (this.type === T_LABEL && !this.dirtyFont) this.measureFont();
         }
-        else this.checkFontIsLoaded(this.defaultTextStyle.fontString);
+        else if (this.currentFontIsLoaded != null) {
+
+            const [fontSizeCalculator, fontSizeCalculatorValues] = this.getCalculators();
+
+            const fontString = this.defaultTextStyle.fontString;
+
+            if (fontSizeCalculator) {
+
+                fontSizeCalculator.style.font = fontString;
+                const family = fontSizeCalculatorValues.fontFamily;
+
+                if (fontfamilymetadatanames.includes(`100px ${family}`)) {
+
+                    this.currentFontIsLoaded = true;
+
+                    this.dirtyFont = false;
+
+                    this.temperFont();
+
+                    if (this.type === T_LABEL && !this.dirtyFont) this.measureFont();
+                }
+                else this.checkFontIsLoaded(fontString);
+            }
+        }
     };
 
 

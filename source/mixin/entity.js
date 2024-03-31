@@ -503,7 +503,8 @@ export default function (P = Ωempty) {
 
         else if (this.visibility) {
 
-            if (this.stashOutput || filterTest) return this.filteredStamp(filterTest);
+            // To note: `checkHitIgnoreTransparency` is specific to Picture entity
+            if (this.checkHitIgnoreTransparency || this.stashOutput || filterTest) return this.filteredStamp(filterTest);
             else return this.regularStamp();
         }
     };
@@ -608,6 +609,9 @@ export default function (P = Ωempty) {
                     filterEng.globalAlpha = 1;
                     filterEng.resetTransform();
                     filterEng.putImageData(img, 0, 0);
+
+                    // To note: `checkHitIgnoreTransparency` is specific to Picture entity
+                    if (this.checkHitIgnoreTransparency) this.stashedImageData = img;
                 }
             }
             currEng.save();
