@@ -220,7 +220,6 @@ export const FIT_DEFS = _freeze(['fill', 'contain', 'cover']);
 export const FLOOD = 'flood';
 export const FOCUS = 'focus';
 export const FOCUS_ACTION = 'focusAction';
-export const FONT_ENTITYS = _freeze(['Label', 'EnhancedLabel']);
 export const FONT_LENGTH_REGEX = /[0-9.,]+(%|cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvmax|dvmin|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvmax|lvmin|lvw|mm|pc|pt|px|Q|rcap|rch|rem|rex|ric|rlh|svb|svh|svi|svmax|svmin|svw|vb|vh|vi|vmax|vmin|vw)/i;
 export const FONT_STRETCH_VALS = _freeze(['ultra-condensed','extra-condensed','condensed','semi-condensed','semi-expanded','expanded','extra-expanded','ultra-expanded']);
 export const FONT_USERS = _freeze(['Label', 'EnhancedLabel']);

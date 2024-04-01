@@ -226,6 +226,7 @@ S.noFilters = function (item) {
     this.dirtyFilterIdentifier = true;
 };
 
+
 // #### Prototype functions
 
 // `getHost` - internal helper function
@@ -375,7 +376,6 @@ P.prepareStamp = function (myCell) {
 
     if (myCell) host = myCell;
 
-// console.log(this.name, 'prepareStamp', myCell.name);
     this.artefactCalculateBuckets.forEach(art => {
 
         if (art.lib === ENTITY) {
@@ -409,7 +409,6 @@ P.stampAction = function (myCell) {
 
         if (!noFilters && filters && filters.length) {
 
-// console.log(this.name, 'stampAction', myCell.name, myCell.w, myCell.h, myCell.element.width, myCell.element.height)
             const img = this.applyFilters(myCell);
             if (stashOutput) this.stashAction(img);
         }
