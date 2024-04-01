@@ -193,19 +193,6 @@ const Canvas = function (items = Ωempty) {
         this.canvasHold = canvasHold;
         el.appendChild(canvasHold);
 
-        const fontHeightCalculator = document.createElement(DIV);
-        fontHeightCalculator.id = `${this.name}-fontHeightCalculator`;
-        fontHeightCalculator.style.border = PX0;
-        fontHeightCalculator.style.padding = PX0;
-        fontHeightCalculator.style.margin = PX0;
-        fontHeightCalculator.style.height = AUTO;
-        fontHeightCalculator.style.lineHeight = 1;
-        fontHeightCalculator.style.boxSizing = BORDER_BOX;
-        fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
-        fontHeightCalculator.setAttribute(ARIA_HIDDEN, TRUE);
-        this.fontHeightCalculator = fontHeightCalculator;
-        canvasHold.appendChild(fontHeightCalculator);
-
         const fontSizeCalculator = document.createElement(DIV);
         fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
         fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);

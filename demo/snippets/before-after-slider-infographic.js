@@ -170,6 +170,8 @@ export default function (scrawl, el) {
                 shadowColor: 'black',
                 shadowBlur: 4,
                 start: ['2%', '2%'],
+                accessibleText: 'Taken during §.',
+                accessibleTextOrder: 2,
 
             }).clone({
 
@@ -177,6 +179,7 @@ export default function (scrawl, el) {
                 text: data.right.date,
                 startX: '98%',
                 handleX: 'right',
+                accessibleTextOrder: 4,
 
             }).clone({
 
@@ -186,6 +189,8 @@ export default function (scrawl, el) {
                 start: [0, 'center'],
                 handle: ['center', 'top'],
                 roll: -90,
+                accessibleText: 'Image of §.',
+                accessibleTextOrder: 1,
 
             }).clone({
 
@@ -193,6 +198,7 @@ export default function (scrawl, el) {
                 text: data.right.caption,
                 startX: '100%',
                 roll: 90,
+                accessibleTextOrder: 3,
             });
 
             scrawl.makeLabel({
