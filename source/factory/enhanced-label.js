@@ -11,7 +11,6 @@ import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
-import { getPixelRatio } from '../core/user-interaction.js';
 import { currentGroup } from './canvas.js';
 import { filterEngine } from '../helper/filter-engine.js';
 import { importDomImage } from '../asset-management/image-asset.js';

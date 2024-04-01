@@ -1195,6 +1195,9 @@ interface EmitterFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDel
     mass?: number;
     massVariation?: number;
     hitRadius?: number;
+    minimumVelocityX?: number;
+    minimumVelocityY?: number;
+    minimumVelocityZ?: number;
     resetAfterBlur?: number;
     rangeX?: number;
     rangeY?: number;
@@ -1205,31 +1208,32 @@ interface EmitterFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDel
 }
 
 interface EmitterFactoryInputs extends BaseMixinInputs, EntityMixinInputs, EmitterFactoryDeltaInputs {
-    world?: WorldInstance | string;
     artefact?: ArtefactInstance | string;
+    delta?: EmitterFactoryDeltaInputs;
+    engine?: ParticleEngines;
+    fillColor?: string;
+    fillMaximumColor?: string;
+    fillMinimumColor?: string;
+    forces?: Array<ForceInstance | string>;
+    generateAlongPath?: ShapeBasedInstance | string;
+    generateFromExistingParticleHistories?: boolean;
+    generateFromExistingParticles?: boolean;
+    generateInArea?: EntityInstance | string;
+    height?: number;
+    hitRadiusColor?: string;
+    killBeyondCanvas?: boolean;
+    minimumVelocity?: VectorInstance;
+    postAction?: (item: CellInstance) => void;
+    preAction?: (item: CellInstance) => void;
     range?: VectorInstance;
     rangeFrom?: VectorInstance;
-    generateAlongPath?: ShapeBasedInstance | string;
-    generateInArea?: EntityInstance | string;
-    generateFromExistingParticles?: boolean;
-    generateFromExistingParticleHistories?: boolean;
-    killBeyondCanvas?: boolean;
-    forces?: Array<ForceInstance | string>;
-    engine?: ParticleEngines;
     showHitRadius?: boolean;
-    hitRadiusColor?: string;
-    fillColor?: string;
-    fillMinimumColor?: string;
-    fillMaximumColor?: string;
-    strokeColor?: string;
-    strokeMinimumColor?: string;
-    strokeMaximumColor?: string;
-    width?: number;
-    height?: number;
-    preAction?: (item: CellInstance) => void;
     stampAction?: (artefact: EntityInstance, particle: ParticleInstance, host: CellInstance) => void;
-    postAction?: (item: CellInstance) => void;
-    delta?: EmitterFactoryDeltaInputs;
+    strokeColor?: string;
+    strokeMaximumColor?: string;
+    strokeMinimumColor?: string;
+    width?: number;
+    world?: WorldInstance | string;
 }
 
 interface EmitterSaveInputs extends EmitterFactoryInputs, SaveInputs {}

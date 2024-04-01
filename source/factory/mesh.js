@@ -1091,7 +1091,7 @@ P.checkHit = function (items = []) {
 
         if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
-        return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+        return mycell.engine.isPointInPath(this.pathObject, tx, ty, this.winding);
 
     }, this)) {
 

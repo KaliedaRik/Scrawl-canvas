@@ -4,7 +4,6 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { getPixelRatio } from '../core/user-interaction.js';
 
 import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 

@@ -1643,35 +1643,45 @@ export default function (P = Ωempty) {
 
         if (xta(x, y)) {
 
+            const {
+                bringToFrontOnDrag,
+                currentDragOffset,
+                currentStart,
+                group,
+                lockTo,
+                mimic,
+                pivot,
+            } = this;
+
             this.isBeingDragged = true;
             this.currentDragCache.set(this.currentDragOffset);
 
             this.relativeCoordinates = [...this.start];
 
-            if (this.lockTo[0] === START) {
-                this.currentDragOffset[0] = this.currentStart[0] - x;
+            if (lockTo[0] === START) {
+                currentDragOffset[0] = currentStart[0] - x;
             }
-            else if (this.lockTo[0] === PIVOT && this.pivot) {
-                this.currentDragOffset[0] = this.pivot.get(STARTX) - x;
+            else if (lockTo[0] === PIVOT && pivot) {
+                currentDragOffset[0] = pivot.get(STARTX) - x;
             }
-            else if (this.lockTo[0] === MIMIC && this.mimic) {
-                this.currentDragOffset[0] = this.mimic.get(STARTX) - x;
-            }
-
-            if (this.lockTo[1] === START) {
-                this.currentDragOffset[1] = this.currentStart[1] - y;
-            }
-            else if (this.lockTo[1] === PIVOT && this.pivot) {
-                this.currentDragOffset[1] = this.pivot.get(STARTY) - y;
-            }
-            else if (this.lockTo[1] === MIMIC && this.mimic) {
-                this.currentDragOffset[1] = this.mimic.get(STARTY) - y;
+            else if (lockTo[0] === MIMIC && mimic) {
+                currentDragOffset[0] = mimic.get(STARTX) - x;
             }
 
-            if (this.bringToFrontOnDrag) {
+            if (lockTo[1] === START) {
+                currentDragOffset[1] = currentStart[1] - y;
+            }
+            else if (lockTo[1] === PIVOT && pivot) {
+                currentDragOffset[1] = pivot.get(STARTY) - y;
+            }
+            else if (lockTo[1] === MIMIC && mimic) {
+                currentDragOffset[1] = mimic.get(STARTY) - y;
+            }
+
+            if (bringToFrontOnDrag) {
 
                 this.stampOrder += 9999;
-                this.group.batchResort = true;
+                group.batchResort = true;
             }
 
             if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
@@ -1682,30 +1692,46 @@ export default function (P = Ωempty) {
 // `dropArtefact`
     P.dropArtefact = function () {
 
-        this.start.set(this.currentStartCache).add(this.currentDragOffset);
+        const {
+            bringToFrontOnDrag,
+            currentDragCache,
+            currentDragOffset,
+            currentHost,
+            currentStartCache,
+            group,
+            ignoreDragForX,
+            ignoreDragForY,
+            relativeCoordinates,
+            start,
+        } = this;
+
+        let x, y, w, h, relX, relY;
+
+        if (!ignoreDragForX) start[0] = currentStartCache[0] + currentDragOffset[0];
+        if (!ignoreDragForY) start[1] = currentStartCache[1] + currentDragOffset[1];
+
         this.dirtyStart = true;
 
-        const host = this.currentHost;
-        if (host) {
+        if (currentHost) {
 
-            const [w, h] = host.get(DIMENSIONS);
-            const [x, y] = this.start;
-            const [relX, relY] = this.relativeCoordinates;
+            [w, h] = currentHost.get(DIMENSIONS);
+            [x, y] = start;
+            [relX, relY] = relativeCoordinates;
 
-            if (relX.substring) this.start[0] = `${(x / w) * 100}%`;
-            if (relY.substring) this.start[1] = `${(y / h) * 100}%`;
+            if (!ignoreDragForX && relX.substring) start[0] = `${(x / w) * 100}%`;
+            if (!ignoreDragForY && relY.substring) start[1] = `${(y / h) * 100}%`;
         }
         delete this.relativeCoordinates;
 
-        this.currentDragOffset.set(this.currentDragCache);
+        currentDragOffset.set(currentDragCache);
 
-        if (this.bringToFrontOnDrag) {
+        if (bringToFrontOnDrag) {
 
             this.stampOrder -= 9999;
 
             if (this.stampOrder < 0) this.stampOrder = 0;
 
-            this.group.batchResort = true;
+            group.batchResort = true;
         }
 
 

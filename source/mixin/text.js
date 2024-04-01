@@ -11,7 +11,7 @@ import { getPixelRatio } from '../core/user-interaction.js';
 
 import { addStrings, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, HIGH, ITALIC, LABEL_DIRTY_FONT_KEYS, LABEL_UPDATE_FONTSTRING_KEYS, LABEL_UNLOADED_FONT_KEYS, LABEL_UPDATE_PARTS_KEYS, LAYOUT_KEYS, LEFT, NAME, NORMAL, OBLIQUE, POLITE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, SYSTEM_FONTS, TEMPLATE_PASS_THROUGH_KEYS, TEXTSTYLE_KEYS, TOP, T_CANVAS, T_CELL, T_ENHANCED_LABEL, T_LABEL, UNDEF } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, HIGH, ITALIC, LABEL_DIRTY_FONT_KEYS, LABEL_UPDATE_FONTSTRING_KEYS, LABEL_UNLOADED_FONT_KEYS, LABEL_UPDATE_PARTS_KEYS, LAYOUT_KEYS, LEFT, NAME, NORMAL, OBLIQUE, POLITE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, SYSTEM_FONTS, TEMPLATE_PASS_THROUGH_KEYS, TEXTSTYLE_KEYS, TOP, T_CANVAS, T_CELL, T_LABEL, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Local variables
@@ -286,12 +286,8 @@ export default function (P = Ωempty) {
         this.text = this.convertTextEntityCharacters(this.rawText.normalize('NFC'));
 
         this.dirtyText = true;
-
-        if (this.type === T_ENHANCED_LABEL) {
-
-            this.dirtyFont = true;
-            this.currentFontIsLoaded = false;
-        }
+        this.dirtyFont = true;
+        this.currentFontIsLoaded = false;
     };
 
     G.accessibleText = function () {
