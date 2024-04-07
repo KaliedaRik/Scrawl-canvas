@@ -13,7 +13,7 @@ const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo-canvas-008';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -158,7 +158,7 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-const dom = initializeDomInputs([
+initializeDomInputs([
     ['input', 'copy_dims_heightAbsolute', '200'],
     ['input', 'copy_dims_heightPercent', '50'],
     ['input', 'copy_dims_widthAbsolute', '200'],

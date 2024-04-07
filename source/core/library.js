@@ -185,7 +185,7 @@ export function findArtefact (item = '') {
 }
 
 export function findEntity (item = '') {
-    
+
     if (entitynames.includes(item)) return entity[item];
     return null;
 }

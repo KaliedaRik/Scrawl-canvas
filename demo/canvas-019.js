@@ -2,53 +2,46 @@
 // Gradient and Color factories - transparency - alternative approach using Cells instead of images
 
 // [Run code](../../demo/canvas-019.html)
-import {
-    library as L,
-    importDomImage,
-    makeFilter,
-    makePicture,
-    makeRadialGradient,
-    makeBlock,
-    makeRender,
-    addNativeListener,
-} from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-// Get a handle to the Canvas wrapper
-const canvases = L.canvas;
-
-
 // Namespacing boilerplate
 const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
 // Import the images we defined in the DOM (in &lt;img> elements)
-importDomImage('.places');
+scrawl.importDomImage('.places');
+
+
+const hackneyCanvas = scrawl.findCanvas('hackney'),
+    heathrowCanvas = scrawl.findCanvas('heathrow'),
+    kingstonCanvas = scrawl.findCanvas('kingston'),
+    burglaryCanvas = scrawl.findCanvas('burglary');
 
 
 // For this scene, we'll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene
 const data = [
     {
-        canvas: canvases['hackney'],
+        canvas: hackneyCanvas,
         image: 'hackney-bg',
         transparency: 'transparent',
     },
     {
-        canvas: canvases['heathrow'],
+        canvas: heathrowCanvas,
         image: 'heathrow-bg',
         transparency: 'rgb(0 0 0 / 0)',
     },
     {
-        canvas: canvases['kingston'],
+        canvas: kingstonCanvas,
         image: 'kingston-bg',
         transparency: '#00000000',
     },
     {
-        canvas: canvases['burglary'],
+        canvas: burglaryCanvas,
         image: 'burglary-bg',
         transparency: '#0000',
     },
@@ -59,7 +52,8 @@ const checkFunctions = [];
 
 // The blur filter is temporary - we use it once on each image to generate a blurred version of that image
 // + We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption
-makeFilter({
+scrawl.makeFilter({
+
     name: name('blur'),
     method: 'gaussianBlur',
     radius: 20,
@@ -79,7 +73,7 @@ data.forEach(scene => {
         shown: false,
     });
 
-    makePicture({
+    scrawl.makePicture({
 
         name: name(`${scene.image}-blurred-image`),
         group: name(`${scene.image}-blurred-cell`),
@@ -98,7 +92,7 @@ data.forEach(scene => {
 
 
     // Next, build a gradient using transparency and apply it in a second Block which displays in the original canvas
-    makeRadialGradient({
+    scrawl.makeRadialGradient({
 
         name: name(`${scene.image}-gradient`),
         start: ['50%', '50%'],
@@ -112,7 +106,7 @@ data.forEach(scene => {
         ],
     });
 
-    const gradientBlock = makeBlock({
+    const gradientBlock = scrawl.makeBlock({
 
         name: name(`${scene.image}-gradient-block`),
         group: scene.canvas.base.name,
@@ -127,7 +121,7 @@ data.forEach(scene => {
 
     // Now we can draw our blurred image into the scene
     // + We use some compositing magic so it only appears where the gradient is not transparent
-    makePicture({
+    scrawl.makePicture({
 
         name: name(`${scene.image}-blurred-block`),
         group: scene.canvas.base.name,
@@ -143,7 +137,7 @@ data.forEach(scene => {
 
     // Lastly, display the original image in the canvas
     // + Again, we use compositing magic to draw on the bits missed by the blurred image
-    makePicture({
+    scrawl.makePicture({
 
         name: name(`${scene.image}-original-image`),
         group: scene.canvas.base.name,
@@ -178,16 +172,16 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
-    target: [canvases['hackney'], canvases['heathrow'], canvases['kingston'], canvases['burglary']],
+    target: [hackneyCanvas, heathrowCanvas, kingstonCanvas, burglaryCanvas],
     observer: true,
 
     commence: () => checkFunctions.forEach(f => f()),
 });
 
-makeRender({
+scrawl.makeRender({
 
     name: name('speed'),
     noTarget: true,
@@ -196,13 +190,13 @@ makeRender({
 
 
 // For this demo we will suppress touchmove functionality over the canvas
-addNativeListener('touchmove', (e) => {
+scrawl.addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-}, [canvases['hackney'].domElement, canvases['heathrow'].domElement, canvases['kingston'].domElement, canvases['burglary'].domElement]);
+}, [hackneyCanvas.domElement, heathrowCanvas.domElement, kingstonCanvas.domElement, burglaryCanvas.domElement]);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

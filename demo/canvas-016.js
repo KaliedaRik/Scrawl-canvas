@@ -6,8 +6,15 @@ import * as scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Gather data
 const width = canvas.get('width');
 
 const data = [
@@ -26,29 +33,36 @@ const data = [
 const len = data.length;
 const blockWidth = ((width * 0.9) / len) - 10;
 
+// Generate entitys for each color column
 data.forEach((d, index) => {
 
     const [label, top, mid, base] = d;
 
     scrawl.makeBlock({
-        name: `${label}-top`,
+
+        name: name(`${label}-top`),
         startX: (blockWidth * index) + (index * 10) + 10,
         startY: '10%',
         width: blockWidth,
         height: '28%',
         fillStyle: top,
+
     }).clone({
-        name: `${label}-mid`,
+
+        name: name(`${label}-mid`),
         startY: '40%',
         fillStyle: mid,
+
     }).clone({
-        name: `${label}-base`,
+
+        name: name(`${label}-base`),
         startY: '70%',
         fillStyle: base,
     });
 
     scrawl.makeLabel({
-        name: `label-${label}-main`,
+
+        name: name(`label-${label}-main`),
         text: label,
         accessibleText: 'Color strings of type: §',
         startX: (blockWidth * index) + (index * 10) + 10,
@@ -56,8 +70,9 @@ data.forEach((d, index) => {
     });
 
     scrawl.makeLabel({
-        name: `label-${label}-top`,
-        pivot: `${label}-top`,
+
+        name: name(`label-${label}-top`),
+        pivot: name(`${label}-top`),
         lockTo: 'pivot',
         text: top,
         accessibleText: 'Color generated: §',
@@ -66,28 +81,28 @@ data.forEach((d, index) => {
         shadowOffsetY: 1,
         roll: 53,
         order: 1,
+
     }).clone({
-        name: `label-${label}-mid`,
-        pivot: `${label}-mid`,
+
+        name: name(`label-${label}-mid`),
+        pivot: name(`${label}-mid`),
         text: mid,
+
     }).clone({
-        name: `label-${label}-base`,
-        pivot: `${label}-base`,
+
+        name: name(`label-${label}-base`),
+        pivot: name(`${label}-base`),
         text: base,
     });
 });
 
 
 // #### Scene animation
-const shutdownRender = () => {
-
-    if (scrawl.library.fontfamilymetadatanames.includes('100px sans-serif')) myRender.halt();
-    else console.log('... waiting for font to load');
-}
+const shutdownRender = () => scrawl.checkFontIsLoaded('sans-serif') && myRender.halt();
 
 const myRender = scrawl.makeRender({
 
-    name: `render`,
+    name: name('render'),
     target: canvas,
     afterShow: shutdownRender,
 });

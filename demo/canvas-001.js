@@ -8,13 +8,12 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
-// Namespacing boilerplate
-const namespace = 'demo-canvas-001';
-const name = (n) => `${namespace}-${n}`;
-
-
 // Get a handle to the Canvas wrapper
 const canvas = scrawl.findCanvas('mycanvas');
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create and clone block entitys
@@ -190,7 +189,7 @@ canvas.set({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
-    
+
     const dragging = current();
     return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}`;
 });

@@ -19,7 +19,7 @@ porthole.set({
 
 
 // Namespacing boilerplate
-const namespace = 'demo-canvas-006';
+const namespace = porthole.name;
 const name = (n) => `${namespace}-${n}`;
 
 

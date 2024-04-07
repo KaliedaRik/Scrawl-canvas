@@ -2,34 +2,23 @@
 // Line, Quadratic and Bezier entitys - control lock alternatives
 
 // [Run code](../../demo/canvas-014.html)
-import {
-    library as L,
-    makeBezier,
-    makeDragZone,
-    makeGroup,
-    makeLine,
-    makePicture,
-    makeQuadratic,
-    makeRender,
-    makeTetragon,
-    makeWheel,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Define the entitys that will be used as pivots and paths before the entitys that use them as such
-makeWheel({
+scrawl.makeWheel({
 
     name: name('pin-1'),
     order: 2,
@@ -75,7 +64,7 @@ makeWheel({
 
 
 // Create a group to hold the draggable artefacts, for easier user action collision detection
-const pins = makeGroup({
+const pins = scrawl.makeGroup({
 
     name: name('my-pins'),
     host: canvas.get('baseName'),
@@ -92,7 +81,7 @@ const pins = makeGroup({
 
 
 // Now start defining the Shape lines. Bezier, Quadratic and Line Shapes can `pivot` and `path` their control coordinates to other artefacts, similar to how start coordinates operate.
-makeQuadratic({
+scrawl.makeQuadratic({
 
     name: name('my-quad'),
 
@@ -116,7 +105,7 @@ makeQuadratic({
     useAsPath: true,
 });
 
-makeBezier({
+scrawl.makeBezier({
 
     name: name('my-bezier'),
 
@@ -142,7 +131,7 @@ makeBezier({
 });
 
 // The 'path-line' shape uses the quadratic and bezier curves as paths for its start and end coordinates
-makeLine({
+scrawl.makeLine({
 
     name: name('path-line'),
 
@@ -170,7 +159,7 @@ makeLine({
 });
 
 // the 'mouse-line' shape has its start coordinates permanently fixed to the center of the screen, while its end coordinates alternate between tracking a point along the 'path-line' shape, and the mouse cursor when it is moving over the canvas
-makeLine({
+scrawl.makeLine({
 
     name: name('mouse-line'),
 
@@ -192,7 +181,7 @@ makeLine({
 
 
 // Decorate the 'mouse-line' shape with other artefacts to turn it into an arrow
-makeTetragon({
+scrawl.makeTetragon({
 
     name: name('arrowhead'),
 
@@ -214,7 +203,7 @@ makeTetragon({
     addPathRotation: true,
 });
 
-makeWheel({
+scrawl.makeWheel({
 
     name: name('arrowbase'),
 
@@ -238,11 +227,11 @@ makeWheel({
 
 
 // We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the `artefact` and the `entity` sections of the library
-const arrow = L.entity[name('mouse-line')];
+const arrow = scrawl.findEntity(name('mouse-line'));
 
 
 // Testing to make sure artefacts stick to their paths, even when those paths are animated or manipulated in various ways
-makePicture({
+scrawl.makePicture({
 
     name: name('bunny1'),
     imageSource: 'img/bunny.png',
@@ -270,7 +259,7 @@ makePicture({
 
 // #### User interaction
 // Create the drag-and-drop zone
-makeDragZone({
+scrawl.makeDragZone({
 
     zone: canvas,
     collisionGroup: pins,
@@ -305,7 +294,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -315,7 +304,7 @@ makeRender({
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
@@ -323,7 +312,7 @@ killArtefact(canvas, name('pin-1'), 2000, () => {
 
     pins.addArtefacts(name('pin-1'));
 
-    L.artefact[name('my-quad')].set({
+    scrawl.findEntity(name('my-quad')).set({
         pivot: name('pin-1'),
         lockTo: 'pivot',
     });
@@ -333,7 +322,7 @@ killArtefact(canvas, name('pin-5'), 3000, () => {
 
     pins.addArtefacts(name('pin-5'));
 
-    L.artefact[name('my-bezier')].set({
+    scrawl.findEntity(name('my-bezier')).set({
         startControlPivot: name('pin-5'),
         startControlLockTo: 'pivot',
     });
@@ -343,7 +332,7 @@ killArtefact(canvas, name('pin-7'), 4000, () => {
 
     pins.addArtefacts(name('pin-7'));
 
-    L.artefact[name('my-bezier')].set({
+    scrawl.findEntity(name('my-bezier')).set({
         endPivot: name('pin-7'),
         endLockTo: 'pivot',
     });
@@ -351,7 +340,7 @@ killArtefact(canvas, name('pin-7'), 4000, () => {
 
 killArtefact(canvas, name('my-bezier'), 5000, () => {
 
-    L.artefact[name('path-line')].set({
+    scrawl.findEntity(name('path-line')).set({
         endPath: name('my-bezier'),
         endLockTo: 'path',
     });

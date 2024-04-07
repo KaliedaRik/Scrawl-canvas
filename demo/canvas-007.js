@@ -13,7 +13,7 @@ const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo-canvas-007';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -751,7 +751,7 @@ scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 
 // Set DOM form initial input values
-const dom = initializeDomInputs([
+initializeDomInputs([
     ['select', 'filter', 0],
     ['select', 'target', 0],
 ]);

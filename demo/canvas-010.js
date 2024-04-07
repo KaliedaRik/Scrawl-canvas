@@ -2,26 +2,18 @@
 // Use video sources and media streams for Picture entitys
 
 // [Run code](../../demo/canvas-010.html)
-import {
-    addListener,
-    importDomVideo,
-    importMediaStream,
-    library as L,
-    makePicture,
-    makeRender,
-    makeUpdater,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -31,11 +23,11 @@ const name = (n) => `${namespace}-${n}`;
 // + When loading video assets from the DOM, note that Scrawl-canvas has to deal with the &lt;video> element operating under normal DOM rules. This means that (in most modern browsers) the video will not fetch anything beyond its metadata until at least 1px height of the video is displayed in the viewport (videos hidden by any CSS rules will not fetch anything until they are made visible).
 // + The practical implications of this is that any Picture entitys relying on the video as their asset will not display an image until the DOM video element appears in the user's viewport.
 // + To make sure the Picture entity displays the video's first frame, we need to explicitly set the DOM element's preload attribute to __auto__
-importDomVideo('.myvideo');
+scrawl.importDomVideo('.myvideo');
 
 
 // __Create Picture entity__ from video entity included in the DOM
-const viddyOne = makePicture({
+const viddyOne = scrawl.makePicture({
 
     name: name('first-video'),
     asset: 'waves',
@@ -62,7 +54,7 @@ const viddyOne = makePicture({
 });
 
 // __Import a video from a remote server__
-const viddyTwo = makePicture({
+const viddyTwo = scrawl.makePicture({
 
     name: name('second-video'),
     videoSource: 'img/Motion - 18249.mp4',
@@ -83,12 +75,12 @@ const viddyTwo = makePicture({
 // + Note 2: importMediaStream returns a Promise!
 let viddyThree;
 
-importMediaStream({
+scrawl.importMediaStream({
     audio: false,
 })
 .then(myface => {
 
-    viddyThree = makePicture({
+    viddyThree = scrawl.makePicture({
 
         name: name('mediastream-video'),
         asset: myface.name,
@@ -113,7 +105,7 @@ importMediaStream({
 
     // Adding some controls to manipulate the media stream's display
     // + For this demo, we'll use the existing controls setup for manipulating the DOM video
-    makeUpdater({
+    scrawl.makeUpdater({
 
         event: ['input', 'change'],
         origin: '.controlItem',
@@ -157,7 +149,8 @@ const report = reportSpeed('#reportmessage', function () {
 
     const {roll, scale} = viddyOne;
 
-    return `    Copy - x: ${copyX}, y: ${copyY}, w: ${copyW}, h: ${copyH}
+    return `
+    Copy - x: ${copyX}, y: ${copyY}, w: ${copyW}, h: ${copyH}
     Paste - x: ${pasteX}, y: ${pasteY}, w: ${pasteW}, h:${pasteH}
     Handle - x: ${handleX}, y: ${handleY}
     Roll: ${roll}; Scale: ${scale}`;
@@ -165,7 +158,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -175,7 +168,7 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -231,7 +224,7 @@ makeUpdater({
 
 // Add an additional click event listener
 // + Because many browsers/devices will not allow video to be played until a user interacts with it in some way
-addListener('up', function () {
+scrawl.addListener('up', function () {
 
     viddyOne.set({
         video_muted: true,
@@ -247,59 +240,37 @@ addListener('up', function () {
 
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#copy_start_xPercent').value = 25;
-// @ts-expect-error
-document.querySelector('#copy_start_yPercent').value = 25;
-// @ts-expect-error
-document.querySelector('#copy_dims_widthPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#copy_dims_widthAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#copy_start_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#copy_start_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#copy_dims_heightPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#copy_dims_heightAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_dims_widthPercent').value = 33;
-// @ts-expect-error
-document.querySelector('#paste_dims_widthAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_dims_heightPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_dims_heightAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_start_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_start_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#paste_start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#paste_handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#paste_start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#paste_start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#paste_handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#paste_handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
+initializeDomInputs([
+    ['input', 'copy_dims_heightAbsolute', '200'],
+    ['input', 'copy_dims_heightPercent', '50'],
+    ['input', 'copy_dims_widthAbsolute', '200'],
+    ['input', 'copy_dims_widthPercent', '50'],
+    ['input', 'copy_start_xAbsolute', '100'],
+    ['input', 'copy_start_xPercent', '25'],
+    ['input', 'copy_start_yAbsolute', '100'],
+    ['input', 'copy_start_yPercent', '25'],
+    ['input', 'paste_dims_heightAbsolute', '200'],
+    ['input', 'paste_dims_heightPercent', '50'],
+    ['input', 'paste_dims_widthAbsolute', '200'],
+    ['input', 'paste_dims_widthPercent', '33'],
+    ['input', 'paste_handle_xAbsolute', '100'],
+    ['input', 'paste_handle_xPercent', '50'],
+    ['input', 'paste_handle_yAbsolute', '100'],
+    ['input', 'paste_handle_yPercent', '50'],
+    ['input', 'paste_start_xAbsolute', '300'],
+    ['input', 'paste_start_xPercent', '50'],
+    ['input', 'paste_start_yAbsolute', '200'],
+    ['input', 'paste_start_yPercent', '50'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['select', 'paste_handle_xString', 1],
+    ['select', 'paste_handle_yString', 1],
+    ['select', 'paste_start_xString', 1],
+    ['select', 'paste_start_yString', 1],
+    ['select', 'reverse', 0],
+    ['select', 'upend', 0],
+]);
+
+
+// #### Development and testing
+console.log(scrawl.library);

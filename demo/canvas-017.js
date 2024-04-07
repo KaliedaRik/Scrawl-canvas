@@ -4,21 +4,24 @@
 // [Run code](../../demo/canvas-017.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas,
-    styles = scrawl.library.styles;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 const [width, height] = canvas.get('dimensions');
 
 
-// Build and display the reaction-diffusion asset
-
 scrawl.makeGradient({
 
-    name: 'monochrome',
+    name: name('monochrome'),
     endX: '100%',
     colors: [
       [0, 'black'],
@@ -27,7 +30,7 @@ scrawl.makeGradient({
 
 }).clone({
 
-    name: 'stepped-grays',
+    name: name('stepped-grays'),
     colors: [
       [0, '#333'],
       [199, '#333'],
@@ -43,7 +46,7 @@ scrawl.makeGradient({
 
 }).clone({
 
-    name: 'red-gradient',
+    name: name('red-gradient'),
     colors: [
       [0, 'hsl(0 100% 40%)'],
       [999, 'hsl(0 100% 100%)'],
@@ -51,7 +54,7 @@ scrawl.makeGradient({
 
 }).clone({
 
-    name: 'red-blue',
+    name: name('red-blue'),
     colors: [
       [0, 'rgb(255 0 0)'],
       [999, 'rgb(0 0 255)'],
@@ -60,7 +63,7 @@ scrawl.makeGradient({
 
 }).clone({
 
-    name: 'hue-gradient',
+    name: name('hue-gradient'),
     colors: [
       [0, 'hwb(120 10% 10%)'],
       [999, 'hwb(20 10% 10%)'],
@@ -68,11 +71,11 @@ scrawl.makeGradient({
 });
 
 const grads = [
-    styles['monochrome'],
-    styles['stepped-grays'],
-    styles['red-gradient'],
-    styles['red-blue'],
-    styles['hue-gradient'],
+    scrawl.findStyles(name('monochrome')),
+    scrawl.findStyles(name('stepped-grays')),
+    scrawl.findStyles(name('red-gradient')),
+    scrawl.findStyles(name('red-blue')),
+    scrawl.findStyles(name('hue-gradient')),
 ];
 
 const bespokeEasings = {
@@ -91,7 +94,7 @@ const bespokeEasings = {
 
 const blockGroup = scrawl.makeGroup({
 
-    name: 'block-group',
+    name: name('block-group'),
     host: canvas.base.name,
 });
 
@@ -105,15 +108,13 @@ const generateBlocks = (numRequired) => {
 
         scrawl.makeBlock({
 
-            name: `b-${counter}`,
-            group: 'block-group',
+            name: name(`b-${counter}`),
+            group: name('block-group'),
 
-// @ts-expect-error
-            fillStyle: gradient.value,
+            fillStyle: name(dom.colorStops.value),
             lockFillStyleToEntity: true,
 
-// @ts-expect-error
-            method: method.value,
+            method: dom.method.value,
 
             width: Math.floor(10 + (Math.random() * 50)),
             height: Math.floor(10 + (Math.random() * 50)),
@@ -136,15 +137,16 @@ const generateBlocks = (numRequired) => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Precision: ${precision.value}\n    Boxes: ${counter}`;
+    return `
+    Precision: ${dom.precision.value}
+    Boxes: ${counter}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -156,8 +158,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
-// @ts-expect-error
-    blockGroup.setArtefacts({ fillStyle: gradient.value });
+    blockGroup.setArtefacts({ fillStyle: name(dom.colorStops.value) });
 
 }, '#colorStops');
 
@@ -165,8 +166,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
-// @ts-expect-error
-    blockGroup.setArtefacts({ method: method.value });
+    blockGroup.setArtefacts({ method: dom.method.value });
 
 }, '#method');
 
@@ -174,8 +174,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
-// @ts-expect-error
-    const ease = (bespokeEasings[easing.value]) ? bespokeEasings[easing.value] : easing.value;
+    const ease = (bespokeEasings[dom.easing.value]) ? bespokeEasings[dom.easing.value] : dom.easing.value;
     grads.forEach(g => g.set({ easing: ease}));
 
 }, '#easing');
@@ -184,8 +183,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
-// @ts-expect-error
-    const p = parseInt(precision.value, 10);
+    const p = parseInt(dom.precision.value, 10);
     grads.forEach(g => g.set({ precision: p}));
 
 }, '#precision');
@@ -198,19 +196,12 @@ scrawl.addNativeListener(['click'], () => {
 
 
 // Setup form
-const precision = document.querySelector('#precision'),
-    easing = document.querySelector('#easing'),
-    gradient = document.querySelector('#colorStops'),
-    method = document.querySelector('#method');
-
-// @ts-expect-error
-precision.value = 25;
-// @ts-expect-error
-easing.options.selectedIndex = 0;
-// @ts-expect-error
-gradient.options.selectedIndex = 0;
-// @ts-expect-error
-method.options.selectedIndex = 0;
+const dom = initializeDomInputs([
+    ['select', 'easing', 0],
+    ['select', 'colorStops', 0],
+    ['select', 'method', 0],
+    ['input', 'precision', '25'],
+]);
 
 
 // Populate scene - because we're generating from DOM form element values, they need to be correctly initialized before we create any Block elements
