@@ -16,18 +16,18 @@
 // + the DOM element - generally a block or inline-block element.
 //
 // __Customisation:__ The snippet can be customised using the following `--data-???` CSS custom properties:
-// + `data-text-color` - any CSS color string (default: `#c213bc'`)
-// + `data-dark-text-color` - any CSS color string (default: `#fcdeef`)
-// + `data-outline-color` - any CSS color string (default: `#f59dcf`)
-// + `data-dark-outline-color` - any CSS color string (default: `#f59dcf`)
-// + `data-outline-width` - (unit % of font size) percentage of the font size for text outline width (default: `0.05`)
-// + `data-bubble-color` - any CSS color string (default: `#fcdeef`)
-// + `data-dark-bubble-color` - any CSS color string (default: `#ed5fb0`)
-// + `data-bubble-outline-color` - any CSS color string (default: `#c213bc`)
-// + `data-dark-bubble-outline-color` - any CSS color string (default: `#c213bc`)
-// + `data-bubble-density` - the number of bubbles to generate (default: `50`)
-// + `data-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more` (default: `black`)
-// + `data-dark-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more` (default: `white`)
+// + `--data-text-color` - any CSS color string (default: `#c213bc'`)
+// + `--data-dark-text-color` - any CSS color string (default: `#fcdeef`)
+// + `--data-outline-color` - any CSS color string (default: `#f59dcf`)
+// + `--data-dark-outline-color` - any CSS color string (default: `#f59dcf`)
+// + `--data-outline-width` - (unit % of font size) percentage of the font size for text outline width (default: `0.05`)
+// + `--data-bubble-color` - any CSS color string (default: `#fcdeef`)
+// + `--data-dark-bubble-color` - any CSS color string (default: `#ed5fb0`)
+// + `--data-bubble-outline-color` - any CSS color string (default: `#c213bc`)
+// + `--data-dark-bubble-outline-color` - any CSS color string (default: `#c213bc`)
+// + `--data-bubble-density` - the number of bubbles to generate (default: `50`)
+// + `--data-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more` (default: `black`)
+// + `--data-dark-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more` (default: `white`)
 //
 // __Function output:__ a Javascript object will be returned, containing the following attributes
 // ```
