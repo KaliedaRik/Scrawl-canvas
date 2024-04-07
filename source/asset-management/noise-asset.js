@@ -316,6 +316,12 @@ S.worleyOutput = function (item) {
     }
 };
 
+S.colors = function (item) {
+
+    if (this.gradient) this.gradient.set({ colors: item });
+    this.dirtyOutput = true;
+};
+
 
 // #### Prototype functions
 

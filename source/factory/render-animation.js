@@ -282,6 +282,20 @@ P.halt = function () {
     return this;
 };
 
+
+// `updateOnce` - if the animation is not running, run it for one Display cycle and halt it again
+P.updateOnce = function () {
+
+    if (!this.isRunning()) {
+
+        this.run();
+        setTimeout(() => this.halt(), 0);
+    }
+    return this;
+};
+
+
+// `updateHook` - a convenience function to update individual hook functions
 P.updateHook = function (hook = '', func) {
 
     switch (hook) {

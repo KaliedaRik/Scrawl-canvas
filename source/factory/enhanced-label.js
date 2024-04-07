@@ -624,7 +624,7 @@ P.calculateLines = function () {
 
     let isInLayout, check, sx, sy, ex, ey;
 
-    const step = _ceil(fontSizeValue * lineSpacing * currentScale);
+    const step = _round(fontSizeValue * lineSpacing * currentScale);
 
     const rrpX = _round(layoutStartX),
         xLeft = _round(rrpX - (layoutWidth * currentScale * 2)),

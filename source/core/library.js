@@ -165,5 +165,19 @@ export function purge (namespace = '') {
 }
 
 
+export function checkFontIsLoaded (font = '') {
+
+    const key = `100px ${font}`;
+    return fontfamilymetadatanames.includes(key);
+}
+
+export function getFontMetadata (font = '') {
+
+    const key = `100px ${font}`;
+    if (fontfamilymetadatanames.includes(key)) return fontfamilymetadata[key];
+    return null;
+}
+
+
 // All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - used mainly as part of Scrawl-canvas cloning functionality.
 export const constructors = {};

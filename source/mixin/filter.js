@@ -208,6 +208,12 @@ export default function (P = Ωempty) {
         return this;
     };
 
+// `hasFilters` - A quick check to see if any filters have been assigned to this artefact
+    P.hasFilters = function () {
+
+        return !!this.filters.length;
+    };
+
 // `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.
     P.preprocessFilters = function (filters) {
 
