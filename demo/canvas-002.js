@@ -2,32 +2,25 @@
 // Block and wheel entity positioning (start, pivot, mimic, mouse)
 
 // [Run code](../../demo/canvas-002.html)
-import {
-    addNativeListener,
-    library as L,
-    makeBlock,
-    makeRender,
-    makeWheel,
-    makeUpdater,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, killArtefact } from './utilities.js';
+import { reportSpeed, killArtefact, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-002';
 const name = (n) => `${namespace}-${n}`;
 
 
 // Create and clone block and wheel entitys. For the sake of safety and sanity, create the (reference) entitys on which other artefacts will pivot and mimic first. Then create those other artefacts.
 //
 // Note: setting this entity's `method` value to __none__ means that while it will perform all necessary calculations as part of the Display cycle, it will not complete its stamp action, thus will not appear on the display. This differs from setting its `visibility` attribute to false, which will make the entity skip both calculation and stamp operations
-let myPivot = makeWheel({
+let myPivot = scrawl.makeWheel({
     name: name('mouse-pivot'),
     method: 'none',
 
@@ -35,7 +28,7 @@ let myPivot = makeWheel({
     startY: 'center',
 });
 
-const myblock = makeBlock({
+const myblock = scrawl.makeBlock({
     name: name('base-block'),
 
     width: 150,
@@ -63,7 +56,7 @@ const myblock = makeBlock({
     },
 });
 
-const mywheel = makeWheel({
+const mywheel = scrawl.makeWheel({
     name: name('base-wheel'),
 
     radius: 60,
@@ -180,7 +173,15 @@ mywheel.clone({
 });
 
 
-// #### User interaction
+// #### Scene animation
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage', function () {
+
+    return `
+    clearAlpha: ${dom['clearAlpha'].value}`;
+});
+
+
 // Function to check whether mouse cursor is over canvas, and lock the reference entity accordingly
 const mouseCheck = function () {
 
@@ -199,16 +200,29 @@ const mouseCheck = function () {
     };
 }();
 
+
+// Create the Display cycle animation
+scrawl.makeRender({
+
+    name: name('animation'),
+    target: canvas,
+    commence: mouseCheck,
+    afterShow: report,
+});
+
+
+// #### User interaction
 // For this demo we will suppress touchmove functionality over the canvas
-addNativeListener('touchmove', (e) => {
+scrawl.addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
 }, canvas.domElement);
 
+
 // Setup form observer functionality.
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -225,49 +239,29 @@ makeUpdater({
     },
 });
 
-const backgroundColorSelector = document.querySelector('#backgroundColor'),
-    clearAlphaInput = document.querySelector('#clearAlpha');
 
-// @ts-expect-error
-backgroundColorSelector.value = '';
-// @ts-expect-error
-clearAlphaInput.value = 0.9;
-
-
-// #### Scene animation
-// Function to display frames-per-second data, and other information relevant to the demo
-const report = reportSpeed('#reportmessage', function () {
-// @ts-expect-error
-    return `    clearAlpha: ${clearAlphaInput.value}`;
-});
-
-// Create the Display cycle animation
-makeRender({
-
-    name: name('animation'),
-    target: canvas,
-    commence: mouseCheck,
-    afterShow: report,
-});
+// Set the DOM input values
+const dom = initializeDomInputs([
+    ['input', 'clearAlpha', '0.9'],
+    ['select', 'backgroundColor', 0],
+]);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
 killArtefact(canvas, name('mouse-pivot'), 4000, () => {
 
-    myPivot = L.entity[name('mouse-pivot')];
+    myPivot = scrawl.findEntity(name('mouse-pivot'));
 
-    L.entity[name('base-block')].set({
-
+    scrawl.findEntity(name('base-block')).set({
         pivot: myPivot,
         lockTo: 'pivot',
     });
 
-    L.entity[name('base-wheel')].set({
-
+    scrawl.findEntity(name('base-wheel')).set({
         pivot: myPivot,
         lockTo: 'pivot',
     });

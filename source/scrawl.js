@@ -55,6 +55,10 @@ export {
     purge,
     checkFontIsLoaded,
     getFontMetadata,
+    findCanvas,
+    findEntity,
+    findArtefact,
+    findStyles,
 } from './core/library.js';
 export { seededRandomNumberGenerator } from './helper/random-seed.js';
 export { makeSnippet } from './core/snippets.js';

@@ -211,10 +211,8 @@ interface CascadeMixinFunctions {
     getAllArtefactsAt: (item: any) => any;
     getArtefactAt: (item: any) => any;
     removeArtefactClasses: (item?: CommonObjectInput) => any;
-    // reverseByDelta: (item?: CommonObjectInput) => any;
     setArtefacts: (item?: CommonObjectInput) => any;
     updateArtefacts: (item?: CommonObjectInput) => any;
-    // updateByDelta: (item?: CommonObjectInput) => any;
 }
 
 
@@ -351,9 +349,9 @@ interface FilterMixinInputs {
 }
 
 interface FilterMixinFunctions {
-    addFilters: (...items: Array<FilterInstance | string>) => EntityInstance;
-    removeFilters: (...items: Array<FilterInstance | string>) => EntityInstance;
-    clearFilters: () => EntityInstance;
+    addFilters?: (...items: Array<FilterInstance | string>) => EntityInstance;
+    removeFilters?: (...items: Array<FilterInstance | string>) => EntityInstance;
+    clearFilters?: () => EntityInstance;
 }
 
 
@@ -507,10 +505,10 @@ interface HitOutput {
 type HitTests = CommonTwoElementArrayInput | CommonHereObjectInput | Array<CommonTwoElementArrayInput | CommonHereObjectInput>
 
 interface PositionMixinFunctions {
-    checkHit: (tests: HitTests) => HitOutput | boolean;
-    dropArtefact: () => ArtefactInstance;
-    pickupArtefact: (items: CommonTwoElementArrayInput | CommonHereObjectInput) => ArtefactInstance;
-    purgeArtefact: (item: string | string[]) => void;
+    checkHit?: (tests: HitTests) => HitOutput | boolean;
+    dropArtefact?: () => ArtefactInstance;
+    pickupArtefact?: (items: CommonTwoElementArrayInput | CommonHereObjectInput) => ArtefactInstance;
+    purgeArtefact?: (item: string | string[]) => void;
 }
 
 
@@ -599,9 +597,9 @@ interface StylesMixinInputs {
 }
 
 interface StylesMixinFunctions {
-    removeColor: (index: number) => AnyGradientInstance;
-    updateByDelta: () => StylesInstance;
-    updateColor: (index: number, color: string) => AnyGradientInstance;
+    removeColor?: (index: number) => AnyGradientInstance;
+    updateByDelta?: () => StylesInstance;
+    updateColor?: (index: number, color: string) => AnyGradientInstance;
 }
 
 
@@ -911,21 +909,22 @@ interface CanvasFactoryInputs extends BaseMixinInputs, DomMixinInputs, DisplaySh
 interface CanvasSaveInputs extends CanvasFactoryInputs, SaveInputs {}
 
 interface CanvasFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions, DisplayShapeMixinFunctions {
-    setAsCurrentCanvas: () => CanvasInstance;
-    setBase: (items: CellFactoryInputs) => CanvasInstance;
-    deltaSetBase: (items: CellFactoryInputs) => CanvasInstance;
-    buildCell: (items: CellFactoryInputs) => CellInstance;
     addCell: (item: CellInstance | string) => CanvasInstance;
-    removeCell: (item: CellInstance | string) => CanvasInstance;
-    killCell: (item: CellInstance | string) => CanvasInstance;
+    buildCell: (items: CellFactoryInputs) => CellInstance;
+    checkHover: () => void;
     clear: () => void;
-    compile: () => void;
-    show: () => void;
-    render: () => void;
     clone: (item?: CanvasFactoryInputs) => CanvasInstance;
+    compile: () => void;
+    deltaSetBase: (items: CellFactoryInputs) => CanvasInstance;
+    killCell: (item: CellInstance | string) => CanvasInstance;
+    removeCell: (item: CellInstance | string) => CanvasInstance;
+    render: () => void;
     saveAsPacket: (item?: CanvasSaveInputs | boolean) => string;
     set: (item?: CanvasFactoryInputs) => CanvasInstance;
+    setAsCurrentCanvas: () => CanvasInstance;
+    setBase: (items: CellFactoryInputs) => CanvasInstance;
     setDelta: (item?: CanvasFactoryDeltaInputs) => CanvasInstance;
+    show: () => void;
     simpleStamp: () => void;
 }
 
@@ -974,14 +973,22 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     canvasColorSpace?: CanvasColorSpaceValues;
 }
 
+interface CellSaveInputs extends CellFactoryInputs, SaveInputs {}
+
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
     clear: () => void;
+
+    // This is a LIE! Added to ignore TS complaints
+    clone: (item?: CellFactoryInputs) => CellInstance;
     compile: () => void;
     render: () => void;
     show: () => void;
     updateArtefacts: (items: CommonObjectInput) => void;
     set: (item?: CellFactoryInputs) => CellInstance;
     setDelta: (item?: CellFactoryDeltaInputs) => CellInstance;
+
+    // This is also a LIE! Added to ignore TS complaints
+    saveAsPacket: (item?: CellSaveInputs | boolean) => string;
 }
 
 interface CellInstance extends CellFactoryInputs, CellFactoryFunctions {
@@ -989,6 +996,7 @@ interface CellInstance extends CellFactoryInputs, CellFactoryFunctions {
     element: any;
     here: CommonHereObjectInput;
 }
+
 
 
 
@@ -1174,7 +1182,7 @@ interface ElementFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions 
 interface ElementInstance extends ElementFactoryInputs, ElementFactoryFunctions {
     here?: CommonHereObjectInput;
     elementComputedStyles?: CommonObjectInput;
-    domElement: any;
+    domElement: HTMLElement;
 }
 
 
@@ -3198,7 +3206,13 @@ export function recalculateFonts(item?: number): void;
 
 export function purgeFontMetadata(): void;
 
+export function findArtefact(item: string): ArtefactInstance;
+export function findEntity(item: string): EntityInstance;
+export function findCanvas(item: string): CanvasInstance;
+export function findStyles(item: string): StylesInstance;
 
+export function checkFontIsLoaded(font: string): boolean;
+export function getFontMetadata(font: string): CommonObjectInput;
 
 
 

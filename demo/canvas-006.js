@@ -2,23 +2,14 @@
 // Canvas tween stress test
 
 // [Run code](../../demo/canvas-006.html)
-import {
-    addNativeListener,
-    library as L,
-    makeRender,
-    makeTween,
-    makeWheel,
-    makeColor,
-    releaseVector,
-    requestVector,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const porthole = L.artefact.porthole;
+const porthole = scrawl.findCanvas('porthole');
 
 porthole.set({
     css: {
@@ -28,13 +19,13 @@ porthole.set({
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-006';
 const name = (n) => `${namespace}-${n}`;
 
 
 // ##### Star generation functionality
 // We use this entity as a template for cloning new stars
-const starling = makeWheel({
+const starling = scrawl.makeWheel({
 
     name: name('starling'),
 
@@ -61,7 +52,7 @@ const addNumber = 100;
 
 
 // Color factory will generate a new star color on each user click
-const colorBuilder = makeColor({
+const colorBuilder = scrawl.makeColor({
     name: name('my-color-builder'),
     minimumColor: '#fcc',
     maximumColor: '#ccf',
@@ -73,7 +64,7 @@ const colorBuilder = makeColor({
 const makeStars = function (buildNumber) {
 
     // We use a Vector for calculating the new star's direction
-    const v = requestVector();
+    const v = scrawl.requestVector();
 
     for (let i = 0; i < buildNumber; i++) {
 
@@ -97,7 +88,7 @@ const makeStars = function (buildNumber) {
 
         // Every star gets its own Tween object
         // + And each Tween generates its own Ticker timeline object
-        makeTween({
+        scrawl.makeTween({
 
             name: star.name,
 
@@ -129,7 +120,7 @@ const makeStars = function (buildNumber) {
 
     // We need to release our Vector back to its vector pool
     // + Failure to release pool objects can lead to memory leaks.
-    releaseVector(v);
+    scrawl.releaseVector(v);
 
     // Change the color of the stars each time the user clicks on the porthole
     starling.set({
@@ -150,7 +141,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: porthole,
@@ -167,8 +158,8 @@ const addStars = (e) => {
 
     makeStars(addNumber);
 };
-addNativeListener('click', addStars, porthole.domElement);
+scrawl.addNativeListener('click', addStars, porthole.domElement);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

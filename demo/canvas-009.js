@@ -2,14 +2,7 @@
 // Pattern styles; Entity web link anchors; Dynamic accessibility
 
 // [Run code](../../demo/canvas-009.html)
-import {
-    addListener,
-    importDomImage,
-    library as L,
-    makeBlock,
-    makePattern,
-    makeRender,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, killArtefactAndAnchor, killStyle } from './utilities.js';
 
@@ -21,6 +14,7 @@ const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 let myTracker;
 
 // Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
+// + TS errors due to not importing/using GA types into the demo
 // @ts-expect-error
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
@@ -42,20 +36,20 @@ ga(function() {
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-009';
 const name = (n) => `${namespace}-${n}`;
 
 
 // Get images from DOM
-importDomImage('.mypatterns');
+scrawl.importDomImage('.mypatterns');
 
 
 // Create Pattern styles using imported images
-makePattern({
+scrawl.makePattern({
 
     name: name('brick-pattern'),
     asset: 'brick',
@@ -68,7 +62,7 @@ makePattern({
 });
 
 // Create Pattern styles dynamically
-makePattern({
+scrawl.makePattern({
 
     name: name('water-pattern'),
     imageSource: 'img/water.png',
@@ -100,7 +94,7 @@ canvas.base.set({
 });
 
 // Create a Block entity to display in the new Cell pattern
-makeBlock({
+scrawl.makeBlock({
 
     name: name('cell-pattern-block'),
     group: name('cell-pattern'),
@@ -124,8 +118,10 @@ makeBlock({
 });
 
 
-// Main canvas display - create Block entitys which will use the patterns defined above
-makeBlock({
+// Main canvas display - create Block entitys which will use the patterns defined above. Note that TS errors are due to:
+// + Not importing/using GA types into the demo
+// + TS not recognising that `this` refers to BlockInstance - it claims that `get`, `set`, `clickAnchor` etc functions don't exist on BlockFactoryInputs (which is true), but we're defining hook functions here. It can probably be fixed in the `d.ts` file, but I don't know how to do that ...
+scrawl.makeBlock({
 
     name: name('water-in-leaves'),
     group: canvas.get('baseGroup'),
@@ -287,7 +283,7 @@ const interactions = function () {
     if (canvas.here.active) interactionResults = canvas.cascadeEventAction('move');
     else interactionResults = '';
 };
-addListener('move', interactions, canvas.domElement);
+scrawl.addListener('move', interactions, canvas.domElement);
 
 // To capture other user interaction with the &lt;a> DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page
 //
@@ -296,7 +292,7 @@ const mylinks = function () {
 
     if (canvas.here.active) canvas.cascadeEventAction('up');
 };
-addListener('up', mylinks, canvas.domElement);
+scrawl.addListener('up', mylinks, canvas.domElement);
 
 
 // #### Scene animation
@@ -307,7 +303,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -316,33 +312,40 @@ makeRender({
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
 // We use the __canvas__ and __myTracker__ variables in our blocks' onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file's code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be 'undefined'. So we need to reset the block's 'on...' functions (in this module file's code) after the block has resurrected
 killArtefactAndAnchor(canvas, name('brick-in-marble'), 'wikipedia-brick-link', 2000, () => {
 
-    L.artefact[name('brick-in-marble')].set({
+    scrawl.findArtefact(name('brick-in-marble')).set({
 
         onEnter: function () {
+// @ts-expect-error
             this.set({ lineWidth: 30 });
             canvas.set({
                 title: `${this.name} tile`,
+// @ts-expect-error
                 label: this.get('anchorDescription'),
             });
+// @ts-expect-error
             myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
         },
         onLeave: function () {
+// @ts-expect-error
             this.set({ lineWidth: 20 });
             canvas.set({
                 title: '',
                 label: `${canvas.name} canvas element`,
             });
+// @ts-expect-error
             myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
         },
         onUp: function () {
+// @ts-expect-error
             myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
+// @ts-expect-error
             this.clickAnchor();
         },
     });
@@ -351,11 +354,11 @@ killArtefactAndAnchor(canvas, name('brick-in-marble'), 'wikipedia-brick-link', 2
 killStyle(canvas, name('marble-pattern'), 3000, () => {
 
     // Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died
-    L.entity[name('brick-in-marble')].set({
+    scrawl.findEntity(name('brick-in-marble')).set({
         strokeStyle: name('marble-pattern'),
     });
 
-    L.entity[name('marble-in-water')].set({
+    scrawl.findEntity(name('marble-in-water')).set({
         fillStyle: name('marble-pattern'),
     });
 });

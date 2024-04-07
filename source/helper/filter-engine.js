@@ -51,7 +51,7 @@ const HIGH_ARRAY = new Uint8Array([0,255,255]);
 
 // The filter Color object - used by various filters
 export const colorEngine = makeColor({
-    name: 'SC-system-filter-do-not-remove',
+    name: 'SC-core-color-engine',
 });
 
 
@@ -5152,7 +5152,7 @@ P.theBigActionsObject = _freeze({
 // We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their `dirtyFilterIdentifier` flag to false.
 makeAnimation({
 
-    name: 'filters-cleanup-action',
+    name: 'SC-core-filters-cleanup-action',
     order: 999,
     fn: function () {
 

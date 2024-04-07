@@ -178,6 +178,30 @@ export function getFontMetadata (font = '') {
     return null;
 }
 
+export function findArtefact (item = '') {
+
+    if (artefactnames.includes(item)) return artefact[item];
+    return null;
+}
+
+export function findEntity (item = '') {
+    
+    if (entitynames.includes(item)) return entity[item];
+    return null;
+}
+
+export function findCanvas (item = '') {
+
+    if (canvasnames.includes(item)) return canvas[item];
+    return null;
+}
+
+export function findStyles (item = '') {
+
+    if (stylesnames.includes(item)) return styles[item];
+    return null;
+}
+
 
 // All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - used mainly as part of Scrawl-canvas cloning functionality.
 export const constructors = {};

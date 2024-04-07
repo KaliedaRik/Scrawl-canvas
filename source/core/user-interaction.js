@@ -509,7 +509,7 @@ export const removeLocalMouseMoveListener = function (wrapper) {
 // Animation object which checks whether any window event listeners have fired, and actions accordingly
 const coreListenersTracker = makeAnimation({
 
-    name: 'coreListenersTracker',
+    name: 'SC-core-listeners-tracker',
     order: 0,
     delay: true,
     fn: function () {

@@ -446,7 +446,6 @@ G.textLines = function () {
 
 
 // #### Prototype functions
-
 // `getTester` - Retrieve the DOM labelStylesCalculator &lt;div> element
 P.getTester = function () {
 

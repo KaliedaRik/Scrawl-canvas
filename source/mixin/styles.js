@@ -29,7 +29,7 @@ import { _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLO
 // Create an animation to handle automated delta gradient animation
 makeAnimation({
 
-    name: 'SC-system-gradient-delta-animation',
+    name: 'SC-core-gradient-delta-animation',
     fn: () => {
 
         stylesnames.forEach(name => {
