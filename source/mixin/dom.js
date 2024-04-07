@@ -32,7 +32,7 @@ import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
 // Question: do DOM elements really need additional anchors and buttons?
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 
@@ -648,22 +648,16 @@ export default function (P = Ωempty) {
     };
 
 // `checkHit`
-    P.checkHit = function (items = [], cell) {
+    P.checkHit = function (items = []) {
 
         if (this.noUserInteraction) return false;
 
         if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
         const tests = (!_isArray(items)) ?  [items] : items;
-        let flag = false;
 
-        if (!cell) {
-
-            cell = requestCell();
-            flag = true;
-        }
-
-        const engine = cell.engine;
+        const mycell = requestCell(),
+            engine = mycell.engine;
 
         let tx, ty;
 
@@ -687,7 +681,7 @@ export default function (P = Ωempty) {
 
         }, this)) {
 
-            if (flag) releaseCell(cell);
+            releaseCell(mycell);
 
             return {
                 x: tx,
@@ -696,8 +690,7 @@ export default function (P = Ωempty) {
             };
         }
 
-        if (flag) releaseCell(cell);
-
+        releaseCell(mycell);
         return false;
     };
 
@@ -815,7 +808,7 @@ export default function (P = Ωempty) {
 
         if (this.dirtyPathObject) this.cleanPathObject();
 
-        // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+        // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 

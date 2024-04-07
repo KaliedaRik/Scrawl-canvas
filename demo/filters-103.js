@@ -364,11 +364,9 @@ scrawl.makeFilter({
 // Blotchy color effect
 scrawl.makeNoiseAsset({
 
-    name: 'worley-basic',
+    name: 'blotch-effect',
     width: 400,
     height: 400,
-
-    // noiseEngine: 'worley-euclidean',
 
     colors: [
         [0, 'rgba(0 0 0 / 0)'],
@@ -383,7 +381,7 @@ scrawl.makeFilter({
     name: 'blotches',
     actions: [{
         action: 'process-image',
-        asset: 'worley-basic',
+        asset: 'blotch-effect',
         width: '100%',
         height: '100%',
         copyWidth: '100%',
@@ -422,28 +420,20 @@ canvas9.buildCell({
     compileOrder: 0,
 });
 
-// scrawl.makeLabel({
-
-//     name: 'watermark-text',
-//     group: 'watermark-pattern-cell',
-//     text: 'Scrawl-canvas',
-//     fontString: 'bold 25px sans-serif',
-//     start: ['center', 'center'],
-//     handle: ['center', 'center'],
-//     method: 'draw',
-// });
-
-scrawl.makePhrase({
+scrawl.makeLabel({
 
     name: 'watermark-text',
     group: 'watermark-pattern-cell',
     text: 'Scrawl-canvas',
-    family: 'Arial, sans-serif',
-    weight: 'bold',
-    size: '25px',
+    fontString: 'bold 20px Arial',
     start: ['center', 'center'],
     handle: ['center', 'center'],
     method: 'draw',
+    shadowOffsetX: 1,
+    shadowOffsetY: 1,
+    shadowBlur: 0,
+    shadowColor: 'white',
+    textIsAccessible: false,
 });
 
 canvas9.buildCell({

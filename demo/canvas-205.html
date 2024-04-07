@@ -11,6 +11,10 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
@@ -56,7 +60,7 @@ See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
 <body>
   <div id="test-navigation">
     <a href="canvas-204.html">&larr; Previous</a>
-    <a href="canvas-301.html">Next &rarr;</a>
+    <a href="canvas-206.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 205</h1>
   <h2>Label entity - updating font parts; experiments with variable font</h2>
@@ -100,9 +104,9 @@ See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
       <input class="controlItem" id="fontWeight-number" type="range" value="400" min="100" max="900" step="10" />
     </div>
 
-    <div class="green label">Font variant</div>
+    <div class="green label">Font variant caps</div>
     <div class="green">
-      <select class="controlItem" id="fontVariant">
+      <select class="controlItem" id="fontVariantCaps">
         <option value="normal">normal</option>
         <option value="small-caps">small-caps</option>
         <option value="all-small-caps">all-small-caps</option>

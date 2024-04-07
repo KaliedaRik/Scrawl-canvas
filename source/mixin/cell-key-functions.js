@@ -9,7 +9,7 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
+import { _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -301,22 +301,6 @@ export default function (P = Ωempty) {
         this.engine.restore();
         return this;
     };
-
-    // `getComputedFontSizes` - internal function - the Cell wrapper gets passed by Phrase entitys to its fontAttributes object, which then invokes it when calculating font sizes
-    P.getComputedFontSizes = function () {
-
-        const host = this.getHost();
-
-        if (host && host.domElement) {
-
-            const em = _computed(host.domElement),
-                rem = _computed(document.documentElement);
-
-            return [parseFloat(em.fontSize), parseFloat(rem.fontSize), window.innerWidth, window.innerHeight];
-        }
-        return false;
-    }
-
 
     // `getEntityHits` - Returns an array of entity Objects responding 'true' to a checkHit call on them, for the Cell's current `.here` attribute coordinates. Used in particular with `Canvas.cascadeEventAction()` function
     P.getEntityHits = function () {

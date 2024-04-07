@@ -156,6 +156,7 @@ api.build = function (items) {
             method: 'draw',
         });
 
+        const redSpan = 'style="color: red; --SC-fill-style: red"';
         const updateSelected = () => {
 
             const {yearLabels, categoryLabels, yearData} = currentData;
@@ -168,7 +169,7 @@ api.build = function (items) {
                 mimic: name(`${year}-${category}`),
             });
 
-            frame.updateSubtitle(`${category} in ${year}: §RED§${data.toLocaleString()}`);
+            frame.updateSubtitle(`${category} in ${year}: <span ${redSpan}>${data.toLocaleString()}</span>`);
         };
 
         updateSelected();

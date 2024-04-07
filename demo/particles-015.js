@@ -76,6 +76,7 @@ const emitter = scrawl.makeEmitter({
 
     rangeX: 40,
     rangeFromX: -20,
+    minimumVelocityX: 10,
     limitDirectionToAngleMultiples: 60,
 
     artefact: scrawl.makeWheel({

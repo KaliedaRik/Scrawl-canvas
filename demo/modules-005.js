@@ -135,7 +135,7 @@ scrawl.makePicture({
 
 scrawl.makeLabel({
 
-    name: 'phrase-entity-1',
+    name: 'label-entity-1',
     group: sceneLayer.name,
     text: 'Hello',
     fontString: '40px serif',
@@ -145,17 +145,17 @@ scrawl.makeLabel({
 
 }).clone({
 
-    name: 'phrase-entity-2',
+    name: 'label-entity-2',
     start: getRandomPosition(),
 
 }).clone({
 
-    name: 'phrase-entity-3',
+    name: 'label-entity-3',
     start: getRandomPosition(),
 
 }).clone({
 
-    name: 'phrase-entity-4',
+    name: 'label-entity-4',
     start: getRandomPosition(),
 });
 

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 211</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    #preload-fonts {
+      height: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
+
+    .demo-my-label {
+
+      & b {
+        font-weight: bold;
+      }
+
+      & strong {
+        --SC-include-highlight: true;
+        --SC-highlight-style: darkblue;
+        --SC-fill-style: lightblue;
+
+        font-weight: bold;
+        color: var(--SC-fill-style);
+        background-color: var(--SC-highlight-style);
+      }
+
+      & i {
+        font-style: italic;
+      }
+
+      & em {
+        --SC-fill-style: blue;
+
+        font-style: italic;
+        color: var(--SC-fill-style);
+      }
+      
+      & u {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
+
+        text-decoration: underline;
+      }
+      
+      & s {
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.4;
+        --SC-overline-style: red;
+        --SC-overline-width: 5px;
+
+        text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
+      }
+
+      & .bold {
+        font-weight: bold;
+      }
+      
+      & .italic {
+        font-style: italic;
+      }
+      
+      & .underline {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
+
+        text-decoration: underline;
+        font-variant: small-caps;
+      }
+
+      & .strike {
+        --SC-fill-style: gray;
+
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.5;
+        --SC-overline-style: gray;
+        --SC-overline-width: 2px;
+
+        color: var(--SC-fill-style);
+        text-decoration-line: line-through;
+        text-decoration-color: var(--SC-overline-style);
+        text-decoration-thickness: var(--SC-overline-width);
+      }
+
+      & .red {
+        --SC-fill-style: red;
+
+        color: var(--SC-fill-style);
+      }
+
+      & .green-highlight {
+        --SC-include-highlight: true;
+        --SC-highlight-style: darkgreen;
+        --SC-fill-style: honeydew;
+
+        color: var(--SC-fill-style);
+        background-color: var(--SC-highlight-style);
+      }
+
+      & .letter-spaced {
+        letter-spacing: 10px;
+      }
+
+      & .word-spaced {
+        word-spacing: 0.8rem;
+      }
+
+      & .make-bigger {
+        font-size: 120%;
+      }
+
+      & .make-monospace {
+        font-family: monospace;
+      }
+
+      & .stamp-outlined {
+        --SC-fill-style: yellow;
+        --SC-stroke-width: 3;
+        --SC-method: drawAndFill;
+
+        color: var(--SC-fill-style);
+
+        text-shadow:
+          -1px -1px 0 black,  
+          1px -1px 0 black,
+          -1px 1px 0 black,
+          1px 1px 0 black;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-210.html">&larr; Previous</a>
+    <a href="filters-001.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 211</h1>
+  <h2>EnhancedLabel entity - keyboard navigation; hit tests</h2>
+
+  <p>For keyboard navigation:</p>
+  <ul>
+    <li>Tab to the canvas to focus it.</li>
+    <li>Arrows will move the cursor backwards/forwards.</li>
+    <li>Enter will start a selection.</li>
+    <li>Backspace will clear any selection.</li>
+    <li>[CTRL + c] will print any selected text to the console.</li>
+  </ul> 
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="600"
+    data-scrawl-canvas
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="lavender label">Font string</div>
+    <div class="lavender">
+      <select class="controlItem" id="font">
+        <option value="Roboto Sans">Roboto Sans</option>
+        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
+        <option value="noto-japanese-sans">Noto Japanese Sans</option>
+      </select>
+    </div>
+    
+    <div class="pink label">Text unit flow</div>
+    <div class="pink">
+      <select class="controlItem" id="textUnitFlow">
+        <option value="row">row</option>
+        <option value="row-reverse">row-reverse</option>
+        <option value="column">column</option>
+        <option value="column-reverse">column-reverse</option>
+      </select>
+    </div>
+
+    <div class="green label">Align text units to path</div>
+    <div class="green">
+      <select class="controlItem" id="alignTextUnitsToPath">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Alignment</div>
+    <div class="green">
+      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
+    <div class="blue label">Letter spacing</div>
+    <div class="blue">
+      <input class="controlItem" id="letterSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
+    </div>
+
+    <div class="blue label">Word spacing</div>
+    <div class="blue">
+      <input class="controlItem" id="wordSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
+    </div>
+
+    <div class="blue label">Break text on spaces</div>
+    <div class="blue">
+      <select class="controlItem" id="breakTextOnSpaces">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+    
+    <div class="orange label">Animation</div>
+    <div class="orange">
+      <select class="controlItem" id="animation">
+        <option value="">off</option>
+        <option value="on">on</option>
+      </select>
+    </div>
+    
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" /></div>
+
+    <div class="yellow label">Flip reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipReverse">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Flip upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipUpend">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><b>Known issue:</b> copying the Hebrew font text is not correct - the punctuation appears to be wrongly positioned. Needs fixing - either in the Demo copy functionality or in the SC code base (not yet determined where the error happens).</p>
+
+    <p><b>Touch test:</b> not required.</p>
+
+    <p><a href="../docs/demo/canvas-211.html">Annotated code</a></p>
+  </div>
+
+  <div id="preload-fonts" aria-hidden="true">
+    <div style='font-family: "Roboto Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+  </div>
+
+  <script src="canvas-211.js" type="module"></script>
+
+</body>
+
+</html>

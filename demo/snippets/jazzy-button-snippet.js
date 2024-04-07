@@ -109,22 +109,19 @@ export default function (scrawl, el) {
             useAsPath: true,
         });
 
-        // The phrase entity that will display the text
-        const label = scrawl.makePhrase({
+        // The EnhancedLabel entity that will display the text
+        const label = scrawl.makeEnhancedLabel({
 
             name: `${wrapper.name}-label`,
-
             text: `Hello - ${setClickText()}`,
-
-            // Use the font set on the DOM element via CSS
-            font: fontString,
+            fontString,
             fillStyle: color,
 
-            handleY: '68%',
+            layoutTemplate: `${name}-line`,
+            useLayoutTemplateAsPath: true,
+            pathPosition: 0,
 
-            textPath: `${name}-line`,
-            textPathPosition: 0,
-            textPathLoop: false,
+            textHandleY: 'bottom',
         });
 
         // Animate the phrase entity along the line when button element is clicked
@@ -134,7 +131,7 @@ export default function (scrawl, el) {
             targets: label,
             definitions: [
                 {
-                    attribute: 'textPathPosition',
+                    attribute: 'pathPosition',
                     start: 1,
                     end: 0,
                     engine: 'easeIn'

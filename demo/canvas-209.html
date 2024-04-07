@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 209</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    @font-face {
+      font-family: "Roboto Serif";
+      src: url("fonts/RobotoSerif-Bold.ttf") format("opentype");
+      font-weight: bold;
+    }
+
+    @font-face {
+      font-family: "Noto Thai Sans";
+      src: url("fonts/NotoSansThai-Regular.ttf") format("opentype");
+    }
+
+    @font-face {
+      font-family: "Noto Chinese Simple Sans";
+      src: url("fonts/NotoSansSC-Regular.ttf") format("opentype");
+    }
+
+    @font-face {
+      font-family: "Noto Arabic Sans";
+      src: url("fonts/NotoSansArabic-Regular.ttf") format("opentype");
+    }
+
+    #preload-fonts {
+      height: 0;
+      overflow: hidden;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
+
+    /* Styling the EnhancedLabel TextUnits */
+    .welcome-text {
+      --SC-local-offset-y: 4;
+    }
+    .country-name {
+      --SC-include-underline: true;
+      --SC-underline-width: 12;
+      --SC-underline-gap: 4;
+      --SC-local-offset-y: -8;
+    }
+
+    .demo-Britain-label {
+      & .welcome-text {
+        font-size: 80%;
+      }
+      & .country-name {
+        --SC-underline-offset: 0.74;
+        font-size: 175%;
+        letter-spacing: 3px;
+      }
+    }
+
+    .demo-Thailand-label {
+      & .welcome-text {
+        font-size: 90%;
+      }
+      & .country-name {
+        --SC-underline-offset: 0.67;
+        font-size: 135%;
+        letter-spacing: 1px;
+      }
+    }
+
+    .demo-China-label {
+      & .welcome-text {
+        font-size: 90%;
+      }
+      & .country-name {
+        --SC-underline-offset: 0.8;
+        font-size: 150%;
+        letter-spacing: 3px;
+      }
+    }
+
+    .demo-Egypt-label {
+      & .welcome-text {
+        font-size: 95%;
+      }
+      & .country-name {
+        --SC-underline-offset: 0.65;
+        font-size: 280%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-208.html">&larr; Previous</a>
+    <a href="canvas-210.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 209</h1>
+  <h2>EnhancedLabel - clone entity, drag-drop; shadows, gradients and patterns</h2>
+  <h3>Drag and drop the entitys around the canvas</h3>
+
+  <div class="controls">
+
+    <div class="blue label">Composition</div> 
+    <div class="blue">
+      <select class="controlItem" id="globalCompositeOperation">
+        <option value="source-over">source-over</option>
+        <option value="source-in">source-in</option>
+        <option value="source-out">source-out</option>
+        <option value="source-atop">source-atop</option>
+        <option value="destination-over">destination-over</option>
+        <option value="destination-in">destination-in</option>
+        <option value="destination-out">destination-out</option>
+        <option value="destination-atop">destination-atop</option>
+        <option value="copy">copy</option>
+        <option value="xor">xor</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="multiply">multiply</option>
+        <option value="screen">screen</option>
+        <option value="overlay">overlay</option>
+        <option value="lighter">lighter</option>
+        <option value="lighten">lighten</option>
+        <option value="darken">darken</option>
+        <option value="hard-light">hard-light</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="color-burn">color-burn</option>
+        <option value="hue">hue</option>
+        <option value="saturation">saturation</option>
+        <option value="color">color</option>
+        <option value="luminosity">luminosity</option>
+      </select>
+    </div>
+
+    <div class="blue label">Alpha</div>
+    <div class="blue">
+      <input class="controlItem" id="globalAlpha" type="range" value="1" min="0" max="1" step="0.01" />
+    </div>
+
+    <div class="green label">Text style</div>
+    <div class="green">
+      <select class="controlItem" id="text-fillStyle">
+        <option value="rgb(220 170 140)">Color</option>
+        <option value="demo-linear-gradient">Gradient</option>
+        <option value="demo-brick-pattern">Pattern</option>
+      </select>
+    </div>
+
+    <div class="green label">Lock styles to entity</div>
+    <div class="green">
+      <select class="controlItem" id="lockFillStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Underline style</div>
+    <div class="green">
+      <select class="controlItem" id="underline-fillStyle">
+        <option value="">Match text</option>
+        <option value="rgb(220 220 220)">Color</option>
+        <option value="demo-linear-gradient">Gradient</option>
+        <option value="demo-brick-pattern">Pattern</option>
+      </select>
+    </div>
+
+    <div class="pink label">Rotate buttons</div>
+    <div class="pink">
+      <select class="controlItem" id="noDeltaUpdates">
+        <option value="1">false</option>
+        <option value="0">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><b>Touch test:</b> should work as expected.</p>
+
+    <p><b>Known issue:</b> when using a gradient or pattern, while the gradient/pattern will rotate with the TextUnits it has been set on, it will not rotate with any overline, underline or highlight applied to the text.</p>
+
+    <p><a href="../docs/demo/canvas-209.html">Annotated code</a></p>
+  </div>
+
+  <div id="preload-fonts" aria-hidden="true">
+    <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Noto Thai Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+  </div>
+
+  <script src="canvas-209.js" type="module"></script>
+
+</body>
+
+</html>

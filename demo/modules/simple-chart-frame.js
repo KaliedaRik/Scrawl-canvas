@@ -64,7 +64,7 @@ const build = function (items) {
             asset: backgroundImage,
         });
 
-        const title = scrawl.makePhrase({
+        const title = scrawl.makeLabel({
 
             name: name('title'),
             group: group,
@@ -73,27 +73,38 @@ const build = function (items) {
 
             text: 'No title',
 
-            width: '100%',
-            justify: 'center',
+            start: ['center', '3%'],
+            handle: ['center', 'center'],
 
-            startY: '3%',
-
-            font: '1.5rem Roboto, Arial, sans-serif',
-
-            fillStyle: 'black',
+            fontString: '1.5rem Roboto',
         });
 
-        const subtitle = title.clone({
+        scrawl.makeBlock({
+
+            name: name('subtitle-template'),
+            group: group,
+
+            start: ['center', '9%'],
+            handle: ['center', 'center'],
+            dimensions: ['100%', 1],
+
+            method: 'none',
+        })
+
+        const subtitle = scrawl.makeEnhancedLabel({
 
             name: name('subtitle'),
+            group: group,
+            order: 1,
+
+            layoutTemplate: name('subtitle-template'),
+
             text: 'No data selected',
             accessibleTextOrder: 2,
 
-            startY: '9%',
-            size: '1.2rem',
+            fontString: '1.2rem Roboto',
+            textHandleY: 'alphabetic',
         });
-
-        subtitle.addSectionClass('RED', { fill: 'darkred' });
 
         const yLabelTop = scrawl.makeLabel({
 

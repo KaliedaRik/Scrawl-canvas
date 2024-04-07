@@ -37,7 +37,7 @@ const easingDisplayComponent = function (name, ypos) {
         fillStyle: color.getRangeColor(0),
     });
 
-    scrawl.makePhrase({
+    scrawl.makeLabel({
         name: `${name}-label`,
         text: name,
         accessibleText: 'Example of §',

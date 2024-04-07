@@ -185,14 +185,12 @@ scrawl.makePicture({
 
     filters: [name('swan-mask')],
 
-    globalAlpha: 0.01,
+    globalAlpha: 0.1,
 
     onEnter: function () {
 
 // @ts-expect-error
-        this.set({
-            globalAlpha: 0.1,
-        });
+        this.set({ globalAlpha: 0.3 });
 
         canvas.set({
             css: {
@@ -204,7 +202,7 @@ scrawl.makePicture({
     onLeave: function () {
 
 // @ts-expect-error
-        this.set({ globalAlpha: 0.01 });
+        this.set({ globalAlpha: 0.1 });
 
         canvas.set({
             css: { cursor: 'auto' }
@@ -421,7 +419,7 @@ const vtTime = vtBackground.clone({
 
 const vtLabel = scrawl.makeLabel({
 
-    name: name('test-video-time-phrase'),
+    name: name('test-video-time-label'),
     fontString: 'bold 1rem monospace',
     start: [5, 20],
     fillStyle: 'yellow',

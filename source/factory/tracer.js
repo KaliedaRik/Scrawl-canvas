@@ -188,7 +188,7 @@ P.regularStamp = function () {
 // `checkHit` - overwrites the function defined in mixin/position.js
 // + The Tracer entity's hit area is a circle centred on the entity's rotation/reflection (start) position or, where the entity's position is determined by reference (pivot, mimic, path, etc), the reference's current position.
 // + Tracer entitys can be dragged and dropped around a canvas display like any other Scrawl-canvas artefact.
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
 
@@ -225,7 +225,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        const r = this.checkHitReturn(tx, ty, mycell);
+        const r = this.checkHitReturn(tx, ty);
 
         return r;
     }

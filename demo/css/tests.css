@@ -145,7 +145,7 @@ code {
 .canvas-container {
 	overflow: hidden;
 	resize: both;
-	border: 1px solid black;
+/*	border: 1px solid black;*/
 	width: 600px;
 	height: 400px;
 	min-height: 200px;

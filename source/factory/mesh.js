@@ -23,7 +23,7 @@ import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωemp
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
-import { makeState } from './state.js';
+import { makeState } from '../untracked-factory/state.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -33,7 +33,7 @@ import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
@@ -546,7 +546,7 @@ P.prepareStamp = function() {
         }
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 
@@ -742,7 +742,7 @@ P.stamp = function (force = false, host, changes) {
         this.regularStamp();
     }
 
-    if (this.visibility) {
+    else if (this.visibility) {
 
         if (this.dirtyInput) {
 
@@ -1063,23 +1063,17 @@ P.doFill = function (engine) {
 
 // `checkHit`
 // + Overwrites mixin/position.js function
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
 
     if (!this.pathObject) return false;
 
-    const tests = (!_isArray(items)) ?  [items] : items,
-        engine = mycell.engine;
+    const tests = (!_isArray(items)) ?  [items] : items;
 
-    let poolCellFlag = false,
-        tx, ty;
+    let tx, ty;
 
-    if (!mycell) {
-
-        mycell = requestCell();
-        poolCellFlag = true;
-    }
+    const mycell = requestCell();
 
     if (tests.some(test => {
 
@@ -1097,7 +1091,7 @@ P.checkHit = function (items = [], mycell) {
 
         if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
-        return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+        return mycell.engine.isPointInPath(this.pathObject, tx, ty, this.winding);
 
     }, this)) {
 
@@ -1107,13 +1101,11 @@ P.checkHit = function (items = [], mycell) {
             artefact: this
         };
 
-        if (poolCellFlag) releaseCell(mycell);
-
+        releaseCell(mycell);
         return r;
     }
 
-    if (poolCellFlag) releaseCell(mycell);
-
+    releaseCell(mycell);
     return false;
 };
 

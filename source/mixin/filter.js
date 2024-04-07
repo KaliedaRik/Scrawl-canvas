@@ -32,7 +32,7 @@ export default function (P = Ωempty) {
         isStencil: false,
 
 // __memoizeFilterOutput__ - SC uses memoization as a means to enhance the speed of filter application. When an entity has filters sety on it, and the `memoizeFilterOutput` flag is set to `true`, the filter engine will cache the generated output after its first run and, for subsequent Display cycles, serve up the cached result rather than perform the filter calculations again. Things to note:
-// + Entitys will automatically request their filters to recalculate and re-memoize after any start, handle, offset, scale, rotation or flip change. They also request re-memoization when other attributes change, for instance: dimensions, fill or stroke styles, line parameters, font or text updates (Phrase), etc.
+// + Entitys will automatically request their filters to recalculate and re-memoize after any start, handle, offset, scale, rotation or flip change. They also request re-memoization when other attributes change, for instance: dimensions, fill or stroke styles, line parameters, font or text updates, etc.
 // + Re-memoization is also triggered by any changes to the entity's `filters` array, or when the attributes of a filter in the array update.
 // + Memoization is limited to entitys (not Groups or Cells). If the `isStencil` flag is set to `true` the `memoizeFilterOutput` flag is ignored.
 // + Memoization is also ignored for Picture entitys using a spritesheet or video asset for their source.
@@ -206,6 +206,12 @@ export default function (P = Ωempty) {
         this.dirtyFilterIdentifier = true;
 
         return this;
+    };
+
+// `hasFilters` - A quick check to see if any filters have been assigned to this artefact
+    P.hasFilters = function () {
+
+        return !!this.filters.length;
     };
 
 // `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.

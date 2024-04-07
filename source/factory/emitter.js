@@ -15,7 +15,7 @@
 // #### Imports
 import { artefact, constructors, world } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../helper/utilities.js';
+import { correctForZero, doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -56,6 +56,7 @@ const Emitter = function (items = Ωempty) {
     // The `range` attributes use Vector objects in which to hold their data.
     this.range = makeVector();
     this.rangeFrom = makeVector();
+    this.minimumVelocity = makeVector();
 
     // As part of its `stamp` functionality the Emitter entity will invoke three user-defined `xyzAction` functions. If none of these functions are supplied to the entity, then it will not display anything on the canvas.
     this.preAction = λnull;
@@ -100,12 +101,15 @@ const defaultAttributes = {
     artefact: null,
 
     // __range__ and __rangeFrom__ - Vector objects with some convenience pseudo-attributes to make setting them a bit easier: _rangeX, rangeY, rangeZ, rangeFromX, rangeFromY, rangeFromZ_.
-    // + These attributes set each generated particle'sinitial velocity; their values represent the distance travelled in the x, y and z directions, as measured in pixels-per-second.
+    // + These attributes set each generated particle's initial velocity; their values represent the distance travelled in the x, y and z directions, as measured in pixels-per-second.
     // + The `rangeFrom` attributes (float Numbers that can be negative) the lowest value in that dimension that will be generated. This value is ___local to the particle___ thus negative values are to the left (x) or above (y) or behind (z) the particle's initial position.
     // + The `range` attributes (again, float Numbers that can be negative) are the ___maximum (or least maximum) random value___ which will be added to the rangeFrom value.
     // + All particles are assigned a (constrained) random velocity in this manner when they are generated.
     range: null,
     rangeFrom: null,
+
+    // __minimumVelocity__ - Vector object with some convenience pseudo-attributes to make setting it a bit easier: _minimumVelocityX, minimumVelocityY, minimumVelocityZ. Sometimes we want to make sure a given velocity has a bit of speed to it. This vector gets used to make sure velocities near zero get rejected
+    minimumVelocity: null,
 
     // __generationRate__ - positive integer Number - Emitter entitys use ___ephemeral particles___ to produce their visual effects, generating a steady stream of particles over time and then killing them off in various ways. Attribute _sets the maximum number of particles that the Emitter will generate every second_.
     generationRate: 0,
@@ -242,6 +246,11 @@ S.rangeFromX = function (val) { this.rangeFrom.x = val; };
 S.rangeFromY = function (val) { this.rangeFrom.y = val; };
 S.rangeFromZ = function (val) { this.rangeFrom.z = val; };
 S.rangeFrom = function (item) { this.rangeFrom.set(item); };
+
+S.minimumVelocityX = function (val) { this.minimumVelocity.x = val; };
+S.minimumVelocityY = function (val) { this.minimumVelocity.y = val; };
+S.minimumVelocityZ = function (val) { this.minimumVelocity.z = val; };
+S.minimumVelocity = function (item) { this.minimumVelocity.set(item); };
 
 S.preAction = function (item) {
 
@@ -487,7 +496,7 @@ P.prepareStamp = function () {
         }
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 
@@ -507,11 +516,19 @@ P.addParticles = function (req) {
 
     // internal helper functions, used when creating the particle
     const calc = function (item, itemVar) {
-        return item + ((_random() * itemVar * 2) - itemVar);
+        return correctForZero(item + ((_random() * itemVar * 2) - itemVar));
     };
 
-    const velocityCalc = function (item, itemVar) {
-        return item + (_random() * itemVar);
+    const velocityCalc = function (item, itemVar, min) {
+
+        let val = correctForZero(item + (_random() * itemVar));
+
+        while (_abs(val) < min) {
+
+            val = correctForZero(item + (_random() * itemVar));
+        }
+
+        return val;
     };
 
     let i, p, cx, cy, timeKill, radiusKill;
@@ -519,7 +536,7 @@ P.addParticles = function (req) {
     const timeChoke = _now();
 
     // The emitter object retains details of the initial values required for eachg particle it generates
-    const {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = this;
+    const {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, minimumVelocity, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = this;
 
     const {x, y, z} = range;
     const {x:fx, y:fy, z:fz} = rangeFrom;
@@ -570,9 +587,9 @@ P.addParticles = function (req) {
                     positionY: coord[1],
                     positionZ: 0,
 
-                    velocityX: velocityCalc(fx, x),
-                    velocityY: velocityCalc(fy, y),
-                    velocityZ: velocityCalc(fz, z),
+                    velocityX: velocityCalc(fx, x, minimumVelocity.x),
+                    velocityY: velocityCalc(fy, y, minimumVelocity.y),
+                    velocityZ: velocityCalc(fz, z, minimumVelocity.z),
 
                     historyLength,
                     engine,
@@ -624,9 +641,9 @@ P.addParticles = function (req) {
                     positionY: coord.y,
                     positionZ: 0,
 
-                    velocityX: velocityCalc(fx, x),
-                    velocityY: velocityCalc(fy, y),
-                    velocityZ: velocityCalc(fz, z),
+                    velocityX: velocityCalc(fx, x, minimumVelocity.x),
+                    velocityY: velocityCalc(fy, y, minimumVelocity.y),
+                    velocityZ: velocityCalc(fz, z, minimumVelocity.z),
 
                     historyLength,
                     engine,
@@ -676,9 +693,9 @@ P.addParticles = function (req) {
             p = requestParticle();
 
             p.set({
-                positionX: res.x,
-                positionY: res.y,
-                positionZ: res.z,
+                positionX: correctForZero(res.x),
+                positionY: correctForZero(res.y),
+                positionZ: correctForZero(res.z),
 
                 historyLength,
                 engine,
@@ -693,22 +710,22 @@ P.addParticles = function (req) {
             if (limitDirectionToAngleMultiples) {
 
                 res.zero();
-                r = _floor(360 / limitDirectionToAngleMultiples)
-                res.x = velocityCalc(fx, x);
+                r = _floor(360 / limitDirectionToAngleMultiples);
+                res.x = velocityCalc(fx, x, minimumVelocity.x);
                 res.rotate((_floor(_random() * r)) * limitDirectionToAngleMultiples);
 
                 p.set({
-                    velocityX: res.x,
-                    velocityY: res.y,
-                    velocityZ: velocityCalc(fz, z),
+                    velocityX: correctForZero(res.x),
+                    velocityY: correctForZero(res.y),
+                    velocityZ: velocityCalc(fz, z, minimumVelocity.z),
                 });
             }
             else {
 
                 p.set({
-                    velocityX: velocityCalc(fx, x),
-                    velocityY: velocityCalc(fy, y),
-                    velocityZ: velocityCalc(fz, z),
+                    velocityX: velocityCalc(fx, x, minimumVelocity.x),
+                    velocityY: velocityCalc(fy, y, minimumVelocity.y),
+                    velocityZ: velocityCalc(fz, z, minimumVelocity.z),
                 });
             }
             releaseVector(res);
@@ -743,9 +760,9 @@ P.addParticles = function (req) {
             p = requestParticle();
 
             p.set({
-                positionX: res.x,
-                positionY: res.y,
-                positionZ: res.z,
+                positionX: correctForZero(res.x),
+                positionY: correctForZero(res.y),
+                positionZ: correctForZero(res.z),
 
                 historyLength,
                 engine,
@@ -760,22 +777,22 @@ P.addParticles = function (req) {
             if (limitDirectionToAngleMultiples) {
 
                 res.zero();
-                r = _floor(360 / limitDirectionToAngleMultiples)
-                res.x = velocityCalc(fx, x);
+                r = _floor(360 / limitDirectionToAngleMultiples);
+                res.x = velocityCalc(fx, x, minimumVelocity.x);
                 res.rotate((_floor(_random() * r)) * limitDirectionToAngleMultiples);
 
                 p.set({
-                    velocityX: res.x,
-                    velocityY: res.y,
-                    velocityZ: velocityCalc(fz, z),
+                    velocityX: correctForZero(res.x),
+                    velocityY: correctForZero(res.y),
+                    velocityZ: velocityCalc(fz, z, minimumVelocity.z),
                 });
             }
             else {
 
                 p.set({
-                    velocityX: velocityCalc(fx, x),
-                    velocityY: velocityCalc(fy, y),
-                    velocityZ: velocityCalc(fz, z),
+                    velocityX: velocityCalc(fx, x, minimumVelocity.x),
+                    velocityY: velocityCalc(fy, y, minimumVelocity.y),
+                    velocityZ: velocityCalc(fz, z, minimumVelocity.z),
                 });
             }
             releaseVector(res);
@@ -804,9 +821,9 @@ P.addParticles = function (req) {
                 positionY: cy,
                 positionZ: 0,
 
-                velocityX: velocityCalc(fx, x),
-                velocityY: velocityCalc(fy, y),
-                velocityZ: velocityCalc(fz, z),
+                velocityX: velocityCalc(fx, x, minimumVelocity.x),
+                velocityY: velocityCalc(fy, y, minimumVelocity.y),
+                velocityZ: velocityCalc(fz, z, minimumVelocity.z),
 
                 historyLength,
                 engine,
@@ -889,7 +906,7 @@ P.regularStamp = function () {
 // `checkHit` - overwrites the function defined in mixin/position.js
 // + The Emitter entity's hit area is a circle centred on the entity's rotation/reflection (start) position or, where the entity's position is determined by reference (pivot, mimic, path, etc), the reference's current position.
 // + Emitter entitys can be dragged and dropped around a canvas display like any other Scrawl-canvas artefact.
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
 
@@ -925,7 +942,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        return this.checkHitReturn(tx, ty, mycell);
+        return this.checkHitReturn(tx, ty);
     }
     return false;
 };

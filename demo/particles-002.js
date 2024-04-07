@@ -65,8 +65,8 @@ const picture = scrawl.makePicture({
 // @ts-expect-error
 }).set(commonValues);
 
-const phrase = scrawl.makeLabel({
-    name: 'particle-phrase-entity',
+const label = scrawl.makeLabel({
+    name: 'particle-label-entity',
     text: 'Hello',
     fontString: 'bold 40px Garamond, serif',
     textIsAccessible: false,
@@ -286,8 +286,8 @@ const useArtefact = function () {
                 choice = picture;
                 break;
 
-            case 'phrase' :
-                choice = phrase;
+            case 'label' :
+                choice = label;
                 break;
         }
 

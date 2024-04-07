@@ -12,32 +12,23 @@ const artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     canvas = artefact.mycanvas;
 
-// Resize the stack, and give it some CSS
+// Set up the stack to be resizable
 stack.set({
     width: 400,
     height: 400,
-    css: {
-        margin: '15px 0 0 0',
-        border: '1px solid black',
-        overflow: 'hidden',
-        resize: 'both',
-    },
     checkForResize: true,
 });
 
 
 // A displayed canvas can have more than one hidden canvas. These additional 'cells' - which act much like traditional animation cels (see https://en.wikipedia.org/wiki/Cel) - will be copied onto the 'base' canvas before the it gets copied over to the displayed cell at the end of every display cycle.
-canvas.buildCell({
+const mycell = canvas.buildCell({
     name: 'mycell',
-    width: '50%',
-    height: '50%',
-    startX: 'center',
-    startY: 'center',
-    handleX: 'center',
-    handleY: 'center',
-    roll: 12,
-    scale: 1.2,
+    dimensions: ['50%', '50%'],
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
     backgroundColor: 'blue',
+    scale: 1.1,
+    roll: 10,
 });
 
 
@@ -102,6 +93,21 @@ scrawl.makeUpdater({
     },
 });
 
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: mycell,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        setRelativeDimensionsUsingBase: ['setRelativeDimensionsUsingBase', 'boolean'],
+    },
+});
+
 
 // Test to make sure Stack is listening for external changes in its dimensions, and that these changes are perculating down to the canvas and its base cell
 // + Stack artefact's `checkForResize` flag set to true, enabling the checks
@@ -142,3 +148,5 @@ document.querySelector('#height').value = '400';
 // __Dev tip 2:__ to see what's going on in any hidden canvas, temporarily add it to the bottom of the page, or insert it wherever using appropriate DOM API functionality:
 //
 // `document.body.appendChild(scrawl.library.cell[NAME].element);`
+
+console.log(scrawl.library);

@@ -43,12 +43,11 @@ export default function (items) {
         fillStyle: name('background-gradient'),
     });
 
-    const top = scrawl.makePhrase({
+    const top = scrawl.makeLabel({
         name: name('top'),
         start: ['center', '5%'],
         handle: ['center', 'center'],
-        font: '1em Arial, sans-serif',
-        lineHeight: 1,
+        fontString: '1em Arial',
         fillStyle: 'white',
     });
 

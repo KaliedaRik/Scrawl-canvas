@@ -76,16 +76,19 @@ export const requestParticleHistory = function () {
 };
 
 // `exported function` - return a ParticleHistory array to the history pool. Failing to return arrays to the pool may lead to more inefficient code and possible memory leaks.
-export const releaseParticleHistory = function (h) {
+export const releaseParticleHistory = function (...args) {
 
-    if (h && h.type === T_PARTICLE_HISTORY) {
+    args.forEach(h => {
 
-        h.fill(0);
-        particleHistoryPool.push(h);
+        if (h && h.type === T_PARTICLE_HISTORY) {
 
-        // Do not keep excessive numbers of under-utilised arrays in the pool
-        if (particleHistoryPool.length > 100) particleHistoryPool.length = 0;
-    }
+            h.fill(0);
+            particleHistoryPool.push(h);
+
+            // Do not keep excessive numbers of under-utilised arrays in the pool
+            if (particleHistoryPool.length > 100) particleHistoryPool.length = 0;
+        }
+    });
 };
 
 constructors.ParticleHistory = ParticleHistory;

@@ -271,12 +271,6 @@ D.copyDimensions = function (w, h) {
     this.dirtyFilterIdentifier = true;
 };
 
-S.checkHitIgnoreTransparency = function (item) {
-
-    this.checkHitIgnoreTransparency = item;
-
-    if (item) this.stashOutput = true;
-};
 
 // Picture `get` and `set` (but not `deltaSet`) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object
 
@@ -558,7 +552,7 @@ P.prepareStamp = function() {
     // Specifically for Loom entitys
     if (this.dirtyImageSubscribers) this.updateImageSubscribers();
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 
@@ -604,6 +598,7 @@ P.cleanPathObject = function () {
         }
     }
 };
+
 
 // ##### Stamp methods
 
@@ -681,23 +676,15 @@ P.fillThenDraw = function (engine) {
 };
 
 // `checkHitReturn` - overwrites mixin/position.js function
-P.checkHitReturn = function (x, y, cell) {
+P.checkHitReturn = function (x, y) {
 
-    if (this.checkHitIgnoreTransparency && cell && cell.engine) {
+    if (this.checkHitIgnoreTransparency) {
 
-        const [copyX, copyY, copyWidth, copyHeight] = this.copyArray;
+        const img = this.stashedImageData;
 
-        if (xta(copyX, copyY, copyWidth, copyHeight)) {
+        if (img) {
 
-            const pasteWidth = this.pasteArray[2];
-            const [stampX, stampY] = this.currentStampPosition;
-
-            const img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
-
-            const myX = x - stampX,
-                myY = y - stampY;
-
-            const index = (((myY * pasteWidth) + myX) * 4) + 3;
+            const index = (((y * img.width) + x) * 4) + 3;
 
             if (img.data[index]) {
 

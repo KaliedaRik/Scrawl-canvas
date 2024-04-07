@@ -7,6 +7,7 @@ import {
     importDomImage,
     library as L,
     makeBlock,
+    makeEnhancedLabel,
     makeFilter,
     makeGradient,
     makeNoiseAsset,
@@ -121,6 +122,29 @@ const wheel2 = wheel1.clone({
     },
     order: 1,
     memoizeFilterOutput: false,
+});
+
+makeWheel({
+    name: name('template'),
+    start: ['65%', '60%'],
+    radius: 70,
+    method: 'none',
+});
+
+const words = makeEnhancedLabel({
+    name: name('t1'),
+    layoutTemplate: name('template'),
+    text: 'Lorem ipsum dolorsit amet',
+    fontString: 'bold 26px sans-serif',
+    justifyLine: 'left',
+    fillStyle: name('linear3'),
+    textHandleY: 'center',
+    lineSpacing: 1.2,
+    lineAdjustment: 20,
+    lockFillStyleToEntity: true,
+    memoizeFilterOutput: false,
+    shadowOffsetX: 1.5,
+    shadowOffsetY: 1.5,
 });
 
 
@@ -714,6 +738,10 @@ const events = function () {
 
                     case 'wheel2' :
                         wheel2.addFilters(...currentFilter);
+                        break;
+
+                    case 'words' :
+                        words.addFilters(...currentFilter);
                         break;
 
                     case 'group' :

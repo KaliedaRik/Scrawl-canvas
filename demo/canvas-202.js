@@ -34,6 +34,8 @@ const mylabel = scrawl.makeLabel({
     fillStyle: 'orange',
     strokeStyle: 'black',
     lineWidth: 4,
+    lineCap: 'round',
+    lineJoin: 'round',
     showBoundingBox: true,
 });
 
@@ -54,22 +56,6 @@ const report = reportSpeed('#reportmessage', function () {
     const boxReadout = `
     width: ${mylabel.get('width')}
     height: ${mylabel.get('height')}
-    fontVerticalOffset: ${mylabel.get('fontVerticalOffset')}
-`;
-
-// @ts-expect-error
-    const metrics = mylabel.metrics;
-    const metricsReadout = `
-    abbAscent: ${metrics.actualBoundingBoxAscent}
-    abbDescent: ${metrics.actualBoundingBoxDescent}
-    abbleft: ${metrics.actualBoundingBoxLeft}
-    abbRight: ${metrics.actualBoundingBoxRight}
-    fbbAscent: ${metrics.fontBoundingBoxAscent}
-    fbbDescent: ${metrics.fontBoundingBoxDescent}
-    alphabeticBaseline: ${metrics.alphabeticBaseline}
-    hangingBaseline: ${metrics.hangingBaseline}
-    ideographicBaseline: ${metrics.ideographicBaseline}
-    width: ${metrics.width}
 `;
 
     let fontReadout = `
@@ -88,7 +74,6 @@ const report = reportSpeed('#reportmessage', function () {
     return `
 Box data:${boxReadout}
 Positioning:${position}
-Font metrics:${metricsReadout}
 Loaded fonts:${fontReadout}`;
 });
 
@@ -138,12 +123,22 @@ scrawl.makeUpdater({
         textRendering: ['textRendering', 'raw'],
     },
 
-    callback: () => {
+    // We need to let the changes settle before transferring them over to our DOM element
+    callback: () => setTimeout(() => {
+
+// @ts-expect-error
+        html.style.transform = `scale(${mylabel.get('scale')}) rotate(${mylabel.get('roll')}deg)`;
 // @ts-expect-error
         html.style.letterSpacing = mylabel.get('letterSpacing');
 // @ts-expect-error
         html.style.wordSpacing = mylabel.get('wordSpacing');
-    },
+// @ts-expect-error
+        html.style.direction = mylabel.get('direction');
+// @ts-expect-error
+        html.style.fontKerning = mylabel.get('fontKerning');
+// @ts-expect-error
+        html.style.textRendering = mylabel.get('textRendering');
+    }, 50),
 });
 const selector = document.querySelector('#font');
 
@@ -452,9 +447,9 @@ const updateFont = (event) => {
                 });
                 break;
 
-            case 'noto-thai-looped-sans' :
+            case 'noto-thai-sans' :
                 mylabel.set({
-                    fontString: '50px "Noto Thai Looped Sans"',
+                    fontString: '50px "Noto Thai Sans"',
                     text: 'โดยที่การยอมรับศักดิ์ศ',
                     direction: 'ltr',
                 });
@@ -520,7 +515,7 @@ const updateFont = (event) => {
         setTimeout(() => {
 
 // @ts-expect-error
-            html.style.font = mylabel.get('defaultFont');
+            html.style.font = mylabel.get('fontString');
 // @ts-expect-error
             html.style.direction = mylabel.get('direction');
             html.textContent = mylabel.get('text');

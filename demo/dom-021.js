@@ -56,7 +56,7 @@ const arrow = scrawl.makeShape({
 });
 
 
-// Draggable phrase entitys
+// Draggable label entitys
 // + Will update their text values depending on the canvas shape
 const shapeLabel = scrawl.makeLabel({
     name: 'shape-label',
@@ -175,7 +175,7 @@ scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domEl
 scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElement);
 
 
-// Drag zone for the phrase size and shape labels
+// Drag zone for the size and shape labels
 scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: dragGroup,

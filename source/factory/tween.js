@@ -646,7 +646,7 @@ P.seekFor = function(milliseconds) {
 //
 //     duration: 2500,
 //
-//     targets: scrawl.artefact['my-phrase'],
+//     targets: scrawl.artefact['my-label'],
 //
 //     definitions: [
 //         {

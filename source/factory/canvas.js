@@ -36,10 +36,10 @@ import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-ele
 
 import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
+import { uiSubscribedElements } from '../core/user-interaction.js';
 
-import { makeState } from './state.js';
-import { makeCell } from './cell.js';
+import { makeState } from '../untracked-factory/state.js';
+import { getCanvasColorSpace, makeCell } from './cell.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
@@ -47,7 +47,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, AUTO, BORDER_BOX, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
+import { _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -85,13 +85,9 @@ const Canvas = function (items = Ωempty) {
 
     this.set(items);
 
-    // Question: why are we invoking `cleanDimensions` here? See if it can be removed
-    this.cleanDimensions();
-
     const el = this.domElement;
 
-    if (!el) this.cleanDimensions();
-    else {
+    if (el) {
 
         const ds = el.dataset;
 
@@ -110,8 +106,8 @@ const Canvas = function (items = Ωempty) {
         this.cellBatchesCompile = [];
         this.cellBatchesShow = [];
 
-        let baseWidth = this.currentDimensions[0],
-            baseHeight = this.currentDimensions[1];
+        let baseWidth = el.width,
+            baseHeight = el.height;
 
         if (ds.isResponsive) {
 
@@ -133,9 +129,9 @@ const Canvas = function (items = Ωempty) {
                 ignoreCanvasCssDimensions: true,
                 fit: ds.fit || this.fit,
             });
-
-            this.cleanDimensions();
         }
+
+        this.cleanDimensions();
 
         // setup base cell
         const cellArgs = {
@@ -197,18 +193,19 @@ const Canvas = function (items = Ωempty) {
         this.canvasHold = canvasHold;
         el.appendChild(canvasHold);
 
-        const fontHeightCalculator = document.createElement(DIV);
-        fontHeightCalculator.id = `${this.name}-fontHeightCalculator`;
-        fontHeightCalculator.style.border = PX0;
-        fontHeightCalculator.style.padding = PX0;
-        fontHeightCalculator.style.margin = PX0;
-        fontHeightCalculator.style.height = AUTO;
-        fontHeightCalculator.style.lineHeight = 1;
-        fontHeightCalculator.style.boxSizing = BORDER_BOX;
-        fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
-        fontHeightCalculator.setAttribute(ARIA_HIDDEN, TRUE);
-        this.fontHeightCalculator = fontHeightCalculator;
-        canvasHold.appendChild(fontHeightCalculator);
+        const fontSizeCalculator = document.createElement(DIV);
+        fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
+        fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.fontSizeCalculator = fontSizeCalculator;
+        this.fontSizeCalculatorValues = _computed(fontSizeCalculator);
+        canvasHold.appendChild(fontSizeCalculator);
+
+        const labelStylesCalculator = document.createElement(DIV);
+        labelStylesCalculator.id = `${this.name}-styles`;
+        labelStylesCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.labelStylesCalculator = labelStylesCalculator;
+        this.labelStylesCalculatorValues = _computed(labelStylesCalculator);
+        canvasHold.appendChild(labelStylesCalculator);
 
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
@@ -224,15 +221,9 @@ const Canvas = function (items = Ωempty) {
         el.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
 
-        const fontSizeCalculator = document.createElement(DIV);
-        fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
-        fontSizeCalculator.style.display = NONE;
-        fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);
-        this.fontSizeCalculator = fontSizeCalculator;
-        this.fontSizeCalculatorValues = _computed(fontSizeCalculator);
-        el.appendChild(fontSizeCalculator);
-
         this.cleanAria();
+
+        this.computedStyles = _computed(el);
     }
 
     this.dirtyCells = true;
@@ -298,7 +289,7 @@ const defaultAttributes = {
 //
 // If no label value is supplied to the Canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual `set()` functionality.
 //
-// Beyond the Canvas object, Scrawl-canvas also encourages Phrase entitys (which handle graphical text in the canvas display) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
+// Beyond the Canvas object, Scrawl-canvas also encourages text-based entitys (Label, EnhancedLabel) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
     title: ZERO_STR,
     label: ZERO_STR,
     description: ZERO_STR,
@@ -362,11 +353,6 @@ P.factoryKill = function () {
     this.base.kill();
 
     // DOM removals
-    this.navigation.remove();
-    this.textHold.remove();
-    this.ariaLabelElement.remove();
-    this.ariaDescriptionElement.remove();
-    this.fontSizeCalculator.remove();
     this.domElement.remove();
 };
 
@@ -692,6 +678,7 @@ P.clear = function () {
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesClear;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].clear();
@@ -710,6 +697,7 @@ P.compile = function () {
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesCompile;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].compile();
@@ -736,6 +724,7 @@ P.show = function(){
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesShow;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].show();
@@ -782,7 +771,7 @@ P.reorderNavElements = function () {
     navEl.setAttribute(ARIA_BUSY, 'false');
 };
 
-// `reorderTextElements` - handle Label and EnhancedLabel (and Phrase) ordering withing the textHold's &lt;div> element
+// `reorderTextElements` - handle Label and EnhancedLabel ordering within the textHold's &lt;div> element
 P.reorderTextElements = function () {
 
     this.dirtyTextTabOrder = false;
@@ -1238,12 +1227,4 @@ export const addCanvas = function (items = Ωempty) {
     mycanvas.set(items);
 
     return mycanvas;
-};
-
-// Wide gamut colors helper
-const getCanvasColorSpace = (useP3) => {
-
-    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
-    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
-    return SRGB;
 };

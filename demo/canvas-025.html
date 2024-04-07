@@ -153,6 +153,13 @@ Canvas elements ignore all attempts to set their CSS box-sizing property to anyt
 >&lt;/canvas>
 
 <b><i>Be aware:</i></b> Scrawl-canvas will include the canvas border and padding values when calculating the dimensions of the canvas element's base cell, making it larger than the display canvas. This will have a effect on the displayed graphic - strokes, and some shapes, will look thinner/smaller than expected.
+
+<b><i>Pro-tip:</i></b> if you really need your canvas to have a border, consider using CSS box shadows to create it.
+
+<i>canvas {
+  box-shadow: 0px 0px 0px 1px black;
+}</i>
+
     </code>
     <canvas id="nr-canvas-3" class="padded-canvas" data-scrawl-canvas></canvas>
 

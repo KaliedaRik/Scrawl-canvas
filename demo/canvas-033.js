@@ -36,10 +36,11 @@ const track = scrawl.makeOval({
     },
 
     useAsPath: true,
+    constantPathSpeed: true,
     precision: 0.1
 });
 
-// Create the three Phrase entitys that will animate around the oval
+// Create the three EnhancedLabel entitys that will animate around the oval
 // + We give them their own group to make updating their attributes easier
 const textGroup = scrawl.makeGroup({
 
@@ -47,34 +48,34 @@ const textGroup = scrawl.makeGroup({
     host: canvas.base.name,
 });
 
-scrawl.makePhrase({
+scrawl.makeEnhancedLabel({
 
     name: 'loader-text-1',
     group: textGroup,
 
-    font: 'bold 50px Arial, sans-serif',
-    // weight: 'bold',
-
+    fontString: 'bold 50px Arial, sans-serif',
     text: 'Loading',
-    // size: '50px',
-    justify: 'center',
 
-    textPath: 'loader-track',
-    handleY: '120%',
+    textHandle: ['center', '120%'],
+
+    layoutTemplate: 'loader-track',
+    useLayoutTemplateAsPath: true,
+
+    breakTextOnSpaces: false,
 
     delta: {
-        textPathPosition: -0.002
+        pathPosition: -0.002
     },
 
 }).clone({
 
     name: 'loader-text-2',
-    textPathPosition: 0.333,
+    pathPosition: 0.333,
 
 }).clone({
 
     name: 'loader-text-3',
-    textPathPosition: 0.667,
+    pathPosition: 0.667,
 });
 
 

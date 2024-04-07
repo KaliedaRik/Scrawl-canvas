@@ -51,6 +51,11 @@ export {
     makeAnimationObserver,
 } from './core/events.js';
 export * as library from './core/library.js';
+export {
+    purge,
+    checkFontIsLoaded,
+    getFontMetadata,
+} from './core/library.js';
 export { seededRandomNumberGenerator } from './helper/random-seed.js';
 export { makeSnippet } from './core/snippets.js';
 export {
@@ -68,6 +73,7 @@ export {
     setPixelRatioChangeAction,
     getIgnorePixelRatio,
     setIgnorePixelRatio,
+    purgeFontMetadata,
 } from './core/user-interaction.js';
 export { forceUpdate } from './helper/system-flags.js';
 export { makeAction } from './factory/action.js';
@@ -85,6 +91,7 @@ export { makeConicGradient } from './factory/conic-gradient.js';
 export { makeCrescent } from './factory/crescent.js';
 export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
+export { makeEnhancedLabel } from './factory/enhanced-label.js';
 export { makeFilter } from './factory/filter.js';
 export { makeForce } from './factory/particle-force.js';
 export { makeGradient } from './factory/gradient.js';
@@ -109,8 +116,6 @@ export {
 } from './asset-management/noise-asset.js';
 export { makeOval } from './factory/oval.js';
 export { makePattern } from './factory/pattern.js';
-// Phrase entity is deprecated and will be removed in a future update. Use Label or EnhancedLabel entitys instead.
-export { makePhrase } from './factory/phrase.js';
 export { makePicture } from './factory/picture.js';
 export { makePolygon } from './factory/polygon.js';
 export { makePolyline } from './factory/polyline.js';

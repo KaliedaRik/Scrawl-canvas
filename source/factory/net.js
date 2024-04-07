@@ -429,7 +429,7 @@ P.restart = function () {
 // `checkHit` - overwrites the function defined in mixin/position.js
 // + The Net entity's hit areas are circles centred on the entity's Particle's positions.
 // + Nets cannot be dragged; the Particles that make up the Net can be dragged.
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     this.lastHitParticle = null;
 
@@ -479,7 +479,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        const r = this.checkHitReturn(tx, ty, mycell, res);
+        const r = this.checkHitReturn(tx, ty, res);
 
         this.lastHitParticle = res;
 
@@ -490,13 +490,13 @@ P.checkHit = function (items = [], mycell) {
 
 // `checkHitReturn` - overwrites the function defined in mixin/position.js
 // + The return object includes the Particle object that recorded the hit, saved in the object's `particle` attribute
-P.checkHitReturn = function (x, y, cell, particle) {
+P.checkHitReturn = function (x, y, particle) {
 
     return {
-        x: x,
-        y: y,
+        x,
+        y,
         artefact: this,
-        particle: particle,
+        particle,
     };
 };
 

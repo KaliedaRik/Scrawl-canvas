@@ -11,7 +11,8 @@
   <link href="css/tests.css" rel="stylesheet" />
   <style>
     canvas {
-      margin: 0 auto;
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
     }
   </style>
 </head>
@@ -37,9 +38,9 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create a shape and Phrase entity to act as areas within which Particles will be generated.</li>
-      <li>Create a world object and Emitter entity to generate particles in the phrase entity.</li>
-      <li>Clone the Emitter entity, updating it so that it uses the shape entity for its particle generation area.</li>
+      <li>Create a Shape and a Label entity, to act as areas within which Particles will be generated.</li>
+      <li>Create a world object and Emitter entity to generate particles in the Label entity.</li>
+      <li>Clone the Emitter entity, updating it so that it uses the Shape entity for its particle generation area.</li>
       <li>Check that particle generation responds as expected when dragging the area entitys around the canvas.</li>
     </ul>
 

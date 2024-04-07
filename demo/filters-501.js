@@ -95,7 +95,7 @@ const updateTarget = (e) => {
 
         if (val === 'picture') filterTarget = piccy;
 // @ts-expect-error
-        else if (val === 'phrase') filterTarget = text;
+        else if (val === 'label') filterTarget = text;
         else if (val === 'cell') filterTarget = canvas.base;
 
         filterTarget.set({ filter: filterString });

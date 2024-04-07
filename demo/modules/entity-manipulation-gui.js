@@ -146,7 +146,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
                 bringToFrontOnDrag: false,
             });
 
-            const moveControlLabel = scrawl.makePhrase({
+            const moveControlLabel = scrawl.makeLabel({
 
                 name: 'gui-move-control-label',
                 group: gui,

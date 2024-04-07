@@ -3,7 +3,7 @@
 //
 // We define an artefact as something that can be displayed in a Scrawl-canvas [Canvas](../factory/stack.html) or [Stack](../factory/stack.html) wrapper - both of which wrap DOM elements in the web page document - &lt;canvas>, and other DOM elements (most commonly a &lt;div> element), respectively.
 // + We call canvas based artefacts __entity objects__ - these objects represent a shape, path or image drawn in the canvas.
-// + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Phrase](../factory/phrase.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; and [Wheel](../factory/wheel.html).
+// + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Label](../factory/label.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; [Wheel](../factory/wheel.html), etc.
 // + __Other artefacts__ live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and [Element](../factory/element.html) wrappers for other direct child elements.
 //
 // ##### Positioning
@@ -134,7 +134,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untrack
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { _isArray, _isFinite, _keys, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js'
+import { _isArray, _isFinite, _keys, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_ENHANCED_LABEL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -792,6 +792,7 @@ export default function (P = Ωempty) {
                     delete art.pivot;
                     delete art.pivotCorner;
                     delete art.pivotPin;
+                    delete art.pivotIndex;
                     delete art.addPivotHandle;
                     delete art.addPivotOffset;
                     delete art.addPivotRotation;
@@ -1285,7 +1286,11 @@ export default function (P = Ωempty) {
 
             if (pivot && this.addPivotRotation && lock.includes(PIVOT)) {
 
-                if (xt(pivot.currentRotation)) r += pivot.currentRotation;
+                // This only affects artefacts using EnhancedLabel entitys as their pivots
+                if (pivot.type === T_ENHANCED_LABEL) r += pivot.getUnitAlignment(this.pivotIndex);
+
+                else if (xt(pivot.currentRotation)) r += pivot.currentRotation;
+
                 else this.dirtyPivotRotation = true;
             }
         }
@@ -1343,11 +1348,13 @@ export default function (P = Ωempty) {
                 pivot,
                 pivotCorner,
                 pivotPin,
+                pivotIndex,
                 useMimicOffset,
                 useMimicStart,
             } = this;
 
-            let physParticle = this.particle;
+            let physParticle = this.particle,
+                textIndex;
 
             const confirmLock = function (lock) {
 
@@ -1386,6 +1393,18 @@ export default function (P = Ωempty) {
                     else if (pivot.type === T_POLYLINE) {
 
                         coord.setFromArray(pivot.getPinAt(pivotPin));
+                    }
+
+                    // When the pivot is an EnhancedLabel entity, need also to confirm which pin to use (default 0)
+                    else if (pivot.type === T_ENHANCED_LABEL) {
+
+                        if (pivotIndex < 0) coord.setFromArray(pivot.layoutTemplate.currentStampPosition);
+                        else {
+
+                            textIndex = pivot.getUnitStartAt(pivotIndex);
+                            if (textIndex != null) coord.setFromArray(textIndex);
+                            else coord.setFromArray(start).add(offset);
+                        }
                     }
 
                     // Everything else
@@ -1559,7 +1578,7 @@ export default function (P = Ωempty) {
 // `checkHit`
 // + We use pool Cells (see [Cell code](../factory/cell.html)) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact.
 // + This works both for entitys and for DOM-based artefacts.
-    P.checkHit = function (items = [], mycell) {
+    P.checkHit = function (items = []) {
 
         if (this.noUserInteraction) return false;
 
@@ -1567,15 +1586,10 @@ export default function (P = Ωempty) {
 
         const tests = (!_isArray(items)) ?  [items] : items;
 
-        let flag = false,
-            x = 0,
+        let x = 0,
             y = 0;
 
-        if (!mycell) {
-
-            mycell = requestCell();
-            flag = true;
-        }
+        const mycell = requestCell();
 
         const engine = mycell.engine,
             stamp = this.currentStampPosition,
@@ -1604,15 +1618,11 @@ export default function (P = Ωempty) {
 
         }, this)) {
 
-            const val = this.checkHitReturn(x, y, mycell);
-
-            if (flag) releaseCell(mycell);
-
-            return val;
+            releaseCell(mycell);
+            return this.checkHitReturn(x, y);
         }
 
-        if (flag) releaseCell(mycell);
-
+        releaseCell(mycell);
         return false;
     };
 
@@ -1620,8 +1630,8 @@ export default function (P = Ωempty) {
     P.checkHitReturn = function (x, y) {
 
         return {
-            x: x,
-            y: y,
+            x,
+            y,
             artefact: this,
         };
     };
@@ -1633,35 +1643,45 @@ export default function (P = Ωempty) {
 
         if (xta(x, y)) {
 
+            const {
+                bringToFrontOnDrag,
+                currentDragOffset,
+                currentStart,
+                group,
+                lockTo,
+                mimic,
+                pivot,
+            } = this;
+
             this.isBeingDragged = true;
             this.currentDragCache.set(this.currentDragOffset);
 
             this.relativeCoordinates = [...this.start];
 
-            if (this.lockTo[0] === START) {
-                this.currentDragOffset[0] = this.currentStart[0] - x;
+            if (lockTo[0] === START) {
+                currentDragOffset[0] = currentStart[0] - x;
             }
-            else if (this.lockTo[0] === PIVOT && this.pivot) {
-                this.currentDragOffset[0] = this.pivot.get(STARTX) - x;
+            else if (lockTo[0] === PIVOT && pivot) {
+                currentDragOffset[0] = pivot.get(STARTX) - x;
             }
-            else if (this.lockTo[0] === MIMIC && this.mimic) {
-                this.currentDragOffset[0] = this.mimic.get(STARTX) - x;
-            }
-
-            if (this.lockTo[1] === START) {
-                this.currentDragOffset[1] = this.currentStart[1] - y;
-            }
-            else if (this.lockTo[1] === PIVOT && this.pivot) {
-                this.currentDragOffset[1] = this.pivot.get(STARTY) - y;
-            }
-            else if (this.lockTo[1] === MIMIC && this.mimic) {
-                this.currentDragOffset[1] = this.mimic.get(STARTY) - y;
+            else if (lockTo[0] === MIMIC && mimic) {
+                currentDragOffset[0] = mimic.get(STARTX) - x;
             }
 
-            if (this.bringToFrontOnDrag) {
+            if (lockTo[1] === START) {
+                currentDragOffset[1] = currentStart[1] - y;
+            }
+            else if (lockTo[1] === PIVOT && pivot) {
+                currentDragOffset[1] = pivot.get(STARTY) - y;
+            }
+            else if (lockTo[1] === MIMIC && mimic) {
+                currentDragOffset[1] = mimic.get(STARTY) - y;
+            }
+
+            if (bringToFrontOnDrag) {
 
                 this.stampOrder += 9999;
-                this.group.batchResort = true;
+                group.batchResort = true;
             }
 
             if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
@@ -1672,30 +1692,46 @@ export default function (P = Ωempty) {
 // `dropArtefact`
     P.dropArtefact = function () {
 
-        this.start.set(this.currentStartCache).add(this.currentDragOffset);
+        const {
+            bringToFrontOnDrag,
+            currentDragCache,
+            currentDragOffset,
+            currentHost,
+            currentStartCache,
+            group,
+            ignoreDragForX,
+            ignoreDragForY,
+            relativeCoordinates,
+            start,
+        } = this;
+
+        let x, y, w, h, relX, relY;
+
+        if (!ignoreDragForX) start[0] = currentStartCache[0] + currentDragOffset[0];
+        if (!ignoreDragForY) start[1] = currentStartCache[1] + currentDragOffset[1];
+
         this.dirtyStart = true;
 
-        const host = this.currentHost;
-        if (host) {
+        if (currentHost) {
 
-            const [w, h] = host.get(DIMENSIONS);
-            const [x, y] = this.start;
-            const [relX, relY] = this.relativeCoordinates;
+            [w, h] = currentHost.get(DIMENSIONS);
+            [x, y] = start;
+            [relX, relY] = relativeCoordinates;
 
-            if (relX.substring) this.start[0] = `${(x / w) * 100}%`;
-            if (relY.substring) this.start[1] = `${(y / h) * 100}%`;
+            if (!ignoreDragForX && relX.substring) start[0] = `${(x / w) * 100}%`;
+            if (!ignoreDragForY && relY.substring) start[1] = `${(y / h) * 100}%`;
         }
         delete this.relativeCoordinates;
 
-        this.currentDragOffset.set(this.currentDragCache);
+        currentDragOffset.set(currentDragCache);
 
-        if (this.bringToFrontOnDrag) {
+        if (bringToFrontOnDrag) {
 
             this.stampOrder -= 9999;
 
             if (this.stampOrder < 0) this.stampOrder = 0;
 
-            this.group.batchResort = true;
+            group.batchResort = true;
         }
 
 
