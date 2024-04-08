@@ -536,6 +536,16 @@ P.deltaSetBase = function (items) {
     return this;
 };
 
+P.getBase = function () {
+
+    return this.base;
+};
+
+P.getBaseHere = function () {
+
+    return this.base.here;
+};
+
 // Internal function - passes the Canvas wrapper's current __here__ object and __fit__ attribute to the base Cell for further processing
 P.updateBaseHere = function () {
 

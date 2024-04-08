@@ -8,13 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create the demo Label entity
 const mytext = scrawl.makeLabel({
 
-    name: 'display-shape-text',
+    name: name('display-shape-text'),
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -131,7 +136,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

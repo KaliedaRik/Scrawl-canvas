@@ -4,16 +4,19 @@
 // [Run code](../../demo/canvas-035.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas,
-    styles = scrawl.library.styles,
-    cells = scrawl.library.cell;
+const canvas = scrawl.findCanvas('mycanvas');
 
-canvas.base.set({
 
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+canvas.setBase({
     compileOrder: 1,
 });
 
@@ -21,17 +24,17 @@ canvas.base.set({
 // Create image-based patterns
 scrawl.makePattern({
 
-    name: 'bunny-pattern',
+    name: name('bunny-pattern'),
     imageSource: 'img/bunny.png',
 
 }).clone({
 
-    name: 'water-pattern',
+    name: name('water-pattern'),
     imageSource: 'img/water.png',
 
 }).clone({
 
-    name: 'leaves-pattern',
+    name: name('leaves-pattern'),
     imageSource: 'img/leaves.png',
 
 });
@@ -40,12 +43,12 @@ scrawl.makePattern({
 // Create video-based pattern
 const videoPattern = scrawl.makePattern({
 
-    name: 'video-pattern',
+    name: name('video-pattern'),
     videoSource: 'img/Sea - 4006.mp4',
 });
 
 // The video can't play until we detect some form of user interaction
-scrawl.addListener('up', () => {
+const videoCheck = scrawl.addListener('up', () => {
 
     if (videoPattern.get('video_paused')) {
 
@@ -55,6 +58,9 @@ scrawl.addListener('up', () => {
             video_loop: true,
 
         }).videoPlay();
+
+        // Check is one-time only - remove listener once it has done its work
+        videoCheck();
     }
 
 }, canvas.domElement);
@@ -63,7 +69,7 @@ scrawl.addListener('up', () => {
 // Create a Cell to use as a pattern
 canvas.buildCell({
 
-    name: 'cell-pattern',
+    name: name('cell-pattern'),
 
     width: 50,
     height: 50,
@@ -76,8 +82,8 @@ canvas.buildCell({
 
 scrawl.makeBlock({
 
-    name: 'cell-pattern-block',
-    group: 'cell-pattern',
+    name: name('cell-pattern-block'),
+    group: name('cell-pattern'),
 
     width: 40,
     height: 40,
@@ -90,7 +96,7 @@ scrawl.makeBlock({
 
     method: 'fill',
 
-    fillStyle: 'water-pattern',
+    fillStyle: name('water-pattern'),
 
     delta: {
         roll: -0.3
@@ -103,7 +109,7 @@ scrawl.makeBlock({
 // + To use a spritesheet as a source, we need to work around this limitation by putting a Picture entity using the spritesheet into a Cell, then using the Cell as the pattern's source.
 canvas.buildCell({
 
-    name: 'cat-pattern',
+    name: name('cat-pattern'),
 
     width: 150,
     height: 75,
@@ -114,8 +120,8 @@ canvas.buildCell({
 
 scrawl.makePicture({
 
-    name: 'cell-pattern-sprite',
-    group: 'cat-pattern',
+    name: name('cell-pattern-sprite'),
+    group: name('cat-pattern'),
 
     width: '100%',
     height: '100%',
@@ -130,13 +136,13 @@ scrawl.makePicture({
 // We'll display the patterns in a Block entity which users can update and interact with, for testing
 const myBlock = scrawl.makeBlock({
 
-    name: 'test-block',
+    name: name('test-block'),
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
     dimensions: [300, 200],
 
-    fillStyle: 'bunny-pattern',
+    fillStyle: name('bunny-pattern'),
 
     lineWidth: 6,
     strokeStyle: 'black',
@@ -149,19 +155,20 @@ const myBlock = scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const matrix = styles['bunny-pattern'].patternMatrix;
-    if (matrix) return `    Matrix: [${matrix.a}, ${matrix.b}, ${matrix.c}, ${matrix.d}, ${matrix.e}, ${matrix.f}]
-    stretchX: ${matrix.a}, stretchY: ${matrix.d}
-    skewX: ${matrix.c}, skewY: ${matrix.b}
-    shiftX: ${matrix.e}, shiftY: ${matrix.f}`;
-    return 'Matrix not available'
+    const bunny = scrawl.findPattern(name('bunny-pattern'));
+
+    return `
+    Matrix: [${bunny.get('matrixA')}, ${bunny.get('matrixB')}, ${bunny.get('matrixC')}, ${bunny.get('matrixD')}, ${bunny.get('matrixE')}, ${bunny.get('matrixF')}]
+    stretchX: ${bunny.get('stretchX')}, stretchY: ${bunny.get('stretchY')}
+    skewX: ${bunny.get('skewX')}, skewY: ${bunny.get('skewY')}
+    shiftX: ${bunny.get('shiftX')}, shiftY: ${bunny.get('shiftY')}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -213,14 +220,29 @@ scrawl.makeUpdater({
 
         upend: ['flipUpend', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
-
-        pattern: ['fillStyle', 'raw'],
     },
 });
 
 // Setup form observer functionality for patterns
 // + we'll cascade form updates to all patterns, and Cells used as patterns
-const myPatterns = [styles['bunny-pattern'], styles['leaves-pattern'], styles['video-pattern'], cells['cell-pattern'], cells['cat-pattern']];
+const myPatterns = [
+    scrawl.findPattern(name('bunny-pattern')),
+    scrawl.findPattern(name('leaves-pattern')),
+    scrawl.findPattern(name('video-pattern')),
+    scrawl.findPattern(name('cell-pattern')),
+    scrawl.findPattern(name('cat-pattern')),
+];
+
+const updatePattern = (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    const val = e.target.value;
+
+    myBlock.set({ fillStyle: name(val)});
+};
+scrawl.addNativeListener(['input', 'change'], updatePattern, '#pattern');
 
 const updateRepeat = (e) => {
 
@@ -247,46 +269,28 @@ scrawl.addNativeListener(['input', 'change'], updateMatrix, '.matrix');
 
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#relativeWidth').value = 50;
-// @ts-expect-error
-document.querySelector('#absoluteWidth').value = 300;
-// @ts-expect-error
-document.querySelector('#relativeHeight').value = 50;
-// @ts-expect-error
-document.querySelector('#absoluteHeight').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 150;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#offset_xPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_xAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#scaleOutline').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#pattern').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#repeat').options.selectedIndex = 0;
+initializeDomInputs([
+    ['input', 'absoluteHeight', '200'],
+    ['input', 'absoluteWidth', '300'],
+    ['input', 'handle_xAbsolute', '150'],
+    ['input', 'handle_xPercent', '50'],
+    ['input', 'handle_yAbsolute', '100'],
+    ['input', 'handle_yPercent', '50'],
+    ['input', 'offset_xAbsolute', '0'],
+    ['input', 'offset_xPercent', '0'],
+    ['input', 'offset_yAbsolute', '0'],
+    ['input', 'offset_yPercent', '0'],
+    ['input', 'relativeHeight', '50'],
+    ['input', 'relativeWidth', '50'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['select', 'pattern', 0],
+    ['select', 'repeat', 0],
+    ['select', 'reverse', 0],
+    ['select', 'scaleOutline', 1],
+    ['select', 'upend', 0],
+]);
 
 
 // #### Development and testing
 console.log(scrawl.library);
-

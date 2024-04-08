@@ -296,9 +296,11 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
     colorSchemeLightAction?: DefaultInputFunction;
     css?: CommonObjectInput;
     includeInTabNavigation?: boolean;
+    moreContrastAction?: DefaultInputFunction;
     noPreferenceDataAction?: DefaultInputFunction;
     noPreferenceMotionAction?: DefaultInputFunction;
     noPreferenceTransparencyAction?: DefaultInputFunction;
+    otherContrastAction?: DefaultInputFunction;
     position?: string;
     reduceDataAction?: DefaultInputFunction;
     reduceMotionAction?: DefaultInputFunction;
@@ -307,7 +309,18 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
     trackHere?: string;
 }
 
-interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions {}
+interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions {
+    setColorSchemeDarkAction?: DefaultInputFunction;
+    setColorSchemeLightAction?: DefaultInputFunction;
+    setMoreContrastAction?: DefaultInputFunction;
+    setNoPreferenceDataAction?: DefaultInputFunction;
+    setNoPreferenceMotionAction?: DefaultInputFunction;
+    setNoPreferenceTransparencyAction?: DefaultInputFunction;
+    setOtherContrastAction?: DefaultInputFunction;
+    setReduceDataAction?: DefaultInputFunction;
+    setReduceMotionAction?: DefaultInputFunction;
+    setReduceTransparencyAction?: DefaultInputFunction;
+}
 
 
 // Entity mixin
@@ -916,6 +929,8 @@ interface CanvasFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions, 
     clone: (item?: CanvasFactoryInputs) => CanvasInstance;
     compile: () => void;
     deltaSetBase: (items: CellFactoryInputs) => CanvasInstance;
+    getBase: () => CellInstance;
+    getBaseHere: () => CommonHereObjectInput;
     killCell: (item: CellInstance | string) => CanvasInstance;
     removeCell: (item: CellInstance | string) => CanvasInstance;
     render: () => void;
@@ -3211,6 +3226,7 @@ export function findArtefact(item: string): ArtefactInstance;
 export function findEntity(item: string): EntityInstance;
 export function findCanvas(item: string): CanvasInstance;
 export function findStyles(item: string): StylesInstance;
+export function findPattern(item: string): PatternInstance | CellInstance;
 
 export function checkFontIsLoaded(font: string): boolean;
 export function getFontMetadata(font: string): CommonObjectInput;
