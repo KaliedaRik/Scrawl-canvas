@@ -9,7 +9,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-019';
 const name = (n) => `${namespace}-${n}`;
 
 

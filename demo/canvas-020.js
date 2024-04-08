@@ -14,7 +14,7 @@ const canvas = scrawl.findCanvas('mycanvas'),
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-020';
 const name = (n) => `${namespace}-${n}`;
 
 

@@ -7,6 +7,11 @@ import * as scrawl from '../source/scrawl.js';
 import { reportSpeed } from './utilities.js';
 
 
+// Namespacing boilerplate
+const namespace = 'demo-canvas-025';
+const name = (n) => `${namespace}-${n}`;
+
+
 // Import image from DOM, and add data to it
 scrawl.importDomImage('.myimage');
 
@@ -15,47 +20,41 @@ scrawl.importDomImage('.myimage');
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
 
-const oval1 = {
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-    radiusX: '20%',
-    radiusY: '20%',
-    fillStyle: 'blue',
-    strokeStyle: 'lightblue',
-    lineWidth: 10,
-    method: 'fillThenDraw',
-};
 
-const oval2 = {
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-    radiusX: 30,
-    radiusY: 30,
-    fillStyle: 'green',
-    strokeStyle: 'lightgreen',
-    lineWidth: 4,
-    method: 'fillThenDraw',
-};
+// Build (most of) the canvas displays
+const demoBuilder = (canvasName) => {
 
-const demoBuilder = (name) => {
+    const c = scrawl.findCanvas(canvasName);
 
-    const c = scrawl.library.canvas[name];
+    c.set({ backgroundColor: 'yellow' });
 
-    c.set({
-        backgroundColor: 'yellow',
+    scrawl.makeOval({
+
+        name: name(`${canvasName}-oval1`),
+        group: c.base.name,
+        start: ['center', 'center'],
+        handle: ['center', 'center'],
+        radiusX: '20%',
+        radiusY: '20%',
+        fillStyle: 'blue',
+        strokeStyle: 'lightblue',
+        lineWidth: 10,
+        method: 'fillThenDraw',
     });
 
     scrawl.makeOval({
-        name: `${name}-oval1`,
-        group: c.base.name
-// @ts-expect-error
-    }).set(oval1);
 
-    scrawl.makeOval({
-        name: `${name}-oval2`,
-        group: c.base.name
-// @ts-expect-error
-    }).set(oval2);
+        name: name(`${canvasName}-oval2`),
+        group: c.base.name,
+        start: ['center', 'center'],
+        handle: ['center', 'center'],
+        radiusX: 30,
+        radiusY: 30,
+        fillStyle: 'green',
+        strokeStyle: 'lightgreen',
+        lineWidth: 4,
+        method: 'fillThenDraw',
+    });
 };
 
 demoBuilder('nr-canvas-1');
@@ -66,10 +65,12 @@ demoBuilder('nr-canvas-5');
 demoBuilder('canvas-1');
 demoBuilder('canvas-2');
 
-const canvas3 = scrawl.library.canvas['canvas-3'];
+
+// Build the canvas with the responsive image
+const canvas3 = scrawl.findCanvas('canvas-3');
 
 scrawl.makePicture({
-    name: `${canvas3.name}-image`,
+    name: name(`${canvas3.name}-image`),
     group: canvas3.base.name,
     asset: "river",
     width: "100%",
@@ -78,8 +79,10 @@ scrawl.makePicture({
     copyHeight: "100%"
 });
 
+
+// Display cycle loop
 scrawl.makeAnimation({
-    name: 'update-all-canvases',
+    name: name('update-all-canvases'),
     fn: () => {
         scrawl.render();
         report();

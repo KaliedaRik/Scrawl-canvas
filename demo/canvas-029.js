@@ -4,11 +4,17 @@
 // [Run code](../../demo/canvas-029.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 scrawl.importDomImage('.flowers');
 
@@ -19,7 +25,7 @@ canvas.setBase({
 
 const textCell = canvas.buildCell({
 
-    name: 'text-cell',
+    name: name('text-cell'),
     dimensions: [100, 100],
     shown: false,
 });
@@ -27,8 +33,8 @@ const textCell = canvas.buildCell({
 
 scrawl.makeLabel({
 
-    name: 'hello-world-in-cell',
-    group: 'text-cell',
+    name: name('hello-world-in-cell'),
+    group: name('text-cell'),
 
     text: 'Hello world!',
 
@@ -39,7 +45,7 @@ scrawl.makeLabel({
 
 scrawl.makePicture({
 
-    name: 'flower',
+    name: name('flower'),
     asset: 'iris',
 
     start: [3, 3],
@@ -55,8 +61,8 @@ scrawl.makePicture({
 
 }).clone({
 
-    name: 'hello',
-    asset: 'text-cell',
+    name: name('hello'),
+    asset: name('text-cell'),
 
     start: [300, 300],
     dimensions: [297, 297],
@@ -67,7 +73,7 @@ scrawl.makePicture({
 
 scrawl.makeLabel({
 
-    name: 'hello-world-in-base-1',
+    name: name('hello-world-in-base-1'),
 
     text: 'Hello world!',
 
@@ -76,20 +82,20 @@ scrawl.makeLabel({
 
 }).clone({
 
-    name: 'hello-world-in-base-2',
+    name: name('hello-world-in-base-2'),
     startY: '70%',
     scale: 2,
 
 }).clone({
 
-    name: 'hello-world-in-base-3',
+    name: name('hello-world-in-base-3'),
     startY: '85%',
     scale: 4.5,
 });
 
 scrawl.makePattern({
 
-    name: 'bunny-pattern',
+    name: name('bunny-pattern'),
     imageSource: 'img/bunny.png',
     matrixA: 3,
     matrixD: 3,
@@ -97,13 +103,13 @@ scrawl.makePattern({
 
 scrawl.makeBlock({
 
-    name: 'pattern-block',
+    name: name('pattern-block'),
 
     start: [300, 3],
     dimensions: [297, 297],
 
     lineWidth: 6,
-    fillStyle: 'bunny-pattern',
+    fillStyle: name('bunny-pattern'),
     strokeStyle: 'gold',
 
     method: 'fillThenDraw',
@@ -114,13 +120,15 @@ scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
 
+
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
+
 
 // #### Development and testing
 // Setup form observer functionality
@@ -129,7 +137,7 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: canvas.base.name,
+    target: canvas.get('baseName'),
     targetLibrarySection: 'group',
 
     useNativeListener: true,
@@ -155,12 +163,13 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     }
 }, '#smoothFont')
 
-// @ts-expect-error
-document.querySelector('#smoothFont').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#imageSmoothingEnabled').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#imageSmoothingQuality').options.selectedIndex = 2;
+
+// Setup form
+initializeDomInputs([
+    ['select', 'smoothFont', 1],
+    ['select', 'imageSmoothingEnabled', 1],
+    ['select', 'imageSmoothingQuality', 2],
+]);
 
 
 console.log(scrawl.library);

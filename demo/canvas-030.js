@@ -5,11 +5,16 @@
 // [Run code](../../demo/canvas-030.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, killPolylineArtefact } from './utilities.js';
+import { reportSpeed, killPolylineArtefact, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Build some coordinate arrays ...
@@ -25,7 +30,7 @@ absoluteCoords.forEach((item, index) => {
 
     scrawl.makeWheel({
 
-        name: `pin-${index}`,
+        name: name(`pin-${index}`),
 
         startX: x,
         startY: y,
@@ -41,13 +46,13 @@ absoluteCoords.forEach((item, index) => {
     });
 });
 
-const pivotCoords = ['pin-0', 'pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5'];
+const pivotCoords = [name('pin-0'), name('pin-1'), name('pin-2'), name('pin-3'), name('pin-4'), name('pin-5')];
 
 
 // Add another Wheel entity to act as a (potential) pivot for the Polyline
 scrawl.makeWheel({
 
-    name: 'pivot-wheel',
+    name: name('pivot-wheel'),
 
     start: [50, 50],
 
@@ -65,7 +70,7 @@ scrawl.makeWheel({
 // Define the Polyline entity
 const myline = scrawl.makePolyline({
 
-    name: 'my-polyline',
+    name: name('my-polyline'),
 
     // The `pins` attribute takes an array with elements which are:
     // + [x, y] coordinate arrays, where values can be absolute (Numbers) and/or relative (String%) values
@@ -94,7 +99,7 @@ const myline = scrawl.makePolyline({
     // + The default precision value is `10`; decreasing the value increases the positioning accuracy. The more accurate the positioning, the greater the computational (and memory) burden.
     precision: 0.05,
 
-    pivot: 'pivot-wheel',
+    pivot: name('pivot-wheel'),
     lockTo: 'start',
 
     mapToPins: false,
@@ -125,12 +130,12 @@ absoluteCoords.forEach((item, index) => {
 
     scrawl.makeBlock({
 
-        name: `block-${index}`,
+        name: name(`block-${index}`),
 
         width: 20,
         height: 20,
 
-        pivot: 'my-polyline',
+        pivot: name('my-polyline'),
         pivotPin: index,
         lockTo: 'pivot',
 
@@ -151,7 +156,7 @@ for (let i = 0; i < 10; i++) {
 
     scrawl.makeWheel({
 
-        name: `normal-ball-${i}`,
+        name: name(`normal-ball-${i}`),
         order: 2,
 
         radius: 10,
@@ -161,7 +166,7 @@ for (let i = 0; i < 10; i++) {
 
         handle: ['center', 'center'],
 
-        path: 'my-polyline',
+        path: name('my-polyline'),
         pathPosition: i / 100,
         lockTo: 'path',
 
@@ -171,7 +176,7 @@ for (let i = 0; i < 10; i++) {
 
     }).clone({
 
-        name: `constant-ball-${i}`,
+        name: name(`constant-ball-${i}`),
         fillStyle: 'yellow',
         strokeStyle :'blue',
 
@@ -184,8 +189,9 @@ for (let i = 0; i < 10; i++) {
 // #### User interaction
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
+
     zone: canvas,
-    collisionGroup: canvas.base.name,
+    collisionGroup: canvas.get('baseName'),
     endOn: ['up', 'leave'],
 
     updateOnStart: {
@@ -207,6 +213,7 @@ scrawl.makeDragZone({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
+
     return `Bounding box: ${myline.getBoundingBox().join(', ')}`;
 });
 
@@ -214,7 +221,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -262,26 +269,18 @@ scrawl.addNativeListener(['input', 'change'], updatePins, '#pins');
 
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#tension').value = 0;
-// @ts-expect-error
-document.querySelector('#pivot').value = 'start';
-// @ts-expect-error
-document.querySelector('#closed').value = 0;
-// @ts-expect-error
-document.querySelector('#path').value = 1;
-// @ts-expect-error
-document.querySelector('#map').value = 0;
-// @ts-expect-error
-document.querySelector('#pins').value = 'absolute';
-// @ts-expect-error
-document.querySelector('#reverse').value = 0;
-// @ts-expect-error
-document.querySelector('#upend').value = 0;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
+initializeDomInputs([
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'tension', '0'],
+    ['select', 'closed', 0],
+    ['select', 'map', 0],
+    ['select', 'path', 1],
+    ['select', 'pins', 0],
+    ['select', 'pivot', 0],
+    ['select', 'reverse', 0],
+    ['select', 'upend', 0],
+]);
 
 
 // #### Development and testing
@@ -289,4 +288,4 @@ console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
-killPolylineArtefact(canvas, 'pin-2', 3000, myline, () => myline.updatePinAt('pin-2', 2));
+killPolylineArtefact(canvas, name('pin-2'), 3000, myline, () => myline.updatePinAt(name('pin-2'), 2));

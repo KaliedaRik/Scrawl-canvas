@@ -959,6 +959,7 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     flipUpend?: boolean;
     willReadFrequently?: boolean;
     includeInCascadeEventActions?: boolean;
+    setRelativeDimensionsUsingBase?: boolean;
     shown?: boolean;
     showOrder?: number;
     smoothFont?: boolean;
