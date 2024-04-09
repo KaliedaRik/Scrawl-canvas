@@ -1276,7 +1276,8 @@ P.cleanPathObject = function () {
     }
 };
 
-// `updateHere` - Internal function - get the Cell to update its .here information
+// `updateHere` - get the Cell to update its .here information
+// + Non-base Cells do not routinely update their local here object, so it has to be triggered manually as part of the Display cycle
 P.updateHere = function () {
 
     const host = this.currentHost;

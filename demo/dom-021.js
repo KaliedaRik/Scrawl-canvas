@@ -73,12 +73,12 @@ const shapeLabel = scrawl.makeLabel({
 
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ showBoundingBox: true});
     },
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ showBoundingBox: false});
     },
 });
@@ -111,12 +111,12 @@ const closeButton = scrawl.makeRectangle({
 
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ fillStyle: 'yellow'});
     },
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ fillStyle: 'white'});
     },
     button: {
@@ -128,7 +128,7 @@ const closeButton = scrawl.makeRectangle({
     },
 
     onUp: function () {
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickButton();
     },
 });

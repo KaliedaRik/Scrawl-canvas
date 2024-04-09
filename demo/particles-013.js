@@ -318,7 +318,7 @@ scrawl.makeEmitter({
 
         let remaining, radius, alpha, x, y, z;
 
-// @ts-expect-error
+/** @ts-expect-error */
         const colorFactory = this.fillColorFactory;
 
         engine.save();

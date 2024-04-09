@@ -114,7 +114,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '.controlItem');
 
 // Set DOM form initial input values
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#backgroundFilter').value = '';
 
 

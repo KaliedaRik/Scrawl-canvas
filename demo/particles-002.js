@@ -38,13 +38,13 @@ const wheel = scrawl.makeWheel({
     startAngle: 20,
     endAngle: -20,
     includeCenter: true,
-// @ts-expect-error
+/** @ts-expect-error */
 }).set(commonValues);
 
 const block = scrawl.makeBlock({
     name: 'particle-block-entity',
     dimensions: [30, 20],
-// @ts-expect-error
+/** @ts-expect-error */
 }).set(commonValues);
 
 const star = scrawl.makeStar({
@@ -52,7 +52,7 @@ const star = scrawl.makeStar({
     radius1: 18,
     radius2: 12,
     points: 5,
-// @ts-expect-error
+/** @ts-expect-error */
 }).set(commonValues);
 
 const picture = scrawl.makePicture({
@@ -62,7 +62,7 @@ const picture = scrawl.makePicture({
     height: 37,
     copyWidth: '100%',
     copyHeight: '100%',
-// @ts-expect-error
+/** @ts-expect-error */
 }).set(commonValues);
 
 const label = scrawl.makeLabel({
@@ -70,7 +70,7 @@ const label = scrawl.makeLabel({
     text: 'Hello',
     fontString: 'bold 40px Garamond, serif',
     textIsAccessible: false,
-// @ts-expect-error
+/** @ts-expect-error */
 }).set(commonValues);
 
 
@@ -135,7 +135,7 @@ const myemitter = scrawl.makeEmitter({
         let remaining, scale, roll, start, z;
 
         // For the stroke color, we shall give all particles the same color, as defined in our World object
-// @ts-expect-error
+/** @ts-expect-error */
         const {strokeStyle, globalAlpha} = myWorld;
 
         // We will display each particle on the canvas using the entity currently assigned to our emitter's `artefact` attribute
@@ -184,12 +184,12 @@ const report = reportSpeed('#reportmessage', function () {
         if (p) historyCount += p.history.length;
     });
 
-// @ts-expect-error
+/** @ts-expect-error */
     const kr = parseFloat(killRadius.value),
-// @ts-expect-error
+/** @ts-expect-error */
         krv = parseFloat(killRadiusVariation.value) / 2;
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}\n    Stamps per display: ${historyCount}\n\n    Background color: ${background.value}, World speed (tickMultiplier): ${worldSpeed.value}\n    Outline color (strokeStyle): ${outlineColor.value}, Opacity (globalAlpha): ${opacity.value}\n    Kill radius: from ${(kr - krv) > 0 ? kr - krv : 0}px to ${kr + krv}px\n    Minimum fill color: ${minFill.value}, Maximum fill color: ${maxFill.value}`;
 });
 
@@ -237,7 +237,7 @@ const setLowColor = function () {
 
     return function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         colorFactory.setMinimumColor(selector.value);
     }
 }();
@@ -250,7 +250,7 @@ const setHighColor = function () {
 
     return function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         colorFactory.setMaximumColor(selector.value);
     }
 }();
@@ -265,7 +265,7 @@ const useArtefact = function () {
 
     return function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         val = selector.value;
 
         switch (val) {
@@ -367,28 +367,28 @@ const worldSpeed = document.querySelector('#world-speed'),
     historyLength = document.querySelector('#historyLength'),
     generationRate = document.querySelector('#generationRate');
 
-// @ts-expect-error
+/** @ts-expect-error */
 minFill.value = '#000000';
-// @ts-expect-error
+/** @ts-expect-error */
 maxFill.value = '#ffffff';
-// @ts-expect-error
+/** @ts-expect-error */
 outlineColor.value = '#F0F8FF';
-// @ts-expect-error
+/** @ts-expect-error */
 background.value = '#000040';
-// @ts-expect-error
+/** @ts-expect-error */
 worldSpeed.value = 2;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 0.2;
-// @ts-expect-error
+/** @ts-expect-error */
 generationRate.value = 10;
-// @ts-expect-error
+/** @ts-expect-error */
 historyLength.value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
 killRadius.value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 killRadiusVariation.value = 0;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#artefact').value = 'star';
 
 

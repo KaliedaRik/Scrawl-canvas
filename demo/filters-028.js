@@ -693,7 +693,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    globalAlpha - ${globalAlpha.value}`;
 });
 
@@ -749,7 +749,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
         cat.haltSprite();
 
-        // @ts-expect-error
+        /** @ts-expect-error */
         stencil = group.getArtefact(name(val));
 
         stencil.set({
@@ -783,10 +783,10 @@ scrawl.makeUpdater({
 
 // Setup form
 const globalAlpha = document.querySelector('#globalAlpha');
-// @ts-expect-error
+/** @ts-expect-error */
 globalAlpha.value = 1;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#filter').options.selectedIndex = 0;
 
 

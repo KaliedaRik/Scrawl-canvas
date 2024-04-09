@@ -43,7 +43,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Level: ${level.value}\n    Mixed offset - min: ${offsetMin.value}; max ${offsetMax.value}\n    Red offset - min: ${offsetRedMin.value}; max ${offsetRedMax.value}\n    Green offset - min: ${offsetGreenMin.value}; max ${offsetGreenMax.value}\n    Blue offset - min: ${offsetBlueMin.value}; max ${offsetBlueMax.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -102,31 +102,31 @@ const offsetBlueMin = document.querySelector('#offsetBlueMin');
 const offsetBlueMax = document.querySelector('#offsetBlueMax');
 const opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 level.value = 0.2;
-// @ts-expect-error
+/** @ts-expect-error */
 step.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 useMixedChannel.options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 transparentEdges.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetMin.value = -10;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetMax.value = 10;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetRedMin.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetRedMax.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetGreenMin.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetGreenMax.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetBlueMin.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetBlueMax.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

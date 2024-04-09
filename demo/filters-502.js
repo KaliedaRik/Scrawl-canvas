@@ -87,9 +87,9 @@ const updateEdgeMode = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateEdgeMode, '#edgeMode');
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#stdDeviation').value = 5;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#edgeMode').options.selectedIndex = 0;
 
 

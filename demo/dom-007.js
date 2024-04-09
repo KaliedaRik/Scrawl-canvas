@@ -103,7 +103,7 @@ flower.set({
 // Updating the flower's DOM element's class attribute
 const checkForFlowerClassUpdates = function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     const current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
 
     if (current && !currentClass) {

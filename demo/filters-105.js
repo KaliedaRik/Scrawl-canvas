@@ -93,15 +93,15 @@ const getPointsFromSpiral = () => {
     for (let i = step; i <= 1; i += step) {
 
         [x, y] = coord.setFromVector(spiral.getPathPositionData(i)).subtract(pos);
-// @ts-expect-error
+/** @ts-expect-error */
         points.push(Math.round(x), Math.round(y));
     }
     [x, y] = coord.setFromVector(spiral.getPathPositionData(0.00000001)).subtract(pos);
-// @ts-expect-error
+/** @ts-expect-error */
     points.push(Math.round(x), Math.round(y));
 
     [x, y] = coord.setFromVector(spiral.getPathPositionData(0.99999999)).subtract(pos);
-// @ts-expect-error
+/** @ts-expect-error */
     points.push(Math.round(x), Math.round(y));
 
     scrawl.releaseCoordinate(coord);
@@ -124,7 +124,7 @@ const updateFilterPoints = () => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Tile dimensions - radius: ${tile_radius.value}px\n    Origin offset - x: ${offset_x.value}px y: ${offset_y.value}px\n    Step along path: ${distance}\n    Spiral: radiusIncrement: ${spiralRadius.value}; radiusIncrementAdjust: ${spiralRadiusAdjust.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -191,7 +191,7 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
 scrawl.addNativeListener(['change', 'input'], () => {
 
     pathGroup.setArtefacts({
-// @ts-expect-error
+/** @ts-expect-error */
         start: [parseInt(offset_x.value, 10), parseInt(offset_y.value, 10)],
     });
 
@@ -201,9 +201,9 @@ scrawl.addNativeListener(['change', 'input'], () => {
 scrawl.addNativeListener(['change', 'input'], () => {
 
     spiral.set({
-// @ts-expect-error
+/** @ts-expect-error */
         radiusIncrement: parseFloat(spiralRadius.value),
-// @ts-expect-error
+/** @ts-expect-error */
         radiusIncrementAdjust: parseFloat(spiralRadiusAdjust.value),
     });
 
@@ -222,21 +222,21 @@ const pathStep = document.querySelector('#path-step'),
     spiralRadiusAdjust = document.querySelector('#spiral-radius-adjust'),
     showPath = document.querySelector('#show-path');
 
-// @ts-expect-error
+/** @ts-expect-error */
 pathStep.value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 showPath.value = 'show';
-// @ts-expect-error
+/** @ts-expect-error */
 offset_x.value = 200;
-// @ts-expect-error
+/** @ts-expect-error */
 offset_y.value = 200;
-// @ts-expect-error
+/** @ts-expect-error */
 tile_radius.value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 spiralRadius.value = 0.04;
-// @ts-expect-error
+/** @ts-expect-error */
 spiralRadiusAdjust.value = 1;
 
 

@@ -429,7 +429,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
                 // Add the image to the DOM and create our asset from it
                 const img = document.createElement('img');
 
-                // @ts-expect-error
+                /** @ts-expect-error */
                 img.src = reader.result;
                 img.id = name;
                 store.appendChild(img);

@@ -55,7 +55,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Red - low: ${lowRed.value}; high - ${highRed.value}\n    Green - low: ${lowGreen.value}; high - ${highGreen.value}\n    Blue - low: ${lowBlue.value}; high - ${highBlue.value}\n    Color - low: ${lowColor.value}; high: ${highColor.value}\n    Opacity - ${opacity.value}`;
 });
 
@@ -94,9 +94,9 @@ scrawl.makeUpdater({
 
     callback: () => {
 
-// @ts-expect-error
+/** @ts-expect-error */
         lowColor.value = colorFactory.convertRGBtoHex(lowRed.value, lowGreen.value, lowBlue.value);
-// @ts-expect-error
+/** @ts-expect-error */
         highColor.value = colorFactory.convertRGBtoHex(highRed.value, highGreen.value, highBlue.value);
     },
 });
@@ -114,22 +114,22 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
             myFilter.set({ lowColor: val });
 
-// @ts-expect-error
+/** @ts-expect-error */
             lowRed.value = r;
-// @ts-expect-error
+/** @ts-expect-error */
             lowGreen.value = g;
-// @ts-expect-error
+/** @ts-expect-error */
             lowBlue.value = b;
         }
         else if ('high-color' === target) {
 
             myFilter.set({ highColor: val });
 
-// @ts-expect-error
+/** @ts-expect-error */
             highRed.value = r;
-// @ts-expect-error
+/** @ts-expect-error */
             highGreen.value = g;
-// @ts-expect-error
+/** @ts-expect-error */
             highBlue.value = b;
         }
     }
@@ -146,23 +146,23 @@ const lowRed = document.querySelector('#low-red'),
     highColor = document.querySelector('#high-color'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 lowRed.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 lowGreen.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 lowBlue.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 highRed.value = 255;
-// @ts-expect-error
+/** @ts-expect-error */
 highGreen.value = 255;
-// @ts-expect-error
+/** @ts-expect-error */
 highBlue.value = 255;
-// @ts-expect-error
+/** @ts-expect-error */
 lowColor.value = '#000000';
-// @ts-expect-error
+/** @ts-expect-error */
 highColor.value = '#ffffff';
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

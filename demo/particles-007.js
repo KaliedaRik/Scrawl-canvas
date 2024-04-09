@@ -90,7 +90,7 @@ scrawl.makeForce({
 
         const {load} = particle;
 
-// @ts-expect-error
+/** @ts-expect-error */
         const intensity = world.brownianIntensity;
 
         load.vectorAdd({
@@ -250,11 +250,11 @@ const filterChoice = function (e) {
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
 // Set DOM form initial input values
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#filter').value = '';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#particleCount').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#brownianIntensity').value = 2;
 
 

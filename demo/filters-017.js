@@ -68,7 +68,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Scales - x: ${scaleX.value}, y: ${scaleY.value}\n    Offset - x: ${offsetX.value}, y: ${offsetY.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -112,18 +112,18 @@ const offsetX = document.querySelector('#offset_x'),
     scaleY = document.querySelector('#scale_y'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 offsetX.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offsetY.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 scaleX.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 scaleY.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#transparent_edges').options.selectedIndex = 0;
 
 

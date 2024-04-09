@@ -8,12 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // STEP 1. We define a gradient, then apply it to some Blocks we create in a new canvas Cell. This gives us a more interesting gradient pattern than the default 'linear' and 'radial' gradients supplied by the Canvas API
 scrawl.makeGradient({
-    name: 'linear',
+
+    name: name('linear'),
     endX: '100%',
     endY: '100%',
     colors: [
@@ -28,7 +34,7 @@ scrawl.makeGradient({
 // Add a new Cell to our canvas
 const patternCell = canvas.buildCell({
 
-    name: 'gradient-pattern-cell',
+    name: name('gradient-pattern-cell'),
     dimensions: [50, 50],
     shown: false,
 });
@@ -36,26 +42,26 @@ const patternCell = canvas.buildCell({
 // Populate our new Cell with Block entitys that use our linear gradient
 scrawl.makeBlock({
 
-    name: 'gradient-block-br',
-    group: 'gradient-pattern-cell',
+    name: name('gradient-block-br'),
+    group: name('gradient-pattern-cell'),
     dimensions: [25, 25],
     start: ['center', 'center'],
-    fillStyle: 'linear',
+    fillStyle: name('linear'),
     lockFillStyleToEntity: true,
 
 }).clone({
 
-    name: 'gradient-block-bl',
+    name: name('gradient-block-bl'),
     roll: 90,
 
 }).clone({
 
-    name: 'gradient-block-tl',
+    name: name('gradient-block-tl'),
     roll: 180,
 
 }).clone({
 
-    name: 'gradient-block-tr',
+    name: name('gradient-block-tr'),
     roll: 270,
 });
 
@@ -65,7 +71,7 @@ scrawl.makeBlock({
 // Create the Noise asset
 scrawl.makeNoiseAsset({
 
-    name: 'my-noise-generator',
+    name: name('my-noise-generator'),
     width: 50,
     height: 50,
     octaves: 5,
@@ -76,29 +82,29 @@ scrawl.makeNoiseAsset({
 // TEST: see if we can load the Noise asset directly into a Picture entity, and into a Pattern style - we'll use these for background textures.
 scrawl.makePicture({
 
-    name: 'test-picture',
+    name: name('test-picture'),
 
     dimensions: [300, 400],
     copyDimensions: ['100%', '100%'],
 
-    asset: 'my-noise-generator',
+    asset: name('my-noise-generator'),
 
     globalAlpha: 0.2,
 });
 
 scrawl.makePattern({
 
-    name: 'test-pattern',
-    asset: 'my-noise-generator',
+    name: name('test-pattern'),
+    asset: name('my-noise-generator'),
 });
 
 scrawl.makeBlock({
 
-    name: 'test-pattern-block',
+    name: name('test-pattern-block'),
     startX: 300,
     dimensions: [300, 400],
 
-    fillStyle: 'test-pattern',
+    fillStyle: name('test-pattern'),
 
     globalAlpha: 0.2,
 });
@@ -106,9 +112,9 @@ scrawl.makeBlock({
 // Build filters that use the Noise asset
 scrawl.makeFilter({
 
-    name: 'noise',
+    name: name('noise'),
     method: 'image',
-    asset: 'my-noise-generator',
+    asset: name('my-noise-generator'),
     width: 400,
     height: 400,
     copyWidth: '100%',
@@ -118,7 +124,7 @@ scrawl.makeFilter({
 
 const displacer =  scrawl.makeFilter({
 
-    name: 'displace',
+    name: name('displace'),
     method: 'displace',
     lineMix: 'map',
     scaleX: 20,
@@ -127,13 +133,13 @@ const displacer =  scrawl.makeFilter({
 
 // Update our Cell with the filters
 patternCell.set({
-    filters: ['noise', 'displace']
+    filters: [name('noise'), name('displace')]
 });
 
 // Animate the displacer filter using a Tween
 scrawl.makeTween({
 
-    name: 'turbulence',
+    name: name('turbulence'),
     duration: 6000,
     targets: displacer,
     cycles: 0,
@@ -158,7 +164,7 @@ scrawl.makeTween({
 // STEP 3. We are now in a position where we can use our Cells as pattern fills for some SC entitys.
 scrawl.makePolygon({
 
-    name: 'hex',
+    name: name('hex'),
     sides: 6,
     sideLength: 90,
     roll: 30,
@@ -169,31 +175,30 @@ scrawl.makePolygon({
     method: 'fillThenDraw',
 
     // To use a Cell as a pattern we just assign its name to the entity's fillStyle attribute
-    // fillStyle: 'warped-pattern',
-    fillStyle: 'gradient-pattern-cell',
+    fillStyle: name('gradient-pattern-cell'),
 });
 
 
 // STEP 4. If we want, we can add some color-based filters to our entitys, to give our pattern a different look.
 scrawl.makeFilter({
 
-    name: 'notred',
+    name: name('notred'),
     method: 'notred',
 
 }).clone({
 
-    name: 'sepia',
+    name: name('sepia'),
     method: 'sepia',
 
 }).clone({
 
-    name: 'invert',
+    name: name('invert'),
     method: 'invert',
 });
 
 scrawl.makeOval({
 
-    name: 'egg',
+    name: name('egg'),
     radiusX: 60,
     radiusY: 80,
     roll: 30,
@@ -203,21 +208,21 @@ scrawl.makeOval({
     strokeStyle: 'green',
     lineJoin: 'round',
     method: 'fillThenDraw',
-    fillStyle: 'gradient-pattern-cell',
-    filters: ['sepia'],
+    fillStyle: name('gradient-pattern-cell'),
+    filters: [name('sepia')],
 });
 
 scrawl.makeTetragon({
 
-    name: 'arrow',
+    name: name('arrow'),
     start: [160, 290],
-    fillStyle: 'gradient-pattern-cell',
+    fillStyle: name('gradient-pattern-cell'),
     radiusX: 60,
     radiusY: 80,
     intersectY: 1.2,
     intersectX: 0.32,
     roll: -60,
-    filters: ['invert'],
+    filters: [name('invert')],
     lineWidth: 2,
     strokeStyle: 'green',
     lineJoin: 'round',
@@ -228,18 +233,18 @@ scrawl.makeTetragon({
 // STEP 5. There's one additional thing we can do with our Cell-based pattern - pass it into a Pattern object where we can warp and resize it. Then we can apply it to entitys via the Pattern object.
 scrawl.makePattern({
 
-    name: 'wavy-pattern',
-    asset: 'gradient-pattern-cell',
-    matrixB: 0.7,
-    matrixF: -150,
+    name: name('wavy-pattern'),
+    asset: name('gradient-pattern-cell'),
+    skewY: 0.7,
+    shiftY: -150,
 });
 
 scrawl.makeBlock({
 
-    name: 'boring-block',
+    name: name('boring-block'),
     start: [50, 50],
     dimensions: [140, 170],
-    fillStyle: 'wavy-pattern',
+    fillStyle: name('wavy-pattern'),
     lineWidth: 2,
     strokeStyle: 'green',
     lineJoin: 'round',
@@ -247,11 +252,11 @@ scrawl.makeBlock({
 
 }).clone({
 
-    name: 'tipsy-block',
+    name: name('tipsy-block'),
     start: [250, 130],
     dimensions: [210, 90],
     roll: -30,
-    filters: ['notred'],
+    filters: [name('notred')],
 });
 
 
@@ -283,24 +288,24 @@ const setCursorTo = {
 
 // We can change the cursor for a subset of entitys declared on the canvas.base cell
 scrawl.makeGroup({
-    name: 'my-draggable-entitys',
+
+    name: name('my-draggable-entitys'),
     host: canvas.base,
     checkForEntityHover: true,
     onEntityHover: setCursorTo.pointer,
     onEntityNoHover: setCursorTo.auto,
-}).moveArtefactsIntoGroup('hex', 'egg', 'arrow', 'boring-block', 'tipsy-block');
+
+}).moveArtefactsIntoGroup(name('hex'), name('egg'), name('arrow'), name('boring-block'), name('tipsy-block'));
 
 scrawl.makeDragZone({
+
     zone: canvas,
-    collisionGroup: 'my-draggable-entitys',
+    collisionGroup: name('my-draggable-entitys'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
     updateOnStart: setCursorTo.grabbing,
     updateOnEnd: setCursorTo.pointer,
 });
-
-// canvas.set({
-// });
 
 
 // #### Scene animation
@@ -311,7 +316,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: () => canvas.checkHover(),
     afterShow: report,

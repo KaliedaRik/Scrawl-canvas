@@ -63,13 +63,13 @@ const myAsset = scrawl.makeRawAsset({
 
             if (item) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.canvasWidth = item.width;
-// @ts-expect-error
+/** @ts-expect-error */
                 this.canvasHeight = item.height;
-// @ts-expect-error
+/** @ts-expect-error */
                 this.mask = item;
-// @ts-expect-error
+/** @ts-expect-error */
                 this.dirtyData = true;
             }
         },
@@ -144,9 +144,9 @@ scrawl.importMediaStream({
     video = mycamera;
 
     // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.width = "1280";
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.height = "720";
 
     // Take the media stream and display it in our canvas element
@@ -178,7 +178,7 @@ scrawl.importMediaStream({
 
     // Start the MediaPipe model
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     model = new SelfieSegmentation({
 
 /* eslint-enable */
@@ -190,7 +190,7 @@ scrawl.importMediaStream({
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     const mediaPipeCamera = new Camera(video.source, {
 
 /* eslint-enable */
@@ -262,9 +262,9 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '.controlItem');
 
 // Set DOM form initial input values
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#backgroundFilter').value = '';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#outlineFilter').value = '1';
 
 

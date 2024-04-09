@@ -59,7 +59,7 @@ scrawl.makeRender({
 // #### User interaction
 scrawl.addNativeListener('change', () => {
 
-// @ts-expect-error
+/** @ts-expect-error */
     const page = document.querySelector('#wikipedia-page').value;
 
     if (page) {

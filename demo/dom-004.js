@@ -52,7 +52,7 @@ const tween = scrawl.makeTween({
 
     commenceAction: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             targets: rocket.clone({
                 name: `${this.name}-element`,

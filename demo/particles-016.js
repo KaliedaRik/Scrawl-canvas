@@ -31,7 +31,7 @@ scrawl.makeNet({
 
     postGenerate: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.springs.forEach(s => {
 
             s.particleFromIsStatic = true;
@@ -116,9 +116,9 @@ scrawl.makeMesh({
 
     method: 'fillThenDraw',
 
-// @ts-expect-error
+/** @ts-expect-error */
     onEnter: function () { this.set({ lineWidth: 6 }) },
-// @ts-expect-error
+/** @ts-expect-error */
     onLeave: function () { this.set({ lineWidth: 2 }) },
 });
 

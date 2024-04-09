@@ -112,25 +112,25 @@ scrawl.makeUpdater({
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontString').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontSize').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontWeight-string').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontWeight-number').value = 400;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontVariantCaps').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontStyle').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontStretch-string').options.selectedIndex = 4;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontStretch-percent').value = 100;
 
 

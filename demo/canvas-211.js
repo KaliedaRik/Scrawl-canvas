@@ -330,28 +330,28 @@ scrawl.makeUpdater({
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 animationSelector.options.selectedIndex = 0;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#breakTextOnSpaces').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#alignment').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#flipReverse').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#flipUpend').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#alignTextUnitsToPath').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textUnitFlow').options.selectedIndex = 0;
 
 

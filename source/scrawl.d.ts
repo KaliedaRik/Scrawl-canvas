@@ -431,6 +431,12 @@ interface PatternMixinDeltaInputs {
     matrixD?: number; 
     matrixE?: number; 
     matrixF?: number; 
+    stretchX?: number; 
+    skewY?: number; 
+    skewX?: number; 
+    stretchY?: number; 
+    shiftX?: number; 
+    shiftY?: number; 
 }
 
 interface PatternMixinInputs {
@@ -992,18 +998,18 @@ interface CellSaveInputs extends CellFactoryInputs, SaveInputs {}
 
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
     clear: () => void;
-
-    // This is a LIE! Added to ignore TS complaints
-    clone: (item?: CellFactoryInputs) => CellInstance;
     compile: () => void;
     render: () => void;
-    show: () => void;
-    updateArtefacts: (items: CommonObjectInput) => void;
     set: (item?: CellFactoryInputs) => CellInstance;
     setDelta: (item?: CellFactoryDeltaInputs) => CellInstance;
+    show: () => void;
+    updateArtefacts: (items: CommonObjectInput) => void;
+    updateHere: () => void;
 
-    // This is also a LIE! Added to ignore TS complaints
-    saveAsPacket: (item?: CellSaveInputs | boolean) => string;
+    // // This is a LIE! Added to ignore TS complaints
+    // clone: (item?: CellFactoryInputs) => CellInstance;
+    // // This is also a LIE! Added to ignore TS complaints
+    // saveAsPacket: (item?: CellSaveInputs | boolean) => string;
 }
 
 interface CellInstance extends CellFactoryInputs, CellFactoryFunctions {

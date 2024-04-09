@@ -13,16 +13,16 @@ const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 let myTracker;
 
 // Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
-// @ts-expect-error
+/** @ts-expect-error */
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
 // We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
-// @ts-expect-error
+/** @ts-expect-error */
 ga(function() {
 
     const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 
-// @ts-expect-error
+/** @ts-expect-error */
     myTracker = ga.getByName('demoCanvasTracker');
     myTracker.set('transport', 'beacon');
     myTracker.set('campaignKeyword', 'Scrawl-canvas demo');

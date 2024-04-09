@@ -4,7 +4,7 @@
 // [Run code](../../demo/delaunator-002.html)
 import * as scrawl from '../source/scrawl.js';
 
-// @ts-expect-error
+/** @ts-expect-error */
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
@@ -102,7 +102,7 @@ const myAsset = scrawl.makeRawAsset({
         defaultValue: [],
         setter: function (item) {
 
-// @ts-expect-error
+/** @ts-expect-error */
             this.points = [...item];
         },
     },{
@@ -126,16 +126,16 @@ const myAsset = scrawl.makeRawAsset({
         defaultValue: false,
         setter: function (item) {
 
-// @ts-expect-error
+/** @ts-expect-error */
             const { points, here } = this;
 
             if (here && here.active) points[0] = [here.x, here.y];
             else points[0] = [...center];
 
-// @ts-expect-error
+/** @ts-expect-error */
             this.delaunay = Delaunator.from(points);
 
-// @ts-expect-error
+/** @ts-expect-error */
             this.dirtyData = item;
         },
     }],

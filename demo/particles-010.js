@@ -69,7 +69,7 @@ scrawl.makeNet({
 
         const regex = RegExp('-0$');
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.particleStore.forEach(p => {
 
             if (regex.test(p.name)) {
@@ -80,7 +80,7 @@ scrawl.makeNet({
                     forces: [],
                 });
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.springs.forEach(s => {
 
                     if (s && s.particleFrom && s.particleFrom.name === p.name) {

@@ -51,7 +51,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    (Low color: ${lowCol.value}, High color: ${highCol.value})\n    Range: [${myFilter.ranges}] → [${myFilter.actions[0].ranges}]\n    Opacity: ${opacity.value}`;
 });
 
@@ -76,7 +76,7 @@ const interpretColors = function () {
 
         myFilter.set({
 
-// @ts-expect-error
+/** @ts-expect-error */
             ranges: [[lowColor.value, highColor.value]],
         })
     }
@@ -94,11 +94,11 @@ const lowCol = document.querySelector('#lowColor'),
     highCol = document.querySelector('#highColor'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 lowCol.value = '#000000';
-// @ts-expect-error
+/** @ts-expect-error */
 highCol.value = '#5c7f5c';
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

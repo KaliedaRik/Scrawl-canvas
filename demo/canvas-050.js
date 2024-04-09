@@ -236,12 +236,12 @@ scrawl.makeUpdater({
     },
 });
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scaling').value = '0';
 document.querySelector('#scaling').innerHTML = 'Add scaling';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#constraintAction').value = 'reverse';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#maxFrameRate').value = '120';
 
 

@@ -100,7 +100,7 @@ scrawl.makeLabel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Matrix dimensions - width: ${matrix_width.value} height: ${matrix_height.value}\n    Matrix offset - x: ${matrix_offset_x.value} y: ${matrix_offset_y.value}\n    Opacity - ${opacity.value}`;
 });
 
@@ -160,28 +160,28 @@ const matrix_width = document.querySelector('#matrix_width'),
     matrix_offset_y = document.querySelector('#matrix_offset_y'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 matrix_width.value = 3;
-// @ts-expect-error
+/** @ts-expect-error */
 matrix_height.value = 3;
-// @ts-expect-error
+/** @ts-expect-error */
 matrix_offset_x.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 matrix_offset_y.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#operation').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeRed').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeGreen').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeBlue').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeAlpha').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 

@@ -85,10 +85,10 @@ const myEmitter = scrawl.makeEmitter({
     // We use the `preAction` function to draw the lines between stars; the opacity of the line connecting two stars will depend on the distance between them.
     preAction: function (host) {
 
-// @ts-expect-error
+/** @ts-expect-error */
         const particles = this.particleStore,
             engine = host.engine,
-// @ts-expect-error
+/** @ts-expect-error */
             radius = this.world.connectionRadius;
 
         engine.save();
@@ -148,7 +148,7 @@ const myEmitter = scrawl.makeEmitter({
     // The 'postAction' function is similar to the preAction function, but now we are drawing lines between stars and the mouse cursor's current position
     postAction: function (host) {
 
-// @ts-expect-error
+/** @ts-expect-error */
         const particles = this.particleStore,
             engine = host.engine,
             here = host.here;

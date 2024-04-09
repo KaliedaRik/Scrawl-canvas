@@ -149,7 +149,7 @@ const currentPin = scrawl.makeDragZone({
 
             if (name.indexOf('start') > 0 || name.indexOf('end') > 0) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 pin.isBeingDragged = false;
                 pin.set({
                     lockXTo: 'mouse',
@@ -408,9 +408,9 @@ scrawl.addNativeListener(['input', 'change'], () => updateOutput(), '.controlIte
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#useMixedChannel').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#opacity').value = 1;
 
 

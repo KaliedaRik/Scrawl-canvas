@@ -15,16 +15,16 @@ let myTracker;
 
 // Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
 // + TS errors due to not importing/using GA types into the demo
-// @ts-expect-error
+/** @ts-expect-error */
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
 // We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
-// @ts-expect-error
+/** @ts-expect-error */
 ga(function() {
 
     const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 
-// @ts-expect-error
+/** @ts-expect-error */
     myTracker = ga.getByName('demoCanvasTracker');
     myTracker.set('transport', 'beacon');
     myTracker.set('campaignKeyword', 'Scrawl-canvas demo');
@@ -153,7 +153,7 @@ scrawl.makeBlock({
         // This function gets invoked by an event listener added to the &lt;a> link element in the DOM. `this` refers to the element, not the SC anchor wrapper or the Block entity object. The `myTracker` object is not recognised by the link element (the object's scope is local to this module), so instead we fire the `ga` analytics object directly as that lives in the global space - see line 19 above.
         clickAction: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
             ga('demoCanvasTracker.send', 'event', 'Outbound link', 'click', this.href);
         },
     },
@@ -163,28 +163,28 @@ scrawl.makeBlock({
     onEnter: function () {
 
         // Update the block entity's visual display
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             lineWidth: 30,
         });
 
         // This is where we update the accessibility information tied to the canvas element. We're using the anchor attribute object's description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.
         canvas.set({
-// @ts-expect-error
+/** @ts-expect-error */
             title: `${this.get('name')} tile`,
-// @ts-expect-error
+/** @ts-expect-error */
             label: this.get('anchorDescription'),
         });
 
         // Track the action in Google Analytics
-// @ts-expect-error
+/** @ts-expect-error */
         myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
     },
 
     onLeave: function () {
 
         // Reset the block entity's visual display
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             lineWidth: 20,
         });
@@ -196,7 +196,7 @@ scrawl.makeBlock({
         });
 
         // Track the action in Google Analytics
-// @ts-expect-error
+/** @ts-expect-error */
         myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
     },
 
@@ -204,11 +204,11 @@ scrawl.makeBlock({
     onUp: function () {
 
         // Track the action in Google Analytics
-// @ts-expect-error
+/** @ts-expect-error */
         myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.get('anchorHref')}`);
 
         // Trigger the click event on the anchor element we added to the DOM
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -313,30 +313,30 @@ killArtefactAndAnchor(canvas, name('brick-in-marble'), 'wikipedia-brick-link', 2
     scrawl.findArtefact(name('brick-in-marble')).set({
 
         onEnter: function () {
-// @ts-expect-error
+/** @ts-expect-error */
             this.set({ lineWidth: 30 });
             canvas.set({
                 title: `${this.name} tile`,
-// @ts-expect-error
+/** @ts-expect-error */
                 label: this.get('anchorDescription'),
             });
-// @ts-expect-error
+/** @ts-expect-error */
             myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
         },
         onLeave: function () {
-// @ts-expect-error
+/** @ts-expect-error */
             this.set({ lineWidth: 20 });
             canvas.set({
                 title: '',
                 label: `${canvas.name} canvas element`,
             });
-// @ts-expect-error
+/** @ts-expect-error */
             myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
         },
         onUp: function () {
-// @ts-expect-error
+/** @ts-expect-error */
             myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
-// @ts-expect-error
+/** @ts-expect-error */
             this.clickAnchor();
         },
     });

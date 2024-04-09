@@ -13,7 +13,7 @@ import {
     makeWorld,
 } from '../source/scrawl.js';
 
-// @ts-expect-error
+/** @ts-expect-error */
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 
 import { reportSpeed } from './utilities.js';
@@ -141,11 +141,11 @@ const myWorld = makeWorld({
         {
             key: 'coords',
             defaultValue: [],
-// @ts-expect-error
+/** @ts-expect-error */
             getter: function () { return [].concat(this.coords) },
             setter: function (emitter) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 const { coords } = this;
                 coords.length = 0;
 
@@ -218,10 +218,10 @@ makeEmitter({
 
 
         // generate coords
-// @ts-expect-error
+/** @ts-expect-error */
         this.world.set({ coords: this });
 
-// @ts-expect-error
+/** @ts-expect-error */
         const c = this.world.get('coords');
 
         // Build a new Delaunay object for each iteration (think of this as a stress test)

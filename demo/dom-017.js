@@ -108,11 +108,11 @@ const buildSquareCanvas = (namespace) => {
                 href: 'https://en.wikipedia.org/wiki/Square',
                 description: 'Link to the Wikipedia article on squares (opens in new tab)',
             },
-// @ts-expect-error
+/** @ts-expect-error */
             onEnter: function () { this.set({ lineWidth: 6 }) },
-// @ts-expect-error
+/** @ts-expect-error */
             onLeave: function () { this.set({ lineWidth: 2 }) },
-// @ts-expect-error
+/** @ts-expect-error */
             onUp: function () { this.clickAnchor() },
         });
 
@@ -206,11 +206,11 @@ const buildCircleCanvas = (namespace) => {
                 href: 'https://en.wikipedia.org/wiki/Circle',
                 description: 'Link to the Wikipedia article on circles (opens in new tab)',
             },
-// @ts-expect-error
+/** @ts-expect-error */
             onEnter: function () { this.set({ lineWidth: 6 }) },
-// @ts-expect-error
+/** @ts-expect-error */
             onLeave: function () { this.set({ lineWidth: 2 }) },
-// @ts-expect-error
+/** @ts-expect-error */
             onUp: function () { this.clickAnchor() },
         });
 

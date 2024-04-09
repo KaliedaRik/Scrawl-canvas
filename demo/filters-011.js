@@ -55,7 +55,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Reference color: ${reference.value}\n    Transparent at: ${transparentAt.value}, Opaque at: ${opaqueAt.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -96,13 +96,13 @@ const reference = document.querySelector('#reference'),
     transparentAt = document.querySelector('#transparentAt'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 reference.value = '#be81df';
-// @ts-expect-error
+/** @ts-expect-error */
 opaqueAt.value = 0.39;
-// @ts-expect-error
+/** @ts-expect-error */
 transparentAt.value = 0.32;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

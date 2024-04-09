@@ -392,7 +392,7 @@ const updateFont = (event) => {
                 });
         }
     }
-// @ts-expect-error
+/** @ts-expect-error */
     breakTextOnSpacesSelector.options.selectedIndex = (mylabel.get('breakTextOnSpaces')) ? 1 : 0;
 };
 scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
@@ -455,66 +455,66 @@ scrawl.makeUpdater({
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 fontSelector.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 animationSelector.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 breakTextOnSpacesSelector.options.selectedIndex = 1;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_xPercent').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_yPercent').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_xPercent').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_yAbsolute').value = 200;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_xAbsolute').value = 100;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_xString').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_yString').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offset_xPercent').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offset_yPercent').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offset_xAbsolute').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offset_yAbsolute').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textHandleX').options.selectedIndex = 2;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textHandleY').options.selectedIndex = 4;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#alignment').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#flipReverse').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#flipUpend').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#alignTextUnitsToPath').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textUnitFlow').options.selectedIndex = 0;
 
 

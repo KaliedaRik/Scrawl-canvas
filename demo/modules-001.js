@@ -89,7 +89,7 @@ let currentGraphType = 'bars',
     currentCategory = 'Burglary';
 
 const crimeCategoryInput = document.querySelector('#crime-categories');
-// @ts-expect-error
+/** @ts-expect-error */
 crimeCategoryInput.value = 'Burglary';
 crimeCategoryInput.setAttribute('disabled', '');
 

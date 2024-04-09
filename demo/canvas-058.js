@@ -70,7 +70,7 @@ const referenceBlock = scrawl.makeBlock({
             },
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             lineDash: [16, 2],
             lineWidth: 2,
@@ -85,7 +85,7 @@ const referenceBlock = scrawl.makeBlock({
             },
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             lineDash: [4, 2],
             lineWidth: 1,

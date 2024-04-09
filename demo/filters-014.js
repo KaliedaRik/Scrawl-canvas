@@ -56,7 +56,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}\n    Gutter dimensions - width: ${gutter_width.value} height: ${gutter_height.value}\n    Offset - x: ${offset_x.value} y: ${offset_y.value}\n    areaAlphaLevels array: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]\n    Opacity: ${opacity.value}`;
 });
 
@@ -96,13 +96,13 @@ scrawl.makeUpdater({
 
 scrawl.addNativeListener(['input', 'change'], function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     const a0 = parseInt(alpha_0.value, 10),
-// @ts-expect-error
+/** @ts-expect-error */
         a1 = parseInt(alpha_1.value, 10),
-// @ts-expect-error
+/** @ts-expect-error */
         a2 = parseInt(alpha_2.value, 10),
-// @ts-expect-error
+/** @ts-expect-error */
         a3 = parseInt(alpha_3.value, 10);
 
     myFilter.set({
@@ -124,27 +124,27 @@ const tile_width = document.querySelector('#tile_width'),
     offset_y = document.querySelector('#offset_y'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 tile_width.value = 10;
-// @ts-expect-error
+/** @ts-expect-error */
 tile_height.value = 10;
-// @ts-expect-error
+/** @ts-expect-error */
 gutter_width.value = 10;
-// @ts-expect-error
+/** @ts-expect-error */
 gutter_height.value = 10;
-// @ts-expect-error
+/** @ts-expect-error */
 offset_x.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 offset_y.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 alpha_0.value = 255;
-// @ts-expect-error
+/** @ts-expect-error */
 alpha_1.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 alpha_2.value = 255;
-// @ts-expect-error
+/** @ts-expect-error */
 alpha_3.value = 0;
 
 

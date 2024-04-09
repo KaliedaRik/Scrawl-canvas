@@ -120,21 +120,21 @@ scrawl.makeUpdater({
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lockFillStyleToEntity').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fillStyle').options.selectedIndex = 0;
 
 

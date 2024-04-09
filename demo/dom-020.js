@@ -21,7 +21,7 @@ addCheckerboardBackground(canvas, 'demo-dom-020');
 const refBackground = document.querySelector('#reference-color'),
     refButton = refBackground.querySelector('button');
 
-// @ts-expect-error
+/** @ts-expect-error */
 refBackground.style.backgroundColor = '#be81df';
 
 
@@ -51,7 +51,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Reference color: ${refBackground.style.backgroundColor}\n    Transparent at: ${transparentAt.value}, Opaque at: ${opaqueAt.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -91,7 +91,7 @@ async function sampleColorFromScreen(abort) {
 
     refButton.setAttribute('disabled', '');
 
-// @ts-expect-error
+/** @ts-expect-error */
     const dropper = new window.EyeDropper();
 
     try {
@@ -104,7 +104,7 @@ async function sampleColorFromScreen(abort) {
             reference: color,
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         refBackground.style.backgroundColor = color;
         abort.abort();
         refButton.removeAttribute('disabled');
@@ -133,11 +133,11 @@ const opaqueAt = document.querySelector('#opaqueAt'),
     transparentAt = document.querySelector('#transparentAt'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 opaqueAt.value = 0.39;
-// @ts-expect-error
+/** @ts-expect-error */
 transparentAt.value = 0.32;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

@@ -301,7 +301,7 @@ cacheAction();
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Opacity: ${opacity.value}`;
 });
 
@@ -361,7 +361,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 // Setup form
 const opacity = document.querySelector('#opacity');
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

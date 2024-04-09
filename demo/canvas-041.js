@@ -6,23 +6,32 @@ import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
-// Ignore pixel ratio considerations
-// + Leads to issues when dragging the browser between screens with different pixel ratio densities
+
+// + We are also going to ignore the device's pixel density
 scrawl.setIgnorePixelRatio(true);
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
-const boxes = [];
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
+
+// Premise of the demo - based on the constraints described in the [Slaylines canvas engine comparison repo](https://github.com/slaylines/canvas-engines-comparison)
+// + Library demos make use of an `engine` object, which includes details of the supplied &lt;canvas> element's dimensions, and a count of the number of boxes currently being drawn on that canvas
 const engine = {
 
-    width: canvas.get("width"),
-    height: canvas.get("height"),
+    width: canvas.get('width'),
+    height: canvas.get('height'),
     count: 1000,
 };
+
+// + We are going to keep details of all our boxes (their current state) in an array
+const boxes = [];
+
 
 // Setup the display canvas
 canvas.set({
@@ -32,10 +41,11 @@ canvas.set({
 
 }).render();
 
-// Build and populate our cache Cell with pre-drawn boxes
-canvas.buildCell({
 
-    name: 'cache',
+// Build and populate our cache Cell with pre-drawn boxes
+const cache = canvas.buildCell({
+
+    name: name('cache'),
     width: 50 * 40,
     height: 50,
     cleared: false,
@@ -44,22 +54,30 @@ canvas.buildCell({
     willReadFrequently: false,
 });
 
-const source = scrawl.library.cell.cache.element;
-const sourceEngine = scrawl.library.cell.cache.engine;
 
+// Convenience variables
+const source = cache.element;
+const sourceEngine = cache.engine;
+
+
+// The source canvas will hold a set of differently sized boxes, which we later draw onto the display canvas.
+// + Generate the boxes once; draw them many times
 sourceEngine.fillStyle = 'white';
 sourceEngine.strokeStyle = 'black';
 sourceEngine.lineWidth = 1;
+sourceEngine.translate(25, 25);
 
 for (let i = 0; i < 40; i++) {
 
     const size = 10 + i,
         delta = Math.floor(size / 2) + 0.5;
 
-    sourceEngine.setTransform(1, 0, 0, 1, (50 * i) + 25, 25);
     sourceEngine.fillRect(-delta, -delta, size, size);
     sourceEngine.strokeRect(-delta, -delta, size, size);
+    sourceEngine.translate(50, 0);
+
 }
+
 
 // On start, and UI, create the required number of box objects
 // - these are plain JS objects holding data for our box drawing routine
@@ -85,21 +103,20 @@ const buildBoxes = function (boxesRequired) {
 const drawBoxes = function () {
 
     const engineWidth = engine.width,
-        ctx = canvas.base.engine;
+        ctx = canvas.getBase().engine,
+        trunc = Math.trunc;
 
     let box, x, y, deltaX, boxpos, width;
 
     return function () {
 
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-
         for (let i = 0, iz = boxes.length; i < iz; i++) {
 
             box = boxes[i];
             [x, y, deltaX, boxpos] = box;
-            width = boxpos + 10
+            width = boxpos + 10;
 
-            ctx.drawImage(source, ~~(boxpos * 50), 0, 50, 50, ~~(x - 25), ~~(y - 25), 50, 50);
+            ctx.drawImage(source, trunc(boxpos * 50), 0, 50, 50, trunc(x - 25), trunc(y - 25), 50, 50);
 
             x += deltaX;
             if (x < -width) x += engineWidth + (width * 2);
@@ -108,10 +125,11 @@ const drawBoxes = function () {
     }
 }();
 
+
 // Speed reporter
 const report = reportSpeed('#reportmessage', function () {
 
-    return `Box count: ${boxes.length}`;
+    return `    Box count: ${boxes.length}`;
 });
 
 
@@ -119,7 +137,7 @@ const report = reportSpeed('#reportmessage', function () {
 // The animation loop object
 scrawl.makeAnimation({
 
-    name: 'demo-animation',
+    name: name('animation'),
 
     fn: () => {
 

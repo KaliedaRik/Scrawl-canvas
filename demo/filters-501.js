@@ -94,7 +94,7 @@ const updateTarget = (e) => {
         canvas.setBase({ filter: 'none'});
 
         if (val === 'picture') filterTarget = piccy;
-// @ts-expect-error
+/** @ts-expect-error */
         else if (val === 'label') filterTarget = text;
         else if (val === 'cell') filterTarget = canvas.base;
 
@@ -116,9 +116,9 @@ const updateFilter = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#filter').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#target').options.selectedIndex = 0;
 
 

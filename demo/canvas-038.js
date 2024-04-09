@@ -8,13 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create a shape track along which we can animate a Cell
 scrawl.makeOval({
 
-    name: 'responsive-oval',
+    name: name('responsive-oval'),
 
     radiusX: '40%',
     radiusY: '40%',
@@ -28,7 +33,7 @@ scrawl.makeOval({
 
 }).clone({
 
-    name: 'static-oval',
+    name: name('static-oval'),
 
     radiusX: 100,
     radiusY: 140,
@@ -38,7 +43,7 @@ scrawl.makeOval({
 
 scrawl.makeTetragon({
 
-    name: 'responsive-diamond',
+    name: name('responsive-diamond'),
 
     strokeStyle: 'lightgreen',
     lineWidth: 6,
@@ -52,7 +57,7 @@ scrawl.makeTetragon({
 
 }).clone({
 
-    name: 'static-diamond',
+    name: name('static-diamond'),
 
     strokeStyle: 'darkgreen',
 
@@ -62,7 +67,7 @@ scrawl.makeTetragon({
 
 scrawl.makeLine({
 
-    name: 'responsive-line',
+    name: name('responsive-line'),
 
     strokeStyle: 'orange',
     lineWidth: 8,
@@ -73,7 +78,7 @@ scrawl.makeLine({
 
 }).clone({
 
-    name: 'static-line',
+    name: name('static-line'),
 
     strokeStyle: 'brown',
 
@@ -83,7 +88,7 @@ scrawl.makeLine({
 
 scrawl.makeRectangle({
 
-    name: 'responsive-rectangle',
+    name: name('responsive-rectangle'),
 
     strokeStyle: 'red',
     lineWidth: 4,
@@ -100,7 +105,7 @@ scrawl.makeRectangle({
 
 }).clone({
 
-    name: 'static-rectangle',
+    name: name('static-rectangle'),
     startY: '75%',
 
     strokeStyle: 'pink',
@@ -113,7 +118,7 @@ scrawl.makeRectangle({
 
 scrawl.makeStar({
 
-    name: 'responsive-star',
+    name: name('responsive-star'),
 
     start: ['center', '25%'],
     handle: ['center', 'center'],
@@ -129,7 +134,7 @@ scrawl.makeStar({
 
 }).clone({
 
-    name: 'static-star',
+    name: name('static-star'),
     startY: '75%',
     strokeStyle: '#840',
 
@@ -139,7 +144,7 @@ scrawl.makeStar({
 
 scrawl.makeCog({
 
-    name: 'static-cog',
+    name: name('static-cog'),
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -156,7 +161,7 @@ scrawl.makeCog({
 
 }).clone({
 
-    name: 'responsive-cog',
+    name: name('responsive-cog'),
 
     outerRadius: `${(180/400) * 100}%`,
     innerRadius: `${(160/400) * 100}%`,
@@ -175,10 +180,11 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
+
 
 // #### Development and testing
 console.log(scrawl.library);

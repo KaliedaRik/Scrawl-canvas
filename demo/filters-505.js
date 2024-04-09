@@ -51,17 +51,17 @@ const bfx = document.querySelector('#bfx'),
     feTurbulence = document.querySelector('feTurbulence'),
     feDisplacementMap = document.querySelector('feDisplacementMap');
 
-// @ts-expect-error
+/** @ts-expect-error */
 bfx.value = 0.01;
-// @ts-expect-error
+/** @ts-expect-error */
 bfy.value = 0.04;
-// @ts-expect-error
+/** @ts-expect-error */
 octaves.value = 2;
-// @ts-expect-error
+/** @ts-expect-error */
 scale.value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
 xChannelSelector.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 yChannelSelector.options.selectedIndex = 0;
 
 
@@ -69,7 +69,7 @@ yChannelSelector.options.selectedIndex = 0;
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `<filter id="svg-noise">\n  <feTurbulence type="fractalNoise" baseFrequency="${bfx.value} ${bfy.value}" result="NOISE" numOctaves="${octaves.value}" />\n  <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="${scale.value}" xChannelSelector="${xChannelSelector.value}" yChannelSelector="${yChannelSelector.value}"></feDisplacementMap>\n</filter>`;
 });
 
@@ -85,23 +85,23 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form functionality
-// @ts-expect-error
+/** @ts-expect-error */
 const baseFrequency = () => feTurbulence.setAttribute('baseFrequency', `${bfx.value} ${bfy.value}`);
 scrawl.addNativeListener(['input', 'change'], baseFrequency, '.baseFreq');
 
-// @ts-expect-error
+/** @ts-expect-error */
 const numOctaves = () => feTurbulence.setAttribute('numOctaves', octaves.value);
 scrawl.addNativeListener(['input', 'change'], numOctaves, '#octaves');
 
-// @ts-expect-error
+/** @ts-expect-error */
 const dmScale = () => feDisplacementMap.setAttribute('scale', scale.value);
 scrawl.addNativeListener(['input', 'change'], dmScale, '#scale');
 
-// @ts-expect-error
+/** @ts-expect-error */
 const dmX = () => feDisplacementMap.setAttribute('xChannelSelector', xChannelSelector.value);
 scrawl.addNativeListener(['input', 'change'], dmX, '#xChannelSelector');
 
-// @ts-expect-error
+/** @ts-expect-error */
 const dmY = () => feDisplacementMap.setAttribute('yChannelSelector', yChannelSelector.value);
 scrawl.addNativeListener(['input', 'change'], dmY, '#yChannelSelector');
 

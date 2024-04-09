@@ -23,9 +23,9 @@ let wormStart = 220,
 const wormstartInput = document.querySelector('#wormstart'),
     wormendInput = document.querySelector('#wormend');
 
-// @ts-expect-error
+/** @ts-expect-error */
 wormstartInput.value = wormStart;
-// @ts-expect-error
+/** @ts-expect-error */
 wormendInput.value = wormEnd;
 
 const worm = scrawl.makePolyline({
@@ -95,9 +95,9 @@ const updateLabelsAndWorm = function (asset) {
             wormEnd = temp;
         }
 
-// @ts-expect-error
+/** @ts-expect-error */
         wormstartInput.value = wormStart;
-// @ts-expect-error
+/** @ts-expect-error */
         wormendInput.value = wormEnd;
 
         // Update the worm's pins
@@ -126,16 +126,16 @@ const myAsset = scrawl.makeRawAsset({
 
                 if (img) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.canvasWidth =  img.width;
-// @ts-expect-error
+/** @ts-expect-error */
                     this.canvasHeight = img.height;
                 }
 
-// @ts-expect-error
+/** @ts-expect-error */
                 if (mesh) this.mesh = mesh;
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.dirtyData = true;
             }
         },
@@ -189,9 +189,9 @@ scrawl.importMediaStream({
 
     video = mycamera;
 
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.width = width;
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.height = height;
 
     scrawl.makePicture({
@@ -207,7 +207,7 @@ scrawl.importMediaStream({
 
     // Start the MediaPipe model
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     model = new FaceMesh({
 
 /* eslint-enable */
@@ -224,7 +224,7 @@ scrawl.importMediaStream({
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     const mediaPipeCamera = new Camera(video.source, {
 
 /* eslint-enable */

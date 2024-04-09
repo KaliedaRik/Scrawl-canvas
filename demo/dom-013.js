@@ -180,29 +180,29 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#width').value = 400;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#height').value = 400;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#start_yAbsolute').value = 300;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_xAbsolute').value = 200;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handle_yAbsolute').value = 200;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offset_xAbsolute').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offset_yAbsolute').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#pitch').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#yaw').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
 
 console.log(scrawl.library);

@@ -124,17 +124,17 @@ const updateDisplayText = () => {
     setTimeout(() => {
 
         displayText.innerHTML = mylabel.get('rawText');
-// @ts-expect-error
+/** @ts-expect-error */
         displayText.style.font = mylabel.get('fontString');
-// @ts-expect-error
+/** @ts-expect-error */
         displayText.style.lineHeight = mylabel.get('lineSpacing');
-// @ts-expect-error
+/** @ts-expect-error */
         if (dims[0]) displayText.style.width = `${dims[0]}px`;
-// @ts-expect-error
+/** @ts-expect-error */
         if (dims[1]) displayText.style.height = `${dims[1]}px`;
-// @ts-expect-error
+/** @ts-expect-error */
         displayText.style.textAlign = justify;
-// @ts-expect-error
+/** @ts-expect-error */
         displayText.style.transform = `rotate(${blockTemplate.get('roll')}deg) scale(${blockTemplate.get('scale')})`;
     }, 50);
 };
@@ -627,12 +627,12 @@ const updateFont = (event) => {
                 });
         }
 
-// @ts-expect-error
+/** @ts-expect-error */
         if (mylabel.get('breakTextOnSpaces')) breakTextOnSpacesSelector.options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
         else breakTextOnSpacesSelector.options.selectedIndex = 0;
 
-// @ts-expect-error
+/** @ts-expect-error */
         lineSpacingSelector.value = mylabel.get('lineSpacing');
 
         updateDisplayText();
@@ -642,52 +642,52 @@ scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 fontSelector.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 layoutTemplateSelector.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 lineSpacingSelector.value = 1.5;
-// @ts-expect-error
+/** @ts-expect-error */
 breakTextOnSpacesSelector.options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 localAlignmentSelector.value = 0;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#width').value = 60;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#height').value = 80;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lineAdjustment').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#justifyLine').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#alignment').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#breakWordsOnHyphens').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#hyphenString').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#truncateString').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textHandleX').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textHandleY').options.selectedIndex = 4;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#showGuidelines').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#guidelineStyle').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#guidelineDash').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textUnitFlow').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#wordSpacing').value = 0;
 
 // #### Development and testing

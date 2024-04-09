@@ -26,7 +26,7 @@ const myAsset = scrawl.makeRawAsset({
 
             if (item && item.allPoses && item.allPoses.length) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 const { parts, leftEyeX, leftEyeY, leftEye, rightEyeX, rightEyeY, rightEye, wobbleDamper } = this;
 
                 const segs = item.allPoses[0];
@@ -35,7 +35,7 @@ const myAsset = scrawl.makeRawAsset({
 
                 if (parts.leftEye != null) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.dirtyData = true;
 
                     const eye = parts.leftEye;
@@ -52,7 +52,7 @@ const myAsset = scrawl.makeRawAsset({
 
                 if (parts.rightEye != null) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.dirtyData = true;
 
                     const eye = parts.rightEye;
@@ -71,21 +71,21 @@ const myAsset = scrawl.makeRawAsset({
             // We can also check for image dimensions as that info is also passed on by the model output
             if (item && item.width && item.height) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 if (this.canvasWidth !== item.width) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.canvasWidth = item.width;
-// @ts-expect-error
+/** @ts-expect-error */
                     this.dirtyData = true;
                 }
 
-// @ts-expect-error
+/** @ts-expect-error */
                 if (this.canvasHeight !== item.height) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.canvasHeight = item.height;
-// @ts-expect-error
+/** @ts-expect-error */
                     this.dirtyData = true;
                 }
             }
@@ -179,9 +179,9 @@ scrawl.importMediaStream({
     video = mycamera;
 
     // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.width = "1280";
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.height = "720";
 
     // Take the media stream and display it in our canvas element
@@ -199,7 +199,7 @@ scrawl.importMediaStream({
 
     // Start the TensorFlow model
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     bodyPix.load()
 /* eslint-enable */
     .then (net => {

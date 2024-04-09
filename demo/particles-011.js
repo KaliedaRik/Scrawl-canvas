@@ -240,7 +240,7 @@ const filterChoice = function (e) {
 };
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#filter').value = '';
 
 

@@ -113,11 +113,11 @@ const userInteraction = scrawl.makeDragZone({
     updateOnStart: () => {
 
         // Invoking the function that `makeDragZone` returns gives us access to the entity being dragged (if any)
-// @ts-expect-error
+/** @ts-expect-error */
         currentlyDragging = userInteraction();
 
         // Invoke the stampOrder promotion
-// @ts-expect-error
+/** @ts-expect-error */
         if (currentlyDragging) promoteStampOrders(currentlyDragging.artefact.name);
 
         // Update the cursor to show we're dragging something
@@ -323,7 +323,7 @@ scrawl.makeEnhancedLabel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     const dragReport = `Currently dragging: ${(typeof currentlyDragging !== 'boolean' && currentlyDragging) ? currentlyDragging.artefact.name : 'nothing'}`;
 
     let fontReadout = `
@@ -372,17 +372,17 @@ scrawl.makeUpdater({
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#text-fillStyle').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#underline-fillStyle').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lockFillStyleToEntity').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#noDeltaUpdates').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#globalCompositeOperation').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#globalAlpha').value = 1;
 
 

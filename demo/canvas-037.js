@@ -27,6 +27,7 @@ let currentScale = maxScale,
     fromLeft = 0,
     fromTop = 0;
 
+
 // #### Scene setup
 const canvas = scrawl.findCanvas('mycanvas');
 

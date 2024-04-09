@@ -28,20 +28,20 @@ const box = scrawl.makeBlock({
     fillStyle: 'red',
 
     onEnter: function () {
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             fillStyle: 'pink',
         });
     },
 
     onLeave: function () {
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             fillStyle: 'red',
         });
     },
 
-// @ts-expect-error
+/** @ts-expect-error */
     onUp: function () { this.clickAnchor() },
 
     anchor: {

@@ -84,7 +84,7 @@ const reactionAsset = makeReactionDiffusionAsset({
     width: assetDimension,
     height: assetDimension,
 
-// @ts-expect-error
+/** @ts-expect-error */
     colors: colorStops['monochrome'],
 });
 
@@ -149,7 +149,7 @@ const report = reportSpeed('#reportmessage', function () {
         `[${mx.a}, ${mx.b}, ${mx.c}, ${mx.d}, ${mx.e}, ${mx.f}]` :
         '[]';
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Generation: ${reactionAsset.currentGeneration} of ${reactionAsset.maxGenerations}\n    Initial random seed level: ${reactionAsset.initialRandomSeedLevel}\n    Diffusion rates - A: ${reactionAsset.diffusionRateA}, B: ${reactionAsset.diffusionRateB}\n    Feed rate: ${reactionAsset.feedRate}; Kill rate: ${reactionAsset.killRate}\n    Asset dimensions - width: ${reactionAsset.width}, height: ${reactionAsset.height}\n    Pattern matrix: ${matrixVals}`;
 });
 
@@ -307,362 +307,362 @@ addNativeListener(['change', 'input'], (e) => {
         switch (val) {
 
             case 'negativeBubbles':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.098;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.0555;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.05;
                 break;
 
             case 'positiveBubbles':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.098;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.057;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.1;
                 break;
 
             case 'precriticalBubbles':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.082;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.059;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.08;
                 break;
 
             case 'wormsAndLoops':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.082;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.06;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.08;
                 break;
 
             case 'stableSolitons':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.074;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.064;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.15;
                 break;
 
             case 'uSkateWorld':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.062;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.0609;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'worms':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.058;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.065;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.1;
                 break;
 
             case 'wormsJoinIntoMazes':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.046;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.063;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'negatons':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.046;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.0594;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'turingPatterns':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.042;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.059;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'chaosToTuringNegatons':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.039;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.058;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'fingerprints':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.037;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.06;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'chaosWithNegatons':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.0353;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.0566;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'spotsAndWorms':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.034;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.0618;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'selfReplicatingSpots':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.03;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.063;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'superResonantMazes':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.03;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.0565;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'mazes':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.029;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.057;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'mazesWithSomeChaos':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.026;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.055;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'chaos':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.026;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.051;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.009;
                 break;
 
             case 'warringMicrobes':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.022;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.059;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'spotsAndLoops':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.018;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.051;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'movingSpots':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.014;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.054;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             case 'waves':
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.014;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.045;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
                 break;
 
             default:
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_feedRate.value = 0.054;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_killRate.value = 0.062;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
                 qs_initialRandomSeedLevel.value = 0.0045;
         }
     }
@@ -697,57 +697,57 @@ const qs_presets = document.querySelector('#presets'),
     qs_returnColorAs = document.querySelector('#returnColorAs');
 
 
-// @ts-expect-error
+/** @ts-expect-error */
 qs_presets.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_initialRandomSeedLevel.value = 0.1;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_diffusionRateA.value = 0.2097;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_diffusionRateB.value = 0.105;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_feedRate.value = 0.054;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_killRate.value = 0.062;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_drawEvery.value = 10;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_maxGenerations.value = 4000;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_canvasWidth.value = assetDimension;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_canvasHeight.value = assetDimension;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_matrixA.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_matrixB.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_matrixC.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_matrixD.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_matrixE.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_matrixF.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_initialSettingPreference.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_randomEngineSeed.value = reactionAsset.get('randomEngineSeed');
-// @ts-expect-error
+/** @ts-expect-error */
 qs_paletteStart.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_paletteEnd.value = 999;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_precision.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_colorStops.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_easing.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_cyclePalette.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_colorSpace.options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 qs_returnColorAs.options.selectedIndex = 0;
 
 // #### Development and testing

@@ -498,42 +498,42 @@ scrawl.addNativeListener('change', (e) => updateFont(e), selector);
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 selector.options.selectedIndex = 0;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#startX').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#startY').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleX').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleY').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleX-string').options.selectedIndex = 2;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleY-string').options.selectedIndex = 3;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeUnderline').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#underlineStyle').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#underlineWidth').value = 2;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#underlineOffset').value = 0.9;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#underlineGap').value = 3;
 
 

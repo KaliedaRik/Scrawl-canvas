@@ -48,7 +48,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Red: ${red.value}, Green: ${green.value}, Blue: ${blue.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -90,16 +90,16 @@ const red = document.querySelector('#red'),
     blue = document.querySelector('#blue'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 red.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 green.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 blue.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#clamp').options.selectedIndex = 0;
 
 

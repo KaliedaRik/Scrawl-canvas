@@ -125,7 +125,7 @@ const myNet = scrawl.makeNet({
         // We want to make all of the top row Particles visually different, and static
         const regex = RegExp('-0-[0-9]+$');
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.particleStore.forEach(p => {
 
             if (regex.test(p.name)) {
@@ -136,7 +136,7 @@ const myNet = scrawl.makeNet({
                     forces: [],
                 });
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.springs.forEach(s => {
 
                     if (s && s.particleFrom && s.particleFrom.name === p.name) {
@@ -246,7 +246,7 @@ const filterChoice = function (e) {
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
 // Set DOM form initial input values
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#filter').value = '';
 
 

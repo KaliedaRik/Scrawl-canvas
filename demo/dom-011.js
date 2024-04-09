@@ -115,21 +115,21 @@ scrawl.makeUpdater({
 // + Can also resize the element by using the width and height form controls - these controls then update the element's style width and height via the event listeners below.
 // + In both cases, the Stack artefact needs to check whether resizing has occurred and take action.
 document.querySelector('#width').addEventListener('input', (e) => {
-// @ts-expect-error
+/** @ts-expect-error */
     stack.domElement.style.width = `${e.target.value}px`;
 }, false);
 document.querySelector('#height').addEventListener('input', (e) => {
-// @ts-expect-error
+/** @ts-expect-error */
     stack.domElement.style.height = `${e.target.value}px`;
 }, false);
 
 
 // Set the DOM input values
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fitselect').value = 'fill';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#width').value = '400';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#height').value = '400';
 
 

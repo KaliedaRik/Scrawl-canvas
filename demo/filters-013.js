@@ -53,7 +53,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Red: ${red.value}, Green: ${green.value}, Blue: ${blue.value}, Alpha: ${alpha.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -89,7 +89,7 @@ scrawl.makeUpdater({
 
     callback: () => {
 
-// @ts-expect-error
+/** @ts-expect-error */
         reference.value = colorFactory.convertRGBtoHex(red.value, green.value, blue.value);
     },
 });
@@ -106,13 +106,13 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
         const [r, g, b, a] = colorFactory.extractRGBfromColor(val)
 
-// @ts-expect-error
+/** @ts-expect-error */
         red.value = r;
-// @ts-expect-error
+/** @ts-expect-error */
         green.value = g;
-// @ts-expect-error
+/** @ts-expect-error */
         blue.value = b;
-// @ts-expect-error
+/** @ts-expect-error */
         alpha.value = Math.round(a * 255);
     }
 }, '.colorSelector');
@@ -126,17 +126,17 @@ const opacity = document.querySelector('#opacity'),
     blue = document.querySelector('#blue'),
     alpha = document.querySelector('#alpha');
 
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 reference.value = '#000000';
-// @ts-expect-error
+/** @ts-expect-error */
 red.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 green.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 blue.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 alpha.value = 255;
 
 

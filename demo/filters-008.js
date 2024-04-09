@@ -59,7 +59,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    In Red - red: ${redInRed.value} green: ${greenInRed.value} blue: ${blueInRed.value} → ${redColor.value}\n    In Green - red: ${redInGreen.value} green: ${greenInGreen.value} blue: ${blueInGreen.value} → ${greenColor.value}\n    In Blue -  red: ${redInBlue.value} green: ${greenInBlue.value} blue: ${blueInBlue.value} → ${blueColor.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -89,33 +89,33 @@ scrawl.addNativeListener(['change'], (e) => {
 
             myFilter.set({ redColor: val });
 
-// @ts-expect-error
+/** @ts-expect-error */
             redInRed.value = r;
-// @ts-expect-error
+/** @ts-expect-error */
             greenInRed.value = g;
-// @ts-expect-error
+/** @ts-expect-error */
             blueInRed.value = b;
         }
         else if ('greenColor' === target) {
 
             myFilter.set({ greenColor: val });
 
-// @ts-expect-error
+/** @ts-expect-error */
             redInGreen.value = r;
-// @ts-expect-error
+/** @ts-expect-error */
             greenInGreen.value = g;
-// @ts-expect-error
+/** @ts-expect-error */
             blueInGreen.value = b;
         }
         else if ('blueColor' === target) {
 
             myFilter.set({ blueColor: val });
 
-// @ts-expect-error
+/** @ts-expect-error */
             redInBlue.value = r;
-// @ts-expect-error
+/** @ts-expect-error */
             greenInBlue.value = g;
-// @ts-expect-error
+/** @ts-expect-error */
             blueInBlue.value = b;
         }
     }
@@ -150,30 +150,30 @@ scrawl.makeUpdater({
 
     callback: () => {
 
-// @ts-expect-error
+/** @ts-expect-error */
         const rR = Math.round(redInRed.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             gR = Math.round(greenInRed.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             bR = Math.round(blueInRed.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             rG = Math.round(redInGreen.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             gG = Math.round(greenInGreen.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             bG = Math.round(blueInGreen.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             rB = Math.round(redInBlue.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             gB = Math.round(greenInBlue.value * 255),
-// @ts-expect-error
+/** @ts-expect-error */
             bB = Math.round(blueInBlue.value * 255);
 
-// @ts-expect-error
+/** @ts-expect-error */
         redColor.value = colorFactory.convertRGBtoHex(rR, gR, bR);
-// @ts-expect-error
+/** @ts-expect-error */
         greenColor.value = colorFactory.convertRGBtoHex(rG, gG, bG);
-// @ts-expect-error
+/** @ts-expect-error */
         blueColor.value = colorFactory.convertRGBtoHex(rB, gB, bB);
     },
 });
@@ -193,33 +193,33 @@ const redInRed = document.querySelector('#redInRed'),
     blueColor = document.querySelector('#blueColor'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 redInRed.value = 0.39;
-// @ts-expect-error
+/** @ts-expect-error */
 redInGreen.value = 0.35;
-// @ts-expect-error
+/** @ts-expect-error */
 redInBlue.value = 0.27;
-// @ts-expect-error
+/** @ts-expect-error */
 greenInRed.value = 0.77;
-// @ts-expect-error
+/** @ts-expect-error */
 greenInGreen.value = 0.69;
-// @ts-expect-error
+/** @ts-expect-error */
 greenInBlue.value = 0.53;
-// @ts-expect-error
+/** @ts-expect-error */
 blueInRed.value = 0.19;
-// @ts-expect-error
+/** @ts-expect-error */
 blueInGreen.value = 0.17;
-// @ts-expect-error
+/** @ts-expect-error */
 blueInBlue.value = 0.13;
 
-// @ts-expect-error
+/** @ts-expect-error */
 redColor.value = colorFactory.convertRGBtoHex(Math.round(0.39 * 255), Math.round(0.77 * 255), Math.round(0.19 * 255));
-// @ts-expect-error
+/** @ts-expect-error */
 greenColor.value = colorFactory.convertRGBtoHex(Math.round(0.35 * 255), Math.round(0.69 * 255), Math.round(0.17 * 255));
-// @ts-expect-error
+/** @ts-expect-error */
 blueColor.value = colorFactory.convertRGBtoHex(Math.round(0.27 * 255), Math.round(0.53 * 255), Math.round(0.13 * 255));
 
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

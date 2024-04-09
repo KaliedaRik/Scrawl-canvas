@@ -53,7 +53,7 @@ const original = dithered.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Commonest colors: ${commonestColors.value}\n    Minimum color distance: ${minimumColorDistance.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -111,26 +111,26 @@ const opacity = document.querySelector('#opacity');
 const minimumColorDistance = document.querySelector('#minimumColorDistance');
 const commonestColors = document.querySelector('#paletteNumber');
 
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 minimumColorDistance.value = 1000;
-// @ts-expect-error
+/** @ts-expect-error */
 commonestColors.value = 10;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#palette').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#paletteString').value = 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#paletteNumber').value = 16;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#seed').value = 'some-random-string-or-other';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#noiseType').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#useLabForPaletteDistance').options.selectedIndex = 0;
 
 

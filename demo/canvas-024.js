@@ -206,9 +206,9 @@ const myLoom = scrawl.makeLoom({
 
     method: 'fillThenDraw',
 
-// @ts-expect-error
+/** @ts-expect-error */
     onEnter: function () { this.set({ lineWidth: 6 }) },
-// @ts-expect-error
+/** @ts-expect-error */
     onLeave: function () { this.set({ lineWidth: 2 }) },
 });
 

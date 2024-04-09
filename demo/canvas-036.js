@@ -211,14 +211,14 @@ scrawl.findEntity(name('block-1')).set({
 
     onEnter: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ scale: 1.2 });
         cell4.set({ backgroundColor: 'pink' });
     },
 
     onLeave: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ scale: 1 });
         cell4.set({ backgroundColor: 'lavender' });
     },
@@ -366,7 +366,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     // __Warning: directly accessing current- attributes is dangerous. Directly setting current- attributes is fatal!__
     // + (TypeScript also gets very upset when you try to do this sort of thing)
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Canvas dimensions: ${canvas.currentDimensions.join(', ')}\n    Base dimensions: ${canvas.base.currentDimensions.join(', ')}\n    Cell 1 dimensions: ${cell1.currentDimensions.join(', ')}\n    Cell 2 dimensions: ${cell2.currentDimensions.join(', ')}\n    Cell 3 dimensions: ${cell3.currentDimensions.join(', ')}\n    Cell 4 dimensions: ${cell4.currentDimensions.join(', ')}\n    Cell 5 dimensions: ${cell5.currentDimensions.join(', ')}`;
 });
 

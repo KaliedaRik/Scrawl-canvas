@@ -164,7 +164,7 @@ scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Offset - x: ${ox.value}, y: ${oy.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -206,18 +206,18 @@ const ox = document.querySelector('#offset-x'),
     oy = document.querySelector('#offset-y'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 ox.value = 30;
-// @ts-expect-error
+/** @ts-expect-error */
 oy.value = 30;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#source').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#destination').options.selectedIndex = 2;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#blend').options.selectedIndex = 0;
 
 

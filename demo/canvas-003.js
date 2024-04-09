@@ -189,7 +189,7 @@ console.log('Performing tests ...');
 killStyle(canvas, name('mygradient'), 3000, () => {
 
     // Repopulate the graddy variable
-// @ts-expect-error
+/** @ts-expect-error */
     graddy = scrawl.findStyles(name('mygradient'));
 
     // Reset the block fillStyle to the gradient

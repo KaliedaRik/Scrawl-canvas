@@ -45,7 +45,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Effect width: ${width.value}px\n    Opacity: ${opacity.value}`;
 });
 
@@ -83,9 +83,9 @@ scrawl.makeUpdater({
 const width = document.querySelector('#width'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 width.value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

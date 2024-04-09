@@ -220,7 +220,7 @@ const myemitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history,
-// @ts-expect-error
+/** @ts-expect-error */
             roll = this.get('roll');
 
         let remaining, globalAlpha, scale, start, z;
@@ -312,7 +312,7 @@ const useArtefact = function () {
 
     return function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         val = selector.value;
 
         switch (val) {
@@ -345,9 +345,9 @@ const useArtefact = function () {
 scrawl.addNativeListener(['input', 'change'], useArtefact, '#artefact');
 
 // Initialize form values
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#artefact').value = 'star';
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#position').value = 'start';
 
 

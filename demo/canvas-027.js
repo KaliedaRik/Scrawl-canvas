@@ -87,7 +87,7 @@ const playPause = scrawl.makeLabel({
             css: { cursor: 'pointer' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ includeUnderline: true });
     },
 
@@ -97,7 +97,7 @@ const playPause = scrawl.makeLabel({
             css: { cursor: 'auto' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ includeUnderline: false });
     },
 
@@ -189,7 +189,7 @@ scrawl.makePicture({
 
     onEnter: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ globalAlpha: 0.3 });
 
         canvas.set({
@@ -201,7 +201,7 @@ scrawl.makePicture({
 
     onLeave: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ globalAlpha: 0.1 });
 
         canvas.set({
@@ -211,7 +211,7 @@ scrawl.makePicture({
 
     onUp: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -290,7 +290,7 @@ const mygoose = scrawl.makeBlock({
             css: { cursor: 'pointer' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ method: 'draw' });
     },
 
@@ -300,13 +300,13 @@ const mygoose = scrawl.makeBlock({
             css: { cursor: 'auto' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ method: 'none' });
     },
 
     onUp: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickAnchor();
     },
 

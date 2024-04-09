@@ -89,9 +89,9 @@ const impressionistAsset = scrawl.makeRawAsset({
         key: 'background',
         defaultValue: false,
         setter: function (item) {
-// @ts-expect-error
+/** @ts-expect-error */
             this.background = item;
-// @ts-expect-error
+/** @ts-expect-error */
             this.dirtyBackground = true;
         },
     },{
@@ -99,9 +99,9 @@ const impressionistAsset = scrawl.makeRawAsset({
         key: 'noise',
         defaultValue: false,
         setter: function (item) {
-// @ts-expect-error
+/** @ts-expect-error */
             this.noise = item;
-// @ts-expect-error
+/** @ts-expect-error */
             this.dirtyData = true;
         },
     },{
@@ -111,13 +111,13 @@ const impressionistAsset = scrawl.makeRawAsset({
         defaultValue: false,
         setter: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
             if (this.dirtyBackground) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.dirtyBackground = false;
 
-// @ts-expect-error
+/** @ts-expect-error */
                 const { element, engine, canvasWidth, canvasHeight, background } = this;
 
                 element.width = canvasWidth;
@@ -133,16 +133,16 @@ const impressionistAsset = scrawl.makeRawAsset({
                     // + the reason why we're NOT doing it that way at the moment is to keep RawAsset canvases out of the SC library
                     engine.drawImage(background.source, ...background.copyArray, ...background.pasteArray);
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.backgroundData = engine.getImageData(0, 0, dimension, dimension);
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.dirtyData = true;
                 }
-// @ts-expect-error
+/** @ts-expect-error */
                 else this.dirtyBackground = true;
             }
-// @ts-expect-error
+/** @ts-expect-error */
             else this.dirtyData = true;
         },
     }],
@@ -203,7 +203,7 @@ const impressionistAsset = scrawl.makeRawAsset({
 
                     engine.beginPath();
                     engine.moveTo(x, y);
-// @ts-expect-error
+/** @ts-expect-error */
                     engine.lineTo(x + dx, y + dy);
                     engine.stroke();
                 }
@@ -307,27 +307,27 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lineBlend').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lineWidth').value = 4;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lineLengthMultiplier').value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lineLengthStart').value = 5;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#linesToAdd').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#lineOpacity').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#noiseScale').value = 80;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offsetX').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offsetY').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#rotationMultiplier').value = 90;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#rotationStart').value = 0;
 
 

@@ -49,7 +49,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Red: [${red.value}]\n    Green: [${green.value}]\n    Blue: [${blue.value}]\n    Alpha: [${alpha.value}]\n    Opacity: ${opacity.value}`;
 });
 
@@ -91,15 +91,15 @@ const red = document.querySelector('#red'),
     alpha = document.querySelector('#alpha'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 red.value = '50, 200';
-// @ts-expect-error
+/** @ts-expect-error */
 green.value = '60, 220, 150';
-// @ts-expect-error
+/** @ts-expect-error */
 blue.value = '40, 180';
-// @ts-expect-error
+/** @ts-expect-error */
 alpha.value = '';
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
 

@@ -12,9 +12,9 @@ import { reportSpeed } from './utilities.js';
 const canvas = scrawl.library.canvas.mycanvas;
 
 const html = document.querySelector('#text-in-html');
-// @ts-expect-error
+/** @ts-expect-error */
 html.style.font = '60px serif';
-// @ts-expect-error
+/** @ts-expect-error */
 html.style.direction = 'ltr';
 html.textContent = 'Long live the world!';
 
@@ -126,17 +126,17 @@ scrawl.makeUpdater({
     // We need to let the changes settle before transferring them over to our DOM element
     callback: () => setTimeout(() => {
 
-// @ts-expect-error
+/** @ts-expect-error */
         html.style.transform = `scale(${mylabel.get('scale')}) rotate(${mylabel.get('roll')}deg)`;
-// @ts-expect-error
+/** @ts-expect-error */
         html.style.letterSpacing = mylabel.get('letterSpacing');
-// @ts-expect-error
+/** @ts-expect-error */
         html.style.wordSpacing = mylabel.get('wordSpacing');
-// @ts-expect-error
+/** @ts-expect-error */
         html.style.direction = mylabel.get('direction');
-// @ts-expect-error
+/** @ts-expect-error */
         html.style.fontKerning = mylabel.get('fontKerning');
-// @ts-expect-error
+/** @ts-expect-error */
         html.style.textRendering = mylabel.get('textRendering');
     }, 50),
 });
@@ -514,9 +514,9 @@ const updateFont = (event) => {
         // We need to let the changes settle before transferring them over to our DOM element
         setTimeout(() => {
 
-// @ts-expect-error
+/** @ts-expect-error */
             html.style.font = mylabel.get('fontString');
-// @ts-expect-error
+/** @ts-expect-error */
             html.style.direction = mylabel.get('direction');
             html.textContent = mylabel.get('text');
         }, 50);
@@ -527,42 +527,42 @@ scrawl.addNativeListener('change', (e) => updateFont(e), selector);
 
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 selector.options.selectedIndex = 0;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#startX').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#startY').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleX').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleY').value = 50;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleX-string').options.selectedIndex = 2;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#handleY-string').options.selectedIndex = 3;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offsetX').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#offsetY').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#scale').value = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#roll').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#direction').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#fontKerning').options.selectedIndex = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#textRendering').options.selectedIndex = 0;
 
 

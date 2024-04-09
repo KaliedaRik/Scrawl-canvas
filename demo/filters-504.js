@@ -96,29 +96,29 @@ const g1 = document.querySelector('#g1'),
 const b1 = document.querySelector('#b1'),
     b2 = document.querySelector('#b2');
 
-// @ts-expect-error
+/** @ts-expect-error */
 r1.value = 0.996;
-// @ts-expect-error
+/** @ts-expect-error */
 r2.value = 0.984;
-// @ts-expect-error
+/** @ts-expect-error */
 g1.value = 0.125;
-// @ts-expect-error
+/** @ts-expect-error */
 g2.value = 0.941;
-// @ts-expect-error
+/** @ts-expect-error */
 b1.value = 0.552;
-// @ts-expect-error
+/** @ts-expect-error */
 b2.value = 0.478;
 
 // Setup form functionality
-// @ts-expect-error
+/** @ts-expect-error */
 const updateR = () => feFuncR.setAttribute('tableValues', `${r1.value} ${r2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateR, '.feFuncR');
 
-// @ts-expect-error
+/** @ts-expect-error */
 const updateG = () => feFuncG.setAttribute('tableValues', `${g1.value} ${g2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateG, '.feFuncG');
 
-// @ts-expect-error
+/** @ts-expect-error */
 const updateB = () => feFuncB.setAttribute('tableValues', `${b1.value} ${b2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateB, '.feFuncB');
 

@@ -152,23 +152,23 @@ const updateTextUnits = () => {
 
             distance = coord.getMagnitude();
 
-// @ts-expect-error
+/** @ts-expect-error */
             angle = Math.atan2(y, x) * radToDeg;
 
             arrowStyle = {};
-// @ts-expect-error
+/** @ts-expect-error */
             if (x < 0 && y < 0) arrowStyle.fillStyle = 'rgb(255 140 140)';
-// @ts-expect-error
+/** @ts-expect-error */
             else if (x > 0 && y < 0) arrowStyle.fillStyle = 'rgb(140 140 255)';
-// @ts-expect-error
+/** @ts-expect-error */
             else if (x < 0 && y > 0) arrowStyle.fillStyle = 'rgb(140 255 140)';
-// @ts-expect-error
+/** @ts-expect-error */
             else arrowStyle.fillStyle = 'rgb(255 255 0)';
 
             if (distance < 80) {
-// @ts-expect-error
+/** @ts-expect-error */
                 arrowStyle.method = 'draw';
-// @ts-expect-error
+/** @ts-expect-error */
                 arrowStyle.strokeStyle = 'rgb(255 255 255)';
                 angle += 180;
             }

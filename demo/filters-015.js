@@ -52,7 +52,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     return `    Tile dimensions - width: ${tile_width.value}px height: ${tile_height.value}px radius: ${tile_radius.value}px\n    Origin offset - x: ${offset_x.value}px y: ${offset_y.value}px\n    Angle: ${angle.value}\n    Random points: ${randomPoints.value}\n    Opacity: ${opacity.value}`;
 });
 
@@ -106,11 +106,11 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
 
         case 'random' :
             myFilter.set({
-// @ts-expect-error
+/** @ts-expect-error */
                 points: parseInt(randomPoints.value, 10),
                 tileRadius: 100,
             });
-// @ts-expect-error
+/** @ts-expect-error */
             tile_radius.value = 100;
             break;
 
@@ -120,9 +120,9 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 tileRadius: 20,
                 tileHeight: 40,
             });
-// @ts-expect-error
+/** @ts-expect-error */
             tile_radius.value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
             tile_height.value = 40;
             break;
 
@@ -132,9 +132,9 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 tileWidth: 20,
                 tileHeight: 20,
             });
-// @ts-expect-error
+/** @ts-expect-error */
             tile_width.value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
             tile_height.value = 20;
             break;
     }
@@ -146,7 +146,7 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
     const t = e.target,
         value = t.value;
 
-// @ts-expect-error
+/** @ts-expect-error */
         if (points.value === 'random') {
 
             myFilter.set({
@@ -167,32 +167,32 @@ const points = document.querySelector('#points'),
     randomPoints = document.querySelector('#random-points'),
     opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
+/** @ts-expect-error */
 points.value = 'rect-grid';
-// @ts-expect-error
+/** @ts-expect-error */
 tile_width.value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
 tile_height.value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
 tile_radius.value = 14;
-// @ts-expect-error
+/** @ts-expect-error */
 offset_x.value = 200;
-// @ts-expect-error
+/** @ts-expect-error */
 offset_y.value = 200;
-// @ts-expect-error
+/** @ts-expect-error */
 angle.value = 0;
-// @ts-expect-error
+/** @ts-expect-error */
 randomPoints.value = 20;
-// @ts-expect-error
+/** @ts-expect-error */
 opacity.value = 1;
 
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeRed').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeGreen').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeBlue').options.selectedIndex = 1;
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
 
 
