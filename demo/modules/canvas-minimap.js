@@ -147,7 +147,7 @@ const initializeMinimap = (args = {}, scrawl) => {
         pivot: "map-cell-pivot",
         lockTo: "pivot",
         backgroundColor: "white",
-        
+
         // The map Cell needs to compile after the large Cell
         compileOrder: 1
     });

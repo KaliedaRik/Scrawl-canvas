@@ -18,8 +18,8 @@ type Percentage = `${number}%`;
 type PercentOrNumberInput = Percentage | number;
 
 interface CommonHereObjectInput {
-    x?: StringOrNumberInput;
-    y?: StringOrNumberInput;
+    x?: number;
+    y?: number;
     [index: string]: any;
 }
 

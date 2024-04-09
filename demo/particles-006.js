@@ -170,7 +170,6 @@ const myEmitter = scrawl.makeEmitter({
 
                     const [ , , fx, fy] = fromHistory[0];
 
-// @ts-expect-error
                     const test = scrawl.requestVector(fx, fy).vectorSubtractArray([x, y]),
                         mag = test.getMagnitude();
 

@@ -147,7 +147,7 @@ const name = (n) => `${namespace}-${n}`;
 
 
 // Building the background - this goes in a separate Cell
-const myBackground = canvas.buildCell({
+canvas.buildCell({
 
     name: name('background'),
 
