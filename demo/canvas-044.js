@@ -10,12 +10,6 @@ import { reportSpeed } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-
-    // The order in which we compile Cells becomes important when building more complex patterns with additional Cells
-    compileOrder: 2,
-});
-
 
 // STEP 1. We define a gradient, then apply it to some Blocks we create in a new canvas Cell. This gives us a more interesting gradient pattern than the default 'linear' and 'radial' gradients supplied by the Canvas API
 scrawl.makeGradient({
@@ -37,8 +31,6 @@ const patternCell = canvas.buildCell({
     name: 'gradient-pattern-cell',
     dimensions: [50, 50],
     shown: false,
-    useAsPattern: true,
-    compileOrder: 0,
 });
 
 // Populate our new Cell with Block entitys that use our linear gradient

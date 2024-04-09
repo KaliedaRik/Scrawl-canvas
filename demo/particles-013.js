@@ -10,10 +10,6 @@ import { reportSpeed } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    compileOrder: 1,
-});
-
 
 // #### Christmas tree Shape entity
 // We generate a 'twinkling' particle Emitter using this entity's shape as a generation field. We also position the 'star' particle Emitter on this entity's path, alongside a set of 10 'candle' Pictures

@@ -16,11 +16,6 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-canvas.setBase({
-    compileOrder: 1,
-});
-
-
 // Create image-based patterns
 scrawl.makePattern({
 
@@ -73,11 +68,8 @@ canvas.buildCell({
 
     width: 50,
     height: 50,
-
     backgroundColor: 'lightblue',
-
     shown: false,
-    useAsPattern: true,
 });
 
 scrawl.makeBlock({
@@ -110,12 +102,9 @@ scrawl.makeBlock({
 canvas.buildCell({
 
     name: name('cat-pattern'),
-
     width: 150,
     height: 75,
-
     shown: false,
-    useAsPattern: true,
 });
 
 scrawl.makePicture({

@@ -10,14 +10,8 @@ import { reportSpeed } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.set({
+canvas.set({ includeInTabNavigation: true });
 
-    includeInTabNavigation: true,
-
-}).setBase({
-    // The base Cell needs to compile after the other Cells
-    compileOrder: 2
-});
 
 // Magic numbers
 const mainDimensions = 1600;
@@ -28,6 +22,7 @@ let [displayWidth, displayHeight] = canvas.get("dimensions");
 let frameWidth = (displayWidth / mainDimensions) * mapDimensions;
 let frameHeight = (displayHeight / mainDimensions) * mapDimensions;
 
+
 // Build out the large Cell (1600px x 1600px)
 // - we don't actually display this Cell
 const mainCell = canvas.buildCell({
@@ -35,7 +30,6 @@ const mainCell = canvas.buildCell({
     name: "main-cell",
     dimensions: [mainDimensions, mainDimensions],
     shown: false,
-    compileOrder: 0,
     backgroundColor: "ivory"
 });
 

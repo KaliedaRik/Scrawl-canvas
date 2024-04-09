@@ -405,19 +405,13 @@ scrawl.makeFilter({
 
 
 // Watermark effect
-canvas9.setBase({
-    compileOrder: 2,
-});
-
 canvas9.buildCell({
 
     name: 'watermark-pattern-cell',
     shown: false,
     dimensions: [200, 150],
-    useAsPattern: true,
     skewX: 0.2,
     skewY: -0.4,
-    compileOrder: 0,
 });
 
 scrawl.makeLabel({
@@ -480,9 +474,9 @@ canvas10.buildCell({
     dimensions: ['100%', '100%'],
 });
 
-canvas10.setBase({
-    compileOrder: 1,
-});
+// canvas10.setBase({
+//     compileOrder: 1,
+// });
 
 scrawl.makeConicGradient({
 

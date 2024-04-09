@@ -10,11 +10,6 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-// The base cell needs to compile after the helper cells we're about to create
-canvas.setBase({
-    compileOrder: 1,
-});
-
 
 // #### Gradients and pattern definitions
 // We display the gradients in a Block entity, in a dedicated Cell
@@ -26,7 +21,6 @@ const patternCell = canvas.buildCell({
     name: 'bar-cell-pattern',
     dimensions: [80, 80],
     shown: false,
-    useAsPattern: true,
     skewX: 0,
     stretchX: 1,
     shiftX: 0,

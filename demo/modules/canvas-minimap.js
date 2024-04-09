@@ -81,12 +81,7 @@ const initializeMinimap = (args = {}, scrawl) => {
     let frameHeight = (displayHeight / mainDimensionY) * mapDimensionY;
 
     canvas.set({
-
         includeInTabNavigation: true,
-
-    }).setBase({
-        // The base Cell needs to compile after the other Cells
-        compileOrder: 2
     });
 
 
@@ -97,7 +92,6 @@ const initializeMinimap = (args = {}, scrawl) => {
         name: "main-cell",
         dimensions: [mainDimensionX, mainDimensionY],
         shown: false,
-        compileOrder: 0,
     });
 
     // Rely on the main code to populate the main Cell with entitys, and the functionality required to interact with them. We only care here about displaying the main map in the canvas element
@@ -147,11 +141,13 @@ const initializeMinimap = (args = {}, scrawl) => {
 
         name: "map-cell",
         dimensions: [mapDimensionX, mapDimensionY],
+
         // We pivot the map Cell to the draggable Block entity
         // - wherever the Block goes, the map Cell will follow
         pivot: "map-cell-pivot",
         lockTo: "pivot",
         backgroundColor: "white",
+        
         // The map Cell needs to compile after the large Cell
         compileOrder: 1
     });

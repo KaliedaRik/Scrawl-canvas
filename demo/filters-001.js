@@ -18,9 +18,6 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 // #### Scene setup
 const canvas = L.canvas.mycanvas;
 
-canvas.setBase({
-    compileOrder: 1,
-});
 
 importDomImage('.flowers');
 

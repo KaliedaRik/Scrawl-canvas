@@ -78,19 +78,10 @@ scrawl.makePattern({
 canvas.buildCell({
 
     name: name('cell-pattern'),
-
     width: 50,
     height: 50,
-
     backgroundColor: 'lightblue',
-
     shown: false,
-    useAsPattern: true,
-});
-
-canvas.base.set({
-
-    compileOrder: 1,
 });
 
 // Create a Block entity to display in the new Cell pattern

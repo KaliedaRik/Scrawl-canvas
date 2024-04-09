@@ -37,7 +37,6 @@ export default function (items = {}) {
         name: name('cell'),
         dimensions: [dimensions, dimensions],
         shown: false,
-        compileOrder: 0,
     });
 
     scrawl.makeGroup({

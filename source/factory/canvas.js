@@ -842,7 +842,7 @@ P.cleanCells = function () {
 
         mycell = cell[cells[i]];
 
-        if (mycell) {
+        if (mycell && !mycell.isBase) {
 
             if (mycell.cleared) tempClear.push(mycell);
 
@@ -851,7 +851,6 @@ P.cleanCells = function () {
                 order = mycell.compileOrder;
 
                 if (!tempCompile[order]) tempCompile[order] = requestArray();
-
                 tempCompile[order].push(mycell);
             }
 
@@ -866,7 +865,7 @@ P.cleanCells = function () {
     }
 
     cellBatchesClear.length = 0;
-    cellBatchesClear.push(...tempClear);
+    cellBatchesClear.push(...tempClear, this.base);
     releaseArray(tempClear);
 
     cellBatchesCompile.length = 0;
@@ -880,6 +879,7 @@ P.cleanCells = function () {
             releaseArray(arr);
         }
     }
+    cellBatchesCompile.push(this.base);
     releaseArray(tempCompile);
 
     cellBatchesShow.length = 0;
@@ -893,6 +893,7 @@ P.cleanCells = function () {
             releaseArray(arr);
         }
     }
+    cellBatchesShow.push(this.base);
     releaseArray(tempShow);
 };
 

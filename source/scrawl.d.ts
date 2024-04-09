@@ -982,7 +982,6 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     stashWidth?: StringOrNumberInput;
     stashX?: StringOrNumberInput;
     stashY?: StringOrNumberInput;
-    useAsPattern?: boolean;
     checkForEntityHover?: boolean;
     onEntityHover?: DefaultInputFunction;
     onEntityNoHover?: DefaultInputFunction;

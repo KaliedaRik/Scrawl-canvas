@@ -10,9 +10,6 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    compileOrder: 1,
-});
 
 // Create the assets
 scrawl.importDomImage('.flowers');

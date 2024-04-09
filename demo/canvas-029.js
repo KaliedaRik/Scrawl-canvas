@@ -19,10 +19,6 @@ const name = (n) => `${namespace}-${n}`;
 scrawl.importDomImage('.flowers');
 
 
-canvas.setBase({
-    compileOrder: 1,
-});
-
 const textCell = canvas.buildCell({
 
     name: name('text-cell'),

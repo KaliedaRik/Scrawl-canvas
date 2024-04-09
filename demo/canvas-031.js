@@ -155,6 +155,7 @@ const myBackground = canvas.buildCell({
     height: '100%',
 
     setRelativeDimensionsUsingBase: true,
+    shown: false,
 });
 
 // We use a wheel segment as a stencil
@@ -259,17 +260,6 @@ scrawl.makePicture({
 
 // Build the clock face
 const clock = buildClockface(canvas, `${namespace}-clock`);
-
-
-// #### Cell display and compile ordering
-myBackground.set({
-    compileOrder: 0,
-    shown: false,
-});
-
-canvas.base.set({
-    compileOrder: 1,
-});
 
 
 // #### Scene animation

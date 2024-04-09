@@ -106,10 +106,6 @@ export default function (scrawl, el) {
             // This makes the canvas element's base cell the default group for everything we create
             canvas.setAsCurrentCanvas();
 
-            canvas.base.set({
-                compileOrder: 1,
-            });
-
 
             // Boilerplate - fix for text alignment
             const getJustifyLine = (val) => {
@@ -185,7 +181,6 @@ export default function (scrawl, el) {
                 cleared: false,
                 compiled: false,
                 shown: false,
-                useAsPattern: true,
             });
 
             scrawl.makeBlock({

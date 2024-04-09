@@ -520,7 +520,6 @@ const addCheckerboardBackground = (canvas, namespace) => {
         cleared: false,
         compiled: false,
         shown: false,
-        useAsPattern: true,
     });
 
     scrawl.makeBlock({
