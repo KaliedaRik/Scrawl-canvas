@@ -4,22 +4,29 @@
 // [Run code](../../demo/canvas-049.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create the radial gradient
 const graddy = scrawl.makeConicGradient({
-    name: 'mygradient',
+
+    name: name('mygradient'),
     startX: '50%',
     startY: '50%',
     angle: 0,
     easing: 'linear',
     precision: 1,
 });
+
 
 // Test the ability to load a user-created easing algorithm into the gradient
 const bespokeEasings = {
@@ -38,7 +45,8 @@ const bespokeEasings = {
 
 // Create a block entity which will use the gradient
 scrawl.makeBlock({
-    name: 'myblock',
+
+    name: name('myblock'),
     width: '90%',
     height: '90%',
     startX: '5%',
@@ -55,15 +63,18 @@ scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}\n    Start - x: ${startX.value}%; y: ${startY.value}%\n    Angle - ${angle.value}°`;
+    return `
+    Palette - start: ${dom.paletteStart.value}; end: ${dom.paletteEnd.value}
+    Start - x: ${dom.startX.value}%; y: ${dom.startY.value}%
+    Angle: ${dom.angle.value}°
+    Precision: ${dom.precision.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -147,40 +158,21 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '#easing');
 
 
-
 // Set the DOM input values
-const paletteStart = document.querySelector('#paletteStart');
-const paletteEnd = document.querySelector('#paletteEnd');
-const startX = document.querySelector('#startX');
-const startY = document.querySelector('#startY');
-const angle = document.querySelector('#angle');
-const precision = document.querySelector('#precision');
-
-/** @ts-expect-error */
-paletteStart.value = 0;
-/** @ts-expect-error */
-paletteEnd.value = 999;
-/** @ts-expect-error */
-startX.value = 50;
-/** @ts-expect-error */
-startY.value = 50;
-/** @ts-expect-error */
-angle.value = 0;
-/** @ts-expect-error */
-precision.value = 1;
-
-/** @ts-expect-error */
-document.querySelector('#red').value = 0;
-/** @ts-expect-error */
-document.querySelector('#blue').value = 0;
-/** @ts-expect-error */
-document.querySelector('#easing').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#cyclePalette').value = 0;
-/** @ts-expect-error */
-document.querySelector('#colorSpace').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#returnColorAs').options.selectedIndex = 0;
+const dom = initializeDomInputs([
+    ['input', 'angle', '0'],
+    ['input', 'paletteEnd', '999'],
+    ['input', 'paletteStart', '0'],
+    ['input', 'precision', '1'],
+    ['input', 'startX', '50'],
+    ['input', 'startY', '50'],
+    ['select', 'blue', 0],
+    ['select', 'colorSpace', 0],
+    ['select', 'cyclePalette', 0],
+    ['select', 'easing', 0],
+    ['select', 'red', 0],
+    ['select', 'returnColorAs', 0],
+]);
 
 
 // #### Development and testing

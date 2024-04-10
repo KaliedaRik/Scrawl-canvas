@@ -8,12 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // #### Create filters
 scrawl.makeFilter({
-    name: 'my-complex-filter',
+
+    name: name('my-complex-filter'),
 
     actions: [
         {
@@ -80,14 +86,16 @@ scrawl.makeFilter({
 // + Note 1: Users will need to explicitly agree to let Scrawl-canvas use the media stream the first time the page loads (the browser should handle this agreement procedure itself)
 // + Note 2: importMediaStream returns a Promise!
 scrawl.importMediaStream({
+
+    name: name('video-feed'),
     audio: false,
 })
-.then(myface => {
+.then(res => {
 
     scrawl.makePicture({
 
-        name: 'camera-picture',
-        asset: myface.name,
+        name: name('camera-picture'),
+        asset: res.name,
 
         width: '100%',
         height: '100%',
@@ -95,9 +103,14 @@ scrawl.importMediaStream({
         copyWidth: '100%',
         copyHeight: '100%',
 
+        // To get a mirror effect
+        start: ['center', 'center'],
+        handle: ['center', 'center'],
+        flipReverse: true,
+
         method: 'fill',
 
-        filters: ['my-complex-filter']
+        filters: [name('my-complex-filter')],
     });
 })
 .catch(err => console.log(err.message));
@@ -111,7 +124,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

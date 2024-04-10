@@ -54,10 +54,11 @@ export * as library from './core/library.js';
 export {
     checkFontIsLoaded,
     findArtefact,
-    findPattern,
     findCanvas,
     findEntity,
+    findPattern,
     findStyles,
+    findTween,
     getFontMetadata,
     purge,
 } from './core/library.js';

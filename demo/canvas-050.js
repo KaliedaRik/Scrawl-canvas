@@ -4,17 +4,22 @@
 // [Run code](../../demo/canvas-050.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create a wheel entity which we can then bounce around the canvas
 const myWheel = scrawl.makeWheel({
 
-    name: 'ball',
+    name: name('ball'),
 
     start: [300, '50%'],
     handle: ['center', 'center'],
@@ -55,7 +60,8 @@ const myWheel = scrawl.makeWheel({
 
 
 scrawl.makeOval({
-    name: 'base-oval',
+
+    name: name('base-oval'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
     radiusX: 150,
@@ -65,57 +71,77 @@ scrawl.makeOval({
     strokeStyle: 'red',
     lineDash: [4, 3],
     useAsPath: true,
-    delta: {
-        roll: 0.1,
-    },
+
     shadowColor: 'black',
     shadowOffsetX: 4,
     shadowOffsetY: 4,
     shadowBlur: 4,
+
+    delta: {
+        roll: 0.1,
+    },
 });
 
 const pins = scrawl.makeGroup({
-    name: 'pins',
-    host: canvas.base.name,
+
+    name: name('pins'),
+    host: canvas.get('baseName'),
 });
 
 const angle = 3 / 7;
 
 scrawl.makeBlock({
-    name: 'pin-1',
-    group: 'pins',
+
+    name: name('pin-1'),
+    group: pins,
+
     dimensions: [7, 7],
     handle: ['center', 'center'],
-    path: 'base-oval',
+
+    path: name('base-oval'),
     pathPosition: (angle * 1) % 1,
     lockTo: 'path',
+
     fillStyle: 'blue',
     shadowColor: 'black',
     shadowOffsetX: 4,
     shadowOffsetY: 4,
     shadowBlur: 4,
+
 }).clone({
-    name: 'pin-2',
+
+    name: name('pin-2'),
     pathPosition: (angle * 2) % 1,
+
 }).clone({
-    name: 'pin-3',
+
+    name: name('pin-3'),
     pathPosition: (angle * 3) % 1,
+
 }).clone({
-    name: 'pin-4',
+
+    name: name('pin-4'),
     pathPosition: (angle * 4) % 1,
+
 }).clone({
-    name: 'pin-5',
+
+    name: name('pin-5'),
     pathPosition: (angle * 5) % 1,
+
 }).clone({
-    name: 'pin-6',
+
+    name: name('pin-6'),
     pathPosition: (angle * 6) % 1,
+
 }).clone({
-    name: 'pin-7',
+
+    name: name('pin-7'),
     pathPosition: (angle * 7) % 1,
 });
 
 scrawl.makePolyline({
-    name: 'polly',
+
+    name: name('polly'),
     pins: pins.get('artefacts'),
     tension: 0,
     closed: true,
@@ -150,7 +176,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 const animation = scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     maxFrameRate: 120,
     target: canvas,
     afterShow: report,
@@ -166,6 +192,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     switch (e.target.value) {
 
         case 'reverse' :
+
             myWheel.set({
                 deltaConstraints: {
                     startX: [50, 550, 'reverse'],
@@ -177,6 +204,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
             break;
 
         case 'loop' :
+
             myWheel.set({
                 deltaConstraints: {
                     startX: [50, 550, 'loop'],
@@ -220,6 +248,7 @@ scrawl.addNativeListener('click', (e) => {
 
 }, '#scaling');
 
+
 // Setup form observer functionality
 scrawl.makeUpdater({
 
@@ -236,13 +265,23 @@ scrawl.makeUpdater({
     },
 });
 
-/** @ts-expect-error */
-document.querySelector('#scaling').value = '0';
-document.querySelector('#scaling').innerHTML = 'Add scaling';
-/** @ts-expect-error */
-document.querySelector('#constraintAction').value = 'reverse';
-/** @ts-expect-error */
-document.querySelector('#maxFrameRate').value = '120';
+
+// Set the DOM input values
+initializeDomInputs([
+    ['button', 'scaling', 'Add scaling'],
+    ['select', 'constraintAction', 0],
+    ['select', 'maxFrameRate', 0]
+]);
+
+// dom.scaling.innerHTML = 'Add scaling';
+
+// /** @ts-expect-error */
+// document.querySelector('#scaling').value = '0';
+// document.querySelector('#scaling').innerHTML = 'Add scaling';
+// /** @ts-expect-error */
+// document.querySelector('#constraintAction').value = 'reverse';
+// /** @ts-expect-error */
+// document.querySelector('#maxFrameRate').value = '120';
 
 
 // #### Development and testing

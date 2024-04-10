@@ -3225,12 +3225,14 @@ export function forceUpdate(): void;
 
 export function recalculateFonts(item?: number): void;
 
+export function purge(item: string): void;
 export function purgeFontMetadata(): void;
 
 export function findArtefact(item: string): ArtefactInstance;
 export function findEntity(item: string): EntityInstance;
 export function findCanvas(item: string): CanvasInstance;
 export function findStyles(item: string): StylesInstance;
+export function findTween(item: string): TweenInstance;
 export function findPattern(item: string): PatternInstance | CellInstance;
 
 export function checkFontIsLoaded(font: string): boolean;

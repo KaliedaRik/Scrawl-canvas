@@ -586,6 +586,23 @@ const initializeDomInputs = (items) => {
             }
             else results[selector] = {};
             break;
+
+        case 'button' :
+
+            if (value.substring) {
+
+                /** @type {HTMLButtonElement} */
+                const S = document.querySelector(`#${selector}`);
+
+                if (S) {
+
+                    S.textContent = value;
+                    results[selector] = S;
+                }
+                else results[selector] = {};
+            }
+            else results[selector] = {};
+            break;
         }
     });
 

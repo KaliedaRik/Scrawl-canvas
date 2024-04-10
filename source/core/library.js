@@ -202,6 +202,12 @@ export function findStyles (item = '') {
     return null;
 }
 
+export function findTween (item = '') {
+
+    if (tweennames.includes(item)) return tween[item];
+    return null;
+}
+
 export function findPattern (item = '') {
 
     if (stylesnames.includes(item)) return styles[item];
