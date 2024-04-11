@@ -59,10 +59,10 @@
     <div class="blue"><input class="controlItem" id="maxGenerations" type="range" value="4000" min="0" max="10000" step="100" /></div>
 
     <div class="blue label">Asset width</div>
-    <div class="blue"><input class="controlItem asset-dimensions" id="canvasWidth" type="range" value="80" min="20" max="200" step="10" /></div>
+    <div class="blue"><input class="controlItem asset-dimensions" id="width" type="range" value="80" min="20" max="200" step="10" /></div>
 
     <div class="blue label">Asset height</div>
-    <div class="blue"><input class="controlItem asset-dimensions" id="canvasHeight" type="range" value="80" min="20" max="200" step="10" /></div>
+    <div class="blue"><input class="controlItem asset-dimensions" id="height" type="range" value="80" min="20" max="200" step="10" /></div>
 
     <div class="pink label">Presets</div>
     <div class="pink">
@@ -110,23 +110,23 @@
     <div class="pink label">Initial random seed level</div>
     <div class="pink"><input class="controlItem" id="initialRandomSeedLevel" type="range" value="0.1" min="0" max="0.15" step="0.0001" /></div>
 
-    <div class="green label">Pattern scale X</div>
-    <div class="green"><input class="controlItem" id="matrixA" type="range" value="1" min="1" max="5" step="0.01" /></div>
+    <div class="green label">Pattern stretch X</div>
+    <div class="green"><input class="controlItem" id="stretchX" type="range" value="1" min="1" max="5" step="0.01" /></div>
 
-    <div class="green label">Pattern scale Y</div>
-    <div class="green"><input class="controlItem" id="matrixD" type="range" value="1" min="1" max="5" step="0.01" /></div>
+    <div class="green label">Pattern stretch Y</div>
+    <div class="green"><input class="controlItem" id="stretchY" type="range" value="1" min="1" max="5" step="0.01" /></div>
 
     <div class="green label">Pattern skew X</div>
-    <div class="green"><input class="controlItem" id="matrixC" type="range" value="0" min="-1.5" max="1.5" step="0.01" /></div>
+    <div class="green"><input class="controlItem" id="skewX" type="range" value="0" min="-1.5" max="1.5" step="0.01" /></div>
 
     <div class="green label">Pattern skew Y</div>
-    <div class="green"><input class="controlItem" id="matrixB" type="range" value="0" min="-1.5" max="1.5" step="0.01" /></div>
+    <div class="green"><input class="controlItem" id="skewY" type="range" value="0" min="-1.5" max="1.5" step="0.01" /></div>
 
-    <div class="green label">Pattern offset X</div>
-    <div class="green"><input class="controlItem" id="matrixE" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="green label">Pattern shift X</div>
+    <div class="green"><input class="controlItem" id="shiftX" type="range" value="0" min="-100" max="100" step="1" /></div>
 
-    <div class="green label">Pattern offset Y</div>
-    <div class="green"><input class="controlItem" id="matrixF" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="green label">Pattern shift Y</div>
+    <div class="green"><input class="controlItem" id="shiftY" type="range" value="0" min="-100" max="100" step="1" /></div>
   </div>
 
   <div class="canvas-container">

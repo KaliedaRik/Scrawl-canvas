@@ -273,16 +273,6 @@ initializeDomInputs([
     ['select', 'maxFrameRate', 0]
 ]);
 
-// dom.scaling.innerHTML = 'Add scaling';
-
-// /** @ts-expect-error */
-// document.querySelector('#scaling').value = '0';
-// document.querySelector('#scaling').innerHTML = 'Add scaling';
-// /** @ts-expect-error */
-// document.querySelector('#constraintAction').value = 'reverse';
-// /** @ts-expect-error */
-// document.querySelector('#maxFrameRate').value = '120';
-
 
 // #### Development and testing
 console.log(scrawl.library);

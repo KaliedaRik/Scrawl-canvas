@@ -124,7 +124,8 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-const S = P.setters;
+const S = P.setters,
+    G = P.getters;
 
 // __subscribers__ - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions. Filters will check for updates every time they run
 S.subscribers = λnull;
@@ -243,6 +244,11 @@ S.initialSettingEntity = function (item) {
             this.dirtyScene = true;
         }
     }
+};
+
+G.generation = function () {
+
+    return this.currentGeneration;
 };
 
 // This asset comes with a set of predefined effects built in, to make using it easier
