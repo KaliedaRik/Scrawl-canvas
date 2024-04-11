@@ -8,30 +8,37 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 const [w, h] = canvas.get('dimensions');
 
 
 const colorEngine = scrawl.makeColor({
 
-    name: 'color-engine',
+    name: name('color-engine'),
     minimumColor: 'red',
     maximumColor: 'blue',
 });
 
 
 const boxGroup = scrawl.makeGroup({
-    name: 'box-group',
-    host: canvas.base.name,
+
+    name: name('box-group'),
+    host: canvas.getBase(),
 });
 
 for (let i = 0; i < 100; i++) {
 
     scrawl.makeBlock({
 
-        name: `b-${i}`,
-        group: 'box-group',
+        name: name(`b-${i}`),
+        group: name('box-group'),
         dimensions: [30, 30],
         startX: (w * 0.1) + (Math.random() * (w * 0.8)),
         startY: (h * 0.1) + (Math.random() * (h * 0.8)),
@@ -47,14 +54,15 @@ for (let i = 0; i < 100; i++) {
 }
 
 const referenceGroup = scrawl.makeGroup({
-    name: 'reference-group',
-    host: canvas.base.name,
+
+    name: name('reference-group'),
+    host: canvas.getBase(),
 });
 
 const referenceBlock = scrawl.makeBlock({
 
-    name: 'reference-block',
-    group: 'reference-group',
+    name: name('reference-block'),
+    group: name('reference-group'),
     dimensions: [0, 0],
     method: 'draw',
     lineDash: [4, 2],
@@ -95,7 +103,8 @@ const referenceBlock = scrawl.makeBlock({
 
 
 const gatherGroup = scrawl.makeGroup({
-    name: 'gather-group',
+
+    name: name('gather-group'),
 });
 
 let isGathering = false,
@@ -245,6 +254,7 @@ scrawl.addListener(['up', 'leave'], upAction, canvas.domElement);
 
 scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
 
+
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
@@ -253,7 +263,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

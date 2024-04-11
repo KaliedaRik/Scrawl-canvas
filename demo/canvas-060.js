@@ -1,18 +1,24 @@
-// # Demo Canvas 061
+// # Demo Canvas 060
 // Wide Gamut 2D Graphics using HTML Canvas
 
-// [Run code](../../demo/filters-064.html)
+// [Run code](../../demo/filters-060.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Red
 const outerBlock = scrawl.makeBlock({
-    name: 'rgb-red',
+    name: name('rgb-red'),
     start: ['25%', '25%'],
     handle: ['center', 'center'],
     dimensions: ['50%', '50%'],
@@ -20,50 +26,50 @@ const outerBlock = scrawl.makeBlock({
 });
 
 const innerBlock = scrawl.makeBlock({
-    name: 'p3-red',
-    handle: ['center', 'center'],
-    pivot: 'rgb-red',
+    name: name('p3-red'),
+    pivot: name('rgb-red'),
     lockTo: 'pivot',
+    handle: ['center', 'center'],
     dimensions: ['25%', '25%'],
     fillStyle: 'color(display-p3 1 0 0)',
 });
 
 // Green
 outerBlock.clone({
-    name: 'rgb-green',
+    name: name('rgb-green'),
     start: ['75%', '25%'],
     fillStyle: 'rgb(0 255 0)',
 });
 
 innerBlock.clone({
-    name: 'p3-green',
-    pivot: 'rgb-green',
+    name: name('p3-green'),
+    pivot: name('rgb-green'),
     fillStyle: 'color(display-p3 0 1 0)',
 });
 
 // Blue
 outerBlock.clone({
-    name: 'rgb-blue',
+    name: name('rgb-blue'),
     start: ['25%', '75%'],
     fillStyle: 'rgb(0 0 255)',
 });
 
 innerBlock.clone({
-    name: 'p3-blue',
-    pivot: 'rgb-blue',
+    name: name('p3-blue'),
+    pivot: name('rgb-blue'),
     fillStyle: 'color(display-p3 0 0 1)',
 });
 
 // Magenta
 outerBlock.clone({
-    name: 'rgb-magenta',
+    name: name('rgb-magenta'),
     start: ['75%', '75%'],
     fillStyle: 'rgb(255 0 255)',
 });
 
 innerBlock.clone({
-    name: 'p3-magenta',
-    pivot: 'rgb-magenta',
+    name: name('p3-magenta'),
+    pivot: name('rgb-magenta'),
     fillStyle: 'color(display-p3 1 0 1)',
 });
 
@@ -76,7 +82,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

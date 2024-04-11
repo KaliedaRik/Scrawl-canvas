@@ -513,33 +513,6 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
     }
 }, '#presets');
 
-// Setup form
-// const qs_presets = document.querySelector('#presets'),
-//     qs_initialRandomSeedLevel = document.querySelector('#initialRandomSeedLevel'),
-//     qs_diffusionRateA = document.querySelector('#diffusionRateA'),
-//     qs_diffusionRateB = document.querySelector('#diffusionRateB'),
-//     qs_feedRate = document.querySelector('#feedRate'),
-//     qs_killRate = document.querySelector('#killRate'),
-//     qs_drawEvery = document.querySelector('#drawEvery'),
-//     qs_maxGenerations = document.querySelector('#maxGenerations'),
-//     qs_canvasWidth = document.querySelector('#canvasWidth'),
-//     qs_canvasHeight = document.querySelector('#canvasHeight'),
-//     qs_matrixA = document.querySelector('#matrixA'),
-//     qs_matrixB = document.querySelector('#matrixB'),
-//     qs_matrixC = document.querySelector('#matrixC'),
-//     qs_matrixD = document.querySelector('#matrixD'),
-//     qs_matrixE = document.querySelector('#matrixE'),
-//     qs_matrixF = document.querySelector('#matrixF'),
-//     qs_initialSettingPreference = document.querySelector('#initialSettingPreference'),
-//     qs_randomEngineSeed = document.querySelector('#randomEngineSeed'),
-//     qs_paletteStart = document.querySelector('#paletteStart'),
-//     qs_paletteEnd = document.querySelector('#paletteEnd'),
-//     qs_precision = document.querySelector('#precision'),
-//     qs_easing = document.querySelector('#easing'),
-//     qs_colorStops = document.querySelector('#colorStops'),
-//     qs_cyclePalette = document.querySelector('#cyclePalette'),
-//     qs_colorSpace = document.querySelector('#colorSpace'),
-//     qs_returnColorAs = document.querySelector('#returnColorAs');
 
 // Set the DOM input values
 const dom = initializeDomInputs([
@@ -571,58 +544,6 @@ const dom = initializeDomInputs([
     ['select', 'easing', 0],
 ]);
 
-// /** @ts-expect-error */
-// qs_presets.options.selectedIndex = 0;
-// /** @ts-expect-error */
-// qs_initialRandomSeedLevel.value = 0.1;
-// /** @ts-expect-error */
-// qs_diffusionRateA.value = 0.2097;
-// /** @ts-expect-error */
-// qs_diffusionRateB.value = 0.105;
-// /** @ts-expect-error */
-// qs_feedRate.value = 0.054;
-// /** @ts-expect-error */
-// qs_killRate.value = 0.062;
-// /** @ts-expect-error */
-// qs_drawEvery.value = 10;
-// /** @ts-expect-error */
-// qs_maxGenerations.value = 4000;
-// /** @ts-expect-error */
-// qs_canvasWidth.value = assetDimension;
-// /** @ts-expect-error */
-// qs_canvasHeight.value = assetDimension;
-// /** @ts-expect-error */
-// qs_matrixA.value = 1;
-// /** @ts-expect-error */
-// qs_matrixB.value = 0;
-// /** @ts-expect-error */
-// qs_matrixC.value = 0;
-// /** @ts-expect-error */
-// qs_matrixD.value = 1;
-// /** @ts-expect-error */
-// qs_matrixE.value = 0;
-// /** @ts-expect-error */
-// qs_matrixF.value = 0;
-// /** @ts-expect-error */
-// qs_initialSettingPreference.selectedIndex = 0;
-// /** @ts-expect-error */
-// qs_randomEngineSeed.value = reactionAsset.get('randomEngineSeed');
-// /** @ts-expect-error */
-// qs_paletteStart.value = 0;
-// /** @ts-expect-error */
-// qs_paletteEnd.value = 999;
-// /** @ts-expect-error */
-// qs_precision.value = 1;
-// /** @ts-expect-error */
-// qs_colorStops.options.selectedIndex = 0;
-// /** @ts-expect-error */
-// qs_easing.options.selectedIndex = 0;
-// /** @ts-expect-error */
-// qs_cyclePalette.options.selectedIndex = 0;
-// /** @ts-expect-error */
-// qs_colorSpace.options.selectedIndex = 0;
-// /** @ts-expect-error */
-// qs_returnColorAs.options.selectedIndex = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

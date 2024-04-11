@@ -4,11 +4,16 @@
 // [Run code](../../demo/canvas-056.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Magic numbers
@@ -23,9 +28,10 @@ let densityValue = 600,
 
 // We use a Polyline entity as the guide along which we shall calculate the hairs for our Shape entity. The Polyline's pins are a set of Wheel entitys which the user can drag around the canvas to reshape the Polyline
 const firstPins = scrawl.makeGroup({
-    name: 'first-pins',
-    host: canvas.base.name,
+    name: name('first-pins'),
+    host: canvas.getBase(),
 });
+
 
 const coord = scrawl.requestCoordinate();
 
@@ -34,8 +40,8 @@ for (let i = 0; i < noOfPins; i++) {
     coord.setFromArray([0, 200]).rotate(i * pinRotationAngle).add([300, 300]);
 
     scrawl.makeWheel({
-        name: `pin-1-${i}`,
-        group: 'first-pins',
+        name: name(`pin-1-${i}`),
+        group: name('first-pins'),
 /** @ts-expect-error */
         start: [...coord],
         handle: ['center', 'center'],
@@ -47,9 +53,10 @@ for (let i = 0; i < noOfPins; i++) {
 
 scrawl.releaseCoordinate(coord);
 
+
 const firstOutline = scrawl.makePolyline({
 
-    name: 'first-outline',
+    name: name('first-outline'),
     pins: firstPins.get('artefacts'),
     mapToPins: true,
     tension: 0.25,
@@ -63,7 +70,7 @@ const firstOutline = scrawl.makePolyline({
 // The Shape entity starts with a minimal pathDefinition value. Note that the Shape's start and handle attributes are centered; this entity does not pivot or mimic to the Polyline entity which is why their borders are often misaligned.
 const secondOutline = scrawl.makeShape({
 
-    name: 'second-outline',
+    name: name('second-outline'),
     pathDefinition: 'm0,0',
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -121,6 +128,7 @@ const checkOutlines = function () {
         // Return the Coordinate object back to the pool - failure to do this leads to memory leaks!
         scrawl.releaseCoordinate(coord);
 
+
         secondOutline.set({
             pathDefinition: line,
         });
@@ -132,56 +140,54 @@ const checkOutlines = function () {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Rotation: ${rotation.value}; Length: ${length.value}; Density: ${density.value}`;
+    return `
+    Rotation: ${dom.rotation.value}
+    Length: ${dom.length.value}
+    Density: ${dom.density.value}`;
 });
+
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     commence: checkOutlines,
     afterShow: report,
 });
 
+
+// #### User interaction
 scrawl.makeDragZone({
     zone: canvas,
-    collisionGroup: 'first-pins',
+    collisionGroup: name('first-pins'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
 
-// #### Development and testing
-const rotation = document.querySelector('#rotation');
-const length = document.querySelector('#length');
-const density = document.querySelector('#density');
-const pathRotation = document.querySelector('#pathroll');
 
 scrawl.addNativeListener(['input', 'change'], () => {
 
-/** @ts-expect-error */
-    rotationValue = rotation.value;
-/** @ts-expect-error */
-    lengthValue = length.value;
-/** @ts-expect-error */
-    densityValue = density.value;
+    rotationValue = dom.rotation.value;
+    lengthValue = dom.length.value;
+    densityValue = dom.density.value;
 
-/** @ts-expect-error */
-    pathrollValue = ('0' === pathRotation.value) ? false : true;
+    pathrollValue = ('0' === dom.pathroll.value) ? false : true;
 
     // Setting the `currentOutline` variable to a null string guarantees that the Shape entity's pathDefinition will be recalculated at the start of the next Display cycle
     currentOutline = '';
 
 }, '.controlItem');
 
-/** @ts-expect-error */
-rotation.value = 360;
-/** @ts-expect-error */
-length.value = 20;
-/** @ts-expect-error */
-density.value = 600;
-/** @ts-expect-error */
-pathRotation.options.selectedIndex = 0;
 
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'rotation', '360'],
+    ['input', 'length', '20'],
+    ['input', 'density', '600'],
+    ['select', 'pathroll', 0],
+]);
+
+
+// #### Development and testing
 console.log(scrawl.library);
