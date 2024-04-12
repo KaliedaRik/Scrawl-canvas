@@ -2,51 +2,46 @@
 // Parameters for: Blur, Gaussianblur filters; filter memoization
 
 // [Run code](../../demo/filters-001.html)
-import {
-    addNativeListener,
-    importDomImage,
-    library as L,
-    makeFilter,
-    makePicture,
-    makeRender,
-    makeUpdater,
-} from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = L.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
-importDomImage('.flowers');
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
-// Create the filters
-const blurFilters = {
-
-    blurFilter: makeFilter({
-
-        name: 'blur',
-        method: 'blur',
-        radius: 10,
-        includeAlpha: false,
-        passes: 1,
-        step: 1,
-    }),
-
-    gaussianBlurFilter: makeFilter({
-
-        name: 'gaussian-blur',
-        method: 'gaussianBlur',
-        radius: 10,
-    }),
-}
+// Import the initial image used by the Picture entity
+scrawl.importDomImage('.flowers');
 
 
-// Create the target entity
-const piccy = makePicture({
+// Create the two blur filters
+const gaussian = scrawl.makeFilter({
 
+    name: name('gaussian-blur'),
+    method: 'gaussianBlur',
+    radius: 10,
+});
+
+const legacy = gaussian.clone({
+
+    name: name('legacy-blur'),
+    method: 'blur',
+    includeAlpha: false,
+    passes: 1,
+    step: 1,
+});
+
+
+// Create the Picture entity
+const piccy = scrawl.makePicture({
+
+    name: name('image'),
     asset: 'iris',
 
     width: '100%',
@@ -57,7 +52,7 @@ const piccy = makePicture({
 
     method: 'fill',
 
-    filters: ['gaussian-blur'],
+    filters: [name('gaussian-blur')],
 });
 
 
@@ -65,28 +60,49 @@ const piccy = makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Radius: ${radius.value}, Step: ${step.value}, Passes: ${passes.value}\n    Opacity: ${opacity.value}`;
+    return `
+Legacy:
+    Radius: ${dom.radius.value}, Step: ${dom.step.value}, Passes: ${dom.passes.value}, Opacity: ${dom.opacity.value}
+
+Gaussian:
+    Radius: ${dom.radius.value}, Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Setup form observer functionality
-makeUpdater({
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'radius', '10'],
+    ['input', 'passes', '1'],
+    ['input', 'step', '1'],
+    ['input', 'opacity', '1'],
+    ['select', 'blurFilter', 1],
+    ['select', 'includeRed', 1],
+    ['select', 'includeGreen', 1],
+    ['select', 'includeBlue', 1],
+    ['select', 'includeAlpha', 0],
+    ['select', 'processHorizontal', 1],
+    ['select', 'processVertical', 1],
+    ['select', 'excludeTransparentPixels', 1],
+    ['select', 'memoizeFilterOutput', 0],
+]);
+
+// Update attributes specific to the legacy filter
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: blurFilters.blurFilter,
+    target: legacy,
 
     useNativeListener: true,
     preventDefault: true,
@@ -104,26 +120,59 @@ makeUpdater({
         processHorizontal: ['processHorizontal', 'boolean'],
         processVertical: ['processVertical', 'boolean'],
         excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
-
-        memoizeFilterOutput: ['memoizeFilterOutput', 'boolean'],
     },
 });
 
-addNativeListener(['update', 'change'], (e) => {
+// Switch between gaussian and legacy blurs
+scrawl.addNativeListener(['update', 'change'], (e) => {
 
     e.preventDefault();
     e.stopPropagation();
 
-    piccy.set({
-        filters: [blurFilters[e.target.value].name],
-    })
+    const val = e.target.value;
 
-}, '#blurFilter');
+    if (val) {
 
-makeUpdater({
+        // Update the filter applied to the Picture entity
+        piccy.clearFilters();
+        piccy.addFilters(name(val));
+
+        // Update UI controls
+        switch (val) {
+
+            case 'legacy-blur' :
+                dom.includeRed.removeAttribute('disabled');
+                dom.includeGreen.removeAttribute('disabled');
+                dom.includeBlue.removeAttribute('disabled');
+                dom.includeAlpha.removeAttribute('disabled');
+                dom.excludeTransparentPixels.removeAttribute('disabled');
+                dom.processHorizontal.removeAttribute('disabled');
+                dom.processVertical.removeAttribute('disabled');
+                dom.passes.removeAttribute('disabled');
+                dom.step.removeAttribute('disabled');
+                break;
+
+            case 'gaussian-blur' :
+                dom.includeRed.setAttribute('disabled', '');
+                dom.includeGreen.setAttribute('disabled', '');
+                dom.includeBlue.setAttribute('disabled', '');
+                dom.includeAlpha.setAttribute('disabled', '');
+                dom.excludeTransparentPixels.setAttribute('disabled', '');
+                dom.processHorizontal.setAttribute('disabled', '');
+                dom.processVertical.setAttribute('disabled', '');
+                dom.passes.setAttribute('disabled', '');
+                dom.step.setAttribute('disabled', '');
+                break;
+        }
+    }
+
+}, dom.blurFilter);
+
+// Get the Picture entity to memoize the filter
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
-    origin: '#memoizeFilterOutput',
+    origin: dom.memoizeFilterOutput,
 
     target: piccy,
 
@@ -135,7 +184,8 @@ makeUpdater({
     },
 });
 
-addNativeListener(['update', 'change'], (e) => {
+// Set the filter radius (both filters)
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
     e.preventDefault();
     e.stopPropagation();
@@ -144,12 +194,13 @@ addNativeListener(['update', 'change'], (e) => {
         radius: parseFloat(e.target.value),
     }
 
-    blurFilters.blurFilter.set(args);
-    blurFilters.gaussianBlurFilter.set(args);
+    gaussian.set(args);
+    legacy.set(args);
 
-}, '#radius');
+}, dom.radius);
 
-addNativeListener(['update', 'change'], (e) => {
+// Set the filter opacity (both filters)
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
     e.preventDefault();
     e.stopPropagation();
@@ -158,44 +209,10 @@ addNativeListener(['update', 'change'], (e) => {
         opacity: parseFloat(e.target.value),
     }
 
-    blurFilters.blurFilter.set(args);
-    blurFilters.gaussianBlurFilter.set(args);
+    gaussian.set(args);
+    legacy.set(args);
 
-}, '#opacity');
-
-// Setup form
-const radius = document.querySelector('#radius');
-const passes = document.querySelector('#passes');
-const step = document.querySelector('#step');
-const opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-radius.value = 10;
-/** @ts-expect-error */
-passes.value = 1;
-/** @ts-expect-error */
-step.value = 1;
-/** @ts-expect-error */
-opacity.value = 1;
-
-/** @ts-expect-error */
-document.querySelector('#blurFilter').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeRed').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeGreen').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeBlue').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeAlpha').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#processHorizontal').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#processVertical').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#excludeTransparentPixels').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
+}, dom.opacity);
 
 
 // #### Drag-and-Drop image loading functionality
@@ -203,4 +220,4 @@ addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

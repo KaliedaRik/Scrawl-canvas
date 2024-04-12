@@ -503,32 +503,5 @@ export const easeEngines = {
 };
 
 
-// Code to detect browser from Code Box: https://code-boxx.com/detect-browser-with-javascript/
-// + Ideally we need to get rid of the need for this functionality. Currently used in `/core/events.js` only
-export const detectBrowser = function () {
-
-    const result = [];
-
-/* eslint-disable-next-line */
-    if ((!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.includes(' OPR/')) result.push('old-opera');
-
-    if (typeof InstallTrigger !== UNDEF) result.push('firefox');
-
-/* eslint-disable-next-line */
-    else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== UNDEF && safari.pushNotification))) result.push('safari');
-
-/* eslint-disable-next-line */
-    if (/*@cc_on!@*/false || !!document.documentMode) result.push('internet-explorer');
-
-    if (!result.includes('internet-explorer') && !!window.StyleMedia) result.push('edge');
-
-    if(window.chrome) result.push('chrome');
-
-    if((result.includes('chrome') || result.includes('old-opera')) && !!window.CSS) result.push('blink');
-
-    return result;
-};
-
-
 // Create an Object prototype
 export const doCreate = () => _create(Object.prototype);

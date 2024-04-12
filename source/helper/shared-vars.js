@@ -442,7 +442,6 @@ export const ROLE = 'role';
 export const ROOT = 'root';
 export const ROUND = 'round';
 export const ROW = 'row';
-export const SAFARI = 'safari';
 export const SANS_SERIF = 'sans-serif';
 export const SATURATION = 'saturation';
 export const SCREEN = 'screen';

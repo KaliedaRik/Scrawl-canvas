@@ -9,7 +9,7 @@
 // #### Imports
 import * as library from "./library.js";
 
-import { detectBrowser, isa_obj, λnull } from "../helper/utilities.js";
+import { isa_obj, λnull } from "../helper/utilities.js";
 
 import { addListener } from "./events.js";
 
@@ -17,7 +17,7 @@ import { makeAnimation } from "../factory/animation.js";
 
 import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from '../helper/system-flags.js';
 
-import { _floor, _isFinite, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
+import { _floor, _isFinite, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -183,17 +183,11 @@ const updatePixelRatio = () => {
 
     if (!ignorePixelRatio) pixelRatioChangeAction();
 
-    // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally?
-    // + Whatever. Safari does not like, or respond to, this matchmedia query
-    // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
-    if (!detectBrowser().includes(SAFARI)) {
-
-        // We use a one-time media query for checking when the device pixel ratio changes
-        // + unlike the user preferences media queries, device pixel ratio can be a number of different values
-        // + we check to see if dpr changes away from the current dpr value
-        // + then we create a replacement one-time media query to check for changes away from the new value
-        matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
-    }
+    // We use a one-time media query for checking when the device pixel ratio changes
+    // + unlike the user preferences media queries, device pixel ratio can be a number of different values
+    // + we check to see if dpr changes away from the current dpr value
+    // + then we create a replacement one-time media query to check for changes away from the new value
+    matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
 };
 
 updatePixelRatio();

@@ -38,8 +38,8 @@
     <div class="lavender label">Blur</div>
     <div class="lavender">
       <select class="controlItem" id="blurFilter">
-        <option value="blurFilter">Legacy Blur</option>
-        <option value="gaussianBlurFilter">Gaussian blur</option>
+        <option value="legacy-blur">Legacy Blur</option>
+        <option value="gaussian-blur">Gaussian blur</option>
       </select>
     </div>
 
@@ -50,14 +50,14 @@
     <div class="yellow"><input class="controlItem" id="radius" type="range" value="10" min="0" max="60" step="1" /></div>
 
     <div class="yellow label">Passes</div>
-    <div class="yellow"><input class="controlItem" id="passes" type="range" value="1" min="0" max="10" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="passes" type="range" value="1" min="0" max="10" step="1" disabled /></div>
 
     <div class="yellow label">Step</div>
-    <div class="yellow"><input class="controlItem" id="step" type="range" value="1" min="1" max="20" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="step" type="range" value="1" min="1" max="20" step="1" disabled /></div>
 
     <div class="yellow label">Exclude transparent pixels</div>
     <div class="yellow">
-      <select class="controlItem" id="excludeTransparentPixels">
+      <select class="controlItem" id="excludeTransparentPixels" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -65,7 +65,7 @@
 
     <div class="pink label">Include red</div>
     <div class="pink">
-      <select class="controlItem" id="includeRed">
+      <select class="controlItem" id="includeRed" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -73,7 +73,7 @@
 
     <div class="green label">Include green</div>
     <div class="green">
-      <select class="controlItem" id="includeGreen">
+      <select class="controlItem" id="includeGreen" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -81,7 +81,7 @@
 
     <div class="blue label">Include blue</div>
     <div class="blue">
-      <select class="controlItem" id="includeBlue">
+      <select class="controlItem" id="includeBlue" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -89,7 +89,7 @@
 
     <div class="lavender label">Include alpha</div>
     <div class="lavender">
-      <select class="controlItem" id="includeAlpha">
+      <select class="controlItem" id="includeAlpha" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -97,7 +97,7 @@
 
     <div class="lavender label">Process horizontal</div>
     <div class="lavender">
-      <select class="controlItem" id="processHorizontal">
+      <select class="controlItem" id="processHorizontal" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -105,7 +105,7 @@
 
     <div class="lavender label">Process vertical</div>
     <div class="lavender">
-      <select class="controlItem" id="processVertical">
+      <select class="controlItem" id="processVertical" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -138,10 +138,6 @@
       <li>Create a blur filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
-
-    <p><b>Known issue:</b> Filter memoization will, sometimes, kill Safari-based browsers for as-yet-unknown reasons - it appears to cause the the getImageData() invocation on line 595 in mixin/entity.js to go from taking a a handful of milliseconds to over 5 seconds, but only after an element's <i>memoizeFilterOutput</i> flag has been set to true.</p>
-
-    <p>For now, if Scrawl-canvas detects that the user is viewing the canvas in a Safari-based browser, it will ignore requests to memoize filters. Use cache output functionality instead to improve render speeds.</p>
 
     <p><b>Touch test:</b> not required</p>
 
