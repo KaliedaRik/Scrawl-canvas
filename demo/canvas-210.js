@@ -9,10 +9,11 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -152,6 +153,7 @@ const updateTextUnits = () => {
 
             distance = coord.getMagnitude();
 
+// TS errors occurring because coordinate (and by inference, vector) objects are capable of accepting string values for their `x` and `y` attributes, whereas all the erroring values here expect numbers
 /** @ts-expect-error */
             angle = Math.atan2(y, x) * radToDeg;
 

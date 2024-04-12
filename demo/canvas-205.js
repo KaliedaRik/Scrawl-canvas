@@ -117,12 +117,12 @@ initializeDomInputs([
     ['input', 'scale', '1'],
     ['input', 'fontWeight_number', '400'],
     ['input', 'fontStretch_percent', '100'],
-    ['fontString', 'reverse', 0],
-    ['fontSize', 'reverse', 0],
-    ['fontWeight_string', 'reverse', 0],
-    ['fontVariantCaps', 'reverse', 0],
-    ['fontStyle', 'reverse', 0],
-    ['fontStretch_string', 'reverse', 4],
+    ['select', 'fontString', 0],
+    ['select', 'fontSize', 0],
+    ['select', 'fontWeight_string', 0],
+    ['select', 'fontVariantCaps', 0],
+    ['select', 'fontStyle', 0],
+    ['select', 'fontStretch_string', 4],
 ]);
 
 

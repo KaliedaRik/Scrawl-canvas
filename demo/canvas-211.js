@@ -4,16 +4,16 @@
 // [Run code](../../demo/canvas-211.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -247,7 +247,23 @@ scrawl.makeRender({
 
 
 // #### User form interaction
-const animationSelector = document.querySelector('#animation');
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'alignment', '0'],
+    ['input', 'letterSpacing', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'wordSpacing', '0'],
+    ['select', 'animation', 0],
+    ['select', 'breakTextOnSpaces', 1],
+    ['select', 'font', 0],
+    ['select', 'textUnitFlow', 0],
+    ['select', 'flipReverse', 0],
+    ['select', 'flipUpend', 0],
+    ['select', 'alignTextUnitsToPath', 1],
+]);
+
+
 const updateAnimation = (event) => {
 
     const val = event.target.value;
@@ -255,10 +271,9 @@ const updateAnimation = (event) => {
     if (val) mylabel.set({ noDeltaUpdates: false });
     else mylabel.set({ noDeltaUpdates: true });
 };
-scrawl.addNativeListener('change', (e) => updateAnimation(e), animationSelector);
+scrawl.addNativeListener('change', (e) => updateAnimation(e), dom.animation);
 
 
-const fontSelector = document.querySelector('#font');
 const updateFont = (event) => {
 
     const font = event.target.value;
@@ -293,7 +308,7 @@ const updateFont = (event) => {
         }
     }
 };
-scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
+scrawl.addNativeListener('change', (e) => updateFont(e), dom.font);
 
 
 scrawl.makeUpdater({
@@ -327,32 +342,6 @@ scrawl.makeUpdater({
 
     callback: clearSelection,
 });
-
-
-// Setup form
-/** @ts-expect-error */
-animationSelector.options.selectedIndex = 0;
-
-/** @ts-expect-error */
-document.querySelector('#breakTextOnSpaces').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#roll').value = 0;
-/** @ts-expect-error */
-document.querySelector('#scale').value = 1;
-/** @ts-expect-error */
-document.querySelector('#alignment').value = 0;
-/** @ts-expect-error */
-document.querySelector('#flipReverse').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#flipUpend').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#alignTextUnitsToPath').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#letterSpacing').value = 0;
-/** @ts-expect-error */
-document.querySelector('#wordSpacing').value = 0;
-/** @ts-expect-error */
-document.querySelector('#textUnitFlow').options.selectedIndex = 0;
 
 
 // #### Development and testing

@@ -4,15 +4,16 @@
 // [Run code](../../demo/canvas-209.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -141,6 +142,7 @@ const userInteraction = scrawl.makeDragZone({
 // #### Groups
 // Each button gets its own group
 const britainGroup = scrawl.makeGroup({
+
     name: name('Britain-group'),
     order: 1,
     host: canvas.base,
@@ -151,16 +153,19 @@ const britainGroup = scrawl.makeGroup({
 });
 
 const thailandGroup = britainGroup.clone({
+
     name: name('Thailand-group'),
     order: 2,
 });
 
 const chinaGroup = britainGroup.clone({
+
     name: name('China-group'),
     order: 3,
 });
 
 const egyptGroup = britainGroup.clone({
+
     name: name('Egypt-group'),
     order: 4,
 });
@@ -249,6 +254,7 @@ scrawl.makeWheel({
     strokeStyle: 'rgb(0 150 0)',
     fillStyle: 'rgb(200 255 200)',
 });
+
 
 // Create the EnhancedLabel entitys
 // + We finesse the word sizes and vertical positioning (including the underline) using CSS
@@ -372,18 +378,25 @@ scrawl.makeUpdater({
 
 
 // Setup form
-/** @ts-expect-error */
-document.querySelector('#text-fillStyle').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#underline-fillStyle').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#lockFillStyleToEntity').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#noDeltaUpdates').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#globalCompositeOperation').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#globalAlpha').value = 1;
+initializeDomInputs([
+    ['input', 'globalAlpha', '1'],
+    ['select', 'text-fillStyle', 0],
+    ['select', 'underline-fillStyle', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'globalCompositeOperation', 0],
+]);
+// /** @ts-expect-error */
+// document.querySelector('#text-fillStyle').options.selectedIndex = 0;
+// /** @ts-expect-error */
+// document.querySelector('#underline-fillStyle').options.selectedIndex = 0;
+// /** @ts-expect-error */
+// document.querySelector('#lockFillStyleToEntity').options.selectedIndex = 0;
+// /** @ts-expect-error */
+// document.querySelector('#noDeltaUpdates').options.selectedIndex = 0;
+// /** @ts-expect-error */
+// document.querySelector('#globalCompositeOperation').options.selectedIndex = 0;
+// /** @ts-expect-error */
+// document.querySelector('#globalAlpha').value = 1;
 
 
 // #### Development and testing
