@@ -546,63 +546,76 @@ const addCheckerboardBackground = (canvas, namespace) => {
 
 const initializeDomInputs = (items) => {
 
-    const results = {}
+    const results = {};
+
     items.forEach(item => {
 
         const [type, selector, value] = item;
 
         switch (type) {
 
-        case 'input' :
+            case 'input' : {
 
-            if (value.substring) {
+                if (value.substring) {
 
-                /** @type {HTMLInputElement} */
-                const S = document.querySelector(`#${selector}`);
+                    /** @type {HTMLInputElement} */
+                    const S = document.querySelector(`#${selector}`);
 
-                if (S) {
+                    if (S) {
 
-                    S.value = value;
-                    results[selector] = S;
+                        S.value = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
                 }
                 else results[selector] = {};
+                break;
             }
-            else results[selector] = {};
-            break;
 
-        case 'select' :
+            case 'select' : {
 
-            if (value.toFixed) {
+                if (value.toFixed) {
 
-                /** @type {HTMLSelectElement} */
-                const S = document.querySelector(`#${selector}`);
+                    /** @type {HTMLSelectElement} */
+                    const S = document.querySelector(`#${selector}`);
 
-                if (S) {
+                    if (S) {
 
-                    S.options.selectedIndex = value;
-                    results[selector] = S;
+                        S.options.selectedIndex = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
                 }
                 else results[selector] = {};
+                break;
             }
-            else results[selector] = {};
-            break;
 
-        case 'button' :
+            case 'button' : {
 
-            if (value.substring) {
+                if (value.substring) {
 
-                /** @type {HTMLButtonElement} */
-                const S = document.querySelector(`#${selector}`);
+                    /** @type {HTMLButtonElement} */
+                    const S = document.querySelector(`#${selector}`);
 
-                if (S) {
+                    if (S) {
 
-                    S.textContent = value;
-                    results[selector] = S;
+                        S.textContent = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
                 }
                 else results[selector] = {};
+                break;
             }
-            else results[selector] = {};
-            break;
+
+            default : {
+
+                /** @type {HTMLElement} */
+                const S = document.querySelector(`#${selector}`);
+
+                if (S) results[selector] = S;
+                else results[selector] = {};
+            }
         }
     });
 
