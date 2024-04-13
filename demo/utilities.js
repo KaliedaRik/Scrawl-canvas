@@ -392,6 +392,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
     if (Array.isArray(canvas)) wrappers.push(...canvas);
     else wrappers.push(canvas);
 
+
     if (!Array.isArray(targets)) targets = [targets];
 
     scrawl.addNativeListener(['dragenter', 'dragover', 'dragleave'], (e) => {

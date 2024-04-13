@@ -79,6 +79,30 @@ scrawl.makeRender({
 
 
 // #### User interaction
+const enableLegacyButtons = () => {
+    dom.includeRed.removeAttribute('disabled');
+    dom.includeGreen.removeAttribute('disabled');
+    dom.includeBlue.removeAttribute('disabled');
+    dom.includeAlpha.removeAttribute('disabled');
+    dom.excludeTransparentPixels.removeAttribute('disabled');
+    dom.processHorizontal.removeAttribute('disabled');
+    dom.processVertical.removeAttribute('disabled');
+    dom.passes.removeAttribute('disabled');
+    dom.step.removeAttribute('disabled');
+};
+
+const disableLegacyButtons = () => {
+    dom.includeRed.setAttribute('disabled', '');
+    dom.includeGreen.setAttribute('disabled', '');
+    dom.includeBlue.setAttribute('disabled', '');
+    dom.includeAlpha.setAttribute('disabled', '');
+    dom.excludeTransparentPixels.setAttribute('disabled', '');
+    dom.processHorizontal.setAttribute('disabled', '');
+    dom.processVertical.setAttribute('disabled', '');
+    dom.passes.setAttribute('disabled', '');
+    dom.step.setAttribute('disabled', '');
+};
+
 // Setup form
 const dom = initializeDomInputs([
     ['input', 'radius', '10'],
@@ -95,6 +119,9 @@ const dom = initializeDomInputs([
     ['select', 'excludeTransparentPixels', 1],
     ['select', 'memoizeFilterOutput', 0],
 ]);
+
+disableLegacyButtons();
+
 
 // Update attributes specific to the legacy filter
 scrawl.makeUpdater({
@@ -141,27 +168,11 @@ scrawl.addNativeListener(['update', 'change'], (e) => {
         switch (val) {
 
             case 'legacy-blur' :
-                dom.includeRed.removeAttribute('disabled');
-                dom.includeGreen.removeAttribute('disabled');
-                dom.includeBlue.removeAttribute('disabled');
-                dom.includeAlpha.removeAttribute('disabled');
-                dom.excludeTransparentPixels.removeAttribute('disabled');
-                dom.processHorizontal.removeAttribute('disabled');
-                dom.processVertical.removeAttribute('disabled');
-                dom.passes.removeAttribute('disabled');
-                dom.step.removeAttribute('disabled');
+                enableLegacyButtons();
                 break;
 
             case 'gaussian-blur' :
-                dom.includeRed.setAttribute('disabled', '');
-                dom.includeGreen.setAttribute('disabled', '');
-                dom.includeBlue.setAttribute('disabled', '');
-                dom.includeAlpha.setAttribute('disabled', '');
-                dom.excludeTransparentPixels.setAttribute('disabled', '');
-                dom.processHorizontal.setAttribute('disabled', '');
-                dom.processVertical.setAttribute('disabled', '');
-                dom.passes.setAttribute('disabled', '');
-                dom.step.setAttribute('disabled', '');
+                disableLegacyButtons();
                 break;
         }
     }

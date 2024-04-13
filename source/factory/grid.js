@@ -404,7 +404,7 @@ P.cleanPathObject = function () {
 P.performFill = function (engine) {
 
     if (this.scale > 0) {
-        
+
         // Grab the current engine values for various things
         engine.save();
 

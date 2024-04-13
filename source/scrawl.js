@@ -56,6 +56,7 @@ export {
     findArtefact,
     findCanvas,
     findEntity,
+    findFilter,
     findPattern,
     findStyles,
     findTween,

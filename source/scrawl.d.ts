@@ -1632,6 +1632,7 @@ interface GroupFactoryFunctions extends BaseMixinFunctions, FilterMixinFunctions
     getAllArtefactsAt: (items: HitTests) => HitOutput[];
     getArtefact: (name: string) => ArtefactInstance;
     getArtefactAt: (items: HitTests) => HitOutput | boolean;
+    getArtefactNames: () => string[];
     moveArtefactsIntoGroup: (...args: GroupArtifactsInput) => GroupInstance;
     removeArtefactClasses: (item: string) => GroupInstance;
     removeArtefacts: (...args: GroupArtifactsInput) => GroupInstance;
@@ -3233,6 +3234,7 @@ export function findEntity(item: string): EntityInstance;
 export function findCanvas(item: string): CanvasInstance;
 export function findStyles(item: string): StylesInstance;
 export function findTween(item: string): TweenInstance;
+export function findFilter(item: string): FilterInstance;
 export function findPattern(item: string): PatternInstance | CellInstance;
 
 export function checkFontIsLoaded(font: string): boolean;

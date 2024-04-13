@@ -4,196 +4,99 @@
 // [Run code](../../demo/filters-002a.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Create some convenience shortcut variables to various sections of the Scrawl-canvas library
-const canvas = scrawl.library.canvas.mycanvas,
-    filters = scrawl.library.filter,
-    entitys = scrawl.library.entity;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
-// Import image from the DOM
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
-// Create the filters
-scrawl.makeFilter({
-    name: 'red',
-    method: 'red',
-}).clone({
-    name: 'green',
-    method: 'green',
-}).clone({
-    name: 'blue',
-    method: 'blue',
-}).clone({
-    name: 'cyan',
-    method: 'cyan',
-}).clone({
-    name: 'magenta',
-    method: 'magenta',
-}).clone({
-    name: 'yellow',
-    method: 'yellow',
-}).clone({
-    name: 'notred',
-    method: 'notred',
-}).clone({
-    name: 'notgreen',
-    method: 'notgreen',
-}).clone({
-    name: 'notblue',
-    method: 'notblue',
-}).clone({
-    name: 'grayscale',
-    method: 'grayscale',
-}).clone({
-    name: 'sepia',
-    method: 'sepia',
-}).clone({
-    name: 'invert',
-    method: 'invert',
+// Preparation
+const filterMethods = ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'notred', 'notgreen', 'notblue', 'grayscale', 'sepia', 'invert'];
+
+const positions = [
+    [10, 10],  [140, 10],  [270, 10],
+    [10, 140], [140, 140], [270, 140],
+    [10, 270], [140, 270], [270, 270],
+    [10, 400], [140, 400], [270, 400],
+];
+
+const filters = [];
+
+const pictureGroup = scrawl.makeGroup({
+
+    name: name('pictures'),
+    host: canvas.getBase(),
+});
+
+pictureGroup.clone({
+
+    name: name('cached'),
+});
+
+const cacheGroup = pictureGroup.clone({
+
+    name: name('labels'),
 });
 
 
-// #### Original entitys
-// For each filter, we shall create a Picture entity which applies that filter to the source image. To make things easier for us later on, we'll gather these entitys into their own Group
-const originals = scrawl.makeGroup({
-
-    name: 'originals',
-    host: canvas.base,
-});
-
-scrawl.makePicture({
-
-    name: 'red-filter',
-    group: 'originals',
-    asset: 'iris',
-
-    start: [10, 10],
-    dimensions: [120, 120],
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['red'],
-
-}).clone({
-
-    name: 'green-filter',
-    startX: 140,
-    filters: ['green'],
-
-}).clone({
-
-    name: 'blue-filter',
-    startX: 270,
-    filters: ['blue'],
-
-}).clone({
-
-    name: 'cyan-filter',
-    start: [10, 140],
-    filters: ['cyan'],
-
-}).clone({
-
-    name: 'magenta-filter',
-    startX: 140,
-    filters: ['magenta'],
-
-}).clone({
-
-    name: 'yellow-filter',
-    startX: 270,
-    filters: ['yellow'],
-
-}).clone({
-
-    name: 'notred-filter',
-    start: [10, 270],
-    filters: ['notred'],
-
-}).clone({
-
-    name: 'notgreen-filter',
-    startX: 140,
-    filters: ['notgreen'],
-
-}).clone({
-
-    name: 'notblue-filter',
-    startX: 270,
-    filters: ['notblue'],
-
-}).clone({
-
-    name: 'grayscale-filter',
-    start: [10, 400],
-    filters: ['grayscale'],
-
-}).clone({
-
-    name: 'sepia-filter',
-    startX: 140,
-    filters: ['sepia'],
-
-}).clone({
-
-    name: 'invert-filter',
-    startX: 270,
-    filters: ['invert'],
-});
+const capitalize = (item) => item[0].toUpperCase() + item.slice(1);
 
 
-// #### Cache entitys
-// We delay creating the Picture entitys that make use of the original entitys' cached output until after the first Display cycle completes. As for the original entitys, we'll store the cache entitys in their own group to make things easier for us going forward
-const cache = scrawl.makeGroup({
+// Build out the filters and entitys
+filterMethods.forEach((n, index) => {
 
-    name: 'cache',
-    host: canvas.base,
-});
+    filters.push(scrawl.makeFilter({
 
-const createCachePictures = () => {
+        name: name(`${n}-filter`),
+        method: n,
+    }));
 
-    // We can get a lot of the data for each cache entity from the original entity that it's shadowing. And we can iterate through each original entity using the originals Group object
-    originals.artefacts.forEach(name => {
+    scrawl.makePicture({
 
-        const e = entitys[name];
+        name: name(`${n}-output`),
+        group: name('pictures'),
 
-        if (e) {
+        asset: 'iris',
 
-            scrawl.makePicture({
+        start: positions[index],
+        dimensions: [120, 120],
 
-                name: `${name}-cached`,
-                group: 'cache',
-                asset: `${name}-image`,
+        copyDimensions: ['100%', '100%'],
 
-                start: e.get('start'),
-                handle: e.get('handle'),
-                dimensions: e.get('dimensions'),
-                copyDimensions: ['100%', '100%'],
-            });
-        }
+        filters: [name(`${n}-filter`)],
     });
-};
 
-// We will also be displaying labels over each Picture entity to let people know which filter we've used on the Picture entity. We will position these labels using Picture entitys as pivots.
-const addLabels = () => {
+    scrawl.makePicture({
 
-    // The Label entitys can go in the canvas element's default Group. To make sure they display correctly (after the Picture entitys have been stamped) we'll set the default Group's order attribute to a higher value
-    canvas.get('baseGroup').set({
-        order: 1,
+        name: name(`${n}-cached`),
+        group: name('cached'),
+
+        // The asset we will create from the previous picture entitys have `-image` attached to the picture's name
+        asset: name(`${n}-output-image`),
+
+        start: positions[index],
+        dimensions: [120, 120],
+
+        copyDimensions: ['100%', '100%'],
     });
 
     scrawl.makeLabel({
 
-        name: 'red-label',
-        text: 'Red',
+        name: name(`${n}-label`),
+        group: name('labels'),
+
+        text: capitalize(n),
 
         fontString: '20px sans-serif',
 
@@ -202,98 +105,39 @@ const addLabels = () => {
 
         method: 'drawThenFill',
 
-        pivot: 'red-filter-cached',
+        pivot: name(`${n}-cached`),
         lockTo: 'pivot',
         offset: [5, 5],
-
-    }).clone({
-
-        name: 'green-label',
-        text: 'Green',
-        pivot: 'green-filter-cached',
-
-    }).clone({
-
-        name: 'blue-label',
-        text: 'Blue',
-        pivot: 'blue-filter-cached',
-
-    }).clone({
-
-        name: 'cyan-label',
-        text: 'Cyan',
-        pivot: 'cyan-filter-cached',
-
-    }).clone({
-
-        name: 'magenta-label',
-        text: 'Magenta',
-        pivot: 'magenta-filter-cached',
-
-    }).clone({
-
-        name: 'yellow-label',
-        text: 'Yellow',
-        pivot: 'yellow-filter-cached',
-
-    }).clone({
-
-        name: 'notred-label',
-        text: 'Notred',
-        pivot: 'notred-filter-cached',
-
-    }).clone({
-
-        name: 'notgreen-label',
-        text: 'Notgreen',
-        pivot: 'notgreen-filter-cached',
-
-    }).clone({
-
-        name: 'notblue-label',
-        text: 'Notblue',
-        pivot: 'notblue-filter-cached',
-
-    }).clone({
-
-        name: 'grayscale-label',
-        text: 'Grayscale',
-        pivot: 'grayscale-filter-cached',
-
-    }).clone({
-
-        name: 'sepia-label',
-        text: 'Sepia',
-        pivot: 'sepia-filter-cached',
-
-    }).clone({
-
-        name: 'invert-label',
-        text: 'Invert',
-        pivot: 'invert-filter-cached',
     });
-};
+});
 
 
-// #### Caching Picture entity output
-// Because we need to recapture filter output whenever the user updates the filters' `opacity` attribute, we'll put these calls in a dedicated function
+// The cache function
+let cachingInProgress = false;
 const cacheAction = () => {
 
-    scrawl.createImageFromEntity(entitys['red-filter'], true);
-    scrawl.createImageFromEntity(entitys['green-filter'], true);
-    scrawl.createImageFromEntity(entitys['blue-filter'], true);
-    scrawl.createImageFromEntity(entitys['cyan-filter'], true);
-    scrawl.createImageFromEntity(entitys['magenta-filter'], true);
-    scrawl.createImageFromEntity(entitys['yellow-filter'], true);
-    scrawl.createImageFromEntity(entitys['notred-filter'], true);
-    scrawl.createImageFromEntity(entitys['notgreen-filter'], true);
-    scrawl.createImageFromEntity(entitys['notblue-filter'], true);
-    scrawl.createImageFromEntity(entitys['grayscale-filter'], true);
-    scrawl.createImageFromEntity(entitys['sepia-filter'], true);
-    scrawl.createImageFromEntity(entitys['invert-filter'], true);
+    if (!cachingInProgress) {
+
+        cachingInProgress = true;
+
+        pictureGroup.set({ visibility: true });
+        cacheGroup.set({ visibility: false });
+
+        pictureGroup.getArtefactNames().forEach(n => scrawl.createImageFromEntity(n, true));
+
+        setTimeout(() => {
+
+            cachingInProgress = false;
+
+            pictureGroup.set({ visibility: false });
+            cacheGroup.set({ visibility: true });
+
+        }, 50);
+    }
 };
 
-// Invoke the cache function before the first Display cycle
+
+// Run the initial caching action
 cacheAction();
 
 
@@ -301,68 +145,40 @@ cacheAction();
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Opacity: ${opacity.value}`;
+    return `
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
-
-    // #### Caching (continued)
-    // Hide the originals group; create the Picture entitys that will display the cached images, alongside the Label labels that describe them
-    afterCreated: () => {
-        originals.set({ visibility: false });
-        createCachePictures();
-        addLabels();
-    },
 });
 
 
 // #### User interaction
-const myFilters = [
-    filters.red,
-    filters.green,
-    filters.blue,
-    filters.cyan,
-    filters.magenta,
-    filters.yellow,
-    filters.notred,
-    filters.notgreen,
-    filters.notblue,
-    filters.grayscale,
-    filters.sepia,
-    filters.invert
-];
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'opacity', '1'],
+]);
 
-// Update the `opacity` attribute for all the filters
+
+// Updating the Filter objects for opacity
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
     const val = parseFloat(e.target.value);
+    filters.forEach(f => f.set({ opacity: val }));
 
-    myFilters.forEach(f => f.set({ opacity: val }));
-
-    // To capture the new filtered output we need to make sure the original entitys take part in the next Display cycle. We also need to instruct them to capture the results of that Display cycle
-    originals.set({ visibility: true });
-    cache.set({ visibility: false });
     cacheAction();
 
-    // We give the Display cycle sufficient time to run before again hiding the original entitys and displaying the cache entitys in their place
-    setTimeout(() => {
-        originals.set({ visibility: false });
-        cache.set({ visibility: true });
-    }, 50);
+}, dom.opacity);
 
-}, '#opacity');
 
-// Setup form
-const opacity = document.querySelector('#opacity');
-/** @ts-expect-error */
-opacity.value = 1;
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', pictureGroup, cacheAction);
 
 
 // #### Development and testing
