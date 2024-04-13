@@ -145,7 +145,6 @@ code {
 .canvas-container {
 	overflow: hidden;
 	resize: both;
-/*	border: 1px solid black;*/
 	width: 600px;
 	height: 400px;
 	min-height: 200px;
@@ -164,6 +163,14 @@ code {
 	height: 0;
 	border-bottom: 1em solid red;
 	border-left: 1em solid transparent;
+}
+@media (scripting: none) {
+	.canvas-container {
+		resize: none;
+	}
+	.canvas-container::after {
+		border-bottom-color: transparent;
+	}
 }
 
 #test-navigation {

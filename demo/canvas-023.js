@@ -413,7 +413,7 @@ initializeDomInputs([
     ['input', 'relativeWidth', '50'],
     ['input', 'roll', '0'],
     ['input', 'rows', '6'],
-    ['input', 'scale', '0'],
+    ['input', 'scale', '1'],
     ['input', 'start_xAbsolute', '300'],
     ['input', 'start_xPercent', '50'],
     ['input', 'start_yAbsolute', '200'],
