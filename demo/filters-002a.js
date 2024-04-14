@@ -22,7 +22,12 @@ scrawl.importDomImage('.flowers');
 
 
 // Preparation
-const filterMethods = ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'notred', 'notgreen', 'notblue', 'grayscale', 'sepia', 'invert'];
+const filterMethods = [
+    'red',       'green',    'blue',
+    'cyan',      'magenta',  'yellow',
+    'notred',    'notgreen', 'notblue',
+    'grayscale', 'sepia',    'invert'
+];
 
 const positions = [
     [10, 10],  [140, 10],  [270, 10],
@@ -39,12 +44,12 @@ const pictureGroup = scrawl.makeGroup({
     host: canvas.getBase(),
 });
 
-pictureGroup.clone({
+const cacheGroup = pictureGroup.clone({
 
     name: name('cached'),
 });
 
-const cacheGroup = pictureGroup.clone({
+pictureGroup.clone({
 
     name: name('labels'),
 });
@@ -82,7 +87,7 @@ filterMethods.forEach((n, index) => {
         name: name(`${n}-cached`),
         group: name('cached'),
 
-        // The asset we will create from the previous picture entitys have `-image` attached to the picture's name
+        // The assets we will create from the previous picture entitys have `-image` attached to the picture's name
         asset: name(`${n}-output-image`),
 
         start: positions[index],

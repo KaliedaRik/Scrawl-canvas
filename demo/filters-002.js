@@ -21,7 +21,12 @@ scrawl.importDomImage('.flowers');
 
 
 // Preparation
-const filterMethods = ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'notred', 'notgreen', 'notblue', 'grayscale', 'sepia', 'invert'];
+const filterMethods = [
+    'red',       'green',    'blue',
+    'cyan',      'magenta',  'yellow',
+    'notred',    'notgreen', 'notblue',
+    'grayscale', 'sepia',    'invert'
+];
 
 const positions = [
     [10, 10],  [140, 10],  [270, 10],

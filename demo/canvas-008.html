@@ -14,7 +14,11 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
     }
 
     /* For progressive enhancement */
