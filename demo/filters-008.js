@@ -4,19 +4,26 @@
 // [Run code](../../demo/filters-008.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'tint',
+    name: name('tint'),
     method: 'tint',
 
     // These values create the sepia tint
@@ -32,26 +39,20 @@ const myFilter = scrawl.makeFilter({
 });
 
 const colorFactory = scrawl.makeColor({
-    name: 'my-color-factory',
+
+    name: name('colors'),
 });
 
 
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['tint'],
+    filters: [name('tint')],
 });
 
 
@@ -59,19 +60,48 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    In Red - red: ${redInRed.value} green: ${greenInRed.value} blue: ${blueInRed.value} → ${redColor.value}\n    In Green - red: ${redInGreen.value} green: ${greenInGreen.value} blue: ${blueInGreen.value} → ${greenColor.value}\n    In Blue -  red: ${redInBlue.value} green: ${greenInBlue.value} blue: ${blueInBlue.value} → ${blueColor.value}\n    Opacity: ${opacity.value}`;
+    return `
+    In Red - red: ${dom.redInRed.value} | green: ${dom.greenInRed.value} | blue: ${dom.blueInRed.value} → ${dom.redColor.value}
+    In Green - red: ${dom.redInGreen.value} | green: ${dom.greenInGreen.value} | blue: ${dom.blueInGreen.value} → ${dom.greenColor.value}
+    In Blue -  red: ${dom.redInBlue.value} | green: ${dom.greenInBlue.value} | blue: ${dom.blueInBlue.value} → ${dom.blueColor.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
+
+// #### User interaction
+// Setup form
+const _round = Math.round,
+    red = colorFactory.convertRGBtoHex(_round(0.39 * 255), _round(0.77 * 255), _round(0.19 * 255)),
+    green = colorFactory.convertRGBtoHex(_round(0.35 * 255), _round(0.69 * 255), _round(0.17 * 255)),
+    blue = colorFactory.convertRGBtoHex(_round(0.27 * 255), _round(0.53 * 255), _round(0.13 * 255));
+
+const dom = initializeDomInputs([
+    ['input', 'redInRed', '0.39'],
+    ['input', 'greenInRed', '0.77'],
+    ['input', 'blueInRed', '0.19'],
+    ['input', 'redInGreen', '0.35'],
+    ['input', 'greenInGreen', '0.69'],
+    ['input', 'blueInGreen', '0.17'],
+    ['input', 'redInBlue', '0.27'],
+    ['input', 'greenInBlue', '0.53'],
+    ['input', 'blueInBlue', '0.13'],
+    ['input', 'redColor', red],
+    ['input', 'greenColor', green],
+    ['input', 'blueColor', blue],
+    ['input', 'opacity', '1'],
+]);
+
+
+// Handle the color inputs
 scrawl.addNativeListener(['change'], (e) => {
 
     if (e && e.target) {
@@ -89,41 +119,31 @@ scrawl.addNativeListener(['change'], (e) => {
 
             myFilter.set({ redColor: val });
 
-/** @ts-expect-error */
-            redInRed.value = r;
-/** @ts-expect-error */
-            greenInRed.value = g;
-/** @ts-expect-error */
-            blueInRed.value = b;
+            dom.redInRed.value = r;
+            dom.greenInRed.value = g;
+            dom.blueInRed.value = b;
         }
         else if ('greenColor' === target) {
 
             myFilter.set({ greenColor: val });
 
-/** @ts-expect-error */
-            redInGreen.value = r;
-/** @ts-expect-error */
-            greenInGreen.value = g;
-/** @ts-expect-error */
-            blueInGreen.value = b;
+            dom.redInGreen.value = r;
+            dom.greenInGreen.value = g;
+            dom.blueInGreen.value = b;
         }
         else if ('blueColor' === target) {
 
             myFilter.set({ blueColor: val });
 
-/** @ts-expect-error */
-            redInBlue.value = r;
-/** @ts-expect-error */
-            greenInBlue.value = g;
-/** @ts-expect-error */
-            blueInBlue.value = b;
+            dom.redInBlue.value = r;
+            dom.greenInBlue.value = g;
+            dom.blueInBlue.value = b;
         }
     }
 }, '.colorSelector');
 
 
-// #### User interaction
-// Setup form observer functionality
+// Setup form observer functionality for other inputs
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -150,81 +170,25 @@ scrawl.makeUpdater({
 
     callback: () => {
 
-/** @ts-expect-error */
-        const rR = Math.round(redInRed.value * 255),
-/** @ts-expect-error */
-            gR = Math.round(greenInRed.value * 255),
-/** @ts-expect-error */
-            bR = Math.round(blueInRed.value * 255),
-/** @ts-expect-error */
-            rG = Math.round(redInGreen.value * 255),
-/** @ts-expect-error */
-            gG = Math.round(greenInGreen.value * 255),
-/** @ts-expect-error */
-            bG = Math.round(blueInGreen.value * 255),
-/** @ts-expect-error */
-            rB = Math.round(redInBlue.value * 255),
-/** @ts-expect-error */
-            gB = Math.round(greenInBlue.value * 255),
-/** @ts-expect-error */
-            bB = Math.round(blueInBlue.value * 255);
+        const rR = _round(dom.redInRed.value * 255),
+            gR = _round(dom.greenInRed.value * 255),
+            bR = _round(dom.blueInRed.value * 255),
+            rG = _round(dom.redInGreen.value * 255),
+            gG = _round(dom.greenInGreen.value * 255),
+            bG = _round(dom.blueInGreen.value * 255),
+            rB = _round(dom.redInBlue.value * 255),
+            gB = _round(dom.greenInBlue.value * 255),
+            bB = _round(dom.blueInBlue.value * 255);
 
-/** @ts-expect-error */
-        redColor.value = colorFactory.convertRGBtoHex(rR, gR, bR);
-/** @ts-expect-error */
-        greenColor.value = colorFactory.convertRGBtoHex(rG, gG, bG);
-/** @ts-expect-error */
-        blueColor.value = colorFactory.convertRGBtoHex(rB, gB, bB);
+        dom.redColor.value = colorFactory.convertRGBtoHex(rR, gR, bR);
+        dom.greenColor.value = colorFactory.convertRGBtoHex(rG, gG, bG);
+        dom.blueColor.value = colorFactory.convertRGBtoHex(rB, gB, bB);
     },
 });
 
-// Setup form
-const redInRed = document.querySelector('#redInRed'),
-    greenInRed = document.querySelector('#greenInRed'),
-    blueInRed = document.querySelector('#blueInRed'),
-    redInGreen = document.querySelector('#redInGreen'),
-    greenInGreen = document.querySelector('#greenInGreen'),
-    blueInGreen = document.querySelector('#blueInGreen'),
-    redInBlue = document.querySelector('#redInBlue'),
-    greenInBlue = document.querySelector('#greenInBlue'),
-    blueInBlue = document.querySelector('#blueInBlue'),
-    redColor = document.querySelector('#redColor'),
-    greenColor = document.querySelector('#greenColor'),
-    blueColor = document.querySelector('#blueColor'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-redInRed.value = 0.39;
-/** @ts-expect-error */
-redInGreen.value = 0.35;
-/** @ts-expect-error */
-redInBlue.value = 0.27;
-/** @ts-expect-error */
-greenInRed.value = 0.77;
-/** @ts-expect-error */
-greenInGreen.value = 0.69;
-/** @ts-expect-error */
-greenInBlue.value = 0.53;
-/** @ts-expect-error */
-blueInRed.value = 0.19;
-/** @ts-expect-error */
-blueInGreen.value = 0.17;
-/** @ts-expect-error */
-blueInBlue.value = 0.13;
-
-/** @ts-expect-error */
-redColor.value = colorFactory.convertRGBtoHex(Math.round(0.39 * 255), Math.round(0.77 * 255), Math.round(0.19 * 255));
-/** @ts-expect-error */
-greenColor.value = colorFactory.convertRGBtoHex(Math.round(0.35 * 255), Math.round(0.69 * 255), Math.round(0.17 * 255));
-/** @ts-expect-error */
-blueColor.value = colorFactory.convertRGBtoHex(Math.round(0.27 * 255), Math.round(0.53 * 255), Math.round(0.13 * 255));
-
-/** @ts-expect-error */
-opacity.value = 1;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

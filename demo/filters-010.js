@@ -4,24 +4,31 @@
 // [Run code](../../demo/filters-010.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the background
-addCheckerboardBackground(canvas, 'demo-filters-010');
+addCheckerboardBackground(canvas, namespace);
 
 
 // Create the filter
 // + Chroma filters can have more than one range; each range array should be added to the `ranges` attribute
 const myFilter = scrawl.makeFilter({
 
-    name: 'chroma',
+    name: name('chroma'),
     method: 'chroma',
 
     ranges: [[0, 0, 0, 92, 127, 92]],
@@ -31,19 +38,12 @@ const myFilter = scrawl.makeFilter({
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['chroma'],
+    filters: [name('chroma')],
 });
 
 
@@ -51,59 +51,42 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    (Low color: ${lowCol.value}, High color: ${highCol.value})\n    Range: [${myFilter.ranges}] → [${myFilter.actions[0].ranges}]\n    Opacity: ${opacity.value}`;
+    return `
+    (Low color: ${dom.lowColor.value}, High color: ${dom.highColor.value})
+    Range: [${myFilter.ranges}] → [${myFilter.actions[0].ranges}]
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Setup form observer functionality
-const interpretColors = function () {
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'lowColor', '#000000'],
+    ['input', 'highColor', '#5c7f5c'],
+    ['input', 'opacity', '1'],
+]);
 
-    const lowColor = document.querySelector('#lowColor');
-    const highColor = document.querySelector('#highColor');
-
-    return function () {
-
-        myFilter.set({
-
-/** @ts-expect-error */
-            ranges: [[lowColor.value, highColor.value]],
-        })
-    }
-}();
+// Handle color input
+const interpretColors = () => myFilter.set({ ranges: [[dom.lowColor.value, dom.highColor.value]] });
 scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
 
-scrawl.addNativeListener(
-    ['input', 'change'],
-    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }),
-    '#opacity');
-
-
-// Setup form
-const lowCol = document.querySelector('#lowColor'),
-    highCol = document.querySelector('#highColor'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-lowCol.value = '#000000';
-/** @ts-expect-error */
-highCol.value = '#5c7f5c';
-/** @ts-expect-error */
-opacity.value = 1;
+// Handle opacity input
+const handleOpacity = () => myFilter.set({ opacity: parseFloat(dom.opacity.value) });
+scrawl.addNativeListener(['input', 'change'], handleOpacity, '#opacity');
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+// addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

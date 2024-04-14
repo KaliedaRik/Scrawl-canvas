@@ -4585,8 +4585,8 @@ P.theBigActionsObject = _freeze({
 //
 // A new `clamp` attribute was added in v8.7.0, which can take the following String values:
 // + `down` (default) - uses `Math.floor()` for the calculation
-// + `up` (default) - uses `Math.ceil()` for the calculation
-// + `round` (default) - uses `Math.round()` for the calculation
+// + `up` - uses `Math.ceil()` for the calculation
+// + `round` - uses `Math.round()` for the calculation
     [STEP_CHANNELS]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);

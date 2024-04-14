@@ -227,7 +227,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

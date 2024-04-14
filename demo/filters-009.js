@@ -4,19 +4,26 @@
 // [Run code](../../demo/filters-009.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'pixelate',
+    name: name('pixelate'),
     method: 'pixelate',
 
     tileWidth: 10,
@@ -29,19 +36,12 @@ const myFilter = scrawl.makeFilter({
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['pixelate'],
+    filters: [name('pixelate')],
 });
 
 
@@ -49,21 +49,37 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Tile dimensions - width: ${tile_width.value}px height: ${tile_height.value}px\n    Tile offset offset - x: ${offset_x.value}px y: ${offset_y.value}px\n    Opacity: ${opacity.value}`;
+    return `
+    Tile dimensions - width: ${dom.tile_width.value}px, height: ${dom.tile_height.value}px
+    Tile offset offset - x: ${dom.offset_x.value}px, y: ${dom.offset_y.value}px
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'tile_width', '10'],
+    ['input', 'tile_height', '10'],
+    ['input', 'offset_x', '0'],
+    ['input', 'offset_y', '0'],
+    ['input', 'opacity', '1'],
+    ['select', 'includeRed', 1],
+    ['select', 'includeGreen', 1],
+    ['select', 'includeBlue', 1],
+    ['select', 'includeAlpha', 0],
+]);
+
+
 // Setup form observer functionality
 scrawl.makeUpdater({
 
@@ -91,36 +107,9 @@ scrawl.makeUpdater({
     },
 });
 
-// Setup form
-const tile_width = document.querySelector('#tile_width'),
-    tile_height = document.querySelector('#tile_height'),
-    offset_x = document.querySelector('#offset_x'),
-    offset_y = document.querySelector('#offset_y'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-tile_width.value = 10;
-/** @ts-expect-error */
-tile_height.value = 10;
-/** @ts-expect-error */
-offset_x.value = 0;
-/** @ts-expect-error */
-offset_y.value = 0;
-/** @ts-expect-error */
-opacity.value = 1;
-
-/** @ts-expect-error */
-document.querySelector('#includeRed').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeGreen').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeBlue').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeAlpha').options.selectedIndex = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

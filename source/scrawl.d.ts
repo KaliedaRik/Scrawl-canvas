@@ -1377,7 +1377,6 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     blueInBlue?: number;
     blueInGreen?: number;
     blueInRed?: number;
-    clamp?: number;
     copyHeight?: StringOrNumberInput;
     copyWidth?: StringOrNumberInput;
     copyX?: StringOrNumberInput;
@@ -1453,6 +1452,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     blueColor?: string;
     channelX?: string;
     channelY?: string;
+    clamp?: string | number;
     compose?: string;
     concurrent?: boolean;
     delta?: FilterFactoryDeltaInputs;
