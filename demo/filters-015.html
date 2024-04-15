@@ -91,11 +91,11 @@
     <div class="yellow"><input class="controlItem" id="angle" type="range" value="0" min="0" max="360" step="1" /></div>
 
     <div class="yellow label">Random points</div>
-    <div class="yellow"><input class="controlItem" id="random-points" type="range" value="20" min="5" max="200" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="random_points" type="range" value="20" min="5" max="200" step="1" /></div>
 
     <div class="pink label">Include red</div>
     <div class="pink">
-      <select class="controlItem" id="includeRed">
+      <select class="controlItem" id="include_red">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -103,7 +103,7 @@
 
     <div class="green label">Include green</div>
     <div class="green">
-      <select class="controlItem" id="includeGreen">
+      <select class="controlItem" id="include_green">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -111,7 +111,7 @@
 
     <div class="blue label">Include blue</div>
     <div class="blue">
-      <select class="controlItem" id="includeBlue">
+      <select class="controlItem" id="include_blue">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -119,7 +119,7 @@
 
     <div class="bluegreen label">Include alpha</div>
     <div class="bluegreen">
-      <select class="controlItem" id="includeAlpha">
+      <select class="controlItem" id="include_alpha">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -164,6 +164,8 @@
       <li>Create a pixelate filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
+
+    <p><b>To note:</b> this filter can have an insanely expensive upfront cost. However once all the initial calculations complete, the filter should run with good speed (thanks to the filter internally memoizing those initial calculation results).</p>
 
     <p><b>Touch test:</b> not required</p>
 

@@ -4,54 +4,52 @@
 // [Run code](../../demo/filters-021.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'corrode',
+    name: name('corrode'),
     method: 'corrode',
 });
 
 // ... And apply it to the canvas's base Cell
-canvas.setBase({
-    filters: ['corrode'],
-})
+canvas.setBase({ filters: [name('corrode')] });
 
 
 // Create the test entitys
 const piccy = scrawl.makePicture({
 
-    name: 'test-image',
-
+    name: name('image'),
     asset: 'iris',
-
     start: [380, 100],
     dimensions: [200, 200],
     copyDimensions: ['100%', '100%'],
-
     lineWidth: 4,
     strokeStyle: 'yellow',
-
     method: 'fillThenDraw',
 });
 
 scrawl.makeWheel({
 
-    name: 'test-star-solid',
-
+    name: name('circle-solid'),
     radius: 90,
-
     start: [100, 100],
     handle: ['center', 'center'],
-
     fillStyle: 'orange',
     strokeStyle: 'purple',
     lineWidth: 10,
@@ -59,35 +57,31 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'test-star-outline',
+    name: name('circle-outline'),
     startY: 200,
     method: 'draw',
 
 
 }).clone({
 
-    name: 'test-star-both',
+    name: name('circle-both'),
     startY: 300,
     method: 'fillThenDraw',
 });
 
 scrawl.makeLabel({
 
-    name: 'greeting-one',
-
+    name: name('greeting-one'),
     text: 'Hello',
-
     fontString: 'bold 130px sans-serif',
-
     lineWidth: 8,
     method: 'draw',
-
     start: [210, 370],
     roll: -82,
 
 }).clone({
 
-    name: 'greeting-two',
+    name: name('greeting-two'),
     text: 'World!',
     method: 'fill',
     start: [350, 10],
@@ -100,22 +94,49 @@ scrawl.makeLabel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Matrix dimensions - width: ${matrix_width.value} height: ${matrix_height.value}\n    Matrix offset - x: ${matrix_offset_x.value} y: ${matrix_offset_y.value}\n    Opacity - ${opacity.value}`;
+    return `
+    Matrix dimensions - width: ${dom.matrix_width.value}, height: ${dom.matrix_height.value}
+    Matrix offset - x: ${dom.matrix_offset_x.value}, y: ${dom.matrix_offset_y.value}
+    Opacity - ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Setup form observer functionality
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'matrix_width', '3'],
+    ['input', 'matrix_height', '3'],
+    ['input', 'matrix_offset_x', '1'],
+    ['input', 'matrix_offset_y', '1'],
+    ['input', 'opacity', '1'],
+    ['select', 'operation', 0],
+    ['select', 'includeRed', 1],
+    ['select', 'includeGreen', 1],
+    ['select', 'includeBlue', 1],
+    ['select', 'includeAlpha', 0],
+    ['select', 'memoizeFilterOutput', 0],
+]);
+
+
+// Handle the memoize filter selector
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    const val = (e.target.value === '0') ? false : true;
+    canvas.setBase({ memoizeFilterOutput: val });
+
+}, '#memoizeFilterOutput');
+
+
+// Handle all other user inputs
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -144,49 +165,9 @@ scrawl.makeUpdater({
     },
 });
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    const val = (e.target.value === '0') ? false : true;
-
-    canvas.base.set({ memoizeFilterOutput: val });
-
-}, '#memoizeFilterOutput');
-
-
-// Setup form
-const matrix_width = document.querySelector('#matrix_width'),
-    matrix_height = document.querySelector('#matrix_height'),
-    matrix_offset_x = document.querySelector('#matrix_offset_x'),
-    matrix_offset_y = document.querySelector('#matrix_offset_y'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-matrix_width.value = 3;
-/** @ts-expect-error */
-matrix_height.value = 3;
-/** @ts-expect-error */
-matrix_offset_x.value = 1;
-/** @ts-expect-error */
-matrix_offset_y.value = 1;
-/** @ts-expect-error */
-opacity.value = 1;
-
-/** @ts-expect-error */
-document.querySelector('#operation').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#includeRed').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#includeGreen').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#includeBlue').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#includeAlpha').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing
