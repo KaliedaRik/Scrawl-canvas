@@ -4,23 +4,30 @@
 // [Run code](../../demo/filters-014.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the background
-addCheckerboardBackground(canvas, 'demo-filters-014');
+addCheckerboardBackground(canvas, namespace);
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'areaAlpha',
+    name: name('areaAlpha'),
     method: 'areaAlpha',
 
     tileWidth: 10,
@@ -36,19 +43,12 @@ const myFilter = scrawl.makeFilter({
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['areaAlpha'],
+    filters: [name('areaAlpha')],
 });
 
 
@@ -56,22 +56,55 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}\n    Gutter dimensions - width: ${gutter_width.value} height: ${gutter_height.value}\n    Offset - x: ${offset_x.value} y: ${offset_y.value}\n    areaAlphaLevels array: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]\n    Opacity: ${opacity.value}`;
+    return `
+    Tile dimensions - width: ${dom.tile_width.value}, height: ${dom.tile_height.value}
+    Gutter dimensions - width: ${dom.gutter_width.value}, height: ${dom.gutter_height.value}
+    Offset - x: ${dom.offset_x.value}, y: ${dom.offset_y.value}
+    areaAlphaLevels array: [${dom.alpha_0.value}, ${dom.alpha_1.value}, ${dom.alpha_2.value}, ${dom.alpha_3.value}]
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Setup form observer functionality
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'tile_width', '10'],
+    ['input', 'tile_height', '10'],
+    ['input', 'gutter_width', '10'],
+    ['input', 'gutter_height', '10'],
+    ['input', 'alpha_0', '255'],
+    ['input', 'alpha_1', '0'],
+    ['input', 'alpha_2', '255'],
+    ['input', 'alpha_3', '0'],
+    ['input', 'offset_x', '0'],
+    ['input', 'offset_y', '0'],
+    ['input', 'opacity', '1'],
+]);
+
+
+// Handle alpha-related user input
+scrawl.addNativeListener(['input', 'change'], function () {
+
+    const a0 = parseInt(dom.alpha_0.value, 10),
+        a1 = parseInt(dom.alpha_1.value, 10),
+        a2 = parseInt(dom.alpha_2.value, 10),
+        a3 = parseInt(dom.alpha_3.value, 10);
+
+    myFilter.set({ areaAlphaLevels: [a0, a2, a1, a3] });
+
+}, '.alphas');
+
+
+// Handle other user input
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -94,62 +127,9 @@ scrawl.makeUpdater({
     },
 });
 
-scrawl.addNativeListener(['input', 'change'], function () {
-
-/** @ts-expect-error */
-    const a0 = parseInt(alpha_0.value, 10),
-/** @ts-expect-error */
-        a1 = parseInt(alpha_1.value, 10),
-/** @ts-expect-error */
-        a2 = parseInt(alpha_2.value, 10),
-/** @ts-expect-error */
-        a3 = parseInt(alpha_3.value, 10);
-
-    myFilter.set({
-        areaAlphaLevels: [a0, a2, a1, a3],
-    });
-
-}, '.alphas');
-
-// Setup form
-const tile_width = document.querySelector('#tile_width'),
-    tile_height = document.querySelector('#tile_height'),
-    gutter_width = document.querySelector('#gutter_width'),
-    gutter_height = document.querySelector('#gutter_height'),
-    alpha_0 = document.querySelector('#alpha_0'),
-    alpha_1 = document.querySelector('#alpha_1'),
-    alpha_2 = document.querySelector('#alpha_2'),
-    alpha_3 = document.querySelector('#alpha_3'),
-    offset_x = document.querySelector('#offset_x'),
-    offset_y = document.querySelector('#offset_y'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-tile_width.value = 10;
-/** @ts-expect-error */
-tile_height.value = 10;
-/** @ts-expect-error */
-gutter_width.value = 10;
-/** @ts-expect-error */
-gutter_height.value = 10;
-/** @ts-expect-error */
-offset_x.value = 0;
-/** @ts-expect-error */
-offset_y.value = 0;
-/** @ts-expect-error */
-opacity.value = 1;
-/** @ts-expect-error */
-alpha_0.value = 255;
-/** @ts-expect-error */
-alpha_1.value = 0;
-/** @ts-expect-error */
-alpha_2.value = 255;
-/** @ts-expect-error */
-alpha_3.value = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing
