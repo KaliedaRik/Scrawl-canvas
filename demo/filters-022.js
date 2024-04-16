@@ -4,87 +4,70 @@
 // [Run code](../../demo/filters-022.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the gradients
-const redToBlue = scrawl.makeGradient({
-    name: 'red-to-blue',
-    endX: '100%',
+scrawl.makeGradient({
 
+    name: name('red-to-blue'),
+    endX: '100%',
     easing: 'linear',
     precision: 1,
-
     colors: [
         [0, 'red'],
         [999, 'blue']
     ],
-});
 
-const blueToRed = scrawl.makeGradient({
-    name: 'blue-to-red',
-    endX: '100%',
+}).clone({
 
-    easing: 'linear',
-    precision: 1,
-
+    name: name('blue-to-red'),
     colors: [
         [999, 'red'],
         [0, 'blue']
     ],
-});
 
-const animatedGradient1 = scrawl.makeGradient({
+}).clone({
 
-    name: 'rainbow',
-    endX: '100%',
+    name: name('rainbow'),
     delta: {
         paletteStart: -1,
         paletteEnd: -1,
     },
     cyclePalette: true,
-
-    easing: 'linear',
-    precision: 1,
-
     animateByDelta: true,
-})
-.updateColor(0, '#ff0000')
-.updateColor(83, '#000000')
-.updateColor(166, '#ffff00')
-.updateColor(249, '#000000')
-.updateColor(332, '#00ff00')
-.updateColor(415, '#000000')
-.updateColor(499, '#00ffff')
-.updateColor(582, '#000000')
-.updateColor(665, '#0000ff')
-.updateColor(749, '#000000')
-.updateColor(832, '#ff00ff')
-.updateColor(915, '#000000')
-.updateColor(999, '#ff0000');
+    colors: [
+        [0, '#ff0000'],
+        [83, '#000000'],
+        [166, '#ffff00'],
+        [249, '#000000'],
+        [332, '#00ff00'],
+        [415, '#000000'],
+        [499, '#00ffff'],
+        [582, '#000000'],
+        [665, '#0000ff'],
+        [749, '#000000'],
+        [832, '#ff00ff'],
+        [915, '#000000'],
+        [999, '#ff0000'],
+    ],
 
-const animatedGradient2 = scrawl.makeGradient({
+}).clone({
 
-    name: 'banded',
-    endX: '100%',
-
-    delta: {
-        paletteStart: -1,
-        paletteEnd: -1,
-    },
-    cyclePalette: true,
-
-    easing: 'linear',
-    precision: 1,
-
-    animateByDelta: true,
-
+    name: name('banded'),
     colors: [
         [0, 'red'],
         [339, 'red'],
@@ -94,9 +77,23 @@ const animatedGradient2 = scrawl.makeGradient({
         [839, 'green'],
         [860, 'blue'],
         [979, 'blue'],
-        [999, 'red']
+        [999, 'red'],
     ],
+
+    // TODO - check: delta objects don't clone? If no, then fix.
+    delta: {
+        paletteStart: -1,
+        paletteEnd: -1,
+    },
 });
+
+const gradients = [
+    scrawl.findStyles(name('red-to-blue')),
+    scrawl.findStyles(name('blue-to-red')),
+    scrawl.findStyles(name('rainbow')),
+    scrawl.findStyles(name('banded')),
+];
+
 
 // Test the ability to load a user-created easing algorithm into the gradient
 const bespokeEasings = {
@@ -116,29 +113,21 @@ const bespokeEasings = {
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'my-filter',
+    name: name('my-filter'),
     method: 'mapToGradient',
-
-    gradient: 'red-to-blue',
+    gradient: name('red-to-blue'),
 });
 
 
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['my-filter'],
+    filters: [name('my-filter')],
 });
 
 
@@ -146,21 +135,53 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Opacity - ${opacity.value}`;
+   return `
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'opacity', '1'],
+    ['select', 'useNaturalGrayscale', 0],
+    ['select', 'gradient', 0],
+    ['select', 'easing', 0],
+]);
+
+
+// Handle filter gradient input
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    if (e && e.target) myFilter.set({ gradient: name(e.target.value)});
+
+}, dom.gradient);
+
+
+// Handle filter easing input
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    if (e && e.target) {
+
+        let val = e.target.value;
+
+        if (['user-steps', 'user-repeat'].includes(val)) val = bespokeEasings[val];
+
+        gradients.forEach(g => g.set({ easing: val }));
+    }
+}, dom.easing);
+
+
+// Handle other inputs for filter
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -174,46 +195,13 @@ scrawl.makeUpdater({
     updates: {
 
         useNaturalGrayscale: ['useNaturalGrayscale', 'boolean'],
-        gradient: ['gradient', 'raw'],
         opacity: ['opacity', 'float'],
     },
 });
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    e.preventDefault();
-    e.returnValue = false;
-
-    const val = e.target.value;
-
-    const items = {
-        easing: val,
-    };
-
-    if (['user-steps', 'user-repeat'].includes(val)) items.easing = bespokeEasings[val];
-
-    blueToRed.set(items);
-    redToBlue.set(items);
-    animatedGradient1.set(items);
-    animatedGradient2.set(items);
-
-}, '#easing');
-
-// Setup form
-const opacity = document.querySelector('#opacity');
-/** @ts-expect-error */
-opacity.value = 1;
-
-/** @ts-expect-error */
-document.querySelector('#useNaturalGrayscale').value = '0';
-/** @ts-expect-error */
-document.querySelector('#gradient').value = 'red-to-blue';
-/** @ts-expect-error */
-document.querySelector('#easing').options.selectedIndex = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

@@ -4,19 +4,26 @@
 // [Run code](../../demo/filters-023.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'my-filter',
+    name: name('random-noise'),
     method: 'randomNoise',
 
     width: 6,
@@ -28,19 +35,12 @@ const myFilter = scrawl.makeFilter({
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['my-filter'],
+    filters: [name('random-noise')],
 });
 
 
@@ -48,21 +48,39 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Width: ${width.value}, Height: ${height.value}\n    Level: ${level.value}\n    Opacity - ${opacity.value}`;
+    return `
+    Width: ${dom.width.value}, Height: ${dom.height.value}
+    Level: ${dom.level.value}
+    Opacity - ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'width', '6'],
+    ['input', 'height', '6'],
+    ['input', 'level', '0.5'],
+    ['input', 'opacity', '1'],
+    ['select', 'noWrap', 0],
+    ['select', 'includeRed', 1],
+    ['select', 'includeGreen', 1],
+    ['select', 'includeBlue', 1],
+    ['select', 'includeAlpha', 1],
+    ['select', 'noiseType', 0],
+]);
+
+
+// Handle user input
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -88,37 +106,9 @@ scrawl.makeUpdater({
     },
 });
 
-// Setup form
-const width = document.querySelector('#width'),
-    height = document.querySelector('#height'),
-    level = document.querySelector('#level'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-width.value = 6;
-/** @ts-expect-error */
-height.value = 6;
-/** @ts-expect-error */
-level.value = 0.5;
-/** @ts-expect-error */
-opacity.value = 1;
-
-/** @ts-expect-error */
-document.querySelector('#noWrap').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#includeRed').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeGreen').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeBlue').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#includeAlpha').options.selectedIndex = 1;
-/** @ts-expect-error */
-document.querySelector('#noiseType').options.selectedIndex = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

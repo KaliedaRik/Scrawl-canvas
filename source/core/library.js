@@ -221,6 +221,12 @@ export function findFilter (item = '') {
     return null;
 }
 
+export function findGroup (item = '') {
+
+    if (groupnames.includes(item)) return group[item];
+    return null;
+}
+
 
 // All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - used mainly as part of Scrawl-canvas cloning functionality.
 export const constructors = {};
