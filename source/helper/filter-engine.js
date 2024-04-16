@@ -4710,7 +4710,8 @@ P.theBigActionsObject = _freeze({
                     outer = temp;
                 }
 
-                const complexLen = outer - inner;
+                let complexLen = outer - inner;
+                if (complexLen === 0) complexLen = 0.1;
 
                 x = sx - outer;
                 if (x < 0) x = 0;

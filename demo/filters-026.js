@@ -4,17 +4,26 @@
 // [Run code](../../demo/filters-026.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
+
+// Create the filter
 const swirl = scrawl.makeFilter({
 
-    name: 'swirl',
+    name: name('swirl'),
     method: 'swirl',
     startX: '50%',
     startY: 200,
@@ -51,17 +60,12 @@ const bespokeEasings = {
 // Create the target entity
 const piccy = scrawl.makePicture({
 
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['swirl'],
+    filters: [name('swirl')],
 });
 
 
@@ -69,22 +73,62 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Start - x: ${swirl.startX}; y: ${swirl.startY}\n    Radius - outer: ${swirl.outerRadius}; inner: ${swirl.innerRadius}\n    Angle: ${angle.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Start - x: ${swirl.startX}; y: ${swirl.startY}
+    Radius - outer: ${swirl.outerRadius}; inner: ${swirl.innerRadius}
+    Angle: ${dom.angle.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Setup form observer functionality
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'start_xPercent', '50'],
+    ['input', 'start_yPercent', '50'],
+    ['input', 'start_xAbsolute', '200'],
+    ['input', 'start_yAbsolute', '200'],
+    ['input', 'innerRadius_percent', '0'],
+    ['input', 'innerRadius_absolute', '0'],
+    ['input', 'outerRadius_percent', '30'],
+    ['input', 'outerRadius_absolute', '120'],
+    ['input', 'angle', '90'],
+    ['input', 'opacity', '1'],
+    ['select', 'easing', 0],
+]);
+
+
+// Handle easing input
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    const val = e.target.value;
+
+    if (['user-steps', 'user-zigzag'].includes(val)) {
+        swirl.set({
+            easing: bespokeEasings[val],
+        });
+    }
+    else {
+        swirl.set({
+            easing: val,
+        });
+    }
+}, '#easing');
+
+
+// Handle all other user inputs
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -111,56 +155,9 @@ scrawl.makeUpdater({
     },
 });
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    e.preventDefault();
-    e.returnValue = false;
-
-    const val = e.target.value;
-
-    if (['user-steps', 'user-zigzag'].includes(val)) {
-        swirl.set({
-            easing: bespokeEasings[val],
-        });
-    }
-    else {
-        swirl.set({
-            easing: val,
-        });
-    }
-}, '#easing');
-
-// Setup form
-const opacity = document.querySelector('#opacity');
-const angle = document.querySelector('#angle');
-
-/** @ts-expect-error */
-opacity.value = 1;
-/** @ts-expect-error */
-angle.value = 90;
-
-/** @ts-expect-error */
-document.querySelector('#start_xPercent').value = 50;
-/** @ts-expect-error */
-document.querySelector('#start_yPercent').value = 50;
-/** @ts-expect-error */
-document.querySelector('#start_xAbsolute').value = 200;
-/** @ts-expect-error */
-document.querySelector('#start_yAbsolute').value = 200;
-/** @ts-expect-error */
-document.querySelector('#innerRadius_percent').value = 0;
-/** @ts-expect-error */
-document.querySelector('#innerRadius_absolute').value = 0;
-/** @ts-expect-error */
-document.querySelector('#outerRadius_percent').value = 30;
-/** @ts-expect-error */
-document.querySelector('#outerRadius_absolute').value = 120;
-/** @ts-expect-error */
-document.querySelector('#easing').options.selectedIndex = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing
