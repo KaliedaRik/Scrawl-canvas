@@ -388,10 +388,15 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
 
     let counter = 0;
 
-    const wrappers = [];
-    if (Array.isArray(canvas)) wrappers.push(...canvas);
-    else wrappers.push(canvas);
+    const canvasArray = [];
+    if (Array.isArray(canvas)) canvasArray.push(...canvas);
+    else canvasArray.push(canvas);
 
+    const wrappers = [];
+    canvasArray.forEach(c => {
+        if (c.substring) wrappers.push(scrawl.findCanvas(c));
+        else wrappers.push(c);
+    });
 
     if (!Array.isArray(targets)) targets = [targets];
 

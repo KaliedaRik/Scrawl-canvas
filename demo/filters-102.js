@@ -4,38 +4,44 @@
 // [Run code](../../demo/filters-102.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addCheckerboardBackground, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
+scrawl.importDomImage('.flowers');
+
+
+// Create the background
+addCheckerboardBackground(canvas, namespace);
 
 
 // Create the assets
-scrawl.importDomImage('.flowers');
-
 canvas.buildCell({
 
-    name: 'star-cell',
+    name: name('star-cell'),
     dimensions: [400, 400],
     shown: false,
 });
 
 scrawl.makeStar({
 
-    name: 'my-star',
-    group: 'star-cell',
-
+    name: name('my-star'),
+    group: name('star-cell'),
     radius1: 200,
     radius2: 100,
-
     roll: 60,
-
     points: 4,
-
     start: ['center', 'center'],
     handle: ['center', 'center'],
-
     fillStyle: 'blue',
     strokeStyle: 'red',
     lineWidth: 10,
@@ -44,30 +50,25 @@ scrawl.makeStar({
 
 canvas.buildCell({
 
-    name: 'wheel-cell',
+    name: name('wheel-cell'),
     dimensions: [400, 400],
     shown: false,
 });
 
 scrawl.makeWheel({
 
-    name: 'my-wheel',
-    group: 'wheel-cell',
-
+    name: name('my-wheel'),
+    group: name('wheel-cell'),
     radius: 150,
-
     startAngle: 30,
     endAngle: -30,
     includeCenter: true,
-
     start: ['center', 'center'],
     handle: ['center', 'center'],
-
     fillStyle: 'green',
     strokeStyle: 'yellow',
     lineWidth: 10,
     method: 'fillThenDraw',
-
     delta: {
         roll: -0.3,
     },
@@ -77,59 +78,50 @@ scrawl.makeWheel({
 // Create the filters
 scrawl.makeFilter({
 
-    name: 'star-filter',
+    name: name('star-filter'),
     method: 'image',
-
-    asset: 'star-cell',
-
+    asset: name('star-cell'),
     width: 400,
     height: 400,
-
     copyWidth: 400,
     copyHeight: 400,
-
     lineOut: 'star',
 
 }).clone({
 
-    name: 'wheel-filter',
-    asset: 'wheel-cell',
+    name: name('wheel-filter'),
+    asset: name('wheel-cell'),
     lineOut: 'wheel',
 });
 
 const imageFilter = scrawl.makeFilter({
 
-    name: 'flower-filter',
+    name: name('flower-filter'),
     method: 'image',
-
     asset: 'iris',
-
     width: '80%',
     height: '80%',
     copyWidth: '100%',
     copyHeight: '100%',
-
     lineOut: 'flower',
 });
 
 const composeFilter = scrawl.makeFilter({
 
-    name: 'block-filter',
+    name: name('block-filter'),
     method: 'blend',
-
     lineIn: 'source',
     lineMix: 'star',
-
     offsetX: 30,
     offsetY: 30,
-
     compose: 'normal',
 });
 
-// Display the filter in a Block entity
 
+// Display the filter in a Block entity
 scrawl.makeGradient({
-    name: 'linear',
+
+    name: name('linear'),
     endX: '100%',
     colors: [
         [0, 'blue'],
@@ -142,21 +134,20 @@ scrawl.makeGradient({
 
 scrawl.makeBlock({
 
-    name: 'display-block',
+    name: name('display-block'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
     dimensions: ['90%', '90%'],
     roll: -20,
-
     lineWidth: 10,
-    fillStyle: 'linear',
+    fillStyle: name('linear'),
     lockFillStyleToEntity: true,
     strokeStyle: 'coral',
     method: 'fillThenDraw',
 
     // Load in the three image filters, then the compose filter to combine two of them
     // + the results display in a Block entity!
-    filters: ['star-filter', 'wheel-filter', 'flower-filter', 'block-filter'],
+    filters: [name('star-filter'), name('wheel-filter'), name('flower-filter'), name('block-filter')],
 });
 
 
@@ -164,21 +155,33 @@ scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Offset - x: ${ox.value}, y: ${oy.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Offset - x: ${dom.offset_x.value}, y: ${dom.offset_y.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'offset_x', '30'],
+    ['input', 'offset_y', '30'],
+    ['input', 'opacity', '1'],
+    ['select', 'source', 2],
+    ['select', 'destination', 0],
+    ['select', 'blend', 0],
+]);
+
+
 // Setup form observer functionality
 scrawl.makeUpdater({
 
@@ -196,33 +199,14 @@ scrawl.makeUpdater({
         destination: ['lineMix', 'raw'],
         blend: ['blend', 'raw'],
         opacity: ['opacity', 'float'],
-        'offset-x': ['offsetX', 'round'],
-        'offset-y': ['offsetY', 'round'],
+        offset_x: ['offsetX', 'round'],
+        offset_y: ['offsetY', 'round'],
     },
 });
 
-// Setup form
-const ox = document.querySelector('#offset-x'),
-    oy = document.querySelector('#offset-y'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-opacity.value = 1;
-/** @ts-expect-error */
-ox.value = 30;
-/** @ts-expect-error */
-oy.value = 30;
-
-/** @ts-expect-error */
-document.querySelector('#source').options.selectedIndex = 0;
-/** @ts-expect-error */
-document.querySelector('#destination').options.selectedIndex = 2;
-/** @ts-expect-error */
-document.querySelector('#blend').options.selectedIndex = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', imageFilter);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, imageFilter);
 
 
 // #### Development and testing

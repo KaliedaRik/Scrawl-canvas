@@ -388,7 +388,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 // Handle the composite and alpha inputs
 scrawl.makeUpdater({
 
-    event: ['change'],
+    event: ['input', 'change'],
     origin: '.controlItem',
 
     target: group,
