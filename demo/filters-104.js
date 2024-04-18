@@ -4,11 +4,20 @@
 // [Run code](../../demo/filters-104.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
+scrawl.importDomImage('.flowers');
 
 
 // #### Gradients and pattern definitions
@@ -18,7 +27,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 // + The pattern matrix lets us warp and stretch the pattern to meet our needs
 const patternCell = canvas.buildCell({
 
-    name: 'bar-cell-pattern',
+    name: name('bar-cell-pattern'),
     dimensions: [80, 80],
     shown: false,
     skewX: 0,
@@ -31,7 +40,7 @@ const patternCell = canvas.buildCell({
 
 const barGradient = scrawl.makeGradient({
 
-    name: 'bar-cell-gradient',
+    name: name('bar-cell-gradient'),
     endX: '100%',
 
     colors: [
@@ -45,7 +54,7 @@ const barGradient = scrawl.makeGradient({
 
 const ringGradient = scrawl.makeRadialGradient({
 
-    name: 'ring-cell-gradient',
+    name: name('ring-cell-gradient'),
     startX: '50%',
     startY: '50%',
     endX: '50%',
@@ -71,10 +80,10 @@ const updateGradients = (items) => {
 
 const filterBlock = scrawl.makeBlock({
 
-    name: 'bar-cell-box',
-    group: 'bar-cell-pattern',
+    name: name('bar-cell-box'),
+    group: name('bar-cell-pattern'),
     dimensions: ['100%', '100%'],
-    fillStyle: 'bar-cell-gradient',
+    fillStyle: name('bar-cell-gradient'),
 });
 
 
@@ -84,26 +93,26 @@ const filterBlock = scrawl.makeBlock({
 // + The Block entity uses our pattern Cell for its `fillStyle` attribute
 const filterCell = canvas.buildCell({
 
-    name: 'bar-cell',
+    name: name('bar-cell'),
     dimensions: ['100%', '100%'],
     shown: false,
 });
 
 scrawl.makeBlock({
 
-    name: 'bar-base-box',
-    group: 'bar-cell',
+    name: name('bar-base-box'),
+    group: name('bar-cell'),
     dimensions: ['100%', '100%'],
-    fillStyle: 'bar-cell-pattern',
+    fillStyle: name('bar-cell-pattern'),
 });
 
 
 // #### Filter definitions
 // Define our filters - we'll populate them with actions data later
-const glassBarsFilter = scrawl.makeFilter({ name: 'glass-bars' }),
-    displaceBarsFilter = scrawl.makeFilter({ name: 'displace-bars' }),
-    etchingFilter = scrawl.makeFilter({ name: 'etching' }),
-    greenMonitorFilter = scrawl.makeFilter({ name: 'green-monitor' });
+const glassBarsFilter = scrawl.makeFilter({ name: name('glass-bars') }),
+    displaceBarsFilter = scrawl.makeFilter({ name: name('displace-bars') }),
+    etchingFilter = scrawl.makeFilter({ name: name('etching') }),
+    greenMonitorFilter = scrawl.makeFilter({ name: name('green-monitor') });
 
 // We define some variables and helper functions here, to cut down on code
 let fOffsetX = 0,
@@ -117,7 +126,7 @@ let fOffsetX = 0,
 const getProcessImageFilter = () => {
     return [{
         action: 'process-image',
-        asset: 'bar-cell',
+        asset: name('bar-cell'),
         width: '100%',
         height: '100%',
         copyWidth: '100%',
@@ -225,13 +234,10 @@ updateFilters();
 
 
 // #### Build the scene
-// The initial image
-scrawl.importDomImage('.flowers');
-
 // We need something to apply our filters to
 const target = scrawl.makePicture({
 
-    name: 'target-image',
+    name: name('target-image'),
 
     asset: 'iris',
 
@@ -243,32 +249,61 @@ const target = scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['glass-bars'],
+    filters: [name('glass-bars')],
 });
 
 // Add some Drag-and-Drop image loading functionality
 // + So users can check the filter effects against different images
-addImageDragAndDrop(canvas, '#my-image-store', target);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, target);
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Filter dimensions - \n        width: ${filterWidth.value}%; height: ${filterHeight.value}%\n    Filter offset - \n        x: ${filterOffsetX.value}px; y: ${filterOffsetY.value}px\n    Pattern dimensions - \n        width: ${patternWidth.value}px; height: ${patternHeight.value}px\n    Pattern matrix -\n        shiftX: ${shiftX.value}; shiftY: ${shiftY.value}\n        skewX: ${skewX.value}; skewY: ${skewY.value}\n        stretchX: ${stretchX.value}; stretchY: ${stretchY.value}\n    Displace filter scaling - \n        x: ${filterScaleX.value}; y: ${filterScaleY.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Filter dimensions - width: ${dom.filter_width.value}%, height: ${dom.filter_height.value}%
+    Filter offset - x: ${dom.filter_offset_x.value}px, y: ${dom.filter_offset_y.value}px
+    Pattern dimensions - width: ${dom.pattern_width.value}px, height: ${dom.pattern_height.value}px
+    Pattern matrix - shiftX: ${dom.shiftX.value}, shiftY: ${dom.shiftY.value}, skewX: ${dom.skewX.value}, skewY: ${dom.skewY.value}, stretchX: ${dom.stretchX.value}, stretchY: ${dom.stretchY.value}
+    Displace filter scaling - x: ${dom.filter_scale_x.value}, y: ${dom.filter_scale_y.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'opacity', '1'],
+    ['input', 'skewX', '0'],
+    ['input', 'skewY', '0'],
+    ['input', 'stretchX', '1'],
+    ['input', 'stretchY', '1'],
+    ['input', 'shiftX', '0'],
+    ['input', 'shiftY', '0'],
+    ['input', 'pattern_width', '80'],
+    ['input', 'pattern_height', '80'],
+    ['input', 'filter_width', '100'],
+    ['input', 'filter_height', '100'],
+    ['input', 'filter_offset_x', '0'],
+    ['input', 'filter_offset_y', '0'],
+    ['input', 'filter_scale_x', '10'],
+    ['input', 'filter_scale_y', '10'],
+    ['select', 'filterEffect', 0],
+    ['select', 'patternGradient', 0],
+    ['select', 'easing', 0],
+    ['select', 'blend', 8],
+]);
+
+
 // Update pattern values
 scrawl.makeUpdater({
 
@@ -281,8 +316,8 @@ scrawl.makeUpdater({
     preventDefault: true,
 
     updates: {
-        'pattern-width': ['width', 'round'],
-        'pattern-height': ['height', 'round'],
+        pattern_width: ['width', 'round'],
+        pattern_height: ['height', 'round'],
         shiftX: ['shiftX', 'round'],
         shiftY: ['shiftY', 'round'],
         skewX: ['skewX', 'float'],
@@ -291,6 +326,7 @@ scrawl.makeUpdater({
         stretchY: ['stretchY', 'float'],
     },
 });
+
 
 // Update filter dimensions
 scrawl.makeUpdater({
@@ -304,26 +340,23 @@ scrawl.makeUpdater({
     preventDefault: true,
 
     updates: {
-        'filter-width': ['width', '%'],
-        'filter-height': ['height', '%'],
+        filter_width: ['width', '%'],
+        filter_height: ['height', '%'],
     },
 });
+
 
 // Update gradient choice
-scrawl.makeUpdater({
+scrawl.addNativeListener(['change', 'input'], (e) => {
 
-    event: ['change', 'input'],
-    origin: '.filterBlock',
+    const t = e.target,
+        value = t.value;
 
-    target: filterBlock,
+    filterBlock.set({
+        fillStyle: name(value),
+    });
+}, '.filterBlock');
 
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-        patternGradient: ['fillStyle', 'raw'],
-    },
-});
 
 // Update filter offset, opacity, blend choices
 scrawl.addNativeListener(['change', 'input'], (e) => {
@@ -333,19 +366,19 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
 
     switch (t.id) {
 
-        case 'filter-offset-x' :
+        case 'filter_offset_x' :
             fOffsetX = parseInt(value, 10);
             break;
 
-        case 'filter-offset-y' :
+        case 'filter_offset_y' :
             fOffsetY = parseInt(value, 10);
             break;
 
-        case 'filter-scale-x' :
+        case 'filter_scale_x' :
             fDisplaceX = parseInt(value, 10);
             break;
 
-        case 'filter-scale-y' :
+        case 'filter_scale_y' :
             fDisplaceY = parseInt(value, 10);
             break;
 
@@ -405,29 +438,19 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             });
 
             filterBlock.set({
-                fillStyle: 'bar-cell-gradient',
+                fillStyle: name('bar-cell-gradient'),
             });
 
-/** @ts-expect-error */
-            skewX.value = 0;
-/** @ts-expect-error */
-            skewY.value = 0;
-/** @ts-expect-error */
-            stretchX.value = 1;
-/** @ts-expect-error */
-            stretchY.value = 1;
-/** @ts-expect-error */
-            shiftX.value = 0;
-/** @ts-expect-error */
-            shiftY.value = 0;
-/** @ts-expect-error */
-            filterBlend.value = 'multiply';
-/** @ts-expect-error */
-            patternGradient.value = 'bar-cell-gradient';
-/** @ts-expect-error */
-            patternWidth.value = 80;
-/** @ts-expect-error */
-            patternHeight.value = 80;
+            dom.skewX.value = 0;
+            dom.skewY.value = 0;
+            dom.stretchX.value = 1;
+            dom.stretchY.value = 1;
+            dom.shiftX.value = 0;
+            dom.shiftY.value = 0;
+            dom.blend.value = 'multiply';
+            dom.patternGradient.value = 'bar-cell-gradient';
+            dom.pattern_width.value = 80;
+            dom.pattern_height.value = 80;
 
             break;
 
@@ -451,29 +474,19 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             });
 
             filterBlock.set({
-                fillStyle: 'ring-cell-gradient',
+                fillStyle: name('ring-cell-gradient'),
             });
 
-/** @ts-expect-error */
-            skewX.value = 0;
-/** @ts-expect-error */
-            skewY.value = 0;
-/** @ts-expect-error */
-            stretchX.value = 1;
-/** @ts-expect-error */
-            stretchY.value = 1;
-/** @ts-expect-error */
-            shiftX.value = 0;
-/** @ts-expect-error */
-            shiftY.value = 0;
-/** @ts-expect-error */
-            filterBlend.value = 'multiply';
-/** @ts-expect-error */
-            patternGradient.value = 'ring-cell-gradient';
-/** @ts-expect-error */
-            patternWidth.value = 80;
-/** @ts-expect-error */
-            patternHeight.value = 80;
+            dom.skewX.value = 0;
+            dom.skewY.value = 0;
+            dom.stretchX.value = 1;
+            dom.stretchY.value = 1;
+            dom.shiftX.value = 0;
+            dom.shiftY.value = 0;
+            dom.blend.value = 'multiply';
+            dom.patternGradient.value = 'ring-cell-gradient';
+            dom.pattern_width.value = 80;
+            dom.pattern_height.value = 80;
 
             break;
 
@@ -497,29 +510,19 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             });
 
             filterBlock.set({
-                fillStyle: 'bar-cell-gradient',
+                fillStyle: name('bar-cell-gradient'),
             });
 
-/** @ts-expect-error */
-            skewX.value = -0.65;
-/** @ts-expect-error */
-            skewY.value = -0.31;
-/** @ts-expect-error */
-            stretchX.value = 1;
-/** @ts-expect-error */
-            stretchY.value = 0.26;
-/** @ts-expect-error */
-            shiftX.value = 0;
-/** @ts-expect-error */
-            shiftY.value = 0;
-/** @ts-expect-error */
-            filterBlend.value = 'screen';
-/** @ts-expect-error */
-            patternGradient.value = 'bar-cell-gradient';
-/** @ts-expect-error */
-            patternWidth.value = 80;
-/** @ts-expect-error */
-            patternHeight.value = 80;
+            dom.skewX.value = -0.65;
+            dom.skewY.value = -0.31;
+            dom.stretchX.value = 1;
+            dom.stretchY.value = 0.26;
+            dom.shiftX.value = 0;
+            dom.shiftY.value = 0;
+            dom.blend.value = 'screen';
+            dom.patternGradient.value = 'bar-cell-gradient';
+            dom.pattern_width.value = 80;
+            dom.pattern_height.value = 80;
 
             break;
 
@@ -543,29 +546,19 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             });
 
             filterBlock.set({
-                fillStyle: 'bar-cell-gradient',
+                fillStyle: name('bar-cell-gradient'),
             });
 
-/** @ts-expect-error */
-            skewX.value = 1.04;
-/** @ts-expect-error */
-            skewY.value = 0.05;
-/** @ts-expect-error */
-            stretchX.value = 0.35;
-/** @ts-expect-error */
-            stretchY.value = 0;
-/** @ts-expect-error */
-            shiftX.value = 0;
-/** @ts-expect-error */
-            shiftY.value = 0;
-/** @ts-expect-error */
-            filterBlend.value = 'luminosity';
-/** @ts-expect-error */
-            patternGradient.value = 'bar-cell-gradient';
-/** @ts-expect-error */
-            patternWidth.value = 80;
-/** @ts-expect-error */
-            patternHeight.value = 80;
+            dom.skewX.value = 1.04;
+            dom.skewY.value = 0.05;
+            dom.stretchX.value = 0.35;
+            dom.stretchY.value = 0;
+            dom.shiftX.value = 0;
+            dom.shiftY.value = 0;
+            dom.blend.value = 'luminosity';
+            dom.patternGradient.value = 'bar-cell-gradient';
+            dom.pattern_width.value = 80;
+            dom.pattern_height.value = 80;
 
             break;
     }
@@ -581,89 +574,21 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
         easing: 'linear',
     });
 
-/** @ts-expect-error */
-    opacity.value = 1;
-/** @ts-expect-error */
-    filterWidth.value = 100;
-/** @ts-expect-error */
-    filterHeight.value = 100;
-/** @ts-expect-error */
-    filterOffsetX.value = 0;
-/** @ts-expect-error */
-    filterOffsetY.value = 0;
-/** @ts-expect-error */
-    filterScaleX.value = 10;
-/** @ts-expect-error */
-    filterScaleY.value = 10;
-/** @ts-expect-error */
-    easing.value = 'linear';
+    dom.opacity.value = 1;
+    dom.filter_width.value = 100;
+    dom.filter_height.value = 100;
+    dom.filter_offset_x.value = 0;
+    dom.filter_offset_y.value = 0;
+    dom.filter_scale_x.value = 10;
+    dom.filter_scale_y.value = 10;
+    dom.easing.value = 'linear';
 
 /** @ts-expect-error */
-    target.clearFilters().addFilters(value);
+    target.clearFilters().addFilters(name(value));
 
 }, '.filterEffect');
 
 
-// #### Setup form on page load
-const opacity = document.querySelector('#opacity');
-const skewX = document.querySelector('#skewX');
-const skewY = document.querySelector('#skewY');
-const stretchX = document.querySelector('#stretchX');
-const stretchY = document.querySelector('#stretchY');
-const shiftX = document.querySelector('#shiftX');
-const shiftY = document.querySelector('#shiftY');
-const patternWidth = document.querySelector('#pattern-width');
-const patternHeight = document.querySelector('#pattern-height');
-const filterWidth = document.querySelector('#filter-width');
-const filterHeight = document.querySelector('#filter-height');
-const filterOffsetX = document.querySelector('#filter-offset-x');
-const filterOffsetY = document.querySelector('#filter-offset-y');
-const filterScaleX = document.querySelector('#filter-scale-x');
-const filterScaleY = document.querySelector('#filter-scale-y');
-const filterBlend = document.querySelector('#blend');
-const patternGradient = document.querySelector('#patternGradient');
-const easing = document.querySelector('#easing');
-
-
-/** @ts-expect-error */
-opacity.value = 1;
-/** @ts-expect-error */
-skewX.value = 0;
-/** @ts-expect-error */
-skewY.value = 0;
-/** @ts-expect-error */
-stretchX.value = 1;
-/** @ts-expect-error */
-stretchY.value = 1;
-/** @ts-expect-error */
-shiftX.value = 0;
-/** @ts-expect-error */
-shiftY.value = 0;
-/** @ts-expect-error */
-patternWidth.value = 80;
-/** @ts-expect-error */
-patternHeight.value = 80;
-/** @ts-expect-error */
-filterWidth.value = 100;
-/** @ts-expect-error */
-filterHeight.value = 100;
-/** @ts-expect-error */
-filterOffsetX.value = 0;
-/** @ts-expect-error */
-filterOffsetY.value = 0;
-/** @ts-expect-error */
-filterScaleX.value = 10;
-/** @ts-expect-error */
-filterScaleY.value = 10;
-/** @ts-expect-error */
-filterBlend.value = 'multiply';
-/** @ts-expect-error */
-patternGradient.value = 'bar-cell-gradient';
-/** @ts-expect-error */
-easing.value = 'linear';
-
-/** @ts-expect-error */
-document.querySelector('#filterEffect').value = 'glass-bars';
 
 
 // #### Development and testing

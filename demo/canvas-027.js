@@ -424,9 +424,10 @@ const vtLabel = scrawl.makeLabel({
     start: [5, 20],
     fillStyle: 'yellow',
 
-    // Accesibility - this Label updates many times per second. Best to not include it in the DOM as it could ruin the web page experience for people using screen readers.
-    // + People will be more interested in seeing/hearing/reading any captions or subtitles included alongside the video.
-    textIsAccessible: false,
+    // Accesibility - this Label updates many times per second. As such, we need to mark the DOM element which will hold the label text (for accessibility) with the role of `timer`.
+    // + All DOM elements containing accessible label texts are given an `aria-live="polite"` attribute.
+    // + Then it will be up to the user's screen reader software to decide how to announce text changes to the user.
+    accessibleTextRole: 'timer',
 });
 
 const videoTimeBar = function () {

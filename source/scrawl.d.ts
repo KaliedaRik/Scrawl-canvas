@@ -631,6 +631,7 @@ interface TextMixinInputs {
     accessibleText?: string;
     accessibleTextOrder?: number;
     accessibleTextPlaceholder?: string;
+    accessibleTextRole?: string;
     textIsAccessible?: boolean;
 }
 

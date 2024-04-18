@@ -617,6 +617,16 @@ const initializeDomInputs = (items) => {
                 break;
             }
 
+            case 'element' : {
+
+                /** @type {HTMLElement} */
+                const S = document.querySelector(`${selector}`);
+
+                if (S) results[selector] = S;
+                else results[selector] = {};
+                break;
+            }
+
             default : {
 
                 /** @type {HTMLElement} */

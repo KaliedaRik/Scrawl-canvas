@@ -4,29 +4,29 @@
 // [Run code](../../demo/filters-502.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the target entity
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
-
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
     filter: 'url(#svg-blur)',
 });
@@ -41,19 +41,15 @@ scrawl.makePicture({
 //   </filter>
 // </svg>
 // ```
-const feGaussianBlur = document.querySelector('feGaussianBlur');
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const stdDeviation = feGaussianBlur.getAttribute('stdDeviation'),
-        edgeMode = feGaussianBlur.getAttribute('edgeMode');
-
     return `
 <filter id="svg-blur">
-  <feGaussianBlur in="SourceGraphic" stdDeviation="${stdDeviation}" edgeMode="${edgeMode}" />
+  <feGaussianBlur in="SourceGraphic" stdDeviation="${dom.stdDeviation}" edgeMode="${dom.edgeMode}" />
 </filter>`;
 });
 
@@ -61,36 +57,42 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Setup form functionality
+const dom = initializeDomInputs([
+    ['input', 'stdDeviation', '5'],
+    ['select', 'edgeMode', 0],
+    ['element', 'feGaussianBlur'],
+]);
+
+
 const updateStdDeviation = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    feGaussianBlur.setAttribute('stdDeviation', e.target.value);
+    dom.feGaussianBlur.setAttribute('stdDeviation', e.target.value);
 };
-scrawl.addNativeListener(['input', 'change'], updateStdDeviation, '#stdDeviation');
+scrawl.addNativeListener(['input', 'change'], updateStdDeviation, dom.stdDeviation);
+
 
 const updateEdgeMode = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    feGaussianBlur.setAttribute(`edgeMode`, e.target.value);
+    dom.feGaussianBlur.setAttribute(`edgeMode`, e.target.value);
 };
-scrawl.addNativeListener(['input', 'change'], updateEdgeMode, '#edgeMode');
+scrawl.addNativeListener(['input', 'change'], updateEdgeMode, dom.edgeMode);
 
-/** @ts-expect-error */
-document.querySelector('#stdDeviation').value = 5;
-/** @ts-expect-error */
-document.querySelector('#edgeMode').options.selectedIndex = 0;
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing
