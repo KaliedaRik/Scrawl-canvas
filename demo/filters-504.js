@@ -4,74 +4,46 @@
 // [Run code](../../demo/filters-504.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the target entity
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
-
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
     filter: 'url(#svg-duotone)',
 });
-
-
-// #### SVG filter
-// We create the filter in the HTML script, not here:
-// ```
-// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-//   <filter id="svg-duotone">
-//     <feColorMatrix type="matrix" values=".33 .33 .33 0 0
-//       .33 .33 .33 0 0
-//       .33 .33 .33 0 0
-//        0   0   0  1 0">
-//     </feColorMatrix>
-
-//     <feComponentTransfer color-interpolation-filters="sRGB">
-//       <feFuncR type="table" tableValues=".996 0.984"></feFuncR>
-//       <feFuncG type="table" tableValues=".125 0.941"></feFuncG>
-//       <feFuncB type="table" tableValues=".552 0.478"></feFuncB>
-//     </feComponentTransfer>
-//   </filter>
-// </svg>
-// ```
-const feFuncR = document.querySelector('feFuncR'),
-    feFuncG = document.querySelector('feFuncG'),
-    feFuncB = document.querySelector('feFuncB');
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const tableValuesR = feFuncR.getAttribute('tableValues'),
-        tableValuesG = feFuncG.getAttribute('tableValues'),
-        tableValuesB = feFuncB.getAttribute('tableValues');
-
     return `
 <filter id="svg-duotone">
   <feColorMatrix type="matrix" values=".33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0"></feColorMatrix>
 
   <feComponentTransfer color-interpolation-filters="sRGB">
-    <feFuncR type="discrete" tableValues="${tableValuesR}" />
-    <feFuncG type="discrete" tableValues="${tableValuesG}" />
-    <feFuncB type="discrete" tableValues="${tableValuesB}" />
+    <feFuncR type="discrete" tableValues="${dom.r1.value} ${dom.r2.value}" />
+    <feFuncG type="discrete" tableValues="${dom.g1.value} ${dom.g2.value}" />
+    <feFuncB type="discrete" tableValues="${dom.b1.value} ${dom.b2.value}" />
   </feComponentTransfer>
 </filter>`;
 });
@@ -80,47 +52,38 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-const r1 = document.querySelector('#r1'),
-    r2 = document.querySelector('#r2');
+const dom = initializeDomInputs([
+    ['input', 'r1', '0.996'],
+    ['input', 'r2', '0.984'],
+    ['input', 'g1', '0.125'],
+    ['input', 'g2', '0.941'],
+    ['input', 'b1', '0.552'],
+    ['input', 'b2', '0.478'],
+    ['element', 'feFuncR'],
+    ['element', 'feFuncG'],
+    ['element', 'feFuncB'],
+]);
 
-const g1 = document.querySelector('#g1'),
-    g2 = document.querySelector('#g2');
-
-const b1 = document.querySelector('#b1'),
-    b2 = document.querySelector('#b2');
-
-/** @ts-expect-error */
-r1.value = 0.996;
-/** @ts-expect-error */
-r2.value = 0.984;
-/** @ts-expect-error */
-g1.value = 0.125;
-/** @ts-expect-error */
-g2.value = 0.941;
-/** @ts-expect-error */
-b1.value = 0.552;
-/** @ts-expect-error */
-b2.value = 0.478;
 
 // Setup form functionality
-/** @ts-expect-error */
-const updateR = () => feFuncR.setAttribute('tableValues', `${r1.value} ${r2.value}`);
+const updateR = () => dom.feFuncR.setAttribute('tableValues', `${dom.r1.value} ${dom.r2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateR, '.feFuncR');
 
-/** @ts-expect-error */
-const updateG = () => feFuncG.setAttribute('tableValues', `${g1.value} ${g2.value}`);
+const updateG = () => dom.feFuncG.setAttribute('tableValues', `${dom.g1.value} ${dom.g2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateG, '.feFuncG');
 
-/** @ts-expect-error */
-const updateB = () => feFuncB.setAttribute('tableValues', `${b1.value} ${b2.value}`);
+const updateB = () => dom.feFuncB.setAttribute('tableValues', `${dom.b1.value} ${dom.b2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateB, '.feFuncB');
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing
