@@ -4,21 +4,22 @@
 // [Run code](../../demo/particles-008.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
-
-
-// Import image from DOM
-scrawl.importDomImage('.flowers');
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // For this Demo, we are creating a flag and pinning it to a pole. This is the pole.
 scrawl.makeLine({
 
-    name: 'flagpole',
+    name: name('flagpole'),
 
     startX: 'center',
     startY: 30,
@@ -34,11 +35,10 @@ scrawl.makeLine({
 
 
 // #### Particle physics animation scene
-
 // Create a World object which we can then assign to the Net entity
 const myWorld = scrawl.makeWorld({
 
-    name: 'demo-world',
+    name: name('my-world'),
     tickMultiplier: 2,
 
     userAttributes: [
@@ -49,14 +49,17 @@ const myWorld = scrawl.makeWorld({
     ],
 });
 
+
 // Create a 'wind' force; we will update the wind direction/strength as part of the Display cycle
 scrawl.makeForce({
 
-    name: 'wind',
+    name: name('wind'),
+
 /* eslint-disable-next-line */
     action: (particle, world, host) => {
 
         particle.load.vectorAdd({
+
 /** @ts-expect-error */
             x: world.wind,
             y: 0,
@@ -64,6 +67,8 @@ scrawl.makeForce({
     },
 });
 
+
+// Make the wind dynamic
 const changeWind = function () {
 
 /** @ts-expect-error */
@@ -73,6 +78,7 @@ const changeWind = function () {
     if (newWind > 15) newWind = 15;
 
     myWorld.set({
+
 /** @ts-expect-error */
         wind: newWind,
     });
@@ -82,7 +88,7 @@ const changeWind = function () {
 // Create a Net entity
 const myNet = scrawl.makeNet({
 
-    name: 'test-net',
+    name: name('test-net'),
 
     // Every net __must__ be associated with a World object. The attribute's value can be the World object's String name value, or the object itself
     world: myWorld,
@@ -146,14 +152,14 @@ const myNet = scrawl.makeNet({
 
     // Particle physics attributes
     mass: 1,
-    forces: ['gravity', 'wind'],
+    forces: ['gravity', name('wind')],
     engine: 'runge-kutta',
     damperConstant: 5,
 
     // We can assign an artefact that we will be using for the particle animation, or we can define it here as part of the Net factory
     artefact: scrawl.makeWheel({
 
-        name: 'particle-wheel',
+        name: name('particle-wheel'),
         radius: 3,
 
         handle: ['center', 'center'],
@@ -185,33 +191,28 @@ const myNet = scrawl.makeNet({
     },
 });
 
-scrawl.makePicture({
-
-    name: 'my-flower',
-    asset: 'iris',
-
-    copyStartX: 0,
-    copyStartY: 0,
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    visibility: false,
-});
-
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
 /** @ts-expect-error */
-    return `    Tick multiplier: ${tickMultiplier.value}\n    Particle mass: ${mass.value}\n    Rest length multiplier: ${restLength.value}\n    Wind speed: ${myWorld.wind.toFixed(2)}\n    Spring constant: ${springConst.value}\n    Damper constant: ${damperConst.value}`;
+    const windSpeed = myWorld.wind.toFixed(2);
+
+    return `
+    Tick multiplier: ${dom.tickMultiplier.value}
+    Particle mass: ${dom.mass.value}
+    Rest length multiplier: ${dom.restLength.value}
+    Wind speed: ${windSpeed}
+    Spring constant: ${dom.springConstant.value}
+    Damper constant: ${dom.damperConstant.value}`;
 });
+
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: changeWind,
     afterShow: report,
@@ -219,6 +220,17 @@ scrawl.makeRender({
 
 
 // #### User interaction
+const dom = initializeDomInputs([
+    ['input', 'springConstant', '50'],
+    ['input', 'mass', '1'],
+    ['input', 'restLength', '1'],
+    ['input', 'tickMultiplier', '2'],
+    ['input', 'damperConstant', '5'],
+    ['select', 'generate', 0],
+    ['select', 'engine', 2],
+]);
+
+
 // Setup form observer functionality
 const updateSprings = function (e) {
 
@@ -236,28 +248,6 @@ const updateSprings = function (e) {
     }
 };
 scrawl.addNativeListener(['input', 'change'], updateSprings, '.controlItem');
-
-const springConst = document.querySelector('#springConstant'),
-    mass = document.querySelector('#mass'),
-    restLength = document.querySelector('#restLength'),
-    tickMultiplier = document.querySelector('#tickMultiplier'),
-    damperConst = document.querySelector('#damperConstant');
-
-/** @ts-expect-error */
-springConst.value = 50;
-/** @ts-expect-error */
-damperConst.value = 5;
-/** @ts-expect-error */
-restLength.value = 1;
-/** @ts-expect-error */
-mass.value = 1;
-/** @ts-expect-error */
-tickMultiplier.value = 2;
-
-/** @ts-expect-error */
-document.querySelector('#generate').value = 'weak-net';
-/** @ts-expect-error */
-document.querySelector('#engine').value = 'runge-kutta';
 
 
 // #### Development and testing

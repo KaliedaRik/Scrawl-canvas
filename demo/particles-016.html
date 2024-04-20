@@ -10,12 +10,14 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    #my-image-store {
-      display: none;
-    }
-
     canvas {
-      margin: 0 auto;
+      box-shadow: 0px 0px 0px 1px black;
+      margin: 1em auto;
+
+      & .assets {
+        height: 0;
+        overflow: hidden;
+      }
     }
   </style>
 </head>
@@ -36,7 +38,16 @@
     height="400"
     data-scrawl-canvas
     data-base-background-color="azure"
-  ></canvas>
+  >
+    <div class="assets" aria-hidden="true">
+      <img
+        id="iris"
+        src="img/iris.png"
+        class="flowers"
+        alt="A purple-mauve iris flower"
+      />    
+    </div>
+  </canvas>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
@@ -57,10 +68,6 @@
   </div>
 
   <script src="particles-016.js" type="module"></script>
-
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
-  </div>
 
 </body>
 

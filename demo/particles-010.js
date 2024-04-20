@@ -8,13 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // For this Demo, we are creating some Shape entitys and using them as a template for generating Net entity Particles.
 scrawl.makeShape({
 
-    name: 'my-first-template-arrow',
+    name: name('my-first-template-arrow'),
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
@@ -31,12 +36,12 @@ scrawl.makeShape({
 
 }).clone({
 
-    name: 'my-second-template-arrow',
+    name: name('my-second-template-arrow'),
     start: ['50%', '50%'],
 
 }).clone({
 
-    name: 'my-third-template-arrow',
+    name: name('my-third-template-arrow'),
     start: ['75%', '75%'],
 });
 
@@ -46,7 +51,7 @@ scrawl.makeShape({
 // Create a World object which we can then assign to the Net entity
 const myWorld = scrawl.makeWorld({
 
-    name: 'demo-world',
+    name: name('my-world'),
     tickMultiplier: 2,
 
 });
@@ -55,13 +60,13 @@ const myWorld = scrawl.makeWorld({
 // Create a Net entity
 scrawl.makeNet({
 
-    name: 'weak-arrow',
+    name: name('weak-arrow'),
     world: myWorld,
 
     // The Net entity comes with four pre-defined `generate` functions - we will be testing 'weak-shape' and 'strong-shape' in this demo.
     // + We can define our own generate function if the pre-defined functions do not meet our needs.
     generate: 'weak-shape',
-    shapeTemplate: 'my-first-template-arrow',
+    shapeTemplate: name('my-first-template-arrow'),
     precision: 40,
     joinTemplateEnds: true,
 
@@ -106,7 +111,7 @@ scrawl.makeNet({
 
     artefact: scrawl.makeWheel({
 
-        name: 'particle-wheel-1',
+        name: name('particle-wheel-1'),
         radius: 7,
 
         handle: ['center', 'center'],
@@ -138,23 +143,24 @@ scrawl.makeNet({
 // Clone the Net entity
 }).clone({
 
-    name: 'strong-arrow',
+    name: name('strong-arrow'),
     generate: 'strong-shape',
-    shapeTemplate: 'my-second-template-arrow',
+    shapeTemplate: name('my-second-template-arrow'),
 
-    artefact: scrawl.library.artefact['particle-wheel-1'].clone({
-        name: 'particle-wheel-2',
+    artefact: scrawl.findEntity(name('particle-wheel-1')).clone({
+
+        name: name('particle-wheel-2'),
     }),
 
 // Clone again
 }).clone({
 
-    name: 'hub-spoke-arrow',
+    name: name('hub-spoke-arrow'),
     generate: 'hub-spoke',
-    shapeTemplate: 'my-third-template-arrow',
+    shapeTemplate: name('my-third-template-arrow'),
 
-    artefact: scrawl.library.artefact['particle-wheel-1'].clone({
-        name: 'particle-wheel-3',
+    artefact: scrawl.findEntity(name('particle-wheel-1')).clone({
+        name: name('particle-wheel-3'),
     }),
 });
 
@@ -167,7 +173,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -178,14 +184,15 @@ scrawl.makeRender({
 // + KNOWN BUG - the particles are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
-    name: 'my-draggable-group',
+    name: name('my-draggable-group'),
 
-}).addArtefacts('weak-arrow', 'strong-arrow', 'hub-spoke-arrow');
+}).addArtefacts(name('weak-arrow'), name('strong-arrow'), name('hub-spoke-arrow'));
+
 
 scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: 'my-draggable-group',
+    collisionGroup: name('my-draggable-group'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });

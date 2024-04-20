@@ -570,7 +570,6 @@ const initializeDomInputs = (items) => {
                     if (S) {
 
                         S.value = value;
-                        S.removeAttribute('disabled');
                         results[selector] = S;
                     }
                     else results[selector] = {};
@@ -589,7 +588,6 @@ const initializeDomInputs = (items) => {
                     if (S) {
 
                         S.options.selectedIndex = value;
-                        S.removeAttribute('disabled');
                         results[selector] = S;
                     }
                     else results[selector] = {};
@@ -608,7 +606,6 @@ const initializeDomInputs = (items) => {
                     if (S) {
 
                         S.textContent = value;
-                        S.removeAttribute('disabled');
                         results[selector] = S;
                     }
                     else results[selector] = {};

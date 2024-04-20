@@ -8,7 +8,12 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Import image from DOM
@@ -18,11 +23,11 @@ scrawl.importDomImage('.flowers');
 // Every Mesh uses a Net entity
 scrawl.makeNet({
 
-    name: 'test-net',
+    name: name('test-net'),
     order: 1,
 
     world: scrawl.makeWorld({
-        name: 'demo-world',
+        name: name('my-world'),
     }),
 
     start: [50, 50],
@@ -53,7 +58,7 @@ scrawl.makeNet({
 
     artefact: scrawl.makeWheel({
 
-        name: 'particle-wheel',
+        name: name('particle-wheel'),
         radius: 7,
 
         handle: ['center', 'center'],
@@ -86,10 +91,11 @@ scrawl.makeNet({
     particlesAreDraggable: true,
 });
 
+
 // Every Mesh also needs a source image
 const myPicture = scrawl.makePicture({
 
-    name: 'my-flower',
+    name: name('my-flower'),
     asset: 'iris',
 
     copyStartX: 0,
@@ -105,21 +111,16 @@ const myPicture = scrawl.makePicture({
 // ___The Mesh entity definition___
 scrawl.makeMesh({
 
-    name: 'display-mesh',
+    name: name('display-mesh'),
 
-    net: 'test-net',
-    source: 'my-flower',
+    net: name('test-net'),
+    source: name('my-flower'),
 
     lineWidth: 2,
     lineJoin: 'round',
     strokeStyle: 'orange',
 
     method: 'fillThenDraw',
-
-/** @ts-expect-error */
-    onEnter: function () { this.set({ lineWidth: 6 }) },
-/** @ts-expect-error */
-    onLeave: function () { this.set({ lineWidth: 2 }) },
 });
 
 
@@ -131,38 +132,31 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-
-// Mouse movement over and away from the Loom (emulates CSS element `hover` functionality)
-const interactions = function () { canvas.cascadeEventAction('move') };
-scrawl.addListener('move', interactions, canvas.domElement);
-
-
 // Create drag functionality
-// + KNOWN BUG - the particles are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
-    name: 'my-draggable-group',
+    name: name('my-draggable-group'),
 
-}).addArtefacts('test-net');
+}).addArtefacts(name('test-net'));
 
 scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: 'my-draggable-group',
+    collisionGroup: name('my-draggable-group'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', [myPicture]);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, myPicture);
 
 
 // #### Development and testing
