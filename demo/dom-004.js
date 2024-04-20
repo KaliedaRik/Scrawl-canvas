@@ -8,9 +8,13 @@ import { reportSpeed, killTicker, reportFullLibrary } from './utilities.js';
 
 
 // #### Scene setup
-const library = scrawl.library,
-    artefact = library.artefact,
-    stack = artefact.mystack;
+const stack = scrawl.findStack('mystack');
+
+
+// Namespacing boilerplate
+const namespace = stack.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 stack.set({
     width: 300,
@@ -21,7 +25,7 @@ stack.set({
 });
 
 stack.addExistingDomElements('#rocket');
-const rocket = artefact.rocket;
+const rocket = scrawl.findElement('rocket');
 
 rocket.set({
     startX: 600,
@@ -36,7 +40,7 @@ rocket.set({
 // Set a tween up as a template which can be cloned, but will never itself run
 const tween = scrawl.makeTween({
 
-    name: 'template',
+    name: name('template'),
 
     duration: 5000,
     killOnComplete: true,
@@ -62,7 +66,7 @@ const tween = scrawl.makeTween({
 
     completeAction: function () {
 
-        artefact[`${this.name}-element`].kill();
+        scrawl.findElement(`${this.name}-element`).kill();
     },
 }).removeFromTicker();
 
@@ -75,7 +79,7 @@ const report = reportSpeed('#reportmessage', () => reportFullLibrary(scrawl));
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: stack,
     afterShow: report,
 });
@@ -90,7 +94,7 @@ const flyRocket = function(e) {
     e.returnValue = false;
 
     tween.clone({
-        name: `rocket-${counter}`,
+        name: name(`rocket-${counter}`),
     }).run();
 
     counter ++;
@@ -102,4 +106,4 @@ scrawl.addNativeListener('click', flyRocket, stack.domElement);
 console.log(scrawl.library);
 
 console.log('Performing tests ...');
-killTicker(stack, 'template_ticker', 4000);
+killTicker(stack, name('template_ticker'), 4000);

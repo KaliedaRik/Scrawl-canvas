@@ -32,11 +32,17 @@ ga(function() {
 });
 
 // #### Scene setup
-const artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    element = artefact.myelement;
+const stack = scrawl.findStack('mystack');
+
+
+// Namespacing boilerplate
+const namespace = stack.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Grab a handle to the 'boat' element, then clone it
+const element = scrawl.findElement('myelement');
+
 element.set({
     startX: 'center',
     startY: 'center',
@@ -52,40 +58,46 @@ element.set({
         padding: '12px 0 0 0',
     }
 }).clone({
-    name: 'mysecondelement',
+
+    name: name('mysecondelement'),
     handleY: 150,
     scale: 0.9,
     css: {
         backgroundColor: 'lightblue',
-    }
+    },
+
 }).clone({
-    name: 'mythirdelement',
+
+    name: name('mythirdelement'),
     handleY: 100,
     scale: 0.8,
     roll: -40,
     css: {
         backgroundColor: 'lightgreen',
-    }
+    },
 });
 
 
 // Create tickers - testing Ticker clone and packet functionality
 const modelTicker = scrawl.makeTicker({
-    name: 'modelTicker',
+
+    name: name('modelTicker'),
     cycles: 0,
     duration: '12s'
 });
 
 // Test Ticker cloning
 const ticker = modelTicker.clone({
-    name: 'myTicker',
+
+    name: name('myTicker'),
 });
 
 // Create, and start, tweens - testing Tween clone and packet functionality
 scrawl.makeTween({
-    name: 'myTween',
+
+    name: name('myTween'),
     targets: element,
-    ticker: 'myTicker',
+    ticker: name('myTicker'),
     duration: '100%',
     time: 0,
     definitions: [
@@ -94,20 +106,24 @@ scrawl.makeTween({
             start: 0,
             end: 360
         }
-    ]
+    ],
+
 }).clone({
-    name: 'myClonedTween',
-    targets: artefact.mysecondelement,
+
+    name: name('myClonedTween'),
+    targets: scrawl.findElement(name('mysecondelement')),
     definitions: [
         {
             attribute: 'roll',
             start: -20,
             end: 340
         }
-    ]
+    ],
+
 }).clone({
-    name: 'mySecondClonedTween',
-    targets: artefact.mythirdelement,
+
+    name: name('mySecondClonedTween'),
+    targets: scrawl.findElement(name('mythirdelement')),
     useNewTicker: true,
     duration: '10s',
     cycles: 0,
@@ -131,60 +147,69 @@ const red = { css: { backgroundColor: 'red' }},
     blue = { css: { backgroundColor: 'blue' }};
 
 scrawl.makeAction({
-    name: 'red',
-    ticker: 'myTicker',
+
+    name: name('red'),
+    ticker: name('myTicker'),
     targets: element,
     time: '6.25%',
     action: function () { element.set(red) },
-    revert: function () { element.set(purple) }
+    revert: function () { element.set(purple) },
 
 }).clone({
-    name: 'brown',
+
+    name: name('brown'),
     time: '18.75%',
     action: function () { element.set(brown) },
-    revert: function () { element.set(red) }
+    revert: function () { element.set(red) },
 
 }).clone({
-    name: 'orange',
+
+    name: name('orange'),
     time: '31.25%',
     action: function () { element.set(orange) },
-    revert: function () { element.set(brown) }
+    revert: function () { element.set(brown) },
 
 }).clone({
-    name: 'yellow',
+
+    name: name('yellow'),
     time: '43.75%',
     action: function () { element.set(yellow) },
-    revert: function () { element.set(orange) }
+    revert: function () { element.set(orange) },
 
 }).clone({
-    name: 'gray',
+
+    name: name('gray'),
     time: '56.25%',
     action: function () { element.set(gray) },
-    revert: function () { element.set(yellow) }
+    revert: function () { element.set(yellow) },
 
 }).clone({
-    name: 'green',
+
+    name: name('green'),
     time: '68.75%',
     action: function () { element.set(green) },
-    revert: function () { element.set(gray) }
+    revert: function () { element.set(gray) },
 
 }).clone({
-    name: 'blue',
+
+    name: name('blue'),
     time: '81.25%',
     action: function () { element.set(blue) },
-    revert: function () { element.set(green) }
+    revert: function () { element.set(green) },
 
 }).clone({
-    name: 'purple_1',
+
+    name: name('purple_1'),
     time: '93.75%',
     action: function () { element.set(purple) },
-    revert: function () { element.set(blue) }
+    revert: function () { element.set(blue) },
 
 }).clone({
-    name: 'purple_2',
+
+    name: name('purple_2'),
     time: '0%',
     action: function () { element.set(purple) },
-    revert: function () { element.set(purple) }
+    revert: function () { element.set(purple) },
 });
 
 // Add some Google Analytics progress actions to one of the tickers
@@ -192,9 +217,9 @@ scrawl.makeAction({
 // TODO: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. I don't consider this to be a show stopper.
 scrawl.makeAction({
 
-    ticker: 'myTicker',
+    ticker: name('myTicker'),
 
-    name: 'lapStarted',
+    name: name('lapStarted'),
     time: '0%',
 
     action: function () {
@@ -207,7 +232,7 @@ scrawl.makeAction({
 
 }).clone({
 
-    name: 'lapCompleted',
+    name: name('lapCompleted'),
     time: '100%',
 
     action: function () {
@@ -220,7 +245,7 @@ scrawl.makeAction({
 
 }).clone({
 
-    name: 'halfwayThere',
+    name: name('halfwayThere'),
     time: '50%',
 
     action: function () {
@@ -234,7 +259,7 @@ scrawl.makeAction({
 
 
 // Also add some Google Analytics code to one of the tweens
-const smallboat = scrawl.library.tween.mySecondClonedTween;
+const smallboat = scrawl.findTween(name('mySecondClonedTween'));
 
 smallboat.set({
 
@@ -261,7 +286,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: stack,
     afterShow: report,
 });
@@ -281,41 +306,49 @@ const changeDirection = (e) => {
 };
 scrawl.addNativeListener('click', changeDirection, stack.domElement);
 
+
 // #### Development and testing
 console.log(scrawl.library);
 
 // Test Tween object packet
-console.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())
+// console.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())
+console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket())
 //     RESULT:
-//     [
-//         "mySecondClonedTween",
-//         "Tween",
-//         "tween",
-//         {
-//             "name":"mySecondClonedTween",
-//             "ticker":"mySecondClonedTween_ticker",
-//             "action":"~~~",
-//             "duration":"10s",
-//             "commenceAction":"~~~",
-//             "completeAction":"~~~",
-//             "targets":["mythirdelement"],
-//             "definitions":[
-//                 {"attribute":"roll","start":-40,"end":320}
-//             ]
-//         }
-//     ]
+
+// [
+//     "mystack-mySecondClonedTween",
+//     "Tween",
+//     "tween",
+//     {
+//         "name":"mystack-mySecondClonedTween",
+//         "ticker":"mystack-mySecondClonedTween_ticker",
+//         "action":"~~~",
+//         "duration":"10s",
+//         "commenceAction":"~~~",
+//         "onHalt":"~~~\n        if (myTracker) myTracker.send('event', 'Tween state', 'halt', `Tween ${this.name} on ${this.ticker}`)\n    ",
+//         "onResume":"~~~\n        if (myTracker) myTracker.send('event', 'Tween state', 'resume', `Tween ${this.name} on ${this.ticker}`)\n    ",
+//         "completeAction":"~~~",
+//         "targets":[],
+//         "definitions":[
+//             {
+//                 "attribute":"roll",
+//                 "start":-40,"end":320
+//             }
+//         ]
+//     }
+// ]
+
 
 // Test Ticker object packet
 console.log(modelTicker.saveAsPacket());
 //     RESULT:
-//     [
-//         "modelTicker",
-//         "Ticker",
-//         "animationtickers",
-//         {
-//             "name":"modelTicker",
-//             "duration":"12s",
-//             "cycles":0
-//         }
-//     ]
-
+// [
+//     "mystack-modelTicker",
+//     "Ticker",
+//     "animationtickers",
+//     {
+//         "name":"mystack-modelTicker",
+//         "duration":"12s",
+//         "cycles":0
+//     }
+// ]

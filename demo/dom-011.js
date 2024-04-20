@@ -4,13 +4,18 @@
 // [Run code](../../demo/dom-011.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    canvas = artefact.mycanvas;
+const stack = scrawl.findStack('mystack'),
+    canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Set up the stack to be resizable
 stack.set({
@@ -22,7 +27,8 @@ stack.set({
 
 // A displayed canvas can have more than one hidden canvas. These additional 'cells' - which act much like traditional animation cels (see https://en.wikipedia.org/wiki/Cel) - will be copied onto the 'base' canvas before the it gets copied over to the displayed cell at the end of every display cycle.
 const mycell = canvas.buildCell({
-    name: 'mycell',
+
+    name: name('mycell'),
     dimensions: ['50%', '50%'],
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -34,25 +40,12 @@ const mycell = canvas.buildCell({
 
 // #### Scene animation
 // Function to check whether mouse cursor is over the canvas element within the stack, and lock the element artefact accordingly
-const check = function () {
+const check = () => {
 
-    let active = false;
+    const here = canvas.getBase().here;
 
-    const here = canvas.here,
-        cell = scrawl.library.asset.mycell;
-
-    return function () {
-
-        if (here.baseActive !== active) {
-
-            active = here.baseActive;
-
-            cell.set({
-                lockTo: (active) ? 'mouse' : 'start',
-            });
-        }
-    };
-}();
+    mycell.set({ lockTo: (here.active) ? 'mouse' : 'start' });
+};
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -62,13 +55,21 @@ const report = reportSpeed('#reportmessage');
 // Create the Animation loop which will run the Display cycle. Note that we don't have to define a target - useful for when we want to cascade through multiple stacks (which don't themselves trigger canvas redraws, just canvas positioning) and multiple canvases
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     commence: check,
     afterShow: report,
 });
 
 
 // #### User interaction
+const dom = initializeDomInputs([
+    ['input', 'width', '400'],
+    ['input', 'height', '400'],
+    ['select', 'fitselect', 3],
+    ['select', 'setRelativeDimensionsUsingBase', 0],
+]);
+
+
 // For this demo we will suppress touchmove functionality over the canvas
 scrawl.addNativeListener(['touchmove'], (e) => {
 
@@ -77,60 +78,34 @@ scrawl.addNativeListener(['touchmove'], (e) => {
 
 }, stack.domElement);
 
-// Event listeners
-scrawl.makeUpdater({
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+// Handle the fit control
+const updateFit = (e) => {
 
-    target: canvas,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-        fitselect: ['fit', 'raw'],
-    },
-});
-
-scrawl.makeUpdater({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: mycell,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-        setRelativeDimensionsUsingBase: ['setRelativeDimensionsUsingBase', 'boolean'],
-    },
-});
+    if (e && e.target) canvas.set({ fit: e.target.value});
+};
+scrawl.addNativeListener(['input', 'change'], updateFit, dom.fitselect);
 
 
-// Test to make sure Stack is listening for external changes in its dimensions, and that these changes are perculating down to the canvas and its base cell
-// + Stack artefact's `checkForResize` flag set to true, enabling the checks
-// + Can resize Stack's DOM element by dragging the lower right corner
-// + Can also resize the element by using the width and height form controls - these controls then update the element's style width and height via the event listeners below.
-// + In both cases, the Stack artefact needs to check whether resizing has occurred and take action.
-document.querySelector('#width').addEventListener('input', (e) => {
-/** @ts-expect-error */
-    stack.domElement.style.width = `${e.target.value}px`;
-}, false);
-document.querySelector('#height').addEventListener('input', (e) => {
-/** @ts-expect-error */
-    stack.domElement.style.height = `${e.target.value}px`;
-}, false);
+// Handle the relative dimensions control
+const updateRelativeDimensions = (e) => {
+
+    if (e && e.target) mycell.set({
+        setRelativeDimensionsUsingBase: (e.target.value === '0') ? false : true,
+    });
+};
+scrawl.addNativeListener(['input', 'change'], updateRelativeDimensions, dom.setRelativeDimensionsUsingBase);
 
 
-// Set the DOM input values
-/** @ts-expect-error */
-document.querySelector('#fitselect').value = 'fill';
-/** @ts-expect-error */
-document.querySelector('#width').value = '400';
-/** @ts-expect-error */
-document.querySelector('#height').value = '400';
+// Handle the width/height control
+const updateDimensions = (e) => {
+
+    if (e && e.target) stack.set({
+        width: parseFloat(dom.width.value),
+        height: parseFloat(dom.height.value),
+    });
+};
+scrawl.addNativeListener(['input', 'change'], updateDimensions, [dom.width, dom.height]);
 
 
 // #### Development and testing

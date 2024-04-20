@@ -310,16 +310,18 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
 }
 
 interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions {
-    setColorSchemeDarkAction?: DefaultInputFunction;
-    setColorSchemeLightAction?: DefaultInputFunction;
-    setMoreContrastAction?: DefaultInputFunction;
-    setNoPreferenceDataAction?: DefaultInputFunction;
-    setNoPreferenceMotionAction?: DefaultInputFunction;
-    setNoPreferenceTransparencyAction?: DefaultInputFunction;
-    setOtherContrastAction?: DefaultInputFunction;
-    setReduceDataAction?: DefaultInputFunction;
-    setReduceMotionAction?: DefaultInputFunction;
-    setReduceTransparencyAction?: DefaultInputFunction;
+    addClasses: (item: string) => void;
+    removeClasses: (item: string) => void;
+    setColorSchemeDarkAction: DefaultInputFunction;
+    setColorSchemeLightAction: DefaultInputFunction;
+    setMoreContrastAction: DefaultInputFunction;
+    setNoPreferenceDataAction: DefaultInputFunction;
+    setNoPreferenceMotionAction: DefaultInputFunction;
+    setNoPreferenceTransparencyAction: DefaultInputFunction;
+    setOtherContrastAction: DefaultInputFunction;
+    setReduceDataAction: DefaultInputFunction;
+    setReduceMotionAction: DefaultInputFunction;
+    setReduceTransparencyAction: DefaultInputFunction;
 }
 
 
@@ -1187,6 +1189,7 @@ export interface CrescentInstance extends CrescentFactoryInputs, CrescentFactory
 interface ElementFactoryDeltaInputs extends BaseMixinDeltaInputs, DomMixinDeltaInputs {}
 
 interface ElementFactoryInputs extends BaseMixinInputs, DomMixinInputs, ElementFactoryDeltaInputs {
+    delta?: ElementFactoryDeltaInputs;
     text?: string;
     content?: string;
 }
@@ -2489,11 +2492,17 @@ interface StackFactoryInputs extends BaseMixinInputs, DomMixinInputs, StackFacto
 
 interface StackSaveInputs extends StackFactoryInputs, SaveInputs {}
 
+interface StackNewElementInputs extends ElementFactoryInputs {
+    tag?: string;
+}
+
 interface StackFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions {
     clone: (item?: StackFactoryInputs) => StackInstance;
     saveAsPacket: (item?: StackSaveInputs | boolean) => string;
     set: (item?: StackFactoryInputs) => StackInstance;
     setDelta: (item?: StackFactoryDeltaInputs) => StackInstance;
+    addNewElement: (item?: StackNewElementInputs) => ElementInstance;
+    addExistingDomElements: (item?: string) => StackInstance;
 }
 
 export interface StackInstance extends StackFactoryInputs, StackFactoryFunctions {
@@ -3237,6 +3246,8 @@ export function findStyles(item: string): StylesInstance;
 export function findTween(item: string): TweenInstance;
 export function findFilter(item: string): FilterInstance;
 export function findGroup(item: string): GroupInstance;
+export function findStack(item: string): StackInstance;
+export function findElement(item: string): ElementInstance;
 export function findPattern(item: string): PatternInstance | CellInstance;
 
 export function checkFontIsLoaded(font: string): boolean;
