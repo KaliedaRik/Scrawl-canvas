@@ -11,10 +11,6 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    #my-image-store {
-      display: none;
-    }
-
     .canvas-container {
       overflow: hidden;
       resize: both;
@@ -25,6 +21,14 @@
       min-width: 200px;
       max-height: 600px;
       max-width: 600px;
+
+      & canvas {
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
     }
   </style>
 </head>
@@ -47,7 +51,16 @@
       data-base-height="400" 
       data-fit="cover"
       data-base-background-color="black"
-    ></canvas>
+    >
+      <div class="assets" aria-hidden="true">
+        <img
+          id="iris"
+          src="img/iris.png"
+          class="flowers"
+          alt="A purple-mauve iris flower"
+        />    
+      </div>
+    </canvas>
   </div>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
@@ -67,10 +80,6 @@
     <p><b>Touch test:</b> canvas should be resizable.</p>
 
     <p><a href="../docs/demo/delaunator-002.html">Annotated code</a></p>
-  </div>
-
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="delaunator-002.js" type="module"></script>

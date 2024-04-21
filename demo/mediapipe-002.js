@@ -8,7 +8,12 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Magic numbers
@@ -20,7 +25,7 @@ const width = 1280,
 // We'll handle everything in a raw asset object, which a Picture entity can then use as its source
 const myAsset = scrawl.makeRawAsset({
 
-    name: 'mediapipe-model-interpreter',
+    name: name('mediapipe-model-interpreter'),
 
     userAttributes: [{
 
@@ -99,8 +104,8 @@ const perform = function (stuff) {
 
     if (!output) output = scrawl.makePicture({
 
-        name: 'output',
-        asset: 'mediapipe-model-interpreter',
+        name: name('output'),
+        asset: name('mediapipe-model-interpreter'),
 
         dimensions: ['100%', '100%'],
         copyDimensions: ['100%', '100%'],
@@ -115,7 +120,7 @@ let video, model, output;
 // Capture the media stream
 scrawl.importMediaStream({
 
-    name: 'device-camera',
+    name: name('device-camera'),
     audio: false,
 })
 .then(mycamera => {
@@ -129,7 +134,7 @@ scrawl.importMediaStream({
 
     scrawl.makePicture({
 
-        name: 'background',
+        name: name('background'),
         asset: mycamera.name,
 
         dimensions: ['100%', '100%'],
@@ -182,7 +187,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

@@ -23,7 +23,7 @@ import { reportSpeed } from './utilities.js';
 // #### Initial setup
 scrawl.importDomImage('.crime');
 
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 const namespace = 'Crimes';
 const name = (item) => `${namespace}-${item}`;
 
