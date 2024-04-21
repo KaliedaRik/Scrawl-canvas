@@ -10,16 +10,18 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    #my-image-store {
-      display: none;
-    }
-
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
+
     canvas {
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
+
+      & .assets {
+        height: 0;
+        overflow: hidden;
+      }
     }
 
     #reference-color button {
@@ -42,18 +44,18 @@
   <div class="controls">
 
     <div class="blue label">Transparent at</div>
-    <div class="blue"><input class="controlItem" id="transparentAt" type="range" value="0.32" min="0" max="1" step="0.01" /></div>
+    <div class="blue"><input class="controlItem filter_control" id="transparentAt" type="range" value="0.32" min="0" max="1" step="0.01" /></div>
 
     <div class="blue label">Opaque at</div>
-    <div class="blue"><input class="controlItem" id="opaqueAt" type="range" value="0.39" min="0" max="1" step="0.01" /></div>
+    <div class="blue"><input class="controlItem filter_control" id="opaqueAt" type="range" value="0.39" min="0" max="1" step="0.01" /></div>
 
     <div class="green label">Reference color</div>
-    <div id="reference-color">
-      <button>Select color using Eye Dropper API</button>
+    <div id="reference_color">
+      <button id="reference_selector">Eye Dropper API requires Javascript to run</button>
     </div>
 
     <div class="lavender label">Opacity</div>
-    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    <div class="lavender"><input class="controlItem filter_control" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 
@@ -63,7 +65,7 @@
     height="400"
     data-scrawl-canvas
   >
-    <div id="my-image-store">
+    <div class="assets">
       <img id="iris" src="img/iris.png" class="flowers" />
     </div>
   </canvas>

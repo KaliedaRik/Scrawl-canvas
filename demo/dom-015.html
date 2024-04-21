@@ -21,6 +21,12 @@
       cursor: grab;
     }
 
+    #mycanvas .assets {
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
     .controls {
       grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
     }
@@ -41,7 +47,16 @@
       data-scrawl-canvas
       data-is-responsive="true" 
       data-base-background-color="gray"
-    ></canvas>
+    >
+      <div class="assets" aria-hidden="true">
+        <img
+          id="iris"
+          src="img/iris.png"
+          class="flowers"
+          alt="A purple-mauve iris flower"
+        />    
+      </div>
+    </canvas>
     <p id="myelement">This DOM element can be dragged around the Scrawl-canvas stack using the mouse.</p>
   </div>
 
@@ -96,10 +111,6 @@
     <p><b>Touch test:</b> should work as expected</p>
 
     <p><a href="../docs/demo/dom-015.html">Annotated code</a></p>
-  </div>
-
-  <div style="display: none;">
-    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="dom-015.js" type="module"></script>

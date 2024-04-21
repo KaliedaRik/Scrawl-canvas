@@ -4,15 +4,13 @@
 // [Run code](../../demo/dom-015.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-// Create some useful variables for use elsewhere in the script
-const artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    element = artefact.myelement,
-    canvas = artefact.mycanvas;
+const stack = scrawl.findStack('mystack'),
+    element = scrawl.findElement('myelement'),
+    canvas = scrawl.findCanvas('mycanvas');
 
 
 // Give the stack element some depth
@@ -50,10 +48,15 @@ element.set({
 scrawl.importDomImage('.flowers');
 
 
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
 // Create entitys to pivot to the element's corners
 scrawl.makeLine({
 
-    name: 'left-line',
+    name: name('left-line'),
 
     strokeStyle: 'red',
     lineWidth: 8,
@@ -75,14 +78,14 @@ scrawl.makeLine({
 
 }).clone({
 
-    name: 'right-line',
+    name: name('right-line'),
     pivotCorner: 'topRight',
     endPivotCorner: 'bottomRight',
 });
 
 scrawl.makeWheel({
 
-    name: 'top-left-wheel',
+    name: name('top-left-wheel'),
     radius: 20,
     handleX: 'center',
     handleY: 'center',
@@ -98,21 +101,21 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'top-right-wheel',
+    name: name('top-right-wheel'),
     pivotCorner: 'topRight',
 }).clone({
 
-    name: 'bottom-right-wheel',
+    name: name('bottom-right-wheel'),
     pivotCorner: 'bottomRight',
 }).clone({
 
-    name: 'bottom-left-wheel',
+    name: name('bottom-left-wheel'),
     pivotCorner: 'bottomLeft',
 });
 
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
-    name: 'myFlower',
+    name: name('myFlower'),
     asset: 'iris',
 
     copyStartX: 0,
@@ -126,12 +129,12 @@ scrawl.makePicture({
 
 scrawl.makeLoom({
 
-    name: 'display-loom',
+    name: name('display-loom'),
 
-    fromPath: 'left-line',
-    toPath: 'right-line',
+    fromPath: name('left-line'),
+    toPath: name('right-line'),
 
-    source: 'myFlower',
+    source: name('myFlower'),
 
     method: 'fill',
 
@@ -148,17 +151,16 @@ scrawl.makeLoom({
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
 
 // A group to help manage pin drag-and-drop functionality
-// + KNOWN BUG - the element is not draggable on first user mousedown, but is draggable afterwards
 scrawl.makeGroup({
 
-    name: 'draggable-artefacts',
+    name: name('draggable-artefacts'),
 
 }).addArtefacts(element);
 
 scrawl.makeDragZone({
 
     zone: stack,
-    collisionGroup: 'draggable-artefacts',
+    collisionGroup: name('draggable-artefacts'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
@@ -172,7 +174,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation-stack',
+    name: 'animation-stack',
     target: stack,
     afterShow: report,
 
@@ -183,12 +185,27 @@ scrawl.makeRender({
 // We can have more than one Display cycle animation on a web page
 scrawl.makeRender({
 
-    name: 'demo-animation-canvas',
+    name: 'animation-canvas',
     target: canvas,
 });
 
 
 // #### More user interaction
+// Setup form
+initializeDomInputs([
+    ['input', 'width', '200'],
+    ['input', 'height', '200'],
+    ['input', 'handle_xAbsolute', '100'],
+    ['input', 'handle_yAbsolute', '100'],
+    ['input', 'offset_xAbsolute', '0'],
+    ['input', 'offset_yAbsolute', '0'],
+    ['input', 'roll', '10'],
+    ['input', 'pitch', '20'],
+    ['input', 'yaw', '30'],
+    ['input', 'scale', '1'],
+]);
+
+
 // Setup form observer functionality
 scrawl.makeUpdater({
 
@@ -217,28 +234,10 @@ scrawl.makeUpdater({
     },
 });
 
-// Setup form
-/** @ts-expect-error */
-document.querySelector('#width').value = 200;
-/** @ts-expect-error */
-document.querySelector('#height').value = 200;
-/** @ts-expect-error */
-document.querySelector('#handle_xAbsolute').value = 100;
-/** @ts-expect-error */
-document.querySelector('#handle_yAbsolute').value = 100;
-/** @ts-expect-error */
-document.querySelector('#offset_xAbsolute').value = 0;
-/** @ts-expect-error */
-document.querySelector('#offset_yAbsolute').value = 0;
-/** @ts-expect-error */
-document.querySelector('#roll').value = 10;
-/** @ts-expect-error */
-document.querySelector('#pitch').value = 20;
-/** @ts-expect-error */
-document.querySelector('#yaw').value = 30;
-/** @ts-expect-error */
-document.querySelector('#scale').value = 1;
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop([canvas, element], `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing
-console.log(artefact);
+console.log(scrawl.library);

@@ -5,12 +5,19 @@
 
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
-const stack = scrawl.library.stack.mystack,
-    canvas = scrawl.library.canvas.mycanvas;
+const stack = scrawl.findStack('mystack'),
+    canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Give the stack element some depth
 stack.set({
     perspectiveZ: 1200,
     css: {
@@ -18,6 +25,8 @@ stack.set({
     },
 });
 
+
+// Setup the canvas within the stack
 canvas.set({
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -25,10 +34,11 @@ canvas.set({
     offsetZ: 150,
 });
 
+
 const ball = scrawl.makeWheel({
 
-    name: 'red-ball',
-    group: canvas.base.name,
+    name: name('red-ball'),
+    group: canvas.get('baseGroup'),
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -43,35 +53,18 @@ const ball = scrawl.makeWheel({
 
 const offset = ball.clone({
 
-    name: 'offset-ball',
+    name: name('offset-ball'),
     radius: 12,
     lineWidth: 3,
     fillStyle: 'blue',
     strokeStyle: 'green',
 });
 
+
 const checkCanvasIsActive = function () {
 
-    const here = canvas.here;
-
-    let isActive = false;
-
-    return function () {
-
-        // We only want this function to run in the canvas render animation, though it will be called by both the canvas and stack renders
-        if (this.target.name === 'mycanvas') {
-
-            if (here.active !== isActive) {
-
-                isActive = here.active;
-
-                ball.set({
-                    lockTo: (isActive) ? 'mouse' : 'start',
-                });
-            }
-        }
-    }
-}();
+    ball.set({ lockTo: (canvas.here.active) ? 'mouse' : 'start' });
+};
 
 
 // #### Scene animation
@@ -117,29 +110,66 @@ const report = reportSpeed('#reportmessage', function () {
     const here = canvas.here;
     const basehere = canvas.base.here;
 
-    return `    client: ${clientX}, ${clientY}
+    return `
+    client: ${clientX}, ${clientY}
     offset: ${offsetX}, ${offsetY}
     page: ${pageX}, ${pageY}
     screen: ${screenX}, ${screenY}
     movement: ${movementX}, ${movementY}
 
-    canvas here x/y: ${here.x}, ${here.y}; dims: ${here.w}, ${here.h}; original dims: ${here.originalWidth}, ${here.originalHeight}; active: ${here.active}
-    base here x/y: ${basehere.x}, ${basehere.y}; dims: ${basehere.w}, ${basehere.h}; active: ${basehere.active}`;
+canvas here:
+    x/y: ${here.x}, ${here.y}
+    dims: ${here.w}, ${here.h}
+    original dims: ${here.originalWidth}, ${here.originalHeight}
+    active: ${here.active}
+
+base here:
+    x/y: ${basehere.x}, ${basehere.y}
+    dims: ${basehere.w}, ${basehere.h}
+    active: ${basehere.active}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
-    target: [stack, canvas],
+    name: name('stack-animation'),
+    target: stack,
+});
 
+scrawl.makeRender({
+
+    name: name('canvas-animation'),
+    target: canvas,
     commence: checkCanvasIsActive,
+});
+
+scrawl.makeRender({
+
+    name: name('reporting'),
+    noTarget: true,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Housekeeping - set the DOM input values to their starting values on each page reload
+initializeDomInputs([
+    ['input', 'width', '400'],
+    ['input', 'height', '400'],
+    ['input', 'start_xAbsolute', '300'],
+    ['input', 'start_yAbsolute', '300'],
+    ['input', 'handle_xAbsolute', '200'],
+    ['input', 'handle_yAbsolute', '200'],
+    ['input', 'offset_xAbsolute', '0'],
+    ['input', 'offset_yAbsolute', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'pitch', '0'],
+    ['input', 'yaw', '0'],
+    ['input', 'scale', '1'],
+]);
+
+
 // For this demo we will suppress touchmove functionality over the canvas
 scrawl.addNativeListener(['touchmove'], (e) => {
 
@@ -147,6 +177,7 @@ scrawl.addNativeListener(['touchmove'], (e) => {
     e.returnValue = false;
 
 }, [stack.domElement, canvas.domElement]);
+
 
 // Setup form observer functionality
 scrawl.makeUpdater({
@@ -179,30 +210,6 @@ scrawl.makeUpdater({
     },
 });
 
-// Setup form
-/** @ts-expect-error */
-document.querySelector('#width').value = 400;
-/** @ts-expect-error */
-document.querySelector('#height').value = 400;
-/** @ts-expect-error */
-document.querySelector('#start_xAbsolute').value = 300;
-/** @ts-expect-error */
-document.querySelector('#start_yAbsolute').value = 300;
-/** @ts-expect-error */
-document.querySelector('#handle_xAbsolute').value = 200;
-/** @ts-expect-error */
-document.querySelector('#handle_yAbsolute').value = 200;
-/** @ts-expect-error */
-document.querySelector('#offset_xAbsolute').value = 0;
-/** @ts-expect-error */
-document.querySelector('#offset_yAbsolute').value = 0;
-/** @ts-expect-error */
-document.querySelector('#roll').value = 0;
-/** @ts-expect-error */
-document.querySelector('#pitch').value = 0;
-/** @ts-expect-error */
-document.querySelector('#yaw').value = 0;
-/** @ts-expect-error */
-document.querySelector('#scale').value = 1;
 
+// #### Development and testing
 console.log(scrawl.library);

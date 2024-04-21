@@ -311,6 +311,7 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
 
 interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions {
     addClasses: (item: string) => void;
+    apply: () => void;
     removeClasses: (item: string) => void;
     setColorSchemeDarkAction: DefaultInputFunction;
     setColorSchemeLightAction: DefaultInputFunction;

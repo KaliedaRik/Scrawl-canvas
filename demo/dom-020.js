@@ -4,31 +4,29 @@
 // [Run code](../../demo/dom-020.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 scrawl.importDomImage('.flowers');
 
 
 // Create the background
-addCheckerboardBackground(canvas, 'demo-dom-020');
-
-
-// UI variables
-const refBackground = document.querySelector('#reference-color'),
-    refButton = refBackground.querySelector('button');
-
-/** @ts-expect-error */
-refBackground.style.backgroundColor = '#be81df';
+addCheckerboardBackground(canvas, namespace);
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'chromakey',
+    name: name('chromakey'),
     method: 'chromakey',
     reference: '#be81df',
     opaqueAt: 0.39,
@@ -39,11 +37,11 @@ const myFilter = scrawl.makeFilter({
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
+    name: name('image'),
     asset: 'iris',
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
-    filters: ['chromakey'],
+    filters: [name('chromakey')],
 });
 
 
@@ -51,26 +49,39 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-/** @ts-expect-error */
-    return `    Reference color: ${refBackground.style.backgroundColor}\n    Transparent at: ${transparentAt.value}, Opaque at: ${opaqueAt.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Reference color: ${dom.reference_color.style.backgroundColor}
+    Transparent at: ${dom.transparentAt.value}, Opaque at: ${dom.opaqueAt.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+const dom = initializeDomInputs([
+    ['input', 'transparentAt', '0.32'],
+    ['input', 'opaqueAt', '0.39'],
+    ['input', 'opacity', '1'],
+    ['button', 'reference_selector', 'Select color using Eye Dropper API'],
+    ['', 'reference_color'],
+]);
+
+dom.reference_color.style.backgroundColor = '#be81df';
+
+
 // Setup form observer functionality
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
-    origin: '.controlItem',
+    origin: '.filter_control',
 
     target: myFilter,
 
@@ -89,7 +100,7 @@ scrawl.makeUpdater({
 // Code taken from this [Chrome Devs article](https://developer.chrome.com/docs/capabilities/web-apis/eyedropper)
 async function sampleColorFromScreen(abort) {
 
-    refButton.setAttribute('disabled', '');
+    dom.reference_selector.setAttribute('disabled', '');
 
 /** @ts-expect-error */
     const dropper = new window.EyeDropper();
@@ -100,19 +111,16 @@ async function sampleColorFromScreen(abort) {
 
         const color = result.sRGBHex;
 
-        myFilter.set({
-            reference: color,
-        });
+        myFilter.set({ reference: color });
 
-/** @ts-expect-error */
-        refBackground.style.backgroundColor = color;
+        dom.reference_color.style.backgroundColor = color;
         abort.abort();
-        refButton.removeAttribute('disabled');
+        dom.reference_selector.removeAttribute('disabled');
 
     } catch (e) {
 
         abort.abort();
-        refButton.removeAttribute('disabled');
+        dom.reference_selector.removeAttribute('disabled');
     }
 }
 
@@ -123,26 +131,15 @@ const useEyedropper = () => {
         const abortController = new AbortController();
         sampleColorFromScreen(abortController)
     }
+    else {
+        dom.reference_selector.textContent = 'Eye Dropper API not supported by this browser';
+    }
 };
-
-scrawl.addNativeListener('click', useEyedropper, refButton);
-
-
-// Setup form
-const opaqueAt = document.querySelector('#opaqueAt'),
-    transparentAt = document.querySelector('#transparentAt'),
-    opacity = document.querySelector('#opacity');
-
-/** @ts-expect-error */
-opaqueAt.value = 0.39;
-/** @ts-expect-error */
-transparentAt.value = 0.32;
-/** @ts-expect-error */
-opacity.value = 1;
+scrawl.addNativeListener('click', useEyedropper, dom.reference_selector);
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing
