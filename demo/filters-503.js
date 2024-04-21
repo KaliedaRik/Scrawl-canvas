@@ -4,66 +4,44 @@
 // [Run code](../../demo/filters-503.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the target entity
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
-
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
     filter: 'url(#svg-posterize)',
 });
-
-
-// #### SVG filter
-// We create the filter in the HTML script, not here:
-// ```
-// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-//   <filter id="svg-posterize">
-//     <feComponentTransfer>
-//       <feFuncR type="discrete" tableValues=".1 .4 .7 1" />
-//       <feFuncG type="discrete" tableValues=".1 .4 .7 1" />
-//       <feFuncB type="discrete" tableValues=".1 .4 .7 1" />
-//     </feComponentTransfer>
-//   </filter>
-// </svg>
-// ```
-const feFuncR = document.querySelector('feFuncR'),
-    feFuncG = document.querySelector('feFuncG'),
-    feFuncB = document.querySelector('feFuncB');
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const tableValuesR = feFuncR.getAttribute('tableValues'),
-        tableValuesG = feFuncG.getAttribute('tableValues'),
-        tableValuesB = feFuncB.getAttribute('tableValues');
-
     return `
 <filter id="svg-posterize">
   <feComponentTransfer>
-    <feFuncR type="discrete" tableValues="${tableValuesR}" />
-    <feFuncG type="discrete" tableValues="${tableValuesG}" />
-    <feFuncB type="discrete" tableValues="${tableValuesB}" />
+    <feFuncR type="discrete" tableValues="${dom.r1.value} ${dom.r2.value} ${dom.r3.value} ${dom.r4.value}" />
+    <feFuncG type="discrete" tableValues="${dom.g1.value} ${dom.g2.value} ${dom.g3.value} ${dom.g4.value}" />
+    <feFuncB type="discrete" tableValues="${dom.b1.value} ${dom.b2.value} ${dom.b3.value} ${dom.b4.value}" />
   </feComponentTransfer>
 </filter>`;
 });
@@ -72,65 +50,45 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-const r1 = document.querySelector('#r1'),
-    r2 = document.querySelector('#r2'),
-    r3 = document.querySelector('#r3'),
-    r4 = document.querySelector('#r4');
+const dom = initializeDomInputs([
+    ['input', 'r1', '0.1'],
+    ['input', 'r2', '0.4'],
+    ['input', 'r3', '0.7'],
+    ['input', 'r4', '1'],
+    ['input', 'g1', '0.1'],
+    ['input', 'g2', '0.4'],
+    ['input', 'g3', '0.7'],
+    ['input', 'g4', '1'],
+    ['input', 'b1', '0.1'],
+    ['input', 'b2', '0.4'],
+    ['input', 'b3', '0.7'],
+    ['input', 'b4', '1'],
+    ['element', 'feFuncR'],
+    ['element', 'feFuncG'],
+    ['element', 'feFuncB'],
+]);
 
-const g1 = document.querySelector('#g1'),
-    g2 = document.querySelector('#g2'),
-    g3 = document.querySelector('#g3'),
-    g4 = document.querySelector('#g4');
-
-const b1 = document.querySelector('#b1'),
-    b2 = document.querySelector('#b2'),
-    b3 = document.querySelector('#b3'),
-    b4 = document.querySelector('#b4');
-
-// @ts-expect-error
-r1.value = 0.1;
-// @ts-expect-error
-r2.value = 0.4;
-// @ts-expect-error
-r3.value = 0.7;
-// @ts-expect-error
-r4.value = 1;
-// @ts-expect-error
-g1.value = 0.1;
-// @ts-expect-error
-g2.value = 0.4;
-// @ts-expect-error
-g3.value = 0.7;
-// @ts-expect-error
-g4.value = 1;
-// @ts-expect-error
-b1.value = 0.1;
-// @ts-expect-error
-b2.value = 0.4;
-// @ts-expect-error
-b3.value = 0.7;
-// @ts-expect-error
-b4.value = 1;
 
 // Setup form functionality
-// @ts-expect-error
-const updateR = () => feFuncR.setAttribute('tableValues', `${r1.value} ${r2.value} ${r3.value} ${r4.value}`);
+const updateR = () => dom.feFuncR.setAttribute('tableValues', `${dom.r1.value} ${dom.r2.value} ${dom.r3.value} ${dom.r4.value}`);
 scrawl.addNativeListener(['input', 'change'], updateR, '.feFuncR');
 
-// @ts-expect-error
-const updateG = () => feFuncG.setAttribute('tableValues', `${g1.value} ${g2.value} ${g3.value} ${g4.value}`);
+const updateG = () => dom.feFuncG.setAttribute('tableValues', `${dom.g1.value} ${dom.g2.value} ${dom.g3.value} ${dom.g4.value}`);
 scrawl.addNativeListener(['input', 'change'], updateG, '.feFuncG');
 
-// @ts-expect-error
-const updateB = () => feFuncB.setAttribute('tableValues', `${b1.value} ${b2.value} ${b3.value} ${b4.value}`);
+const updateB = () => dom.feFuncB.setAttribute('tableValues', `${dom.b1.value} ${dom.b2.value} ${dom.b3.value} ${dom.b4.value}`);
 scrawl.addNativeListener(['input', 'change'], updateB, '.feFuncB');
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

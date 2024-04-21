@@ -4,73 +4,119 @@
 // [Run code](../../demo/filters-020.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'clamp',
+    name: name('clamp'),
     method: 'clampChannels',
-
-    lowRed: 0,
+    lowRed: 20,
     lowGreen: 0,
-    lowBlue: 0,
+    lowBlue: 120,
     highRed: 255,
-    highGreen: 255,
-    highBlue: 255,
+    highGreen: 216,
+    highBlue: 0,
     opacity: 1,
 });
 
 const colorFactory = scrawl.makeColor({
-    name: 'my-color-factory',
+
+    name: name('colors'),
 });
 
 
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['clamp'],
+    filters: [name('clamp')],
 });
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Red - low: ${lowRed.value}; high - ${highRed.value}\n    Green - low: ${lowGreen.value}; high - ${highGreen.value}\n    Blue - low: ${lowBlue.value}; high - ${highBlue.value}\n    Color - low: ${lowColor.value}; high: ${highColor.value}\n    Opacity - ${opacity.value}`;
+    return `
+    Red - low: ${dom.low_red.value}, high - ${dom.high_red.value}
+    Green - low: ${dom.low_green.value}, high - ${dom.high_green.value}
+    Blue - low: ${dom.low_blue.value}, high - ${dom.high_blue.value}
+    Color - low: ${dom.low_color.value}, high: ${dom.high_color.value}
+    Opacity - ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Setup form observer functionality
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'low_color', '#170078'],
+    ['input', 'low_red', '20'],
+    ['input', 'low_green', '0'],
+    ['input', 'low_blue', '120'],
+    ['input', 'high_color', '#ffd800'],
+    ['input', 'high_red', '255'],
+    ['input', 'high_green', '216'],
+    ['input', 'high_blue', '0'],
+    ['input', 'opacity', '1'],
+]);
+
+
+// Handle color selectors
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    if (e && e.target) {
+
+        const target = e.target.id,
+            val = e.target.value;
+
+        const [r, g, b] = colorFactory.extractRGBfromColor(val)
+
+        if ('low_color' === target) {
+
+            myFilter.set({ lowColor: val });
+            dom.low_red.value = r;
+            dom.low_green.value = g;
+            dom.low_blue.value = b;
+        }
+        else if ('high_color' === target) {
+
+            myFilter.set({ highColor: val });
+            dom.high_red.value = r;
+            dom.high_green.value = g;
+            dom.high_blue.value = b;
+        }
+    }
+}, '.colorSelector');
+
+
+// Handle other user input
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -83,91 +129,27 @@ scrawl.makeUpdater({
 
     updates: {
 
-        'low-red': ['lowRed', 'round'],
-        'low-green': ['lowGreen', 'round'],
-        'low-blue': ['lowBlue', 'round'],
-        'high-red': ['highRed', 'round'],
-        'high-green': ['highGreen', 'round'],
-        'high-blue': ['highBlue', 'round'],
-        'opacity': ['opacity', 'float'],
+        low_red: ['lowRed', 'round'],
+        low_green: ['lowGreen', 'round'],
+        low_blue: ['lowBlue', 'round'],
+        high_red: ['highRed', 'round'],
+        high_green: ['highGreen', 'round'],
+        high_blue: ['highBlue', 'round'],
+        opacity: ['opacity', 'float'],
     },
 
     callback: () => {
 
-// @ts-expect-error
-        lowColor.value = colorFactory.convertRGBtoHex(lowRed.value, lowGreen.value, lowBlue.value);
-// @ts-expect-error
-        highColor.value = colorFactory.convertRGBtoHex(highRed.value, highGreen.value, highBlue.value);
+        dom.low_color.value = colorFactory.convertRGBtoHex(dom.low_red.value, dom.low_green.value, dom.low_blue.value);
+
+        dom.high_color.value = colorFactory.convertRGBtoHex(dom.high_red.value, dom.high_green.value, dom.high_blue.value);
     },
 });
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    if (e && e.target) {
-
-        const target = e.target.id,
-            val = e.target.value;
-
-        const [r, g, b] = colorFactory.extractRGBfromColor(val)
-
-        if ('low-color' === target) {
-
-            myFilter.set({ lowColor: val });
-
-// @ts-expect-error
-            lowRed.value = r;
-// @ts-expect-error
-            lowGreen.value = g;
-// @ts-expect-error
-            lowBlue.value = b;
-        }
-        else if ('high-color' === target) {
-
-            myFilter.set({ highColor: val });
-
-// @ts-expect-error
-            highRed.value = r;
-// @ts-expect-error
-            highGreen.value = g;
-// @ts-expect-error
-            highBlue.value = b;
-        }
-    }
-}, '.colorSelector');
-
-// Setup form
-const lowRed = document.querySelector('#low-red'),
-    lowGreen = document.querySelector('#low-green'),
-    lowBlue = document.querySelector('#low-blue'),
-    highRed = document.querySelector('#high-red'),
-    highGreen = document.querySelector('#high-green'),
-    highBlue = document.querySelector('#high-blue'),
-    lowColor = document.querySelector('#low-color'),
-    highColor = document.querySelector('#high-color'),
-    opacity = document.querySelector('#opacity');
-
-// @ts-expect-error
-lowRed.value = 0;
-// @ts-expect-error
-lowGreen.value = 0;
-// @ts-expect-error
-lowBlue.value = 0;
-// @ts-expect-error
-highRed.value = 255;
-// @ts-expect-error
-highGreen.value = 255;
-// @ts-expect-error
-highBlue.value = 255;
-// @ts-expect-error
-lowColor.value = '#000000';
-// @ts-expect-error
-highColor.value = '#ffffff';
-// @ts-expect-error
-opacity.value = 1;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

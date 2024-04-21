@@ -9,8 +9,12 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas,
-    base = canvas.base;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Internal state variables
@@ -25,7 +29,7 @@ let counter = 0,
 // Use a color factory object to generate random colors within a restricted palette
 const myColorFactory = scrawl.makeColor({
 
-    name: 'color-factory',
+    name: name('colors'),
     minimumColor: 'red',
     maximumColor: 'green',
 });
@@ -34,35 +38,31 @@ const myColorFactory = scrawl.makeColor({
 // Freehand line drawing functions, used by event listeners attached to the canvas element
 const startLine = function () {
 
-    if (base.here.active) {
+    const here = canvas.getBaseHere();
 
-        const coord = base.here;
+    if (here.active) {
 
-        if (coord) {
+        currentPins.push([here.x, here.y]);
 
-            currentPins.push([coord.x, coord.y])
+        currentLine = scrawl.makePolyline({
 
-            currentLine = scrawl.makePolyline({
+            name: name(`line-${counter}`),
 
-                name: `line-${counter}`,
+            pins: currentPins,
+            mapToPins: true,
 
-                pins: currentPins,
-                mapToPins: true,
+            tension: 0.3,
 
-                tension: 0.3,
+            strokeStyle: myColorFactory.getRangeColor(Math.random()),
+            lineWidth: 4 + Math.floor(Math.random() * 20),
 
-                strokeStyle: myColorFactory.getRangeColor(Math.random()),
-                lineWidth: 4 + Math.floor(Math.random() * 20),
+            lineCap: 'round',
+            lineJoin: 'round',
 
-                lineCap: 'round',
-                lineJoin: 'round',
+            method: 'draw',
+        });
 
-                method: 'draw',
-            });
-
-            counter++;
-        }
-
+        counter++;
     }
 };
 scrawl.addListener('down', startLine, canvas.domElement);
@@ -73,18 +73,18 @@ const endLine = function () {
 
     currentLine = false;
     currentPins.length = 0;
-    lastX = lastY = -1;
+    lastX = -1;
+    lastY = -1;
 };
 scrawl.addListener(['up', 'leave'], endLine, canvas.domElement);
 
 const checkLine = function () {
 
-    if (currentLine && base.here.active) {
+    const here = canvas.getBaseHere();
 
-        const coord = base.here;
+    if (currentLine && here.active) {
 
-        const x = coord.x,
-            y = coord.y;
+        const {x, y} = here;
 
         if (x === lastX && y === lastY) return false;
 
@@ -109,7 +109,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -163,4 +163,5 @@ scrawl.addNativeListener('click', () => {
 }, '#clear-button');
 
 
+// #### Development and testing
 console.log(scrawl.library);

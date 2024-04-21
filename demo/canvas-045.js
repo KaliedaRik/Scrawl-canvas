@@ -8,40 +8,47 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-scrawl.importDomImage('.ohara-koson')
+const canvas = scrawl.findCanvas('mycanvas');
 
-const canvas = scrawl.library.canvas.mycanvas;
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Get image
+scrawl.importDomImage('.ohara-koson');
 
 
 // First interaction - when user moves their mouse across the bird in its bough, wheels will spin
-const spinFactory = function (name, radius, order, duration, clockwise) {
+const spinFactory = function (namespace, radius, order, duration, clockwise) {
+
+    const name = (n) => `${namespace}-${n}`;
 
     scrawl.makeGroup({
-        name: `${name}-group`,
+
+        name: name('group'),
         host: canvas.base,
         order,
     });
 
     const clipper = scrawl.makeWheel({
-        name: `${name}-clip-${radius}`,
-        group: `${name}-group`,
+
+        name: name(`clip-${radius}`),
+        group: name('group'),
         start: [200, 250],
         handle: ['center', 'center'],
         radius,
         method: 'clip',
 
-        onEnter: function () {
-            if (!tween.isRunning()) tween.run();
-        },
-
-        onLeave: function () {
-            if (!tween.isRunning()) tween.run();
-        },
+        onEnter: () => !tween.isRunning() && tween.run(),
+        onLeave: () => !tween.isRunning() && tween.run(),
     });
 
     const tween = scrawl.makeTween({
-        name: `${name}-tween-${radius}`,
-        targets: `${name}-clip-${radius}`,
+
+        name: name(`tween-${radius}`),
+        targets: name(`clip-${radius}`),
         duration,
         definitions: [
             {
@@ -54,11 +61,12 @@ const spinFactory = function (name, radius, order, duration, clockwise) {
     });
 
     scrawl.makePicture({
-        name: `${name}-hoop-${radius}`,
-        group: `${name}-group`,
+
+        name: name(`hoop-${radius}`),
+        group: name('group'),
         asset: 'songbird',
 
-        pivot: `${name}-clip-${radius}`,
+        pivot: name(`clip-${radius}`),
         addPivotRotation: true,
         lockTo: 'pivot',
 
@@ -67,67 +75,67 @@ const spinFactory = function (name, radius, order, duration, clockwise) {
         copyDimensions: [radius * 2, radius * 2],
         copyStart: [200 - radius, 250 - radius],
     });
+
     return clipper;
 }
 
-spinFactory('outer-ring', 170, 1, '4s', true);
-spinFactory('thin-ring', 130, 2, '2.6s', true);
-spinFactory('thick-ring', 120, 3, '5.3s', false);
-spinFactory('inner-ring', 60, 4, '4s', true);
-spinFactory('center', 20, 5, '4s', false);
+spinFactory(name('outer-ring'), 170, 1, '4s', true);
+spinFactory(name('thin-ring'), 130, 2, '2.6s', true);
+spinFactory(name('thick-ring'), 120, 3, '5.3s', false);
+spinFactory(name('inner-ring'), 60, 4, '4s', true);
+spinFactory(name('center'), 20, 5, '4s', false);
 
 
 // Second interaction - when the user moves their mouse across the signature area, details about the painting will fade into view
 scrawl.makeBlock({
-  name: 'details-trigger',
-  start: ['5%', '70%'],
-  dimensions: ['80%', '22%'],
-  method: 'none',
-  onEnter: function () {
-    if (!detailsTween.isRunning()) detailsTween.run();
-  },
+
+    name: name('details-trigger'),
+    start: ['5%', '70%'],
+    dimensions: ['80%', '22%'],
+    method: 'none',
+    onEnter: () => !detailsTween.isRunning() && detailsTween.run(),
 });
 
 scrawl.makeEnhancedLabel({
-    name: 'painting-details',
-    layoutTemplate: 'details-trigger',
 
+    name: name('painting-details'),
+    layoutTemplate: name('details-trigger'),
     fontString: '15px Arial, sans-serif',
-
-    text: 'Songbird and flowering camellia (1910 - 1930) <span style="font-style: italic;">Ohara Koson (Japanese, 1877-1945)</span>',
     justifyLine: 'end',
-
     fillStyle: 'gray',
-
     globalAlpha: 0,
     order: 8,
+    text: 'Songbird and flowering camellia (1910 - 1930) <span style="font-style: italic;">Ohara Koson (Japanese, 1877-1945)</span>',
 });
 
 const detailsTween = scrawl.makeTween({
-  name: 'show-details',
-  targets: 'painting-details',
-  duration: 5000,
-  cycles: 2,
-  reverseOnCycleEnd: true,
-  definitions: [
-    {
-      attribute: 'globalAlpha',
-      start: 0,
-      end: 1,
-      engine: 'easeIn5',
-    },
-  ],
+
+    name: name('show-details'),
+    targets: name('painting-details'),
+    duration: 5000,
+    cycles: 2,
+    reverseOnCycleEnd: true,
+
+    definitions: [
+        {
+            attribute: 'globalAlpha',
+            start: 0,
+            end: 1,
+            engine: 'easeIn5',
+        },
+    ],
 });
 
 
 // Complete the painting by adding in the non-interactive bits
 scrawl.makePicture({
-  name: 'koson-songbird',
-  asset: 'songbird',
-  dimensions: ['100%', '100%'],
-  copyDimensions: ['100%', '100%'],
-  globalCompositeOperation: 'destination-over',
-  order: 10,
+
+    name: name('koson-songbird'),
+    asset: 'songbird',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
+    globalCompositeOperation: 'destination-over',
+    order: 10,
 });
 
 
@@ -139,7 +147,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

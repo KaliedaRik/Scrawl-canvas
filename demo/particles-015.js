@@ -8,30 +8,38 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 canvas.buildCell({
 
-    name: 'trace-chamber',
+    name: name('trace-chamber'),
     dimensions: ['100%', '100%'],
-    clearAlpha: 0.998,
+    clearAlpha: 0.999,
 });
 
 const lowAdjuster = scrawl.makeColor({
-    name: 'low-adjuster',
+
+    name: name('low-adjuster'),
     minimumColor: 'black',
     maximumColor: 'green',
 });
 
 const highAdjuster = scrawl.makeColor({
-    name: 'high-adjuster',
+
+    name: name('high-adjuster'),
     minimumColor: 'red',
     maximumColor: 'lightgreen',
 });
 
 const myWorld = scrawl.makeWorld({
-    name: 'demo-world',
+
+    name: name('my-world'),
     tickMultiplier: 2,
     userAttributes: [
         {
@@ -39,7 +47,7 @@ const myWorld = scrawl.makeWorld({
             defaultValue: 0,
             setter: function (item) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.rangeColorValue = item;
 
                 emitter.set({
@@ -54,8 +62,8 @@ const myWorld = scrawl.makeWorld({
 
 const emitter = scrawl.makeEmitter({
 
-    name: 'emitter-1',
-    group: 'trace-chamber',
+    name: name('emitter-1'),
+    group: name('trace-chamber'),
 
     start: ['center', 'center'],
     roll: 10,
@@ -80,7 +88,8 @@ const emitter = scrawl.makeEmitter({
     limitDirectionToAngleMultiples: 60,
 
     artefact: scrawl.makeWheel({
-        name: 'trace',
+
+        name: name('trace'),
         radius: 2,
         handle: ['center', 'center'],
     }),
@@ -107,7 +116,7 @@ const emitter = scrawl.makeEmitter({
 
 scrawl.makeTween({
 
-    name: 'color-adjuster',
+    name: name('color-adjuster'),
     duration: '100s',
     cycles: 0,
     reverseOnCycleEnd: true,
@@ -131,7 +140,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

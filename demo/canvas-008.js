@@ -2,32 +2,26 @@
 // Picture entity position; manipulate copy attributes
 
 // [Run code](../../demo/canvas-008.html)
-import {
-    importDomImage,
-    library as L,
-    makePicture,
-    makeRender,
-    makeUpdater,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Import image from DOM, and create Picture entity using it
-importDomImage('.flowers');
+scrawl.importDomImage('.flowers');
 
 
-const piccy = makePicture({
+const piccy = scrawl.makePicture({
 
     name: name('myFlower'),
     asset: 'iris',
@@ -99,7 +93,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -109,7 +103,7 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -164,63 +158,37 @@ makeUpdater({
 });
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#copy_start_xPercent').value = 25;
-// @ts-expect-error
-document.querySelector('#copy_start_yPercent').value = 25;
-// @ts-expect-error
-document.querySelector('#copy_dims_widthPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#copy_dims_widthAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#copy_start_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#copy_start_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#copy_dims_heightPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#copy_dims_heightAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_dims_widthPercent').value = 33;
-// @ts-expect-error
-document.querySelector('#paste_dims_widthAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_dims_heightPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_dims_heightAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_start_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_start_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#paste_start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#paste_start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#paste_handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#paste_handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#paste_start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#paste_start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#paste_handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#paste_handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
+initializeDomInputs([
+    ['input', 'copy_dims_heightAbsolute', '200'],
+    ['input', 'copy_dims_heightPercent', '50'],
+    ['input', 'copy_dims_widthAbsolute', '200'],
+    ['input', 'copy_dims_widthPercent', '50'],
+    ['input', 'copy_start_xAbsolute', '100'],
+    ['input', 'copy_start_xPercent', '25'],
+    ['input', 'copy_start_yAbsolute', '100'],
+    ['input', 'copy_start_yPercent', '25'],
+    ['input', 'paste_dims_heightAbsolute', '200'],
+    ['input', 'paste_dims_heightPercent', '50'],
+    ['input', 'paste_dims_widthAbsolute', '200'],
+    ['input', 'paste_dims_widthPercent', '33'],
+    ['input', 'paste_handle_xAbsolute', '100'],
+    ['input', 'paste_handle_xPercent', '50'],
+    ['input', 'paste_handle_yAbsolute', '100'],
+    ['input', 'paste_handle_yPercent', '50'],
+    ['input', 'paste_start_xAbsolute', '300'],
+    ['input', 'paste_start_xPercent', '50'],
+    ['input', 'paste_start_yAbsolute', '200'],
+    ['input', 'paste_start_yPercent', '50'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['select', 'paste_handle_xString', 1],
+    ['select', 'paste_handle_yString', 1],
+    ['select', 'paste_start_xString', 1],
+    ['select', 'paste_start_yString', 1],
+    ['select', 'reverse', 0],
+    ['select', 'upend', 0],
+]);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

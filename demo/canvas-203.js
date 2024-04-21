@@ -4,16 +4,16 @@
 // [Run code](../../demo/canvas-203.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -86,6 +86,29 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// Gather DOM elements; setup form
+const dom = initializeDomInputs([
+    ['input', 'handleX', '50'],
+    ['input', 'handleY', '50'],
+    ['input', 'letterSpacing', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'startX', '50'],
+    ['input', 'startY', '50'],
+    ['input', 'underlineGap', '3'],
+    ['input', 'underlineOffset', '0.9'],
+    ['input', 'underlineWidth', '2'],
+    ['input', 'wordSpacing', '0'],
+    ['select', 'font', 0],
+    ['select', 'handleX_string', 2],
+    ['select', 'handleY_string', 3],
+    ['select', 'includeUnderline', 1],
+    ['select', 'reverse', 0],
+    ['select', 'underlineStyle', 0],
+    ['select', 'upend', 0],
+]);
+
+
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -102,8 +125,8 @@ scrawl.makeUpdater({
         startY: ['startY', '%'],
         handleX: ['handleX', '%'],
         handleY: ['handleY', '%'],
-        'handleX-string': ['handleX', 'raw'],
-        'handleY-string': ['handleY', 'raw'],
+        handleX_string: ['handleX', 'raw'],
+        handleY_string: ['handleY', 'raw'],
 
         roll: ['roll', 'float'],
         scale: ['scale', 'float'],
@@ -121,8 +144,6 @@ scrawl.makeUpdater({
         underlineGap: ['underlineGap', 'float'],
     },
 });
-
-const selector = document.querySelector('#font');
 
 const updateFont = (event) => {
 
@@ -494,47 +515,7 @@ const updateFont = (event) => {
     }
 };
 
-scrawl.addNativeListener('change', (e) => updateFont(e), selector);
-
-
-// Setup form
-// @ts-expect-error
-selector.options.selectedIndex = 0;
-
-// @ts-expect-error
-document.querySelector('#startX').value = 50;
-// @ts-expect-error
-document.querySelector('#startY').value = 50;
-// @ts-expect-error
-document.querySelector('#handleX').value = 50;
-// @ts-expect-error
-document.querySelector('#handleY').value = 50;
-// @ts-expect-error
-document.querySelector('#handleX-string').options.selectedIndex = 2;
-// @ts-expect-error
-document.querySelector('#handleY-string').options.selectedIndex = 3;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#includeUnderline').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#underlineStyle').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#underlineWidth').value = 2;
-// @ts-expect-error
-document.querySelector('#underlineOffset').value = 0.9;
-// @ts-expect-error
-document.querySelector('#underlineGap').value = 3;
+scrawl.addNativeListener('change', (e) => updateFont(e), dom.font);
 
 
 // #### Development and testing

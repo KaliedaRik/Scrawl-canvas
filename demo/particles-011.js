@@ -8,20 +8,29 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Define some filters
 scrawl.makeFilter({
-    name: 'grayscale',
+
+    name: name('grayscale'),
     method: 'grayscale',
+
 }).clone({
-    name: 'invert',
+
+    name: name('invert'),
     method: 'invert',
 });
 
 scrawl.makeFilter({
-    name: 'tint',
+
+    name: name('tint'),
     method: 'tint',
     redInRed: 0.5,      redInGreen: 1,      redInBlue: 0.9,
     greenInRed: 0,      greenInGreen: 0.3,  greenInBlue: 0.8,
@@ -29,7 +38,8 @@ scrawl.makeFilter({
 });
 
 scrawl.makeFilter({
-    name: 'matrix',
+
+    name: name('matrix'),
     method: 'matrix',
     weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
 });
@@ -38,7 +48,7 @@ scrawl.makeFilter({
 // Create a Shape entity to act as a path for our Tracer entitys
 scrawl.makeShape({
 
-    name: 'my-arrow',
+    name: name('my-arrow'),
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
@@ -61,11 +71,10 @@ scrawl.makeShape({
 
 
 // #### Particle physics animation scene
-
 // Tracer entitys don't have any color control built in; we need to create our own color factory
 const colorFactory = scrawl.makeColor({
 
-    name: 'tracer-3-color-factory',
+    name: name('tracer-3-color-factory'),
 
     minimumColor: 'red',
     maximumColor: 'blue',
@@ -77,12 +86,12 @@ const colorFactory = scrawl.makeColor({
 // + Note that Tracers do not require a World object, cannot process Force objects, and cannot be connected together using Spring objects.
 scrawl.makeTracer({
 
-    name: 'trace-1',
+    name: name('trace-1'),
 
     historyLength: 50,
 
     // We will delta-animate this Tracer alonbg the path of our Shape entity
-    path: 'my-arrow',
+    path: name('my-arrow'),
     pathPosition: 0,
     lockTo: 'path',
 
@@ -92,7 +101,7 @@ scrawl.makeTracer({
 
     artefact: scrawl.makeWheel({
 
-        name: 'burn-1',
+        name: name('burn-1'),
 
         radius: 6,
 
@@ -128,11 +137,12 @@ scrawl.makeTracer({
 // Clone the Tracer entity
 }).clone({
 
-    name: 'trace-2',
+    name: name('trace-2'),
     pathPosition: 0.33,
 
-    artefact: scrawl.library.artefact['burn-1'].clone({
-        name: 'burn-2',
+    artefact: scrawl.findEntity(name('burn-1')).clone({
+
+        name: name('burn-2'),
         fillStyle: 'green',
         globalAlpha: 0.2,
     }),
@@ -162,11 +172,12 @@ scrawl.makeTracer({
 // Clone the second Tracer entity
 }).clone({
 
-    name: 'trace-3',
+    name: name('trace-3'),
     pathPosition: 0.67,
 
-    artefact: scrawl.library.artefact['burn-1'].clone({
-        name: 'burn-3',
+    artefact: scrawl.findEntity(name('burn-1')).clone({
+
+        name: name('burn-3'),
         fillStyle: 'blue',
     }),
 
@@ -202,7 +213,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -213,14 +224,14 @@ scrawl.makeRender({
 // + KNOWN BUG - the arrow is not draggable on first user mousedown, but is draggable afterwards
 scrawl.makeGroup({
 
-    name: 'my-draggable-group',
+    name: name('my-draggable-group'),
 
-}).addArtefacts('my-arrow');
+}).addArtefacts(name('my-arrow'));
 
 scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: 'my-draggable-group',
+    collisionGroup: name('my-draggable-group'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
@@ -229,19 +240,27 @@ scrawl.makeDragZone({
 // Action user choice to apply a filter to a Tracer entity
 const filterChoice = function (e) {
 
-    e.preventDefault();
-    e.returnValue = false;
+    if (e && e.target) {
 
-    const val = e.target.value,
-        entity = scrawl.library.entity['trace-2'];
+        e.preventDefault();
+        e.returnValue = false;
 
-    entity.clearFilters();
-    if (val) entity.addFilters(val);
+        const myTrace = scrawl.findEntity(name('trace-2'));
+
+        const val = e.target.value;
+
+/** @ts-expect-error */
+        myTrace.clearFilters();
+
+/** @ts-expect-error */
+        if (val) myTrace.addFilters(name(val));
+    }
 };
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
-// @ts-expect-error
-document.querySelector('#filter').value = '';
+
+/** @ts-expect-error */
+document.querySelector('#filter').options.selectedIndex = 0;
 
 
 // #### Development and testing

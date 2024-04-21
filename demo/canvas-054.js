@@ -8,12 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Add the NoiseAsset, and a Picture entity in which to display it
 const myNoise = scrawl.makeNoiseAsset({
-    name: 'base-noise',
+
+    name: name('base-noise'),
     width: 600,
     height: 600,
     scale: 80,
@@ -29,7 +35,7 @@ const myNoise = scrawl.makeNoiseAsset({
 
     cyclePalette: true,
 
-    colorSpace: 'LAB',
+    colorSpace: 'OKLAB',
 
     colors: [
         [0, '#000000'],
@@ -87,8 +93,9 @@ const myNoise = scrawl.makeNoiseAsset({
 });
 
 scrawl.makePicture({
-    name: 'base-noise-subscriber',
-    asset: 'base-noise',
+
+    name: name('base-noise-subscriber'),
+    asset: name('base-noise'),
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
 });
@@ -102,7 +109,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 

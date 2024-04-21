@@ -4,29 +4,38 @@
 // [Run code](../../demo/filters-003.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas,
-    filter = scrawl.library.filter,
-    entity = scrawl.library.entity;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filters
 scrawl.makeFilter({
-    name: 'brightness',
+
+    name: name('brightness'),
     method: 'brightness',
     level: 1,
+
 }).clone({
-    name: 'saturation',
+
+    name: name('saturation'),
     method: 'saturation',
 });
 
 scrawl.makeFilter({
-    name: 'advancedbrightness',
+
+    name: name('advanced-brightness'),
     actions: [{
         action: 'modulate-channels',
         red: 1,
@@ -34,8 +43,10 @@ scrawl.makeFilter({
         blue: 1,
         alpha: 1,
     }],
+
 }).clone({
-    name: 'advancedsaturation',
+
+    name: name('advanced-saturation'),
     actions: [{
         action: 'modulate-channels',
         red: 1,
@@ -46,48 +57,70 @@ scrawl.makeFilter({
     }],
 });
 
-const simpleFilters = [filter.brightness, filter.saturation];
-const advancedFilters = [filter.advancedbrightness, filter.advancedsaturation];
+const simpleFilters = [
+    scrawl.findFilter(name('brightness')),
+    scrawl.findFilter(name('saturation')),
+];
+
+const advancedFilters = [
+    scrawl.findFilter(name('advanced-brightness')),
+    scrawl.findFilter(name('advanced-saturation')),
+];
 
 
 // Create the target entitys
+const pictureGroup = scrawl.makeGroup({
+
+    name: name('picture-group'),
+    host: canvas.getBase(),
+});
+
+const labelGroup = scrawl.makeGroup({
+
+    name: name('label-group'),
+    host: canvas.getBase(),
+});
+
+
 scrawl.makePicture({
 
-    name: 'brightness-picture',
+    name: name('brightness-picture'),
+    group: pictureGroup,
 
     asset: 'iris',
 
     dimensions: [200, 200],
 
-    copyWidth: '100%',
-    copyHeight: '100%',
+    copyDimensions: ['100%', '100%'],
 
     method: 'fill',
 
-    filters: ['brightness'],
+    filters: [name('brightness')],
 
 }).clone({
 
-    name: 'saturation-picture',
+    name: name('saturation-picture'),
     startX: 200,
-    filters: ['saturation'],
+    filters: [name('saturation')],
 
 }).clone({
 
-    name: 'advanced-saturation-picture',
+    name: name('advanced-saturation-picture'),
     startY: 200,
-    filters: ['advancedsaturation'],
+    filters: [name('advanced-saturation')],
 
 }).clone({
 
-    name: 'advanced-brightness-picture',
+    name: name('advanced-brightness-picture'),
     startX: 0,
-    filters: ['advancedbrightness'],
+    filters: [name('advanced-brightness')],
 });
 
 scrawl.makeLabel({
 
-    name: 'brightness-label',
+    name: name('brightness-label'),
+    group: labelGroup,
+
     text: 'Brightness',
 
     fontString: '16px sans-serif',
@@ -97,27 +130,27 @@ scrawl.makeLabel({
 
     method: 'drawThenFill',
 
-    pivot: 'brightness-picture',
+    pivot: name('brightness-picture'),
     lockTo: 'pivot',
     offset: [5, 5],
 
 }).clone({
 
-    name: 'saturation-label',
+    name: name('saturation-label'),
     text: 'Saturation',
-    pivot: 'saturation-picture',
+    pivot: name('saturation-picture'),
 
 }).clone({
 
-    name: 'advanced-saturation-label',
+    name: name('advanced-saturation-label'),
     text: 'Mod channels + saturation',
-    pivot: 'advanced-saturation-picture',
+    pivot: name('advanced-saturation-picture'),
 
 }).clone({
 
-    name: 'advanced-brightness-label',
+    name: name('advanced-brightness-label'),
     text: 'Mod channels',
-    pivot: 'advanced-brightness-picture',
+    pivot: name('advanced-brightness-picture'),
 });
 
 
@@ -125,114 +158,93 @@ scrawl.makeLabel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Level: ${level.value}\n    Opacity: ${opacity.value}\n    R: ${red.value}; G: ${green.value}; B: ${blue.value}; A: ${alpha.value}`;
+    return `
+    Level: ${dom.level.value}
+    Opacity: ${dom.opacity.value}
+
+    Red channel: ${dom.red.value}
+    Green channel: ${dom.green.value}
+    Blue channel: ${dom.blue.value}
+    Alpha channel: ${dom.alpha.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'opacity', '1'],
+    ['input', 'level', '1'],
+    ['input', 'red', '1'],
+    ['input', 'green', '1'],
+    ['input', 'blue', '1'],
+    ['input', 'alpha', '1'],
+]);
+
+
 scrawl.addNativeListener(['input', 'change'], () => {
 
     simpleFilters.forEach(f => {
         f.set({
-// @ts-expect-error
-            opacity: opacity.value,
+            opacity: dom.opacity.value,
         });
     });
 
     advancedFilters.forEach(f => {
         f.set({
             actions: [{
-                action: "modulate-channels",
-// @ts-expect-error
-                opacity: opacity.value,
-// @ts-expect-error
-                red: red.value,
-// @ts-expect-error
-                green: green.value,
-// @ts-expect-error
-                blue: blue.value,
-// @ts-expect-error
-                alpha: alpha.value,
-                saturation: ('advancedsaturation' === f.name) ? true : false,
+                action: 'modulate-channels',
+                opacity: dom.opacity.value,
+                red: dom.red.value,
+                green: dom.green.value,
+                blue: dom.blue.value,
+                alpha: dom.alpha.value,
+                saturation: (name('advanced-saturation') === f.name) ? true : false,
             }],
         });
     });
 
-}, '#opacity');
+}, dom.opacity);
 
 scrawl.addNativeListener(['input', 'change'], () => {
 
     simpleFilters.forEach(f => {
         f.set({
-// @ts-expect-error
-            level: level.value,
+            level: dom.level.value,
         });
     });
 
-}, '#level');
+}, dom.level);
 
 scrawl.addNativeListener(['input', 'change'], () => {
 
     advancedFilters.forEach(f => {
         f.set({
             actions: [{
-                action: "modulate-channels",
-// @ts-expect-error
-                opacity: opacity.value,
-// @ts-expect-error
-                red: red.value,
-// @ts-expect-error
-                green: green.value,
-// @ts-expect-error
-                blue: blue.value,
-// @ts-expect-error
-                alpha: alpha.value,
-                saturation: ('advancedsaturation' === f.name) ? true : false,
+                action: 'modulate-channels',
+                opacity: dom.opacity.value,
+                red: dom.red.value,
+                green: dom.green.value,
+                blue: dom.blue.value,
+                alpha: dom.alpha.value,
+                saturation: (name('advanced-saturation') === f.name) ? true : false,
             }],
         });
     });
 
 }, '.modulatecontrol');
 
-// Setup form
-const opacity = document.querySelector('#opacity');
-const level = document.querySelector('#level');
-const red = document.querySelector('#red');
-const green = document.querySelector('#green');
-const blue = document.querySelector('#blue');
-const alpha = document.querySelector('#alpha');
-
-// @ts-expect-error
-opacity.value = 1;
-// @ts-expect-error
-level.value = 1;
-// @ts-expect-error
-red.value = 1;
-// @ts-expect-error
-green.value = 1;
-// @ts-expect-error
-blue.value = 1;
-// @ts-expect-error
-alpha.value = 1;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', [
-    entity['brightness-picture'],
-    entity['saturation-picture'],
-    entity['advanced-brightness-picture'],
-    entity['advanced-saturation-picture']
-]);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, pictureGroup);
 
 
 // #### Development and testing

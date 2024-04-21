@@ -4,23 +4,16 @@
 // [Run code](../../demo/canvas-202.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
-
-const html = document.querySelector('#text-in-html');
-// @ts-expect-error
-html.style.font = '60px serif';
-// @ts-expect-error
-html.style.direction = 'ltr';
-html.textContent = 'Long live the world!';
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -88,6 +81,30 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// Gather DOM elements; setup form
+const dom = initializeDomInputs([
+    ['', 'text'],
+    ['input', 'handleX', '50'],
+    ['input', 'handleY', '50'],
+    ['input', 'letterSpacing', '0'],
+    ['input', 'offsetX', '0'],
+    ['input', 'offsetY', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'startX', '50'],
+    ['input', 'startY', '50'],
+    ['input', 'wordSpacing', '0'],
+    ['select', 'direction', 0],
+    ['select', 'font', 0],
+    ['select', 'fontKerning', 0],
+    ['select', 'handleX_string', 2],
+    ['select', 'handleY_string', 3],
+    ['select', 'reverse', 0],
+    ['select', 'textRendering', 0],
+    ['select', 'upend', 0],
+]);
+
+
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -104,8 +121,8 @@ scrawl.makeUpdater({
         startY: ['startY', '%'],
         handleX: ['handleX', '%'],
         handleY: ['handleY', '%'],
-        'handleX-string': ['handleX', 'raw'],
-        'handleY-string': ['handleY', 'raw'],
+        handleX_string: ['handleX', 'raw'],
+        handleY_string: ['handleY', 'raw'],
         offsetX: ['offsetX', 'int'],
         offsetY: ['offsetY', 'int'],
 
@@ -125,22 +142,14 @@ scrawl.makeUpdater({
 
     // We need to let the changes settle before transferring them over to our DOM element
     callback: () => setTimeout(() => {
-
-// @ts-expect-error
-        html.style.transform = `scale(${mylabel.get('scale')}) rotate(${mylabel.get('roll')}deg)`;
-// @ts-expect-error
-        html.style.letterSpacing = mylabel.get('letterSpacing');
-// @ts-expect-error
-        html.style.wordSpacing = mylabel.get('wordSpacing');
-// @ts-expect-error
-        html.style.direction = mylabel.get('direction');
-// @ts-expect-error
-        html.style.fontKerning = mylabel.get('fontKerning');
-// @ts-expect-error
-        html.style.textRendering = mylabel.get('textRendering');
+        dom.text.style.transform = `scale(${mylabel.get('scale')}) rotate(${mylabel.get('roll')}deg)`;
+        dom.text.style.letterSpacing = mylabel.get('letterSpacing');
+        dom.text.style.wordSpacing = mylabel.get('wordSpacing');
+        dom.text.style.direction = mylabel.get('direction');
+        dom.text.style.fontKerning = mylabel.get('fontKerning');
+        dom.text.style.textRendering = mylabel.get('textRendering');
     }, 50),
 });
-const selector = document.querySelector('#font');
 
 
 const updateFont = (event) => {
@@ -513,57 +522,19 @@ const updateFont = (event) => {
 
         // We need to let the changes settle before transferring them over to our DOM element
         setTimeout(() => {
-
-// @ts-expect-error
-            html.style.font = mylabel.get('fontString');
-// @ts-expect-error
-            html.style.direction = mylabel.get('direction');
-            html.textContent = mylabel.get('text');
+            dom.text.style.font = mylabel.get('fontString');
+            dom.text.style.direction = mylabel.get('direction');
+            dom.text.textContent = mylabel.get('text');
         }, 50);
     }
 };
+scrawl.addNativeListener('change', (e) => updateFont(e), dom.font);
 
-scrawl.addNativeListener('change', (e) => updateFont(e), selector);
 
-
-// Setup form
-// @ts-expect-error
-selector.options.selectedIndex = 0;
-
-// @ts-expect-error
-document.querySelector('#startX').value = 50;
-// @ts-expect-error
-document.querySelector('#startY').value = 50;
-// @ts-expect-error
-document.querySelector('#handleX').value = 50;
-// @ts-expect-error
-document.querySelector('#handleY').value = 50;
-// @ts-expect-error
-document.querySelector('#handleX-string').options.selectedIndex = 2;
-// @ts-expect-error
-document.querySelector('#handleY-string').options.selectedIndex = 3;
-// @ts-expect-error
-document.querySelector('#offsetX').value = 0;
-// @ts-expect-error
-document.querySelector('#offsetY').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#direction').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#fontKerning').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#textRendering').options.selectedIndex = 0;
+// Complete DOM setup
+dom.text.style.font = '60px serif';
+dom.text.style.direction = 'ltr';
+dom.text.textContent = 'Long live the world!';
 
 
 // #### Development and testing

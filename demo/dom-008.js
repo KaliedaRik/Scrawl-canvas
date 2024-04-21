@@ -9,23 +9,31 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Convenience labels - to save some typing
-const artefact = scrawl.library.artefact,
-  stack = artefact.mystack,
-  pin = artefact.pin,
-  front = artefact.frontface,
-  back = artefact.backface,
-  top = artefact.topface,
-  bottom = artefact.bottomface,
-  left = artefact.leftface,
-  right = artefact.rightface;
+const stack = scrawl.findStack('mystack');
+
+
+// Namespacing boilerplate
+const namespace = stack.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+const pin = scrawl.findElement('pin'),
+    front = scrawl.findCanvas('frontface'),
+    back = scrawl.findCanvas('backface'),
+    top = scrawl.findCanvas('topface'),
+    bottom = scrawl.findCanvas('bottomface'),
+    left = scrawl.findCanvas('leftface'),
+    right = scrawl.findCanvas('rightface');
 
 const faces = scrawl.makeGroup({
-    name: "faces"
+
+    name: name('faces'),
+
 }).addArtefacts(left, right, top, bottom, front, back);
 
 stack.set({
-    perspectiveX: "50%",
-    perspectiveY: "50%",
+    perspectiveX: '50%',
+    perspectiveY: '50%',
     perspectiveZ: 1200
 });
 
@@ -33,8 +41,8 @@ pin.set({
     order: 1,
     width: 0,
     height: 0,
-    start: ["center", "center"],
-    lockTo: "start",
+    start: ['center', 'center'],
+    lockTo: 'start',
 
     // To spin the cube we only need to rotate this element
     // - canvases pivot to the cube element for position/rotation
@@ -52,20 +60,20 @@ faces.setArtefacts({
     // - so that they pick up changes to its positioning
     order: 2,
 
-    trackHere: "local",
+    trackHere: 'local',
 
     // Common dimensions; common start/handle values
     width: 300,
     height: 300,
     baseMatchesCanvasDimensions: true,
-    start: ["center", "center"],
-    handle: ["center", "center"],
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
 
     // Offset each canvas from the pin
     offsetZ: 150,
 
     // Set each canvas to pivot to the pin
-    lockTo: "pivot",
+    lockTo: 'pivot',
     pivot: pin,
 
     // Automatically add the pin's rotation values to each canvas's initial rotation value (set below)
@@ -73,170 +81,165 @@ faces.setArtefacts({
 
     // Styling common to all the canvas elements
     css: {
-        backfaceVisibility: "hidden"
-    }
+        backfaceVisibility: 'hidden',
+    },
 });
 
 // Give each canvas its initial rotation
-right.set({
-    yaw: 90
-});
-top.set({
-    pitch: 90
-});
-back.set({
-    pitch: 180
-});
-left.set({
-    yaw: 270
-});
-bottom.set({
-    pitch: 270
-});
+right.set({ yaw: 90 });
+top.set({ pitch: 90 });
+back.set({ pitch: 180 });
+left.set({ yaw: 270 });
+bottom.set({ pitch: 270 });
 
 
 // Build some gradients to color the canvases
 scrawl.makeGradient({
 
-    name: "red-gradient",
-    endX: "100%",
-    endY: "100%",
+    name: name('red-gradient'),
+    endX: '100%',
+    endY: '100%',
     colors: [
-        [0, "#fff"],
-        [499, "#f00"],
-        [999, "#000"]
+        [0, '#fff'],
+        [499, '#f00'],
+        [999, '#000'],
     ],
     colorSpace: 'OKLAB',
 
 }).clone({
 
-    name: "green-gradient",
+    name: name('green-gradient'),
     colors: [
-        [0, "#fff"],
-        [499, "#0f0"],
-        [999, "#000"]
+        [0, '#fff'],
+        [499, '#0f0'],
+        [999, '#000'],
     ]
 
 }).clone({
 
-    name: "blue-gradient",
+    name: name('blue-gradient'),
     colors: [
-        [0, "#fff"],
-        [499, "#00f"],
-        [999, "#000"]
+        [0, '#fff'],
+        [499, '#00f'],
+        [999, '#000'],
     ]
 
 }).clone({
 
-    name: "yellow-gradient",
+    name: name('yellow-gradient'),
     colors: [
-        [0, "#fff"],
-        [499, "#ff0"],
-        [999, "#000"]
+        [0, '#fff'],
+        [499, '#ff0'],
+        [999, '#000'],
     ]
 
 }).clone({
 
-    name: "magenta-gradient",
+    name: name('magenta-gradient'),
     colors: [
-        [0, "#fff"],
-        [499, "#f0f"],
-        [999, "#000"]
+        [0, '#fff'],
+        [499, '#f0f'],
+        [999, '#000'],
     ]
 
 }).clone({
 
-    name: "cyan-gradient",
+    name: name('cyan-gradient'),
     colors: [
-        [0, "#fff"],
-        [499, "#0ff"],
-        [999, "#000"]
+        [0, '#fff'],
+        [499, '#0ff'],
+        [999, '#000'],
     ]
 });
 
 // Display a gradient on each canvas using a Block entity
 scrawl.makeBlock({
 
-    name: "topface-block",
-    group: top.base.name,
-    dimensions: ["100%", "100%"],
-    start: ["center", "center"],
-    handle: ["center", "center"],
-    fillStyle: "red-gradient"
+    name: name('topface-block'),
+    group: top.get('baseGroup'),
+    dimensions: ['100%', '100%'],
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    fillStyle: name('red-gradient'),
 
 }).clone({
 
-    name: "leftface-block",
-    group: left.base.name,
-    fillStyle: "green-gradient"
+    name: name('leftface-block'),
+    group: left.get('baseGroup'),
+    fillStyle: name('green-gradient'),
 
 }).clone({
 
-    name: "bottomface-block",
-    group: bottom.base.name,
-    fillStyle: "yellow-gradient",
-    roll: -90
+    name: name('bottomface-block'),
+    group: bottom.get('baseGroup'),
+    fillStyle: name('yellow-gradient'),
+    roll: -90,
 
 }).clone({
 
-    name: "rightface-block",
-    group: right.base.name,
-    fillStyle: "magenta-gradient",
-    roll: 90
+    name: name('rightface-block'),
+    group: right.get('baseGroup'),
+    fillStyle: name('magenta-gradient'),
+    roll: 90,
 
 }).clone({
 
-    name: "frontface-block",
-    group: front.base.name,
-    fillStyle: "cyan-gradient",
-    roll: 0
+    name: name('frontface-block'),
+    group: front.get('baseGroup'),
+    fillStyle: name('cyan-gradient'),
+    roll: 0,
 
 }).clone({
 
-    name: "backface-block",
-    group: back.base.name,
-    fillStyle: "blue-gradient",
-    roll: -90
+    name: name('backface-block'),
+    group: back.get('baseGroup'),
+    fillStyle: name('blue-gradient'),
+    roll: -90,
 });
 
 // Add a label to each canvas using a Phrase entity
-scrawl
-  .makeLabel({
-    name: "topface-label",
-    group: top.base.name,
-    start: ["center", "center"],
-    handle: ["center", "center"],
-    text: "TOP",
-    accessibleText: "§ canvas element",
+scrawl.makeLabel({
+
+    name: name('topface-label'),
+    group: top.get('baseGroup'),
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    text: 'TOP',
+    accessibleText: '§ canvas element',
     fontString: 'bold 3rem sans-serif',
-    fillStyle: "yellow",
+    fillStyle: 'yellow',
     lineWidth: 2,
-    method: "fillThenDraw"
-  })
-  .clone({
-    name: "bottomface-label",
-    group: bottom.base.name,
-    text: "BOTTOM"
-  })
-  .clone({
-    name: "leftface-label",
-    group: left.base.name,
-    text: "LEFT"
-  })
-  .clone({
-    name: "rightface-label",
-    group: right.base.name,
-    text: "RIGHT"
-  })
-  .clone({
-    name: "frontface-label",
-    group: front.base.name,
-    text: "FRONT"
-  })
-  .clone({
-    name: "backface-label",
-    group: back.base.name,
-    text: "BACK"
+    method: 'fillThenDraw',
+
+  }).clone({
+
+    name: name('bottomface-label'),
+    group: bottom.get('baseGroup'),
+    text: 'BOTTOM',
+
+  }).clone({
+
+    name: name('leftface-label'),
+    group: left.get('baseGroup'),
+    text: 'LEFT',
+
+  }).clone({
+
+    name: name('rightface-label'),
+    group: right.get('baseGroup'),
+    text: 'RIGHT',
+
+  }).clone({
+
+    name: name('frontface-label'),
+    group: front.get('baseGroup'),
+    text: 'FRONT',
+
+  }).clone({
+
+    name: name('backface-label'),
+    group: back.get('baseGroup'),
+    text: 'BACK',
   });
 
 
@@ -267,7 +270,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation-stack',
+    name: name('animation'),
     target: stack,
     commence: stackCheck,
     afterShow: report,
@@ -275,7 +278,7 @@ scrawl.makeRender({
 
 scrawl.makeRender({
 
-    name: 'demo-animation-canvases',
+    name: name('canvas-animation'),
     target: [top, bottom, left, right, front, back],
 });
 

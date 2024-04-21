@@ -41,7 +41,7 @@ export default function (items) {
         document.body.appendChild(hold);
 
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
         const controller = bodymovin.loadAnimation({
 
 /* eslint-enable */
@@ -116,7 +116,7 @@ export default function (items) {
         }
     };
 
-// @ts-expect-error
+/** @ts-expect-error */
     if (!window.bodymovin) {
 
         return new Promise(resolve => {

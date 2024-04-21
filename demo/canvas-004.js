@@ -2,30 +2,23 @@
 // Radial gradients
 
 // [Run code](../../demo/canvas-004.html)
-import {
-    addNativeListener,
-    library as L,
-    makeBlock,
-    makeRadialGradient,
-    makeRender,
-    makeUpdater,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Create the radial gradient
-const graddy = makeRadialGradient({
+const graddy = scrawl.makeRadialGradient({
     name: name('mygradient'),
     startX: '50%',
     startY: '50%',
@@ -52,7 +45,7 @@ const bespokeEasings = {
 };
 
 // Create a block entity which will use the gradient
-makeBlock({
+scrawl.makeBlock({
     name: name('myblock'),
     width: '90%',
     height: '90%',
@@ -69,12 +62,16 @@ makeBlock({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
-// @ts-expect-error
-    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}\n    Start - x: ${startX.value}%; y: ${startY.value}%; radius: ${startRadius.value}\n    End - x: ${endX.value}%; y: ${endY.value}%; radius: ${endRadius.value}\n    Precision: ${precision.value}`;
+
+    return `
+    Palette - start: ${dom['paletteStart'].value}; end: ${dom['paletteEnd'].value}
+    Start - x: ${dom['startX'].value}%; y: ${dom['startY'].value}%; radius: ${dom['startRadius'].value}
+    End - x: ${dom['endX'].value}%; y: ${dom['endY'].value}%; radius: ${dom['endRadius'].value}
+    Precision: ${dom['precision'].value}`;
 });
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -84,7 +81,7 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -122,7 +119,7 @@ const events = (e) => {
     e.returnValue = false;
 };
 
-addNativeListener(['input', 'change'], (e) => {
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -142,7 +139,7 @@ addNativeListener(['input', 'change'], (e) => {
     }
 }, '.colorItems');
 
-addNativeListener(['input', 'change'], (e) => {
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -163,48 +160,24 @@ addNativeListener(['input', 'change'], (e) => {
 
 
 // Set the DOM input values
-const paletteStart = document.querySelector('#paletteStart');
-const paletteEnd = document.querySelector('#paletteEnd');
-const startX = document.querySelector('#startX');
-const startY = document.querySelector('#startY');
-const startRadius = document.querySelector('#startRadius');
-const endX = document.querySelector('#endX');
-const endY = document.querySelector('#endY');
-const endRadius = document.querySelector('#endRadius');
-const precision = document.querySelector('#precision');
-
-// @ts-expect-error
-paletteStart.value = 0;
-// @ts-expect-error
-paletteEnd.value = 999;
-// @ts-expect-error
-startX.value = 50;
-// @ts-expect-error
-startY.value = 50;
-// @ts-expect-error
-startRadius.value = 0;
-// @ts-expect-error
-endX.value = 50;
-// @ts-expect-error
-endY.value = 50;
-// @ts-expect-error
-endRadius.value = 500;
-// @ts-expect-error
-precision.value = 1;
-
-// @ts-expect-error
-document.querySelector('#red').value = 0;
-// @ts-expect-error
-document.querySelector('#blue').value = 0;
-// @ts-expect-error
-document.querySelector('#easing').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#cyclePalette').value = 0;
-// @ts-expect-error
-document.querySelector('#colorSpace').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#returnColorAs').options.selectedIndex = 0;
+const dom = initializeDomInputs([
+    ['input', 'endRadius', '500'],
+    ['input', 'endX', '100'],
+    ['input', 'endY', '0'],
+    ['input', 'paletteEnd', '999'],
+    ['input', 'paletteStart', '0'],
+    ['input', 'precision', '1'],
+    ['input', 'startRadius', '0'],
+    ['input', 'startX', '50'],
+    ['input', 'startY', '50'],
+    ['select', 'blue', 0],
+    ['select', 'colorSpace', 0],
+    ['select', 'cyclePalette', 0],
+    ['select', 'easing', 0],
+    ['select', 'red', 0],
+    ['select', 'returnColorAs', 0],
+]);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

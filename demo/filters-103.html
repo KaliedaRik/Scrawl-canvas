@@ -10,10 +10,6 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    #my-image-store {
-      display: none;
-    }
-
     .canvas-hold {
       width: 100%;
       display: flex;
@@ -28,6 +24,7 @@
       padding: 1em;
       border: 1px solid black;
     }
+    
     #reportmessage {
       width: 80%;
       position: sticky;
@@ -36,6 +33,36 @@
       background-color: #60d060;
       padding: 0.5em 1em;
       margin: 0 auto 1em;
+    }
+
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+      border: 0 !important;
+      padding: 0 !important;
+
+      & canvas {
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+
+          text-align: center;
+          width: 400px;
+          max-width: 100%;
+          border: 0 !important;
+          padding: 0 !important;
+
+          & img {
+            width: 100%;
+          }
+        }
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
     }
   </style>
 </head>
@@ -49,127 +76,243 @@
   <h2>A gallery of compound filter effects</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: the demo takes its own sweet time to load. If Javascript is not running in this browser environment, canvas elements will be ignored; instead placeholder images display where the canvas would have appeared.</p>
 
   <div class="canvas-hold">
     <div>
       <p>Effect: blotchy newsprint with color</p>
-      <canvas 
-        id="canvas-1" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-1" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-01.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+          <div class="assets" aria-hidden="true">
+            <img
+              id="iris"
+              src="img/iris.png"
+              class="flowers"
+              alt="A purple-mauve iris flower"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: jagged transluscent blocks</p>
-      <canvas 
-        id="canvas-2" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-2" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-02.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: brass rubbing</p>
-      <canvas 
-        id="canvas-3" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-3" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-03.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: blueprint</p>
-      <canvas 
-        id="canvas-4" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-4" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-04.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: comic</p>
-      <canvas 
-        id="canvas-5" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-5" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-05.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: square quilt</p>
-      <canvas 
-        id="canvas-6" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-6" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-06.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: raised tiles</p>
-      <canvas 
-        id="canvas-7" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-7" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-07.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: blotchy color</p>
-      <canvas 
-        id="canvas-8" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-8" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-08.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: watermarks</p>
-      <canvas 
-        id="canvas-9" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-9" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-09.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: animated rainbow rays</p>
-      <canvas 
-        id="canvas-10" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-10" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-10.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: grayscale CRT monitor</p>
-      <canvas 
-        id="canvas-11" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-11" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-11.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
     <div>
       <p>Effect: color CRT monitor</p>
-      <canvas 
-        id="canvas-12" 
-        width="400" 
-        height="400"
-        data-scrawl-canvas
-      ></canvas>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="canvas-12" 
+          width="400" 
+          height="400"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-103-12.webp"
+              alt="Screen capture image of the filtered canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
     </div>
 
   </div>
@@ -186,10 +329,6 @@
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-103.html">Annotated code</a></p>
-  </div>
-
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-103.js" type="module"></script>

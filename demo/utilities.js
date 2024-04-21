@@ -388,9 +388,15 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
 
     let counter = 0;
 
+    const canvasArray = [];
+    if (Array.isArray(canvas)) canvasArray.push(...canvas);
+    else canvasArray.push(canvas);
+
     const wrappers = [];
-    if (Array.isArray(canvas)) wrappers.push(...canvas);
-    else wrappers.push(canvas);
+    canvasArray.forEach(c => {
+        if (c.substring) wrappers.push(scrawl.findCanvas(c));
+        else wrappers.push(c);
+    });
 
     if (!Array.isArray(targets)) targets = [targets];
 
@@ -429,7 +435,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
                 // Add the image to the DOM and create our asset from it
                 const img = document.createElement('img');
 
-                // @ts-expect-error
+                /** @ts-expect-error */
                 img.src = reader.result;
                 img.id = name;
                 store.appendChild(img);
@@ -520,7 +526,6 @@ const addCheckerboardBackground = (canvas, namespace) => {
         cleared: false,
         compiled: false,
         shown: false,
-        useAsPattern: true,
     });
 
     scrawl.makeBlock({
@@ -544,6 +549,95 @@ const addCheckerboardBackground = (canvas, namespace) => {
     });
 };
 
+
+const initializeDomInputs = (items) => {
+
+    const results = {};
+
+    items.forEach(item => {
+
+        const [type, selector, value] = item;
+
+        switch (type) {
+
+            case 'input' : {
+
+                if (value.substring) {
+
+                    /** @type {HTMLInputElement} */
+                    const S = document.querySelector(`#${selector}`);
+
+                    if (S) {
+
+                        S.value = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
+                }
+                else results[selector] = {};
+                break;
+            }
+
+            case 'select' : {
+
+                if (value.toFixed) {
+
+                    /** @type {HTMLSelectElement} */
+                    const S = document.querySelector(`#${selector}`);
+
+                    if (S) {
+
+                        S.options.selectedIndex = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
+                }
+                else results[selector] = {};
+                break;
+            }
+
+            case 'button' : {
+
+                if (value.substring) {
+
+                    /** @type {HTMLButtonElement} */
+                    const S = document.querySelector(`#${selector}`);
+
+                    if (S) {
+
+                        S.textContent = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
+                }
+                else results[selector] = {};
+                break;
+            }
+
+            case 'element' : {
+
+                /** @type {HTMLElement} */
+                const S = document.querySelector(`${selector}`);
+
+                if (S) results[selector] = S;
+                else results[selector] = {};
+                break;
+            }
+
+            default : {
+
+                /** @type {HTMLElement} */
+                const S = document.querySelector(`#${selector}`);
+
+                if (S) results[selector] = S;
+                else results[selector] = {};
+            }
+        }
+    });
+
+    return results;
+}
+
 export {
     reportSpeed,
     reportFullLibrary,
@@ -556,4 +650,6 @@ export {
 
     addCheckerboardBackground,
     addImageDragAndDrop,
+
+    initializeDomInputs,
 }

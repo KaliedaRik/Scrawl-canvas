@@ -228,6 +228,10 @@ S.noFilters = function (item) {
 
 
 // #### Prototype functions
+P.getArtefactNames = function () {
+
+    return [...this.artefacts];
+};
 
 // `getHost` - internal helper function
 P.getHost = function (item) {

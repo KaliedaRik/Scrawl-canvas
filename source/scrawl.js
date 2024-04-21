@@ -52,9 +52,19 @@ export {
 } from './core/events.js';
 export * as library from './core/library.js';
 export {
-    purge,
     checkFontIsLoaded,
+    findArtefact,
+    findCanvas,
+    findElement,
+    findEntity,
+    findFilter,
+    findGroup,
+    findPattern,
+    findStack,
+    findStyles,
+    findTween,
     getFontMetadata,
+    purge,
 } from './core/library.js';
 export { seededRandomNumberGenerator } from './helper/random-seed.js';
 export { makeSnippet } from './core/snippets.js';

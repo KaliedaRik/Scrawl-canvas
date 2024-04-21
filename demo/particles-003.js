@@ -4,79 +4,80 @@
 // [Run code](../../demo/particles-003.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('#bunny');
 
 
 // Create Block and Shape entitys that can be used as pivot, mimic and path objects for the Emitter entity
 scrawl.makeBlock({
 
-    name: 'pivot-entity',
+    name: name('pivot'),
     dimensions: [50, 30],
     start: ['20%', '20%'],
     handle: ['center', 'center'],
     order: 1,
     roll: 90,
-
     strokeStyle: 'darkred',
     lineWidth: 5,
     method: 'draw',
 
 }).clone({
 
-    name: 'mimic-entity',
+    name: name('mimic'),
     start: ['80%', '80%'],
-
     delta: {
         roll: 0.3,
     },
-
 });
 
 scrawl.makeShape({
 
-    name: 'path-entity',
-
-    pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
-
+    name: name('path'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-
     scale: 0.5,
     roll: -90,
     flipUpend: true,
     scaleOutline: false,
     useAsPath: true,
     precision: 2,
-
     strokeStyle: 'green',
     lineWidth: 3,
     method: 'draw',
+    pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 });
 
 
 // #### Particle physics animation scene
-
 // Create gradient
 scrawl.makeGradient({
-    name: 'linear1',
+
+    name: name('gradient'),
     endX: '100%',
     colors: [
         [0, 'pink'],
         [999, 'darkgreen']
     ],
+    colorSpace: 'OKLAB',
 });
 
 
 // Create entitys that we can use with the particle emitter
-const wheel = scrawl.makeWheel({
+scrawl.makeWheel({
 
-    name: 'particle-wheel-entity',
+    name: name('wheel'),
     radius: 20,
     handle: ['center', 'center'],
 
@@ -84,7 +85,7 @@ const wheel = scrawl.makeWheel({
     endAngle: -20,
     includeCenter: true,
 
-    fillStyle: 'linear1',
+    fillStyle: name('gradient'),
     method: 'fillThenDraw',
     visibility: false,
 
@@ -94,13 +95,13 @@ const wheel = scrawl.makeWheel({
     noDeltaUpdates: true,
 });
 
-const block = scrawl.makeBlock({
+scrawl.makeBlock({
 
-    name: 'particle-block-entity',
+    name: name('block'),
     dimensions: [40, 16],
     handle: ['center', 'center'],
 
-    fillStyle: 'linear1',
+    fillStyle: name('gradient'),
     lockFillStyleToEntity: true,
 
     method: 'fillThenDraw',
@@ -112,9 +113,9 @@ const block = scrawl.makeBlock({
     noDeltaUpdates: true,
 });
 
-const star = scrawl.makeStar({
+scrawl.makeStar({
 
-    name: 'particle-star-entity',
+    name: name('star'),
 
     radius1: 18,
     radius2: 12,
@@ -133,9 +134,9 @@ const star = scrawl.makeStar({
     noDeltaUpdates: true,
 });
 
-const picture = scrawl.makePicture({
+scrawl.makePicture({
 
-    name: 'particle-image-entity',
+    name: name('picture'),
     asset: 'bunny',
 
     width: 26,
@@ -159,31 +160,31 @@ const picture = scrawl.makePicture({
 // Create a World object which we can then assign to the particle emitter
 const myWorld = scrawl.makeWorld({
 
-    name: 'demo-world',
+    name: name('world'),
     tickMultiplier: 2,
 });
 
 
 // Create the particle Emitter entity
-const myemitter = scrawl.makeEmitter({
+const myEmitter = scrawl.makeEmitter({
 
-    name: 'position-tester',
+    name: name('position-tester'),
     world: myWorld,
 
     // Start coordinates (relative to Cell dimensions)
     start: ['40%', '60%'],
 
     // Pivot
-    pivot: 'pivot-entity',
+    pivot: name('pivot'),
     addPivotRotation: true,
 
     // Mimic
-    mimic: 'mimic-entity',
+    mimic: name('mimic'),
     useMimicStart: true,
     useMimicRotation: true,
 
     // Path
-    path: 'path-entity',
+    path: name('path'),
     pathPosition: 0,
     addPathRotation: true,
 
@@ -199,7 +200,7 @@ const myemitter = scrawl.makeEmitter({
     // Another way to kill particles is to set the `killBeyondCanvas` flag. This will kill any particle that moves beyond the borders of its Cell's &lt;canvas> element
     killBeyondCanvas: true,
 
-    artefact: star,
+    artefact: name('star'),
 
     // These range settings will create a fountain effect, with the particle stars shrinking and fading as they age
     rangeX: 40,
@@ -220,7 +221,7 @@ const myemitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history,
-// @ts-expect-error
+/** @ts-expect-error */
             roll = this.get('roll');
 
         let remaining, globalAlpha, scale, start, z;
@@ -243,12 +244,10 @@ const myemitter = scrawl.makeEmitter({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const particlenames = scrawl.library.particlenames,
-    particle = scrawl.library.particle;
+const { particlenames, particle } = scrawl.library;
 
 const report = reportSpeed('#reportmessage', function () {
 
-    // ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle
     let historyCount = 0;
     particlenames.forEach(n => {
 
@@ -256,7 +255,8 @@ const report = reportSpeed('#reportmessage', function () {
         if (p) historyCount += p.history.length;
     });
 
-    return `    Particles: ${particlenames.length}
+    return `
+    Particles: ${particlenames.length}
     Stamps per display: ${historyCount}`;
 });
 
@@ -264,25 +264,30 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+const dom = initializeDomInputs([
+    ['select', 'position', 0],
+    ['select', 'artefact', 0],
+]);
+
+
 // Make the Emitter draggable
-// + KNOWN BUG - the emitter is not draggable on first user mousedown, but is draggable afterwards
 scrawl.makeGroup({
 
-    name: 'my-draggable-group',
+    name: name('my-draggable-group'),
 
-}).addArtefacts('position-tester');
+}).addArtefacts(myEmitter);
 
 scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: 'my-draggable-group',
+    collisionGroup: name('my-draggable-group'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
@@ -292,9 +297,9 @@ scrawl.makeDragZone({
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
-    origin: '.controlItem',
+    origin: dom.position,
 
-    target: myemitter,
+    target: myEmitter,
 
     useNativeListener: true,
     preventDefault: true,
@@ -304,51 +309,16 @@ scrawl.makeUpdater({
     },
 });
 
-const useArtefact = function () {
+const useArtefact = function (e) {
 
-    const selector = document.querySelector('#artefact');
+    if (e && e.target) {
 
-    let choice, val;
+        const val = scrawl.findEntity(name(e.target.value));
 
-    return function () {
-
-// @ts-expect-error
-        val = selector.value;
-
-        switch (val) {
-
-            case 'star' :
-                choice = star;
-                break;
-
-            case 'wheel' :
-                choice = wheel;
-                break;
-
-            case 'block' :
-                choice = block;
-                break;
-
-            case 'picture' :
-                choice = picture;
-                break;
-        }
-
-        if (choice) {
-
-            myemitter.set({
-                artefact: choice,
-            });
-        }
+        if (val) myEmitter.set({ artefact: val });
     }
-}();
-scrawl.addNativeListener(['input', 'change'], useArtefact, '#artefact');
-
-// Initialize form values
-// @ts-expect-error
-document.querySelector('#artefact').value = 'star';
-// @ts-expect-error
-document.querySelector('#position').value = 'start';
+};
+scrawl.addNativeListener(['input', 'change'], useArtefact, dom.artefact);
 
 
 // #### Development and testing

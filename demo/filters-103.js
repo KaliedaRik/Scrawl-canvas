@@ -7,129 +7,79 @@ import * as scrawl from '../source/scrawl.js';
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
+// Namespacing boilerplate
+let canvas, namespace;
+const name = (n) => `${namespace}-${n}`;
+
+
 // #### Scene setup and animation
-const {
-    'canvas-1':canvas1,
-    'canvas-2':canvas2,
-    'canvas-3':canvas3,
-    'canvas-4':canvas4,
-    'canvas-5':canvas5,
-    'canvas-6':canvas6,
-    'canvas-7':canvas7,
-    'canvas-8':canvas8,
-    'canvas-9':canvas9,
-    'canvas-10':canvas10,
-    'canvas-11':canvas11,
-    'canvas-12':canvas12,
-} = scrawl.library.canvas;
+// Holding group - stands outside any canvas
+const pictures = scrawl.makeGroup({
 
-// Create the target entitys
-scrawl.makePicture({
-
-    name: 'canvas-output-1',
-    group: canvas1.base.name,
-    asset: 'iris',
-    dimensions: ['100%', '100%'],
-    copyDimensions: ['100%', '100%'],
-    filters: ['blotchy-newsprint'],
-    memoizeFilterOutput: true,
-
-}). clone({
-
-    name: 'canvas-output-2',
-    group: canvas2.base.name,
-    filters: ['jagged-shapes'],
-
-}). clone({
-
-    name: 'canvas-output-3',
-    group: canvas3.base.name,
-    filters: ['brass-rubbing'],
-
-}). clone({
-
-    name: 'canvas-output-4',
-    group: canvas4.base.name,
-    filters: ['blueprint'],
-
-}). clone({
-
-    name: 'canvas-output-5',
-    group: canvas5.base.name,
-    filters: ['comic'],
-
-}). clone({
-
-    name: 'canvas-output-6',
-    group: canvas6.base.name,
-    filters: ['square-quilt'],
-
-}). clone({
-
-    name: 'canvas-output-7',
-    group: canvas7.base.name,
-    filters: ['raised-tiles'],
-
-}). clone({
-
-    name: 'canvas-output-8',
-    group: canvas8.base.name,
-    filters: ['blotches'],
-
-}). clone({
-
-    name: 'canvas-output-9',
-    group: canvas9.base.name,
-    filters: ['watermark'],
-
-}). clone({
-
-    name: 'canvas-output-10',
-    group: canvas10.base.name,
-    filters: ['rays'],
-
-}). clone({
-
-    name: 'canvas-output-11',
-    group: canvas11.base.name,
-    filters: ['grayscale-crt'],
-
-}). clone({
-
-    name: 'canvas-output-12',
-    group: canvas12.base.name,
-    filters: ['color-crt'],
+    name: 'target-images',
 });
 
-const pictures = scrawl.makeGroup({
-    name: 'target-images',
-}).addArtefacts('canvas-output-1', 'canvas-output-2', 'canvas-output-3', 'canvas-output-4', 'canvas-output-5', 'canvas-output-6', 'canvas-output-7', 'canvas-output-8', 'canvas-output-9', 'canvas-output-10', 'canvas-output-11', 'canvas-output-12');
 
-
-// Animation
+// Report speed animation - stands outside any canvas
 const report = reportSpeed('#reportmessage');
 
 scrawl.makeRender({
-    name: "demo-reporter",
+
+    name: 'page-speed',
     noTarget: true,
     afterShow: report,
 });
 
-scrawl.makeRender({
-    name: "demo-canvases",
-    target: [canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10, canvas11, canvas12],
-    observer: true,
-});
+
+// Initialise each canvas and its entitys
+const initCanvas = (canvasId) => {
+
+    canvas = scrawl.findCanvas(canvasId);
+    namespace = canvas.name;
+
+    canvas.setAsCurrentCanvas();
+
+    const p = scrawl.makePicture({
+
+        name: name('display'),
+        asset: 'iris',
+        dimensions: ['100%', '100%'],
+        copyDimensions: ['100%', '100%'],
+        memoizeFilterOutput: true,
+    });
+
+    pictures.addArtefacts(p);
+
+    scrawl.makeRender({
+
+        name: name('animation'),
+        target: canvas,
+        observer: true,
+    });
+};
+
+
+const canvases = [
+    'canvas-1', 'canvas-2',  'canvas-3',  'canvas-4',
+    'canvas-5', 'canvas-6',  'canvas-7',  'canvas-8',
+    'canvas-9', 'canvas-10', 'canvas-11', 'canvas-12',
+];
+
+canvases.forEach(c => initCanvas(c));
 
 
 // #### Filter setup
 // Blotchy newsprint
+canvas = scrawl.findCanvas('canvas-1');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'blotchy-newsprint',
+    name: name('blotchy-newsprint'),
     actions: [{
         action: 'newsprint',
         width: 3,
@@ -146,8 +96,14 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('blotchy-newsprint'));
+
 
 // Translucent jagged edges effect
+canvas = scrawl.findCanvas('canvas-2');
+namespace = canvas.name;
+
 const points1 = [],
     points2 = [];
 
@@ -158,7 +114,7 @@ for (let i = 0; i < 2000; i++) {
 
 scrawl.makeFilter({
 
-    name: 'jagged-shapes',
+    name: name('jagged-shapes'),
     actions: [{
         action: 'tiles',
         points: points1,
@@ -171,11 +127,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('jagged-shapes'));
+
 
 // Brass rubbing effect
+canvas = scrawl.findCanvas('canvas-3');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'brass-rubbing',
+    name: name('brass-rubbing'),
     actions: [{
         action: 'gaussian-blur',
         radius: 2,
@@ -194,11 +156,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('brass-rubbing'));
+
 
 // Blueprint effect
+canvas = scrawl.findCanvas('canvas-4');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'blueprint',
+    name: name('blueprint'),
     actions: [{
         action: 'gaussian-blur',
         radius: 1,
@@ -217,11 +185,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('blueprint'));
+
 
 // Comic effect
+canvas = scrawl.findCanvas('canvas-5');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'comic',
+    name: name('comic'),
     actions: [{
         action: 'gaussian-blur',
         radius: 1,
@@ -268,11 +242,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('comic'));
+
 
 // Square quilt effect
+canvas = scrawl.findCanvas('canvas-6');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'square-quilt',
+    name: name('square-quilt'),
     actions: [{
         action: 'pixelate',
         lineOut: 'large',
@@ -320,11 +300,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('square-quilt'));
+
 
 // Raised tiles effect
+canvas = scrawl.findCanvas('canvas-7');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'raised-tiles',
+    name: name('raised-tiles'),
     actions: [{
         action: 'area-alpha',
         lineOut: 'image-grid',
@@ -360,11 +346,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('raised-tiles'));
+
 
 // Blotchy color effect
+canvas = scrawl.findCanvas('canvas-8');
+namespace = canvas.name;
+
 scrawl.makeNoiseAsset({
 
-    name: 'blotch-effect',
+    name: name('blotch-effect'),
     width: 400,
     height: 400,
 
@@ -378,10 +370,10 @@ scrawl.makeNoiseAsset({
 
 scrawl.makeFilter({
 
-    name: 'blotches',
+    name: name('blotches'),
     actions: [{
         action: 'process-image',
-        asset: 'blotch-effect',
+        asset: name('blotch-effect'),
         width: '100%',
         height: '100%',
         copyWidth: '100%',
@@ -403,27 +395,27 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('blotches'));
+
 
 // Watermark effect
-canvas9.setBase({
-    compileOrder: 2,
-});
+canvas = scrawl.findCanvas('canvas-9');
+namespace = canvas.name;
 
-canvas9.buildCell({
+canvas.buildCell({
 
-    name: 'watermark-pattern-cell',
+    name: name('watermark-pattern-cell'),
     shown: false,
     dimensions: [200, 150],
-    useAsPattern: true,
     skewX: 0.2,
     skewY: -0.4,
-    compileOrder: 0,
 });
 
 scrawl.makeLabel({
 
-    name: 'watermark-text',
-    group: 'watermark-pattern-cell',
+    name: name('watermark-text'),
+    group: name('watermark-pattern-cell'),
     text: 'Scrawl-canvas',
     fontString: 'bold 20px Arial',
     start: ['center', 'center'],
@@ -436,9 +428,9 @@ scrawl.makeLabel({
     textIsAccessible: false,
 });
 
-canvas9.buildCell({
+canvas.buildCell({
 
-    name: 'watermark-display-cell',
+    name: name('watermark-display-cell'),
     shown: false,
     dimensions: ['100%', '100%'],
     compileOrder: 1,
@@ -446,18 +438,18 @@ canvas9.buildCell({
 
 scrawl.makeBlock({
 
-    name: 'watermark-block',
-    group: 'watermark-display-cell',
+    name: name('watermark-block'),
+    group: name('watermark-display-cell'),
     dimensions: ['100%', '100%'],
-    fillStyle: 'watermark-pattern-cell',
+    fillStyle: name('watermark-pattern-cell'),
 });
 
 scrawl.makeFilter({
 
-    name: 'watermark',
+    name: name('watermark'),
     actions: [{
         action: 'process-image',
-        asset: 'watermark-display-cell',
+        asset: name('watermark-display-cell'),
         width: '100%',
         height: '100%',
         copyWidth: '100%',
@@ -471,22 +463,24 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('watermark'));
+
 
 // Animated rays effect
-canvas10.buildCell({
+canvas = scrawl.findCanvas('canvas-10');
+namespace = canvas.name;
 
-    name: 'rays-cell',
+canvas.buildCell({
+
+    name: name('rays-cell'),
     shown: false,
     dimensions: ['100%', '100%'],
 });
 
-canvas10.setBase({
-    compileOrder: 1,
-});
-
 scrawl.makeConicGradient({
 
-    name: 'rays-filter',
+    name: name('rays-filter'),
     start: ['center', 'center'],
     colors: [
         [0, 'red'],
@@ -505,12 +499,12 @@ scrawl.makeConicGradient({
 
 scrawl.makeWheel({
 
-    name: 'ray-wheel',
-    group: 'rays-cell',
+    name: name('ray-wheel'),
+    group: name('rays-cell'),
     radius: '150%',
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    fillStyle: 'rays-filter',
+    fillStyle: name('rays-filter'),
     lockFillStyleToEntity: true,
     delta: {
         roll: 0.5,
@@ -519,10 +513,10 @@ scrawl.makeWheel({
 
 scrawl.makeFilter({
 
-    name: 'rays',
+    name: name('rays'),
     actions: [{
         action: 'process-image',
-        asset: 'rays-cell',
+        asset: name('rays-cell'),
         width: '100%',
         height: '100%',
         copyWidth: '100%',
@@ -535,11 +529,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('rays'));
+
 
 // Grayscale cathode ray tube
+canvas = scrawl.findCanvas('canvas-11');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'grayscale-crt',
+    name: name('grayscale-crt'),
     actions: [{
         action: 'area-alpha',
         tileWidth: 20,
@@ -560,11 +560,17 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('grayscale-crt'));
+
 
 // Color cathode ray tube
+canvas = scrawl.findCanvas('canvas-12');
+namespace = canvas.name;
+
 scrawl.makeFilter({
 
-    name: 'color-crt',
+    name: name('color-crt'),
     actions: [{
         action: 'area-alpha',
         tileWidth: 20,
@@ -583,10 +589,13 @@ scrawl.makeFilter({
     }],
 });
 
+/** @ts-expect-error */
+scrawl.findEntity(name('display')).addFilters(name('color-crt'));
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop([canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10, canvas11, canvas12], '#my-image-store', pictures);
+// We'll only add any user images to the first canvas, which contains an assets &lt;div> element
+addImageDragAndDrop(canvases, `#canvas-1 .assets`, pictures);
 
 
 // #### Development and testing

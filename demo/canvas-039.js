@@ -4,11 +4,16 @@
 // [Run code](../../demo/canvas-039.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create a second cell for the canvas
@@ -16,7 +21,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 // + We will also add entitys to the new Cell, and create a drag zone on it so those entitys can be dragged and dropped across the Cell.
 const mycell = canvas.buildCell({
 
-    name: 'test-cell',
+    name: name('test-cell'),
 
     width: 600,
     height: 400,
@@ -69,7 +74,7 @@ const setCursorTo = {
 // Create the drag group
 scrawl.makeGroup({
 
-    name: 'drag-group',
+    name: name('drag-group'),
     host: mycell,
     checkForEntityHover: true,
     onEntityHover: setCursorTo.pointer,
@@ -79,8 +84,8 @@ scrawl.makeGroup({
 // Create draggable entitys
 scrawl.makeWheel({
 
-    name: 'wheel-1',
-    group: 'drag-group',
+    name: name('wheel-1'),
+    group: name('drag-group'),
 
     radius: 40,
 
@@ -91,27 +96,27 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'wheel-2',
+    name: name('wheel-2'),
     start: [250, 250],
     fillStyle: 'blue',
 
 }).clone({
 
-    name: 'wheel-3',
+    name: name('wheel-3'),
     start: [350, 250],
     fillStyle: 'green',
 
 }).clone({
 
-    name: 'wheel-4',
+    name: name('wheel-4'),
     start: [350, 150],
     fillStyle: 'yellow',
 });
 
 scrawl.makeBlock({
 
-    name: 'block-1',
-    group: 'test-cell',
+    name: name('block-1'),
+    group: name('test-cell'),
 
     start: ['5%', '5%'],
     dimensions: ['90%', '90%'],
@@ -122,8 +127,8 @@ scrawl.makeBlock({
 
 scrawl.makeWheel({
 
-    name: 'mouse-wheel',
-    group: 'test-cell',
+    name: name('mouse-wheel'),
+    group: name('test-cell'),
 
     radius: 6,
     handle: ['center', 'center'],
@@ -154,12 +159,14 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: ('animation'),
     target: canvas,
 
     // Non-base Cells do not routinely update their local here object, has to be triggered manually
-    commence: () => mycell.updateHere(),
-    afterCompile: () => canvas.checkHover(),
+    commence: () => {
+        mycell.updateHere();
+        canvas.checkHover();
+    },
     afterShow: report,
 });
 
@@ -169,7 +176,7 @@ scrawl.makeRender({
 scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: 'drag-group',
+    collisionGroup: name('drag-group'),
     coordinateSource: mycell,
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
@@ -219,30 +226,20 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#start_x').value = 380;
-// @ts-expect-error
-document.querySelector('#start_y').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_x').value = 400;
-// @ts-expect-error
-document.querySelector('#handle_y').value = 200;
-// @ts-expect-error
-document.querySelector('#offset_x').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_y').value = 60;
-// @ts-expect-error
-document.querySelector('#roll').value = 120;
-// @ts-expect-error
-document.querySelector('#scale').value = 0.8;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#width').value = 600;
-// @ts-expect-error
-document.querySelector('#height').value = 400;
+initializeDomInputs([
+    ['input', 'start_x', '380'],
+    ['input', 'start_y', '200'],
+    ['input', 'handle_x', '400'],
+    ['input', 'handle_y', '200'],
+    ['input', 'offset_x', '0'],
+    ['input', 'offset_y', '60'],
+    ['input', 'roll', '120'],
+    ['input', 'scale', '0.8'],
+    ['input', 'width', '600'],
+    ['input', 'height', '400'],
+    ['select', 'upend', 1],
+    ['select', 'reverse', 0],
+]);
 
 
 // #### Development and testing

@@ -4,11 +4,17 @@
 // [Run code](../../demo/canvas-057.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Magic numbers
 const dimension = 600;
@@ -21,7 +27,7 @@ scrawl.importDomImage('.flowers');
 // We need a background image to act as the template on which we will draw
 const backgroundImage = scrawl.makePicture({
 
-    name: 'background',
+    name: name('background'),
     asset: 'iris',
     dimensions: [dimension, dimension],
     copyDimensions: ['100%', '100%'],
@@ -32,7 +38,7 @@ const backgroundImage = scrawl.makePicture({
 // We will use Perlin noise to determine brush stroke length and direction
 const noiseAsset = scrawl.makeNoiseAsset({
 
-    name: 'my-noise-generator',
+    name: name('my-noise-generator'),
     width: dimension,
     height: dimension,
     noiseEngine: 'improved-perlin',
@@ -43,7 +49,7 @@ const noiseAsset = scrawl.makeNoiseAsset({
 // We'll code up the painting effect in a RawAsset, which can then be used by Picture entitys, Pattern styles, and filters
 const impressionistAsset = scrawl.makeRawAsset({
 
-    name: 'pretend-van-gogh',
+    name: name('pretend-van-gogh'),
 
     userAttributes: [{
         // __lineWidth__, __lineLengthMultiplier__, __lineLengthStart__, __linesToAdd__, __lineBlend__, __lineOpacity__ - some brush attributes that we'll allow the user to modify in real time.
@@ -88,20 +94,22 @@ const impressionistAsset = scrawl.makeRawAsset({
         // __background__ - a handle to our background Picture entity, from which we will be extracting color values
         key: 'background',
         defaultValue: false,
+
         setter: function (item) {
-// @ts-expect-error
+/** @ts-expect-error */
             this.background = item;
-// @ts-expect-error
+/** @ts-expect-error */
             this.dirtyBackground = true;
         },
     },{
         // __noise__ - a handle to our Noise asset, from which we will be extracting brushstroke direction and length data
         key: 'noise',
         defaultValue: false,
+
         setter: function (item) {
-// @ts-expect-error
+/** @ts-expect-error */
             this.noise = item;
-// @ts-expect-error
+/** @ts-expect-error */
             this.dirtyData = true;
         },
     },{
@@ -109,15 +117,16 @@ const impressionistAsset = scrawl.makeRawAsset({
         // + It's at this point that we fill the RawAsset canvas with the background image, if required
         key: 'trigger',
         defaultValue: false,
+
         setter: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
             if (this.dirtyBackground) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.dirtyBackground = false;
 
-// @ts-expect-error
+/** @ts-expect-error */
                 const { element, engine, canvasWidth, canvasHeight, background } = this;
 
                 element.width = canvasWidth;
@@ -133,16 +142,16 @@ const impressionistAsset = scrawl.makeRawAsset({
                     // + the reason why we're NOT doing it that way at the moment is to keep RawAsset canvases out of the SC library
                     engine.drawImage(background.source, ...background.copyArray, ...background.pasteArray);
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.backgroundData = engine.getImageData(0, 0, dimension, dimension);
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.dirtyData = true;
                 }
-// @ts-expect-error
+/** @ts-expect-error */
                 else this.dirtyBackground = true;
             }
-// @ts-expect-error
+/** @ts-expect-error */
             else this.dirtyData = true;
         },
     }],
@@ -203,7 +212,8 @@ const impressionistAsset = scrawl.makeRawAsset({
 
                     engine.beginPath();
                     engine.moveTo(x, y);
-// @ts-expect-error
+
+/** @ts-expect-error */
                     engine.lineTo(x + dx, y + dy);
                     engine.stroke();
                 }
@@ -219,14 +229,14 @@ impressionistAsset.set({
 });
 
 scrawl.makePicture({
-    name: 'noise-image',
-    asset: 'my-noise-generator',
+    name: name('noise-image'),
+    asset: name('my-noise-generator'),
     method: 'none',
 });
 
 scrawl.makePicture({
-    name: 'display-image',
-    asset: 'pretend-van-gogh',
+    name: name('display-image'),
+    asset: name('pretend-van-gogh'),
     dimensions: [dimension, dimension],
     copyDimensions: ['100%', '100%'],
 });
@@ -240,7 +250,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
 
     // We need to trigger the RawAsset object to update its output at the start of each Display cycle
@@ -252,6 +262,7 @@ scrawl.makeRender({
 
 // #### Drag-and-Drop image loading functionality
 addImageDragAndDrop(
+
     canvas,
     '#my-image-store',
     backgroundImage,
@@ -307,28 +318,19 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#lineBlend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#lineWidth').value = 4;
-// @ts-expect-error
-document.querySelector('#lineLengthMultiplier').value = 20;
-// @ts-expect-error
-document.querySelector('#lineLengthStart').value = 5;
-// @ts-expect-error
-document.querySelector('#linesToAdd').value = 50;
-// @ts-expect-error
-document.querySelector('#lineOpacity').value = 1;
-// @ts-expect-error
-document.querySelector('#noiseScale').value = 80;
-// @ts-expect-error
-document.querySelector('#offsetX').value = 0;
-// @ts-expect-error
-document.querySelector('#offsetY').value = 0;
-// @ts-expect-error
-document.querySelector('#rotationMultiplier').value = 90;
-// @ts-expect-error
-document.querySelector('#rotationStart').value = 0;
+initializeDomInputs([
+    ['input', 'lineWidth', '4'],
+    ['input', 'lineLengthMultiplier', '20'],
+    ['input', 'lineLengthStart', '5'],
+    ['input', 'linesToAdd', '50'],
+    ['input', 'lineOpacity', '1'],
+    ['input', 'noiseScale', '80'],
+    ['input', 'offsetX', '0'],
+    ['input', 'offsetY', '0'],
+    ['input', 'rotationMultiplier', '90'],
+    ['input', 'rotationStart', '0'],
+    ['select', 'lineBlend', 0],
+]);
 
 
 // #### Video recording and download functionality
@@ -339,6 +341,7 @@ let myRecorder;
 let recordedChunks;
 
 videoButton.addEventListener("click", () => {
+
     recording = !recording;
 
     if (recording) {

@@ -4,20 +4,21 @@
 // [Run code](../../demo/canvas-208.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 const westernText = '<span class="underline">Lorem</span> ipsum <b>dolor sit</b> amet, con&shy;sectetur 😀 adi&shy;piscing &eacute;lit, sed <s>do eius-mod</s> <u>tempoj yn&shy;figizqunt</u> ut <span class="stamp-outlined">labore et dolore</span> <span class="green-highlight">magna aliqua.</span> Ut enim ad <span class="bold">minim veniam,</span> quis <span class="letter-spaced">nostrud</span> exercit-ation <span class="strike">ullamco laboris</span> nisi ut aliquip ex ea <span class="make-monospace">"commodo"</span> consequat. Duis <em>(aute irure d&ouml;lor)</em> in reprehenderit 🤖&icirc;n <i>voluptate</i> velit &copy;2024 <i>esse &lt;cillum&gt; <b>dolore</b> eu fug🎻iat nulla</i> pariatur. <span class="red">Excepteur sint</span> occaecat &iexcl;cupidatat! <strong>non proident,</strong> <span class="word-spaced">sunt in culpa qui</span> offici&thorn;a deserunt <span class="make-bigger"><span class="green-highlight">mollit</span> anim</span> id est laborum.';
+
 
 scrawl.makeSpiral({
     name: name('spiral-track'),
@@ -51,11 +52,6 @@ const mylabel = scrawl.makeEnhancedLabel({
 });
 
 
-
-
-// #### User interaction
-
-
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
@@ -81,7 +77,96 @@ scrawl.makeRender({
 
 
 // #### User interaction
-const animationSelector = document.querySelector('#animation');
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'alignment', '0'],
+    ['input', 'handle_xAbsolute', '100'],
+    ['input', 'handle_xPercent', '50'],
+    ['input', 'handle_yAbsolute', '100'],
+    ['input', 'handle_yPercent', '50'],
+    ['input', 'letterSpacing', '0'],
+    ['input', 'offset_xAbsolute', '0'],
+    ['input', 'offset_xPercent', '0'],
+    ['input', 'offset_yAbsolute', '0'],
+    ['input', 'offset_yPercent', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'start_xAbsolute', '300'],
+    ['input', 'start_xPercent', '50'],
+    ['input', 'start_yAbsolute', '200'],
+    ['input', 'start_yPercent', '50'],
+    ['input', 'wordSpacing', '0'],
+    ['select', 'alignTextUnitsToPath', 1],
+    ['select', 'animation', 0],
+    ['select', 'breakTextOnSpaces', 1],
+    ['select', 'flipReverse', 0],
+    ['select', 'flipUpend', 0],
+    ['select', 'font', 0],
+    ['select', 'handle_xString', 1],
+    ['select', 'handle_yString', 1],
+    ['select', 'start_xString', 1],
+    ['select', 'start_yString', 1],
+    ['select', 'textHandleX', 1],
+    ['select', 'textHandleY', 4],
+    ['select', 'textUnitFlow', 0],
+]);
+
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: mylabel,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        start_xPercent: ['startX', '%'],
+        start_xAbsolute: ['startX', 'round'],
+        start_xString: ['startX', 'raw'],
+
+        start_yPercent: ['startY', '%'],
+        start_yAbsolute: ['startY', 'round'],
+        start_yString: ['startY', 'raw'],
+
+        handle_xPercent: ['handleX', '%'],
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_xString: ['handleX', 'raw'],
+
+        handle_yPercent: ['handleY', '%'],
+        handle_yAbsolute: ['handleY', 'round'],
+        handle_yString: ['handleY', 'raw'],
+
+        offset_xPercent: ['offsetX', '%'],
+        offset_xAbsolute: ['offsetX', 'round'],
+
+        offset_yPercent: ['offsetY', '%'],
+        offset_yAbsolute: ['offsetY', 'round'],
+
+        letterSpacing: ['letterSpacing', 'px'],
+        wordSpacing: ['wordSpacing', 'px'],
+
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+
+        textHandleX: ['textHandleX', 'raw'],
+        textHandleY: ['textHandleY', 'raw'],
+
+        textUnitFlow: ['textUnitFlow', 'raw'],
+
+        alignment: ['alignment', 'float'],
+
+        alignTextUnitsToPath: ['alignTextUnitsToPath', 'boolean'],
+        breakTextOnSpaces: ['breakTextOnSpaces', 'boolean'],
+
+        flipReverse: ['flipReverse', 'boolean'],
+        flipUpend: ['flipUpend', 'boolean'],
+    },
+});
+
 
 const updateAnimation = (event) => {
 
@@ -90,11 +175,8 @@ const updateAnimation = (event) => {
     if (val) mylabel.set({ noDeltaUpdates: false });
     else mylabel.set({ noDeltaUpdates: true });
 };
-scrawl.addNativeListener('change', (e) => updateAnimation(e), animationSelector);
+scrawl.addNativeListener('change', (e) => updateAnimation(e), dom.animation);
 
-
-const breakTextOnSpacesSelector = document.querySelector('#breakTextOnSpaces');
-const fontSelector = document.querySelector('#font');
 
 const updateFont = (event) => {
 
@@ -392,130 +474,9 @@ const updateFont = (event) => {
                 });
         }
     }
-// @ts-expect-error
-    breakTextOnSpacesSelector.options.selectedIndex = (mylabel.get('breakTextOnSpaces')) ? 1 : 0;
+    dom.breakTextOnSpaces.options.selectedIndex = (mylabel.get('breakTextOnSpaces')) ? 1 : 0;
 };
-scrawl.addNativeListener('change', (e) => updateFont(e), fontSelector);
-
-
-scrawl.makeUpdater({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: mylabel,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        start_xPercent: ['startX', '%'],
-        start_xAbsolute: ['startX', 'round'],
-        start_xString: ['startX', 'raw'],
-
-        start_yPercent: ['startY', '%'],
-        start_yAbsolute: ['startY', 'round'],
-        start_yString: ['startY', 'raw'],
-
-        handle_xPercent: ['handleX', '%'],
-        handle_xAbsolute: ['handleX', 'round'],
-        handle_xString: ['handleX', 'raw'],
-
-        handle_yPercent: ['handleY', '%'],
-        handle_yAbsolute: ['handleY', 'round'],
-        handle_yString: ['handleY', 'raw'],
-
-        offset_xPercent: ['offsetX', '%'],
-        offset_xAbsolute: ['offsetX', 'round'],
-
-        offset_yPercent: ['offsetY', '%'],
-        offset_yAbsolute: ['offsetY', 'round'],
-
-        letterSpacing: ['letterSpacing', 'px'],
-        wordSpacing: ['wordSpacing', 'px'],
-
-        roll: ['roll', 'float'],
-        scale: ['scale', 'float'],
-
-        textHandleX: ['textHandleX', 'raw'],
-        textHandleY: ['textHandleY', 'raw'],
-
-        textUnitFlow: ['textUnitFlow', 'raw'],
-
-        alignment: ['alignment', 'float'],
-
-        alignTextUnitsToPath: ['alignTextUnitsToPath', 'boolean'],
-        breakTextOnSpaces: ['breakTextOnSpaces', 'boolean'],
-
-        flipReverse: ['flipReverse', 'boolean'],
-        flipUpend: ['flipUpend', 'boolean'],
-    },
-});
-
-
-// Setup form
-// @ts-expect-error
-fontSelector.options.selectedIndex = 0;
-// @ts-expect-error
-animationSelector.options.selectedIndex = 0;
-// @ts-expect-error
-breakTextOnSpacesSelector.options.selectedIndex = 1;
-
-// @ts-expect-error
-document.querySelector('#start_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#offset_xPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_xAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#textHandleX').options.selectedIndex = 2;
-// @ts-expect-error
-document.querySelector('#textHandleY').options.selectedIndex = 4;
-// @ts-expect-error
-document.querySelector('#alignment').value = 0;
-// @ts-expect-error
-document.querySelector('#flipReverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#flipUpend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#alignTextUnitsToPath').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#textUnitFlow').options.selectedIndex = 0;
+scrawl.addNativeListener('change', (e) => updateFont(e), dom.font);
 
 
 // #### Development and testing

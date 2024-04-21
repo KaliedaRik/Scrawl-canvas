@@ -8,81 +8,82 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
-canvas.set({
 
-    includeInTabNavigation: true,
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
-}).setBase({
-    // The base Cell needs to compile after the other Cells
-    compileOrder: 2
-});
+
+// Accessibility
+canvas.set({ includeInTabNavigation: true });
+
 
 // Magic numbers
 const mainDimensions = 1600;
 const mapDimensions = 200;
 const mainMapRatio = mainDimensions / mapDimensions;
 
-let [displayWidth, displayHeight] = canvas.get("dimensions");
+let [displayWidth, displayHeight] = canvas.get('dimensions');
 let frameWidth = (displayWidth / mainDimensions) * mapDimensions;
 let frameHeight = (displayHeight / mainDimensions) * mapDimensions;
+
 
 // Build out the large Cell (1600px x 1600px)
 // - we don't actually display this Cell
 const mainCell = canvas.buildCell({
 
-    name: "main-cell",
+    name: name('main-cell'),
     dimensions: [mainDimensions, mainDimensions],
     shown: false,
-    compileOrder: 0,
-    backgroundColor: "ivory"
+    backgroundColor: 'ivory',
 });
 
 // Populate the large Cell with some shapes
 const myColorFactory = scrawl.makeColor({
 
-    name: "my-color-factory",
-    minimumColor: "orange",
-    maximumColor: "green"
+    name: name('my-color-factory'),
+    minimumColor: 'orange',
+    maximumColor: 'green',
 });
 
 scrawl.makeGroup({
 
-    name: "my-circle-group",
-    host: mainCell.name
+    name: name('my-circle-group'),
+    host: mainCell,
 });
 
 for (let i = 0; i < 50; i++) {
 
     scrawl.makeWheel({
 
-        name: `just-a-wheel-${i}`,
-        group: "my-circle-group",
+        name: name(`just-a-wheel-${i}`),
+        group: name('my-circle-group'),
         startX: 50 + Math.random() * (mainDimensions - 100),
         startY: 50 + Math.random() * (mainDimensions - 100),
         radius: 20 + Math.random() * 30,
         fillStyle: myColorFactory.getRangeColor(Math.random()),
-        method: "fillThenDraw"
+        method: 'fillThenDraw'
     });
 }
 
 // Display the large Cell in the base Cell
 const mainCellPicture = scrawl.makePicture({
 
-    name: "main-cell-picture",
-    group: canvas.base.name,
-    asset: "main-cell",
+    name: name('main-cell-picture'),
+    group: canvas.get('baseGroup'),
+    asset: name('main-cell'),
     dimensions: [displayWidth, displayHeight],
-    copyDimensions: [displayWidth, displayHeight]
+    copyDimensions: [displayWidth, displayHeight],
 });
 
 // Functionality to enable drag-drop on main Cell
 scrawl.makeDragZone({
     zone: canvas,
-    collisionGroup: "my-circle-group",
+    collisionGroup: name('my-circle-group'),
     coordinateSource: mainCell,
-    endOn: ["up", "leave"],
+    endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
     processingOrder: 2,
 });
@@ -92,70 +93,71 @@ scrawl.makeDragZone({
 // - it will be draggable too
 scrawl.makeGroup({
 
-    name: "map-pivot-group",
-    host: canvas.base.name
+    name: name('map-pivot-group'),
+    host: canvas.getBase(),
 });
 
 const myMapPivot = scrawl.makeBlock({
 
-    name: "map-pivot",
-    group: "map-pivot-group",
+    name: name('map-pivot'),
+    group: name('map-pivot-group'),
     start: [displayWidth - mapDimensions, 0],
     dimensions: [mapDimensions, mapDimensions],
-    method: "none"
+    method: 'none',
 });
 
 // Functionality so we can drag-drop the map Cell around the base Cell
 scrawl.makeDragZone({
+
     zone: canvas,
-    collisionGroup: "map-pivot-group",
-    coordinateSource: canvas.base,
-    endOn: ["up", "leave"],
+    collisionGroup: name('map-pivot-group'),
+    coordinateSource: canvas.getBase(),
+    endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
     processingOrder: 1,
 });
 
 const mapCell = canvas.buildCell({
 
-    name: "map-cell",
+    name: name('map-cell'),
     dimensions: [mapDimensions, mapDimensions],
     // We pivot the map Cell to the draggable Block entity
     // - wherever the Block goes, the map Cell will follow
-    pivot: "map-pivot",
-    lockTo: "pivot",
-    backgroundColor: "white",
+    pivot: name('map-pivot'),
+    lockTo: 'pivot',
+    backgroundColor: 'white',
     // The map Cell needs to compile after the large Cell
-    compileOrder: 1
+    compileOrder: 1,
 });
 
 // Now we can copy the large Cell into the map Cell
 scrawl.makePicture({
 
-    name: "map-cell-picture",
-    group: "map-cell",
-    asset: "main-cell",
-    dimensions: ["100%", "100%"],
-    copyDimensions: ["100%", "100%"],
+    name: name('map-cell-picture'),
+    group: name('map-cell'),
+    asset: name('main-cell'),
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
     lineWidth: 4,
-    method: "fillThenDraw",
-    globalAlpha: 0.5
+    method: 'fillThenDraw',
+    globalAlpha: 0.5,
 });
 
 // Add the draggable map frame
 scrawl.makeGroup({
 
-    name: "my-frame-group",
-    host: mapCell.name
+    name: name('my-frame-group'),
+    host: mapCell,
 });
 
 const frame = scrawl.makeBlock({
 
-    name: "my-frame",
-    group: "my-frame-group",
+    name: name('my-frame'),
+    group: name('my-frame-group'),
     dimensions: [frameWidth, frameHeight],
-    strokeStyle: "red",
+    strokeStyle: 'red',
     lineWidth: 2,
-    method: "draw"
+    method: 'draw',
 });
 
 // Functionality so we can drag-drop the frame around the map Cell
@@ -163,7 +165,7 @@ const checkFrameDrag = () => {
 
     if (frameDragZone()) {
 
-        const [x, y] = frame.get("position");
+        const [x, y] = frame.get('position');
 
         const newX = x * mainMapRatio,
         newY = y * mainMapRatio;
@@ -171,13 +173,13 @@ const checkFrameDrag = () => {
         // Adjust the position of the Picture wrt to the frame in the map
         mainCellPicture.set({
             copyStartX: newX,
-            copyStartY: newY
+            copyStartY: newY,
         });
 
         // Adjust the position of the large Cell wrt the base Cell
         mainCell.set({
             startX: -newX,
-            startY: -newY
+            startY: -newY,
         });
     }
 };
@@ -185,9 +187,9 @@ const checkFrameDrag = () => {
 const frameDragZone = scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: "my-frame-group",
+    collisionGroup: name('my-frame-group'),
     coordinateSource: mapCell,
-    endOn: ["up", "leave"],
+    endOn: ['up', 'leave'],
     updateWhileMoving: checkFrameDrag,
     preventTouchDefaultWhenDragging: true,
     exposeCurrentArtefact: true,
@@ -198,18 +200,18 @@ const frameDragZone = scrawl.makeDragZone({
 // Add a label to the map Cell
 scrawl.makeLabel({
 
-    name: "map-label",
-    group: "map-cell",
-    text: "Minimap (draggable)",
-    fontString: "16px Arial, sans-serif",
-    start: ["center", 10],
-    handle: ["center", 0]
+    name: name('map-label'),
+    group: name('map-cell'),
+    text: 'Minimap (draggable)',
+    fontString: '16px Arial, sans-serif',
+    start: ['center', 10],
+    handle: ['center', 0],
 });
 
 // #### Scene animation
 const checkForChanges = () => {
 
-    const [w, h] = canvas.get("dimensions");
+    const [w, h] = canvas.get('dimensions');
 
     if (w !== displayWidth || h !== displayHeight) {
 
@@ -270,13 +272,13 @@ const moveFrame = (direction) => {
     // Adjust the position of the Picture wrt to the frame in the map
     mainCellPicture.set({
         copyStartX: newX,
-        copyStartY: newY
+        copyStartY: newY,
     });
 
     // Adjust the position of the large Cell wrt the base Cell
     mainCell.set({
         startX: -newX,
-        startY: -newY
+        startY: -newY,
     });
 };
 
@@ -342,10 +344,11 @@ scrawl.addNativeListener('keydown', canvasKeys, canvas.domElement);
 const report = reportSpeed('#reportmessage');
 
 
+// #### Scene animation
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     commence: checkForChanges,
     afterShow: report,

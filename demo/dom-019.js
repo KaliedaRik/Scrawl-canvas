@@ -4,36 +4,51 @@
 // [Run code](../../demo/dom-019.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Create demo filters
 scrawl.makeFilter({
-    name: 'grayscale',
+
+    name: name('grayscale'),
     method: 'grayscale',
+
 }).clone({
-    name: 'sepia',
+
+    name: name('sepia'),
     method: 'sepia',
+
 }).clone({
-    name: 'invert',
+
+    name: name('invert'),
     method: 'invert',
+
 }).clone({
-    name: 'red',
+
+    name: name('red'),
     method: 'red',
 });
 
 scrawl.makeFilter({
-    name: 'pixelate',
+
+    name: name('pixelate'),
     method: 'pixelate',
     tileWidth: 4,
     tileHeight: 4,
 });
 
 scrawl.makeFilter({
-    name: 'background-blur',
+
+    name: name('background-blur'),
     method: 'gaussianBlur',
     radius: 2,
 });
@@ -42,21 +57,25 @@ scrawl.makeFilter({
 let myBackground;
 
 // Capture the media stream
+// + Function invoked when user clicks a button (set up below)
 const requestScreenCapture = () => {
 
     console.log('attempting to capture screen');
 
     scrawl.importScreenCapture({
-        name: 'my-screen-capture',
+        name: name('my-screen-capture'),
+        audio: {
+            suppressLocalAudioPlayback: true,
+        },
     })
     .then(mycamera => {
 
-        requestButton.setAttribute('disabled', '');
+        dom.screen_request_button.setAttribute('disabled', '');
 
         // Take the media stream and display it in our canvas element
         myBackground = scrawl.makePicture({
 
-            name: 'background',
+            name: name('background'),
             asset: mycamera.name,
             order: 2,
 
@@ -68,14 +87,10 @@ const requestScreenCapture = () => {
     })
     .catch(err => {
 
-        requestButton.removeAttribute('disabled');
         console.log(err.message);
+        dom.screen_request_button.removeAttribute('disabled');
     });
 };
-
-// Attach the screen capture function to the button
-const requestButton = document.querySelector('#screen-request-button');
-scrawl.addNativeListener('click', requestScreenCapture, requestButton);
 
 
 // #### Scene animation
@@ -86,38 +101,42 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+const dom = initializeDomInputs([
+    ['select', 'backgroundFilter', 0],
+    ['button', 'screen_request_button', 'Request screen capture'],
+]);
+
+
 // Event listeners
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
-    e.preventDefault();
-    e.returnValue = false;
-
     if (e && e.target) {
 
-        const id = e.target.id,
-            val = e.target.value;
+        e.preventDefault();
+        e.returnValue = false;
 
-        if (myBackground && 'backgroundFilter' === id) {
+        if (myBackground) {
+
+            const val = e.target.value;
 
             myBackground.clearFilters();
 
-            if (val) myBackground.addFilters(val);
+            if (val) myBackground.addFilters(name(val));
         }
     }
-}, '.controlItem');
+}, dom.backgroundFilter);
 
-// Set DOM form initial input values
-// @ts-expect-error
-document.querySelector('#backgroundFilter').value = '';
+
+// Attach the screen capture function to the button
+scrawl.addNativeListener('click', requestScreenCapture, dom.screen_request_button);
 
 
 // #### Development and testing
 console.log(scrawl.library);
-

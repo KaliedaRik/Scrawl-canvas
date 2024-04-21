@@ -177,8 +177,10 @@ scrawl.makeUpdater({
         composite: ['globalCompositeOperation', 'raw'],
     },
 });
-// @ts-expect-error
-document.querySelector('#composite').value = 'destination-over';
+
+/** @type {HTMLSelectElement} */
+const S = document.querySelector('#composite');
+S.options.selectedIndex = 4;
 
 
 // #### Development and testing

@@ -4,16 +4,16 @@
 // [Run code](../../demo/dom-002.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-// Create some useful variables for use elsewhere in the script
-const artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    element = artefact.myelement,
-    mimic = artefact.mymimic,
-    pivot = artefact.mypivot;
+const stack = scrawl.findStack('mystack');
+
+
+// Namespacing boilerplate
+const namespace = stack.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Give the stack element some depth
@@ -23,6 +23,7 @@ stack.set({
 
 
 // Setup the main element
+const element = scrawl.findElement('myelement');
 element.set({
     startX: 250,
     startY: 250,
@@ -37,6 +38,7 @@ element.set({
 
 
 // Setup the mimic element
+const mimic = scrawl.findElement('mymimic');
 mimic.set({
     width: 20,
     height: 20,
@@ -67,6 +69,7 @@ mimic.set({
 
 
 // Setup the pivot element
+const pivot = scrawl.findElement('mypivot');
 pivot.set({
     pivot: 'myelement',
     lockTo: 'pivot',
@@ -100,6 +103,7 @@ const report = reportSpeed('#reportmessage', function () {
     const [startX, startY] = element.start;
     const [handleX, handleY] = element.handle;
 
+/** @ts-expect-error */
     const lockTo = element.lockTo.join(', ');
 
     const {roll, pitch, yaw, scale} = element;
@@ -116,7 +120,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: stack,
     commence: stackCheck,
     afterShow: report,
@@ -124,6 +128,35 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// Housekeeping - set the DOM input values to their starting values on each page reload
+initializeDomInputs([
+    ['input', 'dims_widthPercent', '50'],
+    ['input', 'dims_heightPercent', '50'],
+    ['input', 'dims_widthAbsolute', '250'],
+    ['input', 'dims_heightAbsolute', '250'],
+    ['input', 'start_xPercent', '50'],
+    ['input', 'start_yPercent', '50'],
+    ['input', 'start_xAbsolute', '250'],
+    ['input', 'start_yAbsolute', '250'],
+    ['input', 'handle_xPercent', '50'],
+    ['input', 'handle_yPercent', '50'],
+    ['input', 'handle_xAbsolute', '125'],
+    ['input', 'handle_yAbsolute', '125'],
+    ['input', 'roll', '10'],
+    ['input', 'pitch', '20'],
+    ['input', 'yaw', '30'],
+    ['input', 'scale', '1'],
+    ['input', 'mimic_dims', '10'],
+    ['select', 'start_xString', 1],
+    ['select', 'start_yString', 1],
+    ['select', 'handle_xString', 1],
+    ['select', 'handle_yString', 1],
+    ['select', 'pivot_handle', 0],
+    ['select', 'pivot_rotation', 0],
+    ['select', 'mimic_rotation', 0],
+]);
+
+
 // For this demo we will suppress touchmove functionality over the canvas; we also need to disable Android magnification gesture - this is done in CSS with `touch-action: none;` - note: dragging issue does not affect Demo DOM-008
 scrawl.addNativeListener(['touchmove'], (e) => {
 
@@ -193,6 +226,7 @@ scrawl.makeUpdater({
     },
 });
 
+
 // Using the Scrawl-canvas listener functions directly, in this case because we want to update more than one attribute in a single set action, which the makeUpdater function cannot do (because: too much of an edge case to handle)
 const events = (e) => {
 
@@ -216,57 +250,6 @@ const events = (e) => {
     }
 };
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
-
-
-// Housekeeping - set the DOM input values to their starting values on each page reload
-// @ts-expect-error
-document.querySelector('#dims_widthPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#dims_heightPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#dims_widthAbsolute').value = 250;
-// @ts-expect-error
-document.querySelector('#dims_heightAbsolute').value = 250;
-// @ts-expect-error
-document.querySelector('#start_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_xAbsolute').value = 250;
-// @ts-expect-error
-document.querySelector('#start_yAbsolute').value = 250;
-// @ts-expect-error
-document.querySelector('#start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 125;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 125;
-// @ts-expect-error
-document.querySelector('#handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 10;
-// @ts-expect-error
-document.querySelector('#pitch').value = 20;
-// @ts-expect-error
-document.querySelector('#yaw').value = 30;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#pivot_handle').value = 0;
-// @ts-expect-error
-document.querySelector('#pivot_rotation').value = 0;
-// @ts-expect-error
-document.querySelector('#mimic_dims').value = 10;
-// @ts-expect-error
-document.querySelector('#mimic_rotation').value = 0;
 
 
 // #### Development and testing

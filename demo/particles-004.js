@@ -8,99 +8,93 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // #### Particle physics animation scene
-
 // Create a World object which we can then assign to the particle emitter
 const myWorld = scrawl.makeWorld({
 
-    name: 'demo-world',
+    name: name('my-world'),
     tickMultiplier: 2,
 });
 
 
 // #### User-controlled bezier curve with star emitter along its length
-
 // Pins to control the shape of the bezier
 scrawl.makeWheel({
 
-    name: 'pin-1',
+    name: name('pin-1'),
     order: 2,
-
-    startX: 75,
-    startY: 200,
-
-    handleX: 'center',
-    handleY: 'center',
-
+    start: [75, 200],
+    handle: ['center', 'center'],
     radius: 10,
-    fillStyle: 'blue',
+    fillStyle: 'green',
     strokeStyle: 'darkgray',
     lineWidth: 2,
     method: 'fillAndDraw',
 
 }).clone({
-    name: 'pin-2',
+
+    name: name('pin-2'),
     startX: 225,
 
 }).clone({
-    name: 'pin-3',
+
+    name: name('pin-3'),
     startX: 375,
 
 }).clone({
-    name: 'pin-4',
+
+    name: name('pin-4'),
     startX: 525,
 });
 
 // A group to help manage pin drag-and-drop functionality
 const pins = scrawl.makeGroup({
 
-    name: 'my-pins',
+    name: name('my-pins'),
 
-}).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4');
+}).addArtefacts(name('pin-1'), name('pin-2'), name('pin-3'), name('pin-4'));
 
 // Bezier curve using pins as its control points
 scrawl.makeBezier({
 
-    name: 'my-bezier',
+    name: name('my-bezier'),
 
-    pivot: 'pin-1',
+    pivot: name('pin-1'),
     lockTo: 'pivot',
-    // start: [75, 200],
     useStartAsControlPoint: true,
 
-    startControlPivot: 'pin-2',
+    startControlPivot: name('pin-2'),
     startControlLockTo: 'pivot',
 
-    endControlPivot: 'pin-3',
+    endControlPivot: name('pin-3'),
     endControlLockTo: 'pivot',
 
-    endPivot: 'pin-4',
+    endPivot: name('pin-4'),
     endLockTo: 'pivot',
 
     method: 'draw',
-
     useAsPath: true,
 });
 
 // Star entity template
 const stars = scrawl.makeStar({
 
-    name: 'particle-star-template',
-
+    name: name('star'),
     radius1: 6,
     radius2: 4,
-
     points: 5,
-
     handle: ['center', 'center'],
-
     fillStyle: 'gold',
     method: 'fillThenDraw',
     visibility: false,
-
     noUserInteraction: true,
     noPositionDependencies: true,
     noFilters: true,
@@ -110,16 +104,19 @@ const stars = scrawl.makeStar({
 // Particle Emitter entity using the bezier curve as its emission line
 const emitter = scrawl.makeEmitter({
 
-    name: 'emitter-1',
+    name: name('emitter-1'),
     world: myWorld,
 
     generationRate: 20,
     killAfterTime: 5,
 
     // We tell the Emitter to generate its particles along our curve by setting its `generateAlongPath` attribute to the Bezier entity's String name, or the entity object itself.
-    generateAlongPath: 'my-bezier',
+    generateAlongPath: name('my-bezier'),
 
-    artefact: stars.clone({ name: 'stars-1' }),
+    artefact: stars.clone({
+
+        name: name('stars-1'),
+    }),
 
     stampAction: function (artefact, particle, host) {
 
@@ -146,7 +143,7 @@ const emitter = scrawl.makeEmitter({
 // Static line
 scrawl.makeLine({
 
-    name: 'line-1',
+    name: name('my-line'),
     start: [50, 50],
     end: [550, 50],
     strokeStyle: 'green',
@@ -157,19 +154,20 @@ scrawl.makeLine({
 
 emitter.clone({
 
-    name: 'emitter-2',
+    name: name('emitter-2'),
     artefact: stars.clone({
+
         name: 'stars-2',
         fillStyle: 'red',
     }),
-    generateAlongPath: 'line-1',
+    generateAlongPath: name('my-line'),
 });
 
 
 // Static oval
 scrawl.makeOval({
 
-    name: 'oval-1',
+    name: name('my-oval'),
     start: ['center', 320],
     handle: ['center', 'center'],
     radiusX: 90,
@@ -181,22 +179,21 @@ scrawl.makeOval({
 
 emitter.clone({
 
-    name: 'emitter-3',
+    name: name('emitter-3'),
     artefact: stars.clone({
-        name: 'stars-3',
+
+        name: name('stars-3'),
         fillStyle: 'blue',
     }),
-    generateAlongPath: 'oval-1',
+    generateAlongPath: name('my-oval'),
 });
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const particlenames = scrawl.library.particlenames,
-    particle = scrawl.library.particle;
+const { particlenames, particle } = scrawl.library;
 
 const report = reportSpeed('#reportmessage', function () {
 
-    // ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle
     let historyCount = 0;
     particlenames.forEach(n => {
 
@@ -204,7 +201,8 @@ const report = reportSpeed('#reportmessage', function () {
         if (p) historyCount += p.history.length;
     });
 
-    return `    Particles: ${particlenames.length}
+    return `
+    Particles: ${particlenames.length}
     Stamps per display: ${historyCount}`;
 });
 
@@ -212,14 +210,13 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
-// + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeDragZone({
 
     zone: canvas,

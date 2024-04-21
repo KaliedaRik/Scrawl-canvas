@@ -10,9 +10,25 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    canvas {
-      margin: 1em auto;
-      box-shadow: 0px 0px 0px 1px black;
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+          text-align: center;
+          width: 600px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+      }
     }
   </style>
 </head>
@@ -25,15 +41,24 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 001</h1>
   <h2>Block and wheel entitys (make, clone, method)<br />Drag and drop block and wheel entitys</h2>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="600"
-    data-scrawl-canvas
-    data-base-background-color="aliceblue"
-  ></canvas>
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="600"
+      data-scrawl-canvas
+      data-base-background-color="aliceblue"
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/canvas-001.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+    </canvas>
+  </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

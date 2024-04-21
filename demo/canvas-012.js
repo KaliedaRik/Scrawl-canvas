@@ -4,11 +4,11 @@
 // [Run code](../../demo/canvas-012.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
@@ -16,8 +16,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 // + In particular, namespacing SC objects names helps make clearing them up after we've finished with them a lot easier!
 // + For this test demo, we forgo names and namespaces to make sure things still get generated and lodged in the library
 
-const namespace = 'demo';
-/* eslint-disable-next-line */
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -73,6 +72,7 @@ scrawl.makeWheel({
 // Create the Wheel entitys that will use the arrow as their path
 // + This Wheel is a template from which we clone the other Wheels
 const beads = scrawl.makeGroup({
+
     name: name('beads-group'),
     host: canvas.base,
 });
@@ -134,7 +134,8 @@ const report = reportSpeed('#reportmessage', function () {
 
     const {roll, scale, length} = arrow;
 
-    return `    Arrow path length: ${length}
+    return `
+    Arrow path length: ${length}
     Start - x: ${startX}, y: ${startY}
     Handle - x: ${handleX}, y: ${handleY}
     Offset - x: ${offsetX}, y: ${offsetY}
@@ -145,6 +146,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -200,47 +202,30 @@ scrawl.makeUpdater({
     },
 });
 
+
 // Setup form
-// @ts-expect-error
-document.querySelector('#start_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#offset_xPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_xAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 0.2;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
+initializeDomInputs([
+    ['input', 'handle_xAbsolute', '100'],
+    ['input', 'handle_xPercent', '50'],
+    ['input', 'handle_yAbsolute', '100'],
+    ['input', 'handle_yPercent', '50'],
+    ['input', 'offset_xAbsolute', '0'],
+    ['input', 'offset_xPercent', '0'],
+    ['input', 'offset_yAbsolute', '0'],
+    ['input', 'offset_yPercent', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '0.2'],
+    ['input', 'start_xAbsolute', '300'],
+    ['input', 'start_xPercent', '50'],
+    ['input', 'start_yAbsolute', '200'],
+    ['input', 'start_yPercent', '50'],
+    ['select', 'handle_xString', 1],
+    ['select', 'handle_yString', 1],
+    ['select', 'reverse', 0],
+    ['select', 'start_xString', 1],
+    ['select', 'start_yString', 1],
+    ['select', 'upend', 0],
+]);
 
 
 // #### Development and testing

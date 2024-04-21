@@ -9,11 +9,11 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -87,7 +87,7 @@ const playPause = scrawl.makeLabel({
             css: { cursor: 'pointer' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ includeUnderline: true });
     },
 
@@ -97,7 +97,7 @@ const playPause = scrawl.makeLabel({
             css: { cursor: 'auto' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ includeUnderline: false });
     },
 
@@ -189,7 +189,7 @@ scrawl.makePicture({
 
     onEnter: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ globalAlpha: 0.3 });
 
         canvas.set({
@@ -201,7 +201,7 @@ scrawl.makePicture({
 
     onLeave: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ globalAlpha: 0.1 });
 
         canvas.set({
@@ -211,7 +211,7 @@ scrawl.makePicture({
 
     onUp: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -290,7 +290,7 @@ const mygoose = scrawl.makeBlock({
             css: { cursor: 'pointer' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ method: 'draw' });
     },
 
@@ -300,13 +300,13 @@ const mygoose = scrawl.makeBlock({
             css: { cursor: 'auto' }
         });
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ method: 'none' });
     },
 
     onUp: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -424,9 +424,10 @@ const vtLabel = scrawl.makeLabel({
     start: [5, 20],
     fillStyle: 'yellow',
 
-    // Accesibility - this Label updates many times per second. Best to not include it in the DOM as it could ruin the web page experience for people using screen readers.
-    // + People will be more interested in seeing/hearing/reading any captions or subtitles included alongside the video.
-    textIsAccessible: false,
+    // Accesibility - this Label updates many times per second. As such, we need to mark the DOM element which will hold the label text (for accessibility) with the role of `timer`.
+    // + All DOM elements containing accessible label texts are given an `aria-live="polite"` attribute.
+    // + Then it will be up to the user's screen reader software to decide how to announce text changes to the user.
+    accessibleTextRole: 'timer',
 });
 
 const videoTimeBar = function () {

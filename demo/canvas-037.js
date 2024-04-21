@@ -27,18 +27,20 @@ let currentScale = maxScale,
     fromLeft = 0,
     fromTop = 0;
 
-// Convenience variables to access key Scrawl-canvas objects stored in the library
-const canvas = scrawl.library.canvas.mycanvas,
-    base = canvas.base,
-    baseGroup = base.get('group');
-
 
 // #### Scene setup
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // The Picture entity will cover the entire displayed canvas
 const piccie = scrawl.makePicture({
 
-    name: 'river-pic',
+    name: name('river-pic'),
 
     imageSource: './img/river.webp',
 
@@ -61,7 +63,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -71,7 +73,8 @@ scrawl.makeRender({
 // We shall build the "zoom" and "pan" effects using event listeners.
 // + For the purposes of accessibility these events should be extended to include keyboard interactions
 // + Mobile devices should also include multitouch gestures - such activity is often best captured using a dedicated third party Javascript library, for example [hammer.js](https://hammerjs.github.io/)
-//
+
+
 // Zoom effect
 scrawl.addNativeListener('wheel', (e) => {
 
@@ -100,16 +103,18 @@ scrawl.addNativeListener('wheel', (e) => {
     });
 }, canvas.domElement);
 
+
 // Define some additional scene state, specifically for the "pan" effect
 let draggingArtefact = false,
     currentDragX = 0,
     currentDragY = 0;
 
+
 // Pan effect, split across three separate event listeners (starting, during, ending)
 scrawl.addListener('down', () => {
 
-    const here = base.here,
-        target = baseGroup.getArtefactAt(base.here);
+    const here = canvas.getBaseHere(),
+        target = canvas.get('baseGroup').getArtefactAt(here);
 
     draggingArtefact = (target && target.artefact && target.artefact.type === 'Picture') ?
         target.artefact :
@@ -123,7 +128,7 @@ scrawl.addListener('down', () => {
 
 scrawl.addListener('move', () => {
 
-    const here = base.here;
+    const here = canvas.getBaseHere();
 
     if (draggingArtefact) {
 

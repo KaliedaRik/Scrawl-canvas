@@ -2,38 +2,26 @@
 // Gradient and Color factories - transparency
 
 // [Run code](../../demo/canvas-018.html)
-import {
-    library as L,
-    importDomImage,
-    makeFilter,
-    makePicture,
-    createImageFromEntity,
-    makeRadialGradient,
-    makeBlock,
-    makeRender,
-    addNativeListener,
-} from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
 // Get handles to the Canvas wrappers
-const canvases = L.canvas,
-    entitys = L.entity,
-    c1 = canvases['hackney'],
-    c2 = canvases['heathrow'],
-    c3 = canvases['kingston'],
-    c4 = canvases['burglary'];
+const c1 = scrawl.findCanvas('hackney'),
+    c2 = scrawl.findCanvas('heathrow'),
+    c3 = scrawl.findCanvas('kingston'),
+    c4 = scrawl.findCanvas('burglary');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-018';
 const name = (n) => `${namespace}-${n}`;
 
 
 // Import the images we defined in the DOM (in &lt;img> elements)
-importDomImage('.places');
+scrawl.importDomImage('.places');
 
 // For this scene, we'll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene
 const data = [
@@ -66,7 +54,7 @@ const checkFunctions = [];
 
 // The blur filter is temporary - we use it once on each image to generate a blurred version of that image
 // + We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption
-makeFilter({
+scrawl.makeFilter({
     name: name('blur'),
     method: 'gaussianBlur',
     radius: 20,
@@ -77,7 +65,7 @@ data.forEach(scene => {
 
     // The original picture, with the blur filter applied to it
     // - We will remove the filter in a later step
-    const entity = makePicture({
+    const entity = scrawl.makePicture({
 
         name: name(`${scene.image}-original`),
         group: scene.canvas.base.name,
@@ -92,10 +80,10 @@ data.forEach(scene => {
     });
 
     // A one-off instruction to tell Scrawl-canvas to create an image asset from our Picture entity the next time it performs a Display cycle
-    createImageFromEntity(entity, true);
+    scrawl.createImageFromEntity(entity, true);
 
     // The purpose of this demo is to test the various ways we can define 'transparency' in Scrawl-canvas Color objects and Gradients - tests a set of Color factory bugs uncovered and fixed in v8.3.2
-    makeRadialGradient({
+    scrawl.makeRadialGradient({
 
         name: name(`${scene.image}-gradient`),
         start: ['50%', '50%'],
@@ -110,7 +98,7 @@ data.forEach(scene => {
     });
 
     // Apply the gradient to the scene via a Block entity
-    const filterBlock = makeBlock({
+    const filterBlock = scrawl.makeBlock({
 
         name: name(`${scene.image}-block`),
         group: scene.canvas.base.name,
@@ -144,7 +132,7 @@ const postInitialization = (anim) => {
 
     console.log(anim.target.name, 'postInitialization');
 
-    const original = entitys[name(`${anim.target.name}-bg-original`)];
+    const original = scrawl.findEntity(name(`${anim.target.name}-bg-original`));
 
     // Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene
     original.set({
@@ -170,7 +158,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: [c1, c2, c3, c4],
@@ -180,7 +168,7 @@ makeRender({
     commence: () => checkFunctions.forEach(f => f()),
 });
 
-makeRender({
+scrawl.makeRender({
 
     name: name('speed'),
     noTarget: true,
@@ -189,12 +177,13 @@ makeRender({
 
 
 // For this demo we will suppress touchmove functionality over the canvas
-addNativeListener('touchmove', (e) => {
+scrawl.addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
 }, [c1.domElement, c2.domElement, c3.domElement, c4.domElement]);
 
+
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

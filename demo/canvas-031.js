@@ -11,12 +11,12 @@ import { reportSpeed } from './utilities.js';
 // + Because: clocks are useful; most of this code can be thought of as clock boilerplate
 const buildClockface = function (canvas, namespace) {
 
-    const entity = scrawl.library.entity;
+    const name = (n) => `${namespace}-${n}`;
 
     // The clock face will go into its own Cell
     const myFace = canvas.buildCell({
 
-        name: `${namespace}-face`,
+        name: name('face'),
 
         width: '100%',
         height: '100%',
@@ -28,8 +28,8 @@ const buildClockface = function (canvas, namespace) {
     // The clock frame is a wheel, as is the center pin
     scrawl.makeWheel({
 
-        name: `${namespace}-clock-frame`,
-        group: `${namespace}-face`,
+        name: name('frame'),
+        group: name('face'),
 
         radius: '40%',
 
@@ -42,7 +42,7 @@ const buildClockface = function (canvas, namespace) {
 
     }).clone({
 
-        name: `${namespace}-center-pin`,
+        name: name('center-pin'),
 
         radius: '2%',
 
@@ -62,8 +62,8 @@ const buildClockface = function (canvas, namespace) {
     // The hour, minute and second hands are all Line shapes
     scrawl.makeLine({
 
-        name: `${namespace}-hour-hand`,
-        group: `${namespace}-face`,
+        name: name('hour-hand'),
+        group: name('face'),
 
         startX: 'center',
         startY: 'center',
@@ -84,7 +84,7 @@ const buildClockface = function (canvas, namespace) {
 
     }).clone({
 
-        name: `${namespace}-minute-hand`,
+        name: name('minute-hand'),
 
         endY: '15%',
         strokeStyle: 'blue',
@@ -92,7 +92,7 @@ const buildClockface = function (canvas, namespace) {
 
     }).clone({
 
-        name: `${namespace}-second-hand`,
+        name: name('second-hand'),
 
         endY: '12%',
         lineWidth: 4,
@@ -102,9 +102,9 @@ const buildClockface = function (canvas, namespace) {
     // Function to make the clock tick
     const updateClockHands = function () {
 
-        const hourHand = entity[`${namespace}-hour-hand`],
-            minuteHand = entity[`${namespace}-minute-hand`],
-            secondHand = entity[`${namespace}-second-hand`];
+        const hourHand = scrawl.findEntity(name('hour-hand')),
+            minuteHand = scrawl.findEntity(name('minute-hand')),
+            secondHand = scrawl.findEntity(name('second-hand'));
 
         const secondsSinceMidnight = () => {
 
@@ -140,25 +140,29 @@ const buildClockface = function (canvas, namespace) {
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas,
-    namespace = 'kaliedoscope-clock';
+const canvas = scrawl.findCanvas('mycanvas');
+
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Building the background - this goes in a separate Cell
-const myBackground = canvas.buildCell({
+canvas.buildCell({
 
-    name: `${namespace}-background`,
+    name: name('background'),
 
     width: '100%',
     height: '100%',
 
     setRelativeDimensionsUsingBase: true,
+    shown: false,
 });
 
 // We use a wheel segment as a stencil
 scrawl.makeWheel({
 
-    name: `${namespace}-clock-stencil`,
-    group: `${namespace}-background`,
+    name: name('stencil'),
+    group: name('background'),
 
     order: 0,
 
@@ -177,7 +181,7 @@ scrawl.makeWheel({
 // Use a color factory object to generate random colors within a restricted palette
 const myColorFactory = scrawl.makeColor({
 
-    name: `${namespace}-color-factory`,
+    name: name('colors'),
 });
 
 // Add some blocks to create the animated background
@@ -185,8 +189,8 @@ for (let i = 0; i < 50; i++) {
 
     scrawl.makeBlock({
 
-        name: `${namespace}-decoration-block-${i}`,
-        group: `${namespace}-background`,
+        name: name(`decoration-block-${i}`),
+        group: name('background'),
 
         globalCompositeOperation: 'source-atop',
         globalAlpha: 0.3,
@@ -214,8 +218,8 @@ for (let i = 0; i < 50; i++) {
 // We don't display the background Cell. Instead we use it as the source for a set of Picture entitys
 scrawl.makePicture({
 
-    name: `${namespace}-segment-0`,
-    group: canvas.base.name,
+    name: name('segment-0'),
+    group: canvas.get('baseName'),
 
     width: '100%',
     height: '100%',
@@ -226,47 +230,36 @@ scrawl.makePicture({
     start: ['center', 'center'],
     handle: ['center', 'center'],
 
-    asset: `${namespace}-background`,
+    asset: name('background'),
 
 }).clone({
 
-    name: `${namespace}-segment-1`,
+    name: name('segment-1'),
     roll: 120,
 
 }).clone({
 
-    name: `${namespace}-segment-2`,
+    name: name('segment-2'),
     roll: 240,
 
 }).clone({
 
-    name: `${namespace}-segment-3`,
+    name: name('segment-3'),
     flipReverse: true,
 
 }).clone({
 
-    name: `${namespace}-segment-4`,
+    name: name('segment-4'),
     roll: 120,
 
 }).clone({
 
-    name: `${namespace}-segment-5`,
+    name: name('segment-5'),
     roll: 0,
 });
 
 // Build the clock face
-const clock = buildClockface(canvas, namespace);
-
-
-// #### Cell display and compile ordering
-myBackground.set({
-    compileOrder: 0,
-    shown: false,
-});
-
-canvas.base.set({
-    compileOrder: 1,
-});
+const clock = buildClockface(canvas, `${namespace}-clock`);
 
 
 // #### Scene animation

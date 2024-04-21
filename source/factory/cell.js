@@ -192,9 +192,6 @@ const defaultAttributes = {
 // __isBase__ - Every displayed &lt;canvas> element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its 'base' Cell.
     isBase: false,
 
-// __useAsPattern__ - Used to ignore the requirement to resize canvases to take into account device pixel ratios greater than 1
-    useAsPattern: false,
-
 // __controller__ - A reference link to the displayed &lt;canvas> element's Scrawl-canvas wrapper (factory/canvas.js) - only 'base' cells require this handle.
     controller: null,
 
@@ -1279,7 +1276,8 @@ P.cleanPathObject = function () {
     }
 };
 
-// `updateHere` - Internal function - get the Cell to update its .here information
+// `updateHere` - get the Cell to update its .here information
+// + Non-base Cells do not routinely update their local here object, so it has to be triggered manually as part of the Display cycle
 P.updateHere = function () {
 
     const host = this.currentHost;

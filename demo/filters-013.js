@@ -4,48 +4,52 @@
 // [Run code](../../demo/filters-013.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
-
-const colorFactory = scrawl.makeColor({
-    name: 'my-color-factory',
-});
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'flood',
+    name: name('flood'),
     method: 'flood',
 
-    red: 0,
-    green: 0,
+    red: 255,
+    green: 255,
     blue: 0,
-    alpha: 255
+    alpha: 255,
+
+    opacity: 0.4,
 });
+
+const colorFactory = scrawl.makeColor({
+
+    name: name('colors'),
+});
+
 
 
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['flood'],
+    filters: [name('flood')],
 });
 
 
@@ -53,21 +57,57 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Red: ${red.value}, Green: ${green.value}, Blue: ${blue.value}, Alpha: ${alpha.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Reference color: ${dom.reference.value}
+    Red: ${dom.red.value}
+    Green: ${dom.green.value}
+    Blue: ${dom.blue.value}
+    Alpha: ${dom.alpha.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'reference', '#ffff00'],
+    ['input', 'red', '255'],
+    ['input', 'green', '255'],
+    ['input', 'blue', '0'],
+    ['input', 'alpha', '255'],
+    ['input', 'opacity', '0.4'],
+]);
+
+
+// Handle user input from the color selector
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    if (e && e.target) {
+
+        const val = e.target.value;
+
+        myFilter.set({ reference: val });
+
+        const [r, g, b, a] = colorFactory.extractRGBfromColor(val);
+
+        dom.red.value = `${r}`;
+        dom.green.value = `${g}`;
+        dom.blue.value = `${b}`;
+        dom.alpha.value = `${Math.round(a * 255)}`;
+    }
+}, '.colorSelector');
+
+
+// Handle remaining input updates
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -89,59 +129,19 @@ scrawl.makeUpdater({
 
     callback: () => {
 
-// @ts-expect-error
-        reference.value = colorFactory.convertRGBtoHex(red.value, green.value, blue.value);
+        const val = (v) => parseInt(v, 10);
+
+        dom.reference.value = colorFactory.convertRGBtoHex(
+            val(dom.red.value),
+            val(dom.green.value),
+            val(dom.blue.value)
+        );
     },
 });
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    if (e && e.target) {
-
-        const val = e.target.value;
-
-        myFilter.set({
-            reference: val,
-        });
-
-        const [r, g, b, a] = colorFactory.extractRGBfromColor(val)
-
-// @ts-expect-error
-        red.value = r;
-// @ts-expect-error
-        green.value = g;
-// @ts-expect-error
-        blue.value = b;
-// @ts-expect-error
-        alpha.value = Math.round(a * 255);
-    }
-}, '.colorSelector');
-
-
-// Setup form
-const opacity = document.querySelector('#opacity'),
-    reference = document.querySelector('#reference'),
-    red = document.querySelector('#red'),
-    green = document.querySelector('#green'),
-    blue = document.querySelector('#blue'),
-    alpha = document.querySelector('#alpha');
-
-// @ts-expect-error
-opacity.value = 1;
-// @ts-expect-error
-reference.value = '#000000';
-// @ts-expect-error
-red.value = 0;
-// @ts-expect-error
-green.value = 0;
-// @ts-expect-error
-blue.value = 0;
-// @ts-expect-error
-alpha.value = 255;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

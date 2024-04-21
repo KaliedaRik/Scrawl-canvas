@@ -184,7 +184,7 @@ export default function (P = Ωempty) {
 // + Artefacts with higher `calculateOrder` values will be processed after those with lower values - this is important for situations where an artefact relies on others for its positioning data (when it pivots, mimics other artefacts, or uses a path-pased artefact for position/rotation data), thus needs to calculate its data after the reference artefact has completed its calculations.
 // + Artefacts with higher `stampOrder` values will display (be stamped) over artefacts with lower `stampOrder` values.
 // + Note that Group objects also have an order attribute: all artefacts in a Group with a lower order value will be processed before those with a higher order value.
-// + Cell wrappers (a Canvas wrapper can have more than one Cell) have `ccompileOrder` and `showOrder` attributes which do similar work.
+// + Cell wrappers (a Canvas wrapper can have more than one Cell) have `compileOrder` and `showOrder` attributes which do similar work.
 // + Finally, Animation objects (generated from `makeRender`, `makeAnimation`) can be given `order` values.
 // + ___If the display of an artefact does not appear to be following the order value it has been given___, the problem may lie in either the order values assigned to that artefact's Group, or host (Cell, Canvas, Stack), or even the Animation object that contributes to the Display cycle.
         calculateOrder: 0,

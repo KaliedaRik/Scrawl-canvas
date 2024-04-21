@@ -92,7 +92,7 @@
     .controls {
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
-    .demo-explanation-styles {
+    #domText {
       width: calc(600px * 0.6);
       height: calc(400px * 0.8);
       padding: 0;
@@ -148,7 +148,7 @@ CSS custom property --SC-method             maps to TextStyle method
 
 */
 
-    .demo-my-label, .demo-explanation-styles, #preload-fonts {
+    .mycanvas-my-label, #domText {
 
       & b {
         font-weight: bold;
@@ -392,7 +392,7 @@ CSS custom property --SC-method             maps to TextStyle method
       height="400"
       data-scrawl-canvas
     ></canvas>
-    <p class="demo-explanation-styles"></p>
+    <p id="domText"></p>
   </div>
 
 
@@ -419,7 +419,7 @@ CSS custom property --SC-method             maps to TextStyle method
     </div>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

@@ -10,13 +10,60 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    #my-image-store {
-      display: none;
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+
+          text-align: center;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+      }
+
+      & #output-canvas {
+
+        & .placeholder {
+          width: 400px;
+        }
+
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
+
+      & #channel-weights-canvas {
+        margin-bottom: 1em;
+
+        & .placeholder {
+          width: 360px;
+        }
+      }
     }
 
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+
+      @media (scripting: none) {
+        display: none;
+      }
     }
+
     .grid {
       display: grid;
 
@@ -27,21 +74,20 @@
       grid-row-gap: 2px;
 
       font-size:  12px;
-    }
 
-    canvas {
-      margin: 1em auto;
-      box-shadow: 0px 0px 0px 1px black;
+      margin: 1em;
     }
 
     .channel-buttons {
       text-align: center;
-    }
-    button {
-      background-color: lightblue;
-    }
-    button.selected {
-      background-color: yellow;
+
+      & button {
+        background-color: lightblue;
+      }
+
+      & button.selected {
+        background-color: yellow;
+      }
     }
   </style>
 </head>
@@ -72,24 +118,46 @@
 
   <div class="grid">
     
-    <div>
+    <div class="canvas-progressive-enhancement-wrapper">
       <canvas 
         id="output-canvas" 
         width="400" 
         height="400"
         data-scrawl-canvas
-      ></canvas>
+      >
+        <div class="placeholder">
+          <img
+            src="thumbs/filters-024-01.webp"
+            alt="Screen capture image of the demo output canvas"
+          />    
+        </div>
+      <div class="assets" aria-hidden="true">
+          <img
+            id="iris"
+            src="img/iris.png"
+            class="flowers"
+            alt="A purple-mauve iris flower"
+          />    
+        </div>
+      </canvas>
     </div>
 
     <div>
-      <div>
+      <div class="canvas-progressive-enhancement-wrapper">
         <canvas 
           id="channel-weights-canvas" 
           width="360" 
           height="360"
           data-base-background-color="beige"
-        data-scrawl-canvas
-        ></canvas>
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-024-02.webp"
+              alt="Screen capture image of the demo controls canvas"
+            />    
+          </div>
+        </canvas>
       </div>
 
       <div class="channel-buttons">
@@ -101,7 +169,7 @@
     </div>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas elements are ignored; instead placeholder images display where the canvases would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -117,10 +185,6 @@
     <p><b>Touch test:</b> should work as expected. Known issue: the pins are currently too small for effective UX on touch devices.</p>
 
     <p><a href="../docs/demo/filters-024.html">Annotated code</a></p>
-  </div>
-
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-024.js" type="module"></script>

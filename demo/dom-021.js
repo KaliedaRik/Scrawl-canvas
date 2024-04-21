@@ -8,8 +8,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas,
+const canvas = scrawl.findCanvas('mycanvas'),
     base = canvas.get('baseName');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Get a handle on the popover element
@@ -19,19 +24,22 @@ const popover = document.querySelector('#mypopover');
 // #### Build display
 
 const dragGroup = scrawl.makeGroup({
-    name: 'my-drag-group',
+
+    name: name('my-drag-group'),
     order: 1,
     host: base,
 });
 
 const closeButtonGroup = scrawl.makeGroup({
-    name: 'my-close-button-group',
+
+    name: name('my-close-button-group'),
     order: 2,
     host: base,
 });
 
 const backgroundGroup = scrawl.makeGroup({
-    name: 'my-background-group',
+
+    name: name('my-background-group'),
     order: 0,
     host: base,
 });
@@ -39,7 +47,8 @@ const backgroundGroup = scrawl.makeGroup({
 // Arrow shape entity
 // + Will change scale and rotation depending on the canvas size/shape
 const arrow = scrawl.makeShape({
-    name: 'arrow',
+
+    name: name('arrow'),
     group: backgroundGroup,
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
     start: ['center', 'center'],
@@ -59,7 +68,8 @@ const arrow = scrawl.makeShape({
 // Draggable label entitys
 // + Will update their text values depending on the canvas shape
 const shapeLabel = scrawl.makeLabel({
-    name: 'shape-label',
+
+    name: name('shape-label'),
     group: dragGroup,
     bringToFrontOnDrag: false,
     text: 'Canvas shape: ???',
@@ -73,18 +83,19 @@ const shapeLabel = scrawl.makeLabel({
 
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ showBoundingBox: true});
     },
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ showBoundingBox: false});
     },
 });
 
 const sizeLabel = shapeLabel.clone({
-    name: 'size-label',
+
+    name: name('size-label'),
     text: 'Canvas size: ???',
     start: ['75%', '50%'],
 });
@@ -96,7 +107,7 @@ const sizeLabel = shapeLabel.clone({
 // + When clicked, the popover will close
 const closeButton = scrawl.makeRectangle({
 
-    name: 'close-button',
+    name: name('close-button'),
     group: closeButtonGroup,
     rectangleWidth: 100,
     rectangleHeight: 40,
@@ -111,16 +122,16 @@ const closeButton = scrawl.makeRectangle({
 
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ fillStyle: 'yellow'});
     },
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({ fillStyle: 'white'});
     },
     button: {
-        name: 'close-el',
+        name: name('close-el'),
         description: 'Close',
         popoverTarget: 'mypopover',
         popoverTargetAction: 'hide',
@@ -128,16 +139,17 @@ const closeButton = scrawl.makeRectangle({
     },
 
     onUp: function () {
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickButton();
     },
 });
 
 scrawl.makeLabel({
-    name: 'close-button-label',
+
+    name: name('close-button-label'),
     group: closeButtonGroup,
     text: 'Close',
-    pivot: 'close-button',
+    pivot: name('close-button'),
     lockTo: 'pivot',
     handle: ['center', 'center'],
     fontString: '24px  "Roboto Sans"',
@@ -177,6 +189,7 @@ scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElemen
 
 // Drag zone for the size and shape labels
 scrawl.makeDragZone({
+
     zone: canvas,
     collisionGroup: dragGroup,
     endOn: ['up', 'leave'],
@@ -318,7 +331,7 @@ const report = reportSpeed('#reportmessage');
 
 // Create the Display cycle animation
 scrawl.makeRender({
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

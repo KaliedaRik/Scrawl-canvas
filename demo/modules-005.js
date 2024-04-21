@@ -171,7 +171,7 @@ const buttonClickAction = () => {
     setGuiControlChars(keys);
 };
 
-// @ts-expect-error
+/** @ts-expect-error */
 button.onclick = buttonClickAction;
 
 

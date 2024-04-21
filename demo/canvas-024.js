@@ -4,16 +4,16 @@
 // [Run code](../../demo/canvas-024.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -206,9 +206,9 @@ const myLoom = scrawl.makeLoom({
 
     method: 'fillThenDraw',
 
-// @ts-expect-error
+/** @ts-expect-error */
     onEnter: function () { this.set({ lineWidth: 6 }) },
-// @ts-expect-error
+/** @ts-expect-error */
     onLeave: function () { this.set({ lineWidth: 2 }) },
 });
 
@@ -362,42 +362,26 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#fromStart').value = 0;
-// @ts-expect-error
-document.querySelector('#fromEnd').value = 1;
-// @ts-expect-error
-document.querySelector('#toStart').value = 0;
-// @ts-expect-error
-document.querySelector('#toEnd').value = 1;
-// @ts-expect-error
-document.querySelector('#sync').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#looping').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#rendering').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#animation').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#filter').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#method').options.selectedIndex = 4;
-// @ts-expect-error
-document.querySelector('#copy_start_xPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#copy_start_yPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#copy_dims_widthPercent').value = 100;
-// @ts-expect-error
-document.querySelector('#copy_dims_widthAbsolute').value = 400;
-// @ts-expect-error
-document.querySelector('#copy_start_xAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#copy_start_yAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#copy_dims_heightPercent').value = 100;
-// @ts-expect-error
-document.querySelector('#copy_dims_heightAbsolute').value = 400;
+initializeDomInputs([
+    ['input', 'fromStart', '0'],
+    ['input', 'fromEnd', '1'],
+    ['input', 'toStart', '0'],
+    ['input', 'toEnd', '1'],
+    ['input', 'copy_start_xPercent', '0'],
+    ['input', 'copy_start_yPercent', '0'],
+    ['input', 'copy_dims_widthPercent', '100'],
+    ['input', 'copy_dims_widthAbsolute', '400'],
+    ['input', 'copy_start_xAbsolute', '0'],
+    ['input', 'copy_start_yAbsolute', '0'],
+    ['input', 'copy_dims_heightPercent', '100'],
+    ['input', 'copy_dims_heightAbsolute', '400'],
+    ['select', 'sync', 1],
+    ['select', 'looping', 1],
+    ['select', 'rendering', 0],
+    ['select', 'animation', 0],
+    ['select', 'filter', 0],
+    ['select', 'method', 4],
+]);
 
 
 // #### Development and testing

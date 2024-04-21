@@ -4,41 +4,48 @@
 // [Run code](../../demo/canvas-020.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrappers
-const canvas = scrawl.library.artefact.mycanvas,
-    hold = scrawl.library.artefact.holdcanvas;
+const canvas = scrawl.findCanvas('mycanvas'),
+    hold = scrawl.findCanvas('holdcanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-020';
 const name = (n) => `${namespace}-${n}`;
 
 
 // Create gradients
 scrawl.makeGradient({
+
     name: name('linear1'),
     endX: '100%',
     colors: [
         [0, 'pink'],
         [999, 'darkgreen']
     ],
+
 }).clone({
+
     name: name('linear2'),
     colors: [
         [0, 'darkblue'],
         [999, 'white']
     ],
+
 }).clone({
+
     name: name('linear3'),
     colors: [
         [0, 'yellow'],
         [999, 'purple']
     ],
+
 }).clone({
+
     name: name('linear4'),
     colors: [
         [0, 'black'],
@@ -49,6 +56,7 @@ scrawl.makeGradient({
 
 // Create entitys
 const block1 = scrawl.makeBlock({
+
     name: name('b1'),
     group: canvas.base.name,
 
@@ -65,6 +73,7 @@ const block1 = scrawl.makeBlock({
 });
 
 const block2 = block1.clone({
+
     name: name('b2'),
     startX: '70%',
     startY: '65%',
@@ -81,6 +90,7 @@ const block2 = block1.clone({
 });
 
 const wheel1 = scrawl.makeWheel({
+
     name: name('w1'),
     group: canvas.base.name,
 
@@ -97,6 +107,7 @@ const wheel1 = scrawl.makeWheel({
 });
 
 const wheel2 = wheel1.clone({
+
     name: name('w2'),
     startX: '30%',
     startY: '60%',
@@ -113,6 +124,7 @@ const wheel2 = wheel1.clone({
 });
 
 scrawl.makeWheel({
+
     name: name('template'),
     start: ['5%', '35%'],
     radius: 70,
@@ -121,6 +133,7 @@ scrawl.makeWheel({
 });
 
 const words = scrawl.makeEnhancedLabel({
+
     name: name('words'),
     group: canvas.base.name,
 
@@ -140,6 +153,7 @@ const words = scrawl.makeEnhancedLabel({
 
 // Create the filter
 scrawl.makeFilter({
+
     name: name('myfilter'),
     method: 'red',
 });
@@ -147,11 +161,13 @@ scrawl.makeFilter({
 
 // Create a new group with an entity that will only be caught in the Cell's filter
 scrawl.makeGroup({
+
     name: name('temp-group'),
     host: canvas.base.name
 });
 
 scrawl.makeBlock({
+
     name: name('temp-block'),
     group: name('temp-group'),
 
@@ -373,8 +389,9 @@ scrawl.addNativeListener(['input'], events, '.controlItem');
 
 
 // Set the DOM input values
-// @ts-expect-error
-document.querySelector('#target').value = '';
+initializeDomInputs([
+    ['select', 'target', 0],
+]);
 
 
 // #### Development and testing

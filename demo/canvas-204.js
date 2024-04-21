@@ -4,16 +4,16 @@
 // [Run code](../../demo/canvas-204.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -120,22 +120,16 @@ scrawl.makeUpdater({
 
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#wordSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#lockFillStyleToEntity').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#fillStyle').options.selectedIndex = 0;
+initializeDomInputs([
+    ['input', 'letterSpacing', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'wordSpacing', '0'],
+    ['select', 'reverse', 0],
+    ['select', 'upend', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'fillStyle', 0],
+]);
 
 
 // #### Development and testing

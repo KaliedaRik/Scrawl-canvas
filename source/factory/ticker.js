@@ -853,7 +853,7 @@ let tickerAnimationsFlag = true;
 // `coreTickersAnimation`
 makeAnimation({
 
-    name: 'coreTickersAnimation',
+    name: 'SC-core-tickers-animation',
     order: 0,
     fn: function () {
 

@@ -8,7 +8,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Event listeners
 scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
@@ -17,7 +23,7 @@ scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElemen
 // Testing Block entity
 const box = scrawl.makeBlock({
 
-    name: 'my-box',
+    name: name('my-box'),
 
     startX: 10,
     startY: 10,
@@ -28,20 +34,20 @@ const box = scrawl.makeBlock({
     fillStyle: 'red',
 
     onEnter: function () {
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             fillStyle: 'pink',
         });
     },
 
     onLeave: function () {
-// @ts-expect-error
+/** @ts-expect-error */
         this.set({
             fillStyle: 'red',
         });
     },
 
-// @ts-expect-error
+/** @ts-expect-error */
     onUp: function () { this.clickAnchor() },
 
     anchor: {
@@ -77,11 +83,11 @@ console.log('Save test 4 result: ', boxPacket4);
 // ```
 // TEST 1
 // [
-//     "my-box",
+//     "mycanvas-my-box",
 //     "Block",
 //     "entity",
 //     {
-//         "name":"my-box",
+//         "name":"mycanvas-my-box",
 //         "dimensions":[100,50],
 //         "start":[10,10],
 //         "delta":{},
@@ -101,11 +107,11 @@ console.log('Save test 4 result: ', boxPacket4);
 //
 // TEST 2, TEST 3
 // [
-//     "my-box",
+//     "mycanvas-my-box",
 //     "Block",
 //     "entity",
 //     {
-//         "name":"my-box",
+//         "name":"mycanvas-my-box",
 //         "dimensions":[100,50],
 //         "start":[10,10],
 //         "handle":[0,0],
@@ -195,11 +201,11 @@ console.log('Save test 4 result: ', boxPacket4);
 //
 // TEST 4
 // [
-//     "my-box",
+//     "mycanvas-my-box",
 //     "Block",
 //     "entity",
 //     {
-//         "name":"my-box",
+//         "name":"mycanvas-my-box",
 //         "dimensions":[100,50],
 //         "start":[10,10],
 //         "handle":[0,0],
@@ -284,7 +290,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

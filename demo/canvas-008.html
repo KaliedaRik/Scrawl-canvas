@@ -14,15 +14,37 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
-    }
-    canvas {
-      margin: 1em auto;
-      box-shadow: 0px 0px 0px 1px black;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
     }
 
-    img {
-      display: none;
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+
+          text-align: center;
+          width: 600px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+        & .assets {
+          height: 0;
+          overflow: hidden;
+        }
+      }
     }
   </style>
 </head>
@@ -35,14 +57,31 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 008</h1>
   <h2>Picture entity position; manipulate copy attributes</h2>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="400"
+      data-scrawl-canvas
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/canvas-008.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+      <div class="assets" aria-hidden="true">
+        <img
+          id="iris"
+          src="img/iris.png"
+          class="flowers"
+          alt="A purple-mauve iris flower"
+        />    
+      </div>
+    </canvas>
+  </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="controls">
 
@@ -160,8 +199,6 @@
 
     <p><a href="../docs/demo/canvas-008.html">Annotated code</a></p>
   </div>
-
-  <img id="iris" src="img/iris.png" class="flowers" />
 
   <script src="canvas-008.js" type="module"></script>
 

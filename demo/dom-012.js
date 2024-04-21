@@ -69,13 +69,13 @@ const controls = function () {
         b3 = document.querySelector('#action_3'),
         b4 = document.querySelector('#action_4');
 
-// @ts-expect-error
+/** @ts-expect-error */
     b1.disabled = '';
-// @ts-expect-error
+/** @ts-expect-error */
     b2.disabled = 'disabled';
-// @ts-expect-error
+/** @ts-expect-error */
     b3.disabled = '';
-// @ts-expect-error
+/** @ts-expect-error */
     b4.disabled = '';
 
     let stackCanvas;
@@ -132,9 +132,9 @@ const controls = function () {
         switch (e.target.id) {
 
             case 'action_1':
-// @ts-expect-error
+/** @ts-expect-error */
                 b1.disabled = 'disabled';
-// @ts-expect-error
+/** @ts-expect-error */
                 b2.disabled = '';
 
                 stackCanvas = scrawl.addCanvas({
@@ -152,9 +152,9 @@ const controls = function () {
 
             case 'action_2':
 
-// @ts-expect-error
+/** @ts-expect-error */
                 b1.disabled = '';
-// @ts-expect-error
+/** @ts-expect-error */
                 b2.disabled = 'disabled';
 
                 if (stackCanvas) stackCanvas.kill();
@@ -163,11 +163,11 @@ const controls = function () {
 
             case 'action_3':
 
-// @ts-expect-error
+/** @ts-expect-error */
                 b1.disabled = '';
-// @ts-expect-error
+/** @ts-expect-error */
                 b2.disabled = 'disabled';
-// @ts-expect-error
+/** @ts-expect-error */
                 b3.disabled = 'disabled';
 
                 mystack.kill();

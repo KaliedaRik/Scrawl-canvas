@@ -10,16 +10,44 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    #my-image-store {
-      display: none;
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 1em 0;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+
+          text-align: center;
+          width: 400px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
     }
 
-    canvas {
-      margin: 1em auto;
-      box-shadow: 0px 0px 0px 1px black;
-    }
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+
+      @media (scripting: none) {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -36,42 +64,59 @@
   <div class="controls">
 
     <div class="pink label">Low red</div>
-    <div class="pink"><input class="controlItem" id="low-red" type="range" value="0" min="0" max="255" step="1" /></div>
+    <div class="pink"><input class="controlItem" id="low_red" type="range" value="0" min="0" max="255" step="1" /></div>
 
     <div class="pink label">High red</div>
-    <div class="pink"><input class="controlItem" id="high-red" type="range" value="255" min="0" max="255" step="1" /></div>
+    <div class="pink"><input class="controlItem" id="high_red" type="range" value="255" min="0" max="255" step="1" /></div>
 
     <div class="green label">Low green</div>
-    <div class="green"><input class="controlItem" id="low-green" type="range" value="0" min="0" max="255" step="1" /></div>
+    <div class="green"><input class="controlItem" id="low_green" type="range" value="0" min="0" max="255" step="1" /></div>
 
     <div class="green label">High green</div>
-    <div class="green"><input class="controlItem" id="high-green" type="range" value="255" min="0" max="255" step="1" /></div>
+    <div class="green"><input class="controlItem" id="high_green" type="range" value="255" min="0" max="255" step="1" /></div>
 
     <div class="blue label">Low blue</div>
-    <div class="blue"><input class="controlItem" id="low-blue" type="range" value="0" min="0" max="255" step="1" /></div>
+    <div class="blue"><input class="controlItem" id="low_blue" type="range" value="0" min="0" max="255" step="1" /></div>
 
     <div class="blue label">High blue</div>
-    <div class="blue"><input class="controlItem" id="high-blue" type="range" value="255" min="0" max="255" step="1" /></div>
+    <div class="blue"><input class="controlItem" id="high_blue" type="range" value="255" min="0" max="255" step="1" /></div>
 
     <div class="yellow label">Low color</div>
-    <div class="yellow"><input class="controlItem colorSelector" id="low-color" type="color" value="#000000" /></div>
+    <div class="yellow"><input class="controlItem colorSelector" id="low_color" type="color" value="#000000" /></div>
 
     <div class="yellow label">High color</div>
-    <div class="yellow"><input class="controlItem colorSelector" id="high-color" type="color" value="#ffffff" /></div>
+    <div class="yellow"><input class="controlItem colorSelector" id="high_color" type="color" value="#ffffff" /></div>
 
     <div class="lavender label">Opacity</div>
     <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="400" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="mycanvas" 
+      width="400" 
+      height="400"
+      data-scrawl-canvas
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/filters-020.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+      <div class="assets" aria-hidden="true">
+        <img
+          id="iris"
+          src="img/iris.png"
+          class="flowers"
+          alt="A purple-mauve iris flower"
+        />    
+      </div>
+    </canvas>
+  </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -85,10 +130,6 @@
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-020.html">Annotated code</a></p>
-  </div>
-
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-020.js" type="module"></script>

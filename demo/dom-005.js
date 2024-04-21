@@ -8,7 +8,14 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const porthole = scrawl.library.artefact.porthole;
+const porthole = scrawl.findStack('porthole');
+
+
+// Namespacing boilerplate
+const namespace = porthole.name;
+const name = (n) => `${namespace}-${n}`;
+
+
 
 porthole.set({
     width: 600,
@@ -35,7 +42,7 @@ const makeStars = function (buildNumber) {
 
         const star = porthole.addNewElement({
 
-            name: `star_${starCount}`,
+            name: name(`star_${starCount}`),
             tag: 'div',
 
             width: 6,
@@ -108,7 +115,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: porthole,
     afterShow: report,
 });
@@ -124,3 +131,7 @@ const addStars = (e) => {
     makeStars(addNumber);
 };
 scrawl.addNativeListener('click', addStars, porthole.domElement);
+
+
+// #### Development and testing
+console.log(scrawl.library);

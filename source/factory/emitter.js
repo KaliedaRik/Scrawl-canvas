@@ -728,8 +728,6 @@ P.addParticles = function (req) {
                     velocityZ: velocityCalc(fz, z, minimumVelocity.z),
                 });
             }
-            releaseVector(res);
-
             p.velocity.rotate(currentRotation);
 
             timeKill = _abs(calc(killAfterTime, killAfterTimeVariation));
@@ -739,6 +737,7 @@ P.addParticles = function (req) {
 
             particleStore.push(p);
         }
+        releaseVector(res);
     }
     // TODO: documentation
     else if (generateFromExistingParticles) {
@@ -795,8 +794,6 @@ P.addParticles = function (req) {
                     velocityZ: velocityCalc(fz, z, minimumVelocity.z),
                 });
             }
-            releaseVector(res);
-
             p.velocity.rotate(currentRotation);
 
             timeKill = _abs(calc(killAfterTime, killAfterTimeVariation));
@@ -806,6 +803,7 @@ P.addParticles = function (req) {
 
             particleStore.push(p);
         }
+        releaseVector(res);
     }
     // Generate the particle using the emitter's start coordinate, or a reference artifact's coordinate
     else {

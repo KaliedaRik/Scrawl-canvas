@@ -161,7 +161,7 @@ const reviewCircleClasses = function () {
         const targets = circleGroup.getAllArtefactsAt(stack.here);
 
         // updating the scene step 3 - add the 'make_opaque' CSS class to circles under the current cursor position
-// @ts-expect-error
+/** @ts-expect-error */
         targets.forEach(target => target.artefact.addClasses('make_opaque'));
         targetsLength = targets.length;
     };

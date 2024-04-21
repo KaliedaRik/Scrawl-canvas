@@ -2,20 +2,19 @@
 // Emitter entity, and Particle World, basic functionality
 
 // [Run code](../../demo/particles-001.html)
-import {
-    addNativeListener,
-    library as L,
-    makeEmitter,
-    makeRender,
-    makeWorld,
-    makeUpdater,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Initial canvas background color - we will also allow the user to control this attribute's value
 canvas.setBase({
@@ -26,9 +25,9 @@ canvas.setBase({
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the Emitter entity
-const myWorld = makeWorld({
+const myWorld = scrawl.makeWorld({
 
-    name: 'demo-world',
+    name: name('demo-world'),
 
     // `tickMultiplier` controls the speed of the Emitter's animation
     tickMultiplier: 2,
@@ -40,15 +39,15 @@ const myWorld = makeWorld({
         {
             key: 'hello',
             defaultValue: 'Hello World',
-// @ts-expect-error
+/** @ts-expect-error */
             setter: function (item) { this.hello = `Hello ${item}!`},
         },
         {
             key: 'testCoordinate',
             type: 'Coordinate',
-// @ts-expect-error
+/** @ts-expect-error */
             getter: function () { return [].concat(this.testCoordinate) },
-// @ts-expect-error
+/** @ts-expect-error */
             setter: function (item) { this.testCoordinate.set(item) },
         },
 
@@ -60,22 +59,25 @@ const myWorld = makeWorld({
     ],
 
     // Overwrite our user-defined attributes' default values with new data, for testing.
-// @ts-expect-error
+/** @ts-expect-error */
     hello: 'Wonderful Person',
     testCoordinate: [100, 100],
 });
 
 // Test the World object's user-defined attributes
 console.log(myWorld.get('hello'));
-// @ts-expect-error
-myWorld.set({ testCoordinate: ['center', 'center'] });
+
+myWorld.set({
+/** @ts-expect-error */
+    testCoordinate: ['center', 'center'],
+});
 console.log(myWorld.get('testCoordinate'));
 
 
 // Define an Emitter entity
-const myEmitter = makeEmitter({
+const myEmitter = scrawl.makeEmitter({
 
-    name: 'use-raw-2d-context',
+    name: name('use-raw-2d-context'),
 
     // Every emitter __must__ be associated with a World object. The attribute's value can be the World object's String name value, or the object itself
     world: myWorld,
@@ -122,14 +124,14 @@ const myEmitter = makeEmitter({
         const engine = host.engine,
             history = particle.history,
             len = history.length,
-// @ts-expect-error
+/** @ts-expect-error */
             alphaDecay = myWorld.alphaDecay,
             endRad = Math.PI * 2;
 
         let remaining, radius, alpha,
             colorRange, x, y, z;
 
-// @ts-expect-error
+/** @ts-expect-error */
         const colorFactory = this.fillColorFactory;
 
         // Start by saving the engine's current state.
@@ -197,8 +199,7 @@ const myEmitter = makeEmitter({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const particlenames = L.particlenames,
-    particle = L.particle;
+const { particlenames, particle } = scrawl.library;
 
 const report = reportSpeed('#reportmessage', function () {
 
@@ -210,34 +211,41 @@ const report = reportSpeed('#reportmessage', function () {
         if (p) historyCount += p.history.length;
     });
 
-// @ts-expect-error
-    return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}\n    Stamps per display: ${historyCount}\n\n    backgroundColor: ${background.value}, tickMultiplier: ${worldSpeed.value}\n    maxColor: ${maxColorController.value}, minColor: ${minColorController.value}, alphaDecay: ${colorAlpha.value}\n\n    killAfterTime: ${killAfterTime.value}, killAfterTimeVariation: ${killAfterTimeVariation.value}\n\n    Range - X: from ${rangeFromX.value} to ${parseFloat(rangeFromX.value) + parseFloat(rangeX.value)}\n    Range - Y: from ${rangeFromY.value} to ${parseFloat(rangeFromY.value) + parseFloat(rangeY.value)}\n    Range - Z: from ${rangeFromZ.value} to ${parseFloat(rangeFromZ.value) + parseFloat(rangeZ.value)}`;
+    return `
+    Particles: ${particlenames.length}
+    Generation rate: ${dom.generationRate.value}
+    History length: ${dom.historyLength.value}
+    Stamps per display: ${historyCount}
+
+    Tick multiplier: ${dom.world_speed.value}
+
+    Max color: ${dom.maxcolor_controller.value}
+    Min color: ${dom.mincolor_controller.value}
+    Alpha decay: ${dom.color_alpha.value}
+    Background color: ${dom.background.value}
+
+    Kill after time: ${dom.killAfterTime.value}
+    Kill after time variation: ${dom.killAfterTimeVariation.value}
+
+    Range - X: from ${dom.rangefrom_x.value} to ${parseFloat(dom.rangefrom_x.value) + parseFloat(dom.range_x.value)}
+    Range - Y: from ${dom.rangefrom_y.value} to ${parseFloat(dom.rangefrom_y.value) + parseFloat(dom.range_y.value)}
+    Range - Z: from ${dom.rangefrom_z.value} to ${parseFloat(dom.rangefrom_z.value) + parseFloat(dom.range_z.value)}`;
 });
 
 
 // We want the Emitter to attach itself to the mouse cursor whenever it is active over the &lt;canvas> element
 const mouseCheck = function () {
 
-    let active = false;
-
-    return function () {
-
-        if (canvas.here.active !== active) {
-
-            active = canvas.here.active;
-
-            myEmitter.set({
-                lockTo: (active) ? 'mouse' : 'start'
-            });
-        }
-    };
-}();
+    myEmitter.set({
+        lockTo: (canvas.here.active) ? 'mouse' : 'start',
+    });
+};
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: mouseCheck,
     afterShow: report,
@@ -245,8 +253,28 @@ makeRender({
 
 
 // #### User interaction
+const dom = initializeDomInputs([
+    ['input', 'world_speed', '2'],
+    ['input', 'maxcolor_controller', '#f0f8ff'],
+    ['input', 'mincolor_controller', '#f0f8ff'],
+    ['input', 'color_alpha', '6'],
+    ['input', 'background', '#000000'],
+    ['input', 'range_x', '40'],
+    ['input', 'rangefrom_x', '-20'],
+    ['input', 'range_y', '40'],
+    ['input', 'rangefrom_y', '-20'],
+    ['input', 'range_z', '-1'],
+    ['input', 'rangefrom_z', '-0.2'],
+    ['input', 'historyLength', '100'],
+    ['input', 'killAfterTime', '5'],
+    ['input', 'killAfterTimeVariation', '0.1'],
+    ['input', 'generationRate', '60'],
+    ['select', 'gravity', 0],
+]);
+
+
 // For this demo we will suppress touchmove functionality over the canvas
-addNativeListener('touchmove', (e) => {
+scrawl.addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
@@ -254,7 +282,7 @@ addNativeListener('touchmove', (e) => {
 }, canvas.domElement);
 
 // Setup form observer functionality
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -266,12 +294,12 @@ makeUpdater({
 
     updates: {
 
-        'world-speed': ['tickMultiplier', 'float'],
-        'color-alpha': ['alphaDecay', 'float'],
+        world_speed: ['tickMultiplier', 'float'],
+        color_alpha: ['alphaDecay', 'float'],
     },
 });
 
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -282,8 +310,8 @@ makeUpdater({
     preventDefault: true,
 
     updates: {
-        'maxcolor-controller': ['fillMaximumColor', 'raw'],
-        'mincolor-controller': ['fillMinimumColor', 'raw'],
+        maxcolor_controller: ['fillMaximumColor', 'raw'],
+        mincolor_controller: ['fillMinimumColor', 'raw'],
         generationRate: ['generationRate', 'int'],
         historyLength: ['historyLength', 'int'],
         killAfterTime: ['killAfterTime', 'float'],
@@ -297,7 +325,7 @@ makeUpdater({
     },
 });
 
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -315,81 +343,11 @@ makeUpdater({
 
 const useGravity = function () {
 
-    const selector = document.querySelector('#gravity');
-
-    return function () {
-
-// @ts-expect-error
-        if (selector.value === "yes") {
-
-            myEmitter.set({
-                forces: ['gravity'],
-            });
-        }
-        else {
-
-            myEmitter.set({
-                forces: [],
-            });
-        }
-    }
-}();
-addNativeListener(['input', 'change'], useGravity, '#gravity');
-
-
-const worldSpeed = document.querySelector('#world-speed'),
-    maxColorController = document.querySelector('#maxcolor-controller'),
-    minColorController = document.querySelector('#mincolor-controller'),
-    colorAlpha = document.querySelector('#color-alpha'),
-
-    background = document.querySelector('#background'),
-
-    rangeX = document.querySelector('#range_x'),
-    rangeFromX = document.querySelector('#rangefrom_x'),
-    rangeY = document.querySelector('#range_y'),
-    rangeFromY = document.querySelector('#rangefrom_y'),
-    rangeZ = document.querySelector('#range_z'),
-    rangeFromZ = document.querySelector('#rangefrom_z'),
-
-    historyLength = document.querySelector('#historyLength'),
-    killAfterTime = document.querySelector('#killAfterTime'),
-    killAfterTimeVariation = document.querySelector('#killAfterTimeVariation'),
-    generationRate = document.querySelector('#generationRate');
-
-// @ts-expect-error
-maxColorController.value = '#F0F8FF';
-// @ts-expect-error
-minColorController.value = '#F0F8FF';
-// @ts-expect-error
-worldSpeed.value = 2;
-// @ts-expect-error
-colorAlpha.value = 6;
-
-// @ts-expect-error
-document.querySelector('#gravity').value = 'no';
-
-// @ts-expect-error
-rangeX.value = 40;
-// @ts-expect-error
-rangeFromX.value = -20;
-// @ts-expect-error
-rangeY.value = 40;
-// @ts-expect-error
-rangeFromY.value = -20;
-// @ts-expect-error
-rangeZ.value = -1;
-// @ts-expect-error
-rangeFromZ.value = -0.2;
-
-// @ts-expect-error
-generationRate.value = 60;
-// @ts-expect-error
-historyLength.value = 100;
-// @ts-expect-error
-killAfterTime.value = 5;
-// @ts-expect-error
-killAfterTimeVariation.value = 0.1;
+    if (dom.gravity.value === "yes") myEmitter.set({ forces: ['gravity'] });
+    else myEmitter.set({ forces: [] });
+};
+scrawl.addNativeListener(['input', 'change'], useGravity, dom.gravity);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

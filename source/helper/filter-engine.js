@@ -51,7 +51,7 @@ const HIGH_ARRAY = new Uint8Array([0,255,255]);
 
 // The filter Color object - used by various filters
 export const colorEngine = makeColor({
-    name: 'SC-system-filter-do-not-remove',
+    name: 'SC-core-color-engine',
 });
 
 
@@ -1256,8 +1256,6 @@ P.theBigActionsObject = _freeze({
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// DEPRECATED! __binary__ - use the updated `threshold` filter instead, which now incorporates binary filter functionality
-//
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations.
 // + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'.
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
@@ -4587,8 +4585,8 @@ P.theBigActionsObject = _freeze({
 //
 // A new `clamp` attribute was added in v8.7.0, which can take the following String values:
 // + `down` (default) - uses `Math.floor()` for the calculation
-// + `up` (default) - uses `Math.ceil()` for the calculation
-// + `round` (default) - uses `Math.round()` for the calculation
+// + `up` - uses `Math.ceil()` for the calculation
+// + `round` - uses `Math.round()` for the calculation
     [STEP_CHANNELS]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
@@ -4712,7 +4710,8 @@ P.theBigActionsObject = _freeze({
                     outer = temp;
                 }
 
-                const complexLen = outer - inner;
+                let complexLen = outer - inner;
+                if (complexLen === 0) complexLen = 0.1;
 
                 x = sx - outer;
                 if (x < 0) x = 0;
@@ -5152,7 +5151,7 @@ P.theBigActionsObject = _freeze({
 // We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their `dirtyFilterIdentifier` flag to false.
 makeAnimation({
 
-    name: 'filters-cleanup-action',
+    name: 'SC-core-filters-cleanup-action',
     order: 999,
     fn: function () {
 

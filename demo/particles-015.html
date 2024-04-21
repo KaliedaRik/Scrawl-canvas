@@ -32,7 +32,7 @@
     data-scrawl-canvas
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -41,7 +41,7 @@
       <li>Check that the generated particles move only at specific angles (multiples of 60 degrees, all rotated by 15 degrees)</li>
       <li>Check that the tween correctly updates the color range for new particles</li>
     </ul>
-    <p><b>Known issue:</b> For some reason, the Emitter particles start to "stagnate" (not move) during the demo. Needs investigating.</p>
+
     <p><b>Known issue:</b> the Demo in Firefox differs from other browsers as that browser is less tolerant to retaining previous paints during the clear stage of the Display cycle (based on the Cell wrapper's 'clearAlpha' attribute's value).</p>
 
     <p><b>Touch test:</b> not required</p>

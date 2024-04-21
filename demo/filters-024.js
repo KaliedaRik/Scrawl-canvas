@@ -4,14 +4,23 @@
 // [Run code](../../demo/filters-024.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { addImageDragAndDrop } from './utilities.js';
+import { addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-scrawl.importDomImage('.flowers');
+const oCanvas = scrawl.findCanvas('output-canvas');
+const wCanvas = scrawl.findCanvas('channel-weights-canvas');
 
-const oCanvas = scrawl.library.canvas['output-canvas'];
-const wCanvas = scrawl.library.canvas['channel-weights-canvas'];
+
+// Namespacing boilerplate
+const oNamespace = oCanvas.name;
+const wNamespace = wCanvas.name;
+const oName = (n) => `${oNamespace}-${n}`;
+const wName = (n) => `${wNamespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
+scrawl.importDomImage('.flowers');
 
 
 // #### Curves filter
@@ -20,7 +29,7 @@ weights.fill(0);
 
 const myFilter = scrawl.makeFilter({
 
-    name: 'my-filter',
+    name: oName('weighted'),
     method: 'curveWeights',
 
     weights: [...weights],
@@ -30,67 +39,62 @@ const myFilter = scrawl.makeFilter({
 // #### Output canvas
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-    group: oCanvas.base.name,
-
+    name: oName('image'),
+    group: oCanvas.get('baseGroup'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['my-filter'],
+    filters: [oName('weighted')],
 });
 
 
 // #### Weights canvas
 wCanvas.buildCell({
 
-    name: 'curves-cell',
+    name: wName('curves-cell'),
     dimensions: [360, 360],
 });
 
 const curveArray = ['red', 'green', 'blue', 'black'];
 
-curveArray.forEach((name, index) => {
+curveArray.forEach((color, index) => {
+
+    const groupName = wName(`${color}-pins-group`);
 
     scrawl.makeGroup({
 
-        name: `${name}-pins-group`,
-        host: wCanvas.base.name,
+        name: groupName,
+        host: wCanvas.getBase(),
         order: index,
     });
 
     scrawl.makeWheel({
 
-        name: `${name}-pin-start`,
-        group: `${name}-pins-group`,
+        name: wName(`${color}-pin-start`),
+        group: groupName,
         radius: 12,
         start: [0, 360],
-        fillStyle: name,
+        fillStyle: color,
         strokeStyle: 'gold',
         method: 'fillThenDraw',
         handle: ['center', 'center'],
 
     }).clone({
 
-        name: `${name}-pin-cs`,
+        name: wName(`${color}-pin-cs`),
         radius: 8,
         start: [120, 240],
         method: 'fill',
 
     }).clone({
 
-        name: `${name}-pin-ce`,
+        name: wName(`${color}-pin-ce`),
         start: [240, 120],
 
     }).clone({
 
-        name: `${name}-pin-end`,
+        name: wName(`${color}-pin-end`),
         radius: 12,
         start: [360, 0],
         method: 'fillThenDraw',
@@ -98,20 +102,23 @@ curveArray.forEach((name, index) => {
 
     scrawl.makeBezier({
 
-        name: `${name}-bezier`,
-        group: 'curves-cell',
+        name: wName(`${color}-bezier`),
+        group: wName('curves-cell'),
 
-        strokeStyle: name,
+        strokeStyle: color,
         lineWidth: 1,
         method: 'draw',
 
-        pivot: `${name}-pin-start`,
+        pivot: wName(`${color}-pin-start`),
         lockTo: 'pivot',
-        startControlPivot: `${name}-pin-cs`,
+
+        startControlPivot: wName(`${color}-pin-cs`),
         startControlLockTo: 'pivot',
-        endControlPivot: `${name}-pin-ce`,
+
+        endControlPivot: wName(`${color}-pin-ce`),
         endControlLockTo: 'pivot',
-        endPivot: `${name}-pin-end`,
+
+        endPivot: wName(`${color}-pin-end`),
         endLockTo: 'pivot',
 
         useStartAsControlPoint: true,
@@ -125,15 +132,20 @@ curveArray.forEach((name, index) => {
 let draggedPin;
 
 const dragGroup = scrawl.makeGroup({
-    name: 'drag-group',
+    name: wName('drag-group'),
 });
 
-dragGroup.addArtefacts('black-pin-start', 'black-pin-cs', 'black-pin-ce', 'black-pin-end');
+dragGroup.addArtefacts(
+    wName('black-pin-start'),
+    wName('black-pin-cs'),
+    wName('black-pin-ce'),
+    wName('black-pin-end'),
+);
 
 const currentPin = scrawl.makeDragZone({
 
     zone: wCanvas,
-    collisionGroup: 'drag-group',
+    collisionGroup: wName('drag-group'),
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
@@ -149,7 +161,7 @@ const currentPin = scrawl.makeDragZone({
 
             if (name.indexOf('start') > 0 || name.indexOf('end') > 0) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 pin.isBeingDragged = false;
                 pin.set({
                     lockXTo: 'mouse',
@@ -183,10 +195,10 @@ const currentPin = scrawl.makeDragZone({
 // Filter weights recalculation
 const recalculateWeights = function () {
 
-    const allCurve = scrawl.library.entity['black-bezier'],
-        redCurve = scrawl.library.entity['red-bezier'],
-        greenCurve = scrawl.library.entity['green-bezier'],
-        blueCurve = scrawl.library.entity['blue-bezier'];
+    const allCurve = scrawl.findEntity(wName('black-bezier')),
+        redCurve = scrawl.findEntity(wName('red-bezier')),
+        greenCurve = scrawl.findEntity(wName('green-bezier')),
+        blueCurve = scrawl.findEntity(wName('blue-bezier'));
 
     const inverseStep = 256 / 360;
 
@@ -211,9 +223,13 @@ const recalculateWeights = function () {
 
         for (let i = 0; i < 1; i += 0.001) {
 
+/** @ts-expect-error */
             const r = redCurve.getPathPositionData(i),
+/** @ts-expect-error */
                 g = greenCurve.getPathPositionData(i),
+/** @ts-expect-error */
                 b = blueCurve.getPathPositionData(i),
+/** @ts-expect-error */
                 a = allCurve.getPathPositionData(i);
 
             let {x:xr, y:yr} = r;
@@ -337,7 +353,7 @@ const recalculateWeights = function () {
 // #### Scene animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: oName('animation'),
     target: [wCanvas, oCanvas],
 });
 
@@ -350,6 +366,13 @@ updateOutput();
 
 
 // #### User interaction
+// Setup form
+initializeDomInputs([
+    ['select', 'useMixedChannel', 1],
+    ['input', 'opacity', '1'],
+]);
+
+
 // Top form (for opacity, use mixed channel controls)
 scrawl.makeUpdater({
 
@@ -385,7 +408,7 @@ scrawl.addNativeListener('click', (e) => {
         }
 
         selected = e.target.id;
-        selectedGroup = scrawl.library.group[`${selected}-pins-group`];
+        selectedGroup = scrawl.findGroup(wName(`${selected}-pins-group`));
 
         if (selectedGroup) {
 
@@ -397,7 +420,12 @@ scrawl.addNativeListener('click', (e) => {
             selectedGroup.set({ order });
 
             dragGroup.clearArtefacts();
-            dragGroup.addArtefacts(`${selected}-pin-start`, `${selected}-pin-cs`, `${selected}-pin-ce`, `${selected}-pin-end`);
+            dragGroup.addArtefacts(
+                wName(`${selected}-pin-start`),
+                wName(`${selected}-pin-cs`),
+                wName(`${selected}-pin-ce`),
+                wName(`${selected}-pin-end`),
+            );
 
             e.target.classList.add('selected');
         }
@@ -407,15 +435,8 @@ scrawl.addNativeListener('click', (e) => {
 scrawl.addNativeListener(['input', 'change'], () => updateOutput(), '.controlItem');
 
 
-// Setup form
-// @ts-expect-error
-document.querySelector('#useMixedChannel').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#opacity').value = 1;
-
-
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(oCanvas, '#my-image-store', piccy);
+addImageDragAndDrop(oCanvas, `#${oNamespace} .assets`, piccy);
 
 
 // #### Development and testing

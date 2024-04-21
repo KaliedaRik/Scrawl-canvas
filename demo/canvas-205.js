@@ -4,16 +4,16 @@
 // [Run code](../../demo/canvas-205.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -101,38 +101,29 @@ scrawl.makeUpdater({
         fontSize: ['fontSize', 'raw'],
         roll: ['roll', 'float'],
         scale: ['scale', 'float'],
-        'fontWeight-string': ['fontWeight', 'raw'],
-        'fontWeight-number': ['fontWeight', 'int'],
+        fontWeight_string: ['fontWeight', 'raw'],
+        fontWeight_number: ['fontWeight', 'int'],
         fontVariantCaps: ['fontVariantCaps', 'raw'],
         fontStyle: ['fontStyle', 'raw'],
-        'fontStretch-string': ['fontStretch', 'raw'],
-        'fontStretch-percent': ['fontStretch', '%'],
+        fontStretch_string: ['fontStretch', 'raw'],
+        fontStretch_percent: ['fontStretch', '%'],
     },
 });
 
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#fontString').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#fontSize').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#fontWeight-string').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#fontWeight-number').value = 400;
-// @ts-expect-error
-document.querySelector('#fontVariantCaps').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#fontStyle').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#fontStretch-string').options.selectedIndex = 4;
-// @ts-expect-error
-document.querySelector('#fontStretch-percent').value = 100;
-
+initializeDomInputs([
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'fontWeight_number', '400'],
+    ['input', 'fontStretch_percent', '100'],
+    ['select', 'fontString', 0],
+    ['select', 'fontSize', 0],
+    ['select', 'fontWeight_string', 0],
+    ['select', 'fontVariantCaps', 0],
+    ['select', 'fontStyle', 0],
+    ['select', 'fontStretch_string', 4],
+]);
 
 
 // #### Development and testing

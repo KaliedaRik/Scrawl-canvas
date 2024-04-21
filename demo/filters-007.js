@@ -4,43 +4,43 @@
 // [Run code](../../demo/filters-007.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'channels',
+    name: name('channels'),
     method: 'channels',
 
-    red: 1,
-    green: 1,
-    blue: 1,
+    red: 1.45,
+    green: 1.1,
+    blue: 0,
 });
 
 
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['channels'],
+    filters: [name('channels')],
 });
 
 
@@ -48,8 +48,12 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Red: ${red.value}\n    Green: ${green.value}\n    Blue: ${blue.value}\n    Alpha: ${alpha.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Red: ${dom.red.value}
+    Green: ${dom.green.value}
+    Blue: ${dom.blue.value}
+    Alpha: ${dom.alpha.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
@@ -63,6 +67,16 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'red', '1.45'],
+    ['input', 'green', '1.1'],
+    ['input', 'blue', '0'],
+    ['input', 'alpha', '1'],
+    ['input', 'opacity', '1'],
+]);
+
+
 // Setup form observer functionality
 scrawl.makeUpdater({
 
@@ -84,27 +98,9 @@ scrawl.makeUpdater({
     },
 });
 
-// Setup form
-const red = document.querySelector('#red'),
-    green = document.querySelector('#green'),
-    blue = document.querySelector('#blue'),
-    alpha = document.querySelector('#alpha'),
-    opacity = document.querySelector('#opacity');
-
-// @ts-expect-error
-red.value = 1;
-// @ts-expect-error
-green.value = 1;
-// @ts-expect-error
-blue.value = 1;
-// @ts-expect-error
-alpha.value = 1;
-// @ts-expect-error
-opacity.value = 1;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

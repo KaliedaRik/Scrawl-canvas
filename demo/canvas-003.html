@@ -12,12 +12,43 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
     }
 
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+          text-align: center;
+          width: 600px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .css-gradients-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.25em;
+    }
     .css-gradients {
       width: 510px;
-      margin-left: 30px;
+      max-width: 100%;
       color: white;
       padding: 1em;
       margin-bottom: 0.25em;
@@ -61,14 +92,14 @@
   <div class="controls">
 
     <div class="pink label">paletteStart</div>
-    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" disabled /></div>
 
     <div class="pink label">paletteEnd</div>
-    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" disabled /></div>
 
     <div class="pink label">Cycle palette</div>
     <div class="pink">
-        <select class="controlItem" id="cyclePalette">
+        <select class="controlItem" id="cyclePalette" disabled>
           <option value="0">false</option>
           <option value="1">true</option>
       </select>
@@ -79,7 +110,7 @@
 
     <div class="pink label">Int. color space</div>
     <div class="pink">
-        <select class="controlItem" id="colorSpace">
+        <select class="controlItem" id="colorSpace" disabled>
           <option value="RGB">RGB</option>
           <option value="HSL">HSL</option>
           <option value="HWB">HWB</option>
@@ -93,7 +124,7 @@
 
     <div class="pink label">Ret. color space</div>
     <div class="pink">
-        <select class="controlItem" id="returnColorAs">
+        <select class="controlItem" id="returnColorAs" disabled>
           <option value="RGB">RGB</option>
           <option value="HSL">HSL</option>
           <option value="HWB">HWB</option>
@@ -105,20 +136,20 @@
     </div>
 
     <div class="green label">startX</div>
-    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" disabled /></div>
 
     <div class="blue label">endX</div>
-    <div class="blue"><input class="controlItem" id="endX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem" id="endX" type="range" value="0" min="0" max="100" step="1" disabled /></div>
 
     <div class="green label">startY</div>
-    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" disabled /></div>
 
     <div class="blue label">endY</div>
-    <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" disabled /></div>
 
     <div class="yellow label">Include red</div>
     <div class="yellow">
-      <select class="controlItem colorItems" id="red">
+      <select class="controlItem colorItems" id="red" disabled>
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -126,7 +157,7 @@
 
     <div class="yellow label">Include blue</div>
     <div class="yellow">
-        <select class="controlItem colorItems" id="blue">
+        <select class="controlItem colorItems" id="blue" disabled>
           <option value="0">false</option>
           <option value="1">true</option>
       </select>
@@ -134,7 +165,7 @@
 
     <div class="lavender label">Easing</div>
     <div class="lavender">
-      <select class="controlItem" id="easing">
+      <select class="controlItem" id="easing" disabled>
         <option value="linear">linear</option>
         <option value="out">out</option>
         <option value="in">in</option>
@@ -198,27 +229,38 @@
     </div>
 
     <div class="lavender label">Precision</div>
-    <div class="lavender"><input class="controlItem" id="precision" type="range" value="1" min="0" max="20" step="1" /></div>
+    <div class="lavender"><input class="controlItem" id="precision" type="range" value="1" min="0" max="20" step="1" disabled /></div>
 
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-    data-base-background-color="blanchedalmond"
-  ></canvas>
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="400"
+      data-scrawl-canvas
+      data-base-background-color="blanchedalmond"
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/canvas-003.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+    </canvas>
+  </div>
 
-  <div class="css-gradients" id="rgb">RGB</div>
-  <div class="css-gradients" id="hsl">HSL</div>
-  <div class="css-gradients" id="hwb">HWB</div>
-  <div class="css-gradients" id="lab">LAB</div>
-  <div class="css-gradients" id="lch">LCH</div>
-  <div class="css-gradients" id="oklab">OKLAB</div>
-  <div class="css-gradients" id="oklch">OKLCH</div>
+  <div class="css-gradients-container">
+    <div class="css-gradients" id="rgb">RGB</div>
+    <div class="css-gradients" id="hsl">HSL</div>
+    <div class="css-gradients" id="hwb">HWB</div>
+    <div class="css-gradients" id="lab">LAB</div>
+    <div class="css-gradients" id="lch">LCH</div>
+    <div class="css-gradients" id="oklab">OKLAB</div>
+    <div class="css-gradients" id="oklch">OKLCH</div>
+  </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

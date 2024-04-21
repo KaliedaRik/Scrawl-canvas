@@ -8,9 +8,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const {canvas1, canvas2, canvas3} = scrawl.library.canvas;
+// const {canvas1, canvas2, canvas3} = scrawl.library.canvas;
+const canvas1 = scrawl.findCanvas('canvas1'),
+    canvas2 = scrawl.findCanvas('canvas2'),
+    canvas3 = scrawl.findCanvas('canvas3');
 
 
+// Import image from DOM
 scrawl.importDomImage('.canal');
 
 
@@ -424,14 +428,14 @@ const report = reportSpeed('#reportmessage');
 
 // Canvas 1 animation
 scrawl.makeRender({
-    name: 'demo-animation-canvas-1',
+    name: name1('animation'),
     target: canvas1,
 });
 
 // Canvas 2 animation
 scrawl.makeRender({
 
-    name: 'demo-animation-canvas-2',
+    name: name2('animation'),
     target: canvas2,
     afterCreated: canvasTwoPostInitialization,
 });
@@ -439,7 +443,7 @@ scrawl.makeRender({
 // Canvas 3 animation
 const canvas3_animation = scrawl.makeRender({
 
-    name: 'demo-animation-canvas-3',
+    name: name3('animation'),
     target: canvas3,
     afterShow: canvasThreePostInitialization,
 });
