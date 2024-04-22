@@ -2365,7 +2365,7 @@ P.positionTextDecoration = function () {
                             if (!breakTextOnSpaces) {
 
                                 if (lineStart) {
-console.log('lineStart detected')
+
                                     buildUnderline();
                                     buildOverline();
                                     buildHighlight();
