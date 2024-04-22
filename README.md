@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.12.0 - 12 January 2024` 
+Version: `8.13.0 - 27 April 2024` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -58,7 +58,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.12.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-12-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-12-0.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.13.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-13-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-13-0.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -69,7 +69,7 @@ Alternatively, a zip package of the v8.12.0 files can be downloaded from this li
 </head>
 <body>
     
-    <canvas id="mycanvas"></canvas>
+    <canvas id="my-canvas"></canvas>
 
     <!-- The library is entirely modular and needs to be imported into a module script -->
     <script type="module">
@@ -77,20 +77,16 @@ Alternatively, a zip package of the v8.12.0 files can be downloaded from this li
         import * as scrawl from './relative-or-absolute/path/to/scrawl-canvas/min/scrawl.js';
 
         // Get a handle to the canvas element
-        let canvas = scrawl.library.canvas.mycanvas;
+        let canvas = scrawl.findCanvas('my-canvas');
 
         // Setup the scene to be displayed in the canvas
-        scrawl.makePhrase({
+        scrawl.makeLabel({
 
             name: 'hello',
+            start: [20, 20],
+
             text: 'Hello, World!',
-
-            width: '100%',
-
-            startX: 20,
-            startY: 20,
-
-            font: 'bold 40px Garamond, serif',
+            fontString: 'bold 40px Garamond, serif',
         });
 
         // Render the canvas scene once
@@ -106,7 +102,7 @@ Alternatively, a zip package of the v8.12.0 files can be downloaded from this li
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.12.0';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.13.0';
     [...]
 </script>
 ```
@@ -133,7 +129,7 @@ import * as scrawl from 'scrawl-canvas';
 After forking this repo down to your local machine, `cd` into the scrawl-canvas folder, run `yarn install` or `npm install` (for the local build toolchain - the library itself has no external dependencies) and start a local server.
 
 ```sh
-$> cd ./path/to/Scrawl-canvas
+$> cd ./path/to/Scrawl-canvas/folder
 $> yarn install
 $> yarn dev
 ```
@@ -141,9 +137,9 @@ $> yarn dev
 ### Testing
 The code base does not include any ___unit testing___ frameworks. Instead, we rely on a set of Demo tests which allow us to perform ___integration testing___ and ___user interface testing___.
 
-Why this approach? Because most of the Scrawl-canvas functionality revolves around various forms of animation, which requires visual inspection of the Demo tests to check that the canvas display - and thus, by inference, the underlying code - performs as expected.
+Why this approach? Because most of the Scrawl-canvas functionality revolves around various forms of user interaction and animation, which requires visual inspection of the Demo tests to check that the canvas display - and thus, by inference, the underlying code - performs as expected.
 
-Most Demos include some form of user interaction, which allows us to test specific aspects of the code base.
+Demos that include user interaction allow us to test specific aspects of the code base.
 
 #### Linting
 The tool chain includes the [ESLint](https://eslint.org/) package to impose some basic checks on code. We use the default checks supplied by the package (as indicated in the [rules documentation page](https://eslint.org/docs/latest/rules)). To run the linter:

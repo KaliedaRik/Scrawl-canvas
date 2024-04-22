@@ -1666,7 +1666,13 @@ P.positionTextUnitsAlongPath = function () {
                 offsetY = this.getTextOffset(temp, height);
 
                 currentLen += handleY;
-                if (currentLen >= length) currentLen -= length;
+                if (currentLen >= length) {
+
+                    currentLen -= length;
+                    unit.lineStart = true;
+                }
+                else unit.lineStart = false;
+
                 currentPos = currentLen / length;
 
                 unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
@@ -1705,7 +1711,13 @@ P.positionTextUnitsAlongPath = function () {
                 offsetY = this.getTextOffset(temp, height);
 
                 currentLen += handleX;
-                if (currentLen >= length) currentLen -= length;
+                if (currentLen >= length) {
+
+                    currentLen -= length;
+                    unit.lineStart = true;
+                }
+                else unit.lineStart = false;
+
                 currentPos = currentLen / length;
 
                 unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
@@ -2243,7 +2255,7 @@ P.positionTextDecoration = function () {
         includeUnderline, underlineStyle, underlineOffset, underlineWidth,
         includeOverline, overlineStyle, overlineOffset, overlineWidth,
         includeHighlight, highlightStyle,
-        localStyle, realisedStyle, realisedOffset, realisedWidth;
+        lineStart, localStyle, realisedStyle, realisedOffset, realisedWidth;
 
     const underlineOut = requestArray();
     const underlineBack = requestArray();
@@ -2292,6 +2304,7 @@ P.positionTextDecoration = function () {
                 ({
                     boxData,
                     charType,
+                    lineStart,
                     localStyle,
                     style,
                 } = unit);
@@ -2350,6 +2363,13 @@ P.positionTextDecoration = function () {
 
                             // TextUnits that are all single chars will style spaces
                             if (!breakTextOnSpaces) {
+
+                                if (lineStart) {
+console.log('lineStart detected')
+                                    buildUnderline();
+                                    buildOverline();
+                                    buildHighlight();
+                                }
 
                                 if (localStyle.includeUnderline) {
 
@@ -3398,6 +3418,8 @@ U.defs = {
     startRotation: 0,
     localStyle: null,
 
+    lineStart: false,
+
     len: 0,
     height: 0,
     kernOffset: 0,
@@ -3519,6 +3541,7 @@ U.set = function (items = Ωempty) {
                 case 'index' :
                 case 'kernOffset' :
                 case 'len' :
+                case 'lineStart' :
                 case 'localAlignment' :
                 case 'localStyle' :
                 case 'pathData' :
