@@ -27,6 +27,11 @@
     canvas {
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
+
+      & .assets {
+        height: 0;
+        overflow: hidden;
+      }
     }
   </style>
 </head>
@@ -45,7 +50,12 @@
     width="600" 
     height="400"
     data-scrawl-canvas
-  ></canvas>
+  >
+    <div class="assets" aria-hidden="true">
+      <img src="img/brick.png" id="brick" class="mypatterns" />
+      <img src="img/leaves.png" id="leaves" class="mypatterns" />
+    </div>
+  </canvas>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
@@ -92,9 +102,6 @@
 
     <p><a href="../docs/demo/canvas-009.html">Annotated code</a></p>
   </div>
-
-  <img src="img/brick.png" id="brick" class="mypatterns" />
-  <img src="img/leaves.png" id="leaves" class="mypatterns" />
 
   <script src="canvas-009.js" type="module"></script>
 

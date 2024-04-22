@@ -69,6 +69,12 @@
       <li>Add a link to the Picture entity - opens the "swan" page on Wikipedia</li>
       <li>Check that link works only when user clicks on visible (non-transparent) parts of the Picture entity</li>
     </ul>
+    <ul>
+      <li>Check that the user can navigate to each action (play/pause, listen/mute) and link (swan/goose) using the keyboard. When the action button or link is focussed, the graphical representation for that action/link should appear as if the user had hovered the mouse cursor over the entity</li>
+      <li>Check that the user can invoke each link and action using the keyboard; when the user toggles the play/pause or listen/mute buttons the associated Label entity's underline should not disappear</li>
+      <li>Examine the source code; check that the ordering of the actions and links is as expected</li>
+      <li>Check that as the video plays one of the wikipedia-goose-article links gets removed from the DOM at the same time as that goose moves out of the video; when the video loops, the link should be added back into the DOM
+    </ul>
 
     <p><b>Touch test:</b> should work as expected. Known issue: hover effects - such as underlining links - may remain present after touch ends.</p>
 
