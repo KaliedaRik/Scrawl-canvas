@@ -199,8 +199,13 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Confirm that all four buttons are generated (cloning)</li>
+      <li>Check that each button can be dragged/dropped, and that all parts of the button move as a single unit</li>
+      <li>Check that shadows are applied to both the text and the underline, and the shadow appears slightly down/right of the text/underline as the buttons rotate</li>
+      <li>Confirm that the text/underline respects the globalAlpha attribute setting</li>
     </ul>
+
+    <p><b>Note that:</b> some of the source- and destination-based globalCompositeOperation attribute values will destroy the canvas display. EnhancedLabel entitys work by creating internal cells for applying text and text decorations; those internal cells have dimensions matching the canvas base cell's dimensions, thus any GCO applied to the EnhancedLabel will have a canvas-wide effect.</p>
 
     <p><b>Touch test:</b> should work as expected.</p>
 

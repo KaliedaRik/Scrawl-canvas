@@ -291,8 +291,75 @@
 
   <div class="testinfo">
     <h4>Test purpose</h4>
+    <p>There are so, so many things to check here! The following list is not exhaustive:</p>
     <ul>
-      <li>...</li>
+      <li>The initial display should show a serif font, with line-centered text reading from left to right down the yellow box. Emojis should display (in full color) as expected. Lines will break on spaces; words will <b><i>not</i></b> break on soft hyphens. Font size will match the HTML displayed text and the line breaks (should) fall after the same words in both representations.</li>
+
+      <li>The small red dot will follow the mouse cursor over the text, jumping to each text unit's rotation/reflection point. The initial display centers the text units horizontally, with vertical alignment set to 'alphabetic'.</li>
+
+      <li>The demo has been set up to adjust the entity's <code style="display: inline">direction</code> and <code style="display: inline">breakTextOnSpaces</code> attributes to match a font's requirements when that font loads. Check that all fonts do load, and their display matches the HTML display:</li>
+
+      <ul>
+        <li>Check that Arabic and Hebrew fonts correctly read right-to-left.</li>
+
+        <li>Check that Thai fonts break lines as expected.</li>
+
+        <li>Check that for Chinese/Japanese fonts, the punctuation does not separate from the previous character across lines.</li>
+      </ul>
+
+      <li>Update the <code style="display: inline">breakTextOnSpaces</code> value. For western fonts this will lead to as many letters as possible appearing on each line, with words broken in unexpected places. For Arabic and Devangari fonts, this setting will break the displayed text (though the effect is useful for displaying Arabic fonts vertically).</li>
+
+      <li>For western fonts, check that words will break across lines on hard and soft hyphens when the <code style="display: inline">breakWordOnHyphens</code> attribute is set to true. Soft hyphens should only appear at the end of a line. Check that the hyphen character can be changed programmatically.</li>
+
+      <li>Some fonts will overflow the containing template entity's shape. Check that in these situations the truncate string appears as expected (this will not happen for right-to-left fonts, by design); check also that the truncate character can be changed programmatically.</li>
+
+      <li>Check that <code style="display: inline">letterSpacing</code> and <code style="display: inline">wordSpacing</code> attributes operate as expected. The text should flow as these attributes are adjusted.</li>
+
+      <li>Check that the text adapts as the template entity's dimensions are adjusted. Again, the text should flow (and match the HTML line breaks as closely as possible).</li>
+
+      <li>Check that text flow should see minimal changes as the template entity's scale is adjusted. The font's size should grow/shrink to match the scaling factor.</li>
+
+      <li>Check that when the template entity's rotation (<code style="display: inline">roll</code> attribute) updates, the text moves with the template.</li>
+
+      <li>Updating the <code style="display: inline">textHandleX</code> attribute should see minimal text movement, but the red dot will now settle on each text unit's left or right edge.</li>
+
+      <li>Updating the <code style="display: inline">textHandleY</code> attribute will cause the text to move upwards/downwards to match the attribute's value. Again, the red dot's positioning will match the attribute's value.</li>
+
+      <li>Check that adjusting the <code style="display: inline">lineAdjustment</code> attribute will move the text up/down, but the effect does not leave a significant gap at the top of the template entity's yellow background.</li>
+
+      <li>Check that adjusting the <code style="display: inline">lineSpacing</code> attribute alters the spacing between lines as expected. Setting this attribute to 0 should lead to the display of a single line, not to an error.</li>
+
+      <li>Check the <code style="display: inline">justifyLine</code> attribute:</li>
+
+      <ul>
+        <li>The "start" and "end" values should move each line of text to the start/end of the line respectively. For Arabic/Hebrew fonts this will be the right hand side of the template entity's shape; for other fonts, the left hand side.</li>
+
+        <li>The "center" value will center the text (as shown on initial display)</li>
+
+        <li>The "space-between" attribute will show a fully-justified-line effect. Any single orphan words at the end of the text should move to the left/right edge (dependant on the font); double orphan words will have a large gap between them.</li>
+
+        <li>The "space-around" attribute will display a near-full-justified effect; the last line of text will be centered.</li>
+      </ul>
+
+      <li>Update the <code style="display: inline">alignment</code> attribute. The text should rotate within the template entity's shape, reflowing to fit within the shape as it rotates.</li>
+
+      <li>Update the <code style="display: inline">textUnitFlow</code> attribute:</li>
+
+      <ul>
+        <li>The "row" value should display horizontal text (as initially displayed) with lines running downwards</li>
+
+        <li>The "row-reverse" value will reverse the text lines, with the first line displaying at the bottom and other lines running upwards</li>
+
+        <li>The "column" value should display text as horizontal columns. Each text unit will appear along the column, but rotated 90 degrees around its rotation/reflection point. If the text is not broken on spaces then each letter will appear on its own along the column (change the <code style="display: inline">alignment</code> attribute to show vertical text - for example for Chinese/Japanese fonts)</li>
+
+        <li>The "column-reverse" value reverses the order of the columns.</li>
+      </ul>
+
+      <li>Update the <code style="display: inline">localAlignment</code> attribute to adjust each text unit's rotation. Have fun playing with the various rotation attributes to see how they interact.</li>
+
+      <li>Also play with the guideline attribute settings - this will help you see where each text unit is supposed to be in relationship to its line.</li>
+
+      <li>Finally ... update the <code style="display: inline">layoutTemplate</code> attribute. Text should flow within each template's shape.</li>
     </ul>
 
     <p><b>Known issue:</b> When changing the font, or the layout template, the positioning of the red ball breaks down; however that can be fixed by making a small adjustment to another attribute.</p>
@@ -302,8 +369,10 @@
     <p><a href="../docs/demo/canvas-206.html">Annotated code</a></p>
 
     <p><br /><strong>A special note about fonts</strong></p>
+
     <p>Because fonts load asynchronously, and SC EnhancedLabel entitys currently have a (near-unsolvable) bug where they will measure a font before the font family's various iterations (if specified in CSS <code style="display: inline">@font-family</code> definitions) have downloaded - they only wait for their default font to download, not any additional fonts included (via CSS) in their text string - it makes sense for us to trigger font downloads as soon as possible. And the simplest way to do that is to include text using those fonts in a <code style="display: inline">"hidden"</code> (actually an <code style="display: inline">aria-hidden="true" style="height: 0; overflow: hidden"</code>) element in the web page, ahead of the <code style="display: inline">&lt;script></code> tag that triggers the SC canvas build.</p>
     <p>There are, of course, more professional ways for a front-end engineer to manage efficient and timely font downloads ... but this is just a demo and, well, needs must!</p>
+
     <div id="preload-fonts" aria-hidden="true">
       <div style='font-family: "Garamond"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
       <div style='font-family: "Roboto"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
@@ -334,14 +403,20 @@
     </div>
 
     <p><br /><strong>Another special note about Chinese and Japanese scripts</strong></p>
+
     <p>As much as we would like to treat every Chinese and Japanese character as its own thing, both writing systems insist that certain punctuation marks cannot be separated from their preceding character over a line break. Browsers know about this, and make sure it happens in normal HTML. SC, however, makes no effort to guess when this should happen.</p>
+
     <p>For this demo, we have manually added word joiner characters - HTML entity <code style="display: inline">&amp;#x2060;</code> - immediately before these punctuation marks. A more robust code solution to pre-process canvas text would be required to handle this sort of thing in production environments. Building such a solution into the SC code is not in scope for the project.</p>
 
     <p><br /><strong>An even more special note about Thai scripts</strong></p>
+
     <p>Breaking Thai "words" across lines is a difficult issue - see the <a href="https://www.w3.org/International/sealreq/thai/">W3C Thai Layout Requirements</a> spec for the latest position.</p>
+
     <p>The Thai script is a complex abugida. Spaces are used, but the tendency is to only insert them at natural breath pauses, which means a Thai "word" (as in: a set of characters not separated by spaces) can get exceptionally long.</p>
+
     <p>To break such words across lines, one recommendation is to insert zero-space spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. Browser engines seem to do this internally, but getting that data from the text string doesn't seem possible. For the two Thai fonts above, this has been done manually by copying the raw string into a <code style="display: inline">&lt;p style='width: 10px; font: 16px "Noto Thai Looped Sans"'></code> element and then counting the characters. Not recommended for production!</p>
   </div>
+
   <p style='width: 10px; font: 16px "Noto Thai Looped Sans"'>
     ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้
   </p>
