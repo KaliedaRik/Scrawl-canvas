@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -879,7 +899,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -894,9 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -907,14 +925,12 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create the filter</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -924,6 +940,39 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Import the initial image used by the Picture entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Create the filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tint&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>These values create the sepia tint</p>
 
@@ -941,54 +990,9 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 });
 
 <span class="hljs-keyword">const</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-color-factory&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;colors&#x27;</span>),
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>Create the target entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
-
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;tint&#x27;</span>],
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -999,11 +1003,18 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Create the target entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    In Red - red: <span class="hljs-subst">${redInRed.value}</span> green: <span class="hljs-subst">${greenInRed.value}</span> blue: <span class="hljs-subst">${blueInRed.value}</span> → <span class="hljs-subst">${redColor.value}</span>\n    In Green - red: <span class="hljs-subst">${redInGreen.value}</span> green: <span class="hljs-subst">${greenInGreen.value}</span> blue: <span class="hljs-subst">${blueInGreen.value}</span> → <span class="hljs-subst">${greenColor.value}</span>\n    In Blue -  red: <span class="hljs-subst">${redInBlue.value}</span> green: <span class="hljs-subst">${greenInBlue.value}</span> blue: <span class="hljs-subst">${blueInBlue.value}</span> → <span class="hljs-subst">${blueColor.value}</span>\n    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;image&#x27;</span>),
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+    <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tint&#x27;</span>)],
 });</pre></div></div>
             
         </li>
@@ -1015,18 +1026,89 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`
+    In Red - red: <span class="hljs-subst">${dom.redInRed.value}</span> | green: <span class="hljs-subst">${dom.greenInRed.value}</span> | blue: <span class="hljs-subst">${dom.blueInRed.value}</span> → <span class="hljs-subst">${dom.redColor.value}</span>
+    In Green - red: <span class="hljs-subst">${dom.redInGreen.value}</span> | green: <span class="hljs-subst">${dom.greenInGreen.value}</span> | blue: <span class="hljs-subst">${dom.blueInGreen.value}</span> → <span class="hljs-subst">${dom.greenColor.value}</span>
+    In Blue -  red: <span class="hljs-subst">${dom.redInBlue.value}</span> | green: <span class="hljs-subst">${dom.greenInBlue.value}</span> | blue: <span class="hljs-subst">${dom.blueInBlue.value}</span> → <span class="hljs-subst">${dom.blueColor.value}</span>
+    Opacity: <span class="hljs-subst">${dom.opacity.value}</span>`</span>;
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
               <p>Create the Display cycle animation</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Setup form</p>
 
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> _round = <span class="hljs-title class_">Math</span>.<span class="hljs-property">round</span>,
+    red = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(<span class="hljs-title function_">_round</span>(<span class="hljs-number">0.39</span> * <span class="hljs-number">255</span>), <span class="hljs-title function_">_round</span>(<span class="hljs-number">0.77</span> * <span class="hljs-number">255</span>), <span class="hljs-title function_">_round</span>(<span class="hljs-number">0.19</span> * <span class="hljs-number">255</span>)),
+    green = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(<span class="hljs-title function_">_round</span>(<span class="hljs-number">0.35</span> * <span class="hljs-number">255</span>), <span class="hljs-title function_">_round</span>(<span class="hljs-number">0.69</span> * <span class="hljs-number">255</span>), <span class="hljs-title function_">_round</span>(<span class="hljs-number">0.17</span> * <span class="hljs-number">255</span>)),
+    blue = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(<span class="hljs-title function_">_round</span>(<span class="hljs-number">0.27</span> * <span class="hljs-number">255</span>), <span class="hljs-title function_">_round</span>(<span class="hljs-number">0.53</span> * <span class="hljs-number">255</span>), <span class="hljs-title function_">_round</span>(<span class="hljs-number">0.13</span> * <span class="hljs-number">255</span>));
+
+<span class="hljs-keyword">const</span> dom = <span class="hljs-title function_">initializeDomInputs</span>([
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;redInRed&#x27;</span>, <span class="hljs-string">&#x27;0.39&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;greenInRed&#x27;</span>, <span class="hljs-string">&#x27;0.77&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;blueInRed&#x27;</span>, <span class="hljs-string">&#x27;0.19&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;redInGreen&#x27;</span>, <span class="hljs-string">&#x27;0.35&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;greenInGreen&#x27;</span>, <span class="hljs-string">&#x27;0.69&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;blueInGreen&#x27;</span>, <span class="hljs-string">&#x27;0.17&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;redInBlue&#x27;</span>, <span class="hljs-string">&#x27;0.27&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;greenInBlue&#x27;</span>, <span class="hljs-string">&#x27;0.53&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;blueInBlue&#x27;</span>, <span class="hljs-string">&#x27;0.13&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;redColor&#x27;</span>, red],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;greenColor&#x27;</span>, green],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;blueColor&#x27;</span>, blue],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Handle the color inputs</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
     <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {
 
@@ -1041,56 +1123,30 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
         <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;redColor&#x27;</span> === target) {
 
-            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">redColor</span>: val });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">redColor</span>: val });
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            redInRed.<span class="hljs-property">value</span> = r;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            greenInRed.<span class="hljs-property">value</span> = g;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            blueInRed.<span class="hljs-property">value</span> = b;
+            dom.<span class="hljs-property">redInRed</span>.<span class="hljs-property">value</span> = r;
+            dom.<span class="hljs-property">greenInRed</span>.<span class="hljs-property">value</span> = g;
+            dom.<span class="hljs-property">blueInRed</span>.<span class="hljs-property">value</span> = b;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;greenColor&#x27;</span> === target) {
 
-            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">greenColor</span>: val });</pre></div></div>
+            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">greenColor</span>: val });
+
+            dom.<span class="hljs-property">redInGreen</span>.<span class="hljs-property">value</span> = r;
+            dom.<span class="hljs-property">greenInGreen</span>.<span class="hljs-property">value</span> = g;
+            dom.<span class="hljs-property">blueInGreen</span>.<span class="hljs-property">value</span> = b;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;blueColor&#x27;</span> === target) {
+
+            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">blueColor</span>: val });
+
+            dom.<span class="hljs-property">redInBlue</span>.<span class="hljs-property">value</span> = r;
+            dom.<span class="hljs-property">greenInBlue</span>.<span class="hljs-property">value</span> = g;
+            dom.<span class="hljs-property">blueInBlue</span>.<span class="hljs-property">value</span> = b;
+        }
+    }
+}, <span class="hljs-string">&#x27;.colorSelector&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1101,105 +1157,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            redInGreen.<span class="hljs-property">value</span> = r;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            greenInGreen.<span class="hljs-property">value</span> = g;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            blueInGreen.<span class="hljs-property">value</span> = b;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;blueColor&#x27;</span> === target) {
-
-            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">blueColor</span>: val });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            redInBlue.<span class="hljs-property">value</span> = r;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            greenInBlue.<span class="hljs-property">value</span> = g;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            blueInBlue.<span class="hljs-property">value</span> = b;
-        }
-    }
-}, <span class="hljs-string">&#x27;.colorSelector&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <h4 id="user-interaction">User interaction</h4>
-<p>Setup form observer functionality</p>
+              <p>Setup form observer functionality for other inputs</p>
 
             </div>
             
@@ -1227,435 +1185,47 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
     },
 
-    <span class="hljs-attr">callback</span>: <span class="hljs-function">() =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+    <span class="hljs-attr">callback</span>: <span class="hljs-function">() =&gt;</span> {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> rR = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(redInRed.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+        <span class="hljs-keyword">const</span> rR = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">redInRed</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            gR = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">greenInRed</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            bR = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">blueInRed</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            rG = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">redInGreen</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            gG = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">greenInGreen</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            bG = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">blueInGreen</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            rB = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">redInBlue</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            gB = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">greenInBlue</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),
+            bB = <span class="hljs-title function_">_round</span>(dom.<span class="hljs-property">blueInBlue</span>.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            gR = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(greenInRed.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            bR = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(blueInRed.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            rG = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(redInGreen.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            gG = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(greenInGreen.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            bG = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(blueInGreen.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            rB = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(redInBlue.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            gB = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(greenInBlue.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>),</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            bB = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(blueInBlue.<span class="hljs-property">value</span> * <span class="hljs-number">255</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        redColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(rR, gR, bR);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        greenColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(rG, gG, bG);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        blueColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(rB, gB, bB);
+        dom.<span class="hljs-property">redColor</span>.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(rR, gR, bR);
+        dom.<span class="hljs-property">greenColor</span>.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(rG, gG, bG);
+        dom.<span class="hljs-property">blueColor</span>.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(rB, gB, bB);
     },
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-32">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>Setup form</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> redInRed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#redInRed&#x27;</span>),
-    greenInRed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#greenInRed&#x27;</span>),
-    blueInRed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blueInRed&#x27;</span>),
-    redInGreen = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#redInGreen&#x27;</span>),
-    greenInGreen = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#greenInGreen&#x27;</span>),
-    blueInGreen = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blueInGreen&#x27;</span>),
-    redInBlue = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#redInBlue&#x27;</span>),
-    greenInBlue = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#greenInBlue&#x27;</span>),
-    blueInBlue = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blueInBlue&#x27;</span>),
-    redColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#redColor&#x27;</span>),
-    greenColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#greenColor&#x27;</span>),
-    blueColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blueColor&#x27;</span>),
-    opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>redInRed.<span class="hljs-property">value</span> = <span class="hljs-number">0.39</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>redInGreen.<span class="hljs-property">value</span> = <span class="hljs-number">0.35</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>redInBlue.<span class="hljs-property">value</span> = <span class="hljs-number">0.27</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>greenInRed.<span class="hljs-property">value</span> = <span class="hljs-number">0.77</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>greenInGreen.<span class="hljs-property">value</span> = <span class="hljs-number">0.69</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>greenInBlue.<span class="hljs-property">value</span> = <span class="hljs-number">0.53</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>blueInRed.<span class="hljs-property">value</span> = <span class="hljs-number">0.19</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>blueInGreen.<span class="hljs-property">value</span> = <span class="hljs-number">0.17</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>blueInBlue.<span class="hljs-property">value</span> = <span class="hljs-number">0.13</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>redColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.39</span> * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.77</span> * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.19</span> * <span class="hljs-number">255</span>));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>greenColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.35</span> * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.69</span> * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.17</span> * <span class="hljs-number">255</span>));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>blueColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.27</span> * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.53</span> * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-number">0.13</span> * <span class="hljs-number">255</span>));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">`#<span class="hljs-subst">${namespace}</span> .assets`</span>, piccy);</pre></div></div>
             
         </li>
         
         
-        <li id="section-47">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

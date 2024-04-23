@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -879,7 +899,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -894,9 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-<span class="hljs-keyword">const</span> balancePoint = <span class="hljs-number">2500</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -907,13 +925,44 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Magic number</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> balancePoint = <span class="hljs-number">2500</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
               <p>Create a Shape entity to act as a path for our strokeStyle outline</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arrow = scrawl.<span class="hljs-title function_">makeShape</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-arrow&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-arrow&#x27;</span>),
 
     <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">&#x27;M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z&#x27;</span>,
 
@@ -933,11 +982,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>We create this effect using a dashed line with very large dash/nodash values</p>
 <ul>
@@ -952,11 +1001,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>To retrieve the Shape’s length, we need to tell it that it is being used as a path</p>
 
@@ -970,7 +1019,7 @@
 
 <span class="hljs-keyword">const</span> japan = arrow.<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;japan&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;japan&#x27;</span>),
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;70%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
 
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
@@ -1294,67 +1343,15 @@
         </li>
         
         
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <h4 id="scene-animation">Scene animation</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>Our outline has been set up - in the HTML file range input element with an id of “progress” - as a number value running from 0.0 (no outline visible) to 100.0 (whole Shape is outlined). What we need to do in our code is link this novel <code>progress</code> attribute to our Shape entity’s <code>lineDashOffset</code> attribute.</p>
-<ul>
-<li>We cannot set the <code>lineDashOffset</code> attribute directly because it is an absolute value, dependent on the Shape entity’s (computed) path length value which is, in turn, dependent on the entity’s <code>pathDefinition</code> and <code>scale</code> attribute values.</li>
-<li>We also want to animate the progress value using a Tween animation; however we can only tween values which reside in a Scrawl-canvas object, with a Scrawl-canvas <code>set</code> function.</li>
-</ul>
-<p>To solve these issues, we create a World object and define the <code>progress</code> attribute there; at the same time we can define its setter function to both calculate and update the Shape entitys’ <code>lineDashOffset</code> attribute and also update the web page’s progress input field.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> progressElement = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#progress&#x27;</span>);
-
-<span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
-
-    <span class="hljs-attr">userAttributes</span>: [
-
-        {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;progress&#x27;</span>,
-            <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <h4 id="scene-animation">Scene animation</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">progress</span> = item;
-
-                <span class="hljs-keyword">if</span> (arrow.<span class="hljs-property">length</span> != <span class="hljs-literal">null</span>) {
-
-                    arrow.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(arrow.<span class="hljs-property">length</span> * (item / <span class="hljs-number">100</span>)),
-                    });</pre></div></div>
             
         </li>
         
@@ -1365,15 +1362,34 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>The japan entity has several paths, all of them shorter than the arrow entity’s path</p>
+              <p>Our outline has been set up - in the HTML file range input element with an id of “progress” - as a number value running from 0.0 (no outline visible) to 100.0 (whole Shape is outlined). What we need to do in our code is link this novel <code>progress</code> attribute to our Shape entity’s <code>lineDashOffset</code> attribute.</p>
 <ul>
-<li>Most of the paths (around small islands) will be shown relatively quickly - a quirk of  using a dashed line to show the tracing effect</li>
+<li>We cannot set the <code>lineDashOffset</code> attribute directly because it is an absolute value, dependent on the Shape entity’s (computed) path length value which is, in turn, dependent on the entity’s <code>pathDefinition</code> and <code>scale</code> attribute values.</li>
+<li>We also want to animate the progress value using a Tween animation; however we can only tween values which reside in a Scrawl-canvas object, with a Scrawl-canvas <code>set</code> function.</li>
 </ul>
+<p>To solve these issues, we create a World object and define the <code>progress</code> attribute there; at the same time we can define its setter function to both calculate and update the Shape entitys’ <code>lineDashOffset</code> attribute and also update the web page’s progress input field.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    japan.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(japan.<span class="hljs-property">length</span> * (item / <span class="hljs-number">270</span>)),
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;demo-world&#x27;</span>),
+
+    <span class="hljs-attr">userAttributes</span>: [
+
+        {
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;progressVal&#x27;</span>,
+            <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">progressVal</span> = item;
+
+                <span class="hljs-keyword">if</span> (arrow.<span class="hljs-property">length</span> != <span class="hljs-literal">null</span>) {
+
+                    arrow.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(arrow.<span class="hljs-property">length</span> * (item / <span class="hljs-number">100</span>)),
                     });</pre></div></div>
             
         </li>
@@ -1385,11 +1401,18 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>The japan entity has several paths, all of them shorter than the arrow entity’s path</p>
+<ul>
+<li>Most of the paths (around small islands) will be shown relatively quickly - a quirk of  using a dashed line to show the tracing effect</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    progressElement.<span class="hljs-property">value</span> = item;
+            <div class="content"><div class='highlight'><pre>                    japan.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(japan.<span class="hljs-property">length</span> * (item / <span class="hljs-number">270</span>)),
+                    });
+
+                    dom.<span class="hljs-property">progress</span>.<span class="hljs-property">value</span> = item;
                 }
             },
         }
@@ -1417,7 +1440,12 @@
 
         dirty = <span class="hljs-literal">false</span>;
 
-        myWorld.<span class="hljs-title function_">set</span>({</pre></div></div>
+        myWorld.<span class="hljs-title function_">set</span>({
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+            <span class="hljs-attr">progressVal</span>: dom.<span class="hljs-property">progress</span>.<span class="hljs-property">value</span>,
+        });
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1428,24 +1456,6 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attr">progress</span>: progressElement.<span class="hljs-property">value</span>,
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
               <p>Build a tween to progressively outline the arrow Shape entity</p>
 <ul>
 <li>We actually tween the myWorld.progress attribute, which in turn will update the arrow and japan entitys</li>
@@ -1455,7 +1465,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myTween = scrawl.<span class="hljs-title function_">makeTween</span>({
 
-  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;line-progression&#x27;</span>,
+  <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;line-progression&#x27;</span>),
 
   <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
   <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
@@ -1464,7 +1474,7 @@
 
   <span class="hljs-attr">definitions</span>: [
     {
-      <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;progress&#x27;</span>,
+      <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;progressVal&#x27;</span>,
       <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
       <span class="hljs-attr">end</span>: <span class="hljs-number">100</span>,
       <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
@@ -1475,17 +1485,48 @@
         </li>
         
         
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = <span class="hljs-title function_">initializeDomInputs</span>([
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;progress&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+]);
+
+
+<span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`
+    Arrow length: <span class="hljs-subst">${arrow.length}</span>
+    Line progress: <span class="hljs-subst">${dom.progress.value}</span>`</span>;
+});</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">commence</span>: checkDirty,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
             
         </li>
         
@@ -1495,43 +1536,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Arrow length: <span class="hljs-subst">${arrow.length}</span>\n    Line progress: <span class="hljs-subst">${progressElement.value}</span>`</span>;
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>Create the Display cycle animation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">commence</span>: checkDirty,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -1549,6 +1553,7 @@
     dirty = <span class="hljs-literal">true</span>;
 };
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateScale, <span class="hljs-string">&#x27;#scale&#x27;</span>);
+
 
 <span class="hljs-keyword">const</span> updateProgress = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
@@ -1584,12 +1589,12 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
     <span class="hljs-keyword">if</span> (myTween.<span class="hljs-title function_">isRunning</span>() &amp;&amp; val === <span class="hljs-string">&#x27;halt&#x27;</span>) {
 
         myTween.<span class="hljs-title function_">halt</span>();
-        progressElement.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
+        dom.<span class="hljs-property">progress</span>.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!myTween.<span class="hljs-title function_">isRunning</span>() &amp;&amp; val === <span class="hljs-string">&#x27;run&#x27;</span>) {
 
         myTween.<span class="hljs-title function_">run</span>();
-        progressElement.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        dom.<span class="hljs-property">progress</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
     }
 };
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], actionTween, <span class="hljs-string">&#x27;#tween&#x27;</span>);</pre></div></div>
@@ -1597,11 +1602,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

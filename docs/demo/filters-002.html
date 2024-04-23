@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -879,7 +899,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -894,11 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
-    entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>,
-    filter = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">filter</span>;
-
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -909,47 +925,12 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create the filters</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cyan&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;cyan&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magenta&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;magenta&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notred&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notred&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notgreen&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notgreen&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notblue&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notblue&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -960,174 +941,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Create the target entitys</p>
+              <p>Import the initial image used by the Picture entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red-filter&#x27;</span>,
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">10</span>],
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">120</span>, <span class="hljs-number">120</span>],
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;red&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;green&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blue&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cyan-filter&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">140</span>],
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;cyan&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magenta-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;magenta&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;yellow&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notred-filter&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">270</span>],
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;notred&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notgreen-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;notgreen&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notblue-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;notblue&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale-filter&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">400</span>],
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;grayscale&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sepia-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;sepia&#x27;</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert-filter&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;invert&#x27;</span>],
-});
-
-scrawl.<span class="hljs-title function_">makePhrase</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Red&#x27;</span>,
-
-    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>,
-
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>,
-
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;red-filter&#x27;</span>,
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-    <span class="hljs-attr">offset</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">5</span>],
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Green&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;green-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Blue&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;blue-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cyan-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Cyan&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;cyan-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magenta-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Magenta&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;magenta-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Yellow&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;yellow-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notred-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Notred&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;notred-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notgreen-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Notgreen&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;notgreen-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notblue-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Notblue&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;notblue-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Grayscale&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;grayscale-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sepia-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Sepia&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;sepia-filter&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert-label&#x27;</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Invert&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;invert-filter&#x27;</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1138,12 +956,39 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Preparation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterMethods = [
+    <span class="hljs-string">&#x27;red&#x27;</span>,       <span class="hljs-string">&#x27;green&#x27;</span>,    <span class="hljs-string">&#x27;blue&#x27;</span>,
+    <span class="hljs-string">&#x27;cyan&#x27;</span>,      <span class="hljs-string">&#x27;magenta&#x27;</span>,  <span class="hljs-string">&#x27;yellow&#x27;</span>,
+    <span class="hljs-string">&#x27;notred&#x27;</span>,    <span class="hljs-string">&#x27;notgreen&#x27;</span>, <span class="hljs-string">&#x27;notblue&#x27;</span>,
+    <span class="hljs-string">&#x27;grayscale&#x27;</span>, <span class="hljs-string">&#x27;sepia&#x27;</span>,    <span class="hljs-string">&#x27;invert&#x27;</span>
+];
+
+<span class="hljs-keyword">const</span> positions = [
+    [<span class="hljs-number">10</span>, <span class="hljs-number">10</span>],  [<span class="hljs-number">140</span>, <span class="hljs-number">10</span>],  [<span class="hljs-number">270</span>, <span class="hljs-number">10</span>],
+    [<span class="hljs-number">10</span>, <span class="hljs-number">140</span>], [<span class="hljs-number">140</span>, <span class="hljs-number">140</span>], [<span class="hljs-number">270</span>, <span class="hljs-number">140</span>],
+    [<span class="hljs-number">10</span>, <span class="hljs-number">270</span>], [<span class="hljs-number">140</span>, <span class="hljs-number">270</span>], [<span class="hljs-number">270</span>, <span class="hljs-number">270</span>],
+    [<span class="hljs-number">10</span>, <span class="hljs-number">400</span>], [<span class="hljs-number">140</span>, <span class="hljs-number">400</span>], [<span class="hljs-number">270</span>, <span class="hljs-number">400</span>],
+];
+
+<span class="hljs-keyword">const</span> filters = [];
+
+<span class="hljs-keyword">const</span> pictureGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pictures&#x27;</span>),
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">getBase</span>(),
+});
+
+pictureGroup.<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;labels&#x27;</span>),
+});
+
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">capitalize</span> = (<span class="hljs-params">item</span>) =&gt; item[<span class="hljs-number">0</span>].<span class="hljs-title function_">toUpperCase</span>() + item.<span class="hljs-title function_">slice</span>(<span class="hljs-number">1</span>);</pre></div></div>
             
         </li>
         
@@ -1154,11 +999,51 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Build out the filters and entitys</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
+            <div class="content"><div class='highlight'><pre>filterMethods.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">n, index</span>) =&gt;</span> {
+
+    filters.<span class="hljs-title function_">push</span>(scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${n}</span>-filter`</span>),
+        <span class="hljs-attr">method</span>: n,
+    }));
+
+    scrawl.<span class="hljs-title function_">makePicture</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${n}</span>-output`</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pictures&#x27;</span>),
+
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+
+        <span class="hljs-attr">start</span>: positions[index],
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">120</span>, <span class="hljs-number">120</span>],
+
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+        <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${n}</span>-filter`</span>)],
+    });
+
+    scrawl.<span class="hljs-title function_">makeLabel</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${n}</span>-label`</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;labels&#x27;</span>),
+
+        <span class="hljs-attr">text</span>: <span class="hljs-title function_">capitalize</span>(n),
+
+        <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>,
+
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>,
+
+        <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${n}</span>-output`</span>),
+        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+        <span class="hljs-attr">offset</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">5</span>],
+    });
 });</pre></div></div>
             
         </li>
@@ -1170,15 +1055,15 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Create the Display cycle animation</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`
+    Opacity: <span class="hljs-subst">${dom.opacity.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1190,53 +1075,16 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilters = [
-    filter.<span class="hljs-property">red</span>,
-    filter.<span class="hljs-property">green</span>,
-    filter.<span class="hljs-property">blue</span>,
-    filter.<span class="hljs-property">cyan</span>,
-    filter.<span class="hljs-property">magenta</span>,
-    filter.<span class="hljs-property">yellow</span>,
-    filter.<span class="hljs-property">notred</span>,
-    filter.<span class="hljs-property">notgreen</span>,
-    filter.<span class="hljs-property">notblue</span>,
-    filter.<span class="hljs-property">grayscale</span>,
-    filter.<span class="hljs-property">sepia</span>,
-    filter.<span class="hljs-property">invert</span>
-];
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-<span class="hljs-keyword">const</span> myPictures = [
-    entity[<span class="hljs-string">&#x27;red-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;green-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;blue-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;cyan-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;magenta-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;yellow-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;notred-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;notgreen-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;notblue-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;grayscale-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;sepia-filter&#x27;</span>],
-    entity[<span class="hljs-string">&#x27;invert-filter&#x27;</span>],
-];
-
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    myFilters.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>) }));
-
-}, <span class="hljs-string">&#x27;#opacity&#x27;</span>);
-
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">const</span> val = (e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
-
-    myPictures.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">memoizeFilterOutput</span>: val }));
-
-}, <span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>);</pre></div></div>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
             
         </li>
         
@@ -1247,13 +1095,15 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Setup form
-@ts-expect-error</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Setup form</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-<span class="hljs-keyword">const</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = <span class="hljs-title function_">initializeDomInputs</span>([
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;memoizeFilterOutput&#x27;</span>, <span class="hljs-number">0</span>],
+]);</pre></div></div>
             
         </li>
         
@@ -1264,11 +1114,25 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Updating the Picture entitys for memoizeFilterOutput</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeUpdater</span>({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: dom.<span class="hljs-property">memoizeFilterOutput</span>,
+
+    <span class="hljs-attr">target</span>: pictureGroup,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-attr">memoizeFilterOutput</span>: [<span class="hljs-string">&#x27;memoizeFilterOutput&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+    },
+});</pre></div></div>
             
         </li>
         
@@ -1279,11 +1143,16 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <p>Updating the Filter objects for opacity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, myPictures);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> val = <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>);
+    filters.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">opacity</span>: val }));
+
+}, dom.<span class="hljs-property">opacity</span>);</pre></div></div>
             
         </li>
         
@@ -1293,6 +1162,21 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">`#<span class="hljs-subst">${namespace}</span> .assets`</span>, pictureGroup);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

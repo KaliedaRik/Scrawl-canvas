@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -891,12 +911,10 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
-<p>Create some variables for use elsewhere in the script</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
-    stack = artefact.<span class="hljs-property">mystack</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stack = scrawl.<span class="hljs-title function_">findStack</span>(<span class="hljs-string">&#x27;mystack&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -907,15 +925,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create a new group to which we can assign the artefacts we want to drag around the stack</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> hitGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-hit-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: stack.<span class="hljs-property">name</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = stack.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -925,6 +940,25 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Create a new group to which we can assign the artefacts we want to drag around the stack</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> hitGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-hit-group&#x27;</span>),
+    <span class="hljs-attr">host</span>: stack.<span class="hljs-property">name</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>TODO: we need perspectiveZ (CSS perspective) to be picked up from CSS setting in html file. The code where this is handled is in mixin/dom.js lines 355 onwards. Currently is a known issue (low priority)</p>
 
@@ -937,11 +971,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Generate new (DOM) element artefacts and add them to the stack via our new group</p>
 
@@ -949,8 +983,8 @@
             
             <div class="content"><div class='highlight'><pre>stack.<span class="hljs-title function_">addNewElement</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;basic-square&#x27;</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;my-hit-group&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;basic-square&#x27;</span>),
+    <span class="hljs-attr">group</span>: hitGroup,
     <span class="hljs-attr">tag</span>: <span class="hljs-string">&#x27;div&#x27;</span>,
 
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Default square &lt;div&gt;&#x27;</span>,
@@ -964,7 +998,7 @@
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;oval&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;oval&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">150</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">50</span>,
@@ -982,11 +1016,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Clones will create literal clones of the element they are cloning. Thus cannot clone an element and attempt to change its tag value at the same time.</p>
 
@@ -994,8 +1028,8 @@
             
             <div class="content"><div class='highlight'><pre>stack.<span class="hljs-title function_">addNewElement</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;list&#x27;</span>,
-    <span class="hljs-attr">group</span>: hitGroup.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;list&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-hit-group&#x27;</span>),
     <span class="hljs-attr">tag</span>: <span class="hljs-string">&#x27;ul&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
@@ -1023,7 +1057,7 @@
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;list-no-border&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;list-no-border&#x27;</span>),
 
     <span class="hljs-attr">startY</span>: <span class="hljs-number">250</span>,
     <span class="hljs-attr">scale</span>: <span class="hljs-number">1.25</span>,
@@ -1038,11 +1072,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Generate more elements - these ones won’t be draggable: instead we will pivot them to the element artefacts generated above</p>
 
@@ -1050,7 +1084,7 @@
             
             <div class="content"><div class='highlight'><pre>stack.<span class="hljs-title function_">addNewElement</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-1&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pivot-1&#x27;</span>),
     <span class="hljs-attr">tag</span>: <span class="hljs-string">&#x27;div&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">12</span>,
@@ -1058,7 +1092,7 @@
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;basic-square&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;basic-square&#x27;</span>),
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 
@@ -1068,32 +1102,19 @@
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-2&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;oval&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pivot-2&#x27;</span>),
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;oval&#x27;</span>),
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-3&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;list&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pivot-3&#x27;</span>),
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;list&#x27;</span>),
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-4&#x27;</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;list-no-border&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pivot-4&#x27;</span>),
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;list-no-border&#x27;</span>),
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Handle the pre-existing SVG elements that have been automatically imported into the stack</p>
-
-            </div>
             
         </li>
         
@@ -1104,13 +1125,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas’s inbuilt <strong>drag-and-drop</strong> functionality. We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.</p>
+              <p>Handle the pre-existing SVG elements that have been automatically imported into the stack</p>
+<p>SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas’s inbuilt <strong>drag-and-drop</strong> functionality. We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>stack.<span class="hljs-title function_">addNewElement</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;weather-icon-dragger&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;weather-icon-dragger&#x27;</span>),
     <span class="hljs-attr">tag</span>: <span class="hljs-string">&#x27;div&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">40</span>,
@@ -1132,22 +1154,22 @@
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;simple-svg-dragger&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;simple-svg-dragger&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-number">60</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">220</span>,
 
 });
 
-artefact.<span class="hljs-property">weathericon</span>.<span class="hljs-title function_">set</span>({
+scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;weathericon&#x27;</span>).<span class="hljs-title function_">set</span>({
 
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;weather-icon-dragger&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;weather-icon-dragger&#x27;</span>),
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 });
 
-artefact[<span class="hljs-string">&#x27;simple-svg&#x27;</span>].<span class="hljs-title function_">set</span>({
+scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;simple-svg&#x27;</span>).<span class="hljs-title function_">set</span>({
 
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;simple-svg-dragger&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;simple-svg-dragger&#x27;</span>),
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 
@@ -1208,7 +1230,7 @@ artefact[<span class="hljs-string">&#x27;simple-svg&#x27;</span>].<span class="h
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: stack,
     <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
             

@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="../snippets/text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="../snippets/word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1349,6 +1364,7 @@ Data format requirements - a Javascript object with structure:
             <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
         });
 
+        <span class="hljs-keyword">const</span> redSpan = <span class="hljs-string">&#x27;style=&quot;color: red; --SC-fill-style: red&quot;&#x27;</span>;
         <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSelected</span> = (<span class="hljs-params"></span>) =&gt; {
 
             <span class="hljs-keyword">const</span> {yearLabels, categoryLabels, yearData} = currentData;
@@ -1361,7 +1377,7 @@ Data format requirements - a Javascript object with structure:
                 <span class="hljs-attr">mimic</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${year}</span>-<span class="hljs-subst">${category}</span>`</span>),
             });
 
-            frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${category}</span> in <span class="hljs-subst">${year}</span>: §RED§<span class="hljs-subst">${data.toLocaleString()}</span>`</span>);
+            frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${category}</span> in <span class="hljs-subst">${year}</span>: &lt;span <span class="hljs-subst">${redSpan}</span>&gt;<span class="hljs-subst">${data.toLocaleString()}</span>&lt;/span&gt;`</span>);
         };
 
         <span class="hljs-title function_">updateSelected</span>();</pre></div></div>

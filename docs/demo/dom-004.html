@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,9 +914,24 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> library = scrawl.<span class="hljs-property">library</span>,
-    artefact = library.<span class="hljs-property">artefact</span>,
-    stack = artefact.<span class="hljs-property">mystack</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stack = scrawl.<span class="hljs-title function_">findStack</span>(<span class="hljs-string">&#x27;mystack&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = stack.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
+
 
 stack.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
@@ -907,7 +942,7 @@ stack.<span class="hljs-title function_">set</span>({
 });
 
 stack.<span class="hljs-title function_">addExistingDomElements</span>(<span class="hljs-string">&#x27;#rocket&#x27;</span>);
-<span class="hljs-keyword">const</span> rocket = artefact.<span class="hljs-property">rocket</span>;
+<span class="hljs-keyword">const</span> rocket = scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;rocket&#x27;</span>);
 
 rocket.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startX</span>: <span class="hljs-number">600</span>,
@@ -921,11 +956,11 @@ rocket.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Set a tween up as a template which can be cloned, but will never itself run</p>
 
@@ -933,7 +968,7 @@ rocket.<span class="hljs-title function_">set</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> tween = scrawl.<span class="hljs-title function_">makeTween</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;template&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template&#x27;</span>),
 
     <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
     <span class="hljs-attr">killOnComplete</span>: <span class="hljs-literal">true</span>,
@@ -947,22 +982,10 @@ rocket.<span class="hljs-title function_">set</span>({
         }
     ],
 
-    <span class="hljs-attr">commenceAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+    <span class="hljs-attr">commenceAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">targets</span>: rocket.<span class="hljs-title function_">clone</span>({
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-element`</span>,
             })
@@ -971,7 +994,7 @@ rocket.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">completeAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        artefact[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-element`</span>].<span class="hljs-title function_">kill</span>();
+        scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-element`</span>).<span class="hljs-title function_">kill</span>();
     },
 }).<span class="hljs-title function_">removeFromTicker</span>();</pre></div></div>
             
@@ -1006,7 +1029,7 @@ rocket.<span class="hljs-title function_">set</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: stack,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1032,7 +1055,7 @@ rocket.<span class="hljs-title function_">set</span>({
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
     tween.<span class="hljs-title function_">clone</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`rocket-<span class="hljs-subst">${counter}</span>`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`rocket-<span class="hljs-subst">${counter}</span>`</span>),
     }).<span class="hljs-title function_">run</span>();
 
     counter ++;
@@ -1055,7 +1078,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);
 
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Performing tests ...&#x27;</span>);
-<span class="hljs-title function_">killTicker</span>(stack, <span class="hljs-string">&#x27;template_ticker&#x27;</span>, <span class="hljs-number">4000</span>);</pre></div></div>
+<span class="hljs-title function_">killTicker</span>(stack, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template_ticker&#x27;</span>), <span class="hljs-number">4000</span>);</pre></div></div>
             
         </li>
         

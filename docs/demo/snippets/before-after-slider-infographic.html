@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1067,115 +1082,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <h3 id="before-after-slider-infographic-snippet">‘Before-after slider infographic’ snippet</h3>
-<p><strong>Purpose:</strong> Turn a pair of images, alongside associated data, into a fully responsive, interactive and accessible before-after slider infographic</p>
-<p>Note that this is a highly complex snippet, which relies on recieving an element to process in a very specific format containing a number of required child elements. All elements are expected to have various specified data- attributes which are used to build the infographic.</p>
-<p><strong>Function input:</strong></p>
-<pre><code>&lt;div
-  id=<span class="hljs-string">&quot;infographic-unique name&quot;</span>
-  <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;some-class-name&quot;</span>
-  data-label=<span class="hljs-string">&quot;Infographic title - required for accessibility&quot;</span>
-  data-description=<span class="hljs-string">&quot;Infographic description - required for accessibility&quot;</span>&gt;
-
-  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>
-    <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;left-panel-unique-name&quot;</span>
-      <span class="hljs-attr">data-date</span>=<span class="hljs-string">&quot;date of image&quot;</span>
-    <span class="hljs-attr">data-frame</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>
-
-    <span class="hljs-tag">&lt;<span class="hljs-name">img</span>
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;left-panel-image-unique-name&quot;</span>
-      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span>
-      <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;</span>
-
-    <span class="hljs-comment">&lt;!--
-      Each &amp;lt;p&gt; element needs an id value together with some data- attributes
-
-        - data-type=&quot;pin&quot; - required (no default value)
-          - for proof of concept we&#x27;re only handling spot pins, not area pins
-
-        - data-position - required (no default value)
-          - a string of two percentage values, separated by a comma
-          - these are the &#x27;x%, y%&#x27; coords where the pin will appear on image
-
-        - data-fill - pin fill color - default is &quot;red&quot;
-        - data-stroke - pin stroke color - default is &quot;yellow&quot;
-        - data-labelwidth - percentage label width value - default is &quot;20%&quot;
-        - data-labelbackground - default is &quot;rgb(0 0 0 / 0.2)&quot;
-
-        - data-labelposition - default is &quot;below&quot;
-          - where we want the text to appear relative to the pin&#x27;s location
-          - acceptable values: &quot;left&quot;, &quot;right&quot;, &quot;above&quot;, &quot;below&quot;
-
-        - data-shared - default is not included
-          - if included, we create the pin on both panels
-
-      The text in the &lt;p&gt; element is the text that will be used for the pin&#x27;s
-      label. Note that the snippet has been set up to interpret and display
-      the following inline markup:
-        - &lt;b&gt;&lt;/b&gt;, &lt;strong&gt;&lt;/strong&gt;, &lt;i&gt;&lt;/i&gt;, &lt;em&gt;&lt;/em&gt;
-        - &lt;span class=&quot;sc-red&quot;&gt;&lt;/span&gt;, etc
-    --&gt;</span>
-
-    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;pin-unique-id&quot;</span>
-      <span class="hljs-attr">data-type</span>=<span class="hljs-string">&quot;pin&quot;</span>
-      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;59%, 21%&quot;</span>
-      <span class="hljs-attr">data-fill</span>=<span class="hljs-string">&quot;blue&quot;</span>,
-      <span class="hljs-attr">data-stroke</span>=<span class="hljs-string">&quot;yellow&quot;</span>,
-      <span class="hljs-attr">data-labelwidth</span>=<span class="hljs-string">&quot;30%&quot;</span>
-      <span class="hljs-attr">data-labelposition</span>=<span class="hljs-string">&quot;left&quot;</span>
-      <span class="hljs-attr">data-labelbackground</span>=<span class="hljs-string">&quot;azure&quot;</span>
-      <span class="hljs-attr">data-shared</span>&gt;</span>Text <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sc-red&quot;</span>&gt;</span>appears<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> when user <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>hovers<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> over pin<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-
-  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-
-  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
-    <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;right-panel-unique-name&quot;</span>
-      <span class="hljs-attr">data-date</span>=<span class="hljs-string">&quot;date of image&quot;</span>
-    <span class="hljs-attr">data-frame</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>
-
-    <span class="hljs-tag">&lt;<span class="hljs-name">img</span>
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;right-panel-image-unique-name&quot;</span>
-      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span>
-      <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;</span>
-
-    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>...Pin definitions<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-
-  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-
-  <span class="hljs-comment">&lt;!--
-    If we also want to include any clickable links in the infographic,
-    we can include them in a &amp;lt;nav&gt; element
-      - data-position - required (no default value)
-        - a string of two percentage values, separated by a comma
-        - these are the &#x27;x%, y%&#x27; coords where the link will appear over image
-
-      - data-justify - one of: &quot;left&quot;, &quot;right&quot;, &quot;center&quot; (default)
-      - data-width - defaults to &quot;20%&quot;
-      - data-background - defaults to &quot;rgb(0 0 0 / 0.2)&quot;
-  --&gt;</span>
-
-  <span class="hljs-tag">&lt;<span class="hljs-name">nav</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span>
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;link-unique-id&quot;</span>
-      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://absolute/link/url&quot;</span>
-      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;1%, 95%&quot;</span>
-      <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
-      <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>Text to include in the link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
-
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span>
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;another-link-unique-id&quot;</span>
-      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;relative/link/url&quot;</span>
-      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;99%, 95%&quot;</span>
-      <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
-      <span class="hljs-attr">data-background</span>=<span class="hljs-string">&quot;darkblue&quot;</span>
-      <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>Different text for different link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
-
-<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
-</code></pre>
+              <h5 id="the-exported-function">The exported function</h5>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, el</span>) {</pre></div></div>
             
         </li>
         
@@ -1186,61 +1097,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h5 id="usage-example">Usage example:</h5>
-<pre><code><span class="hljs-keyword">import</span> slider <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
-
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class-name&#x27;</span>);
-
-myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">slider</span>(scrawl, el));
-</code></pre>
-<p>Note that this snippet has a profound effect on the element it processes, moving images inside a canvas element and deleting most of the child elements (to prevent copy repetition for screen readers)</p>
-<p><strong>Function output:</strong></p>
-<pre><code>{
-    element           <span class="hljs-comment">// wrapper</span>
-    canvas            <span class="hljs-comment">// wrapper</span>
-    animation         <span class="hljs-comment">// object</span>
-    demolish          <span class="hljs-comment">// function</span>
-}
-</code></pre>
-<h3 id="snippet-code">Snippet code</h3>
-<p>Internal function to scrape data from the supplied element</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getPanelData = <span class="hljs-keyword">function</span> (<span class="hljs-params">el, store, canvas</span>) {
-
-    <span class="hljs-keyword">if</span> (!el) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">const</span> img = el.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
-
-    store.<span class="hljs-property">element</span> = el;
-    store.<span class="hljs-property">name</span> = el.<span class="hljs-property">id</span>;
-    store.<span class="hljs-property">date</span> = el.<span class="hljs-property">dataset</span>.<span class="hljs-property">date</span>;
-    store.<span class="hljs-property">imageElement</span> = img;
-    store.<span class="hljs-property">pinElements</span> = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;p&#x27;</span>);
-    store.<span class="hljs-property">pins</span> = [];
-
-    store.<span class="hljs-property">pinElements</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
-
-        store.<span class="hljs-property">pins</span>.<span class="hljs-title function_">push</span>({
-            <span class="hljs-attr">name</span>: p.<span class="hljs-property">id</span>,
-            <span class="hljs-attr">groupname</span>: store.<span class="hljs-property">name</span>,
-            <span class="hljs-attr">type</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">type</span>,
-            <span class="hljs-attr">position</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">position</span>,
-            <span class="hljs-attr">fill</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">fill</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
-            <span class="hljs-attr">stroke</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">stroke</span> || <span class="hljs-string">&#x27;yellow&#x27;</span>,
-            <span class="hljs-attr">labelposition</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelposition</span>,
-            <span class="hljs-attr">labelwidth</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelwidth</span> || <span class="hljs-string">&#x27;25%&#x27;</span>,
-            <span class="hljs-attr">labelbackground</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelbackground</span> || <span class="hljs-string">&#x27;rgb(0 0 0 / 0.2)&#x27;</span>,
-            <span class="hljs-attr">labeltext</span>: p.<span class="hljs-property">innerHTML</span>,
-            <span class="hljs-attr">shared</span>: (p.<span class="hljs-property">dataset</span>.<span class="hljs-property">shared</span> != <span class="hljs-literal">null</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
-        });
-    });
-
-    canvas.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">appendChild</span>(img);
-
-    <span class="hljs-keyword">return</span> store;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> namespace = el.<span class="hljs-property">id</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">val</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${val}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1251,33 +1113,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Internal function to scrape data from the supplied element</p>
+              <p>Only progress if the supplied element has an <code>id</code> attribute</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getNavigationData = <span class="hljs-keyword">function</span> (<span class="hljs-params">el, store</span>) {
-
-    <span class="hljs-keyword">if</span> (!el) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-
-    store.<span class="hljs-property">element</span> = el;
-    store.<span class="hljs-property">links</span> = [];
-
-    <span class="hljs-keyword">const</span> linkElements = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;a&#x27;</span>);
-
-    linkElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> {
-        store.<span class="hljs-property">links</span>.<span class="hljs-title function_">push</span>({
-            <span class="hljs-attr">name</span>: a.<span class="hljs-property">id</span>,
-            <span class="hljs-attr">href</span>: a.<span class="hljs-property">href</span>,
-            <span class="hljs-attr">width</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">width</span> || <span class="hljs-string">&#x27;20%&#x27;</span>,
-            <span class="hljs-attr">position</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">position</span>,
-            <span class="hljs-attr">background</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">background</span> || <span class="hljs-string">&#x27;rgb(0 0 0 / 0.2)&#x27;</span>,
-            <span class="hljs-attr">justify</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">justify</span> || <span class="hljs-string">&#x27;center&#x27;</span>,
-            <span class="hljs-attr">text</span>: a.<span class="hljs-property">innerHTML</span>,
-        });
-    });
-
-    <span class="hljs-keyword">return</span> store;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (namespace) {</pre></div></div>
             
         </li>
         
@@ -1288,16 +1128,15 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin</p>
+              <p>Apply the snippet to the DOM element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pinFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, items, canvas, pinTextGroup, pinTextBackgroundGroup, colors</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+            <span class="hljs-attr">domElement</span>: el,
+        });
 
-<span class="hljs-comment">/* eslint-disable-next-line */</span>
-    <span class="hljs-keyword">let</span> { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
-
-    <span class="hljs-keyword">const</span> coords = position.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);</pre></div></div>
+        <span class="hljs-keyword">if</span> (snippet) {</pre></div></div>
             
         </li>
         
@@ -1308,15 +1147,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>TODO: We don’t want to display a label if its associated pin is not currently visible to the user</p>
+              <p>Convenience handle variables</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable-next-line */</span>
-    <span class="hljs-keyword">const</span> checkVisibility = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity</span>) {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+                animation = snippet.<span class="hljs-property">animation</span>,
+                element = snippet.<span class="hljs-property">element</span>;</pre></div></div>
             
         </li>
         
@@ -1327,25 +1164,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Generate the visible pin</p>
+              <p>We want the canvas on top of its element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> pin = scrawl.<span class="hljs-title function_">makeWheel</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${groupname}</span>-cell`</span>,
-
-        <span class="hljs-attr">start</span>: coords,
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-
-        <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
-        <span class="hljs-attr">fillStyle</span>: fill,
-        <span class="hljs-attr">strokeStyle</span>: stroke,
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            element.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">canvasOnTop</span>: <span class="hljs-literal">true</span>,
+            });</pre></div></div>
             
         </li>
         
@@ -1356,20 +1181,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>The hit zone for the pin is assigned to the canvas element’s base cell, to make the user interaction (eg collision detection with the mouse cursor) code as simple as posssible</p>
+              <p>This makes the canvas element’s base cell the default group for everything we create</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    pin.<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-hitzone`</span>,
-        <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-        <span class="hljs-attr">radius</span>: <span class="hljs-number">25</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-
-        <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">checkVisibility</span>(pin)) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
@@ -1380,14 +1196,22 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Increase the visible pin’s size</p>
+              <p>Create a data structure to hold the data we’re about to gather</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                pin.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">radius</span>: <span class="hljs-number">15</span>,
-                    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-                });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> data = {
+                <span class="hljs-attr">left</span>: {
+                    <span class="hljs-attr">caption</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+                    <span class="hljs-attr">date</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+                    <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+                },
+                <span class="hljs-attr">right</span>: {
+                    <span class="hljs-attr">caption</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+                    <span class="hljs-attr">date</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+                    <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+                },
+            };</pre></div></div>
             
         </li>
         
@@ -1398,21 +1222,14 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Display the pin’s associated label</p>
+              <p>Import before/after images from element</p>
+<ul>
+<li>We can do this on the element, rather than individually import for each child &lt;figure&gt; element</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (pinText) {
-
-                    pinText.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
-                    pinBackground.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
-                }
-            }
-        },
-
-        <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">checkVisibility</span>(pin)) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${el.id}</span> img`</span>);</pre></div></div>
             
         </li>
         
@@ -1423,14 +1240,25 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Decrease the visible pin’s size</p>
+              <p>Import data from the &lt;figure&gt; elements</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                pin.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
-                    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-                });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;figure&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">figure</span> =&gt;</span> {
+
+                <span class="hljs-keyword">const</span> frame = figure.<span class="hljs-property">dataset</span>.<span class="hljs-property">frame</span>;
+
+                <span class="hljs-keyword">if</span> (frame) {
+
+                    <span class="hljs-keyword">const</span> caption = figure.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;figcaption&#x27;</span>);
+                    <span class="hljs-keyword">if</span> (caption) data[frame].<span class="hljs-property">caption</span> = caption.<span class="hljs-property">textContent</span>;
+
+                    <span class="hljs-keyword">const</span> time = figure.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;time&#x27;</span>);
+                    <span class="hljs-keyword">if</span> (time) data[frame].<span class="hljs-property">date</span> = time.<span class="hljs-property">textContent</span>;
+
+                    <span class="hljs-keyword">const</span> img = figure.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
+                    <span class="hljs-keyword">if</span> (img) data[frame].<span class="hljs-property">image</span> = img.<span class="hljs-property">id</span>;
+                }</pre></div></div>
             
         </li>
         
@@ -1441,18 +1269,12 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Hide the pin’s associated label</p>
+              <p>Once we’ve harvested the data, we can remove the &lt;figure&gt; element from the DOM</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (pinText) {
-
-                    pinText.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
-                    pinBackground.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
-                }
-            }
-        },
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                figure.<span class="hljs-title function_">remove</span>();
+            });</pre></div></div>
             
         </li>
         
@@ -1463,13 +1285,34 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Generate the label associated with each pin (assuming it’s been defined in the data)</p>
+              <p>Make an object to hold functions we’ll use for UI</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> pinText, pinBackground;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> setCursorTo = {
 
-    <span class="hljs-keyword">if</span> (labeltext) {</pre></div></div>
+                <span class="hljs-attr">auto</span>: <span class="hljs-function">() =&gt;</span> {
+                    canvas.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">css</span>: {
+                            <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
+                        },
+                    });
+                },
+                <span class="hljs-attr">pointer</span>: <span class="hljs-function">() =&gt;</span> {
+                    canvas.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">css</span>: {
+                            <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;grab&#x27;</span>,
+                        },
+                    });
+                },
+                <span class="hljs-attr">grabbing</span>: <span class="hljs-function">() =&gt;</span> {
+                    canvas.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">css</span>: {
+                            <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;grabbing&#x27;</span>,
+                        },
+                    });
+                },
+            };</pre></div></div>
             
         </li>
         
@@ -1480,67 +1323,27 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Labels can be positioned above, below, or to the right or left of the pin.</p>
+              <p>Create the drag-and-drop functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!labelposition) labelposition = <span class="hljs-string">&#x27;below&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> dragGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
+                <span class="hljs-attr">checkForEntityHover</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">onEntityHover</span>: setCursorTo.<span class="hljs-property">pointer</span>,
+                <span class="hljs-attr">onEntityNoHover</span>: setCursorTo.<span class="hljs-property">auto</span>,
+            });
 
-        <span class="hljs-keyword">let</span> handle = [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;-20%&#x27;</span>];
+            scrawl.<span class="hljs-title function_">makeDragZone</span>({
+                <span class="hljs-attr">zone</span>: canvas,
+                <span class="hljs-attr">collisionGroup</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
+                <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+                <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">updateOnStart</span>: setCursorTo.<span class="hljs-property">grabbing</span>,
+                <span class="hljs-attr">updateOnEnd</span>: setCursorTo.<span class="hljs-property">pointer</span>,
+            });
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;above&#x27;</span> === labelposition) handle = [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;120%&#x27;</span>];
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;left&#x27;</span> === labelposition) handle = [<span class="hljs-string">&#x27;110%&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>];
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;right&#x27;</span> === labelposition) handle = [<span class="hljs-string">&#x27;-10%&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>];
-
-        pinText = scrawl.<span class="hljs-title function_">makePhrase</span>({
-
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>,
-            <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${groupname}</span>-cell`</span>,
-            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-
-            <span class="hljs-attr">text</span>: labeltext,
-            <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-            <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1.15</span>,
-
-            <span class="hljs-attr">width</span>: labelwidth,
-            handle,
-
-            <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin`</span>,
-            <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-
-            <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;28px Arial, sans-serif&#x27;</span>,
-            <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">default</span>,
-
-            <span class="hljs-attr">exposeText</span>: (suppressAccessibleText) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
-
-            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-        });
-
-        pinTextGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>);
-
-        pinBackground = scrawl.<span class="hljs-title function_">makeBlock</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-background`</span>,
-            <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${groupname}</span>-cell`</span>,
-            <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">fillStyle</span>: labelbackground,
-            <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
-            <span class="hljs-attr">height</span>: <span class="hljs-number">20</span>,
-            <span class="hljs-attr">handleY</span>: <span class="hljs-number">10</span>,
-
-            <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>,
-            <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
-            <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
-
-            <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-        });
-
-        pinTextBackgroundGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span>-background`</span>);
-    }
-};</pre></div></div>
+            animation.<span class="hljs-title function_">updateHook</span>(<span class="hljs-string">&#x27;commence&#x27;</span>, <span class="hljs-function">() =&gt;</span> dragGroup.<span class="hljs-title function_">getAllArtefactsAt</span>(canvas.<span class="hljs-property">here</span>));</pre></div></div>
             
         </li>
         
@@ -1551,67 +1354,114 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>The link factory takes all the data about links that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each link</p>
+              <p>Build out the slider</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> linkFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, items, canvas, linkTextGroup, colors</span>) {
-
-    <span class="hljs-keyword">const</span> {name, position, href, justify, text, width, background} = items;
-
-    <span class="hljs-keyword">const</span> start = position.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
-
-    scrawl.<span class="hljs-title function_">makePhrase</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-link`</span>,
-        <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-        text,
-        start,
-
-        width,
-
-        <span class="hljs-attr">handleX</span>: justify,
-        <span class="hljs-attr">handleY</span>: justify,
-        justify,
-
-        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;16px Arial, sans-serif&#x27;</span>,
-        <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">link</span>,
-
-        <span class="hljs-attr">underlinePosition</span>: <span class="hljs-number">0.8</span>,
-        <span class="hljs-attr">underlineStyle</span>: colors.<span class="hljs-property">linkunderline</span>,
-
-        <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-            canvas.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">css</span>: {
-                    <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span>,
-                }
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> mySlider = scrawl.<span class="hljs-title function_">makeBlock</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;slider&#x27;</span>),
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">80</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+                <span class="hljs-attr">ignoreDragForY</span>: <span class="hljs-literal">true</span>,
             });
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">text</span>: <span class="hljs-string">`§UNDERLINE§<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.text}</span>`</span>,
-            });
-        },
+            dragGroup.<span class="hljs-title function_">addArtefacts</span>(mySlider);
 
-        <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-            canvas.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">css</span>: {
-                    <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
-                }
+            scrawl.<span class="hljs-title function_">makeBlock</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;left-block&#x27;</span>),
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+                <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;slider&#x27;</span>),
+                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
             });
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">text</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;§UNDERLINE§&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>),
+            scrawl.<span class="hljs-title function_">makePicture</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${data.left.image}</span>-picture`</span>),
+                <span class="hljs-attr">asset</span>: data.<span class="hljs-property">left</span>.<span class="hljs-property">image</span>,
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+
+            }).<span class="hljs-title function_">clone</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${data.right.image}</span>-picture`</span>),
+                <span class="hljs-attr">asset</span>: data.<span class="hljs-property">right</span>.<span class="hljs-property">image</span>,
+                <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
             });
-        },
 
-        <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            scrawl.<span class="hljs-title function_">makeLabel</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;left-date&#x27;</span>),
+                <span class="hljs-attr">text</span>: data.<span class="hljs-property">left</span>.<span class="hljs-property">date</span>,
+                <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;18px sans-serif&#x27;</span>,
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+                <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+                <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;2%&#x27;</span>, <span class="hljs-string">&#x27;2%&#x27;</span>],
+                <span class="hljs-attr">accessibleText</span>: <span class="hljs-string">&#x27;Taken during §.&#x27;</span>,
+                <span class="hljs-attr">accessibleTextOrder</span>: <span class="hljs-number">2</span>,
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
-        },</pre></div></div>
+            }).<span class="hljs-title function_">clone</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;right-date&#x27;</span>),
+                <span class="hljs-attr">text</span>: data.<span class="hljs-property">right</span>.<span class="hljs-property">date</span>,
+                <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;98%&#x27;</span>,
+                <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;right&#x27;</span>,
+                <span class="hljs-attr">accessibleTextOrder</span>: <span class="hljs-number">4</span>,
+
+            }).<span class="hljs-title function_">clone</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;left-caption&#x27;</span>),
+                <span class="hljs-attr">text</span>: data.<span class="hljs-property">left</span>.<span class="hljs-property">caption</span>,
+                <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;14px sans-serif&#x27;</span>,
+                <span class="hljs-attr">start</span>: [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
+                <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>,
+                <span class="hljs-attr">accessibleText</span>: <span class="hljs-string">&#x27;Image of §.&#x27;</span>,
+                <span class="hljs-attr">accessibleTextOrder</span>: <span class="hljs-number">1</span>,
+
+            }).<span class="hljs-title function_">clone</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;right-caption&#x27;</span>),
+                <span class="hljs-attr">text</span>: data.<span class="hljs-property">right</span>.<span class="hljs-property">caption</span>,
+                <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+                <span class="hljs-attr">roll</span>: <span class="hljs-number">90</span>,
+                <span class="hljs-attr">accessibleTextOrder</span>: <span class="hljs-number">3</span>,
+            });
+
+            scrawl.<span class="hljs-title function_">makeLabel</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;arrows&#x27;</span>),
+                <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;&amp;larr; &amp;rarr;&#x27;</span>,
+                <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;bold 20px sans-serif&#x27;</span>,
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+                <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;slider&#x27;</span>),
+                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+                <span class="hljs-attr">wordSpacing</span>: <span class="hljs-string">&#x27;10px&#x27;</span>,
+                <span class="hljs-attr">exposeText</span>: <span class="hljs-literal">false</span>,
+            });
+
+            scrawl.<span class="hljs-title function_">makeOval</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;arrows-button&#x27;</span>),
+                <span class="hljs-attr">radiusX</span>: <span class="hljs-number">40</span>,
+                <span class="hljs-attr">radiusY</span>: <span class="hljs-number">20</span>,
+                <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+                <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;slider&#x27;</span>),
+                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+            });
+
+            scrawl.<span class="hljs-title function_">makeBlock</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;divider&#x27;</span>),
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+                <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;slider&#x27;</span>),
+                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+            });</pre></div></div>
             
         </li>
         
@@ -1622,41 +1472,60 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>Suppress accessible text here because we’re also including an anchor, which will also add its description text to the canvas shadow DOM (as part of the navigation)</p>
+              <p>Keyboard accessibility</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">exposeText</span>: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>            canvas.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">includeInTabNavigation</span>: <span class="hljs-literal">true</span>,
+            });
 
-        <span class="hljs-attr">anchor</span>: {
-            name,
-            href,
-            <span class="hljs-attr">description</span>: text,
-        },
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">moveSlider</span> = (<span class="hljs-params">direction</span>) =&gt; {
 
-    });
+                <span class="hljs-keyword">const</span> xPos = mySlider.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>)[<span class="hljs-number">0</span>],
+                    width = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
 
-    linkTextGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span>-link`</span>);
+                <span class="hljs-keyword">let</span> test = <span class="hljs-number">0</span>;
 
-    scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-background`</span>,
-        <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">fillStyle</span>: background,
-        <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
-        <span class="hljs-attr">height</span>: <span class="hljs-number">10</span>,
-        <span class="hljs-attr">handleY</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-keyword">switch</span> (direction) {
 
-        <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-link`</span>,
-        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
-        <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;to-left&#x27;</span> :
+                        test = xPos - <span class="hljs-number">10</span>;
+                        <span class="hljs-keyword">if</span> (test &gt; <span class="hljs-number">0</span>) mySlider.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startX</span>: test });
+                        <span class="hljs-keyword">else</span> mySlider.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span> });
+                        <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">true</span>,
-    })
-};</pre></div></div>
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;full-left&#x27;</span> :
+                        mySlider.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span> });
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;to-right&#x27;</span> :
+                        test = xPos + <span class="hljs-number">10</span>;
+                        <span class="hljs-keyword">if</span> (test &lt; width) mySlider.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startX</span>: test });
+                        <span class="hljs-keyword">else</span> mySlider.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startX</span>: width });
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;full-right&#x27;</span> :
+                        mySlider.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startX</span>: width });
+                        <span class="hljs-keyword">break</span>;
+                }
+            };
+
+            scrawl.<span class="hljs-title function_">makeKeyboardZone</span>({
+
+                <span class="hljs-attr">zone</span>: canvas,
+
+                <span class="hljs-attr">shiftOnly</span>: {
+                    <span class="hljs-title class_">ArrowLeft</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSlider</span>(<span class="hljs-string">&#x27;full-left&#x27;</span>),
+                    <span class="hljs-title class_">ArrowRight</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSlider</span>(<span class="hljs-string">&#x27;full-right&#x27;</span>),
+                },
+
+                <span class="hljs-attr">none</span>: {
+                    <span class="hljs-title class_">ArrowLeft</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSlider</span>(<span class="hljs-string">&#x27;to-left&#x27;</span>),
+                    <span class="hljs-title class_">ArrowRight</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSlider</span>(<span class="hljs-string">&#x27;to-right&#x27;</span>),
+                },
+            });
+        }</pre></div></div>
             
         </li>
         
@@ -1667,888 +1536,12 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h5 id="the-exported-function">The exported function</h5>
+              <p>Return the snippet output</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, el</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>Apply the snippet to the DOM element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
-        <span class="hljs-attr">domElement</span>: el,
-    });
-
-    <span class="hljs-keyword">if</span> (snippet) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p><strong>0. Convenience handle variables</strong>; basic followup housekeeping</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> canvas = snippet.<span class="hljs-property">canvas</span>,
-            animation = snippet.<span class="hljs-property">animation</span>,
-            wrapper = snippet.<span class="hljs-property">element</span>,
-            element = wrapper.<span class="hljs-property">domElement</span>,
-            name = wrapper.<span class="hljs-property">name</span>;
-
-        canvas.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
-        }).<span class="hljs-title function_">render</span>();
-
-        wrapper.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">canvasOnTop</span>: <span class="hljs-literal">true</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p><strong>1. Get all information required from the wrapper’s panel &lt;div&gt; child elements</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> leftPanel = <span class="hljs-title function_">getPanelData</span>(element.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;[data-frame=&quot;left&quot;]&#x27;</span>), {}, canvas);
-
-        <span class="hljs-keyword">const</span> rightPanel = <span class="hljs-title function_">getPanelData</span>(element.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;[data-frame=&quot;right&quot;]&#x27;</span>), {}, canvas);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>Snippet will fail if we don’t have both panels to build</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (leftPanel &amp;&amp; rightPanel) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p><strong>2. Get all information about links from the wrapper’s &lt;nav&gt; child element</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> navItems = <span class="hljs-title function_">getNavigationData</span>(element.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;:scope &gt; nav&#x27;</span>), {});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p><strong>3. Get all information required from the wrapper element</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> aria_label = element.<span class="hljs-property">dataset</span>.<span class="hljs-property">label</span>,
-                aria_description = element.<span class="hljs-property">dataset</span>.<span class="hljs-property">description</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p><strong>4. Clean up DOM - we don’t need to keep elements, text or links that we’ll be recreating in the &lt;canvas&gt; element</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            leftPanel.<span class="hljs-property">element</span>.<span class="hljs-title function_">remove</span>();
-            rightPanel.<span class="hljs-property">element</span>.<span class="hljs-title function_">remove</span>();
-
-            <span class="hljs-keyword">if</span> (navItems &amp;&amp; navItems.<span class="hljs-property">element</span>) navItems.<span class="hljs-property">element</span>.<span class="hljs-title function_">remove</span>();
-
-            <span class="hljs-keyword">delete</span> element.<span class="hljs-property">dataset</span>.<span class="hljs-property">label</span>;
-            <span class="hljs-keyword">delete</span> element.<span class="hljs-property">dataset</span>.<span class="hljs-property">description</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p><strong>5. Import image assets</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${name}</span> img`</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p><strong>6. Create some Groups for handling User Interaction functionality</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> pinTextGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-texts-group`</span>,
-            });
-
-            <span class="hljs-keyword">const</span> pinTextBackgroundGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-texts-background-group`</span>,
-            });
-
-            <span class="hljs-keyword">const</span> linkTextGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-link-texts-group`</span>,
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p><strong>7. Setup the canvas element</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p>Accessibility first!</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-attr">label</span>: aria_label,
-                <span class="hljs-attr">description</span>: aria_description,
-                <span class="hljs-attr">includeInTabNavigation</span>: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p>Responsive text - we need to make sure text updates to an appropriate, readable size when the user changes the dimensions of their browser’s window, or alters the orientation of their device.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-attr">breakToSmallest</span>: <span class="hljs-number">200000</span>,
-                <span class="hljs-attr">breakToSmaller</span>: <span class="hljs-number">400000</span>,
-                <span class="hljs-attr">breakToLarger</span>: <span class="hljs-number">600000</span>,
-                <span class="hljs-attr">breakToLargest</span>: <span class="hljs-number">800000</span>,
-
-                <span class="hljs-attr">actionSmallestArea</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-                    pinTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;28px&#x27;</span>});
-                    linkTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;14px&#x27;</span>});
-                },
-                <span class="hljs-attr">actionSmallerArea</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-                    pinTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;26px&#x27;</span>});
-                    linkTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;17px&#x27;</span>});
-                },
-                <span class="hljs-attr">actionRegularArea</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-                    pinTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;24px&#x27;</span>});
-                    linkTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;20px&#x27;</span>});
-                },
-                <span class="hljs-attr">actionLargerArea</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-                    pinTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;22px&#x27;</span>});
-                    linkTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;23px&#x27;</span>});
-                },
-                <span class="hljs-attr">actionLargestArea</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-                    pinTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;20px&#x27;</span>});
-                    linkTextGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;26px&#x27;</span>});
-                },
-
-            }).<span class="hljs-title function_">setBase</span>({
-                <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>Infographic keyboard navigation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> displayAllLabels = <span class="hljs-literal">false</span>;
-
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">toggleLabels</span> = (<span class="hljs-params"></span>) =&gt; {
-
-                displayAllLabels = !displayAllLabels;
-
-                pinTextGroup.<span class="hljs-title function_">setArtefacts</span>({
-                    <span class="hljs-attr">visibility</span>: displayAllLabels,
-                });
-
-                pinTextBackgroundGroup.<span class="hljs-title function_">setArtefacts</span>({
-                    <span class="hljs-attr">visibility</span>: displayAllLabels,
-                });
-            }
-
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">moveBar</span> = (<span class="hljs-params">pos, width</span>) =&gt; {
-
-                dragBar.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">startX</span>: pos,
-                });
-
-                rightImage.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">copyStartX</span>: pos,
-                    <span class="hljs-attr">copyWidth</span>: width,
-                    width,
-                });
-            };
-
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">showMore</span> = (<span class="hljs-params">moveLeft = <span class="hljs-literal">true</span></span>) =&gt; {
-
-                <span class="hljs-keyword">const</span> canvasWidth = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
-                <span class="hljs-keyword">const</span> currentPos = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
-                <span class="hljs-keyword">const</span> [x] = currentPos;
-
-                <span class="hljs-keyword">const</span> dir = (moveLeft) ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
-
-                <span class="hljs-keyword">let</span> distance = ((x * <span class="hljs-number">100</span>) / canvasWidth) + dir;
-                <span class="hljs-keyword">if</span> (distance &lt; <span class="hljs-number">0</span>) distance = <span class="hljs-number">0</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &gt; <span class="hljs-number">100</span>) distance = <span class="hljs-number">100</span>;
-
-                <span class="hljs-keyword">const</span> pos = <span class="hljs-string">`<span class="hljs-subst">${distance.toFixed(<span class="hljs-number">2</span>)}</span>%`</span>;
-                <span class="hljs-keyword">const</span> width = <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">100</span> - distance).toFixed(<span class="hljs-number">2</span>)}</span>%`</span>;
-
-                <span class="hljs-keyword">return</span> [pos, width];
-            };
-
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">showAllBefore</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title function_">moveBar</span>(<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;0%&#x27;</span>);
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">showAllAfter</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title function_">moveBar</span>(<span class="hljs-string">&#x27;0%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>);
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">showMoreBefore</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title function_">moveBar</span>(...<span class="hljs-title function_">showMore</span>(<span class="hljs-literal">false</span>));
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">showMoreAfter</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title function_">moveBar</span>(...<span class="hljs-title function_">showMore</span>(<span class="hljs-literal">true</span>));
-
-            <span class="hljs-keyword">const</span> <span class="hljs-title function_">canvasKeys</span> = (<span class="hljs-params">e</span>) =&gt; {
-
-                <span class="hljs-keyword">const</span> { keyCode, shiftKey, isComposing } = e;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
-              <p>Ignore when user is composing a glyph</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (isComposing || <span class="hljs-number">229</span> === keyCode) <span class="hljs-keyword">return</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>Tab, Enter/Return, Esc</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-number">9</span> === keyCode || <span class="hljs-number">13</span> === keyCode || <span class="hljs-number">27</span> === keyCode) {
-                    canvas.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">blur</span>();
-                    <span class="hljs-keyword">return</span>;
-                }
-
-                e.<span class="hljs-title function_">preventDefault</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <p>Left/right arrow keys (with and without shift)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (shiftKey) {
-                    <span class="hljs-keyword">if</span> (<span class="hljs-number">39</span> === keyCode) <span class="hljs-title function_">showAllBefore</span>();
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">37</span> === keyCode) <span class="hljs-title function_">showAllAfter</span>();
-                }
-                <span class="hljs-keyword">else</span> {
-                    <span class="hljs-keyword">if</span> (<span class="hljs-number">39</span> === keyCode) <span class="hljs-title function_">showMoreBefore</span>();
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">37</span> === keyCode) <span class="hljs-title function_">showMoreAfter</span>();
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">32</span> === keyCode) <span class="hljs-title function_">toggleLabels</span>();
-                }
-            }
-            scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, canvasKeys, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>Grab colors from CSS</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> colors = {},
-                cssColors = <span class="hljs-title function_">getComputedStyle</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>);
-
-            colors.<span class="hljs-property">default</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-default&#x27;</span>);
-            colors.<span class="hljs-property">shadow</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-shadow&#x27;</span>);
-            colors.<span class="hljs-property">link</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-link&#x27;</span>);
-            colors.<span class="hljs-property">linkshadow</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-linkshadow&#x27;</span>);
-            colors.<span class="hljs-property">linkunderline</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-linkunderline&#x27;</span>);
-            colors.<span class="hljs-property">red</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-red&#x27;</span>);
-            colors.<span class="hljs-property">green</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-green&#x27;</span>);
-            colors.<span class="hljs-property">blue</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-blue&#x27;</span>);
-            colors.<span class="hljs-property">black</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-black&#x27;</span>);
-            colors.<span class="hljs-property">white</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-white&#x27;</span>);
-            colors.<span class="hljs-property">gray</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-gray&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <p>Add additional section classes to the library</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> sect = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">sectionClasses</span>;
-
-            sect[<span class="hljs-string">&#x27;span class=&quot;sc-red&quot;&#x27;</span>] = { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">red</span> };
-            sect[<span class="hljs-string">&#x27;span class=&quot;sc-blue&quot;&#x27;</span>] = { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">blue</span> };
-            sect[<span class="hljs-string">&#x27;span class=&quot;sc-green&quot;&#x27;</span>] = { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">green</span> };
-            sect[<span class="hljs-string">&#x27;span class=&quot;sc-white&quot;&#x27;</span>] = { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">white</span> };
-            sect[<span class="hljs-string">&#x27;span class=&quot;sc-black&quot;&#x27;</span>] = { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">black</span> };
-            sect[<span class="hljs-string">&#x27;span class=&quot;sc-gray&quot;&#x27;</span>] = { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">gray</span> };
-            sect[<span class="hljs-string">&#x27;/span&#x27;</span>] = { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;default&#x27;</span> };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p><strong>8. Build the left-hand panel</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> leftPanelName = leftPanel.<span class="hljs-property">name</span>;
-
-            canvas.<span class="hljs-title function_">buildCell</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-cell`</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p>Does height need to be hardcoded? We should really pro-rata it in line with container/canvas dimensions?</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">1000</span>, <span class="hljs-number">500</span>],
-                <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-            });
-
-            scrawl.<span class="hljs-title function_">makePicture</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-image`</span>,
-                <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">asset</span>: leftPanel.<span class="hljs-property">imageElement</span>.<span class="hljs-property">id</span>,
-                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-                <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-            });
-
-            scrawl.<span class="hljs-title function_">makePhrase</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-image-date`</span>,
-                <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-                <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;1%&#x27;</span>, <span class="hljs-string">&#x27;1%&#x27;</span>],
-                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
-                <span class="hljs-attr">text</span>: leftPanel.<span class="hljs-property">date</span>,
-                <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;20px Arial, sans-serif&#x27;</span>,
-                <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">0.7</span>,
-                <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">white</span>,
-            });
-
-            scrawl.<span class="hljs-title function_">makeBlock</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-image-date-background`</span>,
-                <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-                <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">black</span>,
-                <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">height</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">handle</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">10</span>],
-                <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-image-date`</span>,
-                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
-                <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">true</span>,
-            });
-
-            scrawl.<span class="hljs-title function_">makePicture</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-image-display`</span>,
-                <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-                <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${leftPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-                <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p><strong>9. Build the right-hand panel</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> rightPanelName = rightPanel.<span class="hljs-property">name</span>;
-
-            canvas.<span class="hljs-title function_">buildCell</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-cell`</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p>Again, does height need to be hardcoded?</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">1000</span>, <span class="hljs-number">500</span>],
-                <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-            });
-
-            scrawl.<span class="hljs-title function_">makePicture</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-image`</span>,
-                <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">asset</span>: rightPanel.<span class="hljs-property">imageElement</span>.<span class="hljs-property">id</span>,
-                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-                <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-            });
-
-            scrawl.<span class="hljs-title function_">makePhrase</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-image-date`</span>,
-                <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-                <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;99%&#x27;</span>, <span class="hljs-string">&#x27;1%&#x27;</span>],
-                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
-                <span class="hljs-attr">text</span>: rightPanel.<span class="hljs-property">date</span>,
-                <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;20px Arial, sans-serif&#x27;</span>,
-                <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">0.7</span>,
-                <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">white</span>,
-            });
-
-            scrawl.<span class="hljs-title function_">makeBlock</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-image-date-background`</span>,
-                <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-                <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">black</span>,
-                <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">height</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">handle</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">10</span>],
-                <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-image-date`</span>,
-                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
-                <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">true</span>,
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p>We only need to manipulate the attributes of the right hand panel to execute the slider functionality</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> rightImage = scrawl.<span class="hljs-title function_">makePicture</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-image-display`</span>,
-                <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-                <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${rightPanelName}</span>-cell`</span>,
-                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-                <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-                <span class="hljs-attr">copyStartX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-                <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
-                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p><strong>10. Generate pins and their associated labels</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            leftPanel.<span class="hljs-property">pins</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
-
-                <span class="hljs-keyword">if</span> (p.<span class="hljs-property">shared</span>) {
-
-                    <span class="hljs-keyword">const</span> n = p.<span class="hljs-property">name</span>;
-
-                    p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-left`</span>
-                    p.<span class="hljs-property">groupname</span> = leftPanelName;
-
-                    <span class="hljs-title function_">pinFactory</span>(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
-
-                    p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-right`</span>
-                    p.<span class="hljs-property">groupname</span> = rightPanelName;
-                    p.<span class="hljs-property">suppressAccessibleText</span> = <span class="hljs-literal">true</span>;
-                }
-                <span class="hljs-title function_">pinFactory</span>(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
-            });
-
-            rightPanel.<span class="hljs-property">pins</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
-
-                <span class="hljs-keyword">if</span> (p.<span class="hljs-property">shared</span>) {
-
-                    <span class="hljs-keyword">const</span> n = p.<span class="hljs-property">name</span>;
-
-                    p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-left`</span>
-                    p.<span class="hljs-property">groupname</span> = leftPanelName;
-
-                    <span class="hljs-title function_">pinFactory</span>(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
-
-                    p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-right`</span>
-                    p.<span class="hljs-property">groupname</span> = rightPanelName;
-                    p.<span class="hljs-property">suppressAccessibleText</span> = <span class="hljs-literal">true</span>;
-                }
-                <span class="hljs-title function_">pinFactory</span>(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p><strong>11. Build the drag bar entitys</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> dragBar = scrawl.<span class="hljs-title function_">makeBlock</span>({
-
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-bar`</span>,
-                <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-                <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-                <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">80</span>, <span class="hljs-string">&#x27;110%&#x27;</span>],
-
-                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-
-                <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-                    canvas.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">css</span>: {
-                            <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;col-resize&#x27;</span>,
-                        }
-                    });
-                },
-
-                <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-                    canvas.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">css</span>: {
-                            <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
-                        }
-                    });
-                },
-            });
-
-            scrawl.<span class="hljs-title function_">makeBlock</span>({
-
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-line`</span>,
-                <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-                <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;110%&#x27;</span>],
-                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-
-                <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-bar`</span>,
-                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-
-                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
-                <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-            });
-
-            scrawl.<span class="hljs-title function_">makeOval</span>({
-
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-bar-button`</span>,
-                <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-                <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-                <span class="hljs-attr">radiusX</span>: <span class="hljs-number">40</span>,
-                <span class="hljs-attr">radiusY</span>: <span class="hljs-number">25</span>,
-
-                <span class="hljs-attr">pivot</span>:   <span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-bar`</span>,
-                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-
-                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
-                <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-                <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.6</span>,
-                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <p><strong>12. Build the drag bar functionality</strong></p>
-<ul>
-<li>KNOWN BUG - the drag bar not draggable on first user mousedown, but is draggable afterwards</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">makeGroup</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-group`</span>,
-            }).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-bar`</span>,);
-
-            <span class="hljs-keyword">let</span> isDragging = <span class="hljs-literal">false</span>;
-
-            <span class="hljs-keyword">const</span> dragAction = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-                <span class="hljs-keyword">if</span> (isDragging) {
-
-                    <span class="hljs-keyword">const</span> canvasWidth = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
-                    <span class="hljs-keyword">const</span> currentPos = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
-                    <span class="hljs-keyword">const</span> [x] = currentPos;
-
-                    <span class="hljs-keyword">const</span> distance = (x * <span class="hljs-number">100</span>) / canvasWidth;
-                    <span class="hljs-keyword">const</span> pos = <span class="hljs-string">`<span class="hljs-subst">${distance.toFixed(<span class="hljs-number">2</span>)}</span>%`</span>;
-                    <span class="hljs-keyword">const</span> width = <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">100</span> - distance).toFixed(<span class="hljs-number">2</span>)}</span>%`</span>;
-
-                    rightImage.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">copyStartX</span>: pos,
-                        <span class="hljs-attr">copyWidth</span>: width,
-                        width,
-                    });
-                }
-            };
-
-            scrawl.<span class="hljs-title function_">makeDragZone</span>({
-
-                <span class="hljs-attr">zone</span>: canvas,
-                <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-drag-group`</span>,
-                <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
-
-                <span class="hljs-attr">updateOnStart</span>: <span class="hljs-function">() =&gt;</span> {
-
-                    dragBar.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">false</span>;
-                    dragBar.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">lockXTo</span>: <span class="hljs-string">&#x27;mouse&#x27;</span>,
-                    });
-
-                    isDragging = <span class="hljs-literal">true</span>;
-                },
-
-                <span class="hljs-attr">updateOnEnd</span>: <span class="hljs-function">() =&gt;</span> {
-
-                    <span class="hljs-keyword">const</span> [x] = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>),
-                        width = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
-
-                    dragBar.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${((x * <span class="hljs-number">100</span>) / width).toFixed(<span class="hljs-number">2</span>)}</span>%`</span>,
-                        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-                        <span class="hljs-attr">lockXTo</span>: <span class="hljs-string">&#x27;start&#x27;</span>,
-                    });
-
-                    isDragging = <span class="hljs-literal">false</span>;
-                },
-                <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
-              </div>
-              <p><strong>13. Build the interactive links</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (navItems &amp;&amp; navItems.<span class="hljs-property">links</span>) navItems.<span class="hljs-property">links</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-title function_">linkFactory</span>(scrawl, n, canvas, linkTextGroup, colors));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
-              </div>
-              <p><strong>14. Hook into event listeners</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), el);
-            scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), el);
-            scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">&#x27;touchend&#x27;</span>], <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>), el);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
-              </div>
-              <p><strong>15. Update the animation object to listen for drag bar activity</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            animation.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">commence</span>: dragAction });
-        }
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
-              </div>
-              <p>We delay making the element’s contents visible - this is to prevent ugly flashes of original DOM content</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-property">style</span>.<span class="hljs-property">visibility</span> = <span class="hljs-string">&#x27;visible&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
-              </div>
-              <h4 id="return-the-snippet-output">Return the snippet output</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> snippet;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> snippet;
+    }
 }</pre></div></div>
             
         </li>

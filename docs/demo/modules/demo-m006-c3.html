@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="../snippets/text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="../snippets/word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1212,18 +1227,15 @@
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
     });
 
-    <span class="hljs-keyword">const</span> lineProgressLabel = scrawl.<span class="hljs-title function_">makePhrase</span>({
+    <span class="hljs-keyword">const</span> lineProgressLabel = scrawl.<span class="hljs-title function_">makeLabel</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;progress-label&#x27;</span>),
         <span class="hljs-attr">group</span>: dragGroup,
-        <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
         <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;1em monospace&#x27;</span>,
-        <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;1em monospace&#x27;</span>,
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-        <span class="hljs-attr">boundingBoxColor</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">boundingBoxStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1248,17 +1260,17 @@
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;75%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
     });
 
-    scrawl.<span class="hljs-title function_">makePhrase</span>({
+    scrawl.<span class="hljs-title function_">makeLabel</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;arrow-link&#x27;</span>),
         <span class="hljs-attr">group</span>: animGroup,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;2%&#x27;</span>, <span class="hljs-string">&#x27;98%&#x27;</span>],
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-string">&#x27;bottom&#x27;</span>],
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-string">&#x27;bottom&#x27;</span>],
-        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;1.4em Arial, sans-serif&#x27;</span>,
+        <span class="hljs-attr">offset</span>: [<span class="hljs-number">20</span>, -<span class="hljs-number">20</span>],
+        <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;1.4em Arial&#x27;</span>,
         <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Arrows&#x27;</span>,
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
-        <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">underlinePosition</span>: <span class="hljs-number">0.8</span>,
-        <span class="hljs-attr">underlineStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">underlineOffset</span>: <span class="hljs-number">0.9</span>,
+        <span class="hljs-attr">underlineWidth</span>: <span class="hljs-number">4</span>,
         <span class="hljs-attr">exposeText</span>: <span class="hljs-literal">false</span>,
 
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1266,14 +1278,14 @@
                 <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> },
                 <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Arrow&#x27;</span>,
             });
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-string">`§UNDERLINE§<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.text}</span>`</span>});
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">includeUnderline</span>: <span class="hljs-literal">true</span> });
         },
         <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
             canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> },
                 title,
             });
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;§UNDERLINE§&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>)});
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">includeUnderline</span>: <span class="hljs-literal">false</span> });
         },
         <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
@@ -1285,8 +1297,9 @@
         },
     }).<span class="hljs-title function_">clone</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;label-link&#x27;</span>),
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;98%&#x27;</span>, <span class="hljs-string">&#x27;98%&#x27;</span>],
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-string">&#x27;bottom&#x27;</span>],
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-string">&#x27;bottom&#x27;</span>],
+        <span class="hljs-attr">offset</span>: [-<span class="hljs-number">20</span>, -<span class="hljs-number">20</span>],
         <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Labels&#x27;</span>,
 
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1294,7 +1307,7 @@
                 <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> },
                 <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Label&#x27;</span>,
             });
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-string">`§UNDERLINE§<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.text}</span>`</span>});
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">includeUnderline</span>: <span class="hljs-literal">true</span> });
         },
         <span class="hljs-attr">anchor</span>: {
             <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;label-anchor&#x27;</span>),

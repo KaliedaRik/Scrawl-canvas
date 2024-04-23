@@ -22,8 +22,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="scrawl-canvas">Scrawl-canvas</h1>
-<h4 id="version-8120---12-january-2024">Version 8.12.0 - 12 January 2024</h4>
-<hr>
+<h4 id="version-8130---27-april-2024">Version 8.13.0 - 27 April 2024</h4>
 
             </div>
             
@@ -35,47 +34,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
-              <p>The MIT License (MIT)</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the “Software”), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</p>
-<hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h2 id="initialize-scrawl-canvas">Initialize Scrawl-canvas</h2>
 
@@ -89,11 +47,11 @@ THE SOFTWARE.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h2 id="export-scrawl-canvas-module-functions">Export Scrawl-canvas module functions</h2>
 
@@ -109,6 +67,7 @@ THE SOFTWARE.</p>
     show,
     render,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/display-cycle.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { recalculateFonts } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/document.js&#x27;</span>;
 <span class="hljs-keyword">export</span> {
     addListener,
     removeListener,
@@ -117,13 +76,28 @@ THE SOFTWARE.</p>
     makeAnimationObserver,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/events.js&#x27;</span>;
 <span class="hljs-keyword">export</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/library.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/random-seed.js&#x27;</span>;
+<span class="hljs-keyword">export</span> {
+    checkFontIsLoaded,
+    findArtefact,
+    findCanvas,
+    findElement,
+    findEntity,
+    findFilter,
+    findGroup,
+    findPattern,
+    findStack,
+    findStyles,
+    findTween,
+    getFontMetadata,
+    purge,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/library.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./helper/random-seed.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeSnippet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/snippets.js&#x27;</span>;
 <span class="hljs-keyword">export</span> {
     setFilterMemoizationChoke,
     setWorkstoreLifetimeLength,
     setWorkstorePurgeChoke,
- } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/workstore.js&#x27;</span>;
+ } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./helper/workstore.js&#x27;</span>;
 <span class="hljs-keyword">export</span> {
     currentCorePosition,
     startCoreListeners,
@@ -134,8 +108,9 @@ THE SOFTWARE.</p>
     setPixelRatioChangeAction,
     getIgnorePixelRatio,
     setIgnorePixelRatio,
+    purgeFontMetadata,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/user-interaction.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/system-flags.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./helper/system-flags.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeAction } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/action.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/animation.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeBlock } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/block.js&#x27;</span>;
@@ -148,14 +123,10 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeCog } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/cog.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/color.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeConicGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/conic-gradient.js&#x27;</span>;
-<span class="hljs-keyword">export</span> {
-    requestCoordinate,
-    releaseCoordinate,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/coordinate.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeCrescent } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/crescent.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { makeDragZone } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/drag-zone.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/element.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/emitter.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeEnhancedLabel } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/enhanced-label.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeFilter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filter.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeForce } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particle-force.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/gradient.js&#x27;</span>;
@@ -167,8 +138,8 @@ THE SOFTWARE.</p>
     createImageFromCell,
     createImageFromGroup,
     createImageFromEntity,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/image-asset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { makeKeyboardZone } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/keyboard-zone.js&#x27;</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./asset-management/image-asset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeLabel } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/label.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeLine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/line.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeLineSpiral } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/line-spiral.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeLoom } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/loom.js&#x27;</span>;
@@ -177,30 +148,21 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> {
     makeNoise,
     makeNoiseAsset,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/noise-asset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> {
-    observeAndUpdate,
-    makeUpdater
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/observe-update.js&#x27;</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./asset-management/noise-asset.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeOval } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/oval.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makePattern } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/pattern.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { makePhrase } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/phrase.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makePicture } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/picture.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makePolygon } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polygon.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makePolyline } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polyline.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeQuadratic } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quadratic.js&#x27;</span>;
-<span class="hljs-keyword">export</span> {
-    requestQuaternion,
-    releaseQuaternion,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quaternion.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeRadialGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/radial-gradient.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { makeRawAsset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/raw-asset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { makeReactionDiffusionAsset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/reaction-diffusion-asset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeRawAsset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./asset-management/raw-asset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeReactionDiffusionAsset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./asset-management/reaction-diffusion-asset.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeRectangle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rectangle.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeRender } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/render-animation.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeShape } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/shape.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeSpiral } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spiral.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { importSprite } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/sprite-asset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { importSprite } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./asset-management/sprite-asset.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeSpring } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particle-spring.js&#x27;</span>;
 <span class="hljs-keyword">export</span> {
     addStack,
@@ -212,17 +174,32 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeTracer } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tracer.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeTween } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tween.js&#x27;</span>;
 <span class="hljs-keyword">export</span> {
-    requestVector,
-    releaseVector,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/vector.js&#x27;</span>;
-<span class="hljs-keyword">export</span> {
     importDomVideo,
     importVideo,
     importMediaStream,
     importScreenCapture,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/video-asset.js&#x27;</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./asset-management/video-asset.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeWheel } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/wheel.js&#x27;</span>;
-<span class="hljs-keyword">export</span> { makeWorld } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particle-world.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">export</span> { makeWorld } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particle-world.js&#x27;</span>;
+
+<span class="hljs-keyword">export</span> {
+    requestCoordinate,
+    releaseCoordinate,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./untracked-factory/coordinate.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeDragZone } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./untracked-factory/drag-zone.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeKeyboardZone } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./untracked-factory/keyboard-zone.js&#x27;</span>;
+<span class="hljs-keyword">export</span> {
+    observeAndUpdate,
+    makeUpdater
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./untracked-factory/observe-update.js&#x27;</span>;
+<span class="hljs-keyword">export</span> {
+    requestQuaternion,
+    releaseQuaternion,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./untracked-factory/quaternion.js&#x27;</span>;
+<span class="hljs-keyword">export</span> {
+    requestVector,
+    releaseVector,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./untracked-factory/vector.js&#x27;</span>;</pre></div></div>
             
         </li>
         

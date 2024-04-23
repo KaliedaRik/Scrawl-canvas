@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,20 +914,40 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
 
 
-<span class="hljs-keyword">const</span> easingDisplayComponent = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, ypos</span>) {
+<span class="hljs-keyword">const</span> easingDisplayComponent = <span class="hljs-keyword">function</span> (<span class="hljs-params">easing, ypos</span>) {
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${easing}</span>-<span class="hljs-subst">${n}</span>`</span>;
 
     <span class="hljs-keyword">const</span> color = scrawl.<span class="hljs-title function_">makeColor</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-color`</span>,
-        <span class="hljs-attr">easing</span>: name,
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;color&#x27;</span>),
+        easing,
         <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
         <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
     });
 
     scrawl.<span class="hljs-title function_">makeLine</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-line`</span>,
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;line&#x27;</span>),
         <span class="hljs-attr">startX</span>: <span class="hljs-number">122</span>,
         <span class="hljs-attr">startY</span>: ypos + <span class="hljs-number">12</span>,
         <span class="hljs-attr">endX</span>: <span class="hljs-number">752</span>,
@@ -915,8 +955,9 @@
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
     });
 
-    <span class="hljs-keyword">const</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-wheel`</span>,
+    scrawl.<span class="hljs-title function_">makeWheel</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bead&#x27;</span>),
         <span class="hljs-attr">radius</span>: <span class="hljs-number">12</span>,
         <span class="hljs-attr">startX</span>: <span class="hljs-number">110</span>,
         <span class="hljs-attr">startY</span>: ypos,
@@ -924,16 +965,19 @@
         <span class="hljs-attr">fillStyle</span>: color.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-number">0</span>),
     });
 
-    scrawl.<span class="hljs-title function_">makePhrase</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>,
-        <span class="hljs-attr">text</span>: name,
+    scrawl.<span class="hljs-title function_">makeLabel</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;label&#x27;</span>),
+        <span class="hljs-attr">text</span>: easing,
+        <span class="hljs-attr">accessibleText</span>: <span class="hljs-string">&#x27;Example of §&#x27;</span>,
         <span class="hljs-attr">startX</span>: <span class="hljs-number">10</span>,
         <span class="hljs-attr">startY</span>: ypos + <span class="hljs-number">6</span>,
     });
 
     scrawl.<span class="hljs-title function_">makeTween</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-move-tween`</span>,
-        <span class="hljs-attr">targets</span>: wheel,
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;move-tween&#x27;</span>),
+        <span class="hljs-attr">targets</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bead&#x27;</span>),
         <span class="hljs-attr">duration</span>: <span class="hljs-number">8000</span>,
         <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
@@ -942,14 +986,15 @@
                 <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;startX&#x27;</span>,
                 <span class="hljs-attr">start</span>: <span class="hljs-number">110</span>,
                 <span class="hljs-attr">end</span>: <span class="hljs-number">740</span>,
-                <span class="hljs-attr">engine</span>: name,
+                <span class="hljs-attr">engine</span>: easing,
             },
         ],
     }).<span class="hljs-title function_">run</span>();
 
     scrawl.<span class="hljs-title function_">makeTween</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-color-tween`</span>,
-        <span class="hljs-attr">targets</span>: wheel,
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;color-tween&#x27;</span>),
+        <span class="hljs-attr">targets</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bead&#x27;</span>),
         <span class="hljs-attr">duration</span>: <span class="hljs-number">8000</span>,
         <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
@@ -971,11 +1016,11 @@ easings.<span class="hljs-title function_">forEach</span>(<span class="hljs-func
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -987,11 +1032,11 @@ easings.<span class="hljs-title function_">forEach</span>(<span class="hljs-func
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -999,7 +1044,7 @@ easings.<span class="hljs-title function_">forEach</span>(<span class="hljs-func
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1007,11 +1052,11 @@ easings.<span class="hljs-title function_">forEach</span>(<span class="hljs-func
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
