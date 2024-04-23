@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -879,7 +899,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -895,7 +915,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -927,7 +947,7 @@ scrawl.<span class="hljs-title function_">importSprite</span>(<span class="hljs-
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
@@ -1131,7 +1151,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
     Handle - x: <span class="hljs-subst">${handleX}</span>, y: <span class="hljs-subst">${handleY}</span>
     Offset - x: <span class="hljs-subst">${offsetX}</span>, y: <span class="hljs-subst">${offsetY}</span>
     Roll: <span class="hljs-subst">${roll}</span>; Scale: <span class="hljs-subst">${scale}</span>
-    canvas.here - x: <span class="hljs-subst">${here.x.toFixed(<span class="hljs-number">0</span>)}</span>, y: <span class="hljs-subst">${here.y.toFixed(<span class="hljs-number">0</span>)}</span>; <span class="hljs-subst">${hitReport}</span>`</span>;
+    canvas.here - x: <span class="hljs-subst">${here.x}</span>, y: <span class="hljs-subst">${here.y}</span>; <span class="hljs-subst">${hitReport}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1440,12 +1460,42 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p>Setup form
-@ts-expect-error</p>
+              <p>Setup form</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#columns&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">6</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">initializeDomInputs</span>([
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;absoluteHeight&#x27;</span>, <span class="hljs-string">&#x27;200&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;absoluteWidth&#x27;</span>, <span class="hljs-string">&#x27;300&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;columnGutter&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;columns&#x27;</span>, <span class="hljs-string">&#x27;6&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;handle_xAbsolute&#x27;</span>, <span class="hljs-string">&#x27;150&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;handle_xPercent&#x27;</span>, <span class="hljs-string">&#x27;50&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;handle_yAbsolute&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;handle_yPercent&#x27;</span>, <span class="hljs-string">&#x27;50&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_xAbsolute&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_xPercent&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_yAbsolute&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_yPercent&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;relativeHeight&#x27;</span>, <span class="hljs-string">&#x27;50&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;relativeWidth&#x27;</span>, <span class="hljs-string">&#x27;50&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;roll&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;rows&#x27;</span>, <span class="hljs-string">&#x27;6&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;start_xAbsolute&#x27;</span>, <span class="hljs-string">&#x27;300&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;start_xPercent&#x27;</span>, <span class="hljs-string">&#x27;50&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;start_yAbsolute&#x27;</span>, <span class="hljs-string">&#x27;200&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;start_yPercent&#x27;</span>, <span class="hljs-string">&#x27;50&#x27;</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;baseFill&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;gridStroke&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;handle_xString&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;handle_yString&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;highlightFill&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;start_xString&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;start_yString&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;upend&#x27;</span>, <span class="hljs-number">0</span>],
+]);</pre></div></div>
             
         </li>
         
@@ -1456,446 +1506,12 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <h4 id="development-and-testing">Development and testing</h4>
+<p>TODO: need to develop a test for killing and resurrecting the Grid entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#rows&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">6</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#columnGutter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#rowGutter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#relativeWidth&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#absoluteWidth&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">300</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#relativeHeight&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#absoluteHeight&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#baseFill&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#highlightFill&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#gridStroke&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">300</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">150</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#roll&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scale&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#upend&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reverse&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

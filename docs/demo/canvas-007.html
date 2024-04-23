@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -877,20 +897,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    addNativeListener,
-    importDomImage,
-    library <span class="hljs-keyword">as</span> L,
-    makeBlock,
-    makeFilter,
-    makeGradient,
-    makeNoiseAsset,
-    makePicture,
-    makeRender,
-    makeWheel,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -906,7 +915,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -921,7 +930,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
@@ -937,7 +946,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.filter-image&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.filter-image&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -952,7 +961,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myGrad = <span class="hljs-title function_">makeGradient</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myGrad = scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;linear1&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">colors</span>: [
@@ -992,7 +1001,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> block1 = <span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> block1 = scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;b1&#x27;</span>),
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
@@ -1022,7 +1031,7 @@
     <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">false</span>,
 });
 
-<span class="hljs-keyword">const</span> wheel1 = <span class="hljs-title function_">makeWheel</span>({
+<span class="hljs-keyword">const</span> wheel1 = scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;w1&#x27;</span>),
     <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
@@ -1051,6 +1060,29 @@
     },
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">false</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeWheel</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;65%&#x27;</span>, <span class="hljs-string">&#x27;60%&#x27;</span>],
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">70</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+});
+
+<span class="hljs-keyword">const</span> words = scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;t1&#x27;</span>),
+    <span class="hljs-attr">layoutTemplate</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template&#x27;</span>),
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Lorem ipsum dolorsit amet&#x27;</span>,
+    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;bold 26px sans-serif&#x27;</span>,
+    <span class="hljs-attr">justifyLine</span>: <span class="hljs-string">&#x27;left&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;linear3&#x27;</span>),
+    <span class="hljs-attr">textHandleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+    <span class="hljs-attr">lineSpacing</span>: <span class="hljs-number">1.2</span>,
+    <span class="hljs-attr">lineAdjustment</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">1.5</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">1.5</span>,
 });</pre></div></div>
             
         </li>
@@ -1067,7 +1099,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeNoiseAsset</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-noise-generator&#x27;</span>),
     <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
@@ -1093,7 +1125,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;temp-1&#x27;</span>),
     <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-noise-generator&#x27;</span>),
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">100</span>, <span class="hljs-number">100</span>],
@@ -1101,7 +1133,7 @@
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 });
 
-<span class="hljs-title function_">makePicture</span>({
+scrawl.<span class="hljs-title function_">makePicture</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;temp-2&#x27;</span>),
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">400</span>, <span class="hljs-number">400</span>],
@@ -1122,7 +1154,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;displace&#x27;</span>),
     <span class="hljs-attr">actions</span>: [
         {
@@ -1157,7 +1189,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blend&#x27;</span>),
     <span class="hljs-attr">actions</span>: [
         {
@@ -1190,7 +1222,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;compose&#x27;</span>),
     <span class="hljs-attr">actions</span>: [
         {
@@ -1224,7 +1256,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gray&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,</pre></div></div>
             
@@ -1480,7 +1512,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;emboss&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
     <span class="hljs-attr">angle</span>: <span class="hljs-number">225</span>,
@@ -1501,7 +1533,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;chroma&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
     <span class="hljs-attr">ranges</span>: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]],
@@ -1520,7 +1552,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brightness&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;brightness&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">0.5</span>,</pre></div></div>
@@ -1581,7 +1613,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;swirl&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;swirl&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
@@ -1605,7 +1637,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;channels&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channels&#x27;</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">0.4</span>,
@@ -1646,7 +1678,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tiles&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-string">&#x27;hex-grid&#x27;</span>,
@@ -1667,7 +1699,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;newsprint&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;newsprint&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">2</span>,
@@ -1686,7 +1718,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tint&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
     <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0.5</span>,
@@ -1713,7 +1745,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;offset&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
     <span class="hljs-attr">offsetX</span>: <span class="hljs-number">12</span>,
@@ -1734,7 +1766,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;glitch&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;glitch&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">0.3</span>,
@@ -1760,7 +1792,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;offsetChannels&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;offsetChannels&#x27;</span>,
     <span class="hljs-attr">offsetRedX</span>: -<span class="hljs-number">12</span>,
@@ -1784,7 +1816,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pixelate&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
     <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
@@ -1806,7 +1838,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blur&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
@@ -1827,7 +1859,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gaussianBlur&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
@@ -1846,7 +1878,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;areaAlpha&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;areaAlpha&#x27;</span>,
     <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
@@ -1871,7 +1903,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;matrix&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
     <span class="hljs-attr">weights</span>: [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],</pre></div></div>
@@ -1908,7 +1940,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;channelLevels&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelLevels&#x27;</span>,
     <span class="hljs-attr">red</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">200</span>],
@@ -1930,7 +1962,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;chromakey&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chromakey&#x27;</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">0</span>,
@@ -1953,7 +1985,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;alphaToChannels&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;alphaToChannels&#x27;</span>,
     <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">false</span>,
@@ -1974,7 +2006,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;channelsToAlpha&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelsToAlpha&#x27;</span>,
 });</pre></div></div>
@@ -1992,7 +2024,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clampChannels&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clampChannels&#x27;</span>,
     <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span>,
@@ -2016,7 +2048,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;corrode&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;corrode&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">5</span>,
@@ -2037,7 +2069,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;curveWeights&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;curveWeights&#x27;</span>,
     <span class="hljs-attr">useMixedChannel</span>: <span class="hljs-literal">false</span>,
@@ -2057,7 +2089,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;flood&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
     <span class="hljs-attr">alpha</span>: <span class="hljs-number">100</span>,
@@ -2076,7 +2108,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;randomNoise&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;randomNoise&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">10</span>,
@@ -2097,12 +2129,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;reducePalette&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
 });
 
-<span class="hljs-title function_">makeGradient</span>({
+scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red-to-blue&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
@@ -2125,7 +2157,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mapToGradient&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;mapToGradient&#x27;</span>,
@@ -2146,7 +2178,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;dropShadow&#x27;</span>),
     <span class="hljs-attr">actions</span>: [
         {
@@ -2178,7 +2210,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;redBorder&#x27;</span>),
     <span class="hljs-attr">actions</span>: [
         {
@@ -2229,7 +2261,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
@@ -2314,6 +2346,10 @@
                         wheel2.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
 
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;words&#x27;</span> :
+                        words.<span class="hljs-title function_">addFilters</span>(...currentFilter);
+                        <span class="hljs-keyword">break</span>;
+
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;group&#x27;</span> :
                         group.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
@@ -2340,7 +2376,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], events, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], events, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -2351,12 +2387,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
-              <p>Set DOM form initial input values
-@ts-expect-error</p>
+              <p>Set DOM form initial input values</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#target&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">initializeDomInputs</span>([
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;target&#x27;</span>, <span class="hljs-number">0</span>],
+]);</pre></div></div>
             
         </li>
         
@@ -2367,11 +2405,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <h4 id="development-and-testing">Development and testing</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         
@@ -2381,21 +2419,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-67">&#x00a7;</a>
-              </div>
-              <h4 id="development-and-testing">Development and testing</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>Gradient packet test</p>
 
@@ -2407,11 +2430,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>RESULT:</p>
 <pre><code>[

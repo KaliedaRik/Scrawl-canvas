@@ -55,7 +55,7 @@
     a {
       text-decoration: none;
       transition: color 0.5s;
-      color: darkblue;
+      color: blue;
     }
     a:hover {
       text-decoration: underline;
@@ -150,10 +150,8 @@
         <li>Line, Quadratic, and Bezier entitys can have their start, end and control coordinates positioned absolutely, relatively, or by reference to other entitys (including along paths).</li>
       </ul>
       <li>Images, video and related pixel-based image streams (<strong>Picture</strong>), both in whole and in part; the proportion of the image displayed can be controlled and animated.</li>
-      <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort image output (<strong>Loom, Mesh</strong>). The <strong>EnhancedLabel</strong> entity is a (basic) text layout engine which uses other artefacts as a template for defining how and where the text will display.</li>
-      <ul>
-        <li>EnhancedLabel text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated in different ways, including along a path.</li>
-      </ul>
+      <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort image output (<strong>Loom, Mesh</strong>).</li>
+      <li>Multi-line, styled text layout using the <strong>EnhancedLabel</strong> entity, which uses other artefacts as a template for defining how and where its text will display.</li>
     </ul>
 
     <p>Entitys can be stamped onto the canvas in a variety of ways:</p>
@@ -674,7 +672,7 @@
         <li>gradient, and displacement, mapping.</li>
     </ul>
 
-    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays. Entitys can be used to filter the display behind them (stencil filters).</p>
+    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays. Entitys can be used to filter the display behind them - <strong>stencil filters</strong>.</p>
 
     <p><strong>Filters can be animated</strong> using Scrawl-canvas tween functionality.</p>
 
@@ -1051,8 +1049,9 @@
       <li>Scrawl-canvas treats <strong>accessibility as a First Class Issue:</strong></li>
       <ul>
         <li>All canvases have appropriate <strong>ARIA tags</strong> added to them &mdash; including ARIA labels and descriptions.</li>
-        <li><strong>Graphical text</strong> is automatically exposed to the DOM, to make it readable to assistive technology</li>
+        <li><strong>Graphical text</strong> is (by default) exposed to the DOM, to make it readable to assistive technology. The accessible text can differ from the graphical text, to make more sense to screen readers, and the order in which text is presented to the user can be controlled.</li>
         <li><strong>Graphical navigation</strong> is automatically reflected into the DOM via &lt;a> anchor elements which can be triggered using the keyboard. This extends to responding visually to keyboard-driven <strong>focus/blur</strong> events.</li>
+        <li>Navigable <strong>actions</strong> can be assigned to graphical entitys by means of (hidden) &lt;button> elements which, again, can be triggered using the keyboard (including associated focus/blur events).</li>
         <li>Canvases can adapt to <strong>user preferences</strong>, for instance <strong>prefers-reduced-motion</strong> and <strong>prefers-color-scheme</strong>.</li>
       </ul>
       <li>Scrawl-canvas treats <strong>responsiveness as a First Class Requirement:</strong></li>
@@ -1065,7 +1064,7 @@
       <li><strong>New &lt;canvas> elements</strong> can be added to the web page in real time, and removed when required; Scrawl-canvas includes functionality to help component-based Javascript frameworks (eg: <strong>React, Svelte</strong>) use canvases more efficiently and safely.</li>
       <li>Functionality is included to easily add and/or remove <strong>event listeners</strong> to canvas elements, and also other elements which can be used to control the canvas display &mdash; for instance to help make the canvas scene/animation more accessible to assistive technology and keyboard users.</li>
       <li>Scrawl-canvas &lt;canvas> elements can be made to respond to <strong>touch events</strong>; canvases can be made to remain static while dragging entitys, but follow browser-based touch actions (such as page scrolling) at other times.</li>
-      <li>The Scrawl-canvas <strong>animation loop</strong> can also be stopped and restarted as required. In addition, &lt;canvas> elements will only run their animations when they are <strong>visible in the browser viewport</strong> (via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">intersection observers</a>) &mdash; canvases automatically track their position in, and movement through, the viewport.</li>
+      <li>The Scrawl-canvas <strong>animation loop</strong> can also be stopped and restarted as required. In addition, &lt;canvas> elements can be defined to only run their animations when they are <strong>visible in the browser viewport</strong> (via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">intersection observers</a>) &mdash; canvases automatically track their position in, and movement through, the viewport.</li>
     </ul>
 
     <p>Scrawl-canvas <strong>stacks</strong> extend the library's unique positioning, manipulation and animation functionality to <strong>DOM elements</strong>. This allows us to combine stacks and canvases so that DOM elements can be used to position canvas entitys, and give us the power to animate DOM elements along path-based entitys. It also gives users the power to <strong>interact with &lt;canvas> elements rotated in 3D space</strong>.</p>

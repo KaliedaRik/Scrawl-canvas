@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -879,10 +899,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;
-
-
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -893,24 +910,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="scene-setup-and-animation">Scene setup and animation</h4>
+              <p>Import the initial image used by the Picture entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> {
-    <span class="hljs-string">&#x27;canvas-1&#x27;</span>:canvas1,
-    <span class="hljs-string">&#x27;canvas-2&#x27;</span>:canvas2,
-    <span class="hljs-string">&#x27;canvas-3&#x27;</span>:canvas3,
-    <span class="hljs-string">&#x27;canvas-4&#x27;</span>:canvas4,
-    <span class="hljs-string">&#x27;canvas-5&#x27;</span>:canvas5,
-    <span class="hljs-string">&#x27;canvas-6&#x27;</span>:canvas6,
-    <span class="hljs-string">&#x27;canvas-7&#x27;</span>:canvas7,
-    <span class="hljs-string">&#x27;canvas-8&#x27;</span>:canvas8,
-    <span class="hljs-string">&#x27;canvas-9&#x27;</span>:canvas9,
-    <span class="hljs-string">&#x27;canvas-10&#x27;</span>:canvas10,
-    <span class="hljs-string">&#x27;canvas-11&#x27;</span>:canvas11,
-    <span class="hljs-string">&#x27;canvas-12&#x27;</span>:canvas12,
-} = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -921,90 +925,12 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create the target entitys</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-1&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas1.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blotchy-newsprint&#x27;</span>],
-    <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span>,
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-2&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;jagged-shapes&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-3&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas3.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;brass-rubbing&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-4&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas4.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blueprint&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-5&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas5.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;comic&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-6&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas6.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;square-quilt&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-7&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas7.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;raised-tiles&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-8&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas8.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blotches&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-9&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas9.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;watermark&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-10&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas10.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;rays&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-11&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas11.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;grayscale-crt&#x27;</span>],
-
-}). <span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-12&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas12.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;color-crt&#x27;</span>],
-});
-
-<span class="hljs-keyword">const</span> pictures = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;target-images&#x27;</span>,
-}).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;canvas-output-1&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-2&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-3&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-4&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-5&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-6&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-7&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-8&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-9&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-10&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-11&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-12&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas, namespace;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1015,22 +941,14 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Animation</p>
+              <h4 id="scene-setup-and-animation">Scene setup and animation</h4>
+<p>Holding group - stands outside any canvas</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pictures = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
-scrawl.<span class="hljs-title function_">makeRender</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-reporter&quot;</span>,
-    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">afterShow</span>: report,
-});
-
-scrawl.<span class="hljs-title function_">makeRender</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-canvases&quot;</span>,
-    <span class="hljs-attr">target</span>: [canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10, canvas11, canvas12],
-    <span class="hljs-attr">observer</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;target-images&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1042,14 +960,87 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
+              <p>Report speed animation - stands outside any canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;page-speed&#x27;</span>,
+    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Initialise each canvas and its entitys</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">initCanvas</span> = (<span class="hljs-params">canvasId</span>) =&gt; {
+
+    canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(canvasId);
+    namespace = canvas.<span class="hljs-property">name</span>;
+
+    canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();
+
+    <span class="hljs-keyword">const</span> p = scrawl.<span class="hljs-title function_">makePicture</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>),
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span>,
+    });
+
+    pictures.<span class="hljs-title function_">addArtefacts</span>(p);
+
+    scrawl.<span class="hljs-title function_">makeRender</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+        <span class="hljs-attr">target</span>: canvas,
+        <span class="hljs-attr">observer</span>: <span class="hljs-literal">true</span>,
+    });
+};
+
+
+<span class="hljs-keyword">const</span> canvases = [
+    <span class="hljs-string">&#x27;canvas-1&#x27;</span>, <span class="hljs-string">&#x27;canvas-2&#x27;</span>,  <span class="hljs-string">&#x27;canvas-3&#x27;</span>,  <span class="hljs-string">&#x27;canvas-4&#x27;</span>,
+    <span class="hljs-string">&#x27;canvas-5&#x27;</span>, <span class="hljs-string">&#x27;canvas-6&#x27;</span>,  <span class="hljs-string">&#x27;canvas-7&#x27;</span>,  <span class="hljs-string">&#x27;canvas-8&#x27;</span>,
+    <span class="hljs-string">&#x27;canvas-9&#x27;</span>, <span class="hljs-string">&#x27;canvas-10&#x27;</span>, <span class="hljs-string">&#x27;canvas-11&#x27;</span>, <span class="hljs-string">&#x27;canvas-12&#x27;</span>,
+];
+
+canvases.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> <span class="hljs-title function_">initCanvas</span>(c));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
               <h4 id="filter-setup">Filter setup</h4>
 <p>Blotchy newsprint</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-1&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blotchy-newsprint&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blotchy-newsprint&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;newsprint&#x27;</span>,
         <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
@@ -1064,22 +1055,28 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
         <span class="hljs-attr">blue</span>: <span class="hljs-number">31</span>,
         <span class="hljs-attr">clamp</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blotchy-newsprint&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Translucent jagged edges effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> points1 = [],
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-2&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
+
+<span class="hljs-keyword">const</span> points1 = [],
     points2 = [];
 
 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2000</span>; i++) {
@@ -1089,7 +1086,7 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
 
 scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;jagged-shapes&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;jagged-shapes&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
         <span class="hljs-attr">points</span>: points1,
@@ -1100,24 +1097,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">30</span>,
         <span class="hljs-attr">opacity</span>: <span class="hljs-number">0.5</span>
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;jagged-shapes&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Brass rubbing effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-3&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;brass-rubbing&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brass-rubbing&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
         <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
@@ -1134,24 +1137,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
         <span class="hljs-attr">red</span>: <span class="hljs-number">180</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brass-rubbing&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Blueprint effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-4&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blueprint&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blueprint&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
         <span class="hljs-attr">radius</span>: <span class="hljs-number">1</span>,
@@ -1168,24 +1177,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">high</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>],
         <span class="hljs-attr">low</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">120</span>, <span class="hljs-number">255</span>],
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blueprint&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Comic effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-5&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;comic&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;comic&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
         <span class="hljs-attr">radius</span>: <span class="hljs-number">1</span>,
@@ -1230,24 +1245,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;color2&#x27;</span>,
         <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;outline4&#x27;</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;comic&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Square quilt effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-6&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;square-quilt&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;square-quilt&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
         <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;large&#x27;</span>,
@@ -1293,24 +1314,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;large&#x27;</span>,
         <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;mixed&#x27;</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;square-quilt&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Raised tiles effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-7&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;raised-tiles&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;raised-tiles&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
         <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;image-grid&#x27;</span>,
@@ -1344,41 +1371,33 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">offsetX</span>: <span class="hljs-number">2</span>,
         <span class="hljs-attr">offsetY</span>: <span class="hljs-number">2</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;raised-tiles&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Blotchy color effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-8&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;worley-basic&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blotch-effect&#x27;</span>),
     <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>noiseEngine: ‘worley-euclidean’,</p>
+    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
     <span class="hljs-attr">colors</span>: [
         [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>],
         [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>]
@@ -1389,10 +1408,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
 scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blotches&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blotches&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;worley-basic&#x27;</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blotch-effect&#x27;</span>),
         <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1412,52 +1431,55 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,
         <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blotches&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Watermark effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas9.<span class="hljs-title function_">setBase</span>({
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">2</span>,
-});
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-9&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-canvas9.<span class="hljs-title function_">buildCell</span>({
+canvas.<span class="hljs-title function_">buildCell</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>),
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">150</span>],
-    <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">skewX</span>: <span class="hljs-number">0.2</span>,
     <span class="hljs-attr">skewY</span>: -<span class="hljs-number">0.4</span>,
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
 });
 
-scrawl.<span class="hljs-title function_">makePhrase</span>({
+scrawl.<span class="hljs-title function_">makeLabel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-text&#x27;</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-text&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>),
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Scrawl-canvas&#x27;</span>,
-    <span class="hljs-attr">family</span>: <span class="hljs-string">&#x27;Arial, sans-serif&#x27;</span>,
-    <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span>,
-    <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;25px&#x27;</span>,
+    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;bold 20px Arial&#x27;</span>,
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+    <span class="hljs-attr">textIsAccessible</span>: <span class="hljs-literal">false</span>,
 });
 
-canvas9.<span class="hljs-title function_">buildCell</span>({
+canvas.<span class="hljs-title function_">buildCell</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>),
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
@@ -1465,18 +1487,18 @@ canvas9.<span class="hljs-title function_">buildCell</span>({
 
 scrawl.<span class="hljs-title function_">makeBlock</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-block&#x27;</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-block&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>),
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>),
 });
 
 scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>),
         <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1488,35 +1510,37 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;watermark-panel&#x27;</span>,
         <span class="hljs-attr">opacity</span>: <span class="hljs-number">0.7</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;watermark&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Animated rays effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas10.<span class="hljs-title function_">buildCell</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-10&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rays-cell&#x27;</span>,
+canvas.<span class="hljs-title function_">buildCell</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rays-cell&#x27;</span>),
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
 });
 
-canvas10.<span class="hljs-title function_">setBase</span>({
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
-});
-
 scrawl.<span class="hljs-title function_">makeConicGradient</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rays-filter&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rays-filter&#x27;</span>),
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">colors</span>: [
         [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
@@ -1535,12 +1559,12 @@ scrawl.<span class="hljs-title function_">makeConicGradient</span>({
 
 scrawl.<span class="hljs-title function_">makeWheel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;ray-wheel&#x27;</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;rays-cell&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ray-wheel&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rays-cell&#x27;</span>),
     <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;150%&#x27;</span>,
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rays-filter&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rays-filter&#x27;</span>),
     <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">delta</span>: {
         <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>,
@@ -1549,10 +1573,10 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
 scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rays&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rays&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;rays-cell&#x27;</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rays-cell&#x27;</span>),
         <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1563,24 +1587,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;rays-panel&#x27;</span>,
         <span class="hljs-attr">blend</span>: <span class="hljs-string">&#x27;difference&#x27;</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rays&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Grayscale cathode ray tube</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-11&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale-crt&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;grayscale-crt&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
         <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
@@ -1599,24 +1629,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
     }, {
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
     }],
-});</pre></div></div>
+});
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;grayscale-crt&#x27;</span>));</pre></div></div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Color cathode ray tube</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-12&#x27;</span>);
+namespace = canvas.<span class="hljs-property">name</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-crt&#x27;</span>,
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;color-crt&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
         <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
@@ -1633,22 +1669,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
         <span class="hljs-attr">radius</span>: <span class="hljs-number">1.2</span>,
     }],
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+});
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>([canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10, canvas11, canvas12], <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, pictures);</pre></div></div>
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;display&#x27;</span>)).<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;color-crt&#x27;</span>));</pre></div></div>
             
         </li>
         
@@ -1658,6 +1682,22 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+<p>We’ll only add any user images to the first canvas, which contains an assets &lt;div&gt; element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvases, <span class="hljs-string">`#canvas-1 .assets`</span>, pictures);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

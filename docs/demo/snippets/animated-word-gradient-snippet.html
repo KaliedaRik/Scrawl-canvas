@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1177,9 +1192,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> backgroundColor = compStyles.<span class="hljs-property">backgroundColor</span> || <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
-            font = compStyles.<span class="hljs-property">font</span> || <span class="hljs-string">`<span class="hljs-subst">${(compStyles.fontStyle != <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(compStyles.fontVariant != <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${compStyles.fontSize}</span> <span class="hljs-subst">${compStyles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
-
-        <span class="hljs-keyword">const</span> text = el.<span class="hljs-property">innerText</span>;
+            fontString = compStyles.<span class="hljs-property">font</span> || <span class="hljs-string">`<span class="hljs-subst">${(compStyles.fontStyle !== <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(compStyles.fontVariant !== <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${compStyles.fontSize}</span> <span class="hljs-subst">${compStyles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
 
         canvas.<span class="hljs-title function_">set</span>({
             backgroundColor,
@@ -1212,11 +1225,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">910</span>, <span class="hljs-string">&#x27;orange&#x27;</span>)
         .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;orange&#x27;</span>);
 
-        scrawl.<span class="hljs-title function_">makePhrase</span>({
+        scrawl.<span class="hljs-title function_">makeLabel</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-text`</span>,
             group,
-            font,
-            text,
+            fontString,
+            <span class="hljs-attr">text</span>: el.<span class="hljs-property">innerText</span>,
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,</pre></div></div>
             
         </li>
@@ -1232,8 +1245,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;16%&#x27;</span>,
-            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,</pre></div></div>
             
         </li>
         

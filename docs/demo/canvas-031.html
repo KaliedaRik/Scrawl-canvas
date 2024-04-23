@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -899,7 +919,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildClockface = <span class="hljs-keyword">function</span> (<span class="hljs-params">canvas, namespace</span>) {
 
-    <span class="hljs-keyword">const</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -916,10 +936,12 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> myFace = canvas.<span class="hljs-title function_">buildCell</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-face`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;face&#x27;</span>),
 
         <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+        <span class="hljs-attr">setRelativeDimensionsUsingBase</span>: <span class="hljs-literal">true</span>,
     });</pre></div></div>
             
         </li>
@@ -937,8 +959,8 @@
             
             <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeWheel</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-clock-frame`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-face`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;frame&#x27;</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;face&#x27;</span>),
 
         <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
 
@@ -951,7 +973,7 @@
 
     }).<span class="hljs-title function_">clone</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-center-pin`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;center-pin&#x27;</span>),
 
         <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;2%&#x27;</span>,
 
@@ -983,8 +1005,8 @@
             
             <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeLine</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-hour-hand`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-face`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;hour-hand&#x27;</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;face&#x27;</span>),
 
         <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
@@ -1005,7 +1027,7 @@
 
     }).<span class="hljs-title function_">clone</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-minute-hand`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;minute-hand&#x27;</span>),
 
         <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;15%&#x27;</span>,
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
@@ -1013,7 +1035,7 @@
 
     }).<span class="hljs-title function_">clone</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-second-hand`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;second-hand&#x27;</span>),
 
         <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;12%&#x27;</span>,
         <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
@@ -1035,9 +1057,9 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> updateClockHands = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">const</span> hourHand = entity[<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-hour-hand`</span>],
-            minuteHand = entity[<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-minute-hand`</span>],
-            secondHand = entity[<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-second-hand`</span>];
+        <span class="hljs-keyword">const</span> hourHand = scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;hour-hand&#x27;</span>)),
+            minuteHand = scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;minute-hand&#x27;</span>)),
+            secondHand = scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;second-hand&#x27;</span>));
 
         <span class="hljs-keyword">const</span> <span class="hljs-title function_">secondsSinceMidnight</span> = (<span class="hljs-params"></span>) =&gt; {
 
@@ -1098,8 +1120,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
-    namespace = <span class="hljs-string">&#x27;kaliedoscope-clock&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);
+
+<span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1114,12 +1138,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myBackground = canvas.<span class="hljs-title function_">buildCell</span>({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">buildCell</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background&#x27;</span>),
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+    <span class="hljs-attr">setRelativeDimensionsUsingBase</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
 });</pre></div></div>
             
         </li>
@@ -1137,8 +1164,8 @@
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeWheel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-clock-stencil`</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background&#x27;</span>),
 
     <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
 
@@ -1169,7 +1196,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myColorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-color-factory`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;colors&#x27;</span>),
 });</pre></div></div>
             
         </li>
@@ -1189,8 +1216,8 @@
 
     scrawl.<span class="hljs-title function_">makeBlock</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-decoration-block-<span class="hljs-subst">${i}</span>`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`decoration-block-<span class="hljs-subst">${i}</span>`</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background&#x27;</span>),
 
         <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
         <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.3</span>,
@@ -1230,8 +1257,8 @@
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-0`</span>,
-    <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;segment-0&#x27;</span>),
+    <span class="hljs-attr">group</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1242,31 +1269,31 @@
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background&#x27;</span>),
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-1`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;segment-1&#x27;</span>),
     <span class="hljs-attr">roll</span>: <span class="hljs-number">120</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-2`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;segment-2&#x27;</span>),
     <span class="hljs-attr">roll</span>: <span class="hljs-number">240</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-3`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;segment-3&#x27;</span>),
     <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">true</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-4`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;segment-4&#x27;</span>),
     <span class="hljs-attr">roll</span>: <span class="hljs-number">120</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-5`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;segment-5&#x27;</span>),
     <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
 });</pre></div></div>
             
@@ -1283,7 +1310,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> clock = <span class="hljs-title function_">buildClockface</span>(canvas, namespace);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> clock = <span class="hljs-title function_">buildClockface</span>(canvas, <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-clock`</span>);</pre></div></div>
             
         </li>
         
@@ -1293,28 +1320,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <h4 id="cell-display-and-compile-ordering">Cell display and compile ordering</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>myBackground.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-});
-
-canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1326,11 +1331,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1348,11 +1353,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

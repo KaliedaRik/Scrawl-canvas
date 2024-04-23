@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -879,7 +899,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { addImageDragAndDrop, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -894,10 +914,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
-
-<span class="hljs-keyword">const</span> oCanvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;output-canvas&#x27;</span>];
-<span class="hljs-keyword">const</span> wCanvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;channel-weights-canvas&#x27;</span>];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> oCanvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;output-canvas&#x27;</span>);
+<span class="hljs-keyword">const</span> wCanvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;channel-weights-canvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -908,20 +926,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="curves-filter">Curves filter</h4>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> weights = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-number">1024</span>);
-weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
-
-<span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-filter&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;curveWeights&#x27;</span>,
-
-    <span class="hljs-attr">weights</span>: [...weights],
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> oNamespace = oCanvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> wNamespace = wCanvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">oName</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${oNamespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">wName</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${wNamespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -932,27 +944,11 @@ weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number"
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="output-canvas">Output canvas</h4>
+              <p>Import the initial image used by the Picture entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
-    <span class="hljs-attr">group</span>: oCanvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;my-filter&#x27;</span>],
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -963,79 +959,19 @@ weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number"
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="weights-canvas">Weights canvas</h4>
+              <h4 id="curves-filter">Curves filter</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>wCanvas.<span class="hljs-title function_">buildCell</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> weights = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-number">1024</span>);
+weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;curves-cell&#x27;</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">360</span>, <span class="hljs-number">360</span>],
-});
+<span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-<span class="hljs-keyword">const</span> curveArray = [<span class="hljs-string">&#x27;red&#x27;</span>, <span class="hljs-string">&#x27;green&#x27;</span>, <span class="hljs-string">&#x27;blue&#x27;</span>, <span class="hljs-string">&#x27;black&#x27;</span>];
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">oName</span>(<span class="hljs-string">&#x27;weighted&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;curveWeights&#x27;</span>,
 
-curveArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">name, index</span>) =&gt;</span> {
-
-    scrawl.<span class="hljs-title function_">makeGroup</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pins-group`</span>,
-        <span class="hljs-attr">host</span>: wCanvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-        <span class="hljs-attr">order</span>: index,
-    });
-
-    scrawl.<span class="hljs-title function_">makeWheel</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-start`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pins-group`</span>,
-        <span class="hljs-attr">radius</span>: <span class="hljs-number">12</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">360</span>],
-        <span class="hljs-attr">fillStyle</span>: name,
-        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-
-    }).<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-cs`</span>,
-        <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-number">120</span>, <span class="hljs-number">240</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-
-    }).<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-ce`</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-number">240</span>, <span class="hljs-number">120</span>],
-
-    }).<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-end`</span>,
-        <span class="hljs-attr">radius</span>: <span class="hljs-number">12</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-number">360</span>, <span class="hljs-number">0</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    });
-
-    scrawl.<span class="hljs-title function_">makeBezier</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-bezier`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;curves-cell&#x27;</span>,
-
-        <span class="hljs-attr">strokeStyle</span>: name,
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-
-        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-start`</span>,
-        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-        <span class="hljs-attr">startControlPivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-cs`</span>,
-        <span class="hljs-attr">startControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-        <span class="hljs-attr">endControlPivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-ce`</span>,
-        <span class="hljs-attr">endControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-        <span class="hljs-attr">endPivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin-end`</span>,
-        <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-
-        <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-    });
+    <span class="hljs-attr">weights</span>: [...weights],
 });</pre></div></div>
             
         </li>
@@ -1047,37 +983,20 @@ curveArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
-<p>Create the drag-and-drop zone</p>
+              <h4 id="output-canvas">Output canvas</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> draggedPin;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
-<span class="hljs-keyword">const</span> dragGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;drag-group&#x27;</span>,
-});
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">oName</span>(<span class="hljs-string">&#x27;image&#x27;</span>),
+    <span class="hljs-attr">group</span>: oCanvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
 
-dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;black-pin-start&#x27;</span>, <span class="hljs-string">&#x27;black-pin-cs&#x27;</span>, <span class="hljs-string">&#x27;black-pin-ce&#x27;</span>, <span class="hljs-string">&#x27;black-pin-end&#x27;</span>);
-
-<span class="hljs-keyword">const</span> currentPin = scrawl.<span class="hljs-title function_">makeDragZone</span>({
-
-    <span class="hljs-attr">zone</span>: wCanvas,
-    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&#x27;drag-group&#x27;</span>,
-    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
-    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">updateOnStart</span>: <span class="hljs-function">() =&gt;</span> {
-
-        draggedPin = <span class="hljs-title function_">currentPin</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> draggedPin != <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; draggedPin) {
-
-            <span class="hljs-keyword">const</span> pin = draggedPin.<span class="hljs-property">artefact</span>,
-                name = pin.<span class="hljs-property">name</span>;
-
-            <span class="hljs-keyword">if</span> (name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;start&#x27;</span>) &gt; <span class="hljs-number">0</span> || name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;end&#x27;</span>) &gt; <span class="hljs-number">0</span>) {</pre></div></div>
+    <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">oName</span>(<span class="hljs-string">&#x27;weighted&#x27;</span>)],
+});</pre></div></div>
             
         </li>
         
@@ -1088,11 +1007,134 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <h4 id="weights-canvas">Weights canvas</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                pin.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>wCanvas.<span class="hljs-title function_">buildCell</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;curves-cell&#x27;</span>),
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">360</span>, <span class="hljs-number">360</span>],
+});
+
+<span class="hljs-keyword">const</span> curveArray = [<span class="hljs-string">&#x27;red&#x27;</span>, <span class="hljs-string">&#x27;green&#x27;</span>, <span class="hljs-string">&#x27;blue&#x27;</span>, <span class="hljs-string">&#x27;black&#x27;</span>];
+
+curveArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">color, index</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> groupName = <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pins-group`</span>);
+
+    scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+        <span class="hljs-attr">name</span>: groupName,
+        <span class="hljs-attr">host</span>: wCanvas.<span class="hljs-title function_">getBase</span>(),
+        <span class="hljs-attr">order</span>: index,
+    });
+
+    scrawl.<span class="hljs-title function_">makeWheel</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-start`</span>),
+        <span class="hljs-attr">group</span>: groupName,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">360</span>],
+        <span class="hljs-attr">fillStyle</span>: color,
+        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+
+    }).<span class="hljs-title function_">clone</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-cs`</span>),
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-number">120</span>, <span class="hljs-number">240</span>],
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+
+    }).<span class="hljs-title function_">clone</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-ce`</span>),
+        <span class="hljs-attr">start</span>: [<span class="hljs-number">240</span>, <span class="hljs-number">120</span>],
+
+    }).<span class="hljs-title function_">clone</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-end`</span>),
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-number">360</span>, <span class="hljs-number">0</span>],
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+    });
+
+    scrawl.<span class="hljs-title function_">makeBezier</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-bezier`</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;curves-cell&#x27;</span>),
+
+        <span class="hljs-attr">strokeStyle</span>: color,
+        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+
+        <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-start`</span>),
+        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+        <span class="hljs-attr">startControlPivot</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-cs`</span>),
+        <span class="hljs-attr">startControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+        <span class="hljs-attr">endControlPivot</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-ce`</span>),
+        <span class="hljs-attr">endControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+        <span class="hljs-attr">endPivot</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${color}</span>-pin-end`</span>),
+        <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+        <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+    });
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Create the drag-and-drop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> draggedPin;
+
+<span class="hljs-keyword">const</span> dragGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
+});
+
+dragGroup.<span class="hljs-title function_">addArtefacts</span>(
+    <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;black-pin-start&#x27;</span>),
+    <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;black-pin-cs&#x27;</span>),
+    <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;black-pin-ce&#x27;</span>),
+    <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;black-pin-end&#x27;</span>),
+);
+
+<span class="hljs-keyword">const</span> currentPin = scrawl.<span class="hljs-title function_">makeDragZone</span>({
+
+    <span class="hljs-attr">zone</span>: wCanvas,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updateOnStart</span>: <span class="hljs-function">() =&gt;</span> {
+
+        draggedPin = <span class="hljs-title function_">currentPin</span>();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> draggedPin !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; draggedPin) {
+
+            <span class="hljs-keyword">const</span> pin = draggedPin.<span class="hljs-property">artefact</span>,
+                name = pin.<span class="hljs-property">name</span>;
+
+            <span class="hljs-keyword">if</span> (name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;start&#x27;</span>) &gt; <span class="hljs-number">0</span> || name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;end&#x27;</span>) &gt; <span class="hljs-number">0</span>) {
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                pin.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">false</span>;
                 pin.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">lockXTo</span>: <span class="hljs-string">&#x27;mouse&#x27;</span>,
                 });
@@ -1102,7 +1144,7 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
 
     <span class="hljs-attr">updateOnEnd</span>: <span class="hljs-function">() =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> draggedPin != <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; draggedPin) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> draggedPin !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; draggedPin) {
 
             <span class="hljs-keyword">const</span> pin = draggedPin.<span class="hljs-property">artefact</span>,
                 name = pin.<span class="hljs-property">name</span>;
@@ -1124,11 +1166,11 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Filter weights recalculation</p>
 
@@ -1136,10 +1178,10 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> recalculateWeights = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> allCurve = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;black-bezier&#x27;</span>],
-        redCurve = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;red-bezier&#x27;</span>],
-        greenCurve = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;green-bezier&#x27;</span>],
-        blueCurve = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;blue-bezier&#x27;</span>];
+    <span class="hljs-keyword">const</span> allCurve = scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;black-bezier&#x27;</span>)),
+        redCurve = scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;red-bezier&#x27;</span>)),
+        greenCurve = scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;green-bezier&#x27;</span>)),
+        blueCurve = scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">wName</span>(<span class="hljs-string">&#x27;blue-bezier&#x27;</span>));
 
     <span class="hljs-keyword">const</span> inverseStep = <span class="hljs-number">256</span> / <span class="hljs-number">360</span>;
 
@@ -1164,9 +1206,13 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1</span>; i += <span class="hljs-number">0.001</span>) {
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-keyword">const</span> r = redCurve.<span class="hljs-title function_">getPathPositionData</span>(i),
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
                 g = greenCurve.<span class="hljs-title function_">getPathPositionData</span>(i),
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
                 b = blueCurve.<span class="hljs-title function_">getPathPositionData</span>(i),
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
                 a = allCurve.<span class="hljs-title function_">getPathPositionData</span>(i);
 
             <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>:xr, <span class="hljs-attr">y</span>:yr} = r;
@@ -1289,11 +1335,11 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 
@@ -1301,7 +1347,7 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">oName</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: [wCanvas, oCanvas],
 });
 
@@ -1315,14 +1361,32 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
-<p>Top form (for opacity, use mixed channel controls)</p>
+<p>Setup form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">initializeDomInputs</span>([
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;useMixedChannel&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Top form (for opacity, use mixed channel controls)</p>
 
             </div>
             
@@ -1346,11 +1410,11 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Channel buttons (under the curves canvas)</p>
 
@@ -1371,7 +1435,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         }
 
         selected = e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>;
-        selectedGroup = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[<span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pins-group`</span>];
+        selectedGroup = scrawl.<span class="hljs-title function_">findGroup</span>(<span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pins-group`</span>));
 
         <span class="hljs-keyword">if</span> (selectedGroup) {
 
@@ -1383,7 +1447,12 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             selectedGroup.<span class="hljs-title function_">set</span>({ order });
 
             dragGroup.<span class="hljs-title function_">clearArtefacts</span>();
-            dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-start`</span>, <span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-cs`</span>, <span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-ce`</span>, <span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-end`</span>);
+            dragGroup.<span class="hljs-title function_">addArtefacts</span>(
+                <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-start`</span>),
+                <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-cs`</span>),
+                <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-ce`</span>),
+                <span class="hljs-title function_">wName</span>(<span class="hljs-string">`<span class="hljs-subst">${selected}</span>-pin-end`</span>),
+            );
 
             e.<span class="hljs-property">target</span>.<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&#x27;selected&#x27;</span>);
         }
@@ -1391,37 +1460,6 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 }, <span class="hljs-string">&#x27;.channel-selector&#x27;</span>);
 
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">updateOutput</span>(), <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>Setup form
-@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useMixedChannel&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1436,7 +1474,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(oCanvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(oCanvas, <span class="hljs-string">`#<span class="hljs-subst">${oNamespace}</span> .assets`</span>, piccy);</pre></div></div>
             
         </li>
         

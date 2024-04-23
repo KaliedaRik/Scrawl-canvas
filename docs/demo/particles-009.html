@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,7 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -905,31 +925,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Define some filters</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-}).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
-});
-
-scrawl.<span class="hljs-title function_">makeFilter</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
-    <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0.5</span>,      <span class="hljs-attr">redInGreen</span>: <span class="hljs-number">1</span>,      <span class="hljs-attr">redInBlue</span>: <span class="hljs-number">0.9</span>,
-    <span class="hljs-attr">greenInRed</span>: <span class="hljs-number">0</span>,      <span class="hljs-attr">greenInGreen</span>: <span class="hljs-number">0.3</span>,  <span class="hljs-attr">greenInBlue</span>: <span class="hljs-number">0.8</span>,
-    <span class="hljs-attr">blueInRed</span>: <span class="hljs-number">0.8</span>,     <span class="hljs-attr">blueInGreen</span>: <span class="hljs-number">0.8</span>,   <span class="hljs-attr">blueInBlue</span>: <span class="hljs-number">0.4</span>,
-});
-
-scrawl.<span class="hljs-title function_">makeFilter</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-    <span class="hljs-attr">weights</span>: [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -940,13 +941,53 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
+              <p>Define some filters</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;grayscale&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;invert&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tint&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
+    <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0.5</span>,      <span class="hljs-attr">redInGreen</span>: <span class="hljs-number">1</span>,      <span class="hljs-attr">redInBlue</span>: <span class="hljs-number">0.9</span>,
+    <span class="hljs-attr">greenInRed</span>: <span class="hljs-number">0</span>,      <span class="hljs-attr">greenInGreen</span>: <span class="hljs-number">0.3</span>,  <span class="hljs-attr">greenInBlue</span>: <span class="hljs-number">0.8</span>,
+    <span class="hljs-attr">blueInRed</span>: <span class="hljs-number">0.8</span>,     <span class="hljs-attr">blueInGreen</span>: <span class="hljs-number">0.8</span>,   <span class="hljs-attr">blueInBlue</span>: <span class="hljs-number">0.4</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;matrix&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
+    <span class="hljs-attr">weights</span>: [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
               <p>For this Demo, we are creating a sheet and pinning its top row to a rail. This is the rail.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeLine</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;topline&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;topline&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
@@ -963,32 +1004,20 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h4 id="particle-physics-animation-scene">Particle physics animation scene</h4>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Create a repeller force, associated with a Wheel entity</p>
+              <h4 id="particle-physics-animation-scene">Particle physics animation scene</h4>
+<p>Create a repeller force, associated with a Wheel entity</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> bigball = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;big-ball&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;big-ball&#x27;</span>),
     <span class="hljs-attr">radius</span>: <span class="hljs-number">80</span>,
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-number">320</span>],
@@ -1029,7 +1058,8 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeForce</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wheel-repellor&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;wheel-repellor&#x27;</span>),
+
 <span class="hljs-comment">/* eslint-disable-next-line */</span>
     <span class="hljs-attr">action</span>: <span class="hljs-function">(<span class="hljs-params">particle, world, host</span>) =&gt;</span> {
 
@@ -1092,7 +1122,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-world&#x27;</span>),
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
 
 });</pre></div></div>
@@ -1112,10 +1142,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myNet = scrawl.<span class="hljs-title function_">makeNet</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-net&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;test-net&#x27;</span>),
     <span class="hljs-attr">world</span>: myWorld,
 
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;topline&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;topline&#x27;</span>),
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
     <span class="hljs-attr">generate</span>: <span class="hljs-string">&#x27;weak-net&#x27;</span>,
@@ -1135,22 +1165,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> regex = <span class="hljs-title class_">RegExp</span>(<span class="hljs-string">&#x27;-0-[0-9]+$&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> regex = <span class="hljs-title class_">RegExp</span>(<span class="hljs-string">&#x27;-0-[0-9]+$&#x27;</span>);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (regex.<span class="hljs-title function_">test</span>(p.<span class="hljs-property">name</span>)) {
 
@@ -1158,22 +1176,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
                     <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;lightgrey&#x27;</span>,
                     <span class="hljs-attr">stroke</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
                     <span class="hljs-attr">forces</span>: [],
-                });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+                });
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">springs</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> {
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">springs</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> {
 
                     <span class="hljs-keyword">if</span> (s &amp;&amp; s.<span class="hljs-property">particleFrom</span> &amp;&amp; s.<span class="hljs-property">particleFrom</span>.<span class="hljs-property">name</span> === p.<span class="hljs-property">name</span>) {
 
@@ -1195,7 +1201,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">showSprings</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">showSpringsColor</span>: <span class="hljs-string">&#x27;azure&#x27;</span>,
 
-    <span class="hljs-attr">forces</span>: [<span class="hljs-string">&#x27;gravity&#x27;</span>, <span class="hljs-string">&#x27;wheel-repellor&#x27;</span>],
+    <span class="hljs-attr">forces</span>: [<span class="hljs-string">&#x27;gravity&#x27;</span>, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;wheel-repellor&#x27;</span>)],
 
     <span class="hljs-attr">mass</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">springConstant</span>: <span class="hljs-number">100</span>,
@@ -1204,7 +1210,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">artefact</span>: scrawl.<span class="hljs-title function_">makeWheel</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-wheel&#x27;</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;particle-wheel&#x27;</span>),
         <span class="hljs-attr">radius</span>: <span class="hljs-number">7</span>,
 
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -1235,11 +1241,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Make all of the Net entity’s Particles draggable</p>
 
@@ -1251,11 +1257,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1267,11 +1273,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1279,10 +1285,66 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Make both the Net entity’s Particles, and the big ball, draggable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-draggable-group&#x27;</span>),
+
+}).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;test-net&#x27;</span>), <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;big-ball&#x27;</span>));
+
+scrawl.<span class="hljs-title function_">makeDragZone</span>({
+
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-draggable-group&#x27;</span>),
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>When we set a filter on a Net entity, all the entity’s visual output will be filtered</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterChoice = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+
+    <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {
+
+        e.<span class="hljs-title function_">preventDefault</span>();
+        e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+        myNet.<span class="hljs-title function_">clearFilters</span>();
+        <span class="hljs-keyword">if</span> (val) myNet.<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(val));
+    }
+};
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], filterChoice, <span class="hljs-string">&#x27;#filter&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1293,27 +1355,12 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
-<p>Make both the Net entity’s Particles, and the big ball, draggable</p>
-<ul>
-<li>KNOWN BUG - the entitys/particles are not draggable on first user mousedown, but are draggable afterwards</li>
-</ul>
+              <p>Set DOM form initial input values</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeGroup</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-draggable-group&#x27;</span>,
-
-}).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;test-net&#x27;</span>, <span class="hljs-string">&#x27;big-ball&#x27;</span>);
-
-scrawl.<span class="hljs-title function_">makeDragZone</span>({
-
-    <span class="hljs-attr">zone</span>: canvas,
-    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&#x27;my-draggable-group&#x27;</span>,
-    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
-    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1323,47 +1370,6 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>When we set a filter on a Net entity, all the entity’s visual output will be filtered</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterChoice = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
-
-    e.<span class="hljs-title function_">preventDefault</span>();
-    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
-
-    myNet.<span class="hljs-title function_">clearFilters</span>();
-    <span class="hljs-keyword">if</span> (val) myNet.<span class="hljs-title function_">addFilters</span>(val);
-};
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], filterChoice, <span class="hljs-string">&#x27;#filter&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>Set DOM form initial input values
-@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

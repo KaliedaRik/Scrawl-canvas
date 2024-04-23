@@ -423,8 +423,20 @@ CSS custom property --SC-method             maps to TextStyle method
 
   <div class="testinfo">
     <h4>Test purpose</h4>
+
     <ul>
-      <li>...</li>
+      <li>The first purpose of this test is to check that styling is correctly applied to the text and matches the text displayed in the HTML. Styling is defined in CSS code, and applied to the text through HTML markup.</li>
+      <ul>
+        <li>Styling in this test includes: text color; text outline color; bold text; italic text; text of different size; word spacing; letter spacing; and text decorations</li>
+      </ul>
+      <li>The second purpose of this test is to check that the text decoration (underline, overline, highlight) align with the text units as they flow in response to changes in other attributes:</li>
+      <ul>
+        <li>Highlights should cover the entire height of the font, with letters appearing over the highlight</li>
+        <li>Overlines should appear over the letters</li>
+        <li>Underlines should appear behind the letters, with a small gap between the underline and any letter stroke that intersects it</li>
+        <li>Spaces will be included in the decoration for row-based text flow, but not for column-based text flow</li>
+        <li>Where decoration is applied to text that breaks across a line, the decoration should stop at the end of the line and resume at the start of the next line</li>
+      </ul>
     </ul>
 
     <p><b>Touch test:</b> not required.</p>

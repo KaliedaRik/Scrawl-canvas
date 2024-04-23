@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -891,13 +911,13 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
+<p>const {canvas1, canvas2, canvas3} = scrawl.library.canvas;</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> {canvas1, canvas2, canvas3} = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>;
-
-
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.canal&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas1 = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas1&#x27;</span>),
+    canvas2 = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas2&#x27;</span>),
+    canvas3 = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas3&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -907,6 +927,21 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Import image from DOM</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.canal&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="canvas-1">Canvas 1</h4>
 <p>Applying more than one clipped region to a scene, using Groups to separate them</p>
@@ -919,11 +954,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>The scene will be made up of two clipped images, both draggable around the canvas</p>
 
@@ -943,11 +978,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Clipping region entitys</p>
 
@@ -976,11 +1011,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The clipping region entity MUST be stamped on the canvas before the entitys that will be clipped by it</p>
 
@@ -991,11 +1026,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Add outlines to our clipped regions</p>
 
@@ -1047,11 +1082,11 @@ scrawl.<span class="hljs-title function_">makeStar</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Picture entitys - we pivot these to our clipping region entitys to make the clipped display the same, wherever it is moved to on the canvas</p>
 
@@ -1084,11 +1119,11 @@ scrawl.<span class="hljs-title function_">makeStar</span>({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>We’re not interested with associating the canvas 1 drag group with the canvas’s base cell - the entitys in this group will already be assigned to the clip groups, thus will already be included in the canvas’s Display cycle</p>
 
@@ -1111,11 +1146,11 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="canvas-2">Canvas 2:</h4>
 <p>Generate and use Picture entitys from clipped scenes</p>
@@ -1128,11 +1163,11 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>We’ll be creating some temporary cells etc which we need to clear out after completing work</p>
 
@@ -1144,11 +1179,11 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>We will generate Image assets from cells created specifically for this one task</p>
 
@@ -1171,11 +1206,11 @@ canvas2.<span class="hljs-title function_">buildCell</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Clipped entitys - this code is much the same as for canvas1, without dragging and delta animation</p>
 
@@ -1256,11 +1291,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>We will get Scrawl-canvas to capture the image output of each Cell as part of the first Display cycle. Then we can create regular Picture entitys from those images, and get rid of the original cells and entitys.</p>
 
@@ -1272,11 +1307,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>We create our Picture entitys from Cell output in a post-initialization step. Note that this function may run more than once as page loading is asynchronous and unpredictable</p>
 
@@ -1344,11 +1379,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>The cog and star Cells - and their Groups, entitys, etc - have served their purpose</p>
 <ul>
@@ -1363,51 +1398,19 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <h4 id="canvas-3">Canvas 3:</h4>
-<p>Emulate clipping to a Phrase entity using a composite scene rendered in its own cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ns3 = <span class="hljs-string">`canvas3`</span>;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">name3</span> = (<span class="hljs-params">name</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${ns3}</span>-<span class="hljs-subst">${name}</span>`</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>We will generate Image assets from cells created specifically for this one task</p>
+              <h4 id="canvas-3">Canvas 3:</h4>
+<p>Emulate clipping to a Label entity using a composite scene rendered in its own cell</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> c3Cell = canvas3.<span class="hljs-title function_">buildCell</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-cell&#x27;</span>),
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-});
-
-<span class="hljs-keyword">const</span> c3Phrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-text-hello&#x27;</span>),
-    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-cell&#x27;</span>),
-
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;HELLO!&#x27;</span>,
-    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;bold 120px serif&#x27;</span>,
-    <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
-});
-
-<span class="hljs-keyword">const</span> canvasThreePostInitialization = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;running canvasThreePostInitialization()&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ns3 = <span class="hljs-string">`canvas3`</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name3</span> = (<span class="hljs-params">name</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${ns3}</span>-<span class="hljs-subst">${name}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1418,20 +1421,26 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>create our drag group and dragzone</p>
+              <p>We will generate Image assets from cells created specifically for this one task</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> drag = scrawl.<span class="hljs-title function_">makeGroup</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
-    });
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> c3Cell = canvas3.<span class="hljs-title function_">buildCell</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-cell&#x27;</span>),
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+});
 
-    scrawl.<span class="hljs-title function_">makeDragZone</span>({
-        <span class="hljs-attr">zone</span>: canvas3,
-        <span class="hljs-attr">collisionGroup</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
-        <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
-        <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
-    });</pre></div></div>
+<span class="hljs-keyword">const</span> c3Phrase = scrawl.<span class="hljs-title function_">makeLabel</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-text-hello&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-cell&#x27;</span>),
+
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;HELLO!&#x27;</span>,
+    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;bold 120px serif&#x27;</span>,
+});
+
+
+<span class="hljs-keyword">const</span> canvasThreePostInitialization = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1442,11 +1451,16 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p>We need to retrieve the Phrase entity’s dimensions - which are hard to guess before it’s created - and update its surrounding environment to fit.</p>
+              <p>Font loading is async - only run this code if the font has been loaded and measured</p>
+<ul>
+<li>We always measure the font at a size of 100px, whatever value we set the entity’s font size to</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> [width, height] = c3Phrase.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">fontfamilymetadatanames</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;100px serif&#x27;</span>)) {
+
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;running canvasThreePostInitialization()&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1457,26 +1471,20 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p>We can use the phrase entity as a stencil by applying a Picture entity over it with a GCO = ‘source-atop’</p>
+              <p>create our drag group and dragzone</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> drag = scrawl.<span class="hljs-title function_">makeGroup</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
+        });
 
-        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-image&#x27;</span>),
-        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-cell&#x27;</span>),
-
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;factory&#x27;</span>,
-
-        width,
-        height,
-        <span class="hljs-attr">copyDimensions</span>: [width, height],
-        <span class="hljs-attr">copyStart</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">50</span>],
-
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
-    });</pre></div></div>
+        scrawl.<span class="hljs-title function_">makeDragZone</span>({
+            <span class="hljs-attr">zone</span>: canvas3,
+            <span class="hljs-attr">collisionGroup</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
+            <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+            <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
+        });</pre></div></div>
             
         </li>
         
@@ -1487,20 +1495,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>We can also add an outline, if we want</p>
+              <p>We need to retrieve the Label entity’s dimensions - which are hard to guess before it’s created - and update its surrounding environment to fit.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    c3Phrase.<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-outline&#x27;</span>),
-        <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
-
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
-        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> [width, height] = c3Phrase.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1511,34 +1510,26 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>We cannot directly drag-and-drop a Cell, but we can create a Block entity and pivot the Cell to it, then drag-and-drop the Block</p>
+              <p>We can use the label entity as a stencil by applying a Picture entity over it with a GCO = ‘source-atop’</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>),
-        <span class="hljs-attr">group</span>: canvas3.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
-        width,
-        height,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">delta</span>: {
-            <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>,
-        },
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-    })
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    c3Cell.<span class="hljs-title function_">set</span>({
-        width,
-        height,
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>),
-        <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-    });
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-image&#x27;</span>),
+            <span class="hljs-attr">group</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-cell&#x27;</span>),
 
-    drag.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>));
-};</pre></div></div>
+            <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;factory&#x27;</span>,
+
+            width,
+            height,
+            <span class="hljs-attr">copyDimensions</span>: [width, height],
+            <span class="hljs-attr">copyStart</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">50</span>],
+
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+        });</pre></div></div>
             
         </li>
         
@@ -1549,23 +1540,20 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function will be called 3 times - once per canvas - so we need to make sure the appropriate function gets invoked for that canvas</p>
-<ul>
-<li>Multiple calls invoked because the makeRender function will generate separate animation objects for each canvas target.</li>
-</ul>
+              <p>We can also add an outline, if we want</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> postInitialization = <span class="hljs-keyword">function</span> (<span class="hljs-params">anim</span>) {
+            <div class="content"><div class='highlight'><pre>        c3Phrase.<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(anim.<span class="hljs-property">target</span>.<span class="hljs-property">name</span>);
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-outline&#x27;</span>),
+            <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
+            <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
 
-    <span class="hljs-keyword">const</span> target = anim.<span class="hljs-property">target</span>.<span class="hljs-property">name</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas2&#x27;</span> === target) <span class="hljs-title function_">canvasTwoPostInitialization</span>();
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas3&#x27;</span> === target) <span class="hljs-title function_">canvasThreePostInitialization</span>();
-};</pre></div></div>
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
+            <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
+        });</pre></div></div>
             
         </li>
         
@@ -1576,16 +1564,22 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>We cannot directly drag-and-drop a Cell, but we can create a Block entity and pivot the Cell to it, then drag-and-drop the Block</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: [canvas1, canvas2, canvas3],</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">makeBlock</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>),
+            <span class="hljs-attr">group</span>: canvas3.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+            width,
+            height,
+            <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+            <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+            <span class="hljs-attr">delta</span>: {
+                <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>,
+            },
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+        })</pre></div></div>
             
         </li>
         
@@ -1596,19 +1590,20 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p>Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once</p>
+              <p>Update our cell</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: postInitialization,
-});
+            <div class="content"><div class='highlight'><pre>        c3Cell.<span class="hljs-title function_">set</span>({
+            width,
+            height,
+            <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+            <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>),
+            <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+        });
 
-scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-speed&#x27;</span>,
-    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
+        drag.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>));</pre></div></div>
             
         </li>
         
@@ -1618,6 +1613,123 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>Switch off this check</p>
+<ul>
+<li>We could do this using the render object’s <code>set</code> function - <code>.set({afterShow: () =&gt; {}})</code></li>
+<li>But render objects also have an <code>updateHook</code> function, which takes two args: the hook name, and the new function</li>
+<li>If we don’t supply a new function, the existing hook function is just removed</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        canvas3_animation.<span class="hljs-title function_">updateHook</span>(<span class="hljs-string">&#x27;afterShow&#x27;</span>);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;FAILED TO RUN canvasThreePostInitialization()&#x27;</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>Canvas 1 animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name1</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+    <span class="hljs-attr">target</span>: canvas1,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>Canvas 2 animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name2</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+    <span class="hljs-attr">target</span>: canvas2,
+    <span class="hljs-attr">afterCreated</span>: canvasTwoPostInitialization,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>Canvas 3 animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas3_animation = scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+    <span class="hljs-attr">target</span>: canvas3,
+    <span class="hljs-attr">afterShow</span>: canvasThreePostInitialization,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p>Speed report animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-speed&#x27;</span>,
+    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

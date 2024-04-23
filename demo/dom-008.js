@@ -197,7 +197,7 @@ scrawl.makeBlock({
     roll: -90,
 });
 
-// Add a label to each canvas using a Phrase entity
+// Add a label to each canvas using a Label entity
 scrawl.makeLabel({
 
     name: name('topface-label'),

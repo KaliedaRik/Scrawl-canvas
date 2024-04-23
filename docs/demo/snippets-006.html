@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -914,13 +934,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Risograph text gradient snippet</p>
+              <p>Page performance snippet</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> risographEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/risograph-text-gradient-snippet.js&#x27;</span>;
-<span class="hljs-keyword">const</span> risographHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.risograph-header&#x27;</span>);
-risographHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">risographEffect</span>(el, scrawl));</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> pagePerformance <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/page-performance-snippet.js&#x27;</span>;
+<span class="hljs-keyword">const</span> pageReport = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+pageReport.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">pagePerformance</span>(scrawl, el));</pre></div></div>
             
         </li>
         
@@ -931,13 +951,13 @@ risographHeaders.<span class="hljs-title function_">forEach</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Worley text gradient snippet</p>
+              <p>Risograph text gradient snippet</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> worleyEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/worley-text-gradient-snippet.js&#x27;</span>;
-<span class="hljs-keyword">const</span> worleyHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.worley-header&#x27;</span>);
-worleyHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">worleyEffect</span>(el, scrawl));</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> risographEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/risograph-text-gradient-snippet.js&#x27;</span>;
+<span class="hljs-keyword">const</span> risographHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.risograph-header&#x27;</span>);
+risographHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">risographEffect</span>(scrawl, el));</pre></div></div>
             
         </li>
         
@@ -948,13 +968,13 @@ worleyHeaders.<span class="hljs-title function_">forEach</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Animated highlight gradient text snippet</p>
+              <p>Worley text gradient snippet</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> highlightGradientEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/animated-highlight-gradient-text-snippet.js&#x27;</span>;
-<span class="hljs-keyword">const</span> highlightGradientHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.highlight-gradient-header&#x27;</span>);
-highlightGradientHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">highlightGradientEffect</span>(el, scrawl));</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> worleyEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/worley-text-gradient-snippet.js&#x27;</span>;
+<span class="hljs-keyword">const</span> worleyHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.worley-header&#x27;</span>);
+worleyHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">worleyEffect</span>(scrawl, el));</pre></div></div>
             
         </li>
         
@@ -965,13 +985,13 @@ highlightGradientHeaders.<span class="hljs-title function_">forEach</span>(<span
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Bubbles text snippet</p>
+              <p>Animated highlight gradient text snippet</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> bubblesEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/bubbles-text-snippet.js&#x27;</span>;
-<span class="hljs-keyword">const</span> bubblesHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.bubbles-text-header&#x27;</span>);
-bubblesHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">bubblesEffect</span>(el, scrawl));</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> highlightGradientEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/animated-highlight-gradient-text-snippet.js&#x27;</span>;
+<span class="hljs-keyword">const</span> highlightGradientHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.highlight-gradient-header&#x27;</span>);
+highlightGradientHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">highlightGradientEffect</span>(scrawl, el));</pre></div></div>
             
         </li>
         
@@ -982,13 +1002,13 @@ bubblesHeaders.<span class="hljs-title function_">forEach</span>(<span class="hl
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Swirling stripes text snippet</p>
+              <p>Bubbles text snippet</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> swirlStripesEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/swirling-stripes-text-snippet.js&#x27;</span>;
-<span class="hljs-keyword">const</span> swirlStripesHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.swirling-stripes-header&#x27;</span>);
-swirlStripesHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">swirlStripesEffect</span>(el, scrawl));</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> bubblesEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/bubbles-text-snippet.js&#x27;</span>;
+<span class="hljs-keyword">const</span> bubblesHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.bubbles-text-header&#x27;</span>);
+bubblesHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">bubblesEffect</span>(scrawl, el));</pre></div></div>
             
         </li>
         
@@ -999,13 +1019,13 @@ swirlStripesHeaders.<span class="hljs-title function_">forEach</span>(<span clas
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Page performance snippet</p>
+              <p>Swirling stripes text snippet</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> pagePerformance <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/page-performance-snippet.js&#x27;</span>;
-<span class="hljs-keyword">const</span> pageReport = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-pageReport.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">pagePerformance</span>(scrawl, el));</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> swirlStripesEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/swirling-stripes-text-snippet.js&#x27;</span>;
+<span class="hljs-keyword">const</span> swirlStripesHeaders = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.swirling-stripes-header&#x27;</span>);
+swirlStripesHeaders.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">swirlStripesEffect</span>(scrawl, el));</pre></div></div>
             
         </li>
         

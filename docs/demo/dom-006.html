@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -907,12 +927,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
-@ts-expect-error</p>
+              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;create&#x27;</span>, <span class="hljs-string">&#x27;UA-000000-0&#x27;</span>, <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+<span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;create&#x27;</span>, <span class="hljs-string">&#x27;UA-000000-0&#x27;</span>, <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -923,14 +943,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>We can then incorporate the tracker’s functionality in our various hook functions defined further down in this script
-@ts-expect-error</p>
+              <p>We can then incorporate the tracker’s functionality in our various hook functions defined further down in this script</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+<span class="hljs-title function_">ga</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];</pre></div></div>
+    <span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    myTracker = ga.<span class="hljs-title function_">getByName</span>(<span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);
+    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;transport&#x27;</span>, <span class="hljs-string">&#x27;beacon&#x27;</span>);
+    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;campaignKeyword&#x27;</span>, <span class="hljs-string">&#x27;Scrawl-canvas demo&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -940,23 +965,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    myTracker = ga.<span class="hljs-title function_">getByName</span>(<span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);
-    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;transport&#x27;</span>, <span class="hljs-string">&#x27;beacon&#x27;</span>);
-    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;campaignKeyword&#x27;</span>, <span class="hljs-string">&#x27;Scrawl-canvas demo&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Comment out the next line to send tracker packets (so they show up in the console)</p>
 
@@ -968,19 +976,33 @@
         </li>
         
         
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <h4 id="scene-setup">Scene setup</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stack = scrawl.<span class="hljs-title function_">findStack</span>(<span class="hljs-string">&#x27;mystack&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="scene-setup">Scene setup</h4>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
-    stack = artefact.<span class="hljs-property">mystack</span>,
-    element = artefact.<span class="hljs-property">myelement</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = stack.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -995,7 +1017,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>element.<span class="hljs-title function_">set</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> element = scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;myelement&#x27;</span>);
+
+element.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
@@ -1010,20 +1034,23 @@
         <span class="hljs-attr">padding</span>: <span class="hljs-string">&#x27;12px 0 0 0&#x27;</span>,
     }
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mysecondelement&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mysecondelement&#x27;</span>),
     <span class="hljs-attr">handleY</span>: <span class="hljs-number">150</span>,
     <span class="hljs-attr">scale</span>: <span class="hljs-number">0.9</span>,
     <span class="hljs-attr">css</span>: {
         <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
-    }
+    },
+
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mythirdelement&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mythirdelement&#x27;</span>),
     <span class="hljs-attr">handleY</span>: <span class="hljs-number">100</span>,
     <span class="hljs-attr">scale</span>: <span class="hljs-number">0.8</span>,
     <span class="hljs-attr">roll</span>: -<span class="hljs-number">40</span>,
     <span class="hljs-attr">css</span>: {
         <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
-    }
+    },
 });</pre></div></div>
             
         </li>
@@ -1040,7 +1067,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> modelTicker = scrawl.<span class="hljs-title function_">makeTicker</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;modelTicker&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;modelTicker&#x27;</span>),
     <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;12s&#x27;</span>
 });</pre></div></div>
@@ -1059,7 +1087,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ticker = modelTicker.<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myTicker&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myTicker&#x27;</span>),
 });</pre></div></div>
             
         </li>
@@ -1076,9 +1105,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeTween</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myTween&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myTween&#x27;</span>),
     <span class="hljs-attr">targets</span>: element,
-    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;myTicker&#x27;</span>,
+    <span class="hljs-attr">ticker</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myTicker&#x27;</span>),
     <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">time</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">definitions</span>: [
@@ -1087,20 +1117,24 @@
             <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">end</span>: <span class="hljs-number">360</span>
         }
-    ]
+    ],
+
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myClonedTween&#x27;</span>,
-    <span class="hljs-attr">targets</span>: artefact.<span class="hljs-property">mysecondelement</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myClonedTween&#x27;</span>),
+    <span class="hljs-attr">targets</span>: scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mysecondelement&#x27;</span>)),
     <span class="hljs-attr">definitions</span>: [
         {
             <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;roll&#x27;</span>,
             <span class="hljs-attr">start</span>: -<span class="hljs-number">20</span>,
             <span class="hljs-attr">end</span>: <span class="hljs-number">340</span>
         }
-    ]
+    ],
+
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mySecondClonedTween&#x27;</span>,
-    <span class="hljs-attr">targets</span>: artefact.<span class="hljs-property">mythirdelement</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mySecondClonedTween&#x27;</span>),
+    <span class="hljs-attr">targets</span>: scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mythirdelement&#x27;</span>)),
     <span class="hljs-attr">useNewTicker</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;10s&#x27;</span>,
     <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
@@ -1136,60 +1170,69 @@
     blue = { <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span> }};
 
 scrawl.<span class="hljs-title function_">makeAction</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;myTicker&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red&#x27;</span>),
+    <span class="hljs-attr">ticker</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myTicker&#x27;</span>),
     <span class="hljs-attr">targets</span>: element,
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;6.25%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(red) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;brown&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brown&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;18.75%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(brown) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(red) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(red) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;orange&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;31.25%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(orange) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(brown) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(brown) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;yellow&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;43.75%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(yellow) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(orange) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(orange) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gray&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;56.25%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(gray) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(yellow) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(yellow) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;green&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;68.75%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(green) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(gray) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(gray) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blue&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;81.25%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(blue) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(green) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(green) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;purple_1&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;purple_1&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;93.75%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(blue) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(blue) },
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;purple_2&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;purple_2&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;0%&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) }
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
 });</pre></div></div>
             
         </li>
@@ -1208,9 +1251,9 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeAction</span>({
 
-    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;myTicker&#x27;</span>,
+    <span class="hljs-attr">ticker</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myTicker&#x27;</span>),
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;lapStarted&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lapStarted&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;0%&#x27;</span>,
 
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1223,7 +1266,7 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;lapCompleted&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lapCompleted&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1236,7 +1279,7 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;halfwayThere&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;halfwayThere&#x27;</span>),
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
 
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1261,7 +1304,7 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> smallboat = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tween</span>.<span class="hljs-property">mySecondClonedTween</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> smallboat = scrawl.<span class="hljs-title function_">findTween</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mySecondClonedTween&#x27;</span>));
 
 smallboat.<span class="hljs-title function_">set</span>({
 
@@ -1321,7 +1364,7 @@ smallboat.<span class="hljs-title function_">run</span>();</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: stack,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1376,11 +1419,12 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p>Test Tween object packet</p>
+              <p>Test Tween object packet
+console.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tween</span>.<span class="hljs-property">mySecondClonedTween</span>.<span class="hljs-title function_">saveAsPacket</span>())</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-title function_">findTween</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mySecondClonedTween&#x27;</span>)).<span class="hljs-title function_">saveAsPacket</span>())</pre></div></div>
             
         </li>
         
@@ -1392,23 +1436,6 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-attr">RESULT</span>:
-[
-    <span class="hljs-string">&quot;mySecondClonedTween&quot;</span>,
-    <span class="hljs-string">&quot;Tween&quot;</span>,
-    <span class="hljs-string">&quot;tween&quot;</span>,
-    {
-        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mySecondClonedTween&quot;</span>,
-        <span class="hljs-string">&quot;ticker&quot;</span>:<span class="hljs-string">&quot;mySecondClonedTween_ticker&quot;</span>,
-        <span class="hljs-string">&quot;action&quot;</span>:<span class="hljs-string">&quot;~~~&quot;</span>,
-        <span class="hljs-string">&quot;duration&quot;</span>:<span class="hljs-string">&quot;10s&quot;</span>,
-        <span class="hljs-string">&quot;commenceAction&quot;</span>:<span class="hljs-string">&quot;~~~&quot;</span>,
-        <span class="hljs-string">&quot;completeAction&quot;</span>:<span class="hljs-string">&quot;~~~&quot;</span>,
-        <span class="hljs-string">&quot;targets&quot;</span>:[<span class="hljs-string">&quot;mythirdelement&quot;</span>],
-        <span class="hljs-string">&quot;definitions&quot;</span>:[
-            {<span class="hljs-string">&quot;attribute&quot;</span>:<span class="hljs-string">&quot;roll&quot;</span>,<span class="hljs-string">&quot;start&quot;</span>:-<span class="hljs-number">40</span>,<span class="hljs-string">&quot;end&quot;</span>:<span class="hljs-number">320</span>}
-        ]
-    }
-]
 </code></pre>
 
             </div>
@@ -1422,11 +1449,30 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>Test Ticker object packet</p>
+              <p>[
+    “mystack-mySecondClonedTween”,
+    “Tween”,
+    “tween”,
+    {
+        “name”:”mystack-mySecondClonedTween”,
+        “ticker”:”mystack-mySecondClonedTween_ticker”,
+        “action”:”~~~”,
+        “duration”:”10s”,
+        “commenceAction”:”~~~”,
+        “onHalt”:”~~~\n        if (myTracker) myTracker.send(‘event’, ‘Tween state’, ‘halt’, <code>Tween ${this.name} on ${this.ticker}</code>)\n    “,
+        “onResume”:”~~~\n        if (myTracker) myTracker.send(‘event’, ‘Tween state’, ‘resume’, <code>Tween ${this.name} on ${this.ticker}</code>)\n    “,
+        “completeAction”:”~~~”,
+        “targets”:[],
+        “definitions”:[
+            {
+                “attribute”:”roll”,
+                “start”:-40,”end”:320
+            }
+        ]
+    }
+]</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(modelTicker.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         
@@ -1437,18 +1483,33 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
+              <p>Test Ticker object packet</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(modelTicker.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
               <pre><code><span class="hljs-attr">RESULT</span>:
-[
-    <span class="hljs-string">&quot;modelTicker&quot;</span>,
-    <span class="hljs-string">&quot;Ticker&quot;</span>,
-    <span class="hljs-string">&quot;animationtickers&quot;</span>,
-    {
-        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;modelTicker&quot;</span>,
-        <span class="hljs-string">&quot;duration&quot;</span>:<span class="hljs-string">&quot;12s&quot;</span>,
-        <span class="hljs-string">&quot;cycles&quot;</span>:<span class="hljs-number">0</span>
-    }
-]
 </code></pre>
+<p>[
+    “mystack-modelTicker”,
+    “Ticker”,
+    “animationtickers”,
+    {
+        “name”:”mystack-modelTicker”,
+        “duration”:”12s”,
+        “cycles”:0
+    }
+]</p>
 
             </div>
             

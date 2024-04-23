@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -877,16 +897,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    library <span class="hljs-keyword">as</span> L,
-    makeBlock,
-    makeDragZone,
-    makeGradient,
-    makeRadialGradient,
-    makeRender,
-    makeTween,
-    makeWheel,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -904,7 +915,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -919,7 +930,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
@@ -935,7 +946,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myRadial = <span class="hljs-title function_">makeRadialGradient</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myRadial = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;circle-waves&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
@@ -971,7 +982,7 @@
     ],
 });
 
-<span class="hljs-title function_">makeGradient</span>({
+scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;colored-pipes&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>,
@@ -1004,7 +1015,7 @@
     ],
 });
 
-<span class="hljs-title function_">makeGradient</span>({
+scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;linear&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
@@ -1032,7 +1043,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-locked-block&#x27;</span>),
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">150</span>,
@@ -1078,7 +1089,7 @@
     },
 });
 
-<span class="hljs-title function_">makeWheel</span>({
+scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-locked-wheel&#x27;</span>),
 
     <span class="hljs-attr">radius</span>: <span class="hljs-number">75</span>,
@@ -1148,7 +1159,7 @@
     <span class="hljs-attr">pointer</span>: <span class="hljs-function">() =&gt;</span> {
         canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
-                <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span>,
+                <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;grab&#x27;</span>,
             },
         });
     },
@@ -1174,7 +1185,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> current = <span class="hljs-title function_">makeDragZone</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> current = scrawl.<span class="hljs-title function_">makeDragZone</span>({
 
     <span class="hljs-attr">zone</span>: canvas,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
@@ -1254,7 +1265,7 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> val % <span class="hljs-number">1000</span>;
 };
 
-<span class="hljs-keyword">const</span> tweeny = <span class="hljs-title function_">makeTween</span>({
+<span class="hljs-keyword">const</span> tweeny = scrawl.<span class="hljs-title function_">makeTween</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mytween&#x27;</span>),
     <span class="hljs-attr">targets</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;colored-pipes&#x27;</span>),
     <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
@@ -1290,10 +1301,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
     <span class="hljs-keyword">const</span> dragging = <span class="hljs-title function_">current</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> dragging !== <span class="hljs-string">&#x27;boolean&#x27;</span>) {
-
-        <span class="hljs-keyword">if</span> (dragging &amp;&amp; dragging.<span class="hljs-property">artefact</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`Currently dragging: <span class="hljs-subst">${dragging.artefact.name}</span>`</span>
-    }
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> dragging !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; dragging) <span class="hljs-keyword">return</span> <span class="hljs-string">`Currently dragging: <span class="hljs-subst">${dragging.artefact.name}</span>`</span>
     <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Currently dragging: nothing&#x27;</span>;
 });</pre></div></div>
             
@@ -1306,7 +1314,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Function to animate the gradients</p>
+              <p>Function to animate the ‘pipes’ gradient</p>
 
             </div>
             
@@ -1318,7 +1326,7 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> dragging !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; dragging) {
 
-            <span class="hljs-keyword">if</span> (dragging.<span class="hljs-property">artefact</span> &amp;&amp; dragging.<span class="hljs-property">artefact</span>.<span class="hljs-property">name</span> === <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animated-block&#x27;</span>)) tweeny.<span class="hljs-title function_">run</span>();
+            <span class="hljs-keyword">if</span> (dragging.<span class="hljs-property">artefact</span>.<span class="hljs-property">name</span> === <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animated-block&#x27;</span>)) tweeny.<span class="hljs-title function_">run</span>();
         }
     }
 };</pre></div></div>
@@ -1336,7 +1344,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,</pre></div></div>
@@ -1350,10 +1358,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>Gradient animation is not automatically handled by the Display cycle</p>
-<ul>
-<li>instead we have to trigger it manually</li>
-</ul>
+              <p>We’re animating the ‘pipes’ gradient by means of a tween. This checks to see if we have to invoke that tween as a result of user interaction</p>
 
             </div>
             
@@ -1403,7 +1408,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

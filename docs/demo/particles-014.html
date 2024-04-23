@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,36 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-
-canvas.<span class="hljs-title function_">buildCell</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;trace-chamber&#x27;</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">clearAlpha</span>: <span class="hljs-number">0.998</span>,
-});
-
-<span class="hljs-keyword">const</span> lowAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;low-adjuster&#x27;</span>,
-    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
-    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-});
-
-<span class="hljs-keyword">const</span> highAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;high-adjuster&#x27;</span>,
-    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
-});
-
-<span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
-    <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">userAttributes</span>: [
-        {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>,
-            <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -934,11 +925,47 @@ canvas.<span class="hljs-title function_">buildCell</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeColorValue</span> = item;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
+
+
+canvas.<span class="hljs-title function_">buildCell</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;trace-chamber&#x27;</span>),
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">clearAlpha</span>: <span class="hljs-number">0.998</span>,
+});
+
+<span class="hljs-keyword">const</span> lowAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;low-adjuster&#x27;</span>),
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+});
+
+<span class="hljs-keyword">const</span> highAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;high-adjuster&#x27;</span>),
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
+});
+
+<span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-world&#x27;</span>),
+    <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">userAttributes</span>: [
+        {
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>,
+            <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeColorValue</span> = item;
 
                 emitter.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fillMinimumColor</span>: lowAdjuster.<span class="hljs-title function_">getRangeColor</span>(item),
@@ -952,8 +979,8 @@ canvas.<span class="hljs-title function_">buildCell</span>({
 
 <span class="hljs-keyword">const</span> emitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-1&#x27;</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;trace-chamber&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;emitter-1&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;trace-chamber&#x27;</span>),
 
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
@@ -970,10 +997,11 @@ canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">rangeX</span>: <span class="hljs-number">40</span>,
     <span class="hljs-attr">rangeFromX</span>: -<span class="hljs-number">20</span>,
+    <span class="hljs-attr">minimumVelocityX</span>: <span class="hljs-number">10</span>,
     <span class="hljs-attr">limitDirectionToAngleMultiples</span>: <span class="hljs-number">45</span>,
 
     <span class="hljs-attr">artefact</span>: scrawl.<span class="hljs-title function_">makeWheel</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;trace&#x27;</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;trace&#x27;</span>),
         <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
     }),
 
@@ -997,7 +1025,7 @@ canvas.<span class="hljs-title function_">buildCell</span>({
 
 scrawl.<span class="hljs-title function_">makeTween</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-adjuster&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;color-adjuster&#x27;</span>),
     <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;100s&#x27;</span>,
     <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
@@ -1044,7 +1072,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>

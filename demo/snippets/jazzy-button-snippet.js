@@ -22,7 +22,7 @@
 //
 //     artefacts {
 //         trackLine     // Shape entity
-//         label         // Phrase entity
+//         label         // Label entity
 //     }
 //
 //     assets {
@@ -124,7 +124,7 @@ export default function (scrawl, el) {
             textHandleY: 'bottom',
         });
 
-        // Animate the phrase entity along the line when button element is clicked
+        // Animate the label entity along the line when button element is clicked
         const textTween = scrawl.makeTween({
             name: `${name}-textTween`,
             duration: 2500,
@@ -169,7 +169,7 @@ export default function (scrawl, el) {
 
         const clickAction = () => {
 
-            // Increase the local counter; update the Phrase entity with new text
+            // Increase the local counter; update the Label entity with new text
             counter++;
 
             label.set({

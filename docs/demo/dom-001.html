@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -891,11 +911,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    library <span class="hljs-keyword">as</span> L,
-    makeAnimation,
-    render,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -907,12 +923,16 @@
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
-<p>Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the <strong>scrawl.library.artefact</strong> section of the Scrawl-canvas library. The elements themselves are held in the <strong>domElement</strong> attribute of the wrapper.</p>
+<p>Define some demo variables.</p>
+<ul>
+<li>All Scrawl-canvas wrappers for DOM elements can be found in the <strong>scrawl.library.artefact</strong> section of the Scrawl-canvas library. The elements themselves are held in the <strong>domElement</strong> attribute of the wrapper.</li>
+<li>SC supplies some convenience functions for locating stack and element artefacts: <code>scrawl.findStack()</code> and <code>scrawl.findElement()</code>.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myStack = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mystack</span>,
-    reportMessage = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">reportmessage</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myStack = scrawl.<span class="hljs-title function_">findStack</span>(<span class="hljs-string">&#x27;mystack&#x27;</span>),
+    reportMessage = scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;reportmessage&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -922,6 +942,22 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = myStack.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas stack elements calculate the positions and dimensions of their member artefacts on the assumption that the stack element itself has no padding. If the element does include padding then all member artefacts will be offset (rightwards and downwards) by the left and top padfding values.</p>
 <p>Stack element padding can be set to zero either using regular CSS, or programatically as shown below.</p>
@@ -938,11 +974,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Position and size the report &lt;div&gt; element, which is where we will be displaying details about the stack.</p>
 <p>Note that moving this div element will leave a gap at the top of the stack. The positions and dimensions of Stack member artefacts (in other words, all immediate child elements of the stack element) are calculated when Scrawl-canvas initializes, before Scrawl-canvas updates their CSS position value to “absolute”. Thus moving the report div downwards will not trigger a DOM redraw/reflow action</p>
@@ -958,11 +994,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>The animation loop updates the output with details of the stack’s dimensions and positioning, and details of the mouse cursor’s position in relation to the stack’s top-left hand corner.</p>
@@ -970,22 +1006,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeAnimation</span>({</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>Giving the animation object a name will make it easy to find in the Scrawl-canvas library object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeAnimation</span>({</pre></div></div>
             
         </li>
         
@@ -996,6 +1017,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
+              <p>Giving the animation object a name will make it easy to find in the Scrawl-canvas library object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
               <p>Every animation object must include a <strong>fn</strong> function attribute which <em><strong>MUST</strong></em> return a Promise object - even if the functionality within the function is entirely synchronous.</p>
 <p>This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise</p>
 
@@ -1003,7 +1039,7 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fn</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-title function_">render</span>()
+        scrawl.<span class="hljs-title function_">render</span>()
 
         <span class="hljs-keyword">const</span> here = myStack.<span class="hljs-property">here</span> || {};
 
@@ -1018,27 +1054,27 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>Because the code has been loaded as a <strong>module</strong>, Scrawl-canvas attributes and functions do not get added to the global namespace. For development work, we can overcome this issue (to a small extent) by console logging the scrawl library, so we can check internal attribute values and calculation results.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>A more interactive method is to assign the scrawl object to a window global variable - this then allows us to access all of the objects created by Scrawl-canvas and interact with them in the browser console:</p>
 <pre><code><span class="hljs-comment">// In the .js module file</span>

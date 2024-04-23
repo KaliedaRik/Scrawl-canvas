@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="../snippets/text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="../snippets/word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1171,10 +1186,8 @@
     <span class="hljs-keyword">let</span> frameHeight = (displayHeight / mainDimensionY) * mapDimensionY;
 
     canvas.<span class="hljs-title function_">set</span>({
-
         <span class="hljs-attr">includeInTabNavigation</span>: <span class="hljs-literal">true</span>,
-
-    }).<span class="hljs-title function_">setBase</span>({</pre></div></div>
+    });</pre></div></div>
             
         </li>
         
@@ -1184,22 +1197,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>The base Cell needs to compile after the other Cells</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">2</span>
-    });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Build out the main Cell (default: 1600px x 1600px)</p>
 <ul>
@@ -1213,8 +1210,20 @@
         <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;main-cell&quot;</span>,
         <span class="hljs-attr">dimensions</span>: [mainDimensionX, mainDimensionY],
         <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
     });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Rely on the main code to populate the main Cell with entitys, and the functionality required to interact with them. We only care here about displaying the main map in the canvas element</p>
+
+            </div>
             
         </li>
         
@@ -1224,19 +1233,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>Rely on the main code to populate the main Cell with entitys, and the functionality required to interact with them. We only care here about displaying the main map in the canvas element</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Display the main Cell in the base Cell</p>
 
@@ -1254,11 +1250,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Build out the smaller map Cell (default: 200px x 200px)</p>
 <ul>
@@ -1286,11 +1282,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Functionality so we can drag-drop the map Cell around the base Cell</p>
 
@@ -1313,11 +1309,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>We pivot the map Cell to the draggable Block entity</p>
 <ul>
@@ -1333,11 +1329,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>The map Cell needs to compile after the large Cell</p>
 
@@ -1349,11 +1345,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Now we can copy the large Cell into the map Cell</p>
 
@@ -1373,11 +1369,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Add the draggable map frame</p>
 
@@ -1402,11 +1398,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Functionality so we can drag-drop the frame around the map Cell</p>
 
@@ -1429,11 +1425,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Adjust the position of the Picture wrt to the frame in the map</p>
 
@@ -1447,11 +1443,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Adjust the position of the large Cell wrt the base Cell</p>
 
@@ -1534,11 +1530,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Keyboard navigation</p>
 
@@ -1577,11 +1573,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Adjust the position of the Picture wrt to the frame in the map</p>
 
@@ -1595,11 +1591,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Adjust the position of the large Cell wrt the base Cell</p>
 
@@ -1641,11 +1637,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Show/hide minimap</p>
 
@@ -1668,11 +1664,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Keyboard event listener functions</p>
 
@@ -1702,11 +1698,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="cleanup-and-return">Cleanup and return</h4>
 
@@ -1725,11 +1721,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Return object</p>
 
@@ -1745,11 +1741,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="export">Export</h4>
 

@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1067,18 +1082,18 @@
 <ul>
 <li>the DOM element - generally a block or inline-block element.</li>
 </ul>
-<p><strong>Customisation:</strong> The snippet can be customised using the following data- attributes applied using CSS variables, or directly to the HTML header element:</p>
+<p><strong>Customisation:</strong> The snippet can be customised using the following <code>--data-???</code> CSS custom properties:</p>
 <ul>
-<li><code>data-main-color</code> - any CSS color string</li>
-<li><code>data-dark-main-color</code> - any CSS color string</li>
-<li><code>data-stripe-color</code> - any CSS color string</li>
-<li><code>data-dark-stripe-color</code> - any CSS color string</li>
-<li><code>data-stripe-ratio</code> - (0 - 1) the ratio of stripe to main color; higher values show wider stripes</li>
-<li><code>data-swirl-angle</code> - (degrees) higher values lead to a tighter swirl; use negative values to reverse the swirl direction</li>
-<li><code>data-gradient-skew-x</code> - (-2 - 2) skew the gradient pattern horizontally</li>
-<li><code>data-gradient-skew-y</code> - (-2 - 2) skew the gradient pattern vertically</li>
-<li><code>data-gradient-stretch-x</code> - (0 - 4) stretch the gradient pattern horizontally</li>
-<li><code>data-gradient-stretch-y</code> - (0 - 4) stretch the gradient pattern vertically</li>
+<li><code>--data-main-color</code> - any CSS color string (default: <code>black</code>)</li>
+<li><code>--data-dark-main-color</code> - any CSS color string (default: <code>yellow</code>)</li>
+<li><code>--data-stripe-color</code> - any CSS color string (default: <code>red</code>)</li>
+<li><code>--data-dark-stripe-color</code> - any CSS color string (default: <code>red</code>)</li>
+<li><code>--data-stripe-ratio</code> - (0 - 1) the ratio of stripe to main color; higher values show wider stripes (default: <code>0.5</code>)</li>
+<li><code>--data-swirl-angle</code> - (degrees) higher values lead to a tighter swirl; use negative values to reverse the swirl direction (default: <code>90</code>)</li>
+<li><code>--data-pattern-skew-x</code> - (-2 - 2) skew the gradient pattern horizontally (default: <code>-1</code>)</li>
+<li><code>--data-pattern-skew-y</code> - (-2 - 2) skew the gradient pattern vertically (default: <code>0.5</code>)</li>
+<li><code>--data-pattern-stretch-x</code> - (0 - 4) stretch the gradient pattern horizontally (default: <code>1</code>)</li>
+<li><code>--data-pattern-stretch-y</code> - (0 - 4) stretch the gradient pattern vertically (default: <code>1</code>)</li>
 </ul>
 <p><strong>Function output:</strong> a Javascript object will be returned, containing the following attributes</p>
 <pre><code>{
@@ -1093,10 +1108,17 @@
 
 <span class="hljs-keyword">import</span> mySnippet <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
-myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">mySnippet</span>(el, scrawl));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">mySnippet</span>(scrawl, el));
 </code></pre>
+<p><strong>Effects on the element:</strong></p>
+<ul>
+<li>Imports the element’s background color, and sets the element background to <code>transparent</code></li>
+<li>Imports the element’s text node text, and sets the text color to <code>transparent</code></li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, el</span>) {</pre></div></div>
             
         </li>
         
@@ -1107,11 +1129,12 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Additional font-specific customisation can be added courtesy of the Text Snippet Helper module</p>
+              <p>Boilerplate - namespacing</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { getSnippetData } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./text-snippet-helper.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> namespace = el.<span class="hljs-property">id</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">val</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${val}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1122,16 +1145,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong></p>
-<ul>
-<li>Imports the element’s background color, and sets the element background to <code>transparent</code></li>
-<li>Imports the element’s text node text, and sets the text color to <code>transparent</code></li>
-<li><em><strong>Note that canvas text will NEVER be as good as DOM text!</strong></em></li>
-</ul>
+              <p>Only progress if the supplied element has an <code>id</code> attribute</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el, scrawl</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (namespace) {</pre></div></div>
             
         </li>
         
@@ -1142,13 +1160,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Apply the snippet to the DOM element</p>
+              <p>Create the snippet for this DOM element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
-        <span class="hljs-attr">domElement</span>: el,
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+            <span class="hljs-attr">domElement</span>: el,
+        });</pre></div></div>
             
         </li>
         
@@ -1163,7 +1181,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (snippet) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (snippet) {</pre></div></div>
             
         </li>
         
@@ -1174,11 +1192,14 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Import data and functionality from the Text Snippet Helper module</p>
+              <p>Unpack the snippet into the parts we’ll be using</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> { canvas, group, compStyles, dataset, name, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, colorSchemeDarkActions, colorSchemeLightActions, animationFunctions, animationEndFunctions, additionalDemolishActions } = <span class="hljs-title function_">getSnippetData</span>(snippet, scrawl);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+                animation = snippet.<span class="hljs-property">animation</span>,
+                demolishAction = snippet.<span class="hljs-property">demolish</span>,
+                compStyles = snippet.<span class="hljs-property">element</span>.<span class="hljs-property">elementComputedStyles</span>;</pre></div></div>
             
         </li>
         
@@ -1189,11 +1210,24 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Initialise the canvas</p>
+              <p>Boilerplate - text processing</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">initCanvas</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> <span class="hljs-title function_">addTextNode</span> = (<span class="hljs-params"></span>) =&gt; {
+                <span class="hljs-keyword">const</span> shy = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createTextNode</span>(<span class="hljs-string">&#x27;!&#x27;</span>);
+                el.<span class="hljs-title function_">appendChild</span>(shy);
+            };
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">processText</span> = t =&gt; {
+                t = t.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&lt;canvas.*&lt;\/canvas&gt;/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+                t = t.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&lt;button.*&lt;\/button&gt;/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+                <span class="hljs-keyword">if</span> (!t.<span class="hljs-property">length</span>) {
+                    <span class="hljs-title function_">addTextNode</span>();
+                    t = <span class="hljs-string">&#x27;!&#x27;</span>;
+                }
+                <span class="hljs-keyword">return</span> t;
+            }</pre></div></div>
             
         </li>
         
@@ -1204,80 +1238,17 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Initialize and collect developer-supplied data</p>
+              <p>Boilerplate - demolish/kill functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> mainColor = <span class="hljs-string">&#x27;black&#x27;</span>,
-            darkMainColor = <span class="hljs-string">&#x27;white&#x27;</span>,
-            stripeColor = <span class="hljs-string">&#x27;red&#x27;</span>,
-            darkStripeColor = <span class="hljs-string">&#x27;#e34e49&#x27;</span>,
-            stripeRatio = <span class="hljs-number">0.5</span>,
-            swirlAngle = <span class="hljs-number">90</span>,
-            gradientSkewX = <span class="hljs-number">0</span>,
-            gradientSkewY = <span class="hljs-number">0</span>,
-            gradientStretchX = <span class="hljs-number">1</span>,
-            gradientStretchY = <span class="hljs-number">1</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> additionalDemolishActions = [];
 
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">mainColor</span>) mainColor = dataset.<span class="hljs-property">mainColor</span>;
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-main-color&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) mainColor = s;
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">darkMainColor</span>) darkMainColor = dataset.<span class="hljs-property">darkMainColor</span>;
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-main-color&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) darkMainColor = s;
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">stripeColor</span>) stripeColor = dataset.<span class="hljs-property">stripeColor</span>;
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-stripe-color&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) stripeColor = s;
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">darkStripeColor</span>) darkStripeColor = dataset.<span class="hljs-property">darkStripeColor</span>;
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-stripe-color&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) darkStripeColor = s;
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">stripeRatio</span>) stripeRatio = <span class="hljs-built_in">parseFloat</span>(dataset.<span class="hljs-property">stripeRatio</span>);
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-gradient-easing&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) stripeRatio = <span class="hljs-built_in">parseFloat</span>(s);
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">swirlAngle</span>) swirlAngle = <span class="hljs-built_in">parseFloat</span>(dataset.<span class="hljs-property">swirlAngle</span>);
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-swirl-angle&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) swirlAngle = <span class="hljs-built_in">parseFloat</span>(s);
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">gradientSkewX</span>) gradientSkewX = <span class="hljs-built_in">parseFloat</span>(dataset.<span class="hljs-property">gradientSkewX</span>);
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-gradient-skew-x&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) gradientSkewX = <span class="hljs-built_in">parseFloat</span>(s);
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">gradientSkewY</span>) gradientSkewY = <span class="hljs-built_in">parseFloat</span>(dataset.<span class="hljs-property">gradientSkewY</span>);
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-gradient-skew-y&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) gradientSkewY = <span class="hljs-built_in">parseFloat</span>(s);
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">gradientStretchX</span>) gradientStretchX = <span class="hljs-built_in">parseFloat</span>(dataset.<span class="hljs-property">gradientStretchX</span>);
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-gradient-stretch-x&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) gradientStretchX = <span class="hljs-built_in">parseFloat</span>(s);
-        }
-
-        <span class="hljs-keyword">if</span> (dataset.<span class="hljs-property">gradientStretchY</span>) gradientStretchY = <span class="hljs-built_in">parseFloat</span>(dataset.<span class="hljs-property">gradientStretchY</span>);
-        <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> s = compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-gradient-stretch-y&#x27;</span>);
-            <span class="hljs-keyword">if</span> (s) gradientStretchY = <span class="hljs-built_in">parseFloat</span>(s);
-        }</pre></div></div>
+            snippet.<span class="hljs-property">demolish</span> = <span class="hljs-function">() =&gt;</span> {
+                additionalDemolishActions.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> <span class="hljs-title function_">f</span>());
+                scrawl.<span class="hljs-title function_">purge</span>(namespace);
+                <span class="hljs-title function_">demolishAction</span>();
+            };</pre></div></div>
             
         </li>
         
@@ -1288,99 +1259,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Build the text effect</p>
+              <p>This makes the canvas element’s base cell the default group for everything we create</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> gradientChangeAt = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(stripeRatio * <span class="hljs-number">1000</span>);
-        <span class="hljs-keyword">if</span> (gradientChangeAt &lt; <span class="hljs-number">1</span>) gradientChangeAt = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (gradientChangeAt &gt; <span class="hljs-number">997</span>) gradientChangeAt = <span class="hljs-number">997</span>;
-
-        <span class="hljs-keyword">const</span> myGradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient`</span>,
-            <span class="hljs-attr">colors</span>: [
-                [<span class="hljs-number">0</span>, stripeColor],
-                [gradientChangeAt, stripeColor],
-                [gradientChangeAt + <span class="hljs-number">1</span>, mainColor],
-                [<span class="hljs-number">999</span>, mainColor],
-            ],
-            <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-            <span class="hljs-attr">precision</span>: <span class="hljs-number">10</span>,
-        });
-
-        <span class="hljs-keyword">const</span> cell = canvas.<span class="hljs-title function_">buildCell</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-cell`</span>,
-            <span class="hljs-attr">width</span>: <span class="hljs-number">16</span>,
-            <span class="hljs-attr">height</span>: lineHeight,
-            <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
-        });
-
-        scrawl.<span class="hljs-title function_">makeBlock</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-block-0`</span>,
-            <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-cell`</span>,
-            <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;20%&#x27;</span>],
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient`</span>,
-            <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-        }).<span class="hljs-title function_">clone</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-block-1`</span>,
-            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
-        }).<span class="hljs-title function_">clone</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-block-2`</span>,
-            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
-        }).<span class="hljs-title function_">clone</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-block-3`</span>,
-            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;60%&#x27;</span>,
-        }).<span class="hljs-title function_">clone</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-block-4`</span>,
-            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;80%&#x27;</span>,
-        });
-
-        <span class="hljs-keyword">const</span> p1 = scrawl.<span class="hljs-title function_">makePattern</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-pattern`</span>,
-            <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-cell`</span>,
-            <span class="hljs-attr">stretchX</span>: gradientStretchY,
-            <span class="hljs-attr">stretchY</span>: gradientStretchX,
-            <span class="hljs-attr">skewX</span>: gradientSkewY,
-            <span class="hljs-attr">skewY</span>: gradientSkewX,
-        });
-
-        <span class="hljs-keyword">const</span> textFill = scrawl.<span class="hljs-title function_">makePhrase</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-text-stencil`</span>,
-            group,
-            <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-        });
-
-        <span class="hljs-title function_">initPhrase</span>(textFill);
-
-        textGroup.<span class="hljs-title function_">addArtefacts</span>(textFill);
-
-        scrawl.<span class="hljs-title function_">makeBlock</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-text-fill`</span>,
-            group,
-            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-            <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirlstripe-gradient-pattern`</span>,
-            <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-in&#x27;</span>,
-        });
-
-        <span class="hljs-keyword">const</span> swirl = scrawl.<span class="hljs-title function_">makeFilter</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-swirl-filter`</span>,
-            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;swirl&#x27;</span>,
-            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-            <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">outerRadius</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(lineHeight * <span class="hljs-number">2</span>),
-            <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
-            <span class="hljs-attr">angle</span>: swirlAngle,
-            <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">true</span>,
-        });
-
-        canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span>,
-        });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
@@ -1391,31 +1274,17 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Accessibility</p>
+              <p>Boilerplate - fix for text alignment</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        colorSchemeLightActions.<span class="hljs-title function_">push</span>(<span class="hljs-function">() =&gt;</span> {
-            myGradient.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">colors</span>: [
-                    [<span class="hljs-number">0</span>, stripeColor],
-                    [gradientChangeAt, stripeColor],
-                    [gradientChangeAt + <span class="hljs-number">1</span>, mainColor],
-                    [<span class="hljs-number">999</span>, mainColor],
-                ],
-            });
-        });
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> <span class="hljs-title function_">getJustifyLine</span> = (<span class="hljs-params">val</span>) =&gt; {
 
-        colorSchemeDarkActions.<span class="hljs-title function_">push</span>(<span class="hljs-function">() =&gt;</span> {
-            myGradient.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">colors</span>: [
-                    [<span class="hljs-number">0</span>, darkStripeColor],
-                    [gradientChangeAt, darkStripeColor],
-                    [gradientChangeAt + <span class="hljs-number">1</span>, darkMainColor],
-                    [<span class="hljs-number">999</span>, darkMainColor],
-                ],
-            });
-        });</pre></div></div>
+                <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;justify&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;space-between&#x27;</span>;
+                <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;justify-all&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;space-around&#x27;</span>;
+                <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;match-parent&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;start&#x27;</span>;
+                <span class="hljs-keyword">return</span> val;
+            };</pre></div></div>
             
         </li>
         
@@ -1426,22 +1295,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Responsiveness</p>
+              <p>Boilerplate - fix for lineSpacing/lineHeight</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        responsiveFunctions.<span class="hljs-title function_">push</span>(<span class="hljs-function">(<span class="hljs-params">items = {}</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">const</span> localLineHeight = <span class="hljs-built_in">parseFloat</span>(items.<span class="hljs-property">lineHeight</span>);
-
-            cell.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">height</span>: localLineHeight,
-            });
-
-            swirl.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">outerRadius</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(localLineHeight * <span class="hljs-number">2</span>),
-            });
-        });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> <span class="hljs-title function_">getLineSpacing</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">lineHeight</span>) / <span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">fontSize</span>);</pre></div></div>
             
         </li>
         
@@ -1452,48 +1310,37 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Additional animation functionality</p>
+              <p>Initialize and collect developer-supplied data</p>
+<ul>
+<li>We also set the defaults here for missing colors/values</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> isActive = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> userData = {
 
-        animationFunctions.<span class="hljs-title function_">push</span>(<span class="hljs-function">() =&gt;</span> {
+                <span class="hljs-attr">direction</span>: compStyles.<span class="hljs-property">direction</span> || <span class="hljs-string">&#x27;ltr&#x27;</span>,
+                <span class="hljs-attr">fontStretch</span>: compStyles.<span class="hljs-property">fontStretch</span> || <span class="hljs-string">&#x27;normal&#x27;</span>,
+                <span class="hljs-attr">letterSpacing</span>: compStyles.<span class="hljs-property">letterSpacing</span> || <span class="hljs-string">&#x27;0px&#x27;</span>,
+                <span class="hljs-attr">wordSpacing</span>: compStyles.<span class="hljs-property">wordSpacing</span> || <span class="hljs-string">&#x27;0px&#x27;</span>,
+                <span class="hljs-attr">fontVariantCaps</span>: compStyles.<span class="hljs-property">fontVariantCaps</span> || <span class="hljs-string">&#x27;normal&#x27;</span>,
+                <span class="hljs-attr">lineSpacing</span>: compStyles.<span class="hljs-property">lineSpacing</span> || <span class="hljs-string">&#x27;1&#x27;</span>,
+                <span class="hljs-attr">lineAdjustment</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-line-adjustment&#x27;</span>) || <span class="hljs-string">&#x27;0&#x27;</span>,
+                <span class="hljs-attr">justifyLine</span>: <span class="hljs-title function_">getJustifyLine</span>(compStyles.<span class="hljs-property">textAlign</span>),
 
-            <span class="hljs-keyword">const</span> {x, y, active} = canvas.<span class="hljs-property">here</span>;
+                <span class="hljs-attr">elBackgroundColor</span>: compStyles.<span class="hljs-property">backgroundColor</span> || <span class="hljs-string">&#x27;transparent&#x27;</span>,
 
-            <span class="hljs-keyword">if</span> (active &amp;&amp; !isActive) {
-
-                isActive = <span class="hljs-literal">true</span>;
-
-                canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">filters</span>: [swirl.<span class="hljs-property">name</span>],
-                });
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!active &amp;&amp; isActive) {
-
-                isActive = <span class="hljs-literal">false</span>;
-
-                canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">filters</span>: [],
-                });
-            }
-
-            <span class="hljs-keyword">if</span> (isActive) {
-
-                swirl.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">startX</span>: x,
-                    <span class="hljs-attr">startY</span>: y,
-                });
-            }
-        });
-
-        animationEndFunctions.<span class="hljs-title function_">push</span>(<span class="hljs-function">() =&gt;</span> {
-
-            canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">filters</span>: [],
-            });
-        });</pre></div></div>
+                <span class="hljs-attr">mainColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-main-color&#x27;</span>) || <span class="hljs-string">&#x27;black&#x27;</span>,
+                <span class="hljs-attr">darkMainColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-dark-main-color&#x27;</span>) || <span class="hljs-string">&#x27;yellow&#x27;</span>,
+                <span class="hljs-attr">stripeColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-stripe-color&#x27;</span>) || <span class="hljs-string">&#x27;red&#x27;</span>,
+                <span class="hljs-attr">darkStripeColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-dark-stripe-color&#x27;</span>) || <span class="hljs-string">&#x27;red&#x27;</span>,
+                <span class="hljs-attr">patternSkewX</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-pattern-skew-x&#x27;</span>) || <span class="hljs-string">&#x27;-1&#x27;</span>,
+                <span class="hljs-attr">patternSkewY</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-pattern-skew-y&#x27;</span>) || <span class="hljs-string">&#x27;0.5&#x27;</span>,
+                <span class="hljs-attr">patternStretchX</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-pattern-stretch-x&#x27;</span>) || <span class="hljs-string">&#x27;1&#x27;</span>,
+                <span class="hljs-attr">patternStretchY</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-pattern-stretch-y&#x27;</span>) || <span class="hljs-string">&#x27;1&#x27;</span>,
+                <span class="hljs-attr">stripeRatio</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-stripe-ratio&#x27;</span>) || <span class="hljs-string">&#x27;0.5&#x27;</span>,
+                <span class="hljs-attr">swirlAngle</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-swirl-angle&#x27;</span>) || <span class="hljs-string">&#x27;90&#x27;</span>,
+            };</pre></div></div>
             
         </li>
         
@@ -1504,17 +1351,85 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Cleanup</p>
+              <p>Build the animated swirl effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        additionalDemolishActions.<span class="hljs-title function_">push</span>(<span class="hljs-function">() =&gt;</span> {
-            myGradient.<span class="hljs-title function_">kill</span>();
-            p1.<span class="hljs-title function_">kill</span>();
-            swirl.<span class="hljs-title function_">kill</span>();
-            cell.<span class="hljs-title function_">kill</span>();
-        });
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">getCellHeight</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">lineHeight</span>) / <span class="hljs-number">5</span>);
+
+            <span class="hljs-keyword">const</span> cell = canvas.<span class="hljs-title function_">buildCell</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pattern-cell&#x27;</span>),
+                <span class="hljs-attr">width</span>: <span class="hljs-number">16</span>,
+                <span class="hljs-attr">height</span>: <span class="hljs-title function_">getCellHeight</span>(),
+                <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+            });
+
+            <span class="hljs-keyword">const</span> backBlock = scrawl.<span class="hljs-title function_">makeBlock</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;back-block&#x27;</span>),
+                <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pattern-cell&#x27;</span>),
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+                <span class="hljs-attr">fillStyle</span>: userData.<span class="hljs-property">mainColor</span>,
+            });
+
+            <span class="hljs-keyword">const</span> stripeBlock = backBlock.<span class="hljs-title function_">clone</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stripe-block&#x27;</span>),
+                <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+                <span class="hljs-attr">fillStyle</span>: userData.<span class="hljs-property">stripeColor</span>,
+                <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stripe-filter&#x27;</span>)],
+                <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span>,
+            });
+
+            scrawl.<span class="hljs-title function_">makePattern</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;swirl-pattern&#x27;</span>),
+                <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pattern-cell&#x27;</span>),
+                <span class="hljs-attr">stretchX</span>: <span class="hljs-built_in">parseFloat</span>(userData.<span class="hljs-property">patternStretchX</span>),
+                <span class="hljs-attr">stretchY</span>: <span class="hljs-built_in">parseFloat</span>(userData.<span class="hljs-property">patternStretchY</span>),
+                <span class="hljs-attr">skewX</span>: <span class="hljs-built_in">parseFloat</span>(userData.<span class="hljs-property">patternSkewX</span>),
+                <span class="hljs-attr">skewY</span>: <span class="hljs-built_in">parseFloat</span>(userData.<span class="hljs-property">patternSkewY</span>),
+            });
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">getOuterRadius</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">lineHeight</span>) * <span class="hljs-number">2</span>);
+
+            <span class="hljs-keyword">const</span> swirl = scrawl.<span class="hljs-title function_">makeFilter</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;swirl-filter&#x27;</span>),
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;swirl&#x27;</span>,
+                <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+                <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+                <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">outerRadius</span>: <span class="hljs-title function_">getOuterRadius</span>(),
+                <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
+                <span class="hljs-attr">angle</span>: userData.<span class="hljs-property">swirlAngle</span>,
+                <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">true</span>,
+            });
+
+            <span class="hljs-keyword">const</span> template = scrawl.<span class="hljs-title function_">makeBlock</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template&#x27;</span>),
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+            });
+
+            <span class="hljs-keyword">const</span> label = scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;content&#x27;</span>),
+                <span class="hljs-attr">layoutTemplate</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template&#x27;</span>),
+
+                <span class="hljs-attr">text</span>: <span class="hljs-title function_">processText</span>(el.<span class="hljs-property">innerHTML</span>),
+                <span class="hljs-attr">fontString</span>: compStyles.<span class="hljs-property">font</span>,
+
+                <span class="hljs-attr">textHandleY</span>: <span class="hljs-string">&#x27;alphabetic&#x27;</span>,
+                <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">cacheOutput</span>: <span class="hljs-literal">false</span>,
+
+                <span class="hljs-attr">direction</span>: userData.<span class="hljs-property">direction</span>,
+                <span class="hljs-attr">fontStretch</span>: userData.<span class="hljs-property">fontStretch</span>,
+                <span class="hljs-attr">letterSpacing</span>: userData.<span class="hljs-property">letterSpacing</span>,
+                <span class="hljs-attr">wordSpacing</span>: userData.<span class="hljs-property">wordSpacing</span>,
+                <span class="hljs-attr">fontVariantCaps</span>: userData.<span class="hljs-property">fontVariantCaps</span>,
+                <span class="hljs-attr">lineSpacing</span>: <span class="hljs-title function_">getLineSpacing</span>(),
+                <span class="hljs-attr">justifyLine</span>: userData.<span class="hljs-property">justifyLine</span>,
+
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;swirl-pattern&#x27;</span>),
+            });</pre></div></div>
             
         </li>
         
@@ -1525,11 +1440,363 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Return the snippet, so coders can access the snippet’s parts - in case they need to tweak the output to meet the web page’s specific requirements</p>
+              <p>Boilerplate - font adjustments</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> snippet;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> meta;
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">getLineAdjustment</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                <span class="hljs-keyword">const</span> size = <span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">fontSize</span>);
+                <span class="hljs-keyword">const</span> ratio = size / <span class="hljs-number">100</span>;
+                <span class="hljs-keyword">return</span> ratio * (meta.<span class="hljs-property">alphabeticBaseline</span> + meta.<span class="hljs-property">verticalOffset</span> + <span class="hljs-built_in">parseFloat</span>(userData.<span class="hljs-property">lineAdjustment</span>));
+            };
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateOnFontLoad</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                <span class="hljs-keyword">const</span> font = compStyles.<span class="hljs-property">fontFamily</span>,
+                    check = scrawl.<span class="hljs-title function_">checkFontIsLoaded</span>(font);
+
+                <span class="hljs-keyword">if</span> (check) {
+
+                    el.<span class="hljs-property">style</span>.<span class="hljs-property">backgroundColor</span> = <span class="hljs-string">&#x27;transparent&#x27;</span>;
+                    el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = <span class="hljs-string">&#x27;transparent&#x27;</span>;
+
+                    cell.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">cleared</span>: <span class="hljs-literal">true</span>,
+                        <span class="hljs-attr">compiled</span>: <span class="hljs-literal">true</span>,
+                    });
+
+                    canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span> });
+
+                    meta = scrawl.<span class="hljs-title function_">getFontMetadata</span>(font);
+
+                    <span class="hljs-keyword">const</span> displacement = <span class="hljs-title function_">getLineAdjustment</span>();
+
+                    template.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">startY</span>: displacement,
+                        <span class="hljs-attr">handleY</span>: displacement,
+                        <span class="hljs-attr">fillStyle</span>: userData.<span class="hljs-property">elBackgroundColor</span>,
+                        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+                    });
+
+                    label.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+
+                    animation.<span class="hljs-title function_">updateHook</span>(<span class="hljs-string">&#x27;commence&#x27;</span>, swirlEffect);
+                }
+            };
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">swirlEffect</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                <span class="hljs-keyword">const</span> base = canvas.<span class="hljs-property">base</span>;
+
+                <span class="hljs-keyword">if</span> (isAnimated) {
+
+                    <span class="hljs-keyword">const</span> {x, y, active} = canvas.<span class="hljs-property">here</span>;
+
+                    <span class="hljs-keyword">if</span> (active &amp;&amp; !base.<span class="hljs-title function_">hasFilters</span>()) base.<span class="hljs-title function_">addFilters</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;swirl-filter&#x27;</span>));
+
+                    <span class="hljs-keyword">if</span> (active) {
+
+                        swirl.<span class="hljs-title function_">set</span>({
+                            <span class="hljs-attr">startX</span>: x,
+                            <span class="hljs-attr">startY</span>: y,
+                        });
+                    }
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (base.<span class="hljs-title function_">hasFilters</span>()) base.<span class="hljs-title function_">clearFilters</span>();
+                }
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (base.<span class="hljs-title function_">hasFilters</span>()) base.<span class="hljs-title function_">clearFilters</span>();
+            };
+
+            animation.<span class="hljs-title function_">updateHook</span>(<span class="hljs-string">&#x27;commence&#x27;</span>, updateOnFontLoad);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Boilerplate user interaction - resizing the browser window</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> resizeFlag = <span class="hljs-literal">true</span>,
+                lastResize = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+
+            <span class="hljs-keyword">const</span> resizeChoke = <span class="hljs-number">200</span>;
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">setResizeFlag</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                resizeFlag = <span class="hljs-literal">true</span>;
+
+                <span class="hljs-keyword">const</span> now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Canvases don’t animate when outside of the browser viewport (to save CPU, battery, etc)</p>
+<ul>
+<li>This check forces those canvases to update once to adapt to the new viewport size</li>
+<li>Doing this should prevent unexpected horizontal scrollbars appearing on the page</li>
+<li>Should also minimize flashes of badly sized content when canvas scrolls into view</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (!animation.<span class="hljs-title function_">isRunning</span>() &amp;&amp; now &gt; lastResize + resizeChoke) {
+
+                    <span class="hljs-title function_">resizeAction</span>();
+                    animation.<span class="hljs-title function_">updateOnce</span>();
+                    lastResize = now;
+                }
+            };
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">resizeAction</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                <span class="hljs-keyword">if</span> (resizeFlag) {
+
+                    resizeFlag = <span class="hljs-literal">false</span>;
+
+                    cell.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">height</span>: <span class="hljs-title function_">getCellHeight</span>() });
+
+                    label.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fontString</span>: compStyles.<span class="hljs-property">font</span> });
+
+                    swirl.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">outerRadius</span>: <span class="hljs-title function_">getOuterRadius</span>() });
+
+                    <span class="hljs-keyword">if</span> (meta) {
+
+                        <span class="hljs-keyword">const</span> displacement = <span class="hljs-title function_">getLineAdjustment</span>();
+
+                        template.<span class="hljs-title function_">set</span>({
+                            <span class="hljs-attr">startY</span>: displacement,
+                            <span class="hljs-attr">handleY</span>: displacement,
+                        });
+
+                        label.<span class="hljs-title function_">set</span>({
+                            <span class="hljs-attr">letterSpacing</span>: compStyles.<span class="hljs-property">letterSpacing</span>,
+                            <span class="hljs-attr">wordSpacing</span>: compStyles.<span class="hljs-property">wordSpacing</span>,
+                        });
+                    }
+                }
+            };
+
+            animation.<span class="hljs-title function_">updateHook</span>(<span class="hljs-string">&#x27;afterShow&#x27;</span>, resizeAction);
+
+            additionalDemolishActions.<span class="hljs-title function_">push</span>(
+                scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;resize&#x27;</span>, setResizeFlag, <span class="hljs-variable language_">window</span>),
+            );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Boilerplate user interaction - editing the text</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;contenteditable&#x27;</span>)) {
+
+                <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateText</span> = (<span class="hljs-params"></span>) =&gt; {
+                    label.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-title function_">processText</span>(el.<span class="hljs-property">innerHTML</span>) });
+                }
+                <span class="hljs-keyword">const</span> <span class="hljs-title function_">focusText</span> = (<span class="hljs-params"></span>) =&gt; {
+                    el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0.4)&#x27;</span>;
+                }
+                <span class="hljs-keyword">const</span> <span class="hljs-title function_">blurText</span> = (<span class="hljs-params"></span>) =&gt; {
+                    el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = <span class="hljs-string">&#x27;transparent&#x27;</span>;
+                }
+
+                additionalDemolishActions.<span class="hljs-title function_">push</span>(
+                    scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;input&#x27;</span>, updateText, el),
+                    scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;focus&#x27;</span>, focusText, el),
+                    scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;blur&#x27;</span>, blurText, el),
+                );
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Boilerplate - animation control</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;static&#x27;</span> === compStyles.<span class="hljs-property">position</span>) el.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;relative&#x27;</span>;
+
+            <span class="hljs-keyword">const</span> control = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;button&#x27;</span>);
+
+            control.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;absolute&#x27;</span>;
+            control.<span class="hljs-property">style</span>.<span class="hljs-property">fontSize</span> = <span class="hljs-string">&#x27;12px&#x27;</span>;
+            control.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = <span class="hljs-string">&#x27;block&#x27;</span>;
+            control.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            control.<span class="hljs-property">style</span>.<span class="hljs-property">right</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            control.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;Halt&#x27;</span>;
+            control.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;contenteditable&#x27;</span>, <span class="hljs-string">&#x27;false&#x27;</span>);
+
+            el.<span class="hljs-title function_">appendChild</span>(control);
+
+            <span class="hljs-keyword">let</span> isAnimated = <span class="hljs-literal">true</span>;
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">stopStartAction</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                isAnimated = !isAnimated;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>myGradient.set({ animateByDelta: isAnimated });</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+                control.<span class="hljs-property">textContent</span> = isAnimated ? <span class="hljs-string">&#x27;Halt&#x27;</span> : <span class="hljs-string">&#x27;Play&#x27;</span>;
+            };
+
+            additionalDemolishActions.<span class="hljs-title function_">push</span>(
+                scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, stopStartAction, control)
+            );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Accessibility</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> <span class="hljs-title function_">reduceMotionAction</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                <span class="hljs-keyword">if</span> (isAnimated) {
+
+                    isAnimated = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>myGradient.set({ animateByDelta: isAnimated });</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+                    control.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;Play&#x27;</span>;
+                }
+            };
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">noPreferenceMotionAction</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                <span class="hljs-keyword">if</span> (!isAnimated) {
+
+                    isAnimated = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>myGradient.set({ animateByDelta: isAnimated });</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+                    control.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;Halt&#x27;</span>;
+                }
+            };
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorSchemeLightAction</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                backBlock.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fillStyle</span>: userData.<span class="hljs-property">mainColor</span> });
+                stripeBlock.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fillStyle</span>: userData.<span class="hljs-property">stripeColor</span> });
+            };
+
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorSchemeDarkAction</span> = (<span class="hljs-params"></span>) =&gt; {
+
+                backBlock.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fillStyle</span>: userData.<span class="hljs-property">darkMainColor</span> });
+                stripeBlock.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fillStyle</span>: userData.<span class="hljs-property">darkStripeColor</span> });
+            };
+
+            canvas.<span class="hljs-title function_">set</span>({
+                colorSchemeLightAction,
+                colorSchemeDarkAction,
+                reduceMotionAction,
+                noPreferenceMotionAction,
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>Render once, to get everything in place</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            animation.<span class="hljs-title function_">updateOnce</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>Return the snippet, so coders can access the snippet’s parts</p>
+<ul>
+<li>In case they need to tweak the output to meet the web page’s specific requirements</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> snippet;
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
 }</pre></div></div>
             
         </li>

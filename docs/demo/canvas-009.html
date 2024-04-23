@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -877,14 +897,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    addListener,
-    importDomImage,
-    library <span class="hljs-keyword">as</span> L,
-    makeBlock,
-    makePattern,
-    makeRender,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { reportSpeed, killArtefactAndAnchor, killStyle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -915,12 +928,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
-@ts-expect-error</p>
+              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.</p>
+<ul>
+<li>TS errors due to not importing/using GA types into the demo</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;create&#x27;</span>, <span class="hljs-string">&#x27;UA-000000-0&#x27;</span>, <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+<span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;create&#x27;</span>, <span class="hljs-string">&#x27;UA-000000-0&#x27;</span>, <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -931,14 +947,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>We can then incorporate the tracker’s functionality in our various hook functions defined further down in this script
-@ts-expect-error</p>
+              <p>We can then incorporate the tracker’s functionality in our various hook functions defined further down in this script</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+<span class="hljs-title function_">ga</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];</pre></div></div>
+    <span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    myTracker = ga.<span class="hljs-title function_">getByName</span>(<span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);
+    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;transport&#x27;</span>, <span class="hljs-string">&#x27;beacon&#x27;</span>);
+    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;campaignKeyword&#x27;</span>, <span class="hljs-string">&#x27;Scrawl-canvas demo&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -948,23 +969,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    myTracker = ga.<span class="hljs-title function_">getByName</span>(<span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);
-    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;transport&#x27;</span>, <span class="hljs-string">&#x27;beacon&#x27;</span>);
-    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;campaignKeyword&#x27;</span>, <span class="hljs-string">&#x27;Scrawl-canvas demo&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Uncomment the next line to suppress tracker packets (so they don’t show up in the console)</p>
 
@@ -976,18 +980,34 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
 <p>Get a handle to the Canvas wrapper</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -998,12 +1018,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Namespacing boilerplate</p>
+              <p>Get images from DOM</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.mypatterns&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1014,26 +1033,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Get images from DOM</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.mypatterns&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
               <p>Create Pattern styles using imported images</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makePattern</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePattern</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-pattern&#x27;</span>),
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;brick&#x27;</span>,
@@ -1048,17 +1052,17 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Create Pattern styles dynamically</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makePattern</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePattern</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;water-pattern&#x27;</span>),
     <span class="hljs-attr">imageSource</span>: <span class="hljs-string">&#x27;img/water.png&#x27;</span>,
@@ -1073,11 +1077,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Create a canvas-based Cell pattern</p>
 
@@ -1086,35 +1090,26 @@
             <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-pattern&#x27;</span>),
-
     <span class="hljs-attr">width</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
-
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
-
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
-});
-
-canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
-
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Create a Block entity to display in the new Cell pattern</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-pattern-block&#x27;</span>),
     <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-pattern&#x27;</span>),
@@ -1140,17 +1135,21 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Main canvas display - create Block entitys which will use the patterns defined above</p>
+              <p>Main canvas display - create Block entitys which will use the patterns defined above. Note that TS errors are due to:</p>
+<ul>
+<li>Not importing/using GA types into the demo</li>
+<li>TS not recognising that <code>this</code> refers to BlockInstance - it claims that <code>get</code>, <code>set</code>, <code>clickAnchor</code> etc functions don’t exist on BlockFactoryInputs (which is true), but we’re defining hook functions here. It can probably be fixed in the <code>d.ts</code> file, but I don’t know how to do that …</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;water-in-leaves&#x27;</span>),
     <span class="hljs-attr">group</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
@@ -1175,11 +1174,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>To be aware: adding shadows to entitys using patterns for their fill and/or stroke styles can lead to a serious decrease in frame rate</p>
 
@@ -1193,11 +1192,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Include an anchor (href) link which can be tied to user interaction (in this case, mouse clicks on the canvas element) through events defined further down in this script.</p>
 
@@ -1206,11 +1205,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>ALWAYS include a description! We will be using the anchor’s description string later as part of our asistive technology solution for this demo.</p>
 
@@ -1224,15 +1223,35 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>The clickAction attribute captures both Scrawl-canvas trigger clicks and also non-mouse ‘clicks’ on the anchor element hidden at the top of the web page, for example using the keyboard (tab, return) or other assistive technology.</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>The clickAction attribute captures both Scrawl-canvas trigger clicks and also non-mouse ‘clicks’ on the anchor element hidden at the top of the web page, for example using the keyboard (tab, return) or other assistive technology.</p>
+              <p>This function gets invoked by an event listener added to the &lt;a&gt; link element in the DOM. <code>this</code> refers to the element, not the SC anchor wrapper or the Block entity object. The <code>myTracker</code> object is not recognised by the link element (the object’s scope is local to this module), so instead we fire the <code>ga</code> analytics object directly as that lives in the global space - see line 19 above.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+            <span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;demoCanvasTracker.send&#x27;</span>, <span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Outbound link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>);
+        },
+    },</pre></div></div>
             
         </li>
         
@@ -1242,38 +1261,6 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>This function gets invoked by an event listener added to the &lt;a&gt; link element in the DOM. <code>this</code> refers to the element, not the SC anchor wrapper or the Block entity object. The <code>myTracker</code> object is not recognised by the link element (the object’s scope is local to this module), so instead we fire the <code>ga</code> analytics object directly as that lives in the global space - see line 19 above.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;demoCanvasTracker.send&#x27;</span>, <span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Outbound link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>);
-        },
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas&gt; element. Note that ‘this’ refers to the entity object, meaning the functions can be safely cloned into other entitys.</p>
 <ul>
@@ -1287,20 +1274,59 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>Update the block entity’s visual display</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span>,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>This is where we update the accessibility information tied to the canvas element. We’re using the anchor attribute object’s description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">set</span>({
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+            <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.get(<span class="hljs-string">&#x27;name&#x27;</span>)}</span> tile`</span>,
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+            <span class="hljs-attr">label</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
+        });</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>Update the block entity’s visual display
-@ts-expect-error</p>
+              <p>Track the action in Google Analytics</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span>,
-        });</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
+    },
+
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1311,11 +1337,14 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>This is where we update the accessibility information tied to the canvas element. We’re using the anchor attribute object’s description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.</p>
+              <p>Reset the block entity’s visual display</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span>,
+        });</pre></div></div>
             
         </li>
         
@@ -1325,74 +1354,6 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
               
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.get(<span class="hljs-string">&#x27;name&#x27;</span>)}</span> tile`</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-attr">label</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p>Track the action in Google Analytics
-@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
-    },
-
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p>Reset the block entity’s visual display
-@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Reset the accessibility information tied to the canvas element.</p>
 
@@ -1406,28 +1367,28 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-30">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p>Track the action in Google Analytics
-@ts-expect-error</p>
+              <p>Track the action in Google Analytics</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Used by the Scrawl-canvas click event, below. This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor’s clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology</p>
 
@@ -1438,34 +1399,34 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-32">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p>Track the action in Google Analytics
-@ts-expect-error</p>
+              <p>Track the action in Google Analytics</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.get(<span class="hljs-string">&#x27;anchorHref&#x27;</span>)}</span>`</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.get(<span class="hljs-string">&#x27;anchorHref&#x27;</span>)}</span>`</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-33">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <p>Trigger the click event on the anchor element we added to the DOM
-@ts-expect-error</p>
+              <p>Trigger the click event on the anchor element we added to the DOM</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
     },
 
 }).<span class="hljs-title function_">clone</span>({
@@ -1517,11 +1478,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-34">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Demonstrate zoned actions on a canvas element as a result of user interaction</p>
 <ul>
@@ -1540,16 +1501,16 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
     <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) interactionResults = canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>);
     <span class="hljs-keyword">else</span> interactionResults = <span class="hljs-string">&#x27;&#x27;</span>;
 };
-<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, interactions, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, interactions, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-35">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>To capture other user interaction with the &lt;a&gt; DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page</p>
 <p>In this case, clicking on one of the tiles will open a related Wikipedia page in a new browser tab - as defined in the  <strong>onUp</strong> function in the block factories above</p>
@@ -1560,16 +1521,16 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
 
     <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>);
 };
-<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, mylinks, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, mylinks, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-36">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1583,17 +1544,17 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-37">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
@@ -1603,28 +1564,28 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-38">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);
 
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Performing tests ...&#x27;</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-39">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>We use the <strong>canvas</strong> and <strong>myTracker</strong> variables in our blocks’ onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file’s code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be ‘undefined’. So we need to reset the block’s ‘on…’ functions (in this module file’s code) after the block has resurrected</p>
 
@@ -1632,26 +1593,33 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">killArtefactAndAnchor</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>), <span class="hljs-string">&#x27;wikipedia-brick-link&#x27;</span>, <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
 
-    L.<span class="hljs-property">artefact</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>)].<span class="hljs-title function_">set</span>({
+    scrawl.<span class="hljs-title function_">findArtefact</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>)).<span class="hljs-title function_">set</span>({
 
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span> });
             canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> tile`</span>,
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
                 <span class="hljs-attr">label</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
             });
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
         },
         <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span> });
             canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;&#x27;</span>,
                 <span class="hljs-attr">label</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span> canvas element`</span>,
             });
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
         },
         <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.anchor.href}</span>`</span>);
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
         },
     });
@@ -1662,21 +1630,21 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-40">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    L.<span class="hljs-property">entity</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>)].<span class="hljs-title function_">set</span>({
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>)).<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;marble-pattern&#x27;</span>),
     });
 
-    L.<span class="hljs-property">entity</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;marble-in-water&#x27;</span>)].<span class="hljs-title function_">set</span>({
+    scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;marble-in-water&#x27;</span>)).<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;marble-pattern&#x27;</span>),
     });
 });</pre></div></div>

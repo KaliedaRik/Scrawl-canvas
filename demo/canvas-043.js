@@ -353,10 +353,10 @@ const canvasThreePostInitialization = function () {
             preventTouchDefaultWhenDragging: true,
         });
 
-        // We need to retrieve the Phrase entity's dimensions - which are hard to guess before it's created - and update its surrounding environment to fit.
+        // We need to retrieve the Label entity's dimensions - which are hard to guess before it's created - and update its surrounding environment to fit.
         const [width, height] = c3Phrase.get('dimensions');
 
-        // We can use the phrase entity as a stencil by applying a Picture entity over it with a GCO = 'source-atop'
+        // We can use the label entity as a stencil by applying a Picture entity over it with a GCO = 'source-atop'
         scrawl.makePicture({
 
             name: name3('serif-image'),
