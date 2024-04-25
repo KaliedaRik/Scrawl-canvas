@@ -238,6 +238,8 @@
       <li>Check that when cyclePalette is set to true and the palette's end value is smaller than its start value, the gradient draws itself by going through the 0/999 endpoints</li>
     </ul>
     <p>Additionally, test to make sure canvas responds correctly to external dimensions resizing - &lt;canvas> element is responsive - by changing its width and height values using the controls.</p>
+
+    <p><b>Known issue:</b> the ability to resize the canvas using a container element with CSS <kbd>resize: both</kbd> setting does not work on Safari browsers. This is - <a href="https://stackoverflow.com/questions/75009875/writing-to-a-canvas-breaks-the-resizing-of-the-wrapping-div-on-safari-only">allegedly</a> - due to an canvas overflow which triggers the &lt;canvas> element's <kbd>z-index</kbd> setting to increase ... which then stops the mouse drag event hitting the container element's drag corner. One (extremely ugly!) fix is to always display scrollbars on the container (<kbd>overflow: scroll</kbd>). A better solution is to supply UX controls in the HTML markup to handle a user's desire to resize the canvas container.</p>
     
     <p><b>Touch test:</b> canvas should be resizable</p>
 
