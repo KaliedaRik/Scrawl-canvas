@@ -32,6 +32,7 @@ export * as library from './core/library.js';
 export {
     checkFontIsLoaded,
     findArtefact,
+    findAsset,
     findCanvas,
     findElement,
     findEntity,

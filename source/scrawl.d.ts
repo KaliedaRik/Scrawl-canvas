@@ -3241,6 +3241,7 @@ export function purge(item: string): void;
 export function purgeFontMetadata(): void;
 
 export function findArtefact(item: string): ArtefactInstance;
+export function findAsset(item: string): AssetInstance;
 export function findEntity(item: string): EntityInstance;
 export function findCanvas(item: string): CanvasInstance;
 export function findStyles(item: string): StylesInstance;

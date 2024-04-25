@@ -994,6 +994,12 @@
     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
 }
 
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">findAsset</span> (item = <span class="hljs-string">&#x27;&#x27;</span>) {
+
+    <span class="hljs-keyword">if</span> (assetnames.<span class="hljs-title function_">includes</span>(item)) <span class="hljs-keyword">return</span> asset[item];
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+}
+
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">findEntity</span> (item = <span class="hljs-string">&#x27;&#x27;</span>) {
 
     <span class="hljs-keyword">if</span> (entitynames.<span class="hljs-title function_">includes</span>(item)) <span class="hljs-keyword">return</span> entity[item];
