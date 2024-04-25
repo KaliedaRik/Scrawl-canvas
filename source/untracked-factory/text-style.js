@@ -291,27 +291,27 @@ const G = P.getters,
 
 S.fontString = function (item) {
 
-    if (item?.substring) this.fontString = item;
+    if (item != null && item.substring) this.fontString = item;
 };
 
 S.fontSize = function (item) {
 
-    if (item?.substring) this.fontSize = item.toLowerCase();
+    if (item != null && item.substring) this.fontSize = item.toLowerCase();
 };
 
 S.fontStyle = function (item) {
 
-    if (item?.substring) this.fontStyle = item.toLowerCase();
+    if (item != null && item.substring) this.fontStyle = item.toLowerCase();
 };
 
 S.fontVariantCaps = function (item) {
 
-    if (item?.substring) this.fontVariantCaps = item.toLowerCase();
+    if (item != null && item.substring) this.fontVariantCaps = item.toLowerCase();
 };
 
 S.fontStretch = function (item) {
 
-    if (item?.substring) {
+    if (item != null && item.substring) {
 
         this.fontStretch = this.fontStretchHelper(item);
     }
@@ -350,12 +350,12 @@ S.fontWeight = function (item) {
 
 S.direction = function (item) {
 
-    if (item?.substring) this.direction = item;
+    if (item != null && item.substring) this.direction = item;
 };
 
 S.fontKerning = function (item) {
 
-    if (item?.substring) this.fontKerning = item;
+    if (item != null && item.substring) this.fontKerning = item;
 };
 
 
@@ -369,26 +369,32 @@ G.letterSpacing = function () {
 };
 D.letterSpacing = function (item) {
 
-    if (item === NORMAL) item = 0;
+    if (item != null) {
 
-    const val = (!item?.toFixed) ? parseFloat(item) : item;
+        if (item === NORMAL) item = 0;
 
-    if (_isFinite(val)) {
+        const val = (!item.toFixed) ? parseFloat(item) : item;
 
-        this.letterSpaceValue += val;
-        this.letterSpacing = `${this.letterSpaceValue}px`;
+        if (_isFinite(val)) {
+
+            this.letterSpaceValue += val;
+            this.letterSpacing = `${this.letterSpaceValue}px`;
+        }
     }
 };
 S.letterSpacing = function (item) {
 
-    if (item === NORMAL) item = 0;
+    if (item != null) {
 
-    const val = (!item?.toFixed) ? parseFloat(item) : item;
+        if (item === NORMAL) item = 0;
 
-    if (_isFinite(val)) {
+        const val = (!item.toFixed) ? parseFloat(item) : item;
 
-        this.letterSpaceValue = val;
-        this.letterSpacing = `${val}px`;
+        if (_isFinite(val)) {
+
+            this.letterSpaceValue = val;
+            this.letterSpacing = `${val}px`;
+        }
     }
 };
 
@@ -402,28 +408,34 @@ G.wordSpacing = function () {
 };
 D.wordSpacing = function (item) {
 
-    const val = (!item?.toFixed) ? parseFloat(item) : item;
+    if (item != null) {
 
-    if (_isFinite(val)) {
+        const val = (!item.toFixed) ? parseFloat(item) : item;
 
-        this.wordSpaceValue += val;
-        this.wordSpacing = `${this.wordSpaceValue}px`;
+        if (_isFinite(val)) {
+
+            this.wordSpaceValue += val;
+            this.wordSpacing = `${this.wordSpaceValue}px`;
+        }
     }
 };
 S.wordSpacing = function (item) {
 
-    const val = (!item?.toFixed) ? parseFloat(item) : item;
+    if (item != null) {
 
-    if (_isFinite(val)) {
+        const val = (!item.toFixed) ? parseFloat(item) : item;
 
-        this.wordSpaceValue = val;
-        this.wordSpacing = `${val}px`;
+        if (_isFinite(val)) {
+
+            this.wordSpaceValue = val;
+            this.wordSpacing = `${val}px`;
+        }
     }
 };
 
 S.textRendering = function (item) {
 
-    if (item?.substring) this.textRendering = item;
+    if (item != null && item.substring) this.textRendering = item;
 };
 
 G.textAlign = λnull;

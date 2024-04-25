@@ -1113,27 +1113,27 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
 S.<span class="hljs-property">fontString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontString</span> = item;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontString</span> = item;
 };
 
 S.<span class="hljs-property">fontSize</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontSize</span> = item.<span class="hljs-title function_">toLowerCase</span>();
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontSize</span> = item.<span class="hljs-title function_">toLowerCase</span>();
 };
 
 S.<span class="hljs-property">fontStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontStyle</span> = item.<span class="hljs-title function_">toLowerCase</span>();
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontStyle</span> = item.<span class="hljs-title function_">toLowerCase</span>();
 };
 
 S.<span class="hljs-property">fontVariantCaps</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontVariantCaps</span> = item.<span class="hljs-title function_">toLowerCase</span>();
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontVariantCaps</span> = item.<span class="hljs-title function_">toLowerCase</span>();
 };
 
 S.<span class="hljs-property">fontStretch</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) {
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontStretch</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fontStretchHelper</span>(item);
     }
@@ -1172,12 +1172,12 @@ S.<span class="hljs-property">fontWeight</span> = <span class="hljs-keyword">fun
 
 S.<span class="hljs-property">direction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">direction</span> = item;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">direction</span> = item;
 };
 
 S.<span class="hljs-property">fontKerning</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontKerning</span> = item;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontKerning</span> = item;
 };
 
 
@@ -1191,26 +1191,32 @@ G.<span class="hljs-property">letterSpacing</span> = <span class="hljs-keyword">
 };
 D.<span class="hljs-property">letterSpacing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item === <span class="hljs-variable constant_">NORMAL</span>) item = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) {
 
-    <span class="hljs-keyword">const</span> val = (!item?.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
+        <span class="hljs-keyword">if</span> (item === <span class="hljs-variable constant_">NORMAL</span>) item = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+        <span class="hljs-keyword">const</span> val = (!item.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpaceValue</span> += val;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.letterSpaceValue}</span>px`</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpaceValue</span> += val;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.letterSpaceValue}</span>px`</span>;
+        }
     }
 };
 S.<span class="hljs-property">letterSpacing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item === <span class="hljs-variable constant_">NORMAL</span>) item = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) {
 
-    <span class="hljs-keyword">const</span> val = (!item?.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
+        <span class="hljs-keyword">if</span> (item === <span class="hljs-variable constant_">NORMAL</span>) item = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+        <span class="hljs-keyword">const</span> val = (!item.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpaceValue</span> = val;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${val}</span>px`</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpaceValue</span> = val;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${val}</span>px`</span>;
+        }
     }
 };
 
@@ -1224,28 +1230,34 @@ G.<span class="hljs-property">wordSpacing</span> = <span class="hljs-keyword">fu
 };
 D.<span class="hljs-property">wordSpacing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">const</span> val = (!item?.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+        <span class="hljs-keyword">const</span> val = (!item.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpaceValue</span> += val;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.wordSpaceValue}</span>px`</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpaceValue</span> += val;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.wordSpaceValue}</span>px`</span>;
+        }
     }
 };
 S.<span class="hljs-property">wordSpacing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">const</span> val = (!item?.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+        <span class="hljs-keyword">const</span> val = (!item.<span class="hljs-property">toFixed</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpaceValue</span> = val;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${val}</span>px`</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpaceValue</span> = val;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpacing</span> = <span class="hljs-string">`<span class="hljs-subst">${val}</span>px`</span>;
+        }
     }
 };
 
 S.<span class="hljs-property">textRendering</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">textRendering</span> = item;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">textRendering</span> = item;
 };
 
 G.<span class="hljs-property">textAlign</span> = λ<span class="hljs-literal">null</span>;

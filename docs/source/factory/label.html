@@ -1434,7 +1434,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
 
         <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>?.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
 
         engine.<span class="hljs-title function_">strokeText</span>(...pos);
 
@@ -1462,7 +1462,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
         <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>?.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
 
         engine.<span class="hljs-title function_">fillText</span>(...pos);
 
@@ -1490,7 +1490,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
         <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>?.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
 
         engine.<span class="hljs-title function_">strokeText</span>(...pos);
         engine.<span class="hljs-title function_">fillText</span>(...pos);
@@ -1522,7 +1522,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
         <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>?.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
 
         engine.<span class="hljs-title function_">fillText</span>(...pos);
         engine.<span class="hljs-title function_">strokeText</span>(...pos);
@@ -1554,7 +1554,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
         <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>?.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
 
         engine.<span class="hljs-title function_">strokeText</span>(...pos);
         engine.<span class="hljs-title function_">fillText</span>(...pos);
@@ -1583,7 +1583,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
         <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>?.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
 
         engine.<span class="hljs-title function_">fillText</span>(...pos);
         engine.<span class="hljs-title function_">strokeText</span>(...pos);

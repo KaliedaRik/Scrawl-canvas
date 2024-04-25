@@ -297,7 +297,7 @@ export default function (P = Ωempty) {
     };
     S.accessibleText = function (item) {
 
-        if (item?.substring) {
+        if (item != null && item.substring) {
 
             this.accessibleText = item;
             this.dirtyText = true;
@@ -306,7 +306,7 @@ export default function (P = Ωempty) {
 
     S.accessibleTextPlaceholder = function (item) {
 
-        if (item?.substring) {
+        if (item != null && item.substring) {
 
             this.accessibleTextPlaceholder = item;
             this.dirtyText = true;
@@ -315,7 +315,7 @@ export default function (P = Ωempty) {
 
     S.accessibleTextOrder = function (item) {
 
-        if (item?.toFixed) {
+        if (item != null && item.toFixed) {
 
             this.accessibleTextOrder = item;
             this.dirtyText = true;
@@ -571,10 +571,10 @@ export default function (P = Ωempty) {
         const layoutTemplate = this.layoutTemplate;
 
         // Only EnhancedLabels have a layoutTemplate attribute
-        if (layoutTemplate) return layoutTemplate?.currentScale ?? 1;
+        if (layoutTemplate) return (layoutTemplate.currentScale != null) ? layoutTemplate.currentScale : 1;
 
         // Labels, on the other hand, track their own scale
-        return this.currentScale ?? 1;
+        return (this.currentScale != null) ? this.currentScale : 1;
     };
 
 // `getStyle` - internal helper function to find a gradient, pattern, cell or string style
@@ -677,7 +677,7 @@ export default function (P = Ωempty) {
 // `getCanvasTextHold` - get a handle for the &lt;canvas> element's child text hold &lt;div>
     P.getCanvasTextHold = function (item) {
 
-        if (item?.type === T_CELL && item?.controller?.type === T_CANVAS && item?.controller?.textHold) return item.controller;
+        if (item && item.type === T_CELL && item.controller.type && item.controller.type=== T_CANVAS && item.controller.textHold) return item.controller;
 
         // For non-based Cells we have to make a recursive call to find the &lt;canvas> host
         if (item && item.type === T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);

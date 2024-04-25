@@ -961,7 +961,7 @@
     };
     S.<span class="hljs-property">accessibleText</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) {
+        <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">accessibleText</span> = item;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span> = <span class="hljs-literal">true</span>;
@@ -970,7 +970,7 @@
 
     S.<span class="hljs-property">accessibleTextPlaceholder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">substring</span>) {
+        <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">substring</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">accessibleTextPlaceholder</span> = item;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span> = <span class="hljs-literal">true</span>;
@@ -979,7 +979,7 @@
 
     S.<span class="hljs-property">accessibleTextOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">toFixed</span>) {
+        <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">toFixed</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">accessibleTextOrder</span> = item;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span> = <span class="hljs-literal">true</span>;
@@ -1498,7 +1498,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (layoutTemplate) <span class="hljs-keyword">return</span> layoutTemplate?.<span class="hljs-property">currentScale</span> ?? <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (layoutTemplate) <span class="hljs-keyword">return</span> (layoutTemplate.<span class="hljs-property">currentScale</span> != <span class="hljs-literal">null</span>) ? layoutTemplate.<span class="hljs-property">currentScale</span> : <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1513,7 +1513,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> ?? <span class="hljs-number">1</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> != <span class="hljs-literal">null</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> : <span class="hljs-number">1</span>;
     };</pre></div></div>
             
         </li>
@@ -1687,7 +1687,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getCanvasTextHold</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item?.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CELL</span> &amp;&amp; item?.<span class="hljs-property">controller</span>?.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CANVAS</span> &amp;&amp; item?.<span class="hljs-property">controller</span>?.<span class="hljs-property">textHold</span>) <span class="hljs-keyword">return</span> item.<span class="hljs-property">controller</span>;</pre></div></div>
+        <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CELL</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">type</span>=== <span class="hljs-variable constant_">T_CANVAS</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">textHold</span>) <span class="hljs-keyword">return</span> item.<span class="hljs-property">controller</span>;</pre></div></div>
             
         </li>
         

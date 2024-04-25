@@ -479,10 +479,12 @@ P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
 // + Takes into account the layout entity's current scaling factor
 P.updateWorkingTextStyle = function (worker, style) {
 
-    const scale = this.layoutTemplate?.currentScale || 1;
-    worker.set(style, true);
-    this.updateCanvasFont(worker, scale);
-    this.updateFontString(worker);
+        let scale = 1;
+        if (this.layoutTemplate) scale = this.layoutTemplate.currentScale;
+
+        worker.set(style, true);
+        this.updateCanvasFont(worker, scale);
+        this.updateFontString(worker);
 };
 
 
@@ -513,7 +515,9 @@ P.getTextHandleY = function (val, size, font) {
     } = meta;
 
     const ratio = size / 100;
-    const scale = this.layoutTemplate?.currentScale || 1;
+
+    let scale = 1;
+    if (this.layoutTemplate) scale = this.layoutTemplate.currentScale;
 
     const dim = height * ratio;
 
@@ -556,7 +560,7 @@ P.cleanPathObject = function () {
 
     const layout = this.layoutTemplate;
 
-    if (this.dirtyPathObject && layout?.pathObject) {
+    if (layout && this.dirtyPathObject && layout.pathObject) {
 
         this.dirtyPathObject = false;
 
@@ -1446,7 +1450,7 @@ P.assignTextUnitsToLines = function () {
                     unit = textUnits[i + 1];
 
                     // Next text unit is a soft hyphen
-                    if (unit && unit?.charType === TEXT_TYPE_SOFT_HYPHEN) {
+                    if (unit && unit.charType === TEXT_TYPE_SOFT_HYPHEN) {
 
                         unitAfter = textUnits[i + 2];
 
@@ -1516,7 +1520,7 @@ P.assignTextUnitsToLines = function () {
             else unitData.length = 0;
         }
 
-        if (mutableUnitData?.length) {
+        if (mutableUnitData && mutableUnitData.length) {
 
             ({
                 length: lineLength,
@@ -1525,7 +1529,7 @@ P.assignTextUnitsToLines = function () {
 
             acc = unitData.reduce((a, v) => {
 
-                if (textUnits[v]?.len) a += textUnits[v].len;
+                if (textUnits[v] && textUnits[v].len) a += textUnits[v].len;
                 return a;
 
             }, 0);
@@ -1871,7 +1875,7 @@ P.positionTextUnitsInSpace = function () {
             if (languageDirectionIsLtr && (unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE))) {
 
                 unit = textUnits[unitData[unitData.length - 2]];
-                spaceRemaining -= unit?.replaceLen || 0;
+                spaceRemaining -= (unit.replaceLen != null) ? unit.replaceLen : 0;
             }
 
             // Add unused space to distances as we push data into adjustedDistances
@@ -1920,7 +1924,7 @@ P.positionTextUnitsInSpace = function () {
 
                     unit = textUnits[unitIndex];
 
-                    if (unit?.stampFlag) {
+                    if (unit && unit.stampFlag) {
 
                         unitIndices++
 
@@ -1943,7 +1947,7 @@ P.positionTextUnitsInSpace = function () {
 
                     unit = textUnits[unitIndex];
 
-                    if (unit?.stampFlag) {
+                    if (unit && unit.stampFlag) {
 
                         unitIndices++
 
@@ -3029,7 +3033,7 @@ P.createTextCellsForSpace = function (host) {
 
                         lookAhead = unitData[index + 1];
 
-                        if (lookAhead?.substring) {
+                        if (lookAhead && lookAhead.substring) {
 
                             if (lookAhead === TEXT_TYPE_SOFT_HYPHEN) text = `${chars}${hyphenString}`;
                             else text = `${chars}${truncateString}`;
@@ -3205,7 +3209,7 @@ P.createHighlightCell = function (host) {
 
 P.stampGuidelinesOnCell = function (cell) {
 
-    if (cell?.engine) {
+    if (cell && cell.engine) {
 
         const {
             guidelinesPath,

@@ -464,7 +464,7 @@ P.draw = function (host) {
 
         const pos = this.stampPositioningHelper();
 
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
+        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
 
         engine.strokeText(...pos);
 
@@ -480,7 +480,7 @@ P.fill = function (host) {
         const engine = host.engine;
         const pos = this.stampPositioningHelper();
 
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
+        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
 
         engine.fillText(...pos);
 
@@ -496,7 +496,7 @@ P.drawAndFill = function (host) {
         const engine = host.engine;
         const pos = this.stampPositioningHelper();
 
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
+        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
 
         engine.strokeText(...pos);
         engine.fillText(...pos);
@@ -516,7 +516,7 @@ P.fillAndDraw = function (host) {
         const engine = host.engine;
         const pos = this.stampPositioningHelper();
 
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
+        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
 
         engine.fillText(...pos);
         engine.strokeText(...pos);
@@ -536,7 +536,7 @@ P.drawThenFill = function (host) {
         const engine = host.engine;
         const pos = this.stampPositioningHelper();
 
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
+        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
 
         engine.strokeText(...pos);
         engine.fillText(...pos);
@@ -553,7 +553,7 @@ P.fillThenDraw = function (host) {
         const engine = host.engine;
         const pos = this.stampPositioningHelper();
 
-        if (this?.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
+        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
 
         engine.fillText(...pos);
         engine.strokeText(...pos);

@@ -1538,10 +1538,12 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateWorkingTextStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">worker, style</span>) {
 
-    <span class="hljs-keyword">const</span> scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">layoutTemplate</span>?.<span class="hljs-property">currentScale</span> || <span class="hljs-number">1</span>;
-    worker.<span class="hljs-title function_">set</span>(style, <span class="hljs-literal">true</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateCanvasFont</span>(worker, scale);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateFontString</span>(worker);
+        <span class="hljs-keyword">let</span> scale = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">layoutTemplate</span>) scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">layoutTemplate</span>.<span class="hljs-property">currentScale</span>;
+
+        worker.<span class="hljs-title function_">set</span>(style, <span class="hljs-literal">true</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateCanvasFont</span>(worker, scale);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateFontString</span>(worker);
 };</pre></div></div>
             
         </li>
@@ -1595,7 +1597,9 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
     } = meta;
 
     <span class="hljs-keyword">const</span> ratio = size / <span class="hljs-number">100</span>;
-    <span class="hljs-keyword">const</span> scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">layoutTemplate</span>?.<span class="hljs-property">currentScale</span> || <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">let</span> scale = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">layoutTemplate</span>) scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">layoutTemplate</span>.<span class="hljs-property">currentScale</span>;
 
     <span class="hljs-keyword">const</span> dim = height * ratio;
 
@@ -1661,7 +1665,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
     <span class="hljs-keyword">const</span> layout = <span class="hljs-variable language_">this</span>.<span class="hljs-property">layoutTemplate</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> &amp;&amp; layout?.<span class="hljs-property">pathObject</span>) {
+    <span class="hljs-keyword">if</span> (layout &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> &amp;&amp; layout.<span class="hljs-property">pathObject</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">false</span>;
 
@@ -2983,7 +2987,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (unit &amp;&amp; unit?.<span class="hljs-property">charType</span> === <span class="hljs-variable constant_">TEXT_TYPE_SOFT_HYPHEN</span>) {
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (unit &amp;&amp; unit.<span class="hljs-property">charType</span> === <span class="hljs-variable constant_">TEXT_TYPE_SOFT_HYPHEN</span>) {
 
                         unitAfter = textUnits[i + <span class="hljs-number">2</span>];</pre></div></div>
             
@@ -3141,7 +3145,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
             <span class="hljs-keyword">else</span> unitData.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
         }
 
-        <span class="hljs-keyword">if</span> (mutableUnitData?.<span class="hljs-property">length</span>) {
+        <span class="hljs-keyword">if</span> (mutableUnitData &amp;&amp; mutableUnitData.<span class="hljs-property">length</span>) {
 
             ({
                 <span class="hljs-attr">length</span>: lineLength,
@@ -3150,7 +3154,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
             acc = unitData.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> {
 
-                <span class="hljs-keyword">if</span> (textUnits[v]?.<span class="hljs-property">len</span>) a += textUnits[v].<span class="hljs-property">len</span>;
+                <span class="hljs-keyword">if</span> (textUnits[v] &amp;&amp; textUnits[v].<span class="hljs-property">len</span>) a += textUnits[v].<span class="hljs-property">len</span>;
                 <span class="hljs-keyword">return</span> a;
 
             }, <span class="hljs-number">0</span>);
@@ -3633,7 +3637,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (languageDirectionIsLtr &amp;&amp; (unitData.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">TEXT_TYPE_SOFT_HYPHEN</span>) || unitData.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">TEXT_TYPE_TRUNCATE</span>))) {
 
                 unit = textUnits[unitData[unitData.<span class="hljs-property">length</span> - <span class="hljs-number">2</span>]];
-                spaceRemaining -= unit?.<span class="hljs-property">replaceLen</span> || <span class="hljs-number">0</span>;
+                spaceRemaining -= (unit.<span class="hljs-property">replaceLen</span> != <span class="hljs-literal">null</span>) ? unit.<span class="hljs-property">replaceLen</span> : <span class="hljs-number">0</span>;
             }</pre></div></div>
             
         </li>
@@ -3754,7 +3758,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
                     unit = textUnits[unitIndex];
 
-                    <span class="hljs-keyword">if</span> (unit?.<span class="hljs-property">stampFlag</span>) {
+                    <span class="hljs-keyword">if</span> (unit &amp;&amp; unit.<span class="hljs-property">stampFlag</span>) {
 
                         unitIndices++
 
@@ -3777,7 +3781,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
                     unit = textUnits[unitIndex];
 
-                    <span class="hljs-keyword">if</span> (unit?.<span class="hljs-property">stampFlag</span>) {
+                    <span class="hljs-keyword">if</span> (unit &amp;&amp; unit.<span class="hljs-property">stampFlag</span>) {
 
                         unitIndices++
 
@@ -5050,7 +5054,7 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
 
                         lookAhead = unitData[index + <span class="hljs-number">1</span>];
 
-                        <span class="hljs-keyword">if</span> (lookAhead?.<span class="hljs-property">substring</span>) {
+                        <span class="hljs-keyword">if</span> (lookAhead &amp;&amp; lookAhead.<span class="hljs-property">substring</span>) {
 
                             <span class="hljs-keyword">if</span> (lookAhead === <span class="hljs-variable constant_">TEXT_TYPE_SOFT_HYPHEN</span>) text = <span class="hljs-string">`<span class="hljs-subst">${chars}</span><span class="hljs-subst">${hyphenString}</span>`</span>;
                             <span class="hljs-keyword">else</span> text = <span class="hljs-string">`<span class="hljs-subst">${chars}</span><span class="hljs-subst">${truncateString}</span>`</span>;
@@ -5226,7 +5230,7 @@ P.<span class="hljs-property">createHighlightCell</span> = <span class="hljs-key
 
 P.<span class="hljs-property">stampGuidelinesOnCell</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) {
 
-    <span class="hljs-keyword">if</span> (cell?.<span class="hljs-property">engine</span>) {
+    <span class="hljs-keyword">if</span> (cell &amp;&amp; cell.<span class="hljs-property">engine</span>) {
 
         <span class="hljs-keyword">const</span> {
             guidelinesPath,
