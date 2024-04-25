@@ -2201,9 +2201,16 @@ P.positionTextDecoration = function () {
 
         if (underlineOut.length) {
 
-            realisedStyle = (skipLocal) ? underlineStyle : localStyle.underlineStyle ?? underlineStyle;
-            realisedOffset = (skipLocal) ? underlineOffset : localStyle.underlineOffset ?? underlineOffset;
-            realisedWidth = (skipLocal) ? underlineWidth : localStyle.underlineWidth ?? underlineWidth;
+            realisedStyle = underlineStyle;
+            realisedOffset = underlineOffset;
+            realisedWidth = underlineWidth;
+
+            if (!skipLocal) {
+
+                if (localStyle.underlineStyle) realisedStyle = localStyle.underlineStyle;
+                if (localStyle.underlineOffset) realisedOffset = localStyle.underlineOffset;
+                if (localStyle.underlineWidth) realisedWidth = localStyle.underlineWidth;
+            }
 
             correctCoordinates(underlineOut, underlineBack, realisedOffset, realisedWidth);
             buildPath(underlineOut, underlineBack, realisedStyle, underlinePaths);
@@ -2217,9 +2224,16 @@ P.positionTextDecoration = function () {
 
         if (overlineOut.length) {
 
-            realisedStyle = (skipLocal) ? overlineStyle : localStyle.overlineStyle ?? overlineStyle;
-            realisedOffset = (skipLocal) ? overlineOffset : localStyle.overlineOffset ?? overlineOffset;
-            realisedWidth = (skipLocal) ? overlineWidth : localStyle.overlineWidth ?? overlineWidth;
+            realisedStyle = overlineStyle;
+            realisedOffset = overlineOffset;
+            realisedWidth = overlineWidth;
+
+            if (!skipLocal) {
+
+                if (localStyle.overlineStyle) realisedStyle = localStyle.overlineStyle;
+                if (localStyle.overlineOffset) realisedOffset = localStyle.overlineOffset;
+                if (localStyle.overlineWidth) realisedWidth = localStyle.overlineWidth;
+            }
 
             correctCoordinates(overlineOut, overlineBack, realisedOffset, realisedWidth);
             buildPath(overlineOut, overlineBack, realisedStyle, overlinePaths);
@@ -2233,7 +2247,12 @@ P.positionTextDecoration = function () {
 
         if (highlightOut.length) {
 
-            realisedStyle = (skipLocal) ? highlightStyle : localStyle.highlightStyle ?? highlightStyle;
+            realisedStyle = highlightStyle;
+
+            if (!skipLocal) {
+
+                if (localStyle.highlightStyle) realisedStyle = localStyle.highlightStyle;
+            }
 
             buildPath(highlightOut, highlightBack, realisedStyle, highlightPaths);
 

@@ -4058,9 +4058,16 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
         <span class="hljs-keyword">if</span> (underlineOut.<span class="hljs-property">length</span>) {
 
-            realisedStyle = (skipLocal) ? underlineStyle : localStyle.<span class="hljs-property">underlineStyle</span> ?? underlineStyle;
-            realisedOffset = (skipLocal) ? underlineOffset : localStyle.<span class="hljs-property">underlineOffset</span> ?? underlineOffset;
-            realisedWidth = (skipLocal) ? underlineWidth : localStyle.<span class="hljs-property">underlineWidth</span> ?? underlineWidth;
+            realisedStyle = underlineStyle;
+            realisedOffset = underlineOffset;
+            realisedWidth = underlineWidth;
+
+            <span class="hljs-keyword">if</span> (!skipLocal) {
+
+                <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">underlineStyle</span>) realisedStyle = localStyle.<span class="hljs-property">underlineStyle</span>;
+                <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">underlineOffset</span>) realisedOffset = localStyle.<span class="hljs-property">underlineOffset</span>;
+                <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">underlineWidth</span>) realisedWidth = localStyle.<span class="hljs-property">underlineWidth</span>;
+            }
 
             <span class="hljs-title function_">correctCoordinates</span>(underlineOut, underlineBack, realisedOffset, realisedWidth);
             <span class="hljs-title function_">buildPath</span>(underlineOut, underlineBack, realisedStyle, underlinePaths);
@@ -4074,9 +4081,16 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
         <span class="hljs-keyword">if</span> (overlineOut.<span class="hljs-property">length</span>) {
 
-            realisedStyle = (skipLocal) ? overlineStyle : localStyle.<span class="hljs-property">overlineStyle</span> ?? overlineStyle;
-            realisedOffset = (skipLocal) ? overlineOffset : localStyle.<span class="hljs-property">overlineOffset</span> ?? overlineOffset;
-            realisedWidth = (skipLocal) ? overlineWidth : localStyle.<span class="hljs-property">overlineWidth</span> ?? overlineWidth;
+            realisedStyle = overlineStyle;
+            realisedOffset = overlineOffset;
+            realisedWidth = overlineWidth;
+
+            <span class="hljs-keyword">if</span> (!skipLocal) {
+
+                <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">overlineStyle</span>) realisedStyle = localStyle.<span class="hljs-property">overlineStyle</span>;
+                <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">overlineOffset</span>) realisedOffset = localStyle.<span class="hljs-property">overlineOffset</span>;
+                <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">overlineWidth</span>) realisedWidth = localStyle.<span class="hljs-property">overlineWidth</span>;
+            }
 
             <span class="hljs-title function_">correctCoordinates</span>(overlineOut, overlineBack, realisedOffset, realisedWidth);
             <span class="hljs-title function_">buildPath</span>(overlineOut, overlineBack, realisedStyle, overlinePaths);
@@ -4090,7 +4104,12 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
         <span class="hljs-keyword">if</span> (highlightOut.<span class="hljs-property">length</span>) {
 
-            realisedStyle = (skipLocal) ? highlightStyle : localStyle.<span class="hljs-property">highlightStyle</span> ?? highlightStyle;
+            realisedStyle = highlightStyle;
+
+            <span class="hljs-keyword">if</span> (!skipLocal) {
+
+                <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">highlightStyle</span>) realisedStyle = localStyle.<span class="hljs-property">highlightStyle</span>;
+            }
 
             <span class="hljs-title function_">buildPath</span>(highlightOut, highlightBack, realisedStyle, highlightPaths);
 
