@@ -8,20 +8,29 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Define some filters
 scrawl.makeFilter({
-    name: 'grayscale',
+
+    name: name('grayscale'),
     method: 'grayscale',
+
 }).clone({
-    name: 'invert',
+
+    name: name('invert'),
     method: 'invert',
 });
 
 scrawl.makeFilter({
-    name: 'tint',
+
+    name: name('tint'),
     method: 'tint',
     redInRed: 0.5,      redInGreen: 1,      redInBlue: 0.9,
     greenInRed: 0,      greenInGreen: 0.3,  greenInBlue: 0.8,
@@ -29,7 +38,8 @@ scrawl.makeFilter({
 });
 
 scrawl.makeFilter({
-    name: 'matrix',
+
+    name: name('matrix'),
     method: 'matrix',
     weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
 });
@@ -38,7 +48,7 @@ scrawl.makeFilter({
 // For this Demo, we are creating a sheet and pinning its top row to a rail. This is the rail.
 scrawl.makeLine({
 
-    name: 'topline',
+    name: name('topline'),
 
     startX: '10%',
     startY: '5%',
@@ -54,11 +64,10 @@ scrawl.makeLine({
 
 
 // #### Particle physics animation scene
-
 // Create a repeller force, associated with a Wheel entity
 const bigball = scrawl.makeWheel({
 
-    name: 'big-ball',
+    name: name('big-ball'),
     radius: 80,
     handle: ['center', 'center'],
     start: ['center', 320],
@@ -72,10 +81,12 @@ const bigball = scrawl.makeWheel({
     bringToFrontOnDrag: false,
 });
 
+
 // The repeller force
 scrawl.makeForce({
 
-    name: 'wheel-repellor',
+    name: name('wheel-repellor'),
+
 /* eslint-disable-next-line */
     action: (particle, world, host) => {
 
@@ -103,7 +114,7 @@ scrawl.makeForce({
 // Create a World object which we can then assign to the Net entity
 const myWorld = scrawl.makeWorld({
 
-    name: 'demo-world',
+    name: name('my-world'),
     tickMultiplier: 2,
 
 });
@@ -112,10 +123,10 @@ const myWorld = scrawl.makeWorld({
 // Create the Net entity
 const myNet = scrawl.makeNet({
 
-    name: 'test-net',
+    name: name('test-net'),
     world: myWorld,
 
-    pivot: 'topline',
+    pivot: name('topline'),
     lockTo: 'pivot',
 
     generate: 'weak-net',
@@ -125,7 +136,7 @@ const myNet = scrawl.makeNet({
         // We want to make all of the top row Particles visually different, and static
         const regex = RegExp('-0-[0-9]+$');
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.particleStore.forEach(p => {
 
             if (regex.test(p.name)) {
@@ -136,7 +147,7 @@ const myNet = scrawl.makeNet({
                     forces: [],
                 });
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.springs.forEach(s => {
 
                     if (s && s.particleFrom && s.particleFrom.name === p.name) {
@@ -159,7 +170,7 @@ const myNet = scrawl.makeNet({
     showSprings: true,
     showSpringsColor: 'azure',
 
-    forces: ['gravity', 'wheel-repellor'],
+    forces: ['gravity', name('wheel-repellor')],
 
     mass: 3,
     springConstant: 100,
@@ -168,7 +179,7 @@ const myNet = scrawl.makeNet({
 
     artefact: scrawl.makeWheel({
 
-        name: 'particle-wheel',
+        name: name('particle-wheel'),
         radius: 7,
 
         handle: ['center', 'center'],
@@ -209,7 +220,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -217,17 +228,16 @@ scrawl.makeRender({
 
 // #### User interaction
 // Make both the Net entity's Particles, and the big ball, draggable
-// + KNOWN BUG - the entitys/particles are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
-    name: 'my-draggable-group',
+    name: name('my-draggable-group'),
 
-}).addArtefacts('test-net', 'big-ball');
+}).addArtefacts(name('test-net'), name('big-ball'));
 
 scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: 'my-draggable-group',
+    collisionGroup: name('my-draggable-group'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
@@ -235,18 +245,22 @@ scrawl.makeDragZone({
 // When we set a filter on a Net entity, all the entity's visual output will be filtered
 const filterChoice = function (e) {
 
-    e.preventDefault();
-    e.returnValue = false;
+    if (e && e.target) {
 
-    const val = e.target.value;
+        e.preventDefault();
+        e.returnValue = false;
 
-    myNet.clearFilters();
-    if (val) myNet.addFilters(val);
+        const val = e.target.value;
+
+        myNet.clearFilters();
+        if (val) myNet.addFilters(name(val));
+    }
 };
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
+
 // Set DOM form initial input values
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#filter').value = '';
 
 

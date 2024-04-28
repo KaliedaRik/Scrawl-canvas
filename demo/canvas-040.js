@@ -4,19 +4,26 @@
 // [Run code](../../demo/canvas-040.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Magic number
 const balancePoint = 2500;
 
 
 // Create a Shape entity to act as a path for our strokeStyle outline
 const arrow = scrawl.makeShape({
 
-    name: 'my-arrow',
+    name: name('my-arrow'),
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
@@ -47,7 +54,7 @@ const arrow = scrawl.makeShape({
 
 const japan = arrow.clone({
 
-    name: 'japan',
+    name: name('japan'),
     start: ['70%', '50%'],
 
     lineWidth: 1,
@@ -376,21 +383,20 @@ const japan = arrow.clone({
 // + We also want to animate the progress value using a Tween animation; however we can only tween values which reside in a Scrawl-canvas object, with a Scrawl-canvas `set` function.
 //
 // To solve these issues, we create a World object and define the `progress` attribute there; at the same time we can define its setter function to both calculate and update the Shape entitys' `lineDashOffset` attribute and also update the web page's progress input field.
-const progressElement = document.querySelector('#progress');
 
 const myWorld = scrawl.makeWorld({
 
-    name: 'demo-world',
+    name: name('demo-world'),
 
     userAttributes: [
 
         {
-            key: 'progress',
+            key: 'progressVal',
             defaultValue: 0,
             setter: function (item) {
 
-// @ts-expect-error
-                this.progress = item;
+/** @ts-expect-error */
+                this.progressVal = item;
 
                 if (arrow.length != null) {
 
@@ -404,8 +410,7 @@ const myWorld = scrawl.makeWorld({
                         lineDashOffset: balancePoint - Math.round(japan.length * (item / 270)),
                     });
 
-// @ts-expect-error
-                    progressElement.value = item;
+                    dom.progress.value = item;
                 }
             },
         }
@@ -423,8 +428,8 @@ const checkDirty = function () {
         dirty = false;
 
         myWorld.set({
-// @ts-expect-error
-            progress: progressElement.value,
+/** @ts-expect-error */
+            progressVal: dom.progress.value,
         });
     }
 };
@@ -434,7 +439,7 @@ const checkDirty = function () {
 // + We actually tween the myWorld.progress attribute, which in turn will update the arrow and japan entitys
 const myTween = scrawl.makeTween({
 
-  name: 'line-progression',
+  name: name('line-progression'),
 
   duration: 5000,
   reverseOnCycleEnd: true,
@@ -443,7 +448,7 @@ const myTween = scrawl.makeTween({
 
   definitions: [
     {
-      attribute: 'progress',
+      attribute: 'progressVal',
       start: 0,
       end: 100,
       engine: 'easeOutIn',
@@ -453,17 +458,23 @@ const myTween = scrawl.makeTween({
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
+const dom = initializeDomInputs([
+    ['input', 'progress', '0'],
+]);
+
+
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Arrow length: ${arrow.length}\n    Line progress: ${progressElement.value}`;
+    return `
+    Arrow length: ${arrow.length}
+    Line progress: ${dom.progress.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     commence: checkDirty,
     afterShow: report,
@@ -483,6 +494,7 @@ const updateScale = function (e) {
     dirty = true;
 };
 scrawl.addNativeListener(['input', 'change'], updateScale, '#scale');
+
 
 const updateProgress = function (e) {
 
@@ -518,12 +530,12 @@ const actionTween = function (e) {
     if (myTween.isRunning() && val === 'halt') {
 
         myTween.halt();
-        progressElement.removeAttribute('disabled');
+        dom.progress.removeAttribute('disabled');
     }
     else if (!myTween.isRunning() && val === 'run') {
 
         myTween.run();
-        progressElement.setAttribute('disabled', '');
+        dom.progress.setAttribute('disabled', '');
     }
 };
 scrawl.addNativeListener(['input', 'change'], actionTween, '#tween');

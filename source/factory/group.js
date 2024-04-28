@@ -1,5 +1,5 @@
 // # Group factory
-// Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Phrase, Picture, Shape, Stack, Wheel) for common functions.
+// Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Label, Picture, Shape, Stack, Wheel, etc) for common functions.
 //
 // Groups connect artefacts with controller objects - Stack, Cell - through which the Display cycle can cascade. Each controller object can have more than one Group associated with it. Only Groups whose __visibility__ flag has been set to true will propagate the Display cycle cascade to their member artefacts. The order in which each controller object invokes its Group objects is determined by each Group object's __order__ value.
 //
@@ -13,33 +13,23 @@
 // NOTE: __Groups are NOT used to position a set of artefacts in the display__ - they have no positioning functionality, which is instead handled by the artefact objects themselves. To position and move a collection of artefacts around the display, choose one of them to act as a a reference, and then __pivot__ or __mimic__ other artefacts to that reference. When you position or animate the reference artefact, all the other artefacts will position/move with it. See Demo [Canvas-002](../../demo/canvas-002.html) for an example.
 
 
-// #### Demos:
-// + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier Shapes - control lock alternatives
-// + [Canvas-020](../../demo/canvas-020.html) - Testing createImageFromXXX functionality
-// + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
-// + [DOM-008](../../demo/dom-008.html) - 3d animated cube
-// + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
-
-
 // #### Imports
 import { artefact, cell, constructors, entity, group } from '../core/library.js';
+import { getPixelRatio } from "../core/user-interaction.js";
 
-import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../helper/utilities.js';
 
-import { scrawlCanvasHold } from '../core/document.js';
+import { filterEngine } from '../helper/filter-engine.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { filterEngine } from './filter-engine.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
-
-import { importDomImage } from './image-asset.js';
-
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../core/shared-vars.js';
+import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
 
 
 // #### Group constructor
@@ -108,7 +98,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactCalculateBuckets', 'artefactStampBuckets', 'batchResort']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEntityHover', 'onEntityNoHover']);
 
-
 // #### Clone management
 P.postCloneAction = function(clone, items) {
 
@@ -116,11 +105,17 @@ P.postCloneAction = function(clone, items) {
 
     if (items.host) {
 
-        host = artefact[items.host];
+        if (items.host.substring) host = artefact[items.host];
+        else if (items.host.type && ACCEPTED_OWNERS.includes(items.host.type)) host = items.host;
     }
     else {
 
-        host = (this.currentHost) ? this.currentHost : (this.host) ? artefact[this.host] : false;
+        if (this.currentHost) host = this.currentHost;
+        else if (this.host) {
+
+            if (this.host.substring) host = artefact[this.host];
+            else if (this.host.type && ACCEPTED_OWNERS.includes(this.host.type)) host = this.host;
+        }
     }
 
     if (host) {
@@ -231,7 +226,12 @@ S.noFilters = function (item) {
     this.dirtyFilterIdentifier = true;
 };
 
+
 // #### Prototype functions
+P.getArtefactNames = function () {
+
+    return [...this.artefacts];
+};
 
 // `getHost` - internal helper function
 P.getHost = function (item) {
@@ -281,22 +281,12 @@ P.stamp = function () {
             // Check if artefacts need to be sorterd and, if yes, sort them by their order attribute
             this.sortArtefacts();
 
-            // Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool
-            const filterCell = (stashOutput || (!noFilters && filters && filters.length)) ?
-                requestCell() :
-                false;
+            // Get a pool cell for the filter/stash functionality, if required
+            let filterCell = null;
 
-            // Setup the pool Cell, if required
-            if (filterCell && filterCell.element) {
+            if (stashOutput || (!noFilters && filters && filters.length)) {
 
-                const dims = currentHost.currentDimensions,
-                    fEl = filterCell.element;
-
-                if (dims && fEl) {
-
-                    fEl.width = dims[0];
-                    fEl.height = dims[1];
-                }
+                filterCell = requestCell(currentHost.element.width, currentHost.element.height);
             }
 
             // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
@@ -392,9 +382,9 @@ P.prepareStamp = function (myCell) {
 
     this.artefactCalculateBuckets.forEach(art => {
 
-        if (art.lib == ENTITY) {
+        if (art.lib === ENTITY) {
 
-            if (!art.currentHost || art.currentHost.name != host.name) {
+            if (!art.currentHost || art.currentHost.name !== host.name) {
 
                 art.currentHost = host;
                 if (!myCell) art.dirtyHost = true;
@@ -424,7 +414,7 @@ P.stampAction = function (myCell) {
         if (!noFilters && filters && filters.length) {
 
             const img = this.applyFilters(myCell);
-            this.stashAction(img);
+            if (stashOutput) this.stashAction(img);
         }
         else if (stashOutput) {
 
@@ -447,6 +437,7 @@ P.stampAction = function (myCell) {
 
                 const tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
 
+
                 this.stashAction(tempImg);
             }
         }
@@ -457,6 +448,8 @@ P.stampAction = function (myCell) {
 P.applyFilters = function (myCell) {
 
     const currentHost = this.currentHost;
+    const dpr = getPixelRatio();
+
 
     if (!currentHost || !myCell) return false;
 
@@ -497,11 +490,12 @@ P.applyFilters = function (myCell) {
 
         filterCellEngine.globalCompositeOperation = SOURCE_OVER;
         filterCellEngine.globalAlpha = 1;
-        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.setTransform(dpr, 0, 0, dpr, 0, 0);
         filterCellEngine.putImageData(img, 0, 0);
     }
 
     currentEngine.save();
+
     currentEngine.setTransform(1, 0, 0, 1, 0, 0);
     currentEngine.drawImage(filterCellElement, 0, 0);
     currentEngine.restore();
@@ -510,7 +504,7 @@ P.applyFilters = function (myCell) {
 };
 
 
-// `stashAction` - internal function which creates an ImageAsset object (and, as determined by the setting of the Group's `stashOutputAsAsset` flag, an &lt;img> element which gets attached to the DOM document in the `scrawlCanvasHold` hidden &lt;div> element) from the Group's entity's output.
+// `stashAction` - internal function which creates an ImageAsset object (and, as determined by the setting of the Group's `stashOutputAsAsset` flag, an &lt;img> element which gets attached to the host &lt;canvas> element's `canvasHold` hidden &lt;div> element) from the Group's entity's output.
 //
 // NOTE: the `stashOutput` and `stashOutputAsAsset` flags are not Group object attributes. They are set on the group as a result of invoking the `scrawl.createImageFromGroup` function, and will be set to false as soon as the `Group.stashAction` function runs (in other words, stashing a Group's output is a one-off operation).
 P.stashAction = function (img) {
@@ -542,17 +536,26 @@ P.stashAction = function (img) {
 
             if (!this.stashedImage) {
 
-                const newimg = this.stashedImage = document.createElement('img');
+                const host = this.currentHost;
+                const control = (host) ? host.getController() : null;
 
-                newimg.id = stashId;
+                if (control) {
 
-                newimg.onload = function () {
+                    const that = this;
 
-                    scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${stashId}`);
-                };
+                    const newimg = document.createElement(IMG);
+                    newimg.id = stashId;
+                    newimg.alt = `A cached image of the ${this.name} Group of entitys`;
 
-                newimg.src = myElement.toDataURL();
+                    newimg.onload = function () {
+
+                        control.canvasHold.appendChild(newimg);
+                        that.stashedImage = newimg;
+                        importDomImage(`#${stashId}`);
+                    };
+
+                    newimg.src = myElement.toDataURL();
+                }
             }
             else this.stashedImage.src = myElement.toDataURL();
         }
@@ -790,6 +793,20 @@ P.clearFiltersFromEntitys = function () {
     return this;
 };
 
+// `recalculateFonts` - gets Label and EnhancedLabel entitys in the Group to recalculate their font/text dimensions.
+P.recalculateFonts = function () {
+
+    let ent;
+
+    this.artefacts.forEach(name => {
+
+        ent = entity[name];
+
+        if (ent && ent.recalculateFont) ent.recalculateFont();
+    });
+    return this;
+};
+
 // #### Collision functionality
 // The `getArtefactAt` function checks to see if any of the Group object's artefacts are located at the supplied coordinates in the argument object.
 //
@@ -807,8 +824,7 @@ P.getArtefactAt = function (items) {
 
     this.sortArtefacts();
 
-    const myCell = requestCell(),
-        artBuckets = this.artefactStampBuckets;
+    const artBuckets = this.artefactStampBuckets;
 
     let art, result;
 
@@ -818,16 +834,11 @@ P.getArtefactAt = function (items) {
 
         if (art) {
 
-            result = art.checkHit(items, myCell);
+            result = art.checkHit(items);
 
-            if (result) {
-
-                releaseCell(myCell);
-                return result;
-            }
+            if (result) return result;
         }
     }
-    releaseCell(myCell);
     return false;
 };
 
@@ -838,8 +849,7 @@ P.getAllArtefactsAt = function (items) {
 
     this.sortArtefacts();
 
-    const myCell = requestCell(),
-        artBuckets = this.artefactStampBuckets,
+    const artBuckets = this.artefactStampBuckets,
         resultNames = requestArray(),
         results = [];
 
@@ -851,7 +861,7 @@ P.getAllArtefactsAt = function (items) {
 
         if (art) {
 
-            result = art.checkHit(items, myCell);
+            result = art.checkHit(items);
 
             if (result && result.artefact) {
 
@@ -865,7 +875,6 @@ P.getAllArtefactsAt = function (items) {
             }
         }
     }
-    releaseCell(myCell);
     releaseArray(resultNames);
 
     if (this.checkForEntityHover) {
@@ -873,7 +882,7 @@ P.getAllArtefactsAt = function (items) {
         const foundArtefacts = (results.length) ? true : false,
             isHovering = this.isHovering;
 
-        if (isHovering != foundArtefacts) {
+        if (isHovering !== foundArtefacts) {
 
             this.isHovering = foundArtefacts;
 

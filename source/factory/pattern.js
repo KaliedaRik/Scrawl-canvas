@@ -7,25 +7,20 @@
 // + Scrawl-canvas does not support the Canvas API `CanvasPattern.setTransform()` method - it appears to be based on the SVGMatrix interface, which was deprecated in the SVG2 standard.
 
 
-// #### Demos:
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Canvas-035](../../demo/canvas-035.html) - Pattern style functionality
-
-
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { doCreate, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
+import { doCreate, pushUnique, isa_obj, Ωempty } from '../helper/utilities.js';
 
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from '../asset-management/video-asset.js';
 
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './image-asset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from '../asset-management/image-asset.js';
 
 import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../core/shared-vars.js';
+import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Pattern constructor
@@ -96,8 +91,8 @@ P.kill = function () {
             fill = state.fillStyle;
             stroke = state.strokeStyle;
 
-            if (isa_obj(fill) && fill.name == name) state.fillStyle = defs.fillStyle;
-            if (isa_obj(stroke) && stroke.name == name) state.strokeStyle = defs.strokeStyle;
+            if (isa_obj(fill) && fill.name === name) state.fillStyle = defs.fillStyle;
+            if (isa_obj(stroke) && stroke.name === name) state.strokeStyle = defs.strokeStyle;
         }
     });
 
@@ -123,7 +118,7 @@ P.get = function (item) {
 
     const source = this.source;
 
-    if ((item.indexOf($VIDEO) == 0 || item.indexOf($IMAGE) == 0) && source) {
+    if ((item.indexOf($VIDEO) === 0 || item.indexOf($IMAGE) === 0) && source) {
 
         if (gettableVideoAssetAtributes.includes(item)) return source[item.substring(6)];
         else if (gettableImageAssetAtributes.includes(item)) return source[item.substring(6)];
@@ -139,10 +134,10 @@ P.get = function (item) {
 
             const def = this.defs[item];
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 const val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             return undefined;
         }
@@ -168,18 +163,18 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if ((key.indexOf($VIDEO) == 0 || key.indexOf($IMAGE) == 0) && source) {
+            if ((key.indexOf($VIDEO) === 0 || key.indexOf($IMAGE) === 0) && source) {
 
                 if (settableVideoAssetAtributes.includes(key)) source[key.substring(6)] = value
                 else if (settableImageAssetAtributes.includes(key)) source[key.substring(6)] = value
             }
 
-            else if (key && key != NAME && value != null) {
+            else if (key && key !== NAME && value != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = value;
+                else if (typeof defs[key] !== UNDEF) this[key] = value;
             }
         }
         this.dirtyFilterIdentifier = true;

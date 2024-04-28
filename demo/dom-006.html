@@ -15,11 +15,12 @@
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','https://www.google-analytics.com/analytics_debug.js','ga');
     ga('create', 'UA-000000-0', 'auto');
-    if (location.hostname == 'localhost') ga('set', 'sendHitTask', null);
+    if (location.hostname === 'localhost') ga('set', 'sendHitTask', null);
     ga('send', 'pageview');
   </script>
   <!-- End Google Analytics -->
 
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -34,6 +35,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="dom-005.html">&larr; Previous</a>
+    <a href="dom-007.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 006</h1>
   <h2>Tween actions on a DOM element; tracking tween and ticker activity</h2>
   <h3>Click on the animation to make the boat reverse direction</h3>
@@ -42,7 +47,7 @@
     <div id="myelement"></div>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

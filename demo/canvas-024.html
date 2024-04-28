@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 024</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -15,6 +16,7 @@
     }
     canvas {
       margin: 0 auto;
+      box-shadow: 0px 0px 0px 1px black;
     }
     #my-image-store {
       display: none;
@@ -23,6 +25,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-023.html">&larr; Previous</a>
+    <a href="canvas-025.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 024</h1>
   <h2>Loom entity functionality</h2>
   <h3>To change image, drag-and-drop an image file over the canvas then update one of the controls</h3>
@@ -35,7 +41,7 @@
     data-base-background-color="aliceblue"
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="controls">
 

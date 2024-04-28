@@ -6,68 +6,68 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Snippets 005</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
-</head>
-
-<body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 005</h1>
-  <h2>Create a responsive, interactive and accessible before/after slider infographic</h2>
-
-  <!--
-    We start creating the infographic using HTML and CSS. This code will display for users who prefer to visit websites using a browser with Javascript disabled.
-  -->
   <style>
-  
-    /* Boilerplate stuff */
+    
     body {
       font: 16px Arial, sans-serif;
       line-height: 1.5;
-      margin: 0;
+      margin: 1rem;
     }
+
     section {
-      max-width: 60em;
+      max-width: 60rem;
       margin: 0 auto;
-      padding: 0 2em;
-    }
 
-    /* SLIDER INFOGRAPHIC */
-
-    /* Define the values of the various colors our pin labels and link texts can use */
-    :root {
-      --sc-default: white;
-      --sc-shadow: black;
-      --sc-link: yellow;
-      --sc-linkunderline: yellow;
-      --sc-red: #ff8888;
-      --sc-blue: #8888ff;
-      --sc-green: #88ff88;
-      --sc-black: #404040;
-      --sc-white: #f0f0f0;
-      --sc-gray: #b0b0b0;
+      & img {
+        width: 100%;
+      }
     }
 
     .slider-infographic {
-      margin: 0;
-      border: 0;
-      padding: 0;
 
-      overflow: hidden;
-      width: 100%;
-      visibility: hidden;
+      padding: 1rem 0;
+      margin-bottom: 1rem;
+
+      & figure {
+        margin: 1rem 0;
+      }
+
+      & figcaption {
+        font-size: 120%;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      h1 {
+        font-size: 140%;
+        font-weight: bold;
+        margin: 0;
+        border: 0;
+        text-align: left;
+      }
+
+      nav {
+        margin: 1rem;
+      }
     }
 
-    /* We need to give the infographic container a height value; the height value needs to be responsive, updating as the width value changes - best to do this on individually identified infographics as they may have differing height requirements? */
-    #beirut-infographic {
-      height: calc(100vw / 2);
+    .interactive-slider-container {
+      aspect-ratio: 1000 / 631;
     }
 
-    /* The Javascript we run will add a <canvas> element to our infographic container - we want that canvas to always have the same dimensions as its container element */
-    .slider-infographic canvas {
-      width: 100%;
-      height: 100%;
-    }
   </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="snippets-004.html">&larr; Previous</a>
+    <a href="snippets-006.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 005</h1>
+  <h2>Create a responsive, interactive and accessible before/after slider infographic</h2>
 
   <section>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, <a href="https://example.com">example.com</a> sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis eget nunc lobortis mattis aliquam. Dapibus ultrices in iaculis nunc sed augue. Tempor orci dapibus ultrices in iaculis nunc sed augue lacus. Lacus laoreet non curabitur gravida arcu ac tortor. Cursus in hac habitasse platea dictumst quisque sagittis. Arcu bibendum at varius vel pharetra vel turpis. Consectetur a erat nam at lectus urna duis convallis. Orci phasellus egestas tellus rutrum tellus pellentesque eu. Viverra mauris in aliquam sem fringilla ut. Dui faucibus in ornare quam viverra orci. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio. Orci eu lobortis elementum nibh tellus molestie nunc non. Leo integer malesuada nunc vel risus commodo viverra maecenas accumsan. Urna nec tincidunt praesent semper feugiat nibh. Cras semper auctor neque vitae tempus quam pellentesque.</p>
@@ -76,230 +76,120 @@
   </section>
 
   <section>
-    <h4>Keyboard infographic shortcuts</h4>
+    <h3>Keyboard infographic shortcuts</h3>
+    <p>Use <b>tab:</b>  and <b>shift + tab:</b> to navigate into and away from the canvas element, to focus/blur it. When the canvas is focussed, we can:</p>
     <ul>
-      <li><b>tab:</b> move forwards through links</li>
-      <li><b>shift + tab:</b> move back through links</li>
-      <li><b>enter:</b> when on link, navigate to that linked page</li>
-      <li><b>right arrow:</b> (when canvas is focussed) move infographic bar rightwards</li>
-      <li><b>shift + right arrow:</b> (when canvas is focussed) show all of the before image</li>
-      <li><b>left arrow:</b> (when canvas is focussed) move infographic bar leftwards</li>
-      <li><b>shift + left arrow:</b> (when canvas is focussed) show all of the after image</li>
-      <li><b>space:</b> (when canvas is focussed) toggle pin labels on/off</li>
+      <li><b>right arrow:</b> move infographic bar rightwards</li>
+      <li><b>shift + right arrow:</b> show all of the before image</li>
+      <li><b>left arrow:</b> move infographic bar leftwards</li>
+      <li><b>shift + left arrow:</b> show all of the after image</li>
     </ul>
   </section>
 
-  <!--
-    We start creating the infographic using HTML and CSS. This code will display for users who prefer to visit websites using a browser with Javascript disabled.
+  <section class="slider-infographic">
 
-    The outer container includes an id value, alongside data-label and data-description attributes which describe what's happening in the infographic
-  -->
-  <div id="beirut-infographic"
+    <h1>Beirut explosion: satellite images before and after the blast</h1>
 
-    class="slider-infographic"
+    <p>Satellite images show the scale of the damage caused by the 2020 explosions in the Lebanese capital, with buildings miles from the port lying in ruin. Points of interest include:</p>
 
-    data-label="Beirut explosion: satellite images before and after the blast"
+    <ol>
+      <li>A very large shed on the dockside surrounded by lorries and containers (center-left - before).</li>
+      <li>A similar shed, completely destroyed (center-right - after).</li>
+      <li>A boat (bottom centre) in the harbour, afloat (before) and rolled on its side (after).</li>
+      <li>Some large transport containers (top-right), missing in the after image.</li>
+      <li>A roundabout connecting the sheds to the transport network.</li>
+    </ol>
 
-    data-description="Satellite images show the scale of the damage caused by the 2020 explosions in the Lebanese capital, with buildings miles from the port lying in ruin. Points of interest include: 1, center-left (before) a very large shed on the dockside surrounded by lorries and containers; 2, center-right (after) a similar shed, completely destroyed; 3, bottom-center (both images) a boat in the harbour afloat (before) and rolled on its side (after); 4, top-right (before) some large transport containers, missing in the after image; 5, centre (both images) a roundabout connecting the sheds to the transport network. Before image taken on 31 July; after image taken 5 August. Photograph: Maxar Tech/AFP via Getty Images.">
+    <div id="beirut-explosion-infographic" class="interactive-slider-container">
 
-    <h3>Beirut explosion: satellite images before and after the blast</h3>
-    <p>The port of Beirut (Photographs: Maxar Tech/AFP via Getty Images)</p>
+      <figure data-frame="left">
+        <figcaption>Beirut harbour before the explosion</figcaption>
 
-    <!--
-      The container contains two <div> elements, one for each panel of the infographic. Each element includes an <img> element and however many <p> elements are required to add hotspot information points (which trigger when hovered over or tapped) to that panel. 
+        <img 
+          id="beirut-infographic-before-image"
+          alt="" 
+          src="https://i.guim.co.uk/img/media/f2af43aa8e1510fa3ebd7bd8652de528c3bce144/18_21_1984_1252/master/1984.jpg?width=1000&quality=85&s=92e4b44515c489fa06beaf5fe9559477" />
 
-      The <div> elements need an id value, alongside a data-frame attribute set to either "left" or "right", so we can position the panels correctly. Also have a data-date attribute, though current infographic functionality doesn't do anything with it. 
-    -->
-    <div 
-      id="beirut-infographic-before"
-      data-date="31 July"
-      data-frame="left">
-
-      <!--
-        Give each <img> element an id value alongside some alt text and a src url
-        For now I've put the photo date in a title attribute
-      -->
-      <img 
-        id="beirut-infographic-before-image"
-        alt="Beirut harbour before the explosion" 
-        title="Photograph from: 31 July"
-        src="https://i.guim.co.uk/img/media/f2af43aa8e1510fa3ebd7bd8652de528c3bce144/18_21_1984_1252/master/1984.jpg?width=1000&quality=85&s=92e4b44515c489fa06beaf5fe9559477" />
-      <!--
-        Each <p> element needs an id value together with some data- attributes
-
-          - data-type="pin" - for proof of concept we're only handling spot pins, not area pins
-
-          - data-position - a string of two percentage values, separated by a comma - these are the x and y coordinates of where the pin will appear over the image
-
-          - data-type="pin" - required (no default value)
-            - for proof of concept we're only handling spot pins, not area pins
-
-          - data-position - required (no default value)
-            - a string of two percentage values, separated by a comma 
-            - these are the 'x%, y%' coords where the pin will appear on image
-
-          - data-fill - pin fill color - default is "red"
-          - data-stroke - pin stroke color - default is "yellow"
-          - data-labelwidth - percentage label width value - default is "20%"
-          - data-labelbackground - defaults to "darkslategray" - can be made translucent using rgba() value
-
-          - data-labelposition - default is "below"
-            - where we want the text to appear relative to the pin's location 
-            - acceptable values: "left", "right", "above", "below"
-
-          - data-shared - default is not included
-            - if included, we create the pin on both panels
-
-        The text in the <p> element is the text that will be used for the pin's 
-        label. Note that the snippet has been set up to interpret and display 
-        the following inline markup: 
-          - <b></b>, <strong></strong>, <i></i>, <em></em>
-          - <span class="sc-red"></span>, etc
-
-          - If initial word markup doesn't show correctly in the label, place a non-breaking space at the start of the text
-      -->
-      <p 
-        id="beirut-infographic-roundabout" 
-        data-type="pin" 
-        data-position="59%, 21%" 
-        data-fill="blue",
-        data-stroke="yellow",
-        data-labelwidth="30%"
-        data-labelposition="left"
-        data-labelbackground="rgb(0 127 0 / 0.2)"
-        data-shared>This roundabout <em>remained</em> navigable.</p>
-
-      <p 
-        id="beirut-infographic-working-shed" 
-        data-type="pin" 
-        data-position="30%, 45%" 
-        data-fill="red",
-        data-stroke="yellow",
-        data-labelwidth="25%"
-        data-labelposition="left">Before the <span class="sc-red">explosion</span> the <span class="sc-green">sheds</span> were <i>very</i> busy.</p>
-
-      <p 
-        id="beirut-infographic-containers" 
-        data-type="pin" 
-        data-position="80%, 6%" 
-        data-labelwidth="25%"
-        data-labelposition="below">These <strong><span class="sc-red">containers</span> were moved</strong> before the <span class="sc-red">explosion</span> happened.</p>
-    </div>
-
-    <div 
-      id="beirut-infographic-after"
-      data-date="5 August"
-      data-frame="right">
+        <p>Photograph taken: <time datetime="2020-07-31">31 July</time></p>
+      </figure>
       
-       <img 
-        id="beirut-infographic-after-image"
-        alt="Beirut harbour after the explosion" 
-        title="Photograph from: 5 August"
-        src="https://i.guim.co.uk/img/media/f2af43aa8e1510fa3ebd7bd8652de528c3bce144/29_1315_1953_1232/master/1953.jpg?width=1000&quality=85&s=698240542c692c8e07b81e8cb5f086d2" />
+      <figure data-frame="right">
+        <figcaption>Beirut harbour after the explosion</figcaption>
 
-      <p 
-        id="beirut-infographic-destroyed-shed" 
-        data-type="pin" 
-        data-position="72%, 62%" 
-        data-fill="orange",
-        data-stroke="white",
-        data-labelwidth="20%"
-        data-labelposition="right">This <span class="sc-green">shed</span> has been <b>reduced</b> to its foundations.</p>
+        <img 
+          id="beirut-infographic-after-image"
+          alt="" 
+          src="https://i.guim.co.uk/img/media/f2af43aa8e1510fa3ebd7bd8652de528c3bce144/29_1315_1953_1232/master/1953.jpg?width=1000&quality=85&s=698240542c692c8e07b81e8cb5f086d2" />
 
-      <p 
-        id="beirut-infographic-ship" 
-        data-type="pin" 
-        data-position="40%, 56%" 
-        data-labelwidth="25%"
-        data-labelposition="above">&nbsp;<em><span class="sc-gray">This ship</span> suffered <span class="sc-blue">catastrophic</span> damage.</em></p>
+        <p>Photograph taken: <time datetime="2020-08-05">5 August</time></p>
+      </figure>
     </div>
 
-    <!--
-      If we also want to include any clickable links in the infographic, we can include them in a <nav> element. The following data- attributes apply
+    <p>Photographs from: <cite>(Maxar Tech/AFP via Getty Images)</cite></p>
 
-        - data-position - required (no default value)
-          - a string of two percentage values, separated by a comma 
-          - these are the 'x%, y%' coords where the link will appear over image
+    <p>Original before|after image slider effect shown on Guardian Media article <a href="https://www.theguardian.com/world/2020/aug/06/beirut-explosion-before-and-after-satellite-images">Beirut explosion: satellite images before and after the blast</a>.</p>
 
-        - data-justify - one of: "left", "right", "center" (default)
-        - data-width - defaults to "20%"
-        - data-background - defaults to "rgb(0 0 0 / 0.2)" 
-    -->
-    <nav>
-
-      <a 
-        id="beirut-infographic-guardian-article" 
-        href="https://www.theguardian.com/world/2020/aug/06/beirut-explosion-before-and-after-satellite-images" 
-        data-position="25%, 96%" 
-        data-width="25%"
-        data-background="darkblue"
-        data-justify="center">Guardian article</a>
-
-      <a 
-        id="beirut-infographic-wikipedia-port-blast-article" 
-        href="https://en.wikipedia.org/wiki/2020_Beirut_explosion" 
-        data-position="75%, 96%" 
-        data-width="25%"
-        data-justify="center">Wikipedia entry</a>
-    </nav>
-
-  </div>
-
-  <!--
-    The noscript code runs in situations where Javascript is not available. Use this space to style the content to make it more readable and understandable.
-  -->
-  <noscript>
-    <style>
-      /* We made the slider container invisible earlier, and set its height appropriately for the canvas-based slider. Now that we are not creating the Javascript slider, we need to reverse those changes */
-      .slider-infographic {
-        visibility: visible;
-        height: auto !important;
-        width: calc(100% - 4em - 2px);
-        max-width: 60em;
-        margin: 0 auto;
-        padding: 0 2em;
-        border: 1px solid black;
-        padding-bottom: 1em;
-      }
-
-      .slider-infographic img {
-        width: 100%;
-      }
-
-      .sc-red {
-        color: var(--sc-red, red);
-      }
-      .sc-green {
-        color: var(--sc-green, green);
-      }
-      .sc-blue {
-        color: var(--sc-blue, blue);
-      }
-      .sc-black {
-        color: var(--sc-black, black);
-      }
-      .sc-white {
-        color: var(--sc-white, white);
-      }
-      .sc-gray {
-        color: var(--sc-gray, gray);
-      }
-    </style>
-  </noscript>
+  </section>
 
   <section>
-    <p>Original before|after image slider effect shown on Guardian Media article <a href="https://www.theguardian.com/world/2020/aug/06/beirut-explosion-before-and-after-satellite-images">Beirut explosion: satellite images before and after the blast</a>. Photograph: Maxar Tech/AFP via Getty Images.</p>
-
     <p>Tortor at auctor urna nunc id cursus. Lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet. Aenean vel elit scelerisque mauris pellentesque. Dictum sit amet justo donec. Neque ornare aenean euismod elementum nisi quis eleifend quam. Nam aliquam sem et tortor consequat id. Egestas purus viverra accumsan in nisl. Leo in vitae turpis massa. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Ipsum faucibus vitae aliquet nec ullamcorper sit.</p>
 
     <p>Ullamcorper sit amet risus nullam eget felis eget. Phasellus egestas tellus rutrum tellus pellentesque eu. Id consectetur purus ut faucibus pulvinar elementum integer. <a href="https://example.com">example.com</a> Tempus iaculis urna id volutpat lacus laoreet. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Tempus egestas sed sed risus. Ac turpis egestas sed tempus. Ut aliquam purus sit amet luctus venenatis lectus. Bibendum est ultricies integer quis auctor. Morbi tristique senectus et netus. Facilisi etiam dignissim diam quis enim lobortis. Lectus magna fringilla urna porttitor rhoncus dolor purus non. Id donec ultrices tincidunt arcu non sodales. Libero enim sed faucibus turpis in eu mi bibendum. Laoreet suspendisse interdum consectetur libero id faucibus. Ut pharetra sit amet aliquam id diam maecenas ultricies.</p>
 
-    <p>Arcu non odio euismod lacinia. Gravida cum sociis natoque penatibus et magnis dis parturient montes. Tristique et egestas quis ipsum suspendisse ultrices gravida. Sed adipiscing diam donec adipiscing tristique risus nec feugiat. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras. Tellus in hac habitasse platea. Lorem dolor sed viverra ipsum nunc. Sed elementum tempus egestas sed sed. Nunc id cursus metus aliquam eleifend. Consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis. Amet porttitor eget dolor morbi. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam erat velit scelerisque in. Massa id neque aliquam vestibulum morbi.<a href="https://example.com">example.com</a>        </p>
+    <p>Arcu non odio euismod lacinia. Gravida cum sociis natoque penatibus et magnis dis parturient montes. Tristique et egestas quis ipsum suspendisse ultrices gravida. Sed adipiscing diam donec adipiscing tristique risus nec feugiat. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras. Tellus in hac habitasse platea. Lorem dolor sed viverra ipsum nunc. Sed elementum tempus egestas sed sed. Nunc id cursus metus aliquam eleifend. Consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis. Amet porttitor eget dolor morbi. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam erat velit scelerisque in. Massa id neque aliquam vestibulum morbi.<a href="https://example.com">example.com</a></p>
   </section>
 
-  <!-- 
-    We use Javascript to turn the infographic container's HTML/CSS code into a canvas-based infographic which will replace that code
-  -->
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Code up the HTML doc with a section that includes data and assets which can be used to build a slider infographic. The page should present all relevant information when Javascript is disabled for the page.</li>
+      <li>Apply the "before-after-slider-infographic" snippet to the infographic section. The snippet should convert the section into a responsive, interactive and keyboard accessible slider infographic.</li>
+    </ul>
+
+    <p><b>Touch test:</b> should work as expected</p>
+
+    <p>Annotated code:</p>
+    <ul>
+      <li><a href="../docs/demo/snippets-005.html">Main page code</a></li>
+      <li><a href="../docs/demo/snippets/before-after-slider-infographic.html">Snippet code</a></li>
+    </ul>
+  </div>
+
+  <h2>A note on the HTML code required by the snippet</h2>
+
+  <p>The "before-after-slider-infographic" snippet coded up for this demo requires that any element presented to it for creating a slider infographic has the following structure:</p>
+
+  <pre><code>
+&lt;!-- The container needs an id attribute, which will be used as the snippet's namespace prefix -->
+&lt;div id="beirut-explosion-infographic" class="interactive-slider-container">
+
+  &lt;!-- Two &lt;figure> elements, each with a "data-frame" attribute (set to "left" and "right") -->
+  &lt;figure data-frame="left">
+
+    &lt;!-- A &lt;figcaption> element - text will be displayed in the infographic -->
+    &lt;figcaption>Beirut harbour before the explosion&lt;/figcaption>
+
+    &lt;!-- An &lt;img> element - which can be responsive -->
+    &lt;img 
+      id="beirut-infographic-before-image"
+      alt="" 
+      src="path/to/image/file" />
+
+    &lt;!-- A &lt;time> element, whose content will be displayed on the infographic -->
+    &lt;p>Photograph taken: &lt;time datetime="2020-07-31">31 July&lt;/time>&lt;/p>
+  &lt;/figure>
+  
+  &lt;figure data-frame="right">
+    &lt;figcaption>Beirut harbour after the explosion&lt;/figcaption>
+    &lt;img 
+      id="beirut-infographic-after-image"
+      alt="" 
+      src="path/to/image/file" />
+    &lt;p>Photograph taken: &lt;time datetime="2020-08-05">5 August&lt;/time>&lt;/p>
+  &lt;/figure>
+&lt;/div>
+  </code></pre>
+
   <script src="snippets-005.js" type="module"></script>
 
 </body>

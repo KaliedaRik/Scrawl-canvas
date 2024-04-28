@@ -9,11 +9,11 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
@@ -60,60 +60,49 @@ const playPauseAction = function () {
     }
 };
 
-const playPause = scrawl.makePhrase({
+const playPause = scrawl.makeLabel({
 
     name: name('play-pause-button'),
     order: 2,
 
     text: 'PLAY',
 
-    family: 'sans-serif',
-    size: '2rem',
-
-    startX: '75%',
-    handleX: 'center',
-    startY: 'bottom',
-    handleY: 'bottom',
-
-    letterSpacing: 2,
-    underlinePosition: 0.75,
-    lineHeight: 1,
+    fontString: '2rem sans-serif',
+    letterSpacing: 3,
 
     fillStyle: 'yellow',
 
-    underlineStyle: 'yellow',
+    startX: '75%',
+    handleX: 'center',
+    startY: '98%',
+    handleY: 'bottom',
+
     underlineWidth: 4,
+    underlineOffset: 0.96,
+    underlineGap: 0,
 
     onEnter: function () {
 
         canvas.set({
-            css: {
-                cursor: 'pointer',
-            }
+            css: { cursor: 'pointer' }
         });
 
-        // '§UNDERLINE§' is a section class marker which makes subsequent letters underlined
-        // ___Note:___ - dynamic underlining is currently not triggering in Firefox browser
-// @ts-expect-error
-        this.set({
-            text: `§UNDERLINE§${this.text}`,
-        });
+/** @ts-expect-error */
+        this.set({ includeUnderline: true });
     },
 
     onLeave: function () {
 
         canvas.set({
-            css: {
-                cursor: 'auto',
-            }
+            css: { cursor: 'auto' }
         });
 
-// @ts-expect-error
-        this.set({
-            text: this.text.replace('§UNDERLINE§', ''),
-        });
+/** @ts-expect-error */
+        this.set({ includeUnderline: false });
     },
 
+    // Accesibility
+    textIsAccessible: false,
     button: {
 
         name: name('play-pause-el'),
@@ -196,14 +185,12 @@ scrawl.makePicture({
 
     filters: [name('swan-mask')],
 
-    globalAlpha: 0.01,
+    globalAlpha: 0.1,
 
     onEnter: function () {
 
-// @ts-expect-error
-        this.set({
-            globalAlpha: 0.1,
-        });
+/** @ts-expect-error */
+        this.set({ globalAlpha: 0.3 });
 
         canvas.set({
             css: {
@@ -214,21 +201,17 @@ scrawl.makePicture({
 
     onLeave: function () {
 
-// @ts-expect-error
-        this.set({
-            globalAlpha: 0.01,
-        });
+/** @ts-expect-error */
+        this.set({ globalAlpha: 0.1 });
 
         canvas.set({
-            css: {
-                cursor: 'auto',
-            }
+            css: { cursor: 'auto' }
         });
     },
 
     onUp: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -304,34 +287,26 @@ const mygoose = scrawl.makeBlock({
     onEnter: function () {
 
         canvas.set({
-            css: {
-                cursor: 'pointer',
-            }
+            css: { cursor: 'pointer' }
         });
 
-// @ts-expect-error
-        this.set({
-            method: 'draw',
-        });
+/** @ts-expect-error */
+        this.set({ method: 'draw' });
     },
 
     onLeave: function () {
 
         canvas.set({
-            css: {
-                cursor: 'auto',
-            }
+            css: { cursor: 'auto' }
         });
 
-// @ts-expect-error
-        this.set({
-            method: 'none',
-        });
+/** @ts-expect-error */
+        this.set({ method: 'none' });
     },
 
     onUp: function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -442,19 +417,17 @@ const vtTime = vtBackground.clone({
     fillStyle: 'red',
 })
 
-const vtPhrase = scrawl.makePhrase({
+const vtLabel = scrawl.makeLabel({
 
-    name: name('test-video-time-phrase'),
-
-    family: 'monospace',
-    size: '1em',
-    weight: 700,
-
-    startX: '1%',
-    startY: '4%',
-    width: '40%',
-
+    name: name('test-video-time-label'),
+    fontString: 'bold 1rem monospace',
+    start: [5, 20],
     fillStyle: 'yellow',
+
+    // Accesibility - this Label updates many times per second. As such, we need to mark the DOM element which will hold the label text (for accessibility) with the role of `timer`.
+    // + All DOM elements containing accessible label texts are given an `aria-live="polite"` attribute.
+    // + Then it will be up to the user's screen reader software to decide how to announce text changes to the user.
+    accessibleTextRole: 'timer',
 });
 
 const videoTimeBar = function () {
@@ -475,7 +448,7 @@ const videoTimeBar = function () {
                 width: `${(currentVideoTime * 100) / videoDuration}%`,
             });
 
-            vtPhrase.set({
+            vtLabel.set({
 
                 text: ` ${currentVideoTime.toFixed(2)} / ${videoDuration.toFixed(2)}`,
             });

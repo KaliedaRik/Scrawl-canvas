@@ -2,28 +2,22 @@
 // Shape entity (make, clone, method); drag and drop shape entitys
 
 // [Run code](../../demo/canvas-011.html)
-import {
-    library as L,
-    makeDragZone,
-    makeRender,
-    makeShape,
-    makeWheel,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Japan outline
-makeShape({
+scrawl.makeShape({
     name: name('japan_fill'),
 
     startX: 50,
@@ -388,12 +382,12 @@ makeShape({
 });
 
 // Change the fill and stroke styles on one of the blocks, and any block sharing that block's state
-L.artefact[name('japan_fillAndDraw')].set({
+scrawl.findArtefact(name('japan_fillAndDraw')).set({
     fillStyle: 'blue',
-    strokeStyle: 'coral',
+    strokeStyle: 'coral'
 });
 
-makeWheel({
+scrawl.makeWheel({
     name: name('pin'),
     pivot: name('japan_draw'),
     lockTo: 'pivot',
@@ -403,36 +397,74 @@ makeWheel({
     radius: 3,
 });
 
+
 // #### User interaction
+// Make an object to hold functions we'll use for UI
+const setCursorTo = {
+
+    auto: () => {
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+    },
+    pointer: () => {
+        canvas.set({
+            css: {
+                cursor: 'grab',
+            },
+        });
+    },
+    grabbing: () => {
+        canvas.set({
+            css: {
+                cursor: 'grabbing',
+            },
+        });
+    },
+};
+
 // Create the drag-and-drop zone
-const current = makeDragZone({
+const current = scrawl.makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
+    updateOnStart: setCursorTo.grabbing,
+    updateOnEnd: setCursorTo.pointer,
+});
+
+// Implement the hover check on the Canvas wrapper
+canvas.set({
+    checkForEntityHover: true,
+    onEntityHover: setCursorTo.pointer,
+    onEntityNoHover: setCursorTo.auto,
 });
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
+
     const dragging = current();
     return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}`;
 });
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
+    commence: () => canvas.checkHover(),
     afterShow: report,
 });
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);
 
 console.log('Performing tests ...');
 killArtefact(canvas, name('japan_fill'), 4000);

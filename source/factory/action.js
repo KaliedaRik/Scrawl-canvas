@@ -7,19 +7,15 @@
 // TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
 
 
-// #### Demos:
-// + [DOM-006](../../demo/dom-006.html)- Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../core/shared-vars.js';
+import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Action constructor
@@ -92,7 +88,7 @@ S.revert = function (item) {
 
     this.revert = item;
 
-    if (typeof this.revert != FUNCTION) this.revert = λnull;
+    if (typeof this.revert !== FUNCTION) this.revert = λnull;
 };
 
 // Internal attribute. Set true after the ticker moves past the instance's time value (and set false if the ticker is moving backwards)
@@ -127,12 +123,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = value;
+                else if (typeof defs[key] !== UNDEF) this[key] = value;
             }
         }
 

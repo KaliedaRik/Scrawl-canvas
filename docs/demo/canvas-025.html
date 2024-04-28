@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -890,11 +910,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Import image from DOM, and add data to it</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.myimage&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo-canvas-025&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -905,46 +926,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Import image from DOM, and add data to it</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-<span class="hljs-keyword">const</span> oval1 = {
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-};
-
-<span class="hljs-keyword">const</span> oval2 = {
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">30</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">30</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">demoBuilder</span> = (<span class="hljs-params">name</span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> c = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[name];
-
-    c.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-    });
-
-    scrawl.<span class="hljs-title function_">makeOval</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-oval1`</span>,
-        <span class="hljs-attr">group</span>: c.<span class="hljs-property">base</span>.<span class="hljs-property">name</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.myimage&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -955,15 +941,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    }).<span class="hljs-title function_">set</span>(oval1);
-
-    scrawl.<span class="hljs-title function_">makeOval</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-oval2`</span>,
-        <span class="hljs-attr">group</span>: c.<span class="hljs-property">base</span>.<span class="hljs-property">name</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -974,11 +957,43 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Build (most of) the canvas displays</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    }).<span class="hljs-title function_">set</span>(oval2);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">demoBuilder</span> = (<span class="hljs-params">canvasName</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> c = scrawl.<span class="hljs-title function_">findCanvas</span>(canvasName);
+
+    c.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;yellow&#x27;</span> });
+
+    scrawl.<span class="hljs-title function_">makeOval</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${canvasName}</span>-oval1`</span>),
+        <span class="hljs-attr">group</span>: c.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">radiusX</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+        <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
+        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">10</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+    });
+
+    scrawl.<span class="hljs-title function_">makeOval</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${canvasName}</span>-oval2`</span>),
+        <span class="hljs-attr">group</span>: c.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">radiusX</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">radiusY</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
+        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+    });
 };
 
 <span class="hljs-title function_">demoBuilder</span>(<span class="hljs-string">&#x27;nr-canvas-1&#x27;</span>);
@@ -987,27 +1002,7 @@
 <span class="hljs-title function_">demoBuilder</span>(<span class="hljs-string">&#x27;nr-canvas-4&#x27;</span>);
 <span class="hljs-title function_">demoBuilder</span>(<span class="hljs-string">&#x27;nr-canvas-5&#x27;</span>);
 <span class="hljs-title function_">demoBuilder</span>(<span class="hljs-string">&#x27;canvas-1&#x27;</span>);
-<span class="hljs-title function_">demoBuilder</span>(<span class="hljs-string">&#x27;canvas-2&#x27;</span>);
-
-<span class="hljs-keyword">const</span> canvas3 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;canvas-3&#x27;</span>];
-
-scrawl.<span class="hljs-title function_">makePicture</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas3.name}</span>-image`</span>,
-    <span class="hljs-attr">group</span>: canvas3.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&quot;river&quot;</span>,
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;100%&quot;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&quot;100%&quot;</span>,
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&quot;100%&quot;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&quot;100%&quot;</span>
-});
-
-scrawl.<span class="hljs-title function_">makeAnimation</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;update-all-canvases&#x27;</span>,
-    <span class="hljs-attr">fn</span>: <span class="hljs-function">() =&gt;</span> {
-        scrawl.<span class="hljs-title function_">render</span>();
-        <span class="hljs-title function_">report</span>();
-    },
-});</pre></div></div>
+<span class="hljs-title function_">demoBuilder</span>(<span class="hljs-string">&#x27;canvas-2&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1017,6 +1012,52 @@ scrawl.<span class="hljs-title function_">makeAnimation</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Build the canvas with the responsive image</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas3 = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-3&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">makePicture</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${canvas3.name}</span>-image`</span>),
+    <span class="hljs-attr">group</span>: canvas3.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&quot;river&quot;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;100%&quot;</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">&quot;100%&quot;</span>,
+    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&quot;100%&quot;</span>,
+    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&quot;100%&quot;</span>
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Display cycle loop</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeAnimation</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;update-all-canvases&#x27;</span>),
+    <span class="hljs-attr">fn</span>: <span class="hljs-function">() =&gt;</span> {
+        scrawl.<span class="hljs-title function_">render</span>();
+        <span class="hljs-title function_">report</span>();
+    },
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

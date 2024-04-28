@@ -15,31 +15,26 @@
 // + TODO: clone functionality not yet tested. A possible use case is to clome a Loom so they share the same Shape struts, but have different Picture sources and `from/toPathStart/End` cursor values - multiple images tracked and animated.
 
 
-// #### Demos:
-// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
-// + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-
-
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
-import { makeState } from './state.js';
+import { makeState } from '../untracked-factory/state.js';
 
-import { releaseCell, requestCell } from './cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Loom constructor
@@ -146,7 +141,7 @@ const defaultAttributes = {
 
 // The Loom entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
-// It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__, __collides__.
+// It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__.
     visibility: true,
     calculateOrder: 0,
     stampOrder: 0,
@@ -302,7 +297,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = this[item];
-            return (typeof val != UNDEF) ? val : def;
+            return (typeof val !== UNDEF) ? val : def;
         }
 
         def = state.defs[item];
@@ -310,7 +305,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = state[item];
-            return (typeof val != UNDEF) ? val : def;
+            return (typeof val !== UNDEF) ? val : def;
         }
         return null;
     }
@@ -338,21 +333,21 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEF) this[key] = value;
+                    else if (typeof defs[key] !== UNDEF) this[key] = value;
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
+                    else if (typeof stateDefs[key] !== UNDEF) state[key] = value;
                 }
             }
         }
@@ -382,21 +377,21 @@ P.setDelta = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
+                    else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], value);
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], value);
+                    else if (typeof stateDefs[key] !== UNDEF) state[key] = addStrings(state[key], value);
                 }
             }
         }
@@ -428,7 +423,7 @@ S.group = function (item) {
 
     if (item) {
 
-        if (this.group && this.group.type == T_GROUP) this.group.removeArtefacts(this.name);
+        if (this.group && this.group.type === T_GROUP) this.group.removeArtefacts(this.name);
 
         if (item.substring) {
 
@@ -440,7 +435,7 @@ S.group = function (item) {
         else this.group = item;
     }
 
-    if (this.group && this.group.type == T_GROUP) this.group.addArtefacts(this.name);
+    if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
 };
 
 // __getHere__ - returns current core position.
@@ -467,7 +462,7 @@ S.fromPath = function (item) {
 
         if (newPath && newPath.name && newPath.useAsPath) {
 
-            if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
+            if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
 
             pushUnique(newPath.pathed, name);
 
@@ -489,7 +484,7 @@ S.toPath = function (item) {
 
         if (newPath && newPath.name && newPath.useAsPath) {
 
-            if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
+            if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
 
             pushUnique(newPath.pathed, name);
 
@@ -505,11 +500,11 @@ S.source = function (item) {
 
     item = (item.substring) ? artefact[item] : item;
 
-    if (item && item.type == T_PICTURE) {
+    if (item && item.type === T_PICTURE) {
 
         const src = this.source;
 
-        if (src && src.type == T_PICTURE) src.imageUnsubscribe(this.name);
+        if (src && src.type === T_PICTURE) src.imageUnsubscribe(this.name);
 
         this.source = item;
         item.imageSubscribe(this.name);
@@ -762,7 +757,7 @@ P.prepareStamp = function() {
         else this.dirtyPathData = true;
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 
@@ -841,7 +836,7 @@ P.stamp = function (force = false, host, changes) {
         return this.regularStamp();
     }
 
-    if (this.visibility) {
+    else if (this.visibility) {
 
         // if (this.sourceIsVideoOrSprite || this.dirtyInput) this.sourceImageData = this.cleanInput();
         if (this.sourceIsVideoOrSprite || this.dirtyInput) this.cleanInput();
@@ -851,6 +846,7 @@ P.stamp = function (force = false, host, changes) {
         this.regularStamp();
     }
 };
+
 
 // #### Clean functions
 
@@ -1116,9 +1112,9 @@ P.getBoundingBox = function () {
 /* eslint-disable-next-line */
                 let [lex, ley, ew, eh, ex, ey] = tPath.getBoundingBox();
 
-                if (isNaN(lsx) || isNaN(lsy) || isNaN(sw) || isNaN(sh) || isNaN(sx) || isNaN(sy) || isNaN(lex) || isNaN(ley) || isNaN(ew) || isNaN(eh) || isNaN(ex) || isNaN(ey)) this.dirtyStart = true;
+                if (!_isFinite(lsx) || !_isFinite(lsy) || !_isFinite(sw) || !_isFinite(sh) || !_isFinite(sx) || !_isFinite(sy) || !_isFinite(lex) || !_isFinite(ley) || !_isFinite(ew) || !_isFinite(eh) || !_isFinite(ex) || !_isFinite(ey)) this.dirtyStart = true;
 
-                if (lsx == lex && lsy == ley && sw == ew && sh == eh && sx == ex && sy == ey) this.dirtyStart = true;
+                if (lsx === lex && lsy === ley && sw === ew && sh === eh && sx === ex && sy === ey) this.dirtyStart = true;
 
                 lsx += sx;
                 lsy += sy;
@@ -1367,7 +1363,7 @@ P.checkHit = function (items = []) {
             }
             else return false;
 
-            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+            if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
             cx = tx - x;
             cy = ty - y;

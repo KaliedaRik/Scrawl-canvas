@@ -6,11 +6,21 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 006</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    canvas {
+      margin: 1em auto;
+    }
+  </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-005.html">&larr; Previous</a>
+    <a href="canvas-007.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 006</h1>
   <h2>Canvas tween stress test</h2>
   <h3>Click on porthole to increase number of star tweens</h3>
@@ -23,12 +33,12 @@
     data-base-background-color="black"
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create and run many tweens/tickers, each associated with its own entity</li>
+      <li>Create and run many tweens/tickers, each associated with its own entity; each ticker should change both its entity's position and scale attributes</li>
       <li>Test to see how many tweens a browser can run at a reasonable speed</li>
     </ul>
 

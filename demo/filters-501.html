@@ -6,22 +6,57 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Filters 501</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 1em 0;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+
+          text-align: center;
+          width: 400px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
+    }
+
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
-    }
-    img {
-      display: none;
-    }
-    canvas {
-      margin: 0 auto;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+
+      @media (scripting: none) {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="filters-105.html">&larr; Previous</a>
+    <a href="filters-502.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 501</h1>
   <h2>Canvas engine filter strings (based on CSS filters)</h2>
 
@@ -48,29 +83,44 @@
     <div class="blue">
       <select class="controlItem" id="target">
         <option value="picture">Picture entity</option>
-        <option value="phrase">Phrase entity</option>
+        <option value="label">Label entity</option>
         <option value="cell">Cell wrapper</option>
       </select>
     </div>
 
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="400" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="mycanvas" 
+      width="400" 
+      height="400"
+      data-scrawl-canvas
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/filters-501.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+      <div class="assets" aria-hidden="true">
+        <img
+          id="iris"
+          src="img/iris.png"
+          class="flowers"
+          alt="A purple-mauve iris flower"
+        />    
+      </div>
+    </canvas>
+  </div>
 
-  <img id="iris" src="img/iris.png" class="flowers" />
-
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
 
     <ul>
-      <li>Create a test Picture entity, and a Phrase entity</li>
+      <li>Create a test Picture entity, and a Label entity</li>
       <li>Apply a set of CSS-based filter Strings to the entitys, and to the Cell</li>
       <li>Check that the selected entity/Cell updates its display in line with the current filter String</li>
     </ul>

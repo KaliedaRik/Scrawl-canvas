@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Particles 001</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -19,22 +20,26 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="filters-505.html">&larr; Previous</a>
+    <a href="particles-002.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 001</h1>
   <h2>Emitter entity, and Particle World, basic functionality</h2>
 
   <div class="controls">
 
     <div class="green label">World speed</div>
-    <div class="green"><input class="controlItem" id="world-speed" type="range" value="2" min="0.5" max="4" step="0.01" /></div>
+    <div class="green"><input class="controlItem" id="world_speed" type="range" value="2" min="0.5" max="4" step="0.01" /></div>
 
     <div class="green label">World alpha decay</div>
-    <div class="green"><input class="controlItem" id="color-alpha" type="range" value="6" min="1" max="10" step="0.1" /></div>
+    <div class="green"><input class="controlItem" id="color_alpha" type="range" value="6" min="1" max="10" step="0.1" /></div>
 
     <div class="green label">Maximum color</div>
-    <div class="green"><input class="controlItem" id="maxcolor-controller" type="color" value="#f0f8ff" /></div>
+    <div class="green"><input class="controlItem" id="maxcolor_controller" type="color" value="#f0f8ff" /></div>
 
     <div class="green label">Minimum color</div>
-    <div class="green"><input class="controlItem" id="mincolor-controller" type="color" value="#f0f8ff" /></div>
+    <div class="green"><input class="controlItem" id="mincolor_controller" type="color" value="#f0f8ff" /></div>
 
     <div class="green label">Background color</div>
     <div class="green"><input class="controlItem" id="background" type="color" value="#000040" /></div>
@@ -85,7 +90,7 @@
     data-scrawl-canvas
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

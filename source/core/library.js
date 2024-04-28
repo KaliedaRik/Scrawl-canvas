@@ -9,7 +9,7 @@
 
 
 // Current version
-export const version = '8.12.0';
+export const version = '8.13.0';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -62,9 +62,9 @@ export const filter = {};
 export const filternames = [];
 
 
-// Used internally by Phrase artefacts
-export const fontattribute = {};
-export const fontattributenames = [];
+// collects metadata of various requested fonts
+export const fontfamilymetadata = {};
+export const fontfamilymetadatanames = [];
 
 
 // Objects created using the __makeGroup__ factory, and generated as part of the process of creating Stack and Canvas artefacts, and Cell assets.
@@ -165,39 +165,86 @@ export function purge (namespace = '') {
 }
 
 
-// Section classes are used with Phrase entitys - we store the class definitions in the library so that they can be easily shared between Phrases
-export const sectionClasses = {
-    'DEFAULTS': { defaults: true },
+export function checkFontIsLoaded (font = '') {
 
-    'b': { weight: 'bold' },
-    '/b': { weight: 'normal' },
-    'strong': { weight: 'bold' },
-    '/strong': { weight: 'normal' },
-    'BOLD': { weight: 'bold' },
-    '/BOLD': { weight: 'normal' },
+    const key = `100px ${font}`;
+    return fontfamilymetadatanames.includes(key);
+}
 
-    'i': { style: 'italic' },
-    '/i': { style: 'normal' },
-    'em': { style: 'italic' },
-    '/em': { style: 'normal' },
-    'ITALIC': { style: 'italic' },
-    '/ITALIC': { style: 'normal' },
+export function getFontMetadata (font = '') {
 
-    'u': { underline: true },
-    '/u': { underline: false },
-    'UNDERLINE': { underline: true },
-    '/UNDERLINE': { underline: false },
+    const key = `100px ${font}`;
+    if (fontfamilymetadatanames.includes(key)) return fontfamilymetadata[key];
+    return null;
+}
 
-    'OVERLINE': { overline: true },
-    '/OVERLINE': { overline: false },
+export function findArtefact (item = '') {
 
-    // Warning: font-variant functionality has been deprecated in SC and should be avoided!
-    'SMALL-CAPS': { variant: 'small-caps' },
-    '/SMALL-CAPS': { variant: 'normal' },
+    if (artefactnames.includes(item)) return artefact[item];
+    return null;
+}
 
-    'HIGHLIGHT': { highlight: true },
-    '/HIGHLIGHT': { highlight: false },
-};
+export function findAsset (item = '') {
+
+    if (assetnames.includes(item)) return asset[item];
+    return null;
+}
+
+export function findEntity (item = '') {
+
+    if (entitynames.includes(item)) return entity[item];
+    return null;
+}
+
+export function findCanvas (item = '') {
+
+    if (canvasnames.includes(item)) return canvas[item];
+    return null;
+}
+
+export function findStyles (item = '') {
+
+    if (stylesnames.includes(item)) return styles[item];
+    return null;
+}
+
+export function findTween (item = '') {
+
+    if (tweennames.includes(item)) return tween[item];
+    return null;
+}
+
+export function findPattern (item = '') {
+
+    if (stylesnames.includes(item)) return styles[item];
+    if (cellnames.includes(item)) return cell[item];
+    return null;
+}
+
+export function findFilter (item = '') {
+
+    if (filternames.includes(item)) return filter[item];
+    return null;
+}
+
+export function findGroup (item = '') {
+
+    if (groupnames.includes(item)) return group[item];
+    return null;
+}
+
+export function findStack (item = '') {
+
+    if (stacknames.includes(item)) return stack[item];
+    return null;
+}
+
+export function findElement (item = '') {
+
+    if (elementnames.includes(item)) return element[item];
+    return null;
+}
+
 
 // All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - used mainly as part of Scrawl-canvas cloning functionality.
 export const constructors = {};

@@ -5,9 +5,9 @@
 // #### Imports
 import { artefact, asset } from '../core/library.js';
 
-import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { MIMIC, START, T_CELL, ZERO_STR } from '../core/shared-vars.js';
+import { MIMIC, START, T_CELL, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -82,12 +82,12 @@ export default function (P = Ωempty) {
 
                 newMimic = asset[item];
 
-                if (newMimic && newMimic.type != T_CELL) newMimic = false;
+                if (newMimic && newMimic.type !== T_CELL) newMimic = false;
             }
 
             if (newMimic && newMimic.name) {
 
-                if (oldMimic && oldMimic.name != newMimic.name) removeItem(oldMimic.mimicked, name);
+                if (oldMimic && oldMimic.name !== newMimic.name) removeItem(oldMimic.mimicked, name);
 
                 pushUnique(newMimic.mimicked, name);
 

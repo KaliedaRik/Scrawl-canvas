@@ -11,9 +11,9 @@
 // #### Imports
 import { artefact } from "./library.js";
 
-import { getSortedRootElements } from './document-root-elements.js';
+import { getSortedRootElements } from '../helper/document-root-elements.js';
 
-import { CLEAR, COMPILE, SHOW, RENDER } from './shared-vars.js';
+import { CLEAR, COMPILE, SHOW, RENDER } from '../helper/shared-vars.js';
 
 
 // Helper functions coordinate the actions required to complete a display cycle

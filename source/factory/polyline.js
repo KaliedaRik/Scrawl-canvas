@@ -22,29 +22,24 @@
 // + The artefact can then set its `path` attribute to the path-defined entity's name-String (or the entity itself), and set its `lockTo` Array values to `"path"`.
 // + We position the artefact by setting its `pathPosition` attribute to a float Number value between `0.0 - 1.0`, with `0` being the start of the path, and `1` being its end.
 // + Path-defined entitys can use other path-defined entitys as a path.
-// + Phrase entitys can use a path to position their text block; they can also use a path to position each letter individually along the path.
+// + EnhancedLabel entitys can use a path to position their text units; they can also use a path to position each letter individually along the path.
 // + Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - ___tangential rotation___ by setting their `addPathRotation` flag to `true`.
 // + Animate an artefact along the path by either using the artefact's `delta` object, or triggering a Tween to perform the movement.
-
-
-// #### Demos:
-// + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
-// + [Canvas-032](../../demo/canvas-032.html) - Freehand drawing
 
 
 // #### Imports
 import { artefact, constructors, particle } from '../core/library.js';
 
-import { addStrings, correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../helper/utilities.js';
 
-import { makeCoordinate } from '../factory/coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PINS, PIVOT, POLYLINE, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../core/shared-vars.js';
+import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PINS, PIVOT, POLYLINE, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // #### Polyline constructor
@@ -69,8 +64,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
 baseMix(P);
 shapeMix(P);
 
@@ -114,7 +107,7 @@ P.finalizePacketOut = function (copy, items) {
 
     _keys(copy).forEach(key => {
 
-        if (key == PINS) {
+        if (key === PINS) {
 
             const temp = [];
 
@@ -253,8 +246,8 @@ S.pivot = function (item) {
 
         this.pivot = null;
 
-        if (this.lockTo[0] == PIVOT) this.lockTo[0] = START;
-        if (this.lockTo[1] == PIVOT) this.lockTo[1] = START;
+        if (this.lockTo[0] === PIVOT) this.lockTo[0] = START;
+        if (this.lockTo[1] === PIVOT) this.lockTo[1] = START;
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
@@ -267,7 +260,7 @@ S.pivot = function (item) {
 
         if (newPivot && newPivot.name) {
 
-            if (oldPivot && oldPivot.name != newPivot.name) removeItem(oldPivot.pivoted, name);
+            if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
 
             pushUnique(newPivot.pivoted, name);
 
@@ -401,7 +394,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 
@@ -468,9 +461,9 @@ P.buildCurve = function (x, y, coords) {
 P.cleanCoordinate = function (coord, dim) {
 
     if (coord.toFixed) return coord;
-    if (coord == LEFT || coord == TOP) return 0;
-    if (coord == RIGHT || coord == BOTTOM) return dim;
-    if (coord == CENTER) return dim / 2;
+    if (coord === LEFT || coord === TOP) return 0;
+    if (coord === RIGHT || coord === BOTTOM) return dim;
+    if (coord === CENTER) return dim / 2;
     return (parseFloat(coord) / 100) * dim;
 };
 

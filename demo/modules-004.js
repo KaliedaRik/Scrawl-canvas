@@ -24,7 +24,7 @@ lottieLoader({
     src: 'img/33-video-cam.json',
     scrawl,
 })
-// @ts-expect-error
+/** @ts-expect-error */
 .then(lottiePacket => {
 
     console.log(lottiePacket);

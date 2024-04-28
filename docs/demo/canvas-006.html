@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -877,16 +897,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    addNativeListener,
-    library <span class="hljs-keyword">as</span> L,
-    makeRender,
-    makeTween,
-    makeWheel,
-    makeColor,
-    releaseVector,
-    requestVector,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -904,7 +915,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> porthole = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">porthole</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> porthole = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;porthole&#x27;</span>);
 
 porthole.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">css</span>: {
@@ -925,7 +936,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = porthole.<span class="hljs-property">name</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
@@ -942,7 +953,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> starling = <span class="hljs-title function_">makeWheel</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> starling = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;starling&#x27;</span>),
 
@@ -1003,7 +1014,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorBuilder = <span class="hljs-title function_">makeColor</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorBuilder = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-color-builder&#x27;</span>),
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;#fcc&#x27;</span>,
     <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;#ccf&#x27;</span>,
@@ -1038,7 +1049,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> v = <span class="hljs-title function_">requestVector</span>();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> v = scrawl.<span class="hljs-title function_">requestVector</span>();
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; buildNumber; i++) {
 
@@ -1112,7 +1123,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">makeTween</span>({
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">makeTween</span>({
 
             <span class="hljs-attr">name</span>: star.<span class="hljs-property">name</span>,
 
@@ -1194,7 +1205,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">releaseVector</span>(v);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">releaseVector</span>(v);</pre></div></div>
             
         </li>
         
@@ -1260,7 +1271,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: porthole,
@@ -1288,7 +1299,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-title function_">makeStars</span>(addNumber);
 };
-<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, addStars, porthole.<span class="hljs-property">domElement</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, addStars, porthole.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -1303,7 +1314,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

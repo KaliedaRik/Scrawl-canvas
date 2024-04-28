@@ -6,26 +6,33 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 031</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
     canvas {
-        background-color: lemonchiffon;
+      background-color: lemonchiffon;
     }
     .canvas-container {
-        width: 400px;
-        height: 400px;
+      width: 400px;
+      height: 400px;
 
-        min-width: 200px;
-        min-height: 200px;
+      min-width: 200px;
+      min-height: 200px;
 
-        max-width: 800px;
-        max-height: 800px;
+      max-width: 800px;
+      max-height: 800px;
+
+      box-shadow: 0px 0px 0px 1px black;
     }
   </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-030.html">&larr; Previous</a>
+    <a href="canvas-032.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 031</h1>
   <h2>Cell generation and processing order - kaleidoscope clock</h2>
   <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
@@ -35,14 +42,14 @@
       id="mycanvas" 
       data-scrawl-canvas
       data-is-responsive="true" 
-      data-base-width="400" 
-      data-base-height="400" 
+      data-base-width="800" 
+      data-base-height="800" 
       data-fit="cover"
       data-base-background-color="honeydew"
     ></canvas>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -56,6 +63,8 @@
       <li>Animate the scene so it displays the local time</li>
     </ul>
     
+    <p><b>Known issue:</b> this demo is significantly slower on Chrome browsers, compared to Firefox/Safari. The underlying issue appears to be Chrome's functionality to copy drawImage data from a non-DOM cell over to the (equally non-DOM) base cell - 50ms+ per Display cycle. Performance improves if the base cell dimensions are made smaller (for example: 400px square); however, this issue feels similar to the issue encountered in Demo canvas-009.</p>
+
     <p><b>Touch test:</b> canvas should be resizable</p>
 
     <p><a href="../docs/demo/canvas-031.html">Annotated code</a></p>

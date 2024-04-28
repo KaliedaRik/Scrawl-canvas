@@ -3,9 +3,9 @@
 
 
 // #### Imports
-import { mergeDiscard, mergeOver, Ωempty } from '../core/utilities.js';
+import { mergeDiscard, mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { _isArray, _keys, ADD, LONGCHECK, LOOP, MULTIPLY, NEWNUMBER, NEWSTRING, PC, REMOVE, REVERSE, SEPARATOR, SHORTCHECK, UPDATE, ZERO_STR } from '../core/shared-vars.js'
+import { _isArray, _keys, ADD, LONGCHECK, LOOP, MULTIPLY, NEWNUMBER, NEWSTRING, PC, REMOVE, REVERSE, SEPARATOR, SHORTCHECK, UPDATE, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // #### Export function
@@ -134,7 +134,7 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 item = deltaConstraints[key];
 
-                if (_isArray(item) && item.length == 3) {
+                if (_isArray(item) && item.length === 3) {
 
                     [min, max, action] = deltaConstraints[key];
 

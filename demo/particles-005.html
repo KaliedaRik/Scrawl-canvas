@@ -6,16 +6,22 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Particles 005</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
     canvas {
-      margin: 0 auto;
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
     }
   </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="particles-004.html">&larr; Previous</a>
+    <a href="particles-006.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 005</h1>
   <h2>Emit particles from inside an artefact's area</h2>
   <h3>The entitys are draggable</h3>
@@ -27,14 +33,14 @@
     data-scrawl-canvas
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create a shape and Phrase entity to act as areas within which Particles will be generated.</li>
-      <li>Create a world object and Emitter entity to generate particles in the phrase entity.</li>
-      <li>Clone the Emitter entity, updating it so that it uses the shape entity for its particle generation area.</li>
+      <li>Create a Shape and a Label entity, to act as areas within which Particles will be generated.</li>
+      <li>Create a world object and Emitter entity to generate particles in the Label entity.</li>
+      <li>Clone the Emitter entity, updating it so that it uses the Shape entity for its particle generation area.</li>
       <li>Check that particle generation responds as expected when dragging the area entitys around the canvas.</li>
     </ul>
 

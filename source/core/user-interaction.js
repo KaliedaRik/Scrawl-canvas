@@ -9,15 +9,15 @@
 // #### Imports
 import * as library from "./library.js";
 
-import { detectBrowser, isa_obj, λnull } from "./utilities.js";
+import { isa_obj, λnull } from "../helper/utilities.js";
 
 import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
-import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from './system-flags.js';
+import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from '../helper/system-flags.js';
 
-import { _computed, _floor, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SAFARI, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
+import { _floor, _isFinite, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -54,7 +54,7 @@ contrastMediaQuery.addEventListener(CHANGE, () => {
 
     const res = contrastMediaQuery.matches;
 
-    if (currentCorePosition.prefersContrast != res) {
+    if (currentCorePosition.prefersContrast !== res) {
 
         currentCorePosition.prefersContrast = res;
         setPrefersContrastChanged(true);
@@ -69,7 +69,7 @@ reducedMotionMediaQuery.addEventListener(CHANGE, () => {
 
     const res = reducedMotionMediaQuery.matches;
 
-    if (currentCorePosition.prefersReducedMotion != res) {
+    if (currentCorePosition.prefersReducedMotion !== res) {
 
         currentCorePosition.prefersReducedMotion = res;
         setPrefersReducedMotionChanged(true);
@@ -84,7 +84,7 @@ colorSchemeMediaQuery.addEventListener(CHANGE, () => {
 
     const res = colorSchemeMediaQuery.matches;
 
-    if (currentCorePosition.prefersDarkColorScheme != res) {
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
 
         currentCorePosition.prefersDarkColorScheme = res;
         setPrefersDarkColorSchemeChanged(true);
@@ -99,7 +99,7 @@ reducedTransparencyMediaQuery.addEventListener(CHANGE, () => {
 
     const res = reducedTransparencyMediaQuery.matches;
 
-    if (currentCorePosition.prefersReduceTransparency != res) {
+    if (currentCorePosition.prefersReduceTransparency !== res) {
 
         currentCorePosition.prefersReduceTransparency = res;
         setPrefersReduceTransparencyChanged(true);
@@ -114,7 +114,7 @@ reducedDataMediaQuery.addEventListener(CHANGE, () => {
 
     const res = reducedDataMediaQuery.matches;
 
-    if (currentCorePosition.prefersReduceData != res) {
+    if (currentCorePosition.prefersReduceData !== res) {
 
         currentCorePosition.prefersReduceData = res;
         setPrefersReduceDataChanged(true);
@@ -131,7 +131,7 @@ displaySupportsP3ColorMediaQuery.addEventListener(CHANGE, () => {
 
     const res = displaySupportsP3ColorMediaQuery.matches;
 
-    if (currentCorePosition.displaySupportsP3Color != res) {
+    if (currentCorePosition.displaySupportsP3Color !== res) {
 
         currentCorePosition.displaySupportsP3Color = res;
     }
@@ -146,8 +146,8 @@ const checkCanvasSupportsDisplayP3 = () => {
     // Needs to be done in try-catch because (apparently) Safari throws a fit if colorSpace option is supported by the canvas engine but the minimum macOS/iOS system requirements for display-p3 support are not met
     try {
 
-        const e = c.getContext("2d", { colorSpace: "display-p3" });
-        return e.getContextAttributes().colorSpace == "display-p3";
+        const e = c.getContext("2d", { colorSpace: DISPLAY_P3 });
+        return e.getContextAttributes().colorSpace === DISPLAY_P3;
     }
     catch { console.log('checkCanvasSupportsDisplayP3 errored')}
     return false;
@@ -183,17 +183,11 @@ const updatePixelRatio = () => {
 
     if (!ignorePixelRatio) pixelRatioChangeAction();
 
-    // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally?
-    // + Whatever. Safari does not like, or respond to, this matchmedia query
-    // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
-    if (!detectBrowser().includes(SAFARI)) {
-
-        // We use a one-time media query for checking when the device pixel ratio changes
-        // + unlike the user preferences media queries, device pixel ratio can be a number of different values
-        // + we check to see if dpr changes away from the current dpr value
-        // + then we create a replacement one-time media query to check for changes away from the new value
-        matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
-    }
+    // We use a one-time media query for checking when the device pixel ratio changes
+    // + unlike the user preferences media queries, device pixel ratio can be a number of different values
+    // + we check to see if dpr changes away from the current dpr value
+    // + then we create a replacement one-time media query to check for changes away from the new value
+    matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
 };
 
 updatePixelRatio();
@@ -207,7 +201,7 @@ const resizeAction = function () {
     const w = document.documentElement.clientWidth,
         h = document.documentElement.clientHeight;
 
-    if (currentCorePosition.w != w || currentCorePosition.h != h) {
+    if (currentCorePosition.w !== w || currentCorePosition.h !== h) {
 
         currentCorePosition.w = w;
         currentCorePosition.h = h;
@@ -225,7 +219,7 @@ const scrollAction = function () {
     const x = window.pageXOffset,
         y = window.pageYOffset;
 
-    if (currentCorePosition.scrollX != x || currentCorePosition.scrollY != y) {
+    if (currentCorePosition.scrollX !== x || currentCorePosition.scrollY !== y) {
         currentCorePosition.x += (x - currentCorePosition.scrollX);
         currentCorePosition.y += (y - currentCorePosition.scrollY);
         currentCorePosition.scrollX = x;
@@ -244,7 +238,7 @@ const moveAction = function (e) {
     const x = _round(e.pageX),
         y = _round(e.pageY);
 
-    if (currentCorePosition.x != x || currentCorePosition.y != y) {
+    if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
         currentCorePosition.type = (navigator.pointerEnabled) ? POINTER : MOUSE;
         currentCorePosition.x = x;
         currentCorePosition.y = y;
@@ -270,7 +264,7 @@ export const getTouchActionChoke = function () {
 
 export const setTouchActionChoke = function (val) {
 
-    if (val && val.toFixed && !isNaN(val)) touchActionChoke = val;
+    if (_isFinite(val)) touchActionChoke = val;
 };
 
 export const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
@@ -418,7 +412,7 @@ const updateUiSubscribedElement = function (art) {
             }
 
             // Canvas `fit` attribute adjustments
-            if (dom.type == T_CANVAS) dom.updateBaseHere(here, dom.fit);
+            if (dom.type === T_CANVAS) dom.updateBaseHere(here, dom.fit);
 
             // Automatically check for element resize
             // + The artefact's `checkForResize` flag needs to be set
@@ -428,13 +422,12 @@ const updateUiSubscribedElement = function (art) {
 
                 const [w, h] = dom.currentDimensions;
 
-                if (dom.type == T_CANVAS) {
+                if (dom.type === T_CANVAS) {
                     // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
                     // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
                     // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
                     // + Solved by subtracting padding/border values from the `getBoundingClientRect` dimension values before performing the test.
                     // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
-                    if (!dom.computedStyles) dom.computedStyles = _computed(dom.domElement);
 
                     const s = dom.computedStyles,
                         hw = _floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
@@ -465,16 +458,12 @@ const updateUiSubscribedElement = function (art) {
     }
 };
 
-const updatePhraseEntitys = function () {
+const updateTextBasedEntitys = function () {
 
     _values(library.entity).forEach(ent => {
 
-        if (ent.type == T_PHRASE) {
-
-            ent.dirtyDimensions = true;
-            ent.dirtyFont = true;
-        }
-    })
+        if (FONT_USERS.includes(ent.type)) ent.recalculateFont(true);
+    });
 };
 
 // Internal functions that get triggered when setting a DOM-based artefact's `trackHere` attribute. They add/remove an event listener to the artefact's domElement.
@@ -514,7 +503,7 @@ export const removeLocalMouseMoveListener = function (wrapper) {
 // Animation object which checks whether any window event listeners have fired, and actions accordingly
 const coreListenersTracker = makeAnimation({
 
-    name: 'coreListenersTracker',
+    name: 'SC-core-listeners-tracker',
     order: 0,
     delay: true,
     fn: function () {
@@ -544,7 +533,9 @@ const coreListenersTracker = makeAnimation({
         if (viewportChanged) {
 
             setViewportChanged(false);
-            updatePhraseEntitys();
+
+            // This is to capture changes in the browser viewport size which can affect Label-related text using a font size measured relative to the viewport size
+            updateTextBasedEntitys();
         }
     },
 });
@@ -611,4 +602,14 @@ export const applyCoreScrollListener = function () {
 
     scrollAction();
     setMouseChanged(true);
+};
+
+
+// Putting this small library-related function here as this file gets all `core/library` objects rather than selectively importing some of them
+export const purgeFontMetadata = function () {
+
+    const { fontfamilymetadata, fontfamilymetadatanames } = library;
+
+    fontfamilymetadatanames.forEach(f => delete fontfamilymetadata[f]);
+    fontfamilymetadatanames.length = 0;
 };

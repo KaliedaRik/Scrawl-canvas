@@ -3,7 +3,6 @@
 //
 // Related files:
 // + [Editable header text colorizer and animation effect snippets](../snippets-006.html)
-// + [Text snippet helper](./text-snippet-helper.html)
 //
 // ### 'Worley noise used to color text' snippet
 //
@@ -15,21 +14,21 @@
 // __Function input:__
 // + the DOM element - generally a block or inline-block element.
 //
-// __Customisation:__ The snippet can be customised using the following data- attributes applied using CSS variables, or directly to the HTML header element:
-// + `data-base-color` - any CSS color string
-// + `data-dark-base-color` - any CSS color string
-// + `data-highlight-color` - any CSS color string
-// + `data-dark-highlight-color` - any CSS color string
-// + `data-noise-sum-function` - permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`, `random`
-// + `data-noise-scale` - (+number) a form of zoom level
-// + `data-noise-output` - permitted values include: `X`, `YminusX`, `ZminusX`, etc</li>
-// + `data-shadow-color` - any CSS color string, for the text shadow
-// + `data-dark-shadow-color` - any CSS color string, for the text shadow
-// + `data-shadow-offset-x` - (unit % of font size) percentage of the font size to offset the text shadow horizontally
-// + `data-shadow-offset-y` - (unit % of font size) percentage of the font size to offset the text shadow vertically
-// + `data-shadow-blur` - (unit % of font size) percentage of the font size to blur the shadow
-// + `data-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more`
-// + `data-dark-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more`
+// __Customisation:__ The snippet can be customised using the following `--data-???` CSS custom properties:
+// + `--data-base-color` - any CSS color string (default: `black`)
+// + `--data-dark-base-color` - any CSS color string (default: `white`)
+// + `--data-highlight-color` - any CSS color string (default: `orange`)
+// + `--data-dark-highlight-color` - any CSS color string (default: `orange`)
+// + `--data-noise-sum-function` - permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`, `random` (default: `random`)
+// + `--data-noise-scale` - (+number) a form of zoom level (default: `50`)
+// + `--data-noise-output` - permitted values include: `X`, `YminusX`, `ZminusX`, etc (default: `X`)
+// + `--data-shadow-color` - any CSS color string, for the text shadow (default: `black`)
+// + `--data-dark-shadow-color` - any CSS color string, for the text shadow (default: `white`)
+// + `--data-shadow-offset-x` - (unit % of font size) percentage of the font size to offset the text shadow horizontally (default: `0`)
+// + `--data-shadow-offset-y` - (unit % of font size) percentage of the font size to offset the text shadow vertically (default: ``0)
+// + `--data-shadow-blur` - (unit % of font size) percentage of the font size to blur the shadow (default: `0`)
+// + `--data-contrast-color` - any CSS color string (default: `black`)
+// + `--data-dark-contrast-color` - any CSS color string (default: `white`)
 //
 // __Function output:__ a Javascript object will be returned, containing the following attributes
 // ```
@@ -46,277 +45,381 @@
 //
 // import mySnippet from './relative/or/absolute/path/to/this/file.js';
 // let myElements = document.querySelectorAll('.some-class');
-// myElements.forEach(el => mySnippet(el, scrawl));
+// myElements.forEach(el => mySnippet(scrawl, el));
 // ```
-
-// Additional font-specific customisation can be added courtesy of the Text Snippet Helper module
-import { getSnippetData } from './text-snippet-helper.js';
 
 // __Effects on the element:__
 // + Imports the element's background color, and sets the element background to `transparent`
 // + Imports the element's text node text, and sets the text color to `transparent`
-// + ___Note that canvas text will NEVER be as good as DOM text!___
-export default function (el, scrawl) {
+export default function (scrawl, el) {
 
-    // Apply the snippet to the DOM element
-    const snippet = scrawl.makeSnippet({
-        domElement: el,
-    });
+    // Boilerplate - namespacing
+    const namespace = el.id;
+    const name = (val) => `${namespace}-${val}`;
 
-    // Only proceed if the snippet is successfully generated
-    if (snippet) {
 
-        // Import data and functionality from the Text Snippet Helper module
-        const { canvas, group, dataset, compStyles, name, width, height, fontSize, yOffset, initCanvas, initPhrase, textGroup, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+    // Only progress if the supplied element has an `id` attribute
+    if (namespace) {
 
-        // Initialise the canvas
-        initCanvas();
 
-        canvas.base.set({
-            compileOrder: 1,
+        // Create the snippet for this DOM element
+        const snippet = scrawl.makeSnippet({
+            domElement: el,
         });
 
-        // Initialize and collect developer-supplied data
-        let baseColor = 'black',
-            darkBaseColor = 'white',
-            highlightColor = 'orange',
-            darkHighlightColor = 'orange',
-            noiseSumFunction = 'random',
-            noiseOutput = 'X',
-            noiseScale = 50,
-            shadowColor = 'black',
-            darkShadowColor = 'white',
-            shadowOffsetX = 0,
-            shadowOffsetY = 0,
-            shadowBlur = 0,
-            contrastColor = 'black',
-            darkContrastColor = 'white';
 
-        if (dataset.baseColor) baseColor = dataset.baseColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-base-color');
-            if (s) baseColor = s;
-        }
+        // Only proceed if the snippet is successfully generated
+        if (snippet) {
 
-        if (dataset.darkBaseColor) darkBaseColor = dataset.darkBaseColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-dark-base-color');
-            if (s) darkBaseColor = s;
-        }
 
-        if (dataset.highlightColor) highlightColor = dataset.highlightColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-highlight-color');
-            if (s) highlightColor = s;
-        }
+            // Unpack the snippet into the parts we'll be using
+            const canvas = snippet.canvas,
+                demolishAction = snippet.demolish,
+                animation = snippet.animation,
+                compStyles = snippet.element.elementComputedStyles;
 
-        if (dataset.darkHighlightColor) darkHighlightColor = dataset.darkHighlightColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-dark-highlight-color');
-            if (s) darkHighlightColor = s;
-        }
 
-        if (dataset.noiseSumFunction) noiseSumFunction = dataset.noiseSumFunction;
-        else {
-            const s = compStyles.getPropertyValue('--data-noise-sum-function');
-            if (s) noiseSumFunction = s;
-        }
+            // Boilerplate - text processing
+            const addTextNode = () => {
+                const shy = document.createTextNode('!');
+                el.appendChild(shy);
+            };
 
-        if (dataset.noiseOutput) noiseOutput = dataset.noiseOutput;
-        else {
-            const s = compStyles.getPropertyValue('--data-noise-output');
-            if (s) noiseOutput = s;
-        }
+            const processText = t => {
+                t = t.replace(/<canvas.*<\/canvas>/gi, '');
+                t = t.replace(/<button.*<\/button>/gi, '');
+                if (!t.length) {
+                    addTextNode();
+                    t = '!';
+                }
+                return t;
+            }
 
-        if (dataset.noiseScale) noiseScale = parseFloat(dataset.noiseScale);
-        else {
-            const s = compStyles.getPropertyValue('--data-noise-scale');
-            if (s) noiseScale = parseFloat(s);
-        }
 
-        if (dataset.shadowColor) shadowColor = dataset.shadowColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-shadow-color');
-            if (s) shadowColor = s;
-        }
+            // Boilerplate - demolish/kill functionality
+            const additionalDemolishActions = [];
 
-        if (dataset.darkShadowColor) darkShadowColor = dataset.darkShadowColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-dark-shadow-color');
-            if (s) darkShadowColor = s;
-        }
+            snippet.demolish = () => {
+                additionalDemolishActions.forEach(f => f());
+                scrawl.purge(namespace);
+                demolishAction();
+            };
 
-        if (dataset.shadowOffsetX) shadowOffsetX = parseFloat(dataset.shadowOffsetX);
-        else {
-            const s = compStyles.getPropertyValue('--data-shadow-offset-x');
-            if (s) shadowOffsetX = parseFloat(s);
-        }
 
-        if (dataset.shadowOffsetY) shadowOffsetY = parseFloat(dataset.shadowOffsetY);
-        else {
-            const s = compStyles.getPropertyValue('--data-shadow-offset-y');
-            if (s) shadowOffsetY = parseFloat(s);
-        }
+            // This makes the canvas element's base cell the default group for everything we create
+            canvas.setAsCurrentCanvas();
 
-        if (dataset.shadowBlur) shadowBlur = parseFloat(dataset.shadowBlur);
-        else {
-            const s = compStyles.getPropertyValue('--data-shadow-blur');
-            if (s) shadowBlur = parseFloat(s);
-        }
 
-        if (dataset.contrastColor) contrastColor = dataset.contrastColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-contrast-color');
-            if (s) contrastColor = s;
-        }
+            // Boilerplate - fix for text alignment
+            const getJustifyLine = (val) => {
 
-        if (dataset.darkContrastColor) darkContrastColor = dataset.darkContrastColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-dark-contrast-color');
-            if (s) darkContrastColor = s;
-        }
+                if (val === 'justify') return 'space-between';
+                if (val === 'justify-all') return 'space-around';
+                if (val === 'match-parent') return 'start';
+                return val;
+            };
 
-        // Build the text effect
-        const worley = scrawl.makeNoiseAsset({
-            name: `${name}-noise-generator`,
-            colors: [
-                [0, highlightColor],
-                [999, baseColor],
-            ],
-            colorSpace: 'LAB',
-            noiseEngine: 'worley-euclidean',
-            sumFunction: noiseSumFunction,
-            scale: noiseScale,
-            worleyOutput: noiseOutput,
-            width: Math.ceil(width),
-            height: Math.ceil(height),
-        });
 
-        const p1 = scrawl.makePattern({
-            name: `${name}-noise-pattern`,
-            asset: `${name}-noise-generator`,
-        });
+            // Boilerplate - fix for lineSpacing/lineHeight
+            const getLineSpacing = () => parseFloat(compStyles.lineHeight) / parseFloat(compStyles.fontSize);
 
-        const f1 = scrawl.makeFilter({
-            name: `${name}-blur-filter`,
-            method: 'gaussianBlur',
-            radius: Math.round(fontSize * shadowBlur),
-        });
 
-        const textFill = scrawl.makePhrase({
-            name: `${name}-text-stencil`,
-            group,
-            order: 0,
-        });
+            // Initialize and collect developer-supplied data
+            // + We also set the defaults here for missing colors/values
+            const userData = {
 
-        initPhrase(textFill);
+                direction: compStyles.direction || 'ltr',
+                fontStretch: compStyles.fontStretch || 'normal',
+                letterSpacing: compStyles.letterSpacing || '0px',
+                wordSpacing: compStyles.wordSpacing || '0px',
+                fontVariantCaps: compStyles.fontVariantCaps || 'normal',
+                lineAdjustment: compStyles.getPropertyValue('--data-line-adjustment') || '0',
+                justifyLine: getJustifyLine(compStyles.textAlign),
 
-        const textStroke = textFill.clone({
-            name: `${name}-text-outline`,
-            order: 2,
-            startX: Math.round(fontSize * shadowOffsetX),
-            startY: Math.round((fontSize * yOffset) + (fontSize * shadowOffsetY)),
-            fillStyle: shadowColor,
-            filters: shadowBlur ? [`${name}-blur-filter`] : [],
-            memoizeFilterOutput: true,
-            globalCompositeOperation: 'destination-over',
-        });
+                elBackgroundColor: compStyles.backgroundColor || 'transparent',
 
-        textGroup.addArtefacts(textFill, textStroke);
+                baseColor: compStyles.getPropertyValue('--data-base-color') || 'black',
+                darkBaseColor: compStyles.getPropertyValue('--data-dark-base-color') || 'white',
+                highlightColor: compStyles.getPropertyValue('--data-highlight-color') || 'orange',
+                darkHighlightColor: compStyles.getPropertyValue('--data-dark-highlight-color') || 'orange',
+                noiseSumFunction: compStyles.getPropertyValue('--data-noise-sum-function') || 'random',
+                noiseOutput: compStyles.getPropertyValue('--data-noise-output') || 'X',
+                noiseScale: compStyles.getPropertyValue('--data-noise-scale') || '50',
+                shadowColor: compStyles.getPropertyValue('--data-shadow-color') || 'black',
+                darkShadowColor: compStyles.getPropertyValue('--data-dark-shadow-color') || 'white',
+                shadowOffsetX: compStyles.getPropertyValue('--data-shadow-offset-x') || '0',
+                shadowOffsetY: compStyles.getPropertyValue('--data-shadow-offset-y') || '0',
+                shadowBlur: compStyles.getPropertyValue('--data-shadow-blur') || '0',
+                contrastColor: compStyles.getPropertyValue('--data-contrast-color') || 'black',
+                darkContrastColor: compStyles.getPropertyValue('--data-dark-contrast-color') || 'white',
+            };
 
-        scrawl.makeBlock({
-            name: `${name}-text-fill`,
-            group,
-            order: 1,
-            width: '100%',
-            height: '100%',
-            fillStyle: `${name}-noise-pattern`,
-            globalCompositeOperation: 'source-in',
-        });
 
-        // Accessibility
-        colorSchemeLightActions.push((items = {}) => {
-
-            const localWidth = parseFloat(items.width),
-                localHeight = parseFloat(items.height);
-
-            worley.set({
+            // Build the worley noise effect
+            const worley = scrawl.makeNoiseAsset({
+                name: name('worley-noise'),
                 colors: [
-                    [0, highlightColor],
-                    [999, baseColor],
+                    [0, userData.highlightColor],
+                    [999, userData.baseColor],
                 ],
-                width: localWidth,
-                height: localHeight,
+                colorSpace: 'OKLAB',
+                noiseEngine: 'worley-euclidean',
+                sumFunction: userData.noiseSumFunction,
+                scale: userData.noiseScale,
+                worleyOutput: userData.noiseOutput,
+                width: Math.ceil(parseFloat(compStyles.width)),
+                height: Math.ceil(parseFloat(compStyles.height)),
             });
 
-            textStroke.set({
-                fillStyle: shadowColor,
-            });
-        });
-
-        colorSchemeDarkActions.push((items = {}) => {
-
-            const localWidth = parseFloat(items.width),
-                localHeight = parseFloat(items.height);
-
-            worley.set({
-                colors: [
-                    [0, darkHighlightColor],
-                    [999, darkBaseColor],
-                ],
-                width: localWidth,
-                height: localHeight,
+            scrawl.makePattern({
+                name: name('worley-pattern'),
+                asset: name('worley-noise'),
             });
 
-            textStroke.set({
-                fillStyle: darkShadowColor,
-            });
-        });
-
-        contrastMoreActions.push(() => {
-            el.style.color = (canvas.here.prefersDarkColorScheme) ? darkContrastColor : contrastColor;
-            textGroup.setArtefacts({
+            const template = scrawl.makeBlock({
+                name: name('template'),
+                dimensions: ['100%', '100%'],
                 visibility: false,
             });
-        });
 
-        contrastOtherActions.push(() => {
-            el.style.color = 'transparent';
-            textGroup.setArtefacts({
-                visibility: true,
+            const label = scrawl.makeEnhancedLabel({
+                name: name('content'),
+                layoutTemplate: name('template'),
+
+                text: processText(el.innerHTML),
+                fontString: compStyles.font,
+
+                method: 'fill',
+                textHandleY: 'alphabetic',
+                visibility: false,
+
+                direction: userData.direction,
+                fontStretch: userData.fontStretch,
+                letterSpacing: userData.letterSpacing,
+                wordSpacing: userData.wordSpacing,
+                fontVariantCaps: userData.fontVariantCaps,
+                lineSpacing: getLineSpacing(),
+                justifyLine: userData.justifyLine,
+
+                fillStyle: name('worley-pattern'),
+                shadowOffsetX: userData.shadowOffsetX,
+                shadowOffsetY: userData.shadowOffsetY,
+                shadowBlur: userData.shadowBlur,
+                shadowColor: userData.shadowColor,
             });
-        });
 
-        // Responsiveness
-        responsiveFunctions.push((items = {}) => {
 
-            const localFontSize = parseFloat(items.fontSize),
-                localWidth = parseFloat(items.width),
-                localHeight = parseFloat(items.height);
+            // Boilerplate - font adjustments
+            let meta;
 
-            worley.set({
-                width: localWidth,
-                height: localHeight,
+            const getLineAdjustment = () => {
+
+                const size = parseFloat(compStyles.fontSize);
+                const ratio = size / 100;
+                return ratio * (meta.alphabeticBaseline + meta.verticalOffset + parseFloat(userData.lineAdjustment));
+            };
+
+            const updateOnFontLoad = () => {
+
+                const font = compStyles.fontFamily,
+                    check = scrawl.checkFontIsLoaded(font);
+
+                if (check) {
+
+                    el.style.backgroundColor = 'transparent';
+                    el.style.color = 'transparent';
+
+                    meta = scrawl.getFontMetadata(font);
+
+                    const displacement = getLineAdjustment();
+
+                    template.set({
+                        startY: displacement,
+                        handleY: displacement,
+                        fillStyle: userData.elBackgroundColor,
+                        visibility: true,
+                    });
+
+                    label.set({
+                        visibility: true,
+                    });
+
+                    animation.updateHook('commence');
+                }
+            };
+
+            animation.updateHook('commence', updateOnFontLoad);
+
+
+            // Boilerplate user interaction - resizing the browser window
+            let resizeFlag = true,
+                lastResize = Date.now();
+
+            const resizeChoke = 200;
+
+            const setResizeFlag = () => {
+
+                resizeFlag = true;
+
+                const now = Date.now();
+
+                // Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
+                // + This check forces those canvases to update once to adapt to the new viewport size
+                // + Doing this should prevent unexpected horizontal scrollbars appearing on the page
+                // + Should also prevent flashes of badly sized content when canvas scrolls into view
+                if (!animation.isRunning() && now > lastResize + resizeChoke) {
+
+                    resizeAction();
+                    animation.updateOnce();
+                    lastResize = now;
+                }
+            };
+
+            const resizeAction = () => {
+
+                if (resizeFlag) {
+
+                    resizeFlag = false;
+
+                    worley.set({
+                        width: Math.ceil(parseFloat(compStyles.width)),
+                        height: Math.ceil(parseFloat(compStyles.height)),
+                    });
+
+                    label.set({
+                        fontString: compStyles.font,
+                    });
+
+                    if (meta) {
+
+                        const displacement = getLineAdjustment();
+
+                        template.set({
+                            startY: displacement,
+                            handleY: displacement,
+                        });
+
+                        label.set({
+                            letterSpacing: compStyles.letterSpacing,
+                            wordSpacing: compStyles.wordSpacing,
+                        });
+                    }
+                }
+            };
+
+            animation.updateHook('afterShow', resizeAction);
+
+            additionalDemolishActions.push(
+                scrawl.addNativeListener('resize', setResizeFlag, window),
+            );
+
+
+            // User interaction - editing the text
+            if (el.getAttribute('contenteditable')) {
+
+                const updateText = () => {
+                    label.set({ text: processText(el.innerHTML) });
+                }
+                const focusText = () => {
+                    el.style.color = 'rgb(0 0 0 / 0.4)';
+                }
+                const blurText = () => {
+                    el.style.color = 'transparent';
+                }
+
+                scrawl.addNativeListener('input', updateText, el);
+                scrawl.addNativeListener('focus', focusText, el);
+                scrawl.addNativeListener('blur', blurText, el);
+
+                additionalDemolishActions.push(() => {
+                    scrawl.removeNativeListener('input', updateText, el);
+                    scrawl.removeNativeListener('focus', focusText, el);
+                    scrawl.removeNativeListener('blur', blurText, el);
+                });
+            }
+
+
+            // Accessibility
+            const colorSchemeLightAction = () => {
+
+                worley.set({
+                    colors: [
+                        [0, userData.highlightColor],
+                        [999, userData.baseColor],
+                    ],
+                });
+
+                label.set({
+                    shadowColor: userData.shadowColor,
+                });
+            };
+
+            const colorSchemeDarkAction = () => {
+
+                worley.set({
+                    colors: [
+                        [0, userData.darkHighlightColor],
+                        [999, userData.darkBaseColor],
+                    ],
+                });
+
+                label.set({
+                    shadowColor: userData.darkShadowColor,
+                });
+            };
+
+            const moreContrastAction = () => {
+
+                const color = (canvas.here.prefersDarkColorScheme) ?
+                    userData.darkContrastColor :
+                    userData.contrastColor;
+
+                label.set({
+                    fillStyle: color,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                    shadowBlur: 0,
+                });
+            };
+
+            const otherContrastAction = () => {
+
+                const isDark = canvas.here.prefersDarkColorScheme;
+
+                const highlightColor = (isDark) ? userData.darkHighlightColor : userData.highlightColor;
+                const baseColor = (isDark) ? userData.darkBaseColor : userData.baseColor;
+                const shadowColor = (isDark) ? userData.darkShadowColor : userData.shadowColor;
+
+                worley.set({
+                    colors: [
+                        [0, highlightColor],
+                        [999, baseColor],
+                    ],
+                });
+
+                label.set({
+                    fillStyle: name('worley-pattern'),
+                    shadowOffsetX: userData.shadowOffsetX,
+                    shadowOffsetY: userData.shadowOffsetY,
+                    shadowBlur: userData.shadowBlur,
+                    shadowColor,
+                });
+            };
+
+            canvas.set({
+                colorSchemeLightAction,
+                colorSchemeDarkAction,
+                moreContrastAction,
+                otherContrastAction,
             });
 
-            f1.set({
-                radius: Math.round(localFontSize * shadowBlur),
-            });
 
-            textStroke.set({
-                startX: Math.round(localFontSize * shadowOffsetX),
-                startY: Math.round((localFontSize * yOffset) + (localFontSize * shadowOffsetY)),
-            });
-        });
+            animation.updateOnce();
 
-        // Cleanup
-        additionalDemolishActions.push(() => {
-            f1.kill();
-            p1.kill();
-            worley.kill();
-        });
+            // Return the snippet, so coders can access the snippet's parts
+            // + In case they need to tweak the output to meet the web page's specific requirements
+            return snippet;
+        }
     }
-
-    // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
-    return snippet;
+    return null;
 }

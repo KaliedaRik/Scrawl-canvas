@@ -8,20 +8,24 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
-// Create the demo Phrase entity
-const mytext = scrawl.makePhrase({
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
-    name: 'display-shape-text',
+
+// Create the demo Label entity
+const mytext = scrawl.makeLabel({
+
+    name: name('display-shape-text'),
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
 
     text: `Canvas display shape: undetermined`,
-    size: '40px',
-    justify: 'center',
+    fontString: '40px sans-serif',
 
     fillStyle: 'black',
 });
@@ -79,19 +83,19 @@ canvas.set({
 
     actionLargestArea: () => {
         mytext.set({
-            size: '40px',
+            fontString: '40px sans-serif',
         });
     },
 
     actionRegularArea: () => {
         mytext.set({
-            size: '28px',
+            fontString: '28px sans-serif',
         });
     },
 
     actionSmallestArea: () => {
         mytext.set({
-            size: '16px',
+            fontString: '16px sans-serif',
         });
     },
 });
@@ -113,13 +117,13 @@ canvas.setActionLandscapeShape(() => {
 
 canvas.setActionLargerArea(() => {
     mytext.set({
-        size: '34px',
+        fontString: '34px sans-serif',
     });
 });
 
 canvas.setActionSmallerArea(() => {
     mytext.set({
-        size: '22px',
+        fontString: '22px sans-serif',
     });
 });
 
@@ -132,7 +136,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

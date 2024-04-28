@@ -16,20 +16,20 @@
 // #### Imports
 import { entity, styles, stylesnames } from '../core/library.js';
 
-import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../core/utilities.js';
+import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
-import { makeCoordinate } from '../factory/coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
-import { makePalette } from '../factory/palette.js';
+import { makePalette } from '../untracked-factory/palette.js';
 
-import { _isArray, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../core/shared-vars.js';
+import { _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 
 // Create an animation to handle automated delta gradient animation
 makeAnimation({
 
-    name: 'SC-system-gradient-delta-animation',
+    name: 'SC-core-gradient-delta-animation',
     fn: () => {
 
         stylesnames.forEach(name => {
@@ -263,7 +263,7 @@ export default function (P = Ωempty) {
 // `palette` - argument has to be a Palette object
     S.palette = function (item = Ωempty) {
 
-        if(item.type == T_PALETTE) {
+        if(item.type === T_PALETTE) {
 
             item.dirtyPalette = true;
             this.palette = item;
@@ -401,18 +401,18 @@ export default function (P = Ωempty) {
             let def = this.defs[item],
                 val;
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
 
             def = palette.defs[item];
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = palette[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             else return undefined;
         }
@@ -444,21 +444,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 value = items[key];
 
-                if (key && key != NAME && value != null) {
+                if (key && key !== NAME && value != null) {
 
                     if (!PALETTE_KEYS.includes(key)) {
 
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != UNDEF) this[key] = value;
+                        else if (typeof defs[key] !== UNDEF) this[key] = value;
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != UNDEF) palette[key] = value;
+                        else if (typeof paletteDefs[key] !== UNDEF) palette[key] = value;
                     }
                 }
             }
@@ -492,21 +492,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 value = items[key];
 
-                if (key && key != NAME && value != null) {
+                if (key && key !== NAME && value != null) {
 
                     if (!PALETTE_KEYS.includes(key)) {
 
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
+                        else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], value);
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != UNDEF) palette[key] = addStrings(this[key], value);
+                        else if (typeof paletteDefs[key] !== UNDEF) palette[key] = addStrings(this[key], value);
                     }
                 }
             }
@@ -585,7 +585,7 @@ export default function (P = Ωempty) {
     };
 
 
-// `getData` - Every styles object (Gradient, RadialGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
+// `getData` - Every styles object (Gradient, RadialGradient, ConicGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
     P.getData = function (entity, cell) {
 
         // Step 1: recalculate current start and end points
@@ -613,7 +613,7 @@ export default function (P = Ωempty) {
         }
         else {
 
-            dims = cell.currentDimensions;
+            dims = cell.currentDimensions || [cell.element.width, cell.element.height];
             w = dims[0];
             h = dims[1];
         }
@@ -634,9 +634,10 @@ export default function (P = Ωempty) {
             dim = dimensions[i];
 
             if (val.toFixed) current[i] = val;
-            else if (val == LEFT || val == TOP) current[i] = 0;
-            else if (val == RIGHT || val == BOTTOM) current[i] = dim;
-            else if (val == CENTER) current[i] = dim / 2;
+            else if (val === LEFT || val === TOP) current[i] = 0;
+            else if (val === RIGHT || val === BOTTOM) current[i] = dim;
+            else if (val === CENTER) current[i] = dim / 2;
+            else if (!_isFinite(parseFloat(val))) current[i] = 0;
             else current[i] = (parseFloat(val) / 100) * dim;
         }
     };

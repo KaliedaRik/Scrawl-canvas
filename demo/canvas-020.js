@@ -4,41 +4,48 @@
 // [Run code](../../demo/canvas-020.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrappers
-const canvas = scrawl.library.artefact.mycanvas,
-    hold = scrawl.library.artefact.holdcanvas;
+const canvas = scrawl.findCanvas('mycanvas'),
+    hold = scrawl.findCanvas('holdcanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = 'demo-canvas-020';
 const name = (n) => `${namespace}-${n}`;
 
 
 // Create gradients
 scrawl.makeGradient({
+
     name: name('linear1'),
     endX: '100%',
     colors: [
         [0, 'pink'],
         [999, 'darkgreen']
     ],
+
 }).clone({
+
     name: name('linear2'),
     colors: [
         [0, 'darkblue'],
         [999, 'white']
     ],
+
 }).clone({
+
     name: name('linear3'),
     colors: [
         [0, 'yellow'],
         [999, 'purple']
     ],
+
 }).clone({
+
     name: name('linear4'),
     colors: [
         [0, 'black'],
@@ -49,6 +56,7 @@ scrawl.makeGradient({
 
 // Create entitys
 const block1 = scrawl.makeBlock({
+
     name: name('b1'),
     group: canvas.base.name,
 
@@ -65,6 +73,7 @@ const block1 = scrawl.makeBlock({
 });
 
 const block2 = block1.clone({
+
     name: name('b2'),
     startX: '70%',
     startY: '65%',
@@ -81,6 +90,7 @@ const block2 = block1.clone({
 });
 
 const wheel1 = scrawl.makeWheel({
+
     name: name('w1'),
     group: canvas.base.name,
 
@@ -97,6 +107,7 @@ const wheel1 = scrawl.makeWheel({
 });
 
 const wheel2 = wheel1.clone({
+
     name: name('w2'),
     startX: '30%',
     startY: '60%',
@@ -112,21 +123,51 @@ const wheel2 = wheel1.clone({
     order: 1,
 });
 
+scrawl.makeWheel({
+
+    name: name('template'),
+    start: ['5%', '35%'],
+    radius: 70,
+    method: 'none',
+    scale: 1.8,
+});
+
+const words = scrawl.makeEnhancedLabel({
+
+    name: name('words'),
+    group: canvas.base.name,
+
+    layoutTemplate: name('template'),
+    text: 'Lorem ipsum dolorsit amet',
+    fontString: 'bold 26px sans-serif',
+    justifyLine: 'left',
+    fillStyle: name('linear3'),
+    textHandleY: 'center',
+    lineSpacing: 1.2,
+    lineAdjustment: 20,
+    lockFillStyleToEntity: true,
+    shadowOffsetX: 1.5,
+    shadowOffsetY: 1.5,
+});
+
 
 // Create the filter
 scrawl.makeFilter({
-    name: name('invert'),
-    method: 'invert',
+
+    name: name('myfilter'),
+    method: 'red',
 });
 
 
 // Create a new group with an entity that will only be caught in the Cell's filter
 scrawl.makeGroup({
+
     name: name('temp-group'),
     host: canvas.base.name
 });
 
 scrawl.makeBlock({
+
     name: name('temp-block'),
     group: name('temp-group'),
 
@@ -149,6 +190,7 @@ const imageCapture = function () {
         scrawl.createImageFromEntity(block2, true);
         scrawl.createImageFromEntity(wheel1, true);
         scrawl.createImageFromEntity(wheel2, true);
+        scrawl.createImageFromEntity(words, true);
 
         captureImages = false;
     }
@@ -159,12 +201,12 @@ const imageCapture = function () {
 scrawl.makePicture({
 
     name: name('cell-image'),
-    group: hold.base.name,
+    group: hold.get('baseGroup'),
 
     width: '13%',
     height: '76%',
 
-    startX: '3%',
+    startX: '1%',
     startY: '2%',
 
     asset: 'mycanvas_base-image',
@@ -181,42 +223,48 @@ scrawl.makePicture({
 
     name: name('group-image'),
     asset: 'mycanvas_base-groupimage',
-    startX: '19%',
+    startX: '15%',
 
 }).clone({
 
     name: name('b1-image'),
     asset: name('b1-image'),
-    startX: '35%',
+    startX: '29%',
 
 }).clone({
 
     name: name('b2-image'),
     asset: name('b2-image'),
-    startX: '51%',
+    startX: '43%',
 
 }).clone({
 
     name: name('w1-image'),
     asset: name('w1-image'),
-    startX: '67%',
+    startX: '57%',
 
 }).clone({
 
     name: name('w2-image'),
     asset: name('w2-image'),
-    startX: '83%',
+    startX: '71%',
+
+}).clone({
+
+    name: name('words-image'),
+    asset: name('words-image'),
+    startX: '85%',
 });
 
 
 // Give the hold Picture entitys some labels
-scrawl.makePhrase({
+scrawl.makeLabel({
 
-    name: name('cell-phrase'),
-    group: hold.base.name,
+    name: name('cell-label'),
+    group: hold.get('baseGroup'),
 
     text: 'Cell',
-    font: '15px Arial, sans-serif',
+    fontString: '15px sans-serif',
 
     startY: '85%',
     pivot: name('cell-image'),
@@ -224,33 +272,39 @@ scrawl.makePhrase({
 
 }).clone({
 
-    name: name('group-phrase'),
+    name: name('group-label'),
     text: 'Group',
     pivot: name('group-image'),
 
 }).clone({
 
-    name: name('b1-phrase'),
+    name: name('b1-label'),
     text: 'Block1',
     pivot: name('b1-image'),
 
 }).clone({
 
-    name: name('b2-phrase'),
+    name: name('b2-label'),
     text: 'Block2',
     pivot: name('b2-image'),
 
 }).clone({
 
-    name: name('w1-phrase'),
+    name: name('w1-label'),
     text: 'Wheel1',
     pivot: name('w1-image'),
 
 }).clone({
 
-    name: name('w2-phrase'),
+    name: name('w2-label'),
     text: 'Wheel2',
     pivot: name('w2-image'),
+
+}).clone({
+
+    name: name('words-label'),
+    text: 'Words',
+    pivot: name('words-image'),
 });
 
 
@@ -299,27 +353,31 @@ const events = function () {
             switch (currentTarget) {
 
                 case 'block1' :
-                    block1.addFilters(name('invert'));
+                    block1.addFilters(name('myfilter'));
                     break;
 
                 case 'block2' :
-                    block2.addFilters(name('invert'));
+                    block2.addFilters(name('myfilter'));
                     break;
 
                 case 'wheel1' :
-                    wheel1.addFilters(name('invert'));
+                    wheel1.addFilters(name('myfilter'));
                     break;
 
                 case 'wheel2' :
-                    wheel2.addFilters(name('invert'));
+                    wheel2.addFilters(name('myfilter'));
+                    break;
+
+                case 'words' :
+                    words.addFilters(name('myfilter'));
                     break;
 
                 case 'group' :
-                    group.addFilters(name('invert'));
+                    group.addFilters(name('myfilter'));
                     break;
 
                 case 'cell' :
-                    base.addFilters(name('invert'));
+                    base.addFilters(name('myfilter'));
                     break;
             }
 
@@ -329,9 +387,11 @@ const events = function () {
 }();
 scrawl.addNativeListener(['input'], events, '.controlItem');
 
+
 // Set the DOM input values
-// @ts-expect-error
-document.querySelector('#target').value = '';
+initializeDomInputs([
+    ['select', 'target', 0],
+]);
 
 
 // #### Development and testing

@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo DOM 001</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -23,6 +24,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="particles-016.html">&larr; Previous</a>
+    <a href="dom-002.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 001</h1>
   <h2>Loading the Scrawl-canvas library using a script tag in the HTML code</h2>
 
@@ -49,12 +54,12 @@
 
   <p>... or if using the remote CDN version:</p>
 
-  <h3><b>import</b> * as scrawl from 'https://unpkg.com/scrawl-canvas@8.12.0';</h3>
+  <h3><b>import</b> * as scrawl from 'https://unpkg.com/scrawl-canvas@8.13.0';</h3>
 
   <p>The import doesn't need to be called <span class="scrawl-code">'scrawl'</span> - it can be whatever the user prefers.</p>
 
   <div id="mystack" data-scrawl-stack>
-    <p id="reportmessage"></p>
+    <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
     <div id="secondstack" data-stack style="width: 100%; height: 12em;">
       <p style="color: lightgray; font-family: monospace; font-size: 5em; text-align: center;">element in a nested stack</p>
     </div>

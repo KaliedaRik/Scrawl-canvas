@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,11 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
-    stack = artefact.<span class="hljs-property">mystack</span>,
-    flower = artefact.<span class="hljs-property">flower</span>;
-
-<span class="hljs-keyword">let</span> currentClass = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stack = scrawl.<span class="hljs-title function_">findStack</span>(<span class="hljs-string">&#x27;mystack&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -909,17 +925,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create a new Group for the box elements, against which we will be checking for hits</p>
-<ul>
-<li>the box elements have been imported already and assigned to the Stack’s default group, but we can move them to the new Group using <code>.set()</code></li>
-</ul>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> hitgroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;hitareas&#x27;</span>,
-    <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;mystack&#x27;</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = stack.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
+
+
+<span class="hljs-keyword">let</span> currentClass = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -929,6 +943,28 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Create a new Group for the box elements, against which we will be checking for hits</p>
+<ul>
+<li>the box elements have been imported already and assigned to the Stack’s default group, but we can move them to the new Group using <code>.set()</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> hitgroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;hitareas&#x27;</span>),
+    <span class="hljs-attr">host</span>: stack,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Update the Stack</p>
 
@@ -941,11 +977,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>This gets the browser to add a drag icon to the stack element’s lower right corner, which in turn allows the user to drag-resize the element in real time.</p>
 
@@ -959,11 +995,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Switch on automated element resize capture and processing</p>
 
@@ -975,18 +1011,19 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Update the boxes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>artefact.<span class="hljs-property">rightbox</span>.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;hitareas&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;rightbox&#x27;</span>).<span class="hljs-title function_">set</span>({
+
+    <span class="hljs-attr">group</span>: hitgroup,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;55%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;15%&#x27;</span>,
@@ -995,33 +1032,14 @@
     <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span> },
 });
 
-artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">group</span>: hitgroup.<span class="hljs-property">name</span>,
+scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;leftbox&#x27;</span>).<span class="hljs-title function_">set</span>({
+
+    <span class="hljs-attr">group</span>: hitgroup,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;35%&#x27;</span>,
 
     <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span> },
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Batch-update the box artefacts using their shared Group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>hitgroup.<span class="hljs-title function_">setArtefacts</span>({
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-
-    <span class="hljs-attr">css</span>: { <span class="hljs-attr">opacity</span>: <span class="hljs-string">&#x27;0.4&#x27;</span> },
 });</pre></div></div>
             
         </li>
@@ -1033,17 +1051,38 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
+              <p>Batch-update the box artefacts using their shared Group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>hitgroup.<span class="hljs-title function_">setArtefacts</span>({
+
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+
+    <span class="hljs-attr">css</span>: { <span class="hljs-attr">opacity</span>: <span class="hljs-string">&#x27;0.4&#x27;</span> },
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
               <p>Update the flower wheel</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>flower.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> flower = scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;flower&#x27;</span>);
+
+flower.<span class="hljs-title function_">set</span>({
+
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">200</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">classes</span>: <span class="hljs-string">&#x27;make_round&#x27;</span>,
     <span class="hljs-attr">delta</span>: {
         <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;0.4%&#x27;</span>,
@@ -1054,11 +1093,11 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>We will check for <strong>boundary collisions</strong> using Scrawl-canvas delta checking functionality</p>
 <ul>
@@ -1081,30 +1120,15 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
         </li>
         
         
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <h4 id="scene-animation">Scene animation</h4>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Updating the flower’s DOM element’s class attribute</p>
+              <h4 id="scene-animation">Scene animation</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> checkForFlowerClassUpdates = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1115,12 +1139,29 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Updating the flower’s DOM element’s class attribute</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> current = hitgroup.<span class="hljs-title function_">getArtefactAt</span>([flower.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;start&#x27;</span>)]).<span class="hljs-property">artefact</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> checkForFlowerClassUpdates = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    <span class="hljs-keyword">const</span> current = hitgroup.<span class="hljs-title function_">getArtefactAt</span>([flower.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;start&#x27;</span>)]).<span class="hljs-property">artefact</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>console.log(flower.get(‘start’), current)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
     <span class="hljs-keyword">if</span> (current &amp;&amp; !currentClass) {
 
         currentClass = (current.<span class="hljs-property">name</span> === <span class="hljs-string">&#x27;leftbox&#x27;</span>) ? <span class="hljs-string">&#x27;make_blue&#x27;</span> : <span class="hljs-string">&#x27;make_red&#x27;</span>;
@@ -1136,11 +1177,11 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -1148,28 +1189,9 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Current classes: &quot;<span class="hljs-subst">${flower.get(<span class="hljs-string">&#x27;classes&#x27;</span>)}</span>&quot;`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`
+    Current classes: &quot;<span class="hljs-subst">${flower.get(<span class="hljs-string">&#x27;classes&#x27;</span>)}</span>&quot;`</span>;
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>Create the Display cycle animation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">commence</span>: checkForFlowerClassUpdates,
-    <span class="hljs-attr">target</span>: stack,
-    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
             
         </li>
         
@@ -1180,6 +1202,26 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
+              <p>Create the Display cycle animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+    <span class="hljs-attr">commence</span>: checkForFlowerClassUpdates,
+    <span class="hljs-attr">target</span>: stack,
+    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
               <p>We need to finalize the stack’s display after the first Display cycle completes</p>
 <ul>
 <li>Tweaking the stack’s <code>height</code> attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack’s dimensions).</li>
@@ -1189,6 +1231,21 @@ artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title func
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> stack.<span class="hljs-title function_">set</span>({<span class="hljs-attr">height</span>: <span class="hljs-number">400</span>}),
 });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

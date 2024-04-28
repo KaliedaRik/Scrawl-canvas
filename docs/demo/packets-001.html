@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,7 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -904,6 +924,22 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Event listeners</p>
 
@@ -915,11 +951,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Testing Block entity</p>
 
@@ -927,7 +963,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> box = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-box&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-box&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">10</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">10</span>,
@@ -937,60 +973,22 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
 
-    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
         });
     },
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
         });
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+    },
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>() },
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>() },
 
     <span class="hljs-attr">anchor</span>: {
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-box-link&#x27;</span>,
@@ -1004,11 +1002,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-9">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">1</span> - no argument supplied
 </code></pre>
@@ -1020,11 +1018,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-10">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">2</span> - argument === <span class="hljs-literal">true</span>
 </code></pre>
@@ -1036,11 +1034,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-11">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">3</span> - argument.<span class="hljs-property">includeDefaults</span> === <span class="hljs-literal">true</span>
 </code></pre>
@@ -1054,11 +1052,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-12">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">4</span> - argument.<span class="hljs-property">includeDefaults</span> === <span class="hljs-title class_">Array</span>
 </code></pre>
@@ -1077,20 +1075,20 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-13">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Save tests - expected results</p>
 <pre><code><span class="hljs-variable constant_">TEST</span> <span class="hljs-number">1</span>
 [
-    <span class="hljs-string">&quot;my-box&quot;</span>,
+    <span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
     <span class="hljs-string">&quot;Block&quot;</span>,
     <span class="hljs-string">&quot;entity&quot;</span>,
     {
-        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;my-box&quot;</span>,
+        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
         <span class="hljs-string">&quot;dimensions&quot;</span>:[<span class="hljs-number">100</span>,<span class="hljs-number">50</span>],
         <span class="hljs-string">&quot;start&quot;</span>:[<span class="hljs-number">10</span>,<span class="hljs-number">10</span>],
         <span class="hljs-string">&quot;delta&quot;</span>:{},
@@ -1110,11 +1108,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
 <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">2</span>, <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">3</span>
 [
-    <span class="hljs-string">&quot;my-box&quot;</span>,
+    <span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
     <span class="hljs-string">&quot;Block&quot;</span>,
     <span class="hljs-string">&quot;entity&quot;</span>,
     {
-        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;my-box&quot;</span>,
+        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
         <span class="hljs-string">&quot;dimensions&quot;</span>:[<span class="hljs-number">100</span>,<span class="hljs-number">50</span>],
         <span class="hljs-string">&quot;start&quot;</span>:[<span class="hljs-number">10</span>,<span class="hljs-number">10</span>],
         <span class="hljs-string">&quot;handle&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
@@ -1196,7 +1194,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         <span class="hljs-string">&quot;shadowOffsetY&quot;</span>:<span class="hljs-number">0</span>,
         <span class="hljs-string">&quot;shadowBlur&quot;</span>:<span class="hljs-number">0</span>,
         <span class="hljs-string">&quot;shadowColor&quot;</span>:<span class="hljs-string">&quot;rgb(0 0 0 / 0)&quot;</span>,
-        <span class="hljs-string">&quot;font&quot;</span>:<span class="hljs-string">&quot;12px sans-serif&quot;</span>,
+        <span class="hljs-string">&quot;fontString&quot;</span>:<span class="hljs-string">&quot;12px sans-serif&quot;</span>,
         <span class="hljs-string">&quot;textAlign&quot;</span>:<span class="hljs-string">&quot;start&quot;</span>,
         <span class="hljs-string">&quot;textBaseline&quot;</span>:<span class="hljs-string">&quot;alphabetic&quot;</span>
     }
@@ -1204,11 +1202,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
 <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">4</span>
 [
-    <span class="hljs-string">&quot;my-box&quot;</span>,
+    <span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
     <span class="hljs-string">&quot;Block&quot;</span>,
     <span class="hljs-string">&quot;entity&quot;</span>,
     {
-        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;my-box&quot;</span>,
+        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
         <span class="hljs-string">&quot;dimensions&quot;</span>:[<span class="hljs-number">100</span>,<span class="hljs-number">50</span>],
         <span class="hljs-string">&quot;start&quot;</span>:[<span class="hljs-number">10</span>,<span class="hljs-number">10</span>],
         <span class="hljs-string">&quot;handle&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
@@ -1235,11 +1233,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-14">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Import tests - note that <strong>importPacket() is an asynchronous function that returns a promise</strong></p>
 
@@ -1251,11 +1249,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-15">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>Import test 1</strong> - expect the import to fail due to a bad packet (malformed JSON string)</p>
 
@@ -1268,11 +1266,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-16">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>Import test 2</strong> - expect the import to succeed</p>
 
@@ -1287,11 +1285,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-17">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>Import test 3</strong> - expect the import to fail due to incorrect url (missing .txt)</p>
 
@@ -1304,11 +1302,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-18">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>Import test 4</strong> - expect the import to succeed</p>
 
@@ -1323,11 +1321,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>Import test 5</strong> - expect the import to succeed</p>
 
@@ -1342,11 +1340,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Import tests - expected results (result order may vary due to asynchronous fetch/promise resolve)</p>
 <pre><code><span class="hljs-variable constant_">SETUP</span>
@@ -1377,11 +1375,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Create the Display cycle animation</p>
@@ -1390,7 +1388,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });

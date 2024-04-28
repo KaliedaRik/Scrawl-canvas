@@ -6,11 +6,15 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 032</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
     canvas {
       background-color: lemonchiffon;
+    }
+    .canvas-container {
+      box-shadow: 0px 0px 0px 1px black;
     }
     .button-menu {
       text-align: center;
@@ -20,6 +24,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-031.html">&larr; Previous</a>
+    <a href="canvas-033.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 032</h1>
   <h2>Freehand drawing</h2>
   <h3>Click-drag to draw lines<br />This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
@@ -42,15 +50,15 @@
     ></canvas>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
 
     <ul>
       <li>Define a responsive canvas element with a fixed-dimensions base Cell</li>
-      <li>Implement line drawing functionality using Polyline entitys</li>
-      <li>Add in user interaction buttons to implement undo/redo, and clear canvas, functionality.</li>
+      <li>Implement line drawing functionality using Polyline entitys. A line will be drawn when user clicks the left mouse button and moves the mouse cursor; line drawing will end when user releases the mouse button, or moves the mouse cursor out of the &lt;canvas> element's base-canvas (the green area)</li>
+      <li>Add in user interaction buttons to implement undo/redo, and clear canvas, functionality</li>
     </ul>
     
     <p><b>Touch test:</b> canvas should be resizable. Known issue: new lines may not start, or may connect to previous line ends - the test needs to be reconsidered and rewritten to make UX more robust.</p>

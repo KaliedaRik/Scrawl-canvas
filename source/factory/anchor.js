@@ -8,19 +8,14 @@
 // The __makeAnchor__ function is not exposed to the 'scrawl' object, thus objects can only be created indirectly. Anchors can be saved, cloned and killed as part of wider save/kill/clone functionality.
 
 
-// #### Demos:
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Packets-001](../../demo/packets-001.html) - Save and load Scrawl-canvas entity using text packets
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _A, _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../core/shared-vars.js';
+import { _A, _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Anchor constructor
@@ -153,12 +148,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             val = items[key];
 
-            if (key && key != NAME && val != null) {
+            if (key && key !== NAME && val != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, val);
-                else if (typeof defs[key] != UNDEF) this[key] = val;
+                else if (typeof defs[key] !== UNDEF) this[key] = val;
             }
         }
         this.dirtyAnchor = true;

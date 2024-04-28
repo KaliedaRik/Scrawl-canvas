@@ -1,170 +1,273 @@
 // # Demo Canvas 058
-// Image smoothing
+// Group and ungroup entitys; create a bespoke drag-drop UX
 
-// [Run code](../../demo/canvas-058.html)
-import * as scrawl from '../source/scrawl.js'
+// [Run code](../../demo/filters-058.html)
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
-
-scrawl.importDomImage('.flowers');
+const canvas = scrawl.findCanvas('mycanvas');
 
 
-canvas.setBase({
-    compileOrder: 1,
-});
-
-const textCell = canvas.buildCell({
-
-    name: 'text-cell',
-    dimensions: [100, 100],
-    shown: false,
-});
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
-scrawl.makePhrase({
+const [w, h] = canvas.get('dimensions');
 
-    name: 'hello-world-in-cell',
-    group: 'text-cell',
 
-    text: 'Hello world!',
+const colorEngine = scrawl.makeColor({
 
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-
-    lineHeight: 0.8,
+    name: name('color-engine'),
+    minimumColor: 'red',
+    maximumColor: 'blue',
 });
 
 
-scrawl.makePicture({
+const boxGroup = scrawl.makeGroup({
 
-    name: 'flower',
-    asset: 'iris',
-
-    start: [3, 3],
-    dimensions: [297, 297],
-
-    copyStart: [200, 200],
-    copyDimensions: [50, 50],
-
-    lineWidth: 6,
-    strokeStyle: 'gold',
-
-    method: 'fillThenDraw',
-
-}).clone({
-
-    name: 'hello',
-    asset: 'text-cell',
-
-    start: [300, 300],
-    dimensions: [297, 297],
-
-    copyStart: [15, 15],
-    copyDimensions: [70, 70],
+    name: name('box-group'),
+    host: canvas.getBase(),
 });
 
-scrawl.makePhrase({
+for (let i = 0; i < 100; i++) {
 
-    name: 'hello-world-in-base-1',
+    scrawl.makeBlock({
 
-    text: 'Hello world!',
+        name: name(`b-${i}`),
+        group: name('box-group'),
+        dimensions: [30, 30],
+        startX: (w * 0.1) + (Math.random() * (w * 0.8)),
+        startY: (h * 0.1) + (Math.random() * (h * 0.8)),
+        handle: ['center', 'center'],
+        roll: Math.random() * 360,
+        fillStyle: colorEngine.getRangeColor(Math.random()),
+        globalAlpha: 0.25,
+        delta: {
+            roll: 0.8,
+        },
+        noDeltaUpdates: true,
+    });
+}
 
-    start: ['25%', '60%'],
-    handle: ['center', 'center'],
+const referenceGroup = scrawl.makeGroup({
 
-    lineHeight: 0.8,
-
-}).clone({
-
-    name: 'hello-world-in-base-2',
-    startY: '70%',
-    scale: 2,
-
-}).clone({
-
-    name: 'hello-world-in-base-3',
-    startY: '85%',
-    scale: 4.5,
+    name: name('reference-group'),
+    host: canvas.getBase(),
 });
 
-scrawl.makePattern({
+const referenceBlock = scrawl.makeBlock({
 
-    name: 'bunny-pattern',
-    imageSource: 'img/bunny.png',
-    matrixA: 3,
-    matrixD: 3,
+    name: name('reference-block'),
+    group: name('reference-group'),
+    dimensions: [0, 0],
+    method: 'draw',
+    lineDash: [4, 2],
+    delta: {
+        lineDashOffset: 0.2,
+    },
+
+    onEnter: function () {
+
+        canvas.set({
+            css: {
+                cursor: 'grab',
+            },
+        });
+
+/** @ts-expect-error */
+        this.set({
+            lineDash: [16, 2],
+            lineWidth: 2,
+        });
+    },
+
+    onLeave: function () {
+
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+
+/** @ts-expect-error */
+        this.set({
+            lineDash: [4, 2],
+            lineWidth: 1,
+        });
+    },
 });
 
-scrawl.makeBlock({
 
-    name: 'pattern-block',
+const gatherGroup = scrawl.makeGroup({
 
-    start: [300, 3],
-    dimensions: [297, 297],
-
-    lineWidth: 6,
-    fillStyle: 'bunny-pattern',
-    strokeStyle: 'gold',
-
-    method: 'fillThenDraw',
+    name: name('gather-group'),
 });
+
+let isGathering = false,
+    isMoving = false;
+
+let startX = 0,
+    startY = 0;
+
+const downAction = () => {
+
+    const { here } = canvas;
+
+    if (here) {
+
+        const hit = referenceGroup.getArtefactAt(here);
+
+        if (typeof hit !== 'boolean' && hit.artefact) {
+
+            isMoving = true;
+            isGathering = false;
+        }
+        else {
+
+            boxGroup.setArtefacts({
+                globalAlpha: 0.25,
+                noDeltaUpdates: true,
+            });
+
+            const {x, y} = here;
+
+            startX = x;
+            startY = y;
+
+            referenceBlock.set({
+                start: [x, y],
+                dimensions: [0, 0],
+            });
+
+            isGathering = true;
+            isMoving = false;
+        }
+    }
+}
+
+const moveAction = (e) => {
+
+    if (isGathering) doGathering();
+    else if (isMoving) doMoving(e);
+};
+
+const doGathering = () => {
+
+    const { here } = canvas;
+
+    if (here) {
+
+        const {x, y} = here;
+
+        let width = 0,
+            height = 0,
+            revStartX = 0,
+            revStartY = 0;
+
+        if (x < startX) {
+
+            width = startX - x;
+            revStartX = x;
+        }
+        else width = x - startX;
+
+        if (y < startY) {
+
+            height = startY - y;
+            revStartY = y;
+        }
+        else height = y - startY;
+
+        referenceBlock.set({
+            startX: revStartX || startX,
+            startY: revStartY || startY,
+            width,
+            height,
+        });
+
+        gatherGroup.setArtefacts({
+            globalAlpha: 0.25,
+            noDeltaUpdates: true,
+        });
+
+        gatherGroup.clearArtefacts();
+
+        const boxes = boxGroup.get('artefacts');
+
+        boxes.forEach(b => {
+
+            const box = boxGroup.getArtefact(b);
+
+            if (box) {
+
+                const hit = referenceGroup.getArtefactAt([box.get('position')]);
+
+                if (typeof hit !== 'boolean' && hit.artefact) {
+
+                    gatherGroup.addArtefacts(box);
+                }
+            }
+        });
+
+        gatherGroup.setArtefacts({
+            globalAlpha: 1,
+            noDeltaUpdates: false,
+        });
+    }
+};
+
+const doMoving = (e) => {
+
+    if (e) {
+
+        e.preventDefault();
+
+        const { movementX, movementY } = e;
+
+        gatherGroup.updateArtefacts({
+            startX: movementX,
+            startY: movementY,
+        });
+
+        referenceGroup.updateArtefacts({
+            startX: movementX,
+            startY: movementY,
+        });
+    }
+}
+
+const upAction = () => {
+
+    isGathering = false;
+    isMoving = false;
+    startX = 0;
+    startY = 0;
+};
+
+scrawl.addListener('down', downAction, canvas.domElement);
+scrawl.addListener('move', moveAction, canvas.domElement);
+scrawl.addListener(['up', 'leave'], upAction, canvas.domElement);
+
+scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage');
 
+
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
+
 // #### Development and testing
-// Setup form observer functionality
-scrawl.makeUpdater({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: canvas.base.name,
-    targetLibrarySection: 'group',
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        imageSmoothingEnabled: ['imageSmoothingEnabled', 'boolean'],
-        imageSmoothingQuality: ['imageSmoothingQuality', 'raw'],
-    },
-});
-
-
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    if (e && e.target) {
-
-        const val = (e.target.value === '1') ? true : false;
-
-        canvas.set({ smoothFont: val });
-        canvas.setBase({ smoothFont: val });
-        textCell.set({ smoothFont: val });
-    }
-}, '#smoothFont')
-
-// @ts-expect-error
-document.querySelector('#smoothFont').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#imageSmoothingEnabled').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#imageSmoothingQuality').options.selectedIndex = 2;
-
-
 console.log(scrawl.library);

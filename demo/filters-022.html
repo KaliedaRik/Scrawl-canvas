@@ -6,24 +6,57 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Filters 022</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    #my-image-store {
-      display: none;
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 1em 0;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+
+          text-align: center;
+          width: 400px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
     }
 
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
-    }
+      grid-template-columns: 1fr 2fr;
 
-    canvas {
-      margin:  0 auto;
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+
+      @media (scripting: none) {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="filters-021.html">&larr; Previous</a>
+    <a href="filters-023.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 022</h1>
   <h2>Parameters for: mapToGradient filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
@@ -52,62 +85,10 @@
     <div class="pink">
       <select class="controlItem" id="easing">
         <option value="linear">linear</option>
-        <option value="out">out</option>
-        <option value="in">in</option>
-        <option value="" disabled>---</option>
         <option value="easeOut">easeOut</option>
         <option value="easeOutIn">easeOutIn</option>
         <option value="easeInOut">easeInOut</option>
         <option value="easeIn">easeIn</option>
-        <option value="easeOut3">easeOut3</option>
-        <option value="easeOutIn3">easeOutIn3</option>
-        <option value="easeInOut3">easeInOut3</option>
-        <option value="easeIn3">easeIn3</option>
-        <option value="easeOut4">easeOut4</option>
-        <option value="easeOutIn4">easeOutIn4</option>
-        <option value="easeInOut4">easeInOut4</option>
-        <option value="easeIn4">easeIn4</option>
-        <option value="easeOut5">easeOut5</option>
-        <option value="easeOutIn5">easeOutIn5</option>
-        <option value="easeInOut5">easeInOut5</option>
-        <option value="easeIn5">easeIn5</option>
-        <option value="" disabled>---</option>
-        <option value="cosine">cosine</option>
-        <option value="hermite">hermite</option>
-        <option value="quintic">quintic</option>
-        <option value="" disabled>---</option>
-        <option value="easeOutSine">easeOutSine</option>
-        <option value="easeOutInSine">easeOutInSine</option>
-        <option value="easeInSine">easeInSine</option>
-        <option value="easeOutQuad">easeOutQuad</option>
-        <option value="easeOutInQuad">easeOutInQuad</option>
-        <option value="easeInQuad">easeInQuad</option>
-        <option value="easeOutCubic">easeOutCubic</option>
-        <option value="easeOutInCubic">easeOutInCubic</option>
-        <option value="easeInCubic">easeInCubic</option>
-        <option value="easeOutQuart">easeOutQuart</option>
-        <option value="easeOutInQuart">easeOutInQuart</option>
-        <option value="easeInQuart">easeInQuart</option>
-        <option value="easeOutQuint">easeOutQuint</option>
-        <option value="easeOutInQuint">easeOutInQuint</option>
-        <option value="easeInQuint">easeInQuint</option>
-        <option value="easeOutExpo">easeOutExpo</option>
-        <option value="easeOutInExpo">easeOutInExpo</option>
-        <option value="easeInExpo">easeInExpo</option>
-        <option value="easeOutCirc">easeOutCirc</option>
-        <option value="easeOutInCirc">easeOutInCirc</option>
-        <option value="easeInCirc">easeInCirc</option>
-        <option value="" disabled>---</option>
-        <option value="easeOutBack">easeOutBack</option>
-        <option value="easeOutInBack">easeOutInBack</option>
-        <option value="easeInBack">easeInBack</option>
-        <option value="easeOutElastic">easeOutElastic</option>
-        <option value="easeOutInElastic">easeOutInElastic</option>
-        <option value="easeInElastic">easeInElastic</option>
-        <option value="easeOutBounce">easeOutBounce</option>
-        <option value="easeOutInBounce">easeOutInBounce</option>
-        <option value="easeInBounce">easeInBounce</option>
-        <option value="" disabled>---</option>
         <option value="user-steps">steps (user-defined)</option>
         <option value="user-repeat">repeat (user-defined)</option>
       </select>
@@ -118,14 +99,31 @@
 
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="400" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="mycanvas" 
+      width="400" 
+      height="400"
+      data-scrawl-canvas
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/filters-022.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+      <div class="assets" aria-hidden="true">
+        <img
+          id="iris"
+          src="img/iris.png"
+          class="flowers"
+          alt="A purple-mauve iris flower"
+        />    
+      </div>
+    </canvas>
+  </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -139,10 +137,6 @@
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-022.html">Annotated code</a></p>
-  </div>
-
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-022.js" type="module"></script>

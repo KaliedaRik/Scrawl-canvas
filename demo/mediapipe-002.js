@@ -8,7 +8,12 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Magic numbers
@@ -20,7 +25,7 @@ const width = 1280,
 // We'll handle everything in a raw asset object, which a Picture entity can then use as its source
 const myAsset = scrawl.makeRawAsset({
 
-    name: 'mediapipe-model-interpreter',
+    name: name('mediapipe-model-interpreter'),
 
     userAttributes: [{
 
@@ -30,13 +35,13 @@ const myAsset = scrawl.makeRawAsset({
 
             if (item) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.stuff = item;
-// @ts-expect-error
+/** @ts-expect-error */
                 this.canvasWidth =  width;
-// @ts-expect-error
+/** @ts-expect-error */
                 this.canvasHeight = height;
-// @ts-expect-error
+/** @ts-expect-error */
                 this.dirtyData = true;
             }
         },
@@ -70,19 +75,19 @@ const myAsset = scrawl.makeRawAsset({
 
                 // We'll draw stuff on the canvas using MediaPipe's own drawing routines
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
                 drawConnectors(engine, landmarks, FACEMESH_TESSELATION, {color: '#707070', lineWidth: 1});
-// @ts-expect-error
+/** @ts-expect-error */
                 drawConnectors(engine, landmarks, FACEMESH_RIGHT_EYE, {color: '#FF3030'});
-// @ts-expect-error
+/** @ts-expect-error */
                 drawConnectors(engine, landmarks, FACEMESH_RIGHT_EYEBROW, {color: '#FF3030'});
-// @ts-expect-error
+/** @ts-expect-error */
                 drawConnectors(engine, landmarks, FACEMESH_LEFT_EYE, {color: '#30FF30'});
-// @ts-expect-error
+/** @ts-expect-error */
                 drawConnectors(engine, landmarks, FACEMESH_LEFT_EYEBROW, {color: '#30FF30'});
-// @ts-expect-error
+/** @ts-expect-error */
                 drawConnectors(engine, landmarks, FACEMESH_FACE_OVAL, {color: '#000000'});
-// @ts-expect-error
+/** @ts-expect-error */
                 drawConnectors(engine, landmarks, FACEMESH_LIPS, {color: '#000000'});
 /* eslint-enable */
             }
@@ -99,8 +104,8 @@ const perform = function (stuff) {
 
     if (!output) output = scrawl.makePicture({
 
-        name: 'output',
-        asset: 'mediapipe-model-interpreter',
+        name: name('output'),
+        asset: name('mediapipe-model-interpreter'),
 
         dimensions: ['100%', '100%'],
         copyDimensions: ['100%', '100%'],
@@ -115,21 +120,21 @@ let video, model, output;
 // Capture the media stream
 scrawl.importMediaStream({
 
-    name: 'device-camera',
+    name: name('device-camera'),
     audio: false,
 })
 .then(mycamera => {
 
     video = mycamera;
 
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.width = width;
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.height = height;
 
     scrawl.makePicture({
 
-        name: 'background',
+        name: name('background'),
         asset: mycamera.name,
 
         dimensions: ['100%', '100%'],
@@ -140,7 +145,7 @@ scrawl.importMediaStream({
 
     // Start the MediaPipe model
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     model = new FaceMesh({
 
 /* eslint-enable */
@@ -156,7 +161,7 @@ scrawl.importMediaStream({
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     const mediaPipeCamera = new Camera(video.source, {
 
 /* eslint-enable */
@@ -182,7 +187,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

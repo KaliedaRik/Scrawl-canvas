@@ -20,36 +20,23 @@
 // + The artefact can then set its `path` attribute to the path-defined entity's name-String (or the entity itself), and set its `lockTo` Array values to `"path"`.
 // + We position the artefact by setting its `pathPosition` attribute to a float Number value between `0.0 - 1.0`, with `0` being the start of the path, and `1` being its end.
 // + Path-defined entitys can use other path-defined entitys as a path.
-// + Phrase entitys can use a path to position their text block; they can also use a path to position each letter individually along the path.
+// + EnhancedLabel entitys can use a path to position their text units; they can also use a path to position each letter individually along the path.
 // + Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - ___tangential rotation___ by setting their `addPathRotation` flag to `true`.
 // + Animate an artefact along the path by either using the artefact's `delta` object, or triggering a Tween to perform the movement.
-
-
-// #### Demos:
-// + [Canvas-011](../../demo/canvas-011.html) - Shape entity (make, clone, method); drag and drop shape entitys
-// + [Canvas-012](../../demo/canvas-012.html) - Shape entity position; shape entity as a path for other artefacts to follow
-// + [Canvas-013](../../demo/canvas-013.html) - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral
-// + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier entitys - control lock alternatives
-// + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
-// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
-// + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
-// + [Canvas-038](../../demo/canvas-038.html) - Responsive Shape-based entitys
-// + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-// + [Packets-004](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
-import { makeCoordinate } from './coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 import curveMix from '../mixin/shape-curve.js';
 
-import { BEZIER, COORD, END_CONTROL, END_CONTROL_PARTICLE, END_CONTROL_PATH, END_CONTROL_PIVOT, ENTITY, PATH, START_CONTROL, START_CONTROL_PARTICLE, START_CONTROL_PATH, START_CONTROL_PIVOT, T_BEZIER, ZERO_STR } from '../core/shared-vars.js';
+import { BEZIER, COORD, END_CONTROL, END_CONTROL_PARTICLE, END_CONTROL_PATH, END_CONTROL_PIVOT, ENTITY, PATH, START_CONTROL, START_CONTROL_PARTICLE, START_CONTROL_PATH, START_CONTROL_PIVOT, T_BEZIER, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Bezier constructor
@@ -83,9 +70,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [shapeBasic](../mixin/shapeBasic.html)
-// + [shapeCurve](../mixin/shapeCurve.html)
 baseMix(P);
 shapeMix(P);
 curveMix(P);
@@ -101,6 +85,7 @@ const defaultAttributes = {
 // __startControlPivot__, __startControlPivotCorner__, __addStartControlPivotHandle__, __addStartControlPivotOffset__
 // + Like the `start` coordinate, the `startControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
     startControlPivot: ZERO_STR,
+    startControlPivotIndex: -1,
     startControlPivotCorner: ZERO_STR,
     addStartControlPivotHandle: false,
     addStartControlPivotOffset: false,
@@ -122,6 +107,7 @@ const defaultAttributes = {
 // __endControlPivot__, __endControlPivotCorner__, __addEndControlPivotHandle__, __addEndControlPivotOffset__
 // + Like the `start` coordinate, the `endControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
     endControlPivot: ZERO_STR,
+    endControlPivotIndex: -1,
     endControlPivotCorner: ZERO_STR,
     addEndControlPivotHandle: false,
     addEndControlPivotOffset: false,
@@ -446,19 +432,19 @@ P.preparePinsForStamp = function () {
 
         name = dirtyPins[i];
 
-        if ((scPivot && scPivot.name == name) || (scPath && scPath.name == name)) {
+        if ((scPivot && scPivot.name === name) || (scPath && scPath.name === name)) {
 
             this.dirtyStartControl = true;
             if (this.startControlLockTo.includes(PATH)) this.currentStartControlPathData = false;
         }
 
-        if ((ecPivot && ecPivot.name == name) || (ecPath && ecPath.name == name)) {
+        if ((ecPivot && ecPivot.name === name) || (ecPath && ecPath.name === name)) {
 
             this.dirtyEndControl = true;
             if (this.endControlLockTo.includes(PATH)) this.currentEndControlPathData = false;
         }
 
-        if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
+        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
 
             this.dirtyEnd = true;
             if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;

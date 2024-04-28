@@ -4,131 +4,136 @@
 // [Run code](../../demo/filters-019.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas,
-    entity = scrawl.library.entity,
-    filter = scrawl.library.filter;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filters
 scrawl.makeFilter({
-    name: 'edgeDetect',
+
+    name: name('edgeDetect'),
     method: 'edgeDetect',
+
 }).clone({
-    name: 'sharpen',
+
+    name: name('sharpen'),
     method: 'sharpen',
 });
+
 
 // Create the target entity
 scrawl.makePicture({
 
-    name: 'edgeDetect-filter',
+    name: name('edgeDetect-image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    start: [0, 0],
-    dimensions: [300, 300],
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['edgeDetect'],
+    filters: [name('edgeDetect')],
 
 }).clone({
 
-    name: 'sharpen-filter',
+    name: name('sharpen-image'),
     startX: 300,
-    filters: ['sharpen'],
+    filters: [name('sharpen')],
 });
 
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
-    name: 'edgeDetect-label',
+    name: name('edgeDetect-label'),
     text: 'Edge detect',
 
-    font: '20px sans-serif',
+    fontString: '20px sans-serif',
 
     fillStyle: 'white',
     lineWidth: 4,
 
     method: 'drawThenFill',
 
-    pivot: 'edgeDetect-filter',
+    pivot: name('edgeDetect-image'),
     lockTo: 'pivot',
     offset: [5, 5],
 
 }).clone({
 
-    name: 'sharpen-label',
+    name: name('sharpen-label'),
     text: 'Sharpen',
-    pivot: 'sharpen-filter',
+    pivot: name('sharpen-image'),
 
-})
+});
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Opacity: ${opacity.value}`;
+    return `
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'opacity', '1'],
+    ['select', 'memoizeFilterOutput', 0],
+]);
+
+
 // Setup form observer functionality
 const myFilters = [
-    filter.edgeDetect,
-    filter.sharpen
-];
-
-const myPictures = [
-    entity['edgeDetect-filter'],
-    entity['sharpen-filter']
+    scrawl.findFilter(name('edgeDetect')),
+    scrawl.findFilter(name('sharpen')),
 ];
 
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
-    myFilters.forEach(f => f.set({ opacity: parseFloat(e.target.value) }));
+    if (e && e.target) {
 
-}, '#opacity');
+        const val = parseFloat(e.target.value)
+        myFilters.forEach(f => f.set({ opacity: val }));
+    }
+
+}, dom.opacity);
+
+
+const myPictures = [
+    scrawl.findEntity(name('edgeDetect-image')),
+    scrawl.findEntity(name('sharpen-image')),
+];
 
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
     const val = (e.target.value === '0') ? false : true;
-
     myPictures.forEach(p => p.set({ memoizeFilterOutput: val }));
 
-}, '#memoizeFilterOutput');
-
-// Setup form
-// @ts-expect-error
-document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
-
-const opacity = document.querySelector('#opacity');
-
-// @ts-expect-error
-opacity.value = 1;
+}, dom.memoizeFilterOutput);
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', myPictures);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, myPictures);
 
 
 // #### Development and testing

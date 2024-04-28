@@ -8,9 +8,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    flower = artefact.flower;
+const stack = scrawl.findStack('mystack');
+
+
+// Namespacing boilerplate
+const namespace = stack.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 let currentClass = '';
 
@@ -18,8 +22,9 @@ let currentClass = '';
 // Create a new Group for the box elements, against which we will be checking for hits
 // + the box elements have been imported already and assigned to the Stack's default group, but we can move them to the new Group using `.set()`
 const hitgroup = scrawl.makeGroup({
-    name: 'hitareas',
-    host: 'mystack',
+
+    name: name('hitareas'),
+    host: stack,
 });
 
 
@@ -40,8 +45,9 @@ stack.set({
 
 
 // Update the boxes
-artefact.rightbox.set({
-    group: 'hitareas',
+scrawl.findElement('rightbox').set({
+
+    group: hitgroup,
 
     startX: '55%',
     startY: '15%',
@@ -50,8 +56,9 @@ artefact.rightbox.set({
     css: { backgroundColor: 'red' },
 });
 
-artefact.leftbox.set({
-    group: hitgroup.name,
+scrawl.findElement('leftbox').set({
+
+    group: hitgroup,
 
     startX: '10%',
     startY: '35%',
@@ -62,6 +69,7 @@ artefact.leftbox.set({
 
 // Batch-update the box artefacts using their shared Group
 hitgroup.setArtefacts({
+
     width: '25%',
     height: '50%',
 
@@ -70,13 +78,13 @@ hitgroup.setArtefacts({
 
 
 // Update the flower wheel
+const flower = scrawl.findElement('flower');
+
 flower.set({
-    width: 200,
-    height: 200,
-    startX: '50%',
-    startY: '50%',
-    handleX: 'center',
-    handleY: 'center',
+
+    dimensions: [200, 200],
+    start: ['50%', '50%'],
+    handle: ['center', 'center'],
     classes: 'make_round',
     delta: {
         startX: '0.4%',
@@ -103,8 +111,10 @@ flower.set({
 // Updating the flower's DOM element's class attribute
 const checkForFlowerClassUpdates = function () {
 
-// @ts-expect-error
+/** @ts-expect-error */
     const current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
+
+    // console.log(flower.get('start'), current)
 
     if (current && !currentClass) {
 
@@ -122,14 +132,15 @@ const checkForFlowerClassUpdates = function () {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Current classes: "${flower.get('classes')}"`;
+    return `
+    Current classes: "${flower.get('classes')}"`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     commence: checkForFlowerClassUpdates,
     target: stack,
     afterShow: report,
@@ -138,3 +149,7 @@ scrawl.makeRender({
     // + Tweaking the stack's `height` attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack's dimensions).
     afterCreated: () => stack.set({height: 400}),
 });
+
+
+// #### Development and testing
+console.log(scrawl.library);

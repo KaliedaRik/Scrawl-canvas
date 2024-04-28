@@ -2,38 +2,27 @@
 // Apply filters at the entity, group and cell level
 
 // [Run code](../../demo/canvas-007.html)
-import {
-    addNativeListener,
-    importDomImage,
-    library as L,
-    makeBlock,
-    makeFilter,
-    makeGradient,
-    makeNoiseAsset,
-    makePicture,
-    makeRender,
-    makeWheel,
-} from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Import asset
-importDomImage('.filter-image');
+scrawl.importDomImage('.filter-image');
 
 
 // Create gradients
-const myGrad = makeGradient({
+const myGrad = scrawl.makeGradient({
     name: name('linear1'),
     endX: '100%',
     colors: [
@@ -62,7 +51,7 @@ const myGrad = makeGradient({
 
 
 // Create entitys
-const block1 = makeBlock({
+const block1 = scrawl.makeBlock({
     name: name('b1'),
     width: '70%',
     height: '70%',
@@ -92,7 +81,7 @@ const block2 = block1.clone({
     memoizeFilterOutput: false,
 });
 
-const wheel1 = makeWheel({
+const wheel1 = scrawl.makeWheel({
     name: name('w1'),
     radius: '20%',
     startX: '70%',
@@ -123,10 +112,33 @@ const wheel2 = wheel1.clone({
     memoizeFilterOutput: false,
 });
 
+scrawl.makeWheel({
+    name: name('template'),
+    start: ['65%', '60%'],
+    radius: 70,
+    method: 'none',
+});
+
+const words = scrawl.makeEnhancedLabel({
+    name: name('t1'),
+    layoutTemplate: name('template'),
+    text: 'Lorem ipsum dolorsit amet',
+    fontString: 'bold 26px sans-serif',
+    justifyLine: 'left',
+    fillStyle: name('linear3'),
+    textHandleY: 'center',
+    lineSpacing: 1.2,
+    lineAdjustment: 20,
+    lockFillStyleToEntity: true,
+    memoizeFilterOutput: false,
+    shadowOffsetX: 1.5,
+    shadowOffsetY: 1.5,
+});
+
 
 // #### Define filters - need to test them all, plus some user-defined filters
 // Asset generator
-makeNoiseAsset({
+scrawl.makeNoiseAsset({
 
     name: name('my-noise-generator'),
     width: 400,
@@ -140,7 +152,7 @@ makeNoiseAsset({
 });
 
 // Required, otherwise the asset generator doesn't produce anything for the filter
-makePicture({
+scrawl.makePicture({
     name: name('temp-1'),
     asset: name('my-noise-generator'),
     dimensions: [100, 100],
@@ -148,7 +160,7 @@ makePicture({
     method: 'none',
 });
 
-makePicture({
+scrawl.makePicture({
     name: name('temp-2'),
     asset: 'iris',
     dimensions: [400, 400],
@@ -157,7 +169,7 @@ makePicture({
 });
 
 // __Displace__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('displace'),
     actions: [
         {
@@ -180,7 +192,7 @@ makeFilter({
 });
 
 // __Blend__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('blend'),
     actions: [
         {
@@ -201,7 +213,7 @@ makeFilter({
 });
 
 // __Compose__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('compose'),
     actions: [
         {
@@ -223,7 +235,7 @@ makeFilter({
 });
 
 // __Gray__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('gray'),
     method: 'gray',
 
@@ -299,7 +311,7 @@ makeFilter({
 });
 
 // __Emboss__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('emboss'),
     method: 'emboss',
     angle: 225,
@@ -308,14 +320,14 @@ makeFilter({
 });
 
 // __Chroma__ (green screen) filter
-makeFilter({
+scrawl.makeFilter({
     name: name('chroma'),
     method: 'chroma',
     ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]],
 });
 
 // __Brightness__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('brightness'),
     method: 'brightness',
     level: 0.5,
@@ -340,7 +352,7 @@ makeFilter({
 });
 
 // __Swirl__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('swirl'),
     method: 'swirl',
     startX: '50%',
@@ -352,7 +364,7 @@ makeFilter({
 });
 
 // __Channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('channels'),
     method: 'channels',
     red: 0.4,
@@ -369,7 +381,7 @@ makeFilter({
 });
 
 // __Tiles__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('tiles'),
     method: 'tiles',
     points: 'hex-grid',
@@ -378,14 +390,14 @@ makeFilter({
 });
 
 // __Newsprint__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('newsprint'),
     method: 'newsprint',
     width: 2,
 });
 
 // __Tint__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('tint'),
     method: 'tint',
     redInRed: 0.5,
@@ -400,7 +412,7 @@ makeFilter({
 });
 
 // __Offset__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('offset'),
     method: 'offset',
     offsetX: 12,
@@ -409,7 +421,7 @@ makeFilter({
 });
 
 // __Glitch__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('glitch'),
     method: 'glitch',
     level: 0.3,
@@ -423,7 +435,7 @@ makeFilter({
 });
 
 // __Offset Channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('offsetChannels'),
     method: 'offsetChannels',
     offsetRedX: -12,
@@ -435,7 +447,7 @@ makeFilter({
 });
 
 // __Pixellate__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('pixelate'),
     method: 'pixelate',
     tileWidth: 20,
@@ -445,7 +457,7 @@ makeFilter({
 });
 
 // __Blur__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('blur'),
     method: 'blur',
     radius: 8,
@@ -454,14 +466,14 @@ makeFilter({
 });
 
 // __Gaussian Blur__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('gaussianBlur'),
     method: 'gaussianBlur',
     radius: 30,
 });
 
 // __AreaAlpha__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('areaAlpha'),
     method: 'areaAlpha',
     tileWidth: 20,
@@ -474,7 +486,7 @@ makeFilter({
 });
 
 // __Matrix__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('matrix'),
     method: 'matrix',
     weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
@@ -487,7 +499,7 @@ makeFilter({
 });
 
 // __ChannelLevels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('channelLevels'),
     method: 'channelLevels',
     red: [50, 200],
@@ -497,7 +509,7 @@ makeFilter({
 });
 
 // __Chrome key__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('chromakey'),
     method: 'chromakey',
     red: 0,
@@ -508,7 +520,7 @@ makeFilter({
 });
 
 // __Alpha to channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('alphaToChannels'),
     method: 'alphaToChannels',
     includeRed: false,
@@ -517,13 +529,13 @@ makeFilter({
 });
 
 // __Channels to alpha__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('channelsToAlpha'),
     method: 'channelsToAlpha',
 });
 
 // __Clamp channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('clampChannels'),
     method: 'clampChannels',
     lowRed: 0,
@@ -535,7 +547,7 @@ makeFilter({
 });
 
 // __Corrode__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('corrode'),
     method: 'corrode',
     width: 5,
@@ -544,7 +556,7 @@ makeFilter({
 });
 
 // __Curve weights__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('curveWeights'),
     method: 'curveWeights',
     useMixedChannel: false,
@@ -552,14 +564,14 @@ makeFilter({
 });
 
 // __Flood__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('flood'),
     method: 'flood',
     alpha: 100,
 });
 
 // __Random noise__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('randomNoise'),
     method: 'randomNoise',
     width: 10,
@@ -568,12 +580,12 @@ makeFilter({
 });
 
 // __Reduce palette__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('reducePalette'),
     method: 'reducePalette',
 });
 
-makeGradient({
+scrawl.makeGradient({
     name: name('red-to-blue'),
     endX: '100%',
 
@@ -584,7 +596,7 @@ makeGradient({
 });
 
 // __Map to gradient__ filter
-makeFilter({
+scrawl.makeFilter({
 
     name: name('mapToGradient'),
     method: 'mapToGradient',
@@ -594,7 +606,7 @@ makeFilter({
 
 
 // __Bespoke (drop shadow)__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('dropShadow'),
     actions: [
         {
@@ -614,7 +626,7 @@ makeFilter({
 });
 
 // __Bespoke (red border)__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('redBorder'),
     actions: [
         {
@@ -642,7 +654,7 @@ makeFilter({
 const report = reportSpeed('#reportmessage');
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -716,6 +728,10 @@ const events = function () {
                         wheel2.addFilters(...currentFilter);
                         break;
 
+                    case 'words' :
+                        words.addFilters(...currentFilter);
+                        break;
+
                     case 'group' :
                         group.addFilters(...currentFilter);
                         break;
@@ -729,18 +745,20 @@ const events = function () {
     };
 }();
 
+
 // Event listeners
-addNativeListener(['input', 'change'], events, '.controlItem');
+scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
+
 
 // Set DOM form initial input values
-// @ts-expect-error
-document.querySelector('#target').value = '';
-// @ts-expect-error
-document.querySelector('#filter').value = '';
+initializeDomInputs([
+    ['select', 'filter', 0],
+    ['select', 'target', 0],
+]);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);
 
 // Gradient packet test
 console.log(myGrad.saveAsPacket());

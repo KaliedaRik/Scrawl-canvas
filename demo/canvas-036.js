@@ -8,13 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create a Cell on the canvas
 const cell1 = canvas.buildCell({
 
-    name: 'cell-1',
+    name: name('cell-1'),
 
     width: 200,
     height: 200,
@@ -32,10 +37,11 @@ const cell1 = canvas.buildCell({
     backgroundColor: 'lightblue',
 });
 
+
 // Cells cannot be cloned (yet - may introduce that functionality in a future update)
 const cell2 = canvas.buildCell({
 
-    name: 'cell-2',
+    name: name('cell-2'),
 
     width: '20%',
     height: '20%',
@@ -53,10 +59,11 @@ const cell2 = canvas.buildCell({
     backgroundColor: 'lightblue',
 });
 
-// Create a shape track along which we can animate a Cell
+
+// Create a shape track along which we can move a Cell
 scrawl.makeOval({
 
-    name: 'mytrack',
+    name: name('mytrack'),
 
     radiusX: '40%',
     radiusY: '40%',
@@ -72,10 +79,11 @@ scrawl.makeOval({
     precision: 0.1,
 });
 
+
 // This Cell will animate along the track we created earlier
 const cell3 = canvas.buildCell({
 
-    name: 'cell-3',
+    name: name('cell-3'),
 
     width: 100,
     height: 50,
@@ -83,10 +91,10 @@ const cell3 = canvas.buildCell({
     handleX: 'center',
     handleY: 'bottom',
 
-    path: 'mytrack',
+    path: name('mytrack'),
     lockTo: 'path',
     addPathRotation: true,
-    constantPathSpeed: true,
+    constantSpeedAlongPath: true,
 
     delta: {
       pathPosition: -0.001,
@@ -95,19 +103,20 @@ const cell3 = canvas.buildCell({
     backgroundColor: 'black',
 });
 
+
 // Create some entitys to which we can pivot and mimic Cells
 // + Cells cannot take part in artefact functionality such as drag-and-drop because they are assets who use positional mixins to gain artefact-like behaviour, but they can't be included in Groups because they are limited to grouping Artefacts together
 // + One way to get around this limitation is to use Block entitys for testing collision detection, and then route mouse hover functionality through to any Cells pivoting or mimicking them. This should also allow us to drag-and-drop Cells (by proxy)
-const myGroup = scrawl.makeGroup({
+scrawl.makeGroup({
 
-    name: 'target-group',
-    host: canvas.base.name,
+    name: name('target-group'),
+    host: canvas.getBase(),
 });
 
 scrawl.makeBlock({
 
-    name: 'block-1',
-    group: 'target-group',
+    name: name('block-1'),
+    group: name('target-group'),
 
     start: ['80%', '10%'],
     handle: ['center', 'center'],
@@ -125,10 +134,10 @@ scrawl.makeBlock({
 
 }).clone({
 
-    name: 'block-2',
+    name: name('block-2'),
     dimensions: [120, 100],
     handle: ['left', 'top'],
-    startY: '80%',
+    startY: '60%',
 
     roll: 30,
 
@@ -137,21 +146,23 @@ scrawl.makeBlock({
     },
 });
 
+
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: myGroup,
+    collisionGroup: name('target-group'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
 
+
 // Check to see if a Cell will mimic on an entity
 const cell4 = canvas.buildCell({
 
-    name: 'cell-4',
+    name: name('cell-4'),
 
-    mimic: 'block-1',
+    mimic: name('block-1'),
     lockTo: 'mimic',
 
     width: -20,
@@ -177,12 +188,13 @@ const cell4 = canvas.buildCell({
     backgroundColor: 'lavender',
 });
 
+
 // Check to see if a Cell will pivot to an entity
 const cell5 = canvas.buildCell({
 
-    name: 'cell-5',
+    name: name('cell-5'),
 
-    pivot: 'block-2',
+    pivot: name('block-2'),
     lockTo: 'pivot',
 
     dimensions: [110, 90],
@@ -193,57 +205,55 @@ const cell5 = canvas.buildCell({
     backgroundColor: 'lavender',
 });
 
+
 // Add in a hover check
-scrawl.library.entity['block-1'].set({
+scrawl.findEntity(name('block-1')).set({
 
     onEnter: function () {
 
-        this.set({
-            scale: 1.2,
-        });
-
-        cell4.set({
-            backgroundColor: 'pink',
-        });
+/** @ts-expect-error */
+        this.set({ scale: 1.2 });
+        cell4.set({ backgroundColor: 'pink' });
     },
 
     onLeave: function () {
 
-        this.set({
-            scale: 1,
-        });
-
-        cell4.set({
-            backgroundColor: 'lavender',
-        });
+/** @ts-expect-error */
+        this.set({ scale: 1 });
+        cell4.set({ backgroundColor: 'lavender' });
     },
 });
 
-scrawl.library.entity['block-2'].set({
+scrawl.findEntity(name('block-2')).set({
 
     onEnter: () => cell5.set({ backgroundColor: 'pink' }),
 
     onLeave: () => cell5.set({ backgroundColor: 'lavender' }),
 });
 
-scrawl.addListener('move', () => canvas.here.active && canvas.cascadeEventAction('move'), canvas.domElement);
+scrawl.addListener(
+    'move',
+    () => canvas.here.active && canvas.cascadeEventAction('move'),
+    canvas.domElement
+);
+
 
 // Add labels to Cells
-scrawl.makePhrase({
+scrawl.makeLabel({
 
-    name: 'label-1',
-    group: 'cell-1',
+    name: name('label-1'),
+    group: name('cell-1'),
 
     text: 'Cell 1',
-    font: '20px sans-serif',
+    fontString: '20px sans-serif',
     fillStyle: 'red',
 
     start: [5, 5],
 
 }).clone({
 
-    name: 'label-2',
-    group: 'cell-2',
+    name: name('label-2'),
+    group: name('cell-2'),
 
     text: 'Cell 2',
 
@@ -252,33 +262,34 @@ scrawl.makePhrase({
 
 }).clone({
 
-    name: 'label-3',
-    group: 'cell-3',
+    name: name('label-3'),
+    group: name('cell-3'),
 
     text: 'Cell 3',
     fillStyle: 'white',
 
 }).clone({
 
-    name: 'label-4',
-    group: 'cell-4',
+    name: name('label-4'),
+    group: name('cell-4'),
 
     text: 'Cell 4',
     fillStyle: 'green',
 
 }).clone({
 
-    name: 'label-5',
-    group: 'cell-5',
+    name: name('label-5'),
+    group: name('cell-5'),
 
     text: 'Cell 5',
 });
 
+
 // .. Also add some other entitys to the Cells
 scrawl.makeWheel({
 
-    name: 'wheel-1',
-    group: 'cell-1',
+    name: name('wheel-1'),
+    group: name('cell-1'),
 
     radius: 30,
 
@@ -290,8 +301,8 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'wheel-2',
-    group: 'cell-2',
+    name: name('wheel-2'),
+    group: name('cell-2'),
 
     radius: 40,
 
@@ -300,28 +311,31 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'wheel-3',
-    group: canvas.base.name,
+    name: name('wheel-3'),
+    group: canvas.get('baseGroup'),
 
     strokeStyle: 'green',
 
     start: ['85%', '85%'],
-    pivot: 'cell-3',
+
+    pivot: name('cell-3'),
     lockTo: 'pivot',
 });
 
+
+// See if an entity can mimic a Cell
 scrawl.makeBlock({
 
-    name: 'mimic-block',
+    name: name('mimic-block'),
 
-    group: canvas.base.name,
+    group: canvas.get('baseGroup'),
 
     fillStyle: 'yellow',
     strokeStyle: 'green',
     lineWidth: 4,
     method: 'fillThenDraw',
 
-    mimic: 'cell-2',
+    mimic: name('cell-2'),
     lockTo: 'mimic',
 
     width: 30,
@@ -351,20 +365,16 @@ scrawl.makeBlock({
 const report = reportSpeed('#reportmessage', function () {
 
     // __Warning: directly accessing current- attributes is dangerous. Directly setting current- attributes is fatal!__
-    return `Canvas dimensions: ${canvas.currentDimensions.join(', ')}
-Base dimensions: ${canvas.base.currentDimensions.join(', ')}
-Cell 1 dimensions: ${cell1.currentDimensions.join(', ')}
-Cell 2 dimensions: ${cell2.currentDimensions.join(', ')}
-Cell 3 dimensions: ${cell3.currentDimensions.join(', ')}
-Cell 4 dimensions: ${cell4.currentDimensions.join(', ')}
-Cell 5 dimensions: ${cell5.currentDimensions.join(', ')}`;
+    // + (TypeScript also gets very upset when you try to do this sort of thing)
+/** @ts-expect-error */
+    return `    Canvas dimensions: ${canvas.currentDimensions.join(', ')}\n    Base dimensions: ${canvas.base.currentDimensions.join(', ')}\n    Cell 1 dimensions: ${cell1.currentDimensions.join(', ')}\n    Cell 2 dimensions: ${cell2.currentDimensions.join(', ')}\n    Cell 3 dimensions: ${cell3.currentDimensions.join(', ')}\n    Cell 4 dimensions: ${cell4.currentDimensions.join(', ')}\n    Cell 5 dimensions: ${cell5.currentDimensions.join(', ')}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

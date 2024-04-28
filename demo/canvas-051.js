@@ -4,16 +4,21 @@
 // [Run code](../../demo/canvas-051.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 const mySpiral = scrawl.makeLineSpiral({
 
-    name: 'my-spiral',
+    name: name('my-spiral'),
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
@@ -26,18 +31,17 @@ const mySpiral = scrawl.makeLineSpiral({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = mySpiral;
-
-    return `    Radius - start: ${startRadius}, increment: ${radiusIncrement}, adjust: ${radiusIncrementAdjust}
-    Angle - start: ${startAngle}, increment: ${angleIncrement}, adjust: ${angleIncrementAdjust}
-    Limit: ${stepLimit}`;
+    return `
+    Radius - start: ${dom.startRadius.value}, increment: ${dom.radiusIncrement.value}, adjust: ${dom.radiusIncrementAdjust.value}
+    Angle - start: ${dom.startAngle.value}, increment: ${dom.angleIncrement.value}, adjust: ${dom.angleIncrementAdjust.value}
+    Limit: ${dom.stepLimit.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -67,20 +71,17 @@ scrawl.makeUpdater({
     },
 });
 
-// @ts-expect-error
-document.querySelector('#startRadius').value = 0;
-// @ts-expect-error
-document.querySelector('#radiusIncrement').value = 0.1;
-// @ts-expect-error
-document.querySelector('#radiusIncrementAdjust').value = 1;
-// @ts-expect-error
-document.querySelector('#startAngle').value = 0;
-// @ts-expect-error
-document.querySelector('#angleIncrement').value = 5;
-// @ts-expect-error
-document.querySelector('#angleIncrementAdjust').value = 1;
-// @ts-expect-error
-document.querySelector('#stepLimit').value = 100;
+
+// Set the DOM input values
+const dom = initializeDomInputs([
+    ['input', 'startRadius', '0'],
+    ['input', 'radiusIncrement', '0.1'],
+    ['input', 'radiusIncrementAdjust', '1'],
+    ['input', 'startAngle', '0'],
+    ['input', 'angleIncrement', '5'],
+    ['input', 'angleIncrementAdjust', '1'],
+    ['input', 'stepLimit', '100'],
+]);
 
 
 // #### Development and testing

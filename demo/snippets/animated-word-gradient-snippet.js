@@ -65,9 +65,7 @@ export default function (scrawl, el) {
         // The snippet will take details of its font family and size from the DOM element's computed styles
         // + Note that Firefox does not supply a font string; font details are broken up into their constituent parts and need to be reconstructed. The code below will not pick up bold fonts:
         const backgroundColor = compStyles.backgroundColor || '#f2f2f2',
-            font = compStyles.font || `${(compStyles.fontStyle != 'normal') ? compStyles.fontStyle + ' ' : ''}${(compStyles.fontVariant != 'normal') ? compStyles.fontVariant + ' ' : ''}${compStyles.fontSize} ${compStyles.fontFamily}` || '20px sans-serif';
-
-        const text = el.innerText;
+            fontString = compStyles.font || `${(compStyles.fontStyle !== 'normal') ? compStyles.fontStyle + ' ' : ''}${(compStyles.fontVariant !== 'normal') ? compStyles.fontVariant + ' ' : ''}${compStyles.fontSize} ${compStyles.fontFamily}` || '20px sans-serif';
 
         canvas.set({
             backgroundColor,
@@ -100,16 +98,15 @@ export default function (scrawl, el) {
         .updateColor(910, 'orange')
         .updateColor(999, 'orange');
 
-        scrawl.makePhrase({
+        scrawl.makeLabel({
             name: `${name}-text`,
             group,
-            font,
-            text,
+            fontString,
+            text: el.innerText,
             fillStyle: `${name}-gradient`,
 
             // This is a bad fix for mis-aligned text - a better solution would be to expose startX and startY so coder could set them individually for each instance where this snippet is used, so the replacement canvas text can line up exactly with its surrounding text
-            startY: '16%',
-            method: 'fill',
+            startY: '5%',
 
             // We do not want to expose this canvas text in the DOM as it already exists in the DOM (this snippet just makes it invisible by setting its color to 'transparent'). The last thing non-visual users need is repeated text.
             exposeText: false,

@@ -2,34 +2,27 @@
 // Linear gradients
 
 // [Run code](../../demo/canvas-003.html)
-import {
-    addNativeListener,
-    library as L,
-    makeBlock,
-    makeGradient,
-    makeRender,
-    makeUpdater,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, killStyle } from './utilities.js';
+import { reportSpeed, killStyle, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Create the linear gradient - we will kill and resurrect it as the demo runs
 // + Needs to be a let, not a const, because we're going to kill/resurrect this gradient
-let graddy = makeGradient({
+let graddy = scrawl.makeGradient({
+
     name: name('mygradient'),
     endX: '100%',
-
     easing: 'linear',
     precision: 1,
 });
@@ -49,7 +42,8 @@ const bespokeEasings = {
 };
 
 // Create a block entity which will use the gradient
-makeBlock({
+scrawl.makeBlock({
+
     name: name('myblock'),
     width: '90%',
     height: '90%',
@@ -67,13 +61,16 @@ makeBlock({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
-    // if (L.palette.mygradient_palette) console.log(L.palette.mygradient_palette.colors);
-// @ts-expect-error
-    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}\n    Start - x: ${startX.value}%; y: ${startY.value}%\n    End - x: ${endX.value}%; y: ${endY.value}%\n    Precision: ${precision.value}`;
+
+    return `
+    Palette - start: ${dom['paletteStart'].value}; end: ${dom['paletteEnd'].value}
+    Start - x: ${dom['startX'].value}%; y: ${dom['startY'].value}%
+    End - x: ${dom['endX'].value}%; y: ${dom['endY'].value}%
+    Precision: ${dom['precision'].value}`;
 });
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -85,7 +82,7 @@ makeRender({
 // Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
 const makeObserver = () => {
 
-    return makeUpdater({
+    return scrawl.makeUpdater({
 
         event: ['input', 'change'],
         origin: '.controlItem',
@@ -126,7 +123,7 @@ const events = (e) => {
     e.returnValue = false;
 };
 
-addNativeListener(['input', 'change'], (e) => {
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -146,7 +143,7 @@ addNativeListener(['input', 'change'], (e) => {
     }
 }, '.colorItems');
 
-addNativeListener(['input', 'change'], (e) => {
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -165,55 +162,38 @@ addNativeListener(['input', 'change'], (e) => {
 
 }, '#easing');
 
+
 // Set the DOM input values
-const paletteStart = document.querySelector('#paletteStart');
-const paletteEnd = document.querySelector('#paletteEnd');
-const startX = document.querySelector('#startX');
-const startY = document.querySelector('#startY');
-const endX = document.querySelector('#endX');
-const endY = document.querySelector('#endY');
-const precision = document.querySelector('#precision');
+const dom = initializeDomInputs([
+    ['input', 'endX', '100'],
+    ['input', 'endY', '0'],
+    ['input', 'paletteEnd', '999'],
+    ['input', 'paletteStart', '0'],
+    ['input', 'precision', '1'],
+    ['input', 'startX', '0'],
+    ['input', 'startY', '0'],
+    ['select', 'blue', 0],
+    ['select', 'colorSpace', 0],
+    ['select', 'cyclePalette', 0],
+    ['select', 'easing', 0],
+    ['select', 'red', 0],
+    ['select', 'returnColorAs', 0],
+]);
 
-// @ts-expect-error
-paletteStart.value = 0;
-// @ts-expect-error
-paletteEnd.value = 999;
-// @ts-expect-error
-startX.value = 0;
-// @ts-expect-error
-startY.value = 0;
-// @ts-expect-error
-endX.value = 100;
-// @ts-expect-error
-endY.value = 0;
-// @ts-expect-error
-precision.value = 1;
-
-// @ts-expect-error
-document.querySelector('#red').value = 0;
-// @ts-expect-error
-document.querySelector('#blue').value = 0;
-// @ts-expect-error
-document.querySelector('#easing').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#cyclePalette').value = 0;
-// @ts-expect-error
-document.querySelector('#colorSpace').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#returnColorAs').options.selectedIndex = 0;
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
 killStyle(canvas, name('mygradient'), 3000, () => {
 
     // Repopulate the graddy variable
-    graddy = L.styles[name('mygradient')];
+/** @ts-expect-error */
+    graddy = scrawl.findStyles(name('mygradient'));
 
     // Reset the block fillStyle to the gradient
-    L.entity[name('myblock')].set({
+    scrawl.findEntity(name('myblock')).set({
         fillStyle: name('mygradient'),
     });
 

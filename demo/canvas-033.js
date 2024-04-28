@@ -8,8 +8,15 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// color variables
 const background_dark = '#404040',
     text_dark = '#c0ffc0',
     background_light = '#f0f0f0',
@@ -19,7 +26,7 @@ const background_dark = '#404040',
 // Create the demo Oval entity
 const track = scrawl.makeOval({
 
-    name: 'loader-track',
+    name: name('loader-track'),
 
     radiusX: '22%',
     radiusY: '12%',
@@ -36,44 +43,47 @@ const track = scrawl.makeOval({
     },
 
     useAsPath: true,
+    constantPathSpeed: true,
     precision: 0.1
 });
 
-// Create the three Phrase entitys that will animate around the oval
+
+// Create the three EnhancedLabel entitys that will animate around the oval
 // + We give them their own group to make updating their attributes easier
 const textGroup = scrawl.makeGroup({
 
-    name: 'text-group',
-    host: canvas.base.name,
+    name: name('text-group'),
+    host: canvas.get('baseName'),
 });
 
-scrawl.makePhrase({
+scrawl.makeEnhancedLabel({
 
-    name: 'loader-text-1',
+    name: name('loader-text-1'),
     group: textGroup,
 
-    weight: 'bold',
-
+    fontString: 'bold 50px Arial, sans-serif',
     text: 'Loading',
-    size: '50px',
-    justify: 'center',
 
-    textPath: 'loader-track',
-    handleY: '120%',
+    textHandle: ['center', '120%'],
+
+    layoutTemplate: name('loader-track'),
+    useLayoutTemplateAsPath: true,
+
+    breakTextOnSpaces: false,
 
     delta: {
-      textPathPosition: -0.002
+        pathPosition: -0.002
     },
 
 }).clone({
 
-    name: 'loader-text-2',
-    textPathPosition: 0.333,
+    name: name('loader-text-2'),
+    pathPosition: 0.333,
 
 }).clone({
 
-    name: 'loader-text-3',
-    textPathPosition: 0.667,
+    name: name('loader-text-3'),
+    pathPosition: 0.667,
 });
 
 
@@ -100,7 +110,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -109,37 +119,37 @@ scrawl.makeRender({
 // #### prefers-reduced-motion actions
 const checkE = (e) => {
     if (e) {
-        if ("keydown" === e.type) {
+        if ('keydown' === e.type) {
             // spacebar
             if (32 === e.keycode) return true;
             // enter key
             if (13 === e.keycode) return true;
         }
         // mouse click
-        if ("click" === e.type) return true;
+        if ('click' === e.type) return true;
         // tap
-        if ("touchend" === e.type) return true;
+        if ('touchend' === e.type) return true;
     }
     return false;
 };
 
 const startAnimation = (e) => {
-    if (e === "reduced-motion" || checkE(e)) {
+    if (e === 'reduced-motion' || checkE(e)) {
         track.set({ noDeltaUpdates: false });
         textGroup.setArtefacts({ noDeltaUpdates: false });
     }
 };
 
 const stopAnimation = (e) => {
-    if (e === "reduced-motion" || checkE(e)) {
+    if (e === 'reduced-motion' || checkE(e)) {
         track.set({ noDeltaUpdates: true });
         textGroup.setArtefacts({ noDeltaUpdates: true });
     }
 };
 
-canvas.setReduceMotionAction(() => setTimeout(() => stopAnimation("reduced-motion"), 1000));
+canvas.setReduceMotionAction(() => setTimeout(() => stopAnimation('reduced-motion'), 1000));
 
-canvas.setNoPreferenceMotionAction(() => startAnimation("reduced-motion"));
+canvas.setNoPreferenceMotionAction(() => startAnimation('reduced-motion'));
 
 scrawl.addNativeListener(['click', 'keydown', 'touchend'], startAnimation, '#play');
 

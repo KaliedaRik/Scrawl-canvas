@@ -5,9 +5,9 @@
 // #### Imports
 import { artefact, asset } from '../core/library.js';
 
-import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { CORNER_LABELS, PIVOT, START, T_BEZIER, T_CELL, T_LINE, T_POLYLINE, T_QUADRATIC, ZERO_STR } from '../core/shared-vars.js';
+import { CORNER_LABELS, PIVOT, START, T_BEZIER, T_CELL, T_LINE, T_POLYLINE, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -23,8 +23,12 @@ export default function (P = Ωempty) {
 // __pivotCorner__ - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to `topLeft`, `topRight`, `bottomRight` or `bottomLeft`; default is `''` to use the Element's start coordinate.
         pivotCorner: ZERO_STR,
 
-// __pivotPin__ - Polyline entitys are composed of a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).
+// __pivotPin__ - Polyline entitys comprise a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).
         pivotPin: 0,
+
+// __pivotIndex__ - EnhancedLabel entitys comprise a set of TextUnits, each with their own `startData` coordinate; we can reference that coordinate by setting this attribute to the appropriate index value (number).
+// + Defaults to '-1', which means we should use the entity's layoutTemplate artefact's start position
+        pivotIndex: -1,
 
 // __addPivotHandle__, __addPivotOffset__, __addPivotRotation__ - Boolean flags. When set, the artifact will add its own values to the reference artefact's values, rather than use them as replacement values.
         addPivotHandle: false,
@@ -76,12 +80,12 @@ export default function (P = Ωempty) {
 
                 newPivot = asset[item];
 
-                if (newPivot && newPivot.type != T_CELL) newPivot = false;
+                if (newPivot && newPivot.type !== T_CELL) newPivot = false;
             }
 
             if (newPivot && newPivot.name) {
 
-                if (oldPivot && oldPivot.name != newPivot.name) removeItem(oldPivot.pivoted, name);
+                if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
 
                 pushUnique(newPivot.pivoted, name);
 
@@ -96,6 +100,14 @@ export default function (P = Ωempty) {
     S.pivotCorner = function (item) {
 
         if (CORNER_LABELS.includes(item)) this.pivotCorner = item;
+        this.dirtyStart = true;
+    };
+
+// __pivotIndex__
+    S.pivotIndex = function (item) {
+
+        this.pivotIndex = item;
+        this.dirtyStart = true;
     };
 
 
@@ -142,8 +154,8 @@ export default function (P = Ωempty) {
                 if (art.addPivotOffset) art.dirtyOffset = true;
                 if (art.addPivotRotation) art.dirtyRotation = true;
 
-                if (art.type == T_POLYLINE) art.dirtyPins = true;
-                else if (art.type == T_LINE || art.type == T_QUADRATIC || art.type == T_BEZIER) art.dirtyPins.push(this.name);
+                if (art.type === T_POLYLINE) art.dirtyPins = true;
+                else if (art.type === T_LINE || art.type === T_QUADRATIC || art.type === T_BEZIER) art.dirtyPins.push(this.name);
             }
         }, this);
     };

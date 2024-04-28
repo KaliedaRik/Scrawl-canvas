@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1079,31 +1099,29 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
     <span class="hljs-attr">start</span>: <span class="hljs-title function_">getRandomPosition</span>(),
 });
 
-scrawl.<span class="hljs-title function_">makePhrase</span>({
+scrawl.<span class="hljs-title function_">makeLabel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;phrase-entity-1&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-entity-1&#x27;</span>,
     <span class="hljs-attr">group</span>: sceneLayer.<span class="hljs-property">name</span>,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Hello&#x27;</span>,
-    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;serif&#x27;</span>,
-    <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;40px&#x27;</span>,
-    <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;40px serif&#x27;</span>,
     <span class="hljs-attr">start</span>: <span class="hljs-title function_">getRandomPosition</span>(),
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     ...addControllerAttributes,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;phrase-entity-2&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-entity-2&#x27;</span>,
     <span class="hljs-attr">start</span>: <span class="hljs-title function_">getRandomPosition</span>(),
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;phrase-entity-3&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-entity-3&#x27;</span>,
     <span class="hljs-attr">start</span>: <span class="hljs-title function_">getRandomPosition</span>(),
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;phrase-entity-4&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-entity-4&#x27;</span>,
     <span class="hljs-attr">start</span>: <span class="hljs-title function_">getRandomPosition</span>(),
 });</pre></div></div>
             
@@ -1128,7 +1146,10 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
     <span class="hljs-keyword">const</span> keys = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&#x27;To change the keyboard settings to move, scale and rotate selected entitys, enter the desired characters (11 in total) in the order MOVE-DELTA, MOVE-UP, MOVE-LEFT, MOVE-DOWN, MOVE-RIGHT, SCALE-DELTA, SCALE-GROW, SCALE-SHRINK, ROTATE-DELTA, ROTATE-CLOCKWISE, ROTATE-ANTI-CLOCKWISE (with no spaces or separating commas etc, though the comma key can be used as a shortcut). Character case will be ignored.&#x27;</span>, <span class="hljs-string">&#x27;QWASDBNMGJH&#x27;</span>);
 
     <span class="hljs-title function_">setGuiControlChars</span>(keys);
-};</pre></div></div>
+};
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+button.<span class="hljs-property">onclick</span> = buttonClickAction;</pre></div></div>
             
         </li>
         
@@ -1138,21 +1159,6 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>button.<span class="hljs-property">onclick</span> = buttonClickAction;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1164,11 +1170,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1182,11 +1188,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

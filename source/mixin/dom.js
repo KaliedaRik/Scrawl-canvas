@@ -14,17 +14,17 @@
 // #### Imports
 import { artefact } from '../core/library.js';
 
-import { setMouseChanged } from '../core/system-flags.js';
+import { setMouseChanged } from '../helper/system-flags.js';
 
-import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 
-import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../factory/quaternion.js';
+import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../untracked-factory/quaternion.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 import positionMix from './position.js';
 import deltaMix from './delta.js';
@@ -32,11 +32,11 @@ import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
 // Question: do DOM elements really need additional anchors and buttons?
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 
-import { _isArray, _round, _entries, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../core/shared-vars.js'
+import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // #### Export function
@@ -194,7 +194,7 @@ export default function (P = Ωempty) {
 
                 pushUnique(uiSubscribedElements, this.name);
 
-                if (val == LOCAL) addLocalMouseMoveListener(this);
+                if (val === LOCAL) addLocalMouseMoveListener(this);
             }
             else {
 
@@ -398,7 +398,7 @@ export default function (P = Ωempty) {
                 // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
                 // for Stack artefacts only, discover perspective and perspective-origin values
-                if (this.type == T_STACK) {
+                if (this.type === T_STACK) {
 
                     const pStyle = parseFloat(style.perspective);
                     const {perspective, perspectiveX, perspectiveY, perspectiveZ} = items;
@@ -408,7 +408,7 @@ export default function (P = Ωempty) {
 
                         // TODO - this isn't working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail
                         // + Workaround is to explicitly set the stack's perspectiveZ value in Javascript
-                        items.perspectiveZ = (!isNaN(pStyle)) ? pStyle : 0;
+                        items.perspectiveZ = (_isFinite(pStyle)) ? pStyle : 0;
                     }
 
                     const pOrigin = style.perspectiveOrigin;
@@ -538,7 +538,7 @@ export default function (P = Ωempty) {
 
         const pathCorners = this.pathCorners;
 
-        if (pathCorners.length == 4) {
+        if (pathCorners.length === 4) {
 
             const here = this.getHere(),
                 x = currentCorePosition.scrollX - (here.offsetX || 0),
@@ -648,22 +648,16 @@ export default function (P = Ωempty) {
     };
 
 // `checkHit`
-    P.checkHit = function (items = [], cell) {
+    P.checkHit = function (items = []) {
 
         if (this.noUserInteraction) return false;
 
         if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
         const tests = (!_isArray(items)) ?  [items] : items;
-        let flag = false;
 
-        if (!cell) {
-
-            cell = requestCell();
-            flag = true;
-        }
-
-        const engine = cell.engine;
+        const mycell = requestCell(),
+            engine = mycell.engine;
 
         let tx, ty;
 
@@ -681,13 +675,13 @@ export default function (P = Ωempty) {
             }
             else return false;
 
-            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+            if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
             return engine.isPointInPath(this.pathObject, tx, ty);
 
         }, this)) {
 
-            if (flag) releaseCell(cell);
+            releaseCell(mycell);
 
             return {
                 x: tx,
@@ -696,8 +690,7 @@ export default function (P = Ωempty) {
             };
         }
 
-        if (flag) releaseCell(cell);
-
+        releaseCell(mycell);
         return false;
     };
 
@@ -815,7 +808,7 @@ export default function (P = Ωempty) {
 
         if (this.dirtyPathObject) this.cleanPathObject();
 
-        // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+        // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 

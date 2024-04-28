@@ -6,12 +6,18 @@ import * as scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Setup Gradient style
 let mygradient = scrawl.makeGradient({
-    name: 'blue-green',
+
+    name: name('blue-green'),
     endX: '100%',
     colors: [
         [0, 'blue'],
@@ -24,7 +30,8 @@ let mygradient = scrawl.makeGradient({
 
 // Setup Color style
 let mycolor = scrawl.makeColor({
-    name: 'myColorObject',
+
+    name: name('myColorObject'),
     minimumColor: 'red',
     maximumColor: 'green',
 });
@@ -32,7 +39,7 @@ let mycolor = scrawl.makeColor({
 // Setup Filter
 let myfilter = scrawl.makeFilter({
 
-    name: 'emboss',
+    name: name('emboss'),
     method: 'emboss',
     angle: 225,
     strength: 3,
@@ -47,7 +54,7 @@ let myfilter = scrawl.makeFilter({
 // Test Block entity
 let myblock = scrawl.makeBlock({
 
-    name: 'block-tester',
+    name: name('block-tester'),
 
     width: 120,
     height: 40,
@@ -61,7 +68,7 @@ let myblock = scrawl.makeBlock({
 
 scrawl.makeTween({
 
-    name: 'block-color-animation',
+    name: name('block-color-animation'),
     duration: 2500,
     targets: myblock,
 
@@ -90,7 +97,7 @@ scrawl.makeTween({
 // Test Picture entity
 let mypicture = scrawl.makePicture({
 
-    name: 'picture-tester',
+    name: name('picture-tester'),
 
     imageSource: 'img/iris.png',
 
@@ -109,20 +116,17 @@ let mypicture = scrawl.makePicture({
     globalAlpha: 0.8,
 });
 
-// Test Phrase entity
-let myphrase = scrawl.makePhrase({
+// Test Label entity
+let mylabel = scrawl.makeLabel({
 
-    name: 'phrase-tester',
+    name: name('label-tester'),
 
-    text: 'H&epsilon;§BOLD§lj§/BOLD§&ouml;!',
-    font: '40px Garamond, serif',
+    text: 'H&epsilon;lj&ouml;!',
+    fontString: 'bold 40px Garamond, serif',
 
     width: 120,
     startX: 250,
     startY: 150,
-
-    justify: 'center',
-    lineHeight: 1,
 
     fillStyle: 'rgb(50 0 0)',
     method: 'fill',
@@ -132,7 +136,7 @@ let myphrase = scrawl.makePhrase({
 // Test Wheel entity
 let mypie = scrawl.makeWheel({
 
-    name: 'wheel-pie-tester',
+    name: name('wheel-pie-tester'),
 
     radius: 50,
 
@@ -143,7 +147,7 @@ let mypie = scrawl.makeWheel({
     startX: 320,
     startY: 280,
 
-    fillStyle: 'blue-green',
+    fillStyle: name('blue-green'),
     lockFillStyleToEntity: true,
 
     method: 'fill',
@@ -152,7 +156,7 @@ let mypie = scrawl.makeWheel({
 // Test oval Shape entity
 let myoval = scrawl.makeOval({
 
-    name: 'shape-oval-tester',
+    name: name('shape-oval-tester'),
 
     startX: 30,
     startY: 160,
@@ -168,7 +172,7 @@ let myoval = scrawl.makeOval({
 // Test bezier Shape entity
 let mybezier = scrawl.makeBezier({
 
-    name: 'shape-bezier-tester',
+    name: name('shape-bezier-tester'),
 
     startX: 200,
     startY: 210,
@@ -191,7 +195,7 @@ let mybezier = scrawl.makeBezier({
 // Test Grid entity
 let mygrid = scrawl.makeGrid({
 
-    name: 'test-grid',
+    name: name('test-grid'),
 
     width: 120,
     height: 80,
@@ -223,7 +227,7 @@ let mygrid = scrawl.makeGrid({
 // Test svg path.d Shape entity
 let myshape = scrawl.makeShape({
 
-    name: 'shape-test',
+    name: name('shape-test'),
 
     startX: 240,
     startY: 20,
@@ -246,7 +250,7 @@ let myshape = scrawl.makeShape({
 
     method: 'fillAndDraw',
 
-    filters: ['emboss'],
+    filters: [name('emboss')],
 
     // svg outline of Japan from this source:
     // https://silhouettegarden.com/download/japan-silhouette/
@@ -567,7 +571,7 @@ const performEntityTests = () => {
     console.log('Creating packets for all entitys in test');
     const myblockPacket = myblock.saveAsPacket();
     const mypicturePacket = mypicture.saveAsPacket();
-    const myphrasePacket = myphrase.saveAsPacket();
+    const mylabelPacket = mylabel.saveAsPacket();
     const mypiePacket = mypie.saveAsPacket();
     const myovalPacket = myoval.saveAsPacket();
     const mybezierPacket = mybezier.saveAsPacket();
@@ -577,7 +581,7 @@ const performEntityTests = () => {
     console.log('Kill all entitys in test');
     myblock.kill();
     mypicture.kill();
-    myphrase.kill();
+    mylabel.kill();
     mypie.kill();
     myoval.kill();
     mybezier.kill();
@@ -599,10 +603,10 @@ const performEntityTests = () => {
     })
     .catch(err => console.log(err));
 
-    canvas.importPacket(myphrasePacket)
+    canvas.importPacket(mylabelPacket)
     .then(res => {
-        myphrase = res;
-        console.log('myphrase resurrected');
+        mylabel = res;
+        console.log('mylabel resurrected');
     })
     .catch(err => console.log(err));
 
@@ -686,7 +690,7 @@ performOtherTests();
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
 });
 
@@ -696,15 +700,15 @@ const fixEntitys = () => {
 
     console.log('Fix entitys to use other objects');
     myblock.set({
-        fillStyle: 'myColorObject',
+        fillStyle: name('myColorObject'),
     });
 
     mypie.set({
-        fillStyle: 'blue-green',
+        fillStyle: name('blue-green'),
     });
 
     myshape.set({
-        filters: 'emboss',
+        filters: name('emboss'),
     })
 };
 

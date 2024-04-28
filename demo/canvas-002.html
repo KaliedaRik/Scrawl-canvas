@@ -6,17 +6,47 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 002</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+    }
+
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+          text-align: center;
+          width: 600px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+      }
     }
   </style>
 
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-001.html">&larr; Previous</a>
+    <a href="canvas-003.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 002</h1>
   <h2>Block and wheel entity positioning (start, pivot, mimic, mouse)</h2>
 
@@ -35,15 +65,24 @@
     <div class="pink"><input class="controlItem" id="clearAlpha" type="range" value="0.9" min="0.8" max="1" step="0.005" /></div>
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-    data-base-clear-alpha="0.9"
-  ></canvas>
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="400"
+      data-scrawl-canvas
+      data-base-clear-alpha="0.9"
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/canvas-002.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+    </canvas>
+  </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

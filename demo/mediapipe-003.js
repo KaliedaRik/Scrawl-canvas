@@ -4,7 +4,16 @@
 // [Run code](../../demo/mediapipe-003.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
+
+
+// #### Scene setup
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Magic numbers
@@ -12,25 +21,19 @@ const width = 1280,
     height = 720;
 
 
-// #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
-
-
 // Create and manipulate the face worm
-let wormStart = 220,
-    wormEnd = 270;
+// let wormStart = 220,
+//     wormEnd = 270;
 
-const wormstartInput = document.querySelector('#wormstart'),
-    wormendInput = document.querySelector('#wormend');
 
-// @ts-expect-error
-wormstartInput.value = wormStart;
-// @ts-expect-error
-wormendInput.value = wormEnd;
+const dom = initializeDomInputs([
+    ['input', 'wormstart', '220'],
+    ['input', 'wormend', '270'],
+]);
 
 const worm = scrawl.makePolyline({
 
-    name: 'face-worm',
+    name: name('face-worm'),
 
     strokeStyle: 'red',
     lineJoin: 'round',
@@ -56,13 +59,13 @@ const updateLabelsAndWorm = function (asset) {
 
             face.forEach((coord, index) => {
 
-                entitys.push(scrawl.makePhrase({
-                    name: `label-${index}`,
+                entitys.push(scrawl.makeLabel({
+
+                    name: name(`label-${index}`),
                     text: `${index}`,
                     handle: ['center', 'center'],
-                    width: 20,
-                    justify: 'center',
-                    font: '10px Arial',
+                    fontString: '10px Arial',
+                    textIsAccessible: false,
                 }));
             });
         }
@@ -80,12 +83,15 @@ const updateLabelsAndWorm = function (asset) {
             });
         });
 
+        let wormStart = parseInt(dom.wormstart.value, 10),
+            wormEnd = parseInt(dom.wormend.value, 10);
+
         // Check for perilous user input
-        if (isNaN(wormStart)) wormStart = 0;
+        if (!Number.isFinite(wormStart)) wormStart = 0;
         if (wormStart < 0) wormStart = 0;
         if (wormStart > 468) wormStart = 468;
 
-        if (isNaN(wormEnd)) wormEnd = 0;
+        if (!Number.isFinite(wormEnd)) wormEnd = 0;
         if (wormEnd < 0) wormEnd = 0;
         if (wormEnd > 468) wormEnd = 468;
 
@@ -96,10 +102,8 @@ const updateLabelsAndWorm = function (asset) {
             wormEnd = temp;
         }
 
-// @ts-expect-error
-        wormstartInput.value = wormStart;
-// @ts-expect-error
-        wormendInput.value = wormEnd;
+        dom.wormstart.value = `${wormStart}`;
+        dom.wormend.value = `${wormEnd}`;
 
         // Update the worm's pins
         worm.set({
@@ -113,7 +117,7 @@ const updateLabelsAndWorm = function (asset) {
 // We'll handle everything in a raw asset object
 const myAsset = scrawl.makeRawAsset({
 
-    name: 'mediapipe-model-interpreter',
+    name: name('mediapipe-model-interpreter'),
 
     userAttributes: [{
 
@@ -127,16 +131,16 @@ const myAsset = scrawl.makeRawAsset({
 
                 if (img) {
 
-// @ts-expect-error
+/** @ts-expect-error */
                     this.canvasWidth =  img.width;
-// @ts-expect-error
+/** @ts-expect-error */
                     this.canvasHeight = img.height;
                 }
 
-// @ts-expect-error
+/** @ts-expect-error */
                 if (mesh) this.mesh = mesh;
 
-// @ts-expect-error
+/** @ts-expect-error */
                 this.dirtyData = true;
             }
         },
@@ -171,8 +175,8 @@ const perform = function (mesh) {
     // To get the raw asset working, something needs to subscribe to it - even though we're not using the asset to output any graphics in this demo. We only need to create the Picture entity once.
     if (!output) output = scrawl.makePicture({
 
-        name: 'output',
-        asset: 'mediapipe-model-interpreter',
+        name: name('output'),
+        asset: name('mediapipe-model-interpreter'),
     });
 };
 
@@ -183,16 +187,16 @@ let video, model, output;
 // Capture the media stream
 scrawl.importMediaStream({
 
-    name: 'device-camera',
+    name: name('device-camera'),
     audio: false,
 })
 .then(mycamera => {
 
     video = mycamera;
 
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.width = width;
-// @ts-expect-error
+/** @ts-expect-error */
     video.source.height = height;
 
     scrawl.makePicture({
@@ -208,7 +212,7 @@ scrawl.importMediaStream({
 
     // Start the MediaPipe model
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     model = new FaceMesh({
 
 /* eslint-enable */
@@ -225,7 +229,7 @@ scrawl.importMediaStream({
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
 /* eslint-disable */
-// @ts-expect-error
+/** @ts-expect-error */
     const mediaPipeCamera = new Camera(video.source, {
 
 /* eslint-enable */
@@ -251,27 +255,10 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
-
-
-// #### User interaction
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    if (e && e.target) {
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        const target = e.target;
-
-        if ('wormstart' === target.id) wormStart = parseInt(target.value, 10);
-        else if ('wormend' === target.id) wormEnd = parseInt(target.value, 10);
-    }
-
-}, '.controlItem');
 
 
 // #### Development and testing

@@ -10,21 +10,14 @@
 // The __makeButton__ function is not exposed to the 'scrawl' object, thus objects can only be created indirectly. Buttons can be saved, cloned and killed as part of wider save/kill/clone functionality.
 
 
-// #### Demos:
-// + [DOM-021](../../demo/dom-021.html) - Use canvas elements in popover content
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import {
-} from '../core/shared-vars.js';
-
-import { _keys, _FORMACTION, _FORMENCTYPE, _FORMMETHOD, _FORMNOVALIDATE, _POPOVERTARGET, _POPOVERTARGETACTION, ANCHOR, AUTOFOCUS, BLUR, BUTTON, CLICK, DATA_TAB_ORDER, DISABLED, FOCUS, FORM, NAME, T_BUTTON, TARGET, TYPE, UNDEF, VALUE, ZERO_STR } from '../core/shared-vars.js';
+import { _keys, _FORMACTION, _FORMENCTYPE, _FORMMETHOD, _FORMNOVALIDATE, _POPOVERTARGET, _POPOVERTARGETACTION, ANCHOR, AUTOFOCUS, BLUR, BUTTON, CLICK, DATA_TAB_ORDER, DISABLED, FOCUS, FORM, NAME, T_BUTTON, TARGET, TYPE, UNDEF, VALUE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Button constructor
@@ -162,12 +155,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             val = items[key];
 
-            if (key && key != NAME && val != null) {
+            if (key && key !== NAME && val != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, val);
-                else if (typeof defs[key] != UNDEF) this[key] = val;
+                else if (typeof defs[key] !== UNDEF) this[key] = val;
             }
         }
         this.dirtyButton = true;

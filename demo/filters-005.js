@@ -4,43 +4,45 @@
 // [Run code](../../demo/filters-005.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'channelstep',
+    name: name('channel-step'),
     method: 'channelstep',
 
-    red: 1,
-    green: 1,
-    blue: 1,
+    red: 32,
+    green: 32,
+    blue: 32,
+
+    clamp: 'round',
 });
 
 
 // Create the target entity
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['channelstep'],
+    filters: [name('channel-step')],
 });
 
 
@@ -48,21 +50,34 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Red: ${red.value}, Green: ${green.value}, Blue: ${blue.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Red: ${dom.red.value}
+    Green: ${dom.green.value}
+    Blue: ${dom.blue.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'red', '32'],
+    ['input', 'green', '32'],
+    ['input', 'blue', '32'],
+    ['input', 'opacity', '1'],
+    ['select', 'clamp', 1],
+]);
+
+
 // Setup form observer functionality
 scrawl.makeUpdater({
 
@@ -84,27 +99,9 @@ scrawl.makeUpdater({
     },
 });
 
-// Setup form
-const red = document.querySelector('#red'),
-    green = document.querySelector('#green'),
-    blue = document.querySelector('#blue'),
-    opacity = document.querySelector('#opacity');
-
-// @ts-expect-error
-red.value = 1;
-// @ts-expect-error
-green.value = 1;
-// @ts-expect-error
-blue.value = 1;
-// @ts-expect-error
-opacity.value = 1;
-
-// @ts-expect-error
-document.querySelector('#clamp').options.selectedIndex = 0;
-
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

@@ -40,28 +40,18 @@
 // + Would be a Big Win if we can tether Ticker/Tween/Actions to progress while a video plays - opens up the world of ___interactive video___.
 
 
-// #### Demos:
-// + All Tween and Action-related Demos necessarily include Tickers
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-006](../../demo/canvas-006.html) - Canvas tween stress test
-// + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
-// + [DOM-005](../../demo/dom-005.html) - DOM tween stress test
-// + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
-
-
 // #### Imports
 import { animation, animationtickers, constructors, tween } from '../core/library.js';
 
-import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, xtGet, Ωempty } from '../core/utilities.js';
+import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, xtGet, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _floor, _isArray, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../core/shared-vars.js';
+import { _floor, _isArray, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../helper/shared-vars.js';
 
 
 // #### Ticker constructor
@@ -254,7 +244,7 @@ S.duration = function (item) {
 
                 target.calculateEffectiveTime();
 
-                if (target.type == T_TWEEN) target.calculateEffectiveDuration();
+                if (target.type === T_TWEEN) target.calculateEffectiveDuration();
             }
         }
     }
@@ -481,7 +471,7 @@ P.setEffectiveDuration = function() {
         temp = convertTime(this.duration);
 
         // Cannot use %-String values for Ticker `duration` attribute
-        if (temp[0] == PC) {
+        if (temp[0] === PC) {
 
             this.duration = 0
             this.recalculateEffectiveDuration();
@@ -502,13 +492,13 @@ P.checkObserverRunningState = function () {
 
             const anim = animation[observer];
 
-            if (anim && anim.type == T_RENDER_ANIMATION) {
+            if (anim && anim.type === T_RENDER_ANIMATION) {
 
                 observer = this.observer = anim;
             }
             else return true;
         }
-        if (observer.type == T_RENDER_ANIMATION) {
+        if (observer.type === T_RENDER_ANIMATION) {
 
             return observer.isRunning();
         }
@@ -659,7 +649,7 @@ P.run = function () {
         pushUnique(tickerAnimations, this.name);
         tickerAnimationsFlag = true;
 
-        if (typeof this.onRun == FUNCTION) this.onRun();
+        if (typeof this.onRun === FUNCTION) this.onRun();
     }
     return this;
 };
@@ -691,7 +681,7 @@ P.reset = function () {
     this.fn(true);
     this.active = false;
 
-    if (typeof this.onReset == FUNCTION) this.onReset();
+    if (typeof this.onReset === FUNCTION) this.onReset();
 
     return this;
 };
@@ -717,7 +707,7 @@ P.complete = function () {
     this.fn();
     this.active = false;
 
-    if (typeof this.onComplete == FUNCTION) this.onComplete();
+    if (typeof this.onComplete === FUNCTION) this.onComplete();
 
     return this;
 };
@@ -744,7 +734,7 @@ P.reverse = function (resume = false) {
     this.fn();
     this.active = false;
 
-    if (typeof this.onReverse == FUNCTION) this.onReverse();
+    if (typeof this.onReverse === FUNCTION) this.onReverse();
 
     if (resume) this.resume();
 
@@ -760,7 +750,7 @@ P.halt = function () {
     removeItem(tickerAnimations, this.name);
     tickerAnimationsFlag = true;
 
-    if (typeof this.onHalt == FUNCTION) this.onHalt();
+    if (typeof this.onHalt === FUNCTION) this.onHalt();
 
     return this;
 };
@@ -783,7 +773,7 @@ P.resume = function () {
         pushUnique(tickerAnimations, this.name);
         tickerAnimationsFlag = true;
 
-        if (typeof this.onResume == FUNCTION) this.onResume();
+        if (typeof this.onResume === FUNCTION) this.onResume();
 
     }
     return this;
@@ -815,7 +805,7 @@ P.seekTo = function (milliseconds, resume = false) {
     this.fn(backwards);
     this.active = false;
 
-    if (typeof this.onSeekTo == FUNCTION) this.onSeekTo();
+    if (typeof this.onSeekTo === FUNCTION) this.onSeekTo();
 
     if (resume) this.resume();
 
@@ -848,7 +838,7 @@ P.seekFor = function (milliseconds, resume = false) {
     this.fn(backwards);
     this.active = false;
 
-    if (typeof this.onSeekFor == FUNCTION) this.onSeekFor();
+    if (typeof this.onSeekFor === FUNCTION) this.onSeekFor();
 
     if (resume) this.resume();
 
@@ -863,7 +853,7 @@ let tickerAnimationsFlag = true;
 // `coreTickersAnimation`
 makeAnimation({
 
-    name: 'coreTickersAnimation',
+    name: 'SC-core-tickers-animation',
     order: 0,
     fn: function () {
 

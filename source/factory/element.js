@@ -22,20 +22,10 @@
 // Element wrappers are included in the Scrawl-canvas packet system; they can be saved and cloned. Killing an Element wrapper will remove its DOM element from the document.
 
 
-// #### Demos:
-// + All stack demos include examples of using Elements. In particular:
-// + [DOM-002](../../demo/dom-002.html) - Element mouse, pivot and mimic functionality
-// + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
-// + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
-// + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-// + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-// + [Snippets-002](../../demo/snippets-002.html) - Scrawl-canvas stack element snippets
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_dom, removeItem, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_dom, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { uiSubscribedElements } from '../core/user-interaction.js';
 
@@ -44,7 +34,7 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
-import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../core/shared-vars.js';
+import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../helper/shared-vars.js';
 
 
 // #### Element constructor
@@ -96,8 +86,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [dom](../mixin/dom.html)
 baseMix(P);
 domMix(P);
 

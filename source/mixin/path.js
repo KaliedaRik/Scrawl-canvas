@@ -5,9 +5,9 @@
 // #### Imports
 import { artefact } from '../core/library.js';
 
-import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { _abs, PATH, START, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, PATH, START, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -74,7 +74,7 @@ export default function (P = Ωempty) {
 
             if (newPath && newPath.name && newPath.useAsPath) {
 
-                if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
+                if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
 
                 pushUnique(newPath.pathed, name);
 

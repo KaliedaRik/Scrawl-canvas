@@ -7,11 +7,11 @@
 // #### Imports
 import { artefact, particle } from '../core/library.js';
 
-import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { makeCoordinate } from '../factory/coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
-import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../core/shared-vars.js';
+import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_ENHANCED_LABEL, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 
 
 const capitalize = (s) => {
@@ -36,6 +36,7 @@ export default function (P = Ωempty) {
 // + Like the `start` coordinate, the `end` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes.
         endPivot: ZERO_STR,
         endPivotCorner: ZERO_STR,
+        endPivotIndex: -1,
         addEndPivotHandle: false,
         addEndPivotOffset: false,
 
@@ -78,15 +79,15 @@ P.factoryKill = function () {
 
         if (art.name !== this.name) {
 
-            if (art.startControlPivot && art.startControlPivot.name == this.name) art.set({ startControlPivot: false});
-            if (art.controlPivot && art.controlPivot.name == this.name) art.set({ controlPivot: false});
-            if (art.endControlPivot && art.endControlPivot.name == this.name) art.set({ endControlPivot: false});
-            if (art.endPivot && art.endPivot.name == this.name) art.set({ endPivot: false});
+            if (art.startControlPivot && art.startControlPivot.name === this.name) art.set({ startControlPivot: false});
+            if (art.controlPivot && art.controlPivot.name === this.name) art.set({ controlPivot: false});
+            if (art.endControlPivot && art.endControlPivot.name === this.name) art.set({ endControlPivot: false});
+            if (art.endPivot && art.endPivot.name === this.name) art.set({ endPivot: false});
 
-            if (art.startControlPath && art.startControlPath.name == this.name) art.set({ startControlPath: false});
-            if (art.controlPath && art.controlPath.name == this.name) art.set({ controlPath: false});
-            if (art.endControlPath && art.endControlPath.name == this.name) art.set({ endControlPath: false});
-            if (art.endPath && art.endPath.name == this.name) art.set({ endPath: false});
+            if (art.startControlPath && art.startControlPath.name === this.name) art.set({ startControlPath: false});
+            if (art.controlPath && art.controlPath.name === this.name) art.set({ controlPath: false});
+            if (art.endControlPath && art.endControlPath.name === this.name) art.set({ endControlPath: false});
+            if (art.endPath && art.endPath.name === this.name) art.set({ endPath: false});
         }
     });
 };
@@ -250,9 +251,9 @@ P.factoryKill = function () {
 
             this[attr] = null;
 
-            if (label == START_CONTROL) this.dirtyStartControlLock = true;
-            else if (label == CONTROL) this.dirtyControlLock = true;
-            else if (label == END_CONTROL) this.dirtyEndControlLock = true;
+            if (label === START_CONTROL) this.dirtyStartControlLock = true;
+            else if (label === CONTROL) this.dirtyControlLock = true;
+            else if (label === END_CONTROL) this.dirtyEndControlLock = true;
             else this.dirtyEndLock = true;
         }
         else if (item) {
@@ -291,9 +292,9 @@ P.factoryKill = function () {
 
                     this.updateDirty();
 
-                    if (label == START_CONTROL) this.dirtyStartControl = true;
-                    else if (label == CONTROL) this.dirtyControl = true;
-                    else if (label == END_CONTROL) this.dirtyEndControl = true;
+                    if (label === START_CONTROL) this.dirtyStartControl = true;
+                    else if (label === CONTROL) this.dirtyControl = true;
+                    else if (label === END_CONTROL) this.dirtyEndControl = true;
                     else this.dirtyEnd = true;
 
                     this[attr] = item;
@@ -404,10 +405,10 @@ P.factoryKill = function () {
 
         if (this.dirtyStart) this.cleanStart();
 
-        if (this.dirtyStartControl || this.startControlLockTo == PARTICLE) this.cleanControl(START_CONTROL);
-        if (this.dirtyEndControl || this.endControlLockTo == PARTICLE) this.cleanControl(END_CONTROL);
-        if (this.dirtyControl || this.controlLockTo == PARTICLE) this.cleanControl(CONTROL);
-        if (this.dirtyEnd || this.endLockTo == PARTICLE) this.cleanControl(END);
+        if (this.dirtyStartControl || this.startControlLockTo === PARTICLE) this.cleanControl(START_CONTROL);
+        if (this.dirtyEndControl || this.endControlLockTo === PARTICLE) this.cleanControl(END_CONTROL);
+        if (this.dirtyControl || this.controlLockTo === PARTICLE) this.cleanControl(CONTROL);
+        if (this.dirtyEnd || this.endLockTo === PARTICLE) this.cleanControl(END);
 
         if (this.dirtyOffset) this.cleanOffset();
         if (this.dirtyRotation) this.cleanRotation();
@@ -424,7 +425,7 @@ P.factoryKill = function () {
             this.updateControlPathSubscribers();
         }
 
-        // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+        // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 
@@ -476,9 +477,9 @@ P.factoryKill = function () {
         const raw = this[label],
             current = this[`current${capLabel}`];
 
-        if (lock == PIVOT && (!pivot || pivot.substring)) lock = COORD;
-        else if (lock == PATH && (!path || path.substring)) lock = COORD;
-        else if (lock == PARTICLE && (!part || part.substring)) lock = COORD;
+        if (lock === PIVOT && (!pivot || pivot.substring)) lock = COORD;
+        else if (lock === PATH && (!path || path.substring)) lock = COORD;
+        else if (lock === PARTICLE && (!part || part.substring)) lock = COORD;
 
         switch(lock) {
 
@@ -487,6 +488,21 @@ P.factoryKill = function () {
                 if (this.pivotCorner && pivot.getCornerCoordinate) {
 
                     [x, y] = pivot.getCornerCoordinate(this[`${label}PivotCorner`]);
+                }
+                else if (pivot.type === T_ENHANCED_LABEL) {
+
+                    if (this[`${label}PivotIndex`] < 0) {
+
+                        if (pivot.layoutTemplate) [x, y] = pivot.layoutTemplate.currentStampPosition;
+                        else this[`dirty${capLabel}`] = true;
+                    }
+                    else {
+
+                        const check = pivot.getUnitStartAt(this[`${label}PivotIndex`]);
+
+                        if (check) [x, y] = check;
+                        else this[`dirty${capLabel}`] = true;
+                    }
                 }
                 else [x, y] = pivot.currentStampPosition;
 
@@ -573,7 +589,7 @@ P.factoryKill = function () {
         if (pathPos > 1) pathPos = pathPos % 1;
 
         pathPos = parseFloat(pathPos.toFixed(6));
-        if (pathPos != tempPos) this[`${label}PathPosition`] = pathPos;
+        if (pathPos !== tempPos) this[`${label}PathPosition`] = pathPos;
 
         if (pathData) {
 
@@ -622,15 +638,15 @@ P.factoryKill = function () {
 
             if (sub) {
 
-                if (sub.type == T_LINE || sub.type == T_QUADRATIC || sub.type == T_BEZIER) {
+                if (sub.type === T_LINE || sub.type === T_QUADRATIC || sub.type === T_BEZIER) {
 
-                    if (sub.type == T_QUADRATIC) {
+                    if (sub.type === T_QUADRATIC) {
 
                         sub.dirtyControl = true;
                         sub.currentControlPathData = false;
                     }
 
-                    else if (sub.type == T_BEZIER) {
+                    else if (sub.type === T_BEZIER) {
 
                         sub.dirtyStartControl = true;
                         sub.dirtyEndControl = true;

@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -890,9 +910,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Ignore pixel ratio considerations</p>
-<ul>
-<li>Leads to issues when dragging the browser between screens with different pixel ratio densities</li>
+              <ul>
+<li>We are also going to ignore the device’s pixel density</li>
 </ul>
 
             </div>
@@ -912,17 +931,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-
-<span class="hljs-keyword">const</span> boxes = [];
-
-<span class="hljs-keyword">const</span> engine = {
-
-    <span class="hljs-attr">width</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;width&quot;</span>),
-    <span class="hljs-attr">height</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;height&quot;</span>),
-    <span class="hljs-attr">count</span>: <span class="hljs-number">1000</span>,
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -932,6 +941,62 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Premise of the demo - based on the constraints described in the <a href="https://github.com/slaylines/canvas-engines-comparison">Slaylines canvas engine comparison repo</a></p>
+<ul>
+<li>Library demos make use of an <code>engine</code> object, which includes details of the supplied &lt;canvas&gt; element’s dimensions, and a count of the number of boxes currently being drawn on that canvas</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> engine = {
+
+    <span class="hljs-attr">width</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>),
+    <span class="hljs-attr">height</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;height&#x27;</span>),
+    <span class="hljs-attr">count</span>: <span class="hljs-number">1000</span>,
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <ul>
+<li>We are going to keep details of all our boxes (their current state) in an array</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> boxes = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Setup the display canvas</p>
 
@@ -947,52 +1012,83 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Build and populate our cache Cell with pre-drawn boxes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">buildCell</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cache = canvas.<span class="hljs-title function_">buildCell</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cache&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cache&#x27;</span>),
     <span class="hljs-attr">width</span>: <span class="hljs-number">50</span> * <span class="hljs-number">40</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">compiled</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">willReadFrequently</span>: <span class="hljs-literal">false</span>,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Convenience variables</p>
 
-<span class="hljs-keyword">const</span> source = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">cell</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">element</span>;
-<span class="hljs-keyword">const</span> sourceEngine = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">cell</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">engine</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> source = cache.<span class="hljs-property">element</span>;
+<span class="hljs-keyword">const</span> sourceEngine = cache.<span class="hljs-property">engine</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>The source canvas will hold a set of differently sized boxes, which we later draw onto the display canvas.</p>
+<ul>
+<li>Generate the boxes once; draw them many times</li>
+</ul>
 
-sourceEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;white&#x27;</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>sourceEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;white&#x27;</span>;
 sourceEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;black&#x27;</span>;
 sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
+sourceEngine.<span class="hljs-title function_">translate</span>(<span class="hljs-number">25</span>, <span class="hljs-number">25</span>);
 
 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">40</span>; i++) {
 
     <span class="hljs-keyword">const</span> size = <span class="hljs-number">10</span> + i,
         delta = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(size / <span class="hljs-number">2</span>) + <span class="hljs-number">0.5</span>;
 
-    sourceEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, (<span class="hljs-number">50</span> * i) + <span class="hljs-number">25</span>, <span class="hljs-number">25</span>);
     sourceEngine.<span class="hljs-title function_">fillRect</span>(-delta, -delta, size, size);
     sourceEngine.<span class="hljs-title function_">strokeRect</span>(-delta, -delta, size, size);
+    sourceEngine.<span class="hljs-title function_">translate</span>(<span class="hljs-number">50</span>, <span class="hljs-number">0</span>);
+
 }</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>On start, and UI, create the required number of box objects</p>
 <ul>
@@ -1022,11 +1118,11 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
         </li>
         
         
-        <li id="section-8">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Use the box data to draw the appropriate box images onto the screen at the required positions</p>
 
@@ -1035,21 +1131,20 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> drawBoxes = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">const</span> engineWidth = engine.<span class="hljs-property">width</span>,
-        ctx = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">engine</span>;
+        ctx = canvas.<span class="hljs-title function_">getBase</span>().<span class="hljs-property">engine</span>,
+        trunc = <span class="hljs-title class_">Math</span>.<span class="hljs-property">trunc</span>;
 
     <span class="hljs-keyword">let</span> box, x, y, deltaX, boxpos, width;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        ctx.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = boxes.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
             box = boxes[i];
             [x, y, deltaX, boxpos] = box;
-            width = boxpos + <span class="hljs-number">10</span>
+            width = boxpos + <span class="hljs-number">10</span>;
 
-            ctx.<span class="hljs-title function_">drawImage</span>(source, ~~(boxpos * <span class="hljs-number">50</span>), <span class="hljs-number">0</span>, <span class="hljs-number">50</span>, <span class="hljs-number">50</span>, ~~(x - <span class="hljs-number">25</span>), ~~(y - <span class="hljs-number">25</span>), <span class="hljs-number">50</span>, <span class="hljs-number">50</span>);
+            ctx.<span class="hljs-title function_">drawImage</span>(source, <span class="hljs-title function_">trunc</span>(boxpos * <span class="hljs-number">50</span>), <span class="hljs-number">0</span>, <span class="hljs-number">50</span>, <span class="hljs-number">50</span>, <span class="hljs-title function_">trunc</span>(x - <span class="hljs-number">25</span>), <span class="hljs-title function_">trunc</span>(y - <span class="hljs-number">25</span>), <span class="hljs-number">50</span>, <span class="hljs-number">50</span>);
 
             x += deltaX;
             <span class="hljs-keyword">if</span> (x &lt; -width) x += engineWidth + (width * <span class="hljs-number">2</span>);
@@ -1061,11 +1156,11 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
         </li>
         
         
-        <li id="section-9">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Speed reporter</p>
 
@@ -1073,17 +1168,17 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`Box count: <span class="hljs-subst">${boxes.length}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Box count: <span class="hljs-subst">${boxes.length}</span>`</span>;
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>The animation loop object</p>
 
@@ -1091,7 +1186,7 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeAnimation</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
 
     <span class="hljs-attr">fn</span>: <span class="hljs-function">() =&gt;</span> {
 
@@ -1109,11 +1204,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-11">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

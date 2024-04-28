@@ -23,7 +23,7 @@ import { reportSpeed } from './utilities.js';
 // #### Initial setup
 scrawl.importDomImage('.crime');
 
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 const namespace = 'Crimes';
 const name = (item) => `${namespace}-${item}`;
 
@@ -89,7 +89,7 @@ let currentGraphType = 'bars',
     currentCategory = 'Burglary';
 
 const crimeCategoryInput = document.querySelector('#crime-categories');
-// @ts-expect-error
+/** @ts-expect-error */
 crimeCategoryInput.value = 'Burglary';
 crimeCategoryInput.setAttribute('disabled', '');
 

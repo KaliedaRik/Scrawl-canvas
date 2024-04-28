@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,7 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -904,6 +924,22 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Magic numbers</p>
 
@@ -915,11 +951,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="mediapipe-functionality">MediaPipe functionality</h4>
 <p>We’ll handle everything in a raw asset object, which a Picture entity can then use as its source</p>
@@ -928,7 +964,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>),
 
     <span class="hljs-attr">userAttributes</span>: [{
 
@@ -936,67 +972,16 @@
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-            <span class="hljs-keyword">if</span> (item) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+            <span class="hljs-keyword">if</span> (item) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">stuff</span> = item;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> =  width;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = height;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">stuff</span> = item;
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> =  width;
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = height;
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
             }
         },
     },{
@@ -1018,11 +1003,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Clear the RawAsset’s canvass element</p>
 
@@ -1034,11 +1019,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The model’s results supply an entire WebGL2 canvas in stuff.image</p>
 <ul>
@@ -1056,122 +1041,31 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>We’ll draw stuff on the canvas using MediaPipe’s own drawing routines</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_TESSELATION</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#707070&#x27;</span>, <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_FACE_OVAL</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LIPS</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>});
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span>
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_TESSELATION</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#707070&#x27;</span>, <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>});
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_FACE_OVAL</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>});
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LIPS</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>});
 <span class="hljs-comment">/* eslint-enable */</span>
             }
         }
@@ -1182,11 +1076,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The forever loop function, which captures the MediaPipe model’s output and passes it on to our raw asset for processing</p>
 
@@ -1198,8 +1092,8 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
 
     <span class="hljs-keyword">if</span> (!output) output = scrawl.<span class="hljs-title function_">makePicture</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;output&#x27;</span>,
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;output&#x27;</span>),
+        <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>),
 
         <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
         <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
@@ -1209,11 +1103,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h5 id="import-and-use-livestream">Import and use livestream</h5>
 <p>convenience handle for the media stream asset</p>
@@ -1225,11 +1119,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Capture the media stream</p>
 
@@ -1237,46 +1131,21 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importMediaStream</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;device-camera&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;device-camera&#x27;</span>),
     <span class="hljs-attr">audio</span>: <span class="hljs-literal">false</span>,
 })
 .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mycamera</span> =&gt;</span> {
 
-    video = mycamera;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+    video = mycamera;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    video.<span class="hljs-property">source</span>.<span class="hljs-property">width</span> = width;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    video.<span class="hljs-property">source</span>.<span class="hljs-property">height</span> = height;
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    video.<span class="hljs-property">source</span>.<span class="hljs-property">width</span> = width;
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    video.<span class="hljs-property">source</span>.<span class="hljs-property">height</span> = height;
 
     scrawl.<span class="hljs-title function_">makePicture</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;background&#x27;</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background&#x27;</span>),
         <span class="hljs-attr">asset</span>: mycamera.<span class="hljs-property">name</span>,
 
         <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
@@ -1288,32 +1157,19 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Start the MediaPipe model</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    model = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FaceMesh</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span>
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    model = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FaceMesh</span>({
 
 <span class="hljs-comment">/* eslint-enable */</span>
         <span class="hljs-attr">locateFile</span>: <span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> <span class="hljs-string">`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/<span class="hljs-subst">${file}</span>`</span>,
@@ -1329,32 +1185,19 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Use MediaPipe’s camera functionality to get updates to the forever loop</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> mediaPipeCamera = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Camera</span>(video.<span class="hljs-property">source</span>, {
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span>
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    <span class="hljs-keyword">const</span> mediaPipeCamera = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Camera</span>(video.<span class="hljs-property">source</span>, {
 
 <span class="hljs-comment">/* eslint-enable */</span>
         <span class="hljs-attr">onFrame</span>: <span class="hljs-keyword">async</span> () =&gt; {
@@ -1373,11 +1216,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1389,11 +1232,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1401,7 +1244,7 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1409,11 +1252,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

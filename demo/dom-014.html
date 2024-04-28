@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo DOM 014</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -35,6 +36,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="dom-013.html">&larr; Previous</a>
+    <a href="dom-015.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 014</h1>
   <h2>Scrawl-canvas initialization: canvas interference check</h2>
 
@@ -220,16 +225,14 @@
     const canvas = scrawl.library.canvas['my-scrawl-canvas'];
     const namespace = 'dom-014';
 
-    scrawl.makePhrase({
+    scrawl.makeLabel({
       name: `${namespace}-label`,
 
       start: ['center', 'center'],
       handle: ['center', 'center'],
-      width: '100%',
 
-      font: '4.5em bold Garamond, sans-serif',
+      fontString: 'bold 4.5rem Garamond, sans-serif',
       text: 'Hello, world!',
-      justify: 'center',
 
       fillStyle: 'lightblue',
       lineWidth: 2,

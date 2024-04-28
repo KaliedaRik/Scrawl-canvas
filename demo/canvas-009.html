@@ -15,16 +15,32 @@
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','https://www.google-analytics.com/analytics_debug.js','ga');
     ga('create', 'UA-000000-0', 'auto');
-    if (location.hostname == 'localhost') ga('set', 'sendHitTask', null);
+    if (location.hostname === 'localhost') ga('set', 'sendHitTask', null);
     ga('send', 'pageview');
   </script>
   <!-- End Google Analytics -->
 
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+
+      & .assets {
+        height: 0;
+        overflow: hidden;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-008.html">&larr; Previous</a>
+    <a href="canvas-010.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 009</h1>
   <h2>Pattern styles; Entity web link anchors; Dynamic accessibility</h2>
   <h3>Move cursor over canvas, or use keyboard tab,<br />to see dynamic hover and accessibility functionality<br />Click (or press keyboard enter) on a highlighted entity<br />to open a new web page</h3>
@@ -34,9 +50,14 @@
     width="600" 
     height="400"
     data-scrawl-canvas
-  ></canvas>
+  >
+    <div class="assets" aria-hidden="true">
+      <img src="img/brick.png" id="brick" class="mypatterns" />
+      <img src="img/leaves.png" id="leaves" class="mypatterns" />
+    </div>
+  </canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -81,9 +102,6 @@
 
     <p><a href="../docs/demo/canvas-009.html">Annotated code</a></p>
   </div>
-
-  <img src="img/brick.png" id="brick" class="mypatterns" />
-  <img src="img/leaves.png" id="leaves" class="mypatterns" />
 
   <script src="canvas-009.js" type="module"></script>
 

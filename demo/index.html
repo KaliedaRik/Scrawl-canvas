@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Scrawl-canvas Demos</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -54,7 +55,7 @@
     a {
       text-decoration: none;
       transition: color 0.5s;
-      color: darkblue;
+      color: blue;
     }
     a:hover {
       text-decoration: underline;
@@ -122,27 +123,26 @@
 
 <body>
   <main>
-    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.12.0)</span></h1>
+    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.13.0)</span></h1>
 
-    <p>The Scrawl-canvas library has been developed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
+    <p>The Scrawl-canvas library makes it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 
-    <p><strong>These demos represent the library's testing suite.</strong> They have been designed to cover as much functionality as possible in sets of integration tests. Testing is (currently) conducted by hand: all demos must run as expected before changes can be pushed to the library's v8 or master branches on GitHub.</p>
+    <p><strong>These demos represent the library's testing suite.</strong> They have been designed to cover as much functionality as possible in sets of integration tests. Testing is (currently) conducted by hand: all demos must run as expected before changes can be pushed to the library's v8 branch on GitHub.</p>
 
     <p>Additional (non-testing) demos can be found in this <a href="https://codepen.io/collection/RzzMjw">CodePen collection</a>.</p>
 
     <h2>Core functionality tests:</h2>
 
-    <p>Scrawl-canvas helps developers build graphical representations and scenes that are <strong>real-time responsive</strong> to their DOM environment, and easier to <strong>make accessible</strong> to non-visibility-based technology. The coding paradigm encourages developers to <strong>split their code into ES6 modules</strong>: this makes code easier to maintain and easier to reuse.</p>
+    <p>Scrawl-canvas helps developers build graphical representations and scenes that are <strong>real-time responsive</strong> to their DOM environment, and easier to <strong>make accessible</strong> to non-visual technology. The coding paradigm encourages developers to <strong>split their code into ES6 modules</strong>: this makes code easier to maintain and easier to reuse.</p>
 
-    <p>In essence, Scrawl-canvas represents a system to define a set of <strong>graphical entitys</strong> and their associated <strong>styles</strong> (colors, gradients, patterns) and <strong>assets</strong> (images, spritesheets, video, media stream, noise, other canvas elements), then <strong>position</strong> (absolutely, relatively, by reference to other entitys) and <strong>animate them</strong> (by delta, by tween) across the canvas - often in response to user interaction. Animation can also be extended to styles and asset display.</p>
+    <p>In essence, Scrawl-canvas represents a system to define a set of <strong>graphical entitys</strong> and their associated <strong>styles</strong> (colors, gradients, patterns) and <strong>assets</strong> (images, spritesheets, video, media stream, noise, other canvas elements), then <strong>position</strong> (absolutely, relatively, by reference to other entitys) and <strong>animate</strong> them (by delta, by tween) across the canvas - often in response to user interaction. Animation can also be extended to styles and asset display.</p>
 
     <p>Entitys include:</p>
 
     <ul>
-      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>, <strong>Crescent</strong>) and text (<strong>Phrase</strong>).</li>
+      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>, <strong>Crescent</strong>) and text (<strong>Label</strong>).</li>
       <ul>
         <li>Wheel entitys also include part-circle shapes such as pie slices and truncated circles.</li>
-        <li>Phrase text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated along (curved) paths.</li>
         <li>CSS font strings are supported as far as possible, including font-sizes declared using suffixes such as 'em', 'rem', 'vw', 'pt', etc.</li>
       </ul>
       <li>Path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Bezier, Cog, Line, LineSpiral, Oval, Polygon, Polyline, Quadratic, Rectangle, Spiral, Star, Tetragon</strong>).</li>
@@ -151,6 +151,7 @@
       </ul>
       <li>Images, video and related pixel-based image streams (<strong>Picture</strong>), both in whole and in part; the proportion of the image displayed can be controlled and animated.</li>
       <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort image output (<strong>Loom, Mesh</strong>).</li>
+      <li>Multi-line, styled text layout using the <strong>EnhancedLabel</strong> entity, which uses other artefacts as a template for defining how and where its text will display.</li>
     </ul>
 
     <p>Entitys can be stamped onto the canvas in a variety of ways:</p>
@@ -161,6 +162,7 @@
       <ul>
         <li>All gradient styles can be bound to their containing cell, or to particular entitys.</li>
         <li>Entitys can accept all legitimate CSS color strings &ndash; rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklch(), oklab(), color() &ndash; for their fillStyle, strokeStyle and shadowColor input.</li>
+        <li>Wide-gamut color can be displayed on devices that support them.</li>
         <li>Color factories (and thus gradient styles) can work with RGB, HSL, HWB, LAB, LCH, OKLAB and OKLCH <strong>color spaces</strong> internally, and export CSS color strings for each of those spaces; Color factories support <strong>color ranges</strong>. This extends to gradients, which can spread colors defined in any supported color space.</li> 
         <li>Color factories, and gradient styles, can have easing algorithms applied to them &ndash; <strong>eased linear gradients</strong>.</li>
       </ul>
@@ -275,44 +277,30 @@
       <div class="no-padding"><img src="thumbs/canvas-015.webp" /></div>
       <div>
         <a href="canvas-015.html">Canvas 015</a>
-        Phrase entity (make, clone, method, multiline)
-        <br /><span class="responsive">Drag zones</span>
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-015.webp" /></div>
-      <div>
-        <a href="canvas-015a.html">Canvas 015a</a>
-        Phrase entity - cache output to improve render speeds
-        <br /><span class="responsive">Drag zones</span>
+        CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-016.webp" /></div>
       <div>
         <a href="canvas-016.html">Canvas 016</a>
-        Phrase entity position and font attributes; Block mimic functionality
+        CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-017.webp" /></div>
       <div>
         <a href="canvas-017.html">Canvas 017</a>
-        Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-018.webp" /></div>
-      <div>
-        <a href="canvas-018.html">Canvas 018</a>
-        Phrase entity - text along a path
+        Gradients stress test
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-019.webp" /></div>
       <div>
-        <a href="canvas-019.html">Canvas 019</a>
+        <a href="canvas-018.html">Canvas 018</a>
         Gradient and Color factories - transparency
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-019.webp" /></div>
       <div>
-        <a href="canvas-019a.html">Canvas 019a</a>
+        <a href="canvas-019.html">Canvas 019</a>
         Gradient and Color factories - transparency - alternative approach using Cells instead of images
       </div>
 
@@ -364,9 +352,10 @@
       <div class="no-padding"><img src="thumbs/canvas-027.webp" /></div>
       <div>
         <a href="canvas-027.html">Canvas 027</a>
-        Video control and manipulation; chroma-based hit zone
+        Video control and manipulation; filter-based hit zone
         <br /><span class="responsive">Responsive canvas</span>
         <br /><span class="responsive">Anchor links</span>
+        <br /><span class="responsive">Keyboard zones</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-028.webp" /></div>
@@ -379,7 +368,7 @@
       <div class="no-padding"><img src="thumbs/canvas-029.webp" /></div>
       <div>
         <a href="canvas-029.html">Canvas 029</a>
-        Phrase entitys and gradients
+        Image smoothing
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-030.webp" /></div>
@@ -532,9 +521,8 @@
       <div class="no-padding"><img src="thumbs/canvas-052.webp" /></div>
       <div>
         <a href="canvas-052.html">Canvas 052</a>
-        Create and use a RawAsset object to modify an image asset
+        Noise asset functionality
         <br /><span class="responsive">Responsive canvas</span>
-        <br /><span class="responsive">Record video</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-053.webp" /></div>
@@ -567,61 +555,108 @@
       <div class="no-padding"><img src="thumbs/canvas-057.webp" /></div>
       <div>
         <a href="canvas-057.html">Canvas 057</a>
-        CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz
+        Create and use a RawAsset object to modify an image asset
+        <br /><span class="responsive">Responsive canvas</span>
+        <br /><span class="responsive">Record video</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-058.webp" /></div>
       <div>
         <a href="canvas-058.html">Canvas 058</a>
-        Image smoothing
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-059.png" /></div>
-      <div>
-        <a href="canvas-059.html">Canvas 059</a>
-        CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-060.webp" /></div>
-      <div>
-        <a href="canvas-060.html">Canvas 060</a>
-        Noise asset functionality
-        <br /><span class="responsive">Responsive canvas</span>
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-061.webp" /></div>
-      <div>
-        <a href="canvas-061.html">Canvas 061</a>
-        Gradients stress test
-      </div>
-
-      <div class="no-padding"><img src="thumbs/canvas-062.webp" /></div>
-      <div>
-        <a href="canvas-062.html">Canvas 062</a>
         Group and ungroup entitys; create a bespoke drag-drop UX
       </div>
 
-      <div class="no-padding"><img src="thumbs/canvas-063.webp" /></div>
+      <div class="no-padding"><img src="thumbs/canvas-059.webp" /></div>
       <div>
-        <a href="canvas-063.html">Canvas 063</a>
+        <a href="canvas-059.html">Canvas 059</a>
         Semi-accessible Minimap; multiple drag zones
         <br /><span class="responsive">Responsive canvas</span>
         <br /><span class="responsive">Drag zones</span>
       </div>
 
-      <div class="no-padding"><img src="thumbs/canvas-064.webp" /></div>
+      <div class="no-padding"><img src="thumbs/canvas-060.webp" /></div>
       <div>
-        <a href="canvas-064.html">Canvas 064</a>
-        Animation object: gradient along a line
-        <br /><span class="responsive">Responsive canvas</span>
+        <a href="canvas-060.html">Canvas 060</a>
+        Wide Gamut 2D Graphics using HTML Canvas
+      </div>
+    </div>
+
+    <h2>Label and EnhancedLabel entity tests</h2>
+
+    <p>As of Scrawl-canvas v8.13.0, the Phrase entity has been deprecated and removed from the library. The new <strong>Label</strong> and <strong>EnhancedLabel</strong> entitys replace it. All demos that previously used Phrase entitys have been updated to use these new entitys.</p>
+    
+    <div class="container">
+      <div class="no-padding"><img src="thumbs/canvas-201.webp" /></div>
+      <div>
+        <a href="canvas-201.html">Canvas 201</a>
+        Label entity (make, clone, method); Label accessible text
         <br /><span class="responsive">Drag zones</span>
       </div>
 
-      <div class="no-padding"><img src="thumbs/canvas-065.png" /></div>
+      <div class="no-padding"><img src="thumbs/canvas-202.webp" /></div>
       <div>
-        <a href="canvas-065.html">Canvas 065</a>
-        Wide Gamut 2D Graphics using HTML Canvas
+        <a href="canvas-202.html">Canvas 202</a>
+        Label entity - basic support for non-western fonts
       </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-203.webp" /></div>
+      <div>
+        <a href="canvas-203.html">Canvas 203</a>
+        Label entity - underline text
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-204.webp" /></div>
+      <div>
+        <a href="canvas-204.html">Canvas 204</a>
+        Label entity - gradients and patterns
+        <br /><span class="responsive">Drag zones</span>
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-205.webp" /></div>
+      <div>
+        <a href="canvas-205.html">Canvas 205</a>
+        Label entity - updating font parts; experiments with variable font
+        <br /><span class="responsive">Drag zones</span>
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-206.webp" /></div>
+      <div>
+        <a href="canvas-206.html">Canvas 206</a>
+        EnhancedLabel entity - basic multiline text
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-207.webp" /></div>
+      <div>
+        <a href="canvas-207.html">Canvas 207</a>
+        EnhancedLabel entity - styling multiline text
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-208.webp" /></div>
+      <div>
+        <a href="canvas-208.html">Canvas 208</a>
+        EnhancedLabel entity - text along a path
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-209.webp" /></div>
+      <div>
+        <a href="canvas-209.html">Canvas 209</a>
+        EnhancedLabel - clone entity, drag-drop; shadows, gradients and patterns
+        <br /><span class="responsive">Drag zones</span>
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-210.webp" /></div>
+      <div>
+        <a href="canvas-210.html">Canvas 210</a>
+        EnhancedLabel - TextUnit dynamic manipulation
+      </div>
+      
+      <div class="no-padding"><img src="thumbs/canvas-211.webp" /></div>
+      <div>
+        <a href="canvas-211.html">Canvas 211</a>
+        EnhancedLabel entity - keyboard navigation; hit tests
+        <br /><span class="responsive">Keyboard zones</span>
+      </div>
+      
     </div>
 
     <h2>Filters functionality tests</h2>
@@ -637,7 +672,7 @@
         <li>gradient, and displacement, mapping.</li>
     </ul>
 
-    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays. Entitys can be used to filter the display behind them (stencil filters).</p>
+    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays. Entitys can be used to filter the display behind them - <strong>stencil filters</strong>.</p>
 
     <p><strong>Filters can be animated</strong> using Scrawl-canvas tween functionality.</p>
 
@@ -812,7 +847,7 @@
         Parameters for: reducePalette filter
       </div>
 
-      <div class="no-padding"><img src="thumbs/filters-028.png" /></div>
+      <div class="no-padding"><img src="thumbs/filters-028.webp" /></div>
       <div>
         <a href="filters-028.html">Filters 028</a>
         Stencil (background) filter functionality
@@ -1014,8 +1049,9 @@
       <li>Scrawl-canvas treats <strong>accessibility as a First Class Issue:</strong></li>
       <ul>
         <li>All canvases have appropriate <strong>ARIA tags</strong> added to them &mdash; including ARIA labels and descriptions.</li>
-        <li><strong>Graphical text</strong> is automatically exposed to the DOM, to make it readable to assistive technology</li>
+        <li><strong>Graphical text</strong> is (by default) exposed to the DOM, to make it readable to assistive technology. The accessible text can differ from the graphical text, to make more sense to screen readers, and the order in which text is presented to the user can be controlled.</li>
         <li><strong>Graphical navigation</strong> is automatically reflected into the DOM via &lt;a> anchor elements which can be triggered using the keyboard. This extends to responding visually to keyboard-driven <strong>focus/blur</strong> events.</li>
+        <li>Navigable <strong>actions</strong> can be assigned to graphical entitys by means of (hidden) &lt;button> elements which, again, can be triggered using the keyboard (including associated focus/blur events).</li>
         <li>Canvases can adapt to <strong>user preferences</strong>, for instance <strong>prefers-reduced-motion</strong> and <strong>prefers-color-scheme</strong>.</li>
       </ul>
       <li>Scrawl-canvas treats <strong>responsiveness as a First Class Requirement:</strong></li>
@@ -1028,7 +1064,7 @@
       <li><strong>New &lt;canvas> elements</strong> can be added to the web page in real time, and removed when required; Scrawl-canvas includes functionality to help component-based Javascript frameworks (eg: <strong>React, Svelte</strong>) use canvases more efficiently and safely.</li>
       <li>Functionality is included to easily add and/or remove <strong>event listeners</strong> to canvas elements, and also other elements which can be used to control the canvas display &mdash; for instance to help make the canvas scene/animation more accessible to assistive technology and keyboard users.</li>
       <li>Scrawl-canvas &lt;canvas> elements can be made to respond to <strong>touch events</strong>; canvases can be made to remain static while dragging entitys, but follow browser-based touch actions (such as page scrolling) at other times.</li>
-      <li>The Scrawl-canvas <strong>animation loop</strong> can also be stopped and restarted as required. In addition, &lt;canvas> elements will only run their animations when they are <strong>visible in the browser viewport</strong> (via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">intersection observers</a>) &mdash; canvases automatically track their position in, and movement through, the viewport.</li>
+      <li>The Scrawl-canvas <strong>animation loop</strong> can also be stopped and restarted as required. In addition, &lt;canvas> elements can be defined to only run their animations when they are <strong>visible in the browser viewport</strong> (via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">intersection observers</a>) &mdash; canvases automatically track their position in, and movement through, the viewport.</li>
     </ul>
 
     <p>Scrawl-canvas <strong>stacks</strong> extend the library's unique positioning, manipulation and animation functionality to <strong>DOM elements</strong>. This allows us to combine stacks and canvases so that DOM elements can be used to position canvas entitys, and give us the power to animate DOM elements along path-based entitys. It also gives users the power to <strong>interact with &lt;canvas> elements rotated in 3D space</strong>.</p>

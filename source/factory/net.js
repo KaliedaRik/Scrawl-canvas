@@ -12,28 +12,21 @@
 // + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
 
 
-// #### Demos:
-// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
-// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
-// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
-
-
 // #### Imports
 import { artefact, artefactnames, constructors, entity, particle, world } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 import { makeSpring } from './particle-spring.js';
 
-import { releaseVector, requestVector } from './vector.js';
+import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _floor, _isArray, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../core/shared-vars.js';
+import { _floor, _isArray, _isFinite, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../helper/shared-vars.js';
 
 
 // #### Net constructor
@@ -114,7 +107,7 @@ const defaultAttributes = {
     springConstant: 50,
     damperConstant: 10,
 
-    // This is a ratio figure, not the actual rest length. If `== 1`, spring restLength will equal the initial distance between the two particles. `< 1` and the length will be proportionately smaller; `> 1` gives results in a longer length
+    // This is a ratio figure, not the actual rest length. If `=== 1`, spring restLength will equal the initial distance between the two particles. `< 1` and the length will be proportionately smaller; `> 1` gives results in a longer length
     restLength: 1,
 
     // __showSprings__ - Boolean flag - when set, Scrawl-canvas will display the Spring connections between Particle pairs
@@ -231,11 +224,11 @@ P.purgeParticlesFromLibrary = function () {
             if (tempArt.particle && !tempArt.particle.substring && tempArt.particle.name) tempArt.particle = tempArt.particle.name;
 
             // Polyline entitys go one step further in that they can also use Particles in their pin array
-            if (tempArt.type == T_POLYLINE && tempArt.useParticlesAsPins) {
+            if (tempArt.type === T_POLYLINE && tempArt.useParticlesAsPins) {
 
                 tempArt.pins.forEach((pin, index) => {
 
-                    if (isa_obj(pin) && pin.type == T_PARTICLE) {
+                    if (isa_obj(pin) && pin.type === T_PARTICLE) {
 
                         tempArt.pins[index] = pin.name;
                         tempArt.dirtyPins = true;
@@ -281,7 +274,7 @@ S.world = function (item) {
     let w;
 
     if (item.substring) w = world[item];
-    else if (isa_obj(item) && item.type == T_WORLD) w = item;
+    else if (isa_obj(item) && item.type === T_WORLD) w = item;
 
     if (w) this.world = w;
 };
@@ -436,7 +429,7 @@ P.restart = function () {
 // `checkHit` - overwrites the function defined in mixin/position.js
 // + The Net entity's hit areas are circles centred on the entity's Particle's positions.
 // + Nets cannot be dragged; the Particles that make up the Net can be dragged.
-P.checkHit = function (items = [], mycell) {
+P.checkHit = function (items = []) {
 
     this.lastHitParticle = null;
 
@@ -464,7 +457,7 @@ P.checkHit = function (items = [], mycell) {
         }
         else return false;
 
-        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (!_isFinite(tx) || !_isFinite(ty)) return false;
 
         const v = requestVector();
 
@@ -486,7 +479,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        const r = this.checkHitReturn(tx, ty, mycell, res);
+        const r = this.checkHitReturn(tx, ty, res);
 
         this.lastHitParticle = res;
 
@@ -497,13 +490,13 @@ P.checkHit = function (items = [], mycell) {
 
 // `checkHitReturn` - overwrites the function defined in mixin/position.js
 // + The return object includes the Particle object that recorded the hit, saved in the object's `particle` attribute
-P.checkHitReturn = function (x, y, cell, particle) {
+P.checkHitReturn = function (x, y, particle) {
 
     return {
-        x: x,
-        y: y,
+        x,
+        y,
         artefact: this,
-        particle: particle,
+        particle,
     };
 };
 

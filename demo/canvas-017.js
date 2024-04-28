@@ -1,98 +1,150 @@
 // # Demo Canvas 017
-// Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
+// Gradients stress test
 
 // [Run code](../../demo/canvas-017.html)
-import {
-    library as L,
-    makePhrase,
-    makeRender,
-    makeWheel,
-    makeUpdater,
-} from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-// Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-// Create Phrase entity
-const lorem = makePhrase({
+const [width, height] = canvas.get('dimensions');
 
-    name: name('myPhrase'),
 
-    startX: 300,
-    startY: 200,
-    handleX: '50%',
-    handleY: '50%',
-    width: '50%',
+scrawl.makeGradient({
 
-    // To make the initial italic styling stick, we need to insert a soft hyphen
-    // + Yes, this is a bug
-    // + We have no plans to fix this issue in the near future
-    text: '&shy;§ITALIC§Lorem§/ITALIC§ ipsum §Red-Text§har varit <ITALIC>standard 😀</ITALIC> &auml;nda sedan §SMALL-CAPS§1500-talet§/SMALL-CAPS§, när-en-ok&aring;nd-§BOLD§bok§DEFAULTS§sättare-tog att antal 🤖 §BOLD§bok§/BOLD§stäver §OVERLINE§och <HIGHLIGHT>blandade§/OVERLINE§ dem</HIGHLIGHT> för §size-24§Red-Text§att§DEFAULTS§ g&ouml;ra, §Letter-spacing-10§ett 🎻 prov§UNDERLINE§exemplar</UNDERLINE>§/Letter-spacing-10§ §MONO§av en §BOLD§b&oacute;k.',
-    // Note also that the `SMALL-CAPS` styling has been deprecated and shouldn't be used. Included here only for testing the deprecated functionality
+    name: name('monochrome'),
+    endX: '100%',
+    colors: [
+      [0, 'black'],
+      [999, 'white'],
+    ],
 
-    font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
+}).clone({
 
-    fillStyle: '#003399',
+    name: name('stepped-grays'),
+    colors: [
+      [0, '#333'],
+      [199, '#333'],
+      [200, '#666'],
+      [399, '#666'],
+      [400, '#999'],
+      [599, '#999'],
+      [600, '#ccc'],
+      [799, '#ccc'],
+      [800, '#fff'],
+      [999, '#fff'],
+    ],
 
-    method: 'fill',
-    showBoundingBox: true,
+}).clone({
+
+    name: name('red-gradient'),
+    colors: [
+      [0, 'hsl(0 100% 40%)'],
+      [999, 'hsl(0 100% 100%)'],
+    ],
+
+}).clone({
+
+    name: name('red-blue'),
+    colors: [
+      [0, 'rgb(255 0 0)'],
+      [999, 'rgb(0 0 255)'],
+    ],
+    colorSpace: 'LAB',
+
+}).clone({
+
+    name: name('hue-gradient'),
+    colors: [
+      [0, 'hwb(120 10% 10%)'],
+      [999, 'hwb(20 10% 10%)'],
+    ],
 });
 
+const grads = [
+    scrawl.findStyles(name('monochrome')),
+    scrawl.findStyles(name('stepped-grays')),
+    scrawl.findStyles(name('red-gradient')),
+    scrawl.findStyles(name('red-blue')),
+    scrawl.findStyles(name('hue-gradient')),
+];
 
-// Add additional section classes directly to the library
-L.sectionClasses['Red-Text'] = { fill: 'red' };
-L.sectionClasses['size-24'] = { size: '24px' };
-L.sectionClasses['Letter-spacing-10'] = { space: 10 };
-L.sectionClasses['/Letter-spacing-10'] = { space: 0 };
-L.sectionClasses['MONO'] = { family: 'monospace' };
+const bespokeEasings = {
+
+    'user-steps': (val) => {
+
+        if (val < 0.2) return 0.1;
+        if (val < 0.4) return 0.3;
+        if (val < 0.6) return 0.5;
+        if (val < 0.8) return 0.7;
+        return 0.9;
+    },
+    'user-repeat': (val) => (val * 4) % 1,
+};
 
 
-// Add a pivoted Wheel entity
-makeWheel({
+const blockGroup = scrawl.makeGroup({
 
-    name: name('pin'),
-    method: 'fillAndDraw',
-    fillStyle: 'gold',
-    strokeStyle: 'darkblue',
-
-    radius: 5,
-    handleX: 'center',
-    handleY: 'center',
-
-    pivot: name('myPhrase'),
-    lockTo: 'pivot',
+    name: name('block-group'),
+    host: canvas.base.name,
 });
+
+let counter = 0;
+const generateBlocks = (numRequired) => {
+
+    const maxWidth = width - 60;
+    const maxHeight = height - 60;
+
+    for (let i = 0; i < numRequired; i++) {
+
+        scrawl.makeBlock({
+
+            name: name(`b-${counter}`),
+            group: name('block-group'),
+
+            fillStyle: name(dom.colorStops.value),
+            lockFillStyleToEntity: true,
+
+            method: dom.method.value,
+
+            width: Math.floor(10 + (Math.random() * 50)),
+            height: Math.floor(10 + (Math.random() * 50)),
+            startX: Math.floor(30 + (Math.random() * maxWidth)),
+            startY: Math.floor(30 + (Math.random() * maxHeight)),
+
+            handle: ['center', 'center'],
+
+            delta: {
+                roll: 1 - (Math.random() * 2),
+            },
+        });
+
+        counter++;
+    }
+};
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const [startX, startY] = lorem.start;
-    const [handleX, handleY] = lorem.handle;
-    const width = lorem.dimensions[0];
-
-    const {roll, scale, lineHeight, letterSpacing, overlinePosition} = lorem;
-
-    return `    Start - x: ${startX}, y: ${startY}
-    Handle - x: ${handleX}, y: ${handleY}
-    Width: ${width}; Roll: ${roll}; Scale: ${scale}
-    Line height: ${lineHeight}; Letter spacing: ${letterSpacing}; Overline: ${overlinePosition}`;
+    return `
+    Precision: ${dom.precision.value}
+    Boxes: ${counter}`;
 });
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
@@ -102,104 +154,59 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-makeUpdater({
+scrawl.addNativeListener(['change'], (e) => {
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+    e.preventDefault();
 
-    target: lorem,
+    blockGroup.setArtefacts({ fillStyle: name(dom.colorStops.value) });
 
-    useNativeListener: true,
-    preventDefault: true,
+}, '#colorStops');
 
-    updates: {
+scrawl.addNativeListener(['change'], (e) => {
 
-        absoluteWidth: ['width', 'round'],
+    e.preventDefault();
 
-        start_xPercent: ['startX', '%'],
-        start_xAbsolute: ['startX', 'round'],
-        start_xString: ['startX', 'raw'],
+    blockGroup.setArtefacts({ method: dom.method.value });
 
-        start_yPercent: ['startY', '%'],
-        start_yAbsolute: ['startY', 'round'],
-        start_yString: ['startY', 'raw'],
+}, '#method');
 
-        handle_xPercent: ['handleX', '%'],
-        handle_xAbsolute: ['handleX', 'round'],
-        handle_xString: ['handleX', 'raw'],
+scrawl.addNativeListener(['change'], (e) => {
 
-        handle_yPercent: ['handleY', '%'],
-        handle_yAbsolute: ['handleY', 'round'],
-        handle_yString: ['handleY', 'raw'],
+    e.preventDefault();
 
-        roll: ['roll', 'float'],
-        scale: ['scale', 'float'],
+    const ease = (bespokeEasings[dom.easing.value]) ? bespokeEasings[dom.easing.value] : dom.easing.value;
+    grads.forEach(g => g.set({ easing: ease}));
 
-        upend: ['flipUpend', 'boolean'],
-        reverse: ['flipReverse', 'boolean'],
+}, '#easing');
 
-        overline: ['overlinePosition', 'float'],
-        letterSpacing: ['letterSpacing', 'float'],
-        lineHeight: ['lineHeight', 'float'],
-        justify: ['justify', 'raw'],
-        family: ['family', 'raw'],
+scrawl.addNativeListener(['change'], (e) => {
 
-        size_string: ['size', 'raw'],
-        size_px: ['size', 'px'],
-    },
-});
+    e.preventDefault();
+
+    const p = parseInt(dom.precision.value, 10);
+    grads.forEach(g => g.set({ precision: p}));
+
+}, '#precision');
+
+scrawl.addNativeListener(['click'], () => {
+
+    generateBlocks(100);
+
+}, canvas.domElement);
 
 
 // Setup form
-// @ts-expect-error
-document.querySelector('#start_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 1;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#overline').value = 0.1;
-// @ts-expect-error
-document.querySelector('#absoluteWidth').value = 300;
-// @ts-expect-error
-document.querySelector('#lineHeight').value = 1.5;
-// @ts-expect-error
-document.querySelector('#letterSpacing').value = 0;
-// @ts-expect-error
-document.querySelector('#justify').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#family').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#size_px').value = 16;
-// @ts-expect-error
-document.querySelector('#size_string').options.selectedIndex = 0;
+const dom = initializeDomInputs([
+    ['select', 'easing', 0],
+    ['select', 'colorStops', 0],
+    ['select', 'method', 0],
+    ['input', 'precision', '25'],
+]);
+
+
+// Populate scene - because we're generating from DOM form element values, they need to be correctly initialized before we create any Block elements
+generateBlocks(100);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

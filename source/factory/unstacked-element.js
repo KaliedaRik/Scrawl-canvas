@@ -1,28 +1,19 @@
 // # UnstackedElement factory
-
 // ___To be aware - this artefact factory is HIGHLY EXPERIMENTAL; its API will be subject to short-notice breaking changes as we amend and inprove the artefact's functionality___
-
+//
 // TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
 
 
 // ## Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, xt, Ωempty } from '../helper/utilities.js';
 
 import { makeCanvas } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_NAME, HEIGHT, RELATIVE, STATIC, T_UNSTACKED_ELEMENT, UE_INCLUDED_STYLES, UE_MIMICKED_STYLES, UNSTACKEDELEMENT, WIDTH, Z_INDEX } from '../core/shared-vars.js';
+import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_NAME, HEIGHT, RELATIVE, STATIC, T_UNSTACKED_ELEMENT, UE_INCLUDED_STYLES, UE_MIMICKED_STYLES, UNSTACKEDELEMENT, WIDTH, Z_INDEX } from '../helper/shared-vars.js';
 
 
 // ## UnstackedElement constructor
@@ -99,7 +90,7 @@ P.addCanvas = function (items = Ωempty) {
             el = this.domElement,
             style = el.style;
 
-        if (style.position == STATIC) style.position = RELATIVE;
+        if (style.position === STATIC) style.position = RELATIVE;
 
         canvas.id = `${this.name}-canvas`;
 
@@ -163,7 +154,7 @@ P.checkElementStyleValues = function () {
                 case WIDTH :
 
                     w = _max(styleW, elW);
-                    if (this.canvasWidth != w) {
+                    if (this.canvasWidth !== w) {
 
                         this.canvasWidth = w;
                         this.dirtyDimensions = true;
@@ -173,7 +164,7 @@ P.checkElementStyleValues = function () {
                 case HEIGHT :
 
                     h = _max(styleH, elH);
-                    if (this.canvasHeight != h) {
+                    if (this.canvasHeight !== h) {
 
                         this.canvasHeight = h;
                         this.dirtyDimensions = true;
@@ -182,10 +173,10 @@ P.checkElementStyleValues = function () {
 
                 case Z_INDEX :
 
-                    z = (styleZ == AUTO) ? 0 : parseInt(styleZ, 10);
+                    z = (styleZ === AUTO) ? 0 : parseInt(styleZ, 10);
                     z = (this.canvasOnTop) ? z + 1 : z - 1;
 
-                    if (this.canvasZIndex != z) {
+                    if (this.canvasZIndex !== z) {
 
                         this.canvasZIndex = z;
                         this.dirtyZIndex = true;
@@ -198,7 +189,7 @@ P.checkElementStyleValues = function () {
                     hi = host[item];
                     si = style[item];
 
-                    if(!xt(hi) || hi != si) {
+                    if(!xt(hi) || hi !== si) {
 
                         host[item] = si;
                         results[item] = si;

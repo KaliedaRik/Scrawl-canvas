@@ -6,11 +6,23 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 037</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
+  </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-036.html">&larr; Previous</a>
+    <a href="canvas-038.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 037</h1>
   <h2>Pan and zoom using a Picture entity</h2>
 
@@ -24,13 +36,13 @@
     data-base-background-color="honeydew"
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
 
     <ul>
-      <li>Crerate a Picture entity hat displays a large image asset</li>
+      <li>Crerate a Picture entity that displays a large image asset</li>
       <li>Add event listeners that allow the user to zoom the image in/out within the Picture. Zooming out should be constrained so that no blank space appears at the Picture's edges: when the image edge zooms past the Picture edge, it sticks to the edge. Wherever possible (as constrained by edges), the zoom effect should center on the mouse cursor.</li>
       <li>Add event listeners that allow the user to drag the image within the Picture; again, drag should be constrained so that no blank space appears at the Picture's edges</li>
     </ul>

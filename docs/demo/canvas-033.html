@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -894,12 +914,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-<span class="hljs-keyword">const</span> background_dark = <span class="hljs-string">&#x27;#404040&#x27;</span>,
-    text_dark = <span class="hljs-string">&#x27;#c0ffc0&#x27;</span>,
-    background_light = <span class="hljs-string">&#x27;#f0f0f0&#x27;</span>,
-    text_light = <span class="hljs-string">&#x27;#408f40&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -910,13 +925,47 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>color variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> background_dark = <span class="hljs-string">&#x27;#404040&#x27;</span>,
+    text_dark = <span class="hljs-string">&#x27;#c0ffc0&#x27;</span>,
+    background_light = <span class="hljs-string">&#x27;#f0f0f0&#x27;</span>,
+    text_light = <span class="hljs-string">&#x27;#408f40&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
               <p>Create the demo Oval entity</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> track = scrawl.<span class="hljs-title function_">makeOval</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-track&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;loader-track&#x27;</span>),
 
     <span class="hljs-attr">radiusX</span>: <span class="hljs-string">&#x27;22%&#x27;</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;12%&#x27;</span>,
@@ -933,19 +982,20 @@
     },
 
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">constantPathSpeed</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">precision</span>: <span class="hljs-number">0.1</span>
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Create the three Phrase entitys that will animate around the oval</p>
+              <p>Create the three EnhancedLabel entitys that will animate around the oval</p>
 <ul>
 <li>We give them their own group to make updating their attributes easier</li>
 </ul>
@@ -954,47 +1004,48 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> textGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;text-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;text-group&#x27;</span>),
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
 });
 
-scrawl.<span class="hljs-title function_">makePhrase</span>({
+scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-text-1&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;loader-text-1&#x27;</span>),
     <span class="hljs-attr">group</span>: textGroup,
 
-    <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span>,
-
+    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;bold 50px Arial, sans-serif&#x27;</span>,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Loading&#x27;</span>,
-    <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;50px&#x27;</span>,
-    <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">textPath</span>: <span class="hljs-string">&#x27;loader-track&#x27;</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;120%&#x27;</span>,
+    <span class="hljs-attr">textHandle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;120%&#x27;</span>],
+
+    <span class="hljs-attr">layoutTemplate</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;loader-track&#x27;</span>),
+    <span class="hljs-attr">useLayoutTemplateAsPath</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">breakTextOnSpaces</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">delta</span>: {
-      <span class="hljs-attr">textPathPosition</span>: -<span class="hljs-number">0.002</span>
+        <span class="hljs-attr">pathPosition</span>: -<span class="hljs-number">0.002</span>
     },
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-text-2&#x27;</span>,
-    <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0.333</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;loader-text-2&#x27;</span>),
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.333</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-text-3&#x27;</span>,
-    <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0.667</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;loader-text-3&#x27;</span>),
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.667</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="prefers-color-scheme-actions">prefers-color-scheme actions</h4>
 <p>Setup the actions to take, to match the animation scene to the user’s preference for <code>dark</code> or <code>light</code> (default) color scheme</p>
@@ -1016,11 +1067,11 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1032,11 +1083,11 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1044,7 +1095,7 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1052,11 +1103,11 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="prefers-reduced-motion-actions">prefers-reduced-motion actions</h4>
 
@@ -1064,16 +1115,16 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">checkE</span> = (<span class="hljs-params">e</span>) =&gt; {
     <span class="hljs-keyword">if</span> (e) {
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;keydown&quot;</span> === e.<span class="hljs-property">type</span>) {</pre></div></div>
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;keydown&#x27;</span> === e.<span class="hljs-property">type</span>) {</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>spacebar</p>
 
@@ -1084,11 +1135,11 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>enter key</p>
 
@@ -1100,53 +1151,53 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>mouse click</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;click&quot;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;click&#x27;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>tap</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;touchend&quot;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;touchend&#x27;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">startAnimation</span> = (<span class="hljs-params">e</span>) =&gt; {
-    <span class="hljs-keyword">if</span> (e === <span class="hljs-string">&quot;reduced-motion&quot;</span> || <span class="hljs-title function_">checkE</span>(e)) {
+    <span class="hljs-keyword">if</span> (e === <span class="hljs-string">&#x27;reduced-motion&#x27;</span> || <span class="hljs-title function_">checkE</span>(e)) {
         track.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span> });
         textGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span> });
     }
 };
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">stopAnimation</span> = (<span class="hljs-params">e</span>) =&gt; {
-    <span class="hljs-keyword">if</span> (e === <span class="hljs-string">&quot;reduced-motion&quot;</span> || <span class="hljs-title function_">checkE</span>(e)) {
+    <span class="hljs-keyword">if</span> (e === <span class="hljs-string">&#x27;reduced-motion&#x27;</span> || <span class="hljs-title function_">checkE</span>(e)) {
         track.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span> });
         textGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span> });
     }
 };
 
-canvas.<span class="hljs-title function_">setReduceMotionAction</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">stopAnimation</span>(<span class="hljs-string">&quot;reduced-motion&quot;</span>), <span class="hljs-number">1000</span>));
+canvas.<span class="hljs-title function_">setReduceMotionAction</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">stopAnimation</span>(<span class="hljs-string">&#x27;reduced-motion&#x27;</span>), <span class="hljs-number">1000</span>));
 
-canvas.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">startAnimation</span>(<span class="hljs-string">&quot;reduced-motion&quot;</span>));
+canvas.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">startAnimation</span>(<span class="hljs-string">&#x27;reduced-motion&#x27;</span>));
 
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">&#x27;keydown&#x27;</span>, <span class="hljs-string">&#x27;touchend&#x27;</span>], startAnimation, <span class="hljs-string">&#x27;#play&#x27;</span>);
 
@@ -1155,11 +1206,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>In chrome browsers, open the inspector and enable the <strong>Rendering</strong> view - this includes selectors to emulate both <code>prefers-reduced-motion</code> and <code>prefers-color-scheme</code> user choices.</p>

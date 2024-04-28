@@ -1,27 +1,17 @@
 // # Color factory
-
-// #### Demos:
-// While any entity using a color style will make use of color functionality, the following demos are most relevant for testing this functionality
-// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
-// + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
-// + [Canvas-047](../../demo/canvas-047.html) - Easing functions for Color and Tween factories
-// + [Canvas-059](../../demo/canvas-059.html) - CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lab(), lch(), oklab(), oklch()
-// + [Filters-027](../../demo/filters-027.html) - Parameters for: reducePalette filter
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-// + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
-// + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
+// TODO - documentation!
 
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, λfirstArg, Ωempty } from '../core/utilities.js';
+import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, λfirstArg, Ωempty } from '../helper/utilities.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -256,9 +246,9 @@ P.kill = function () {
                 stroke = state.strokeStyle,
                 shadow = state.shadowColor;
 
-            if (isa_obj(fill) && fill.name == myname) state.fillStyle = state.defs.fillStyle;
-            if (isa_obj(stroke) && stroke.name == myname) state.strokeStyle = state.defs.strokeStyle;
-            if (isa_obj(shadow) && shadow.name == myname) state.shadowColor = state.defs.shadowColor;
+            if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+            if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+            if (isa_obj(shadow) && shadow.name === myname) state.shadowColor = state.defs.shadowColor;
         }
     });
 
@@ -282,15 +272,15 @@ P.get = function (item) {
 
         return this.getRangeColor(item);
     }
-    else if (item == MIN) {
+    else if (item === MIN) {
 
         return this.getMinimumColor();
     }
-    else if (item == MAX) {
+    else if (item === MAX) {
 
         return this.getMaximumColor();
     }
-    else if (item == RANDOM) {
+    else if (item === RANDOM) {
 
         this.generateRandomColor();
         return this.getCurrentColor();
@@ -305,10 +295,10 @@ P.get = function (item) {
 
             const def = this.defs[item];
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 const val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             return undefined;
         }
@@ -333,12 +323,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = value;
+                else if (typeof defs[key] !== UNDEF) this[key] = value;
             }
         }
         if (items.random) this.generateRandomColor();
@@ -561,13 +551,13 @@ P.returnColorFromValues = function (b, c, d, a) {
     const col = this.buildColorString(b, c, d, a, colorSpace);
 
     let flag = false;
-    if (XYZ == colorSpace) flag = true;
-    else if (colorSpace != returnColorAs) flag = true;
-    else if (HWB == returnColorAs && !supportsHWB) flag = true;
-    else if (LAB == returnColorAs && !supportsLAB) flag = true;
-    else if (LCH == returnColorAs && !supportsLCH) flag = true;
-    else if (OKLAB == returnColorAs && !supportsOKLAB) flag = true;
-    else if (OKLCH == returnColorAs && !supportsOKLCH) flag = true;
+    if (XYZ === colorSpace) flag = true;
+    else if (colorSpace !== returnColorAs) flag = true;
+    else if (HWB === returnColorAs && !supportsHWB) flag = true;
+    else if (LAB === returnColorAs && !supportsLAB) flag = true;
+    else if (LCH === returnColorAs && !supportsLCH) flag = true;
+    else if (OKLAB === returnColorAs && !supportsOKLAB) flag = true;
+    else if (OKLCH === returnColorAs && !supportsOKLCH) flag = true;
 
     if (flag) {
 
@@ -625,7 +615,7 @@ P.checkColor = function (item) {
         else if (item.includes(_LCH)) colSpace = LCH;
         else if (item.includes(_XYZ)) colSpace = XYZ;
 
-        if (RGB == colSpace || HSL == colSpace) return item;
+        if (RGB === colSpace || HSL === colSpace) return item;
 
         this.colorSpace = colSpace;
 
@@ -653,8 +643,8 @@ P.getRangeColor = function (item, internalGradientBuild = false) {
         if (internalGradientBuild) {
 
             if (HSL_HWB_ARRAY.includes(col)) col = RGB;
-            else if (LCH == col) col = LAB;
-            else if (OKLCH == col) col = OKLAB;
+            else if (LCH === col) col = LAB;
+            else if (OKLCH === col) col = OKLAB;
         }
 
         const vals = this.calculateRangeColorValues(item, internalGradientBuild),
@@ -678,8 +668,8 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
     if (internalGradientBuild) {
 
         if (HSL_HWB_ARRAY.includes(colorSpace)) col = _RGB;
-        else if (LCH == colorSpace) col = _LAB;
-        else if (OKLCH == colorSpace) col = _OKLAB;
+        else if (LCH === colorSpace) col = _LAB;
+        else if (OKLCH === colorSpace) col = _OKLAB;
     }
 
     const [bMin, cMin, dMin, aMin] = this[`${col}_min`];
@@ -687,7 +677,7 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
 
     let e = easingFunction;
 
-    if (!internalGradientBuild && easing != FUNCTION && easeEngines[easing]) e = easeEngines[easing];
+    if (!internalGradientBuild && easing !== FUNCTION && easeEngines[easing]) e = easeEngines[easing];
 
     const val = (internalGradientBuild) ? item : e(item);
 
@@ -779,7 +769,7 @@ P.getAlphaValue = function (alpha) {
         else a = parseFloat(alpha);
     }
     // This test should capture alpha values of `none`
-    if (isNaN(a)) a = 1;
+    if (!_isFinite(a)) a = 1;
     else if (a > 1) a = 1;
     else if ( a < 0) a = 0;
 
@@ -789,7 +779,7 @@ P.getAlphaValue = function (alpha) {
 // `getHueValue` - internal helper function - because the CSS `hue` definition is massively overloaded with possibilities
 P.getHueValue = function (hue) {
 
-    if (hue == NONE) return 0;
+    if (hue === NONE) return 0;
 
     if (hue.includes(DEG)) hue = parseFloat(hue)
     else if (hue.includes(RAD)) hue = parseFloat(hue) / _radian;
@@ -798,7 +788,7 @@ P.getHueValue = function (hue) {
     else hue = parseFloat(hue);
 
     // We test and correct for the hue-related `none` value here
-    if (isNaN(hue)) return 0;
+    if (!_isFinite(hue)) return 0;
 
     return correctAngle(hue);
 };
@@ -814,9 +804,9 @@ P.getColorValuesFromString = function(str, col) {
     const res = str.split(SPACE).filter(e => e != null && e !== ZERO_STR);
 
     // We test and correct for the `none` value here (excluding alpha channel)
-    if (res[0] == null || res[0] == NONE) res[0] = _0;
-    if (res[1] == null || res[1] == NONE) res[1] = _0;
-    if (res[2] == null || res[2] == NONE) res[2] = _0;
+    if (res[0] == null || res[0] === NONE) res[0] = _0;
+    if (res[1] == null || res[1] === NONE) res[1] = _0;
+    if (res[2] == null || res[2] === NONE) res[2] = _0;
 
     return res;
 };
@@ -1149,7 +1139,7 @@ P.convertRGBtoHex = function (red, green, blue) {
     if (green.substring) green = parseInt(green, 10);
     if (blue.substring) blue = parseInt(blue, 10);
 
-    if (!isNaN(red) && !isNaN(green) && !isNaN(blue)) {
+    if (_isFinite(red) && _isFinite(green) && _isFinite(blue)) {
 
         const r = (_0 + (red).toString(16)).slice(-2),
             g = (_0 + (green).toString(16)).slice(-2),

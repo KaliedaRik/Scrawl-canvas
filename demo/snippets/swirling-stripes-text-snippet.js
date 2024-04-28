@@ -15,17 +15,17 @@
 // __Function input:__
 // + the DOM element - generally a block or inline-block element.
 //
-// __Customisation:__ The snippet can be customised using the following data- attributes applied using CSS variables, or directly to the HTML header element:
-// + `data-main-color` - any CSS color string
-// + `data-dark-main-color` - any CSS color string
-// + `data-stripe-color` - any CSS color string
-// + `data-dark-stripe-color` - any CSS color string
-// + `data-stripe-ratio` - (0 - 1) the ratio of stripe to main color; higher values show wider stripes
-// + `data-swirl-angle` - (degrees) higher values lead to a tighter swirl; use negative values to reverse the swirl direction
-// + `data-gradient-skew-x` - (-2 - 2) skew the gradient pattern horizontally
-// + `data-gradient-skew-y` - (-2 - 2) skew the gradient pattern vertically
-// + `data-gradient-stretch-x` - (0 - 4) stretch the gradient pattern horizontally
-// + `data-gradient-stretch-y` - (0 - 4) stretch the gradient pattern vertically
+// __Customisation:__ The snippet can be customised using the following `--data-???` CSS custom properties:
+// + `--data-main-color` - any CSS color string (default: `black`)
+// + `--data-dark-main-color` - any CSS color string (default: `yellow`)
+// + `--data-stripe-color` - any CSS color string (default: `red`)
+// + `--data-dark-stripe-color` - any CSS color string (default: `red`)
+// + `--data-stripe-ratio` - (0 - 1) the ratio of stripe to main color; higher values show wider stripes (default: `0.5`)
+// + `--data-swirl-angle` - (degrees) higher values lead to a tighter swirl; use negative values to reverse the swirl direction (default: `90`)
+// + `--data-pattern-skew-x` - (-2 - 2) skew the gradient pattern horizontally (default: `-1`)
+// + `--data-pattern-skew-y` - (-2 - 2) skew the gradient pattern vertically (default: `0.5`)
+// + `--data-pattern-stretch-x` - (0 - 4) stretch the gradient pattern horizontally (default: `1`)
+// + `--data-pattern-stretch-y` - (0 - 4) stretch the gradient pattern vertically (default: `1`)
 //
 // __Function output:__ a Javascript object will be returned, containing the following attributes
 // ```
@@ -42,281 +42,424 @@
 //
 // import mySnippet from './relative/or/absolute/path/to/this/file.js';
 // let myElements = document.querySelectorAll('.some-class');
-// myElements.forEach(el => mySnippet(el, scrawl));
+// myElements.forEach(el => mySnippet(scrawl, el));
 // ```
-
-// Additional font-specific customisation can be added courtesy of the Text Snippet Helper module
-import { getSnippetData } from './text-snippet-helper.js';
-
+//
 // __Effects on the element:__
 // + Imports the element's background color, and sets the element background to `transparent`
 // + Imports the element's text node text, and sets the text color to `transparent`
-// + ___Note that canvas text will NEVER be as good as DOM text!___
-export default function (el, scrawl) {
+export default function (scrawl, el) {
 
-    // Apply the snippet to the DOM element
-    const snippet = scrawl.makeSnippet({
-        domElement: el,
-    });
+    // Boilerplate - namespacing
+    const namespace = el.id;
+    const name = (val) => `${namespace}-${val}`;
 
-    // Only proceed if the snippet is successfully generated
-    if (snippet) {
 
-        // Import data and functionality from the Text Snippet Helper module
-        const { canvas, group, compStyles, dataset, name, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, colorSchemeDarkActions, colorSchemeLightActions, animationFunctions, animationEndFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+    // Only progress if the supplied element has an `id` attribute
+    if (namespace) {
 
-        // Initialise the canvas
-        initCanvas();
 
-        // Initialize and collect developer-supplied data
-        let mainColor = 'black',
-            darkMainColor = 'white',
-            stripeColor = 'red',
-            darkStripeColor = '#e34e49',
-            stripeRatio = 0.5,
-            swirlAngle = 90,
-            gradientSkewX = 0,
-            gradientSkewY = 0,
-            gradientStretchX = 1,
-            gradientStretchY = 1;
-
-        if (dataset.mainColor) mainColor = dataset.mainColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-main-color');
-            if (s) mainColor = s;
-        }
-
-        if (dataset.darkMainColor) darkMainColor = dataset.darkMainColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-main-color');
-            if (s) darkMainColor = s;
-        }
-
-        if (dataset.stripeColor) stripeColor = dataset.stripeColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-stripe-color');
-            if (s) stripeColor = s;
-        }
-
-        if (dataset.darkStripeColor) darkStripeColor = dataset.darkStripeColor;
-        else {
-            const s = compStyles.getPropertyValue('--data-stripe-color');
-            if (s) darkStripeColor = s;
-        }
-
-        if (dataset.stripeRatio) stripeRatio = parseFloat(dataset.stripeRatio);
-        else {
-            const s = compStyles.getPropertyValue('--data-gradient-easing');
-            if (s) stripeRatio = parseFloat(s);
-        }
-
-        if (dataset.swirlAngle) swirlAngle = parseFloat(dataset.swirlAngle);
-        else {
-            const s = compStyles.getPropertyValue('--data-swirl-angle');
-            if (s) swirlAngle = parseFloat(s);
-        }
-
-        if (dataset.gradientSkewX) gradientSkewX = parseFloat(dataset.gradientSkewX);
-        else {
-            const s = compStyles.getPropertyValue('--data-gradient-skew-x');
-            if (s) gradientSkewX = parseFloat(s);
-        }
-
-        if (dataset.gradientSkewY) gradientSkewY = parseFloat(dataset.gradientSkewY);
-        else {
-            const s = compStyles.getPropertyValue('--data-gradient-skew-y');
-            if (s) gradientSkewY = parseFloat(s);
-        }
-
-        if (dataset.gradientStretchX) gradientStretchX = parseFloat(dataset.gradientStretchX);
-        else {
-            const s = compStyles.getPropertyValue('--data-gradient-stretch-x');
-            if (s) gradientStretchX = parseFloat(s);
-        }
-
-        if (dataset.gradientStretchY) gradientStretchY = parseFloat(dataset.gradientStretchY);
-        else {
-            const s = compStyles.getPropertyValue('--data-gradient-stretch-y');
-            if (s) gradientStretchY = parseFloat(s);
-        }
-
-        // Build the text effect
-        let gradientChangeAt = Math.floor(stripeRatio * 1000);
-        if (gradientChangeAt < 1) gradientChangeAt = 1;
-        if (gradientChangeAt > 997) gradientChangeAt = 997;
-
-        const myGradient = scrawl.makeGradient({
-            name: `${name}-swirlstripe-gradient`,
-            colors: [
-                [0, stripeColor],
-                [gradientChangeAt, stripeColor],
-                [gradientChangeAt + 1, mainColor],
-                [999, mainColor],
-            ],
-            endY: '100%',
-            precision: 10,
+        // Create the snippet for this DOM element
+        const snippet = scrawl.makeSnippet({
+            domElement: el,
         });
 
-        const cell = canvas.buildCell({
-            name: `${name}-swirlstripe-gradient-cell`,
-            width: 16,
-            height: lineHeight,
-            shown: false,
-            useAsPattern: true,
-        });
 
-        scrawl.makeBlock({
-            name: `${name}-swirlstripe-gradient-block-0`,
-            group: `${name}-swirlstripe-gradient-cell`,
-            dimensions: ['100%', '20%'],
-            fillStyle: `${name}-swirlstripe-gradient`,
-            lockFillStyleToEntity: true,
-        }).clone({
-            name: `${name}-swirlstripe-gradient-block-1`,
-            startY: '20%',
-        }).clone({
-            name: `${name}-swirlstripe-gradient-block-2`,
-            startY: '40%',
-        }).clone({
-            name: `${name}-swirlstripe-gradient-block-3`,
-            startY: '60%',
-        }).clone({
-            name: `${name}-swirlstripe-gradient-block-4`,
-            startY: '80%',
-        });
+        // Only proceed if the snippet is successfully generated
+        if (snippet) {
 
-        const p1 = scrawl.makePattern({
-            name: `${name}-swirlstripe-gradient-pattern`,
-            asset: `${name}-swirlstripe-gradient-cell`,
-            stretchX: gradientStretchY,
-            stretchY: gradientStretchX,
-            skewX: gradientSkewY,
-            skewY: gradientSkewX,
-        });
 
-        const textFill = scrawl.makePhrase({
-            name: `${name}-text-stencil`,
-            group,
-            order: 0,
-        });
+            // Unpack the snippet into the parts we'll be using
+            const canvas = snippet.canvas,
+                animation = snippet.animation,
+                demolishAction = snippet.demolish,
+                compStyles = snippet.element.elementComputedStyles;
 
-        initPhrase(textFill);
 
-        textGroup.addArtefacts(textFill);
+            // Boilerplate - text processing
+            const addTextNode = () => {
+                const shy = document.createTextNode('!');
+                el.appendChild(shy);
+            };
 
-        scrawl.makeBlock({
-            name: `${name}-text-fill`,
-            group,
-            order: 1,
-            width: '100%',
-            height: '100%',
-            fillStyle: `${name}-swirlstripe-gradient-pattern`,
-            globalCompositeOperation: 'source-in',
-        });
-
-        const swirl = scrawl.makeFilter({
-            name: `${name}-swirl-filter`,
-            method: 'swirl',
-            startX: '50%',
-            startY: '50%',
-            innerRadius: 0,
-            outerRadius: Math.ceil(lineHeight * 2),
-            easing: 'easeOutIn',
-            angle: swirlAngle,
-            transparentEdges: true,
-        });
-
-        canvas.base.set({
-            compileOrder: 1,
-            memoizeFilterOutput: true,
-        });
-
-        // Accessibility
-        colorSchemeLightActions.push(() => {
-            myGradient.set({
-                colors: [
-                    [0, stripeColor],
-                    [gradientChangeAt, stripeColor],
-                    [gradientChangeAt + 1, mainColor],
-                    [999, mainColor],
-                ],
-            });
-        });
-
-        colorSchemeDarkActions.push(() => {
-            myGradient.set({
-                colors: [
-                    [0, darkStripeColor],
-                    [gradientChangeAt, darkStripeColor],
-                    [gradientChangeAt + 1, darkMainColor],
-                    [999, darkMainColor],
-                ],
-            });
-        });
-
-        // Responsiveness
-        responsiveFunctions.push((items = {}) => {
-
-            const localLineHeight = parseFloat(items.lineHeight);
-
-            cell.set({
-                height: localLineHeight,
-            });
-
-            swirl.set({
-                outerRadius: Math.ceil(localLineHeight * 2),
-            });
-        });
-
-        // Additional animation functionality
-        let isActive = false;
-
-        animationFunctions.push(() => {
-
-            const {x, y, active} = canvas.here;
-
-            if (active && !isActive) {
-
-                isActive = true;
-
-                canvas.base.set({
-                    filters: [swirl.name],
-                });
-            }
-            else if (!active && isActive) {
-
-                isActive = false;
-
-                canvas.base.set({
-                    filters: [],
-                });
+            const processText = t => {
+                t = t.replace(/<canvas.*<\/canvas>/gi, '');
+                t = t.replace(/<button.*<\/button>/gi, '');
+                if (!t.length) {
+                    addTextNode();
+                    t = '!';
+                }
+                return t;
             }
 
-            if (isActive) {
 
-                swirl.set({
-                    startX: x,
-                    startY: y,
-                });
-            }
-        });
+            // Boilerplate - demolish/kill functionality
+            const additionalDemolishActions = [];
 
-        animationEndFunctions.push(() => {
+            snippet.demolish = () => {
+                additionalDemolishActions.forEach(f => f());
+                scrawl.purge(namespace);
+                demolishAction();
+            };
 
-            canvas.base.set({
-                filters: [],
+
+            // This makes the canvas element's base cell the default group for everything we create
+            canvas.setAsCurrentCanvas();
+
+
+            // Boilerplate - fix for text alignment
+            const getJustifyLine = (val) => {
+
+                if (val === 'justify') return 'space-between';
+                if (val === 'justify-all') return 'space-around';
+                if (val === 'match-parent') return 'start';
+                return val;
+            };
+
+
+            // Boilerplate - fix for lineSpacing/lineHeight
+            const getLineSpacing = () => parseFloat(compStyles.lineHeight) / parseFloat(compStyles.fontSize);
+
+
+            // Initialize and collect developer-supplied data
+            // + We also set the defaults here for missing colors/values
+            const userData = {
+
+                direction: compStyles.direction || 'ltr',
+                fontStretch: compStyles.fontStretch || 'normal',
+                letterSpacing: compStyles.letterSpacing || '0px',
+                wordSpacing: compStyles.wordSpacing || '0px',
+                fontVariantCaps: compStyles.fontVariantCaps || 'normal',
+                lineSpacing: compStyles.lineSpacing || '1',
+                lineAdjustment: compStyles.getPropertyValue('--data-line-adjustment') || '0',
+                justifyLine: getJustifyLine(compStyles.textAlign),
+
+                elBackgroundColor: compStyles.backgroundColor || 'transparent',
+
+                mainColor: compStyles.getPropertyValue('--data-main-color') || 'black',
+                darkMainColor: compStyles.getPropertyValue('--data-dark-main-color') || 'yellow',
+                stripeColor: compStyles.getPropertyValue('--data-stripe-color') || 'red',
+                darkStripeColor: compStyles.getPropertyValue('--data-dark-stripe-color') || 'red',
+                patternSkewX: compStyles.getPropertyValue('--data-pattern-skew-x') || '-1',
+                patternSkewY: compStyles.getPropertyValue('--data-pattern-skew-y') || '0.5',
+                patternStretchX: compStyles.getPropertyValue('--data-pattern-stretch-x') || '1',
+                patternStretchY: compStyles.getPropertyValue('--data-pattern-stretch-y') || '1',
+                stripeRatio: compStyles.getPropertyValue('--data-stripe-ratio') || '0.5',
+                swirlAngle: compStyles.getPropertyValue('--data-swirl-angle') || '90',
+            };
+
+
+            // Build the animated swirl effect
+
+            const getCellHeight = () => Math.ceil(parseFloat(compStyles.lineHeight) / 5);
+
+            const cell = canvas.buildCell({
+                name: name('pattern-cell'),
+                width: 16,
+                height: getCellHeight(),
+                shown: false,
             });
-        });
 
-        // Cleanup
-        additionalDemolishActions.push(() => {
-            myGradient.kill();
-            p1.kill();
-            swirl.kill();
-            cell.kill();
-        });
+            const backBlock = scrawl.makeBlock({
+                name: name('back-block'),
+                group: name('pattern-cell'),
+                dimensions: ['100%', '50%'],
+                fillStyle: userData.mainColor,
+            });
+
+            const stripeBlock = backBlock.clone({
+                name: name('stripe-block'),
+                startY: '50%',
+                fillStyle: userData.stripeColor,
+                filters: [name('stripe-filter')],
+                memoizeFilterOutput: true,
+            });
+
+            scrawl.makePattern({
+                name: name('swirl-pattern'),
+                asset: name('pattern-cell'),
+                stretchX: parseFloat(userData.patternStretchX),
+                stretchY: parseFloat(userData.patternStretchY),
+                skewX: parseFloat(userData.patternSkewX),
+                skewY: parseFloat(userData.patternSkewY),
+            });
+
+            const getOuterRadius = () => Math.ceil(parseFloat(compStyles.lineHeight) * 2);
+
+            const swirl = scrawl.makeFilter({
+                name: name('swirl-filter'),
+                method: 'swirl',
+                startX: '50%',
+                startY: '50%',
+                innerRadius: 0,
+                outerRadius: getOuterRadius(),
+                easing: 'easeOutIn',
+                angle: userData.swirlAngle,
+                transparentEdges: true,
+            });
+
+            const template = scrawl.makeBlock({
+                name: name('template'),
+                dimensions: ['100%', '100%'],
+                visibility: false,
+            });
+
+            const label = scrawl.makeEnhancedLabel({
+                name: name('content'),
+                layoutTemplate: name('template'),
+
+                text: processText(el.innerHTML),
+                fontString: compStyles.font,
+
+                textHandleY: 'alphabetic',
+                visibility: false,
+                cacheOutput: false,
+
+                direction: userData.direction,
+                fontStretch: userData.fontStretch,
+                letterSpacing: userData.letterSpacing,
+                wordSpacing: userData.wordSpacing,
+                fontVariantCaps: userData.fontVariantCaps,
+                lineSpacing: getLineSpacing(),
+                justifyLine: userData.justifyLine,
+
+                fillStyle: name('swirl-pattern'),
+            });
+
+
+            // Boilerplate - font adjustments
+            let meta;
+
+            const getLineAdjustment = () => {
+
+                const size = parseFloat(compStyles.fontSize);
+                const ratio = size / 100;
+                return ratio * (meta.alphabeticBaseline + meta.verticalOffset + parseFloat(userData.lineAdjustment));
+            };
+
+            const updateOnFontLoad = () => {
+
+                const font = compStyles.fontFamily,
+                    check = scrawl.checkFontIsLoaded(font);
+
+                if (check) {
+
+                    el.style.backgroundColor = 'transparent';
+                    el.style.color = 'transparent';
+
+                    cell.set({
+                        cleared: true,
+                        compiled: true,
+                    });
+
+                    canvas.base.set({ memoizeFilterOutput: true });
+
+                    meta = scrawl.getFontMetadata(font);
+
+                    const displacement = getLineAdjustment();
+
+                    template.set({
+                        startY: displacement,
+                        handleY: displacement,
+                        fillStyle: userData.elBackgroundColor,
+                        visibility: true,
+                    });
+
+                    label.set({ visibility: true });
+
+                    animation.updateHook('commence', swirlEffect);
+                }
+            };
+
+            const swirlEffect = () => {
+
+                const base = canvas.base;
+
+                if (isAnimated) {
+
+                    const {x, y, active} = canvas.here;
+
+                    if (active && !base.hasFilters()) base.addFilters(name('swirl-filter'));
+
+                    if (active) {
+
+                        swirl.set({
+                            startX: x,
+                            startY: y,
+                        });
+                    }
+                    else if (base.hasFilters()) base.clearFilters();
+                }
+                else if (base.hasFilters()) base.clearFilters();
+            };
+
+            animation.updateHook('commence', updateOnFontLoad);
+
+
+            // Boilerplate user interaction - resizing the browser window
+            let resizeFlag = true,
+                lastResize = Date.now();
+
+            const resizeChoke = 200;
+
+            const setResizeFlag = () => {
+
+                resizeFlag = true;
+
+                const now = Date.now();
+
+                // Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
+                // + This check forces those canvases to update once to adapt to the new viewport size
+                // + Doing this should prevent unexpected horizontal scrollbars appearing on the page
+                // + Should also minimize flashes of badly sized content when canvas scrolls into view
+                if (!animation.isRunning() && now > lastResize + resizeChoke) {
+
+                    resizeAction();
+                    animation.updateOnce();
+                    lastResize = now;
+                }
+            };
+
+            const resizeAction = () => {
+
+                if (resizeFlag) {
+
+                    resizeFlag = false;
+
+                    cell.set({ height: getCellHeight() });
+
+                    label.set({ fontString: compStyles.font });
+
+                    swirl.set({ outerRadius: getOuterRadius() });
+
+                    if (meta) {
+
+                        const displacement = getLineAdjustment();
+
+                        template.set({
+                            startY: displacement,
+                            handleY: displacement,
+                        });
+
+                        label.set({
+                            letterSpacing: compStyles.letterSpacing,
+                            wordSpacing: compStyles.wordSpacing,
+                        });
+                    }
+                }
+            };
+
+            animation.updateHook('afterShow', resizeAction);
+
+            additionalDemolishActions.push(
+                scrawl.addNativeListener('resize', setResizeFlag, window),
+            );
+
+
+            // Boilerplate user interaction - editing the text
+            if (el.getAttribute('contenteditable')) {
+
+                const updateText = () => {
+                    label.set({ text: processText(el.innerHTML) });
+                }
+                const focusText = () => {
+                    el.style.color = 'rgb(0 0 0 / 0.4)';
+                }
+                const blurText = () => {
+                    el.style.color = 'transparent';
+                }
+
+                additionalDemolishActions.push(
+                    scrawl.addNativeListener('input', updateText, el),
+                    scrawl.addNativeListener('focus', focusText, el),
+                    scrawl.addNativeListener('blur', blurText, el),
+                );
+            }
+
+
+            // Boilerplate - animation control
+            if ('static' === compStyles.position) el.style.position = 'relative';
+
+            const control = document.createElement('button');
+
+            control.style.position = 'absolute';
+            control.style.fontSize = '12px';
+            control.style.display = 'block';
+            control.style.top = '0';
+            control.style.right = '0';
+            control.textContent = 'Halt';
+            control.setAttribute('contenteditable', 'false');
+
+            el.appendChild(control);
+
+            let isAnimated = true;
+
+            const stopStartAction = () => {
+
+                isAnimated = !isAnimated;
+
+                // myGradient.set({ animateByDelta: isAnimated });
+
+                control.textContent = isAnimated ? 'Halt' : 'Play';
+            };
+
+            additionalDemolishActions.push(
+                scrawl.addNativeListener('click', stopStartAction, control)
+            );
+
+
+            // Accessibility
+            const reduceMotionAction = () => {
+
+                if (isAnimated) {
+
+                    isAnimated = false;
+
+                    // myGradient.set({ animateByDelta: isAnimated });
+
+                    control.textContent = 'Play';
+                }
+            };
+
+            const noPreferenceMotionAction = () => {
+
+                if (!isAnimated) {
+
+                    isAnimated = true;
+
+                    // myGradient.set({ animateByDelta: isAnimated });
+
+                    control.textContent = 'Halt';
+                }
+            };
+
+            const colorSchemeLightAction = () => {
+
+                backBlock.set({ fillStyle: userData.mainColor });
+                stripeBlock.set({ fillStyle: userData.stripeColor });
+            };
+
+            const colorSchemeDarkAction = () => {
+
+                backBlock.set({ fillStyle: userData.darkMainColor });
+                stripeBlock.set({ fillStyle: userData.darkStripeColor });
+            };
+
+            canvas.set({
+                colorSchemeLightAction,
+                colorSchemeDarkAction,
+                reduceMotionAction,
+                noPreferenceMotionAction,
+            });
+
+
+            // Render once, to get everything in place
+            animation.updateOnce();
+
+            // Return the snippet, so coders can access the snippet's parts
+            // + In case they need to tweak the output to meet the web page's specific requirements
+            return snippet;
+        }
     }
-
-    // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
-    return snippet;
+    return null;
 }

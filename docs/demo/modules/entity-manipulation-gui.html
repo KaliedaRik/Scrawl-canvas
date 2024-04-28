@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="../snippets/text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="../snippets/word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1271,7 +1286,7 @@
                 <span class="hljs-attr">bringToFrontOnDrag</span>: <span class="hljs-literal">false</span>,
             });
 
-            <span class="hljs-keyword">const</span> moveControlLabel = scrawl.<span class="hljs-title function_">makePhrase</span>({
+            <span class="hljs-keyword">const</span> moveControlLabel = scrawl.<span class="hljs-title function_">makeLabel</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gui-move-control-label&#x27;</span>,
                 <span class="hljs-attr">group</span>: gui,
@@ -2171,7 +2186,7 @@
 
         deltaAngle = <span class="hljs-built_in">parseFloat</span>(val);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(deltaAngle)) deltaAngle = <span class="hljs-number">0.5</span>;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isFinite</span>(deltaAngle)) deltaAngle = <span class="hljs-number">0.5</span>;
     };
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">setDeltaScale</span> = (<span class="hljs-params"></span>) =&gt; {
@@ -2180,7 +2195,7 @@
 
         deltaScale = <span class="hljs-built_in">parseFloat</span>(val);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(deltaScale)) deltaScale = <span class="hljs-number">0.5</span>;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isFinite</span>(deltaScale)) deltaScale = <span class="hljs-number">0.5</span>;
     };
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">setDeltaMove</span> = (<span class="hljs-params"></span>) =&gt; {
@@ -2189,7 +2204,7 @@
 
         deltaMove = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(deltaMove)) deltaMove = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isFinite</span>(deltaMove)) deltaMove = <span class="hljs-number">1</span>;
     };</pre></div></div>
             
         </li>

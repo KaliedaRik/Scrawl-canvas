@@ -6,10 +6,15 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 012</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
     .controls {
       grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
     }
@@ -17,6 +22,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-011.html">&larr; Previous</a>
+    <a href="canvas-013.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 012</h1>
   <h2>Shape entity position<br />Shape entity as a path for other artefacts to follow</h2>
 
@@ -27,7 +36,7 @@
     data-scrawl-canvas
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="controls">
 

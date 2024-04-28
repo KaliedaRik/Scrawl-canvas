@@ -2,13 +2,9 @@
 // Responsive Voronoi cells in a RawAsset wrapper
 
 // [Run code](../../demo/delaunator-002.html)
-import * as scrawl from '../source/scrawl.js';
 
-// @ts-expect-error
+/** @ts-expect-error */
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
-
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
-
 
 // The following functions are used to handle the Delaunay object
 // + Code adapted from the [Delaunator Guide website](https://mapbox.github.io/delaunator/)
@@ -69,10 +65,21 @@ const forEachVoronoiEdge = (pts, del, cb) => {
 };
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
+import * as scrawl from '../source/scrawl.js';
+
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
 
 // Import image from DOM, and create Picture entity using it
 scrawl.importDomImage('.flowers');
+
 
 // Magic number - base Cell dimensions
 const baseDimension = 400;
@@ -92,7 +99,7 @@ for (let i = 0; i < 200; i++) {
 // We build the Voronoi web in a RawAsset wrapper
 const myAsset = scrawl.makeRawAsset({
 
-    name: 'voronoi-web',
+    name: name('voronoi-web'),
 
     userAttributes: [{
 
@@ -102,7 +109,7 @@ const myAsset = scrawl.makeRawAsset({
         defaultValue: [],
         setter: function (item) {
 
-// @ts-expect-error
+/** @ts-expect-error */
             this.points = [...item];
         },
     },{
@@ -126,16 +133,16 @@ const myAsset = scrawl.makeRawAsset({
         defaultValue: false,
         setter: function (item) {
 
-// @ts-expect-error
+/** @ts-expect-error */
             const { points, here } = this;
 
             if (here && here.active) points[0] = [here.x, here.y];
             else points[0] = [...center];
 
-// @ts-expect-error
+/** @ts-expect-error */
             this.delaunay = Delaunator.from(points);
 
-// @ts-expect-error
+/** @ts-expect-error */
             this.dirtyData = item;
         },
     }],
@@ -176,21 +183,21 @@ myAsset.set({
 // The RawAsset needs a subscriber to make it active - currently filters do not subscribe to assets so we need to do it via an otherwise unused Picture entity
 scrawl.makePicture({
 
-    name: 'temp',
-    asset: 'voronoi-web',
+    name: name('temp'),
+    asset: name('voronoi-web'),
     method: 'none',
 });
 
 // We apply the mosaic effect over our image using a Scrawl-canvas filter
 scrawl.makeFilter({
 
-    name: 'mosaic-filter',
+    name: name('mosaic-filter'),
 
     actions: [{
         // Load our RawAsset's output - the Voronoi web - into the filter
         action: 'process-image',
         lineOut: 'web',
-        asset: 'voronoi-web',
+        asset: name('voronoi-web'),
         width: baseDimension,
         height: baseDimension,
         copyWidth: '100%',
@@ -250,13 +257,13 @@ scrawl.makeFilter({
 // Display our image in a Picture entity - the filter is applied here
 const piccy = scrawl.makePicture({
 
-    name: 'myFlower',
+    name: name('image'),
     asset: 'iris',
 
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
 
-    filters: ['mosaic-filter'],
+    filters: [name('mosaic-filter')],
 });
 
 
@@ -268,7 +275,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
 
     // We need to update our RawAsset at the start of each Display cycle
@@ -287,7 +294,9 @@ scrawl.addNativeListener(['touchmove'], (e) => {
 }, canvas.domElement);
 
 
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
+
 
 // #### Development and testing
 console.log(scrawl.library);

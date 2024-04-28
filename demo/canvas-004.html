@@ -6,18 +6,52 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 004</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+    }
+
+    canvas {
+
+      /* In no-JS environments, the image should display in place of the canvas element */
+      & .placeholder {
+        text-align: center;
+        width: 600px;
+        max-width: 100%;
+
+        & img {
+          width: calc(100% - 2em);
+        }
+      }
+    }
+
+    .canvas-container {
+      box-shadow: 0px 0px 0px 1px black;
+
+      @media (scripting: none) {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        height: auto;
+      }
     }
   </style>
 
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-003.html">&larr; Previous</a>
+    <a href="canvas-005.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 004</h1>
   <h2>Radial gradients</h2>
 
@@ -180,10 +214,17 @@
       data-base-height="1000" 
       data-base-background-color="blanchedalmond"
       data-fit="cover"
-    ></canvas>
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/canvas-004.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+    </canvas>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -197,6 +238,8 @@
       <li>Check that when cyclePalette is set to true and the palette's end value is smaller than its start value, the gradient draws itself by going through the 0/999 endpoints</li>
     </ul>
     <p>Additionally, test to make sure canvas responds correctly to external dimensions resizing - &lt;canvas> element is responsive - by changing its width and height values using the controls.</p>
+
+    <p><b>Known issue:</b> the ability to resize the canvas using a container element with CSS <kbd>resize: both</kbd> setting does not work on Safari browsers. This is - <a href="https://stackoverflow.com/questions/75009875/writing-to-a-canvas-breaks-the-resizing-of-the-wrapping-div-on-safari-only">allegedly</a> - due to an canvas overflow which triggers the &lt;canvas> element's <kbd>z-index</kbd> setting to increase ... which then stops the mouse drag event hitting the container element's drag corner. One (extremely ugly!) fix is to always display scrollbars on the container (<kbd>overflow: scroll</kbd>). A better solution is to supply UX controls in the HTML markup to handle a user's desire to resize the canvas container.</p>
     
     <p><b>Touch test:</b> canvas should be resizable</p>
 

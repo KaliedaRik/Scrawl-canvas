@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 025</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -93,6 +94,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-024.html">&larr; Previous</a>
+    <a href="canvas-026.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 025</h1>
   <h2>Various responsive and non-responsive canvases; responsive images</h2>
 
@@ -148,6 +153,13 @@ Canvas elements ignore all attempts to set their CSS box-sizing property to anyt
 >&lt;/canvas>
 
 <b><i>Be aware:</i></b> Scrawl-canvas will include the canvas border and padding values when calculating the dimensions of the canvas element's base cell, making it larger than the display canvas. This will have a effect on the displayed graphic - strokes, and some shapes, will look thinner/smaller than expected.
+
+<b><i>Pro-tip:</i></b> if you really need your canvas to have a border, consider using CSS box shadows to create it.
+
+<i>canvas {
+  box-shadow: 0px 0px 0px 1px black;
+}</i>
+
     </code>
     <canvas id="nr-canvas-3" class="padded-canvas" data-scrawl-canvas></canvas>
 
@@ -321,7 +333,7 @@ To work correctly, we need to add some additional data to the element - specific
 
   </section>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

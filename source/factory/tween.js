@@ -27,26 +27,17 @@
 // TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
 
 
-// #### Demos:
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-006](../../demo/canvas-006.html) - Canvas tween stress test
-// + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
-// + [DOM-005](../../demo/dom-005.html) - DOM tween stress test
-// + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
-
-
 // #### Imports
 import { animationtickers, constructors } from '../core/library.js';
 
-import { convertTime, doCreate, easeEngines, mergeOver, pushUnique, xt, xtGet, xto, λnull, Ωempty } from '../core/utilities.js';
+import { convertTime, doCreate, easeEngines, mergeOver, pushUnique, xt, xtGet, xto, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Tween constructor
@@ -181,7 +172,7 @@ P.finalizePacketOut = function (copy) {
             if (d.engine && d.engine.substring) res.engine = d.engine.substring;
             else {
 
-                if (xt(d.engine) && d.engine !== null) {
+                if (xt(d.engine) && d.engine != null) {
 
                     const e = this.stringifyFunction(d.engine);
 
@@ -334,7 +325,7 @@ P.calculateEffectiveDuration = function (item) {
 
     this.effectiveDuration = 0;
 
-    if (cType == PC) {
+    if (cType === PC) {
 
         if (ticker) {
 
@@ -395,7 +386,7 @@ P.update = function (items = Ωempty) {
             if (!items.next) this.status = (reversed) ? -1 : 1;
         }
     }
-    // For Tweens with a duration == 0
+    // For Tweens with a duration === 0
     else {
 
         if (status != this.status) {
@@ -462,7 +453,7 @@ P.doSimpleUpdate = function (items = Ωempty) {
 
         const t = targets[j];
 
-        if (T_GROUP == t.type) t.setArtefacts(setObj);
+        if (T_GROUP === t.type) t.setArtefacts(setObj);
         else t.set(setObj);
     }
 
@@ -552,7 +543,7 @@ P.run = function () {
         this.commenceAction();
         t.run();
 
-        if (typeof this.onRun == FUNCTION) this.onRun();
+        if (typeof this.onRun === FUNCTION) this.onRun();
     }
     return this;
 };
@@ -577,7 +568,7 @@ P.halt = function() {
 
         t.halt();
 
-        if (typeof this.onHalt == FUNCTION) this.onHalt();
+        if (typeof this.onHalt === FUNCTION) this.onHalt();
     }
     return this;
 };
@@ -593,7 +584,7 @@ P.reverse = function() {
 
         t.reverse();
 
-        if (typeof this.onReverse == FUNCTION) this.onReverse();
+        if (typeof this.onReverse === FUNCTION) this.onReverse();
     }
     return this;
 };
@@ -609,7 +600,7 @@ P.resume = function() {
 
         t.resume();
 
-        if (typeof this.onResume == FUNCTION) this.onResume();
+        if (typeof this.onResume === FUNCTION) this.onResume();
     }
     return this;
 };
@@ -625,7 +616,7 @@ P.seekTo = function(milliseconds) {
 
         t.seekTo(milliseconds);
 
-        if (typeof this.onSeekTo == FUNCTION) this.onSeekTo();
+        if (typeof this.onSeekTo === FUNCTION) this.onSeekTo();
     }
     return this;
 };
@@ -641,7 +632,7 @@ P.seekFor = function(milliseconds) {
 
         t.seekFor(milliseconds);
 
-        if (typeof this.onSeekFor == FUNCTION) this.onSeekFor();
+        if (typeof this.onSeekFor === FUNCTION) this.onSeekFor();
     }
     return this;
 };
@@ -655,7 +646,7 @@ P.seekFor = function(milliseconds) {
 //
 //     duration: 2500,
 //
-//     targets: scrawl.artefact['my-phrase'],
+//     targets: scrawl.artefact['my-label'],
 //
 //     definitions: [
 //         {

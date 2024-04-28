@@ -9,11 +9,11 @@
 // #### Imports
 import { group } from '../core/library.js';
 
-import { mergeOver, pushUnique, removeItem, xtGet, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xtGet, Ωempty } from '../helper/utilities.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _floor, ADD_ARTEFACT_CLASSES, REMOVE_ARTEFACT_CLASSES, REVERSE_BY_DELTA, SET_ARTEFACTS, UPDATE_ARTEFACTS, UPDATE_BY_DELTA } from '../core/shared-vars.js';
+import { _floor, ADD_ARTEFACT_CLASSES, REMOVE_ARTEFACT_CLASSES, REVERSE_BY_DELTA, SET_ARTEFACTS, UPDATE_ARTEFACTS, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
 
 
 // #### Export function

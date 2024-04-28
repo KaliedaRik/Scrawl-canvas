@@ -9,21 +9,15 @@
 // + __Entity-locked__ Gradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
-// #### Demos:
-// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
-// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
-// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { BLANK, STYLES, T_GRADIENT } from '../core/shared-vars.js';
+import { BLANK, STYLES, T_GRADIENT } from '../helper/shared-vars.js';
 
 
 // #### Gradient constructor
@@ -100,7 +94,7 @@ P.updateGradientArgs = function (x, y) {
     let ex = currentEnd[0] + x;
 
     // check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
-    if (sx == ex && sy == ey) ex++;
+    if (sx === ex && sy === ey) ex++;
 
     gradientArgs.length = 0;
     gradientArgs.push(sx, sy, ex, ey);

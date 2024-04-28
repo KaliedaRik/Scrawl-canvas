@@ -8,15 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-// Create some variables for use elsewhere in the script
-const artefact = scrawl.library.artefact,
-    stack = artefact.mystack;
+const stack = scrawl.findStack('mystack');
+
+
+// Namespacing boilerplate
+const namespace = stack.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create a new group to which we can assign the artefacts we want to drag around the stack
 const hitGroup = scrawl.makeGroup({
 
-    name: 'my-hit-group',
+    name: name('my-hit-group'),
     host: stack.name,
 });
 
@@ -28,8 +31,8 @@ stack.set({
 // Generate new (DOM) element artefacts and add them to the stack via our new group
 stack.addNewElement({
 
-    name: 'basic-square',
-    group: 'my-hit-group',
+    name: name('basic-square'),
+    group: hitGroup,
     tag: 'div',
 
     text: 'Default square <div>',
@@ -43,7 +46,7 @@ stack.addNewElement({
 
 }).clone({
 
-    name: 'oval',
+    name: name('oval'),
 
     startX: 150,
     startY: 50,
@@ -61,8 +64,8 @@ stack.addNewElement({
 // Clones will create literal clones of the element they are cloning. Thus cannot clone an element and attempt to change its tag value at the same time.
 stack.addNewElement({
 
-    name: 'list',
-    group: hitGroup.name,
+    name: name('list'),
+    group: name('my-hit-group'),
     tag: 'ul',
 
     width: '25%',
@@ -90,7 +93,7 @@ stack.addNewElement({
 
 }).clone({
 
-    name: 'list-no-border',
+    name: name('list-no-border'),
 
     startY: 250,
     scale: 1.25,
@@ -106,7 +109,7 @@ stack.addNewElement({
 // Generate more elements - these ones won't be draggable: instead we will pivot them to the element artefacts generated above
 stack.addNewElement({
 
-    name: 'pivot-1',
+    name: name('pivot-1'),
     tag: 'div',
 
     width: 12,
@@ -114,7 +117,7 @@ stack.addNewElement({
     handleX: 'center',
     handleY: 'center',
 
-    pivot: 'basic-square',
+    pivot: name('basic-square'),
     lockTo: 'pivot',
     order: 1,
 
@@ -124,27 +127,27 @@ stack.addNewElement({
 
 }).clone({
 
-    name: 'pivot-2',
-    pivot: 'oval',
+    name: name('pivot-2'),
+    pivot: name('oval'),
 
 }).clone({
 
-    name: 'pivot-3',
-    pivot: 'list',
+    name: name('pivot-3'),
+    pivot: name('list'),
 
 }).clone({
 
-    name: 'pivot-4',
-    pivot: 'list-no-border',
+    name: name('pivot-4'),
+    pivot: name('list-no-border'),
 });
 
 
 // Handle the pre-existing SVG elements that have been automatically imported into the stack
-
+//
 // SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt __drag-and-drop__ functionality. We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
 stack.addNewElement({
 
-    name: 'weather-icon-dragger',
+    name: name('weather-icon-dragger'),
     tag: 'div',
 
     width: 40,
@@ -166,22 +169,22 @@ stack.addNewElement({
 
 }).clone({
 
-    name: 'simple-svg-dragger',
+    name: name('simple-svg-dragger'),
     startX: 60,
     startY: 220,
 
 });
 
-artefact.weathericon.set({
+scrawl.findElement('weathericon').set({
 
-    pivot: 'weather-icon-dragger',
+    pivot: name('weather-icon-dragger'),
     lockTo: 'pivot',
     order: 1,
 });
 
-artefact['simple-svg'].set({
+scrawl.findElement('simple-svg').set({
 
-    pivot: 'simple-svg-dragger',
+    pivot: name('simple-svg-dragger'),
     lockTo: 'pivot',
     order: 1,
 
@@ -209,13 +212,14 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: stack,
     afterShow: report,
 
     // The elements in the stack don't know their positions, and thus their hit zones (for drag-and-drop), until after the first render. This one-time-run function is enough to get the elements to perform the necessary recalculations.
     afterCreated: () => stack.set({ width: stack.get('width')}),
 });
+
 
 // #### Development and testing
 console.log(scrawl.library);

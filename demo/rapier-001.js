@@ -5,7 +5,7 @@
 // [Run code](../../demo/rapier-001.html)
 import * as scrawl from '../source/scrawl.js';
 
-// @ts-expect-error
+/** @ts-expect-error */
 import rapier from "https://cdn.skypack.dev/@dimforge/rapier2d-compat";
 
 import { reportSpeed } from './utilities.js';

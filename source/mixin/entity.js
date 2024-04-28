@@ -1,5 +1,5 @@
  // # Entity mixin
-// This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas [Block](../factory/block.html), [Grid](../factory/grid.html), [Loom](../factory/loom.html), [Phrase](../factory/phrase.html), [Picture](../factory/picture.html), [Shape](../factory/shape.html), [Wheel](../factory/wheel.html)) the ability to act as __artefacts__.
+// This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas [Block](../factory/block.html), [Grid](../factory/grid.html), [Loom](../factory/loom.html), [Label](../factory/label.html), [Picture](../factory/picture.html), [Shape](../factory/shape.html), [Wheel](../factory/wheel.html), etc) the ability to act as __artefacts__.
 //
 // Entitys differ from non-entity artefacts in that they are restricted to Cell wrappers (though no harm should come if they are included in Stack-related Groups).
 // + The entity object represents a set of instructions for rendering graphical lines and shapes onto a &lt;canvas> CanvasRenderingContext2D engine, using the Canvas API to do this
@@ -10,16 +10,14 @@
 
 
 // #### Imports
-import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
+import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
-import { scrawlCanvasHold } from '../core/document.js';
+import { makeState } from '../untracked-factory/state.js';
 
-import { makeState } from '../factory/state.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
-
-import { filterEngine } from '../factory/filter-engine.js';
-import { importDomImage } from '../factory/image-asset.js';
+import { filterEngine } from '../helper/filter-engine.js';
+import { importDomImage } from '../asset-management/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
 
 import positionMix from '../mixin/position.js';
@@ -27,12 +25,12 @@ import deltaMix from '../mixin/delta.js';
 import pivotMix from '../mixin/pivot.js';
 import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
-import hiddenElementsMix from '../mixin/hiddenDomElements.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
 
-import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -171,12 +169,13 @@ export default function (P = Ωempty) {
 // + CSS format color String - `#fff`, `#ffffff`, `rgb(255 255 255)`, `rgb(255 255 255 / 1)`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
 //
-// __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
+// __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Label and EnhancedLabel entitys use these attributes internally, but have their own set of attributes for defining the font styling used by their text.
 //
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the entity as it is stamped on the canvas.
 // + Be aware that entitys can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
+
 
 // #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
@@ -191,7 +190,7 @@ export default function (P = Ωempty) {
 
         let result = true;
 
-        if(!incs.indexOf(key) && value == this.defs[key]) result = false;
+        if(!incs.indexOf(key) && value === this.defs[key]) result = false;
 
         return result;
     };
@@ -271,7 +270,7 @@ export default function (P = Ωempty) {
             if (def != null) {
 
                 val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
 
             def = state.defs[item];
@@ -279,7 +278,7 @@ export default function (P = Ωempty) {
             if (def != null) {
 
                 val = state[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             return null;
         }
@@ -306,21 +305,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     if (!STATE_KEYS.includes(key)) {
 
                         fn = setters[key];
 
                         if (fn) fn.call(this, val);
-                        else if (typeof defs[key] != UNDEF) this[key] = val;
+                        else if (typeof defs[key] !== UNDEF) this[key] = val;
                     }
                     else {
 
                         fn = stateSetters[key];
 
                         if (fn) fn.call(state, val);
-                        else if (typeof stateDefs[key] != UNDEF) state[key] = val;
+                        else if (typeof stateDefs[key] !== UNDEF) state[key] = val;
                     }
                 }
             }
@@ -349,21 +348,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     if (!STATE_KEYS.includes(key)) {
 
                         fn = setters[key];
 
                         if (fn) fn.call(this, val);
-                        else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
+                        else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], val);
                     }
                     else {
 
                         fn = stateSetters[key];
 
                         if (fn) fn.call(state, val);
-                        else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], val);
+                        else if (typeof stateDefs[key] !== UNDEF) state[key] = addStrings(state[key], val);
                     }
                 }
             }
@@ -474,7 +473,7 @@ export default function (P = Ωempty) {
 // `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-// `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+// `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
         this.prepareStampTabsHelper();
     };
 
@@ -502,9 +501,10 @@ export default function (P = Ωempty) {
             else return this.regularStamp();
         }
 
-        if (this.visibility) {
+        else if (this.visibility) {
 
-            if (this.stashOutput || filterTest) return this.filteredStamp(filterTest);
+            // To note: `checkHitIgnoreTransparency` is specific to Picture entity
+            if (this.checkHitIgnoreTransparency || this.stashOutput || filterTest) return this.filteredStamp(filterTest);
             else return this.regularStamp();
         }
     };
@@ -552,23 +552,20 @@ export default function (P = Ωempty) {
             currentDimensions: currDims,
         } = currentHost;
 
-        // Get and prepare a pool Cell for the filter operations
-        const filterHost = requestCell();
-
-        const {
-            element: filterEl,
-            engine: filterEng,
-        } = filterHost;
-
-        this.currentHost = filterHost;
-
         const w = currDims ? currDims[0] : currEl.width,
             h = currDims ? currDims[1] : currEl.height;
 
         if (w && h) {
 
-            filterHost.w = filterEl.width = w;
-            filterHost.h = filterEl.height = h;
+            // Get and prepare a pool Cell for the filter operations
+            const filterHost = requestCell(w, h);
+
+            const {
+                element: filterEl,
+                engine: filterEng,
+            } = filterHost;
+
+            this.currentHost = filterHost;
 
             // Switch off fast stamp
             const oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
@@ -587,14 +584,14 @@ export default function (P = Ωempty) {
                     filterEng.save();
                     filterEng.globalCompositeOperation = SOURCE_IN;
                     filterEng.globalAlpha = 1;
-                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.resetTransform();
                     filterEng.drawImage(currEl, 0, 0);
                     filterEng.restore();
 
                     this.dirtyFilterIdentifier = true;
                 }
 
-                filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                filterEng.resetTransform();
 
                 const myimage = filterEng.getImageData(0, 0, w, h);
 
@@ -610,8 +607,11 @@ export default function (P = Ωempty) {
 
                     filterEng.globalCompositeOperation = SOURCE_OVER;
                     filterEng.globalAlpha = 1;
-                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.resetTransform();
                     filterEng.putImageData(img, 0, 0);
+
+                    // To note: `checkHitIgnoreTransparency` is specific to Picture entity
+                    if (this.checkHitIgnoreTransparency) this.stashedImageData = img;
                 }
             }
             currEng.save();
@@ -619,7 +619,7 @@ export default function (P = Ωempty) {
             currEng.globalAlpha = (state && state.globalAlpha) ? state.globalAlpha : 1;
             currEng.globalCompositeOperation = (state && state.globalCompositeOperation) ? state.globalCompositeOperation : SOURCE_OVER;
 
-            currEng.setTransform(1, 0, 0, 1, 0, 0);
+            currEng.resetTransform();
 
             currEng.drawImage(filterEl, 0, 0);
 
@@ -645,17 +645,25 @@ export default function (P = Ωempty) {
 
                     if (!this.stashedImage) {
 
-                        const newimg = this.stashedImage = document.createElement(IMG);
+                        const control = this.group.currentHost.getController();
 
-                        newimg.id = stashId;
+                        if (control) {
 
-                        newimg.onload = function () {
+                            const that = this;
 
-                            scrawlCanvasHold.appendChild(newimg);
-                            importDomImage(`#${stashId}`);
-                        };
+                            const newimg = document.createElement(IMG);
+                            newimg.id = stashId;
+                            newimg.alt = `A cached image of the ${this.name} ${this.type} entity`;
 
-                        newimg.src = filterEl.toDataURL();
+                            newimg.onload = function () {
+
+                                control.canvasHold.appendChild(newimg);
+                                that.stashedImage = newimg;
+                                importDomImage(`#${stashId}`);
+                            };
+
+                            newimg.src = filterEl.toDataURL();
+                        }
                     }
                     else this.stashedImage.src = filterEl.toDataURL();
                 }
@@ -664,8 +672,9 @@ export default function (P = Ωempty) {
 
             this.currentHost = currentHost;
             this.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
+
+            releaseCell(filterHost);
         }
-        releaseCell(filterHost);
     };
 
 // `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.

@@ -2,51 +2,41 @@
 // Fullscreen API functionality
 
 // [Run code](../../demo/dom-018.html)
-import {
-    addNativeListener,
-    library as L,
-    makeBlock,
-    makeDragZone,
-    makeGradient,
-    makeRadialGradient,
-    makeRender,
-    makeTween,
-    makeWheel,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas1 = L.artefact['canvas-1'];
+const canvas = scrawl.findCanvas('canvas-1');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // #### Manage Fullscreen API functionality
-const container1 = canvas1.domElement.parentNode;
+const container = canvas.domElement.parentNode;
 
 
 // We need to handle browser prefixing issues
 let requestFS, releaseFS, isFS;
 
-if (container1.requestFullScreen) {
+if (container.requestFullScreen) {
 
     requestFS = 'requestFullScreen';
     releaseFS = 'exitFullscreen';
     isFS = 'fullscreenElement';
 }
-else if (container1.webkitRequestFullscreen) {
+else if (container.webkitRequestFullscreen) {
 
     requestFS = 'webkitRequestFullscreen';
     releaseFS = 'webkitExitFullscreen';
     isFS = 'webkitFullscreenElement';
 }
-else if (container1.mozRequestFullScreen) {
+else if (container.mozRequestFullScreen) {
 
     requestFS = 'mozRequestFullScreen';
     releaseFS = 'mozCancelFullScreen';
@@ -59,7 +49,7 @@ const toggleFullScreen = () => {
 
     if (isFS) {
 
-        if (!document[isFS]) container1[requestFS]();
+        if (!document[isFS]) container[requestFS]();
 
         else if (document[releaseFS]) document[releaseFS]();
     }
@@ -67,16 +57,16 @@ const toggleFullScreen = () => {
 
 
 // Add an event listener for UI keyboard - use enter/return key to toggle fullscreen
-addNativeListener('keydown', (e) => {
+scrawl.addNativeListener('keydown', (e) => {
 
     if (e.keyCode === 13) toggleFullScreen();
 
 }, document);
 
 
-// #### Canvas 1 scene
+// #### Canvas scene
 // Build the gradient objects
-const myRadial = makeRadialGradient({
+const myRadial = scrawl.makeRadialGradient({
     name: name('circle-waves'),
 
     startX: '30%',
@@ -112,7 +102,7 @@ const myRadial = makeRadialGradient({
     ],
 });
 
-makeGradient({
+scrawl.makeGradient({
     name: name('colored-pipes'),
     endX: '100%',
     cyclePalette: true,
@@ -145,7 +135,7 @@ makeGradient({
     ],
 });
 
-makeGradient({
+scrawl.makeGradient({
     name: name('linear'),
     endX: '100%',
 
@@ -162,7 +152,7 @@ makeGradient({
 
 
 // Build the block and wheel entitys
-makeBlock({
+scrawl.makeBlock({
     name: name('cell-locked-block'),
 
     width: 150,
@@ -208,7 +198,7 @@ makeBlock({
     },
 });
 
-makeWheel({
+scrawl.makeWheel({
     name: name('cell-locked-wheel'),
 
     radius: 75,
@@ -258,21 +248,21 @@ makeWheel({
 const setCursorTo = {
 
     auto: () => {
-        canvas1.set({
+        canvas.set({
             css: {
                 cursor: 'auto',
             },
         });
     },
     pointer: () => {
-        canvas1.set({
+        canvas.set({
             css: {
                 cursor: 'pointer',
             },
         });
     },
     grabbing: () => {
-        canvas1.set({
+        canvas.set({
             css: {
                 cursor: 'grabbing',
             },
@@ -281,9 +271,9 @@ const setCursorTo = {
 };
 
 // Create the drag-and-drop zone
-const current = makeDragZone({
+const current = scrawl.makeDragZone({
 
-    zone: canvas1,
+    zone: canvas,
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
@@ -292,7 +282,7 @@ const current = makeDragZone({
 });
 
 // Implement the hover check on the Canvas wrapper
-canvas1.set({
+canvas.set({
     checkForEntityHover: true,
     onEntityHover: setCursorTo.pointer,
     onEntityNoHover: setCursorTo.auto,
@@ -314,7 +304,7 @@ const tweenEngine = (start, change, position) => {
     return val % 1000;
 };
 
-const tweeny = makeTween({
+const tweeny = scrawl.makeTween({
     name: name('mytween'),
     targets: name('colored-pipes'),
     duration: 5000,
@@ -363,17 +353,17 @@ const animateGradients = function () {
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
-    target: canvas1,
+    target: canvas,
 
     // Gradient animation is not automatically handled by the Display cycle
     // - instead we have to trigger it manually
     commence: animateGradients,
 
     // We have to tell the canvas to check UI for hovering states every Display cycle
-    afterCompile: () => canvas1.checkHover(),
+    afterCompile: () => canvas.checkHover(),
 
     // Display the current frame rate - calculated at the end of each Display cycle
     afterShow: report,
@@ -381,4 +371,4 @@ makeRender({
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

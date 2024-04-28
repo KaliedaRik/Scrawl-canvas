@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1215,12 +1235,12 @@ artefact.<span class="hljs-property">stop_listeners</span>.<span class="hljs-tit
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>updating the scene step 3 - add the ‘make_opaque’ CSS class to circles under the current cursor position
-@ts-expect-error</p>
+              <p>updating the scene step 3 - add the ‘make_opaque’ CSS class to circles under the current cursor position</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> target.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">addClasses</span>(<span class="hljs-string">&#x27;make_opaque&#x27;</span>));
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> target.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">addClasses</span>(<span class="hljs-string">&#x27;make_opaque&#x27;</span>));
         targetsLength = targets.<span class="hljs-property">length</span>;
     };
 }();</pre></div></div>
@@ -1324,7 +1344,7 @@ artefact.<span class="hljs-property">stop_listeners</span>.<span class="hljs-tit
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span> == <span class="hljs-string">&#x27;mystack&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span> === <span class="hljs-string">&#x27;mystack&#x27;</span>) {
 
             circleGroup.<span class="hljs-title function_">setDeltaValues</span>({
                 <span class="hljs-attr">roll</span>: <span class="hljs-string">&#x27;reverse&#x27;</span>

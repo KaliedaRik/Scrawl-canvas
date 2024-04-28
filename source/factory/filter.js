@@ -12,8 +12,6 @@
 //
 // `average-channels` - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue`.
 //
-// `binary` - DEPRECATED - functionality moved over to `threshold`.
-//
 // `blend` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations). The blending method is determined by the String value supplied in the `blend` argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: `action, lineIn, lineOut, lineMix, opacity, blend, offsetX, offsetY`.
 //
 // `blur` - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects. Object attributes: `action, lineIn, lineOut, opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, step`.
@@ -73,72 +71,18 @@
 // `user-defined-legacy` - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: `action, lineIn, lineOut, opacity`.
 //
 // `vary-channels-by-weights` - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of `1.0`. Object attributes: `action, lineIn, lineOut, opacity, weights, useMixedChannel`.
-//
-// ```
-// // Example: the following code creates a filter that applies a thick red border around the entitys
-// // it is applied to; if used on a group then it will outline the outside of the group's entitys,
-// // ignoring overlaps between entitys:
-// scrawl.makeFilter({
-//     name: 'redBorder',
-//     actions: [
-//         {
-//             action: 'blur',
-//             lineIn: 'source-alpha',
-//             lineOut: 'shadow',
-//             radius: 3,
-//             passes: 2,
-//             includeRed: false,
-//             includeGreen: false,
-//             includeBlue: false,
-//             includeAlpha: true,
-//         },
-//         {
-//             action: 'binary',
-//             lineIn: 'shadow',
-//             lineOut: 'shadow',
-//             alpha: 1,
-//         },
-//         {
-//             action: 'flood',
-//             lineIn: 'shadow',
-//             lineOut: 'red-flood',
-//             red: 255,
-//         },
-//         {
-//             action: 'compose',
-//             lineIn: 'shadow',
-//             lineMix: 'red-flood',
-//             lineOut: 'colorized',
-//             compose: 'destination-in',
-//         },
-//         {
-//             action: 'compose',
-//             lineIn: 'source',
-//             lineMix: 'colorized',
-//         }
-//     ],
-// });
-// ```
-
-// #### Demos:
-// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Canvas-020](../../demo/canvas-020.html) - Testing createImageFromXXX functionality
-// + [Canvas-027](../../demo/canvas-027.html) - Video control and manipulation; chroma-based hit zone
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-// + [Filters-019](../../demo/filters-019.html) - Using a Noise asset with a displace filter
-
 
 // #### Imports
 import { cell, constructors, entity, group, styles } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from './gradient.js';
-import { colorEngine } from './filter-engine.js';
+import { colorEngine } from '../helper/filter-engine.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _freeze, _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../core/shared-vars.js';
+import { _freeze, _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Filter constructor
@@ -177,7 +121,7 @@ const defaultAttributes = {
     // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array.
     // + Filter factory invocations which include the `method` attribute in their argument object do not need to include an `actions` attribute; the factory will build the action objects for us.
     // + When using the `method` attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
-    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'binary', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'userDefined', 'yellow'`.
+    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'userDefined', 'yellow'`.
     method: ZERO_STR,
 
     // ##### How filters process data
@@ -413,12 +357,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = value;
+                else if (typeof defs[key] !== UNDEF) this[key] = value;
             }
         }
     }
@@ -447,12 +391,12 @@ P.setDelta = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key != NAME && value != null) {
+            if (key && key !== NAME && value != null) {
 
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
+                else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], value);
             }
         }
     }
@@ -528,41 +472,6 @@ const setActionsArray = _freeze({
             gutterWidth: (f.gutterWidth != null) ? f.gutterWidth : 1,
             gutterHeight: (f.gutterHeight != null) ? f.gutterHeight : 1,
             areaAlphaLevels: (f.areaAlphaLevels != null) ? f.areaAlphaLevels : [255,0,0,0],
-        }];
-    },
-
-// DEPRECATED! __binary__ - use the updated threshold filter instead, as this functionality has been added to it.
-    binary: function (f) {
-        const lowRed = (f.lowRed != null) ? f.lowRed : 0,
-            lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
-            lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
-            lowAlpha = (f.lowAlpha != null) ? f.lowAlpha : 255,
-            highRed = (f.highRed != null) ? f.highRed : 255,
-            highGreen = (f.highGreen != null) ? f.highGreen : 255,
-            highBlue = (f.highBlue != null) ? f.highBlue : 255,
-            highAlpha = (f.highAlpha != null) ? f.highAlpha : 255;
-
-
-        const low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
-            high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
-
-        f.actions = [{
-            action: THRESHOLD,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 128,
-            red: (f.red != null) ? f.red : 128,
-            green: (f.green != null) ? f.green : 128,
-            blue: (f.blue != null) ? f.blue : 128,
-            alpha: (f.alpha != null) ? f.alpha : 128,
-            low,
-            high,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : false,
         }];
     },
 
@@ -701,8 +610,8 @@ const setActionsArray = _freeze({
 
             f.ranges.forEach(range => {
 
-                if (range.length == 6) processedRanges.push(range);
-                else if (range.length == 2) {
+                if (range.length === 6) processedRanges.push(range);
+                else if (range.length === 2) {
 
                     if (range[0].substring && range[1].substring) {
 

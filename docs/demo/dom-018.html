@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -877,17 +897,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    addNativeListener,
-    library <span class="hljs-keyword">as</span> L,
-    makeBlock,
-    makeDragZone,
-    makeGradient,
-    makeRadialGradient,
-    makeRender,
-    makeTween,
-    makeWheel,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -905,7 +915,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas1 = L.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;canvas-1&#x27;</span>];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-1&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -920,7 +930,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
@@ -936,7 +946,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> container1 = canvas1.<span class="hljs-property">domElement</span>.<span class="hljs-property">parentNode</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> container = canvas.<span class="hljs-property">domElement</span>.<span class="hljs-property">parentNode</span>;</pre></div></div>
             
         </li>
         
@@ -953,19 +963,19 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> requestFS, releaseFS, isFS;
 
-<span class="hljs-keyword">if</span> (container1.<span class="hljs-property">requestFullScreen</span>) {
+<span class="hljs-keyword">if</span> (container.<span class="hljs-property">requestFullScreen</span>) {
 
     requestFS = <span class="hljs-string">&#x27;requestFullScreen&#x27;</span>;
     releaseFS = <span class="hljs-string">&#x27;exitFullscreen&#x27;</span>;
     isFS = <span class="hljs-string">&#x27;fullscreenElement&#x27;</span>;
 }
-<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (container1.<span class="hljs-property">webkitRequestFullscreen</span>) {
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (container.<span class="hljs-property">webkitRequestFullscreen</span>) {
 
     requestFS = <span class="hljs-string">&#x27;webkitRequestFullscreen&#x27;</span>;
     releaseFS = <span class="hljs-string">&#x27;webkitExitFullscreen&#x27;</span>;
     isFS = <span class="hljs-string">&#x27;webkitFullscreenElement&#x27;</span>;
 }
-<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (container1.<span class="hljs-property">mozRequestFullScreen</span>) {
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (container.<span class="hljs-property">mozRequestFullScreen</span>) {
 
     requestFS = <span class="hljs-string">&#x27;mozRequestFullScreen&#x27;</span>;
     releaseFS = <span class="hljs-string">&#x27;mozCancelFullScreen&#x27;</span>;
@@ -989,7 +999,7 @@
 
     <span class="hljs-keyword">if</span> (isFS) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">document</span>[isFS]) container1[requestFS]();
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">document</span>[isFS]) container[requestFS]();
 
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">document</span>[releaseFS]) <span class="hljs-variable language_">document</span>[releaseFS]();
     }
@@ -1008,7 +1018,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
     <span class="hljs-keyword">if</span> (e.<span class="hljs-property">keyCode</span> === <span class="hljs-number">13</span>) <span class="hljs-title function_">toggleFullScreen</span>();
 
@@ -1023,12 +1033,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="canvas-1-scene">Canvas 1 scene</h4>
+              <h4 id="canvas-scene">Canvas scene</h4>
 <p>Build the gradient objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myRadial = <span class="hljs-title function_">makeRadialGradient</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myRadial = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;circle-waves&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
@@ -1064,7 +1074,7 @@
     ],
 });
 
-<span class="hljs-title function_">makeGradient</span>({
+scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;colored-pipes&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>,
@@ -1097,7 +1107,7 @@
     ],
 });
 
-<span class="hljs-title function_">makeGradient</span>({
+scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;linear&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
@@ -1125,7 +1135,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-locked-block&#x27;</span>),
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">150</span>,
@@ -1171,7 +1181,7 @@
     },
 });
 
-<span class="hljs-title function_">makeWheel</span>({
+scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell-locked-wheel&#x27;</span>),
 
     <span class="hljs-attr">radius</span>: <span class="hljs-number">75</span>,
@@ -1232,21 +1242,21 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setCursorTo = {
 
     <span class="hljs-attr">auto</span>: <span class="hljs-function">() =&gt;</span> {
-        canvas1.<span class="hljs-title function_">set</span>({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
             },
         });
     },
     <span class="hljs-attr">pointer</span>: <span class="hljs-function">() =&gt;</span> {
-        canvas1.<span class="hljs-title function_">set</span>({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span>,
             },
         });
     },
     <span class="hljs-attr">grabbing</span>: <span class="hljs-function">() =&gt;</span> {
-        canvas1.<span class="hljs-title function_">set</span>({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;grabbing&#x27;</span>,
             },
@@ -1267,9 +1277,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> current = <span class="hljs-title function_">makeDragZone</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> current = scrawl.<span class="hljs-title function_">makeDragZone</span>({
 
-    <span class="hljs-attr">zone</span>: canvas1,
+    <span class="hljs-attr">zone</span>: canvas,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
     <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
@@ -1290,7 +1300,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas1.<span class="hljs-title function_">set</span>({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">checkForEntityHover</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">onEntityHover</span>: setCursorTo.<span class="hljs-property">pointer</span>,
     <span class="hljs-attr">onEntityNoHover</span>: setCursorTo.<span class="hljs-property">auto</span>,
@@ -1347,7 +1357,7 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> val % <span class="hljs-number">1000</span>;
 };
 
-<span class="hljs-keyword">const</span> tweeny = <span class="hljs-title function_">makeTween</span>({
+<span class="hljs-keyword">const</span> tweeny = scrawl.<span class="hljs-title function_">makeTween</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mytween&#x27;</span>),
     <span class="hljs-attr">targets</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;colored-pipes&#x27;</span>),
     <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
@@ -1429,10 +1439,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
-    <span class="hljs-attr">target</span>: canvas1,</pre></div></div>
+    <span class="hljs-attr">target</span>: canvas,</pre></div></div>
             
         </li>
         
@@ -1465,7 +1475,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCompile</span>: <span class="hljs-function">() =&gt;</span> canvas1.<span class="hljs-title function_">checkHover</span>(),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCompile</span>: <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">checkHover</span>(),</pre></div></div>
             
         </li>
         
@@ -1496,7 +1506,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

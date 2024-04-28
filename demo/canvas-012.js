@@ -2,30 +2,28 @@
 // Shape entity position; shape entity as a path for other artefacts to follow
 
 // [Run code](../../demo/canvas-012.html)
-import {
-    library as L,
-    makeRender,
-    makeShape,
-    makeWheel,
-    makeUpdater,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
+const canvas = scrawl.findCanvas('mycanvas');
+
+
 // Namespacing boilerplate
 // + We don't need to give SC objects a `name` attribute - it's just a lot more convenient if we do.
 // + In particular, namespacing SC objects names helps make clearing them up after we've finished with them a lot easier!
 // + For this test demo, we forgo names and namespaces to make sure things still get generated and lodged in the library
 
-const namespace = 'demo';
-/* eslint-disable-next-line */
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Create Shape entity
-const arrow = makeShape({
+const arrow = scrawl.makeShape({
+
+    name: name('arrow-path'),
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
@@ -58,7 +56,9 @@ const arrow = makeShape({
 });
 
 // Create Wheel entity to pivot to the arrow
-makeWheel({
+scrawl.makeWheel({
+
+    name: name('arrow-pin'),
 
     fillStyle: 'blue',
     radius: 5,
@@ -71,7 +71,16 @@ makeWheel({
 
 // Create the Wheel entitys that will use the arrow as their path
 // + This Wheel is a template from which we clone the other Wheels
-const myWheel = makeWheel({
+const beads = scrawl.makeGroup({
+
+    name: name('beads-group'),
+    host: canvas.base,
+});
+
+const myWheel = scrawl.makeWheel({
+
+    name: name('bead-template'),
+    group: beads,
 
     fillStyle: 'red',
     radius: 3,
@@ -108,6 +117,7 @@ for (let i = 0.01; i < 1; i += 0.01) {
     else col = 'purple';
 
     myWheel.clone({
+        name: name(`bead-${col}-${Math.round(i * 100)}`),
         pathPosition: i,
         fillStyle: col,
     });
@@ -124,7 +134,8 @@ const report = reportSpeed('#reportmessage', function () {
 
     const {roll, scale, length} = arrow;
 
-    return `    Arrow path length: ${length}
+    return `
+    Arrow path length: ${length}
     Start - x: ${startX}, y: ${startY}
     Handle - x: ${handleX}, y: ${handleY}
     Offset - x: ${offsetX}, y: ${offsetY}
@@ -133,16 +144,17 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
-    target: L.artefact.mycanvas,
+    name: name('animation'),
+    target: canvas,
     afterShow: report,
 });
 
 
 // #### User interaction
 // Setup form observer functionality
-makeUpdater({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -182,50 +194,39 @@ makeUpdater({
         upend: ['flipUpend', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
     },
+
+    // The makeUpdater function will supply the triggering event object to the callback function
+    callback: (e) => {
+
+        if (e.target.id === 'scale') beads.setArtefacts({ scale: parseFloat(e.target.value) * 5 });
+    },
 });
 
+
 // Setup form
-// @ts-expect-error
-document.querySelector('#start_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_xPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#handle_yPercent').value = 50;
-// @ts-expect-error
-document.querySelector('#start_xAbsolute').value = 300;
-// @ts-expect-error
-document.querySelector('#start_yAbsolute').value = 200;
-// @ts-expect-error
-document.querySelector('#handle_xAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#handle_yAbsolute').value = 100;
-// @ts-expect-error
-document.querySelector('#start_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#start_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_xString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#handle_yString').options.selectedIndex = 1;
-// @ts-expect-error
-document.querySelector('#offset_xPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yPercent').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_xAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#offset_yAbsolute').value = 0;
-// @ts-expect-error
-document.querySelector('#roll').value = 0;
-// @ts-expect-error
-document.querySelector('#scale').value = 0.2;
-// @ts-expect-error
-document.querySelector('#upend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#reverse').options.selectedIndex = 0;
+initializeDomInputs([
+    ['input', 'handle_xAbsolute', '100'],
+    ['input', 'handle_xPercent', '50'],
+    ['input', 'handle_yAbsolute', '100'],
+    ['input', 'handle_yPercent', '50'],
+    ['input', 'offset_xAbsolute', '0'],
+    ['input', 'offset_xPercent', '0'],
+    ['input', 'offset_yAbsolute', '0'],
+    ['input', 'offset_yPercent', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '0.2'],
+    ['input', 'start_xAbsolute', '300'],
+    ['input', 'start_xPercent', '50'],
+    ['input', 'start_yAbsolute', '200'],
+    ['input', 'start_yPercent', '50'],
+    ['select', 'handle_xString', 1],
+    ['select', 'handle_yString', 1],
+    ['select', 'reverse', 0],
+    ['select', 'start_xString', 1],
+    ['select', 'start_yString', 1],
+    ['select', 'upend', 0],
+]);
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

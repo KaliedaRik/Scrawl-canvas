@@ -1,266 +1,114 @@
 // # Demo Canvas 052
-// Create and use a RawAsset object to modify an image asset
+// Noise asset functionality
 
 // [Run code](../../demo/canvas-052.html)
-import * as scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas;
-
-// Magic numbers
-const dimension = 600;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
-// Import image from DOM, and create Picture entity using it
-scrawl.importDomImage('.flowers');
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
-// We need a background image to act as the template on which we will draw
-const backgroundImage = scrawl.makePicture({
+// Build and display the reaction-diffusion asset
+const bespokeColors = {
+  'stepped-grays': [
+      [0, '#333'],
+      [199, '#333'],
+      [200, '#666'],
+      [399, '#666'],
+      [400, '#999'],
+      [599, '#999'],
+      [600, '#ccc'],
+      [799, '#ccc'],
+      [800, '#fff'],
+      [999, '#fff'],
+  ],
+  'red-gradient': [
+      [0, 'hsl(0 100% 40%)'],
+      [999, 'hsl(0 100% 100%)'],
+  ],
+  'red-blue': [
+      [0, 'rgb(255 0 0)'],
+      [999, 'rgb(0 0 255)'],
+  ],
+  'red-green': [
+      [0, 'rgb(255 0 0)'],
+      [999, 'rgb(0 255 0)'],
+  ],
+  'hue-gradient': [
+      [0, 'hwb(120 10% 10%)'],
+      [999, 'hwb(240 10% 10%)'],
+  ],
+  'monochrome': [
+      [0, 'black'],
+      [999, 'white'],
+  ],
+}
 
-    name: 'background',
-    asset: 'iris',
-    dimensions: [dimension, dimension],
-    copyDimensions: ['100%', '100%'],
-    method: 'none',
-});
+const bespokeEasings = {
 
+    'user-steps': (val) => {
 
-// We will use Perlin noise to determine brush stroke length and direction
+        if (val < 0.2) return 0.1;
+        if (val < 0.4) return 0.3;
+        if (val < 0.6) return 0.5;
+        if (val < 0.8) return 0.7;
+        return 0.9;
+    },
+    'user-repeat': (val) => (val * 4) % 1,
+};
+
 const noiseAsset = scrawl.makeNoiseAsset({
 
-    name: 'my-noise-generator',
-    width: dimension,
-    height: dimension,
+    name: name('noise'),
+    width: 400,
+    height: 400,
+
     noiseEngine: 'improved-perlin',
-    scale: 80,
-});
 
-
-// We'll code up the painting effect in a RawAsset, which can then be used by Picture entitys, Pattern styles, and filters
-const impressionistAsset = scrawl.makeRawAsset({
-
-    name: 'pretend-van-gogh',
-
-    userAttributes: [{
-        // __lineWidth__, __lineLengthMultiplier__, __lineLengthStart__, __linesToAdd__, __lineBlend__, __lineOpacity__ - some brush attributes that we'll allow the user to modify in real time.
-        key: 'lineWidth',
-        defaultValue: 4,
-    },{
-        key: 'lineLengthMultiplier',
-        defaultValue: 20,
-    },{
-        key: 'lineLengthStart',
-        defaultValue: 5,
-    },{
-        key: 'linesToAdd',
-        defaultValue: 50,
-    },{
-        key: 'lineBlend',
-        defaultValue: 'source-over',
-    },{
-        key: 'lineOpacity',
-        defaultValue: 1,
-    },{
-        // __offsetX__, __offsetY__, __rotationMultiplier__, __rotationStart__ - some additional brush rotation attributes.
-        key: 'offsetX',
-        defaultValue: 0,
-    },{
-        key: 'offsetY',
-        defaultValue: 0,
-    },{
-        key: 'rotationMultiplier',
-        defaultValue: 90,
-    },{
-        key: 'rotationStart',
-        defaultValue: 0,
-    },{
-        // __canvasWidth__, __canvasHeight__ - make the RawAsset's dimensions the same as our canvas base Cell's dimensions
-        key: 'canvasWidth',
-        defaultValue: dimension,
-    },{
-        key: 'canvasHeight',
-        defaultValue: dimension,
-    },{
-        // __background__ - a handle to our background Picture entity, from which we will be extracting color values
-        key: 'background',
-        defaultValue: false,
-        setter: function (item) {
-// @ts-expect-error
-            this.background = item;
-// @ts-expect-error
-            this.dirtyBackground = true;
-        },
-    },{
-        // __noise__ - a handle to our Noise asset, from which we will be extracting brushstroke direction and length data
-        key: 'noise',
-        defaultValue: false,
-        setter: function (item) {
-// @ts-expect-error
-            this.noise = item;
-// @ts-expect-error
-            this.dirtyData = true;
-        },
-    },{
-        // __trigger__ - we update the RawAsset at the start of each Display cycle by setting its `trigger` attribute.
-        // + It's at this point that we fill the RawAsset canvas with the background image, if required
-        key: 'trigger',
-        defaultValue: false,
-        setter: function () {
-
-// @ts-expect-error
-            if (this.dirtyBackground) {
-
-// @ts-expect-error
-                this.dirtyBackground = false;
-
-// @ts-expect-error
-                const { element, engine, canvasWidth, canvasHeight, background } = this;
-
-                element.width = canvasWidth;
-                element.height = canvasHeight;
-
-                const { source, copyArray, pasteArray } = background;
-
-                if (source && copyArray && pasteArray ) {
-
-                    // Strictly speaking, copyArray and pasteArray are Picture entity internal data structures but that doesn't stop us using them here.
-                    // + TODO: consider whether the RawAsset object should be using a Cell wrapper rather than a raw &lt;canvas> element
-                    // + if we did it that way, then we would be able to simpleStamp the Picture entity onto the canvas
-                    // + the reason why we're NOT doing it that way at the moment is to keep RawAsset canvases out of the SC library
-                    engine.drawImage(background.source, ...background.copyArray, ...background.pasteArray);
-
-// @ts-expect-error
-                    this.backgroundData = engine.getImageData(0, 0, dimension, dimension);
-
-// @ts-expect-error
-                    this.dirtyData = true;
-                }
-// @ts-expect-error
-                else this.dirtyBackground = true;
-            }
-// @ts-expect-error
-            else this.dirtyData = true;
-        },
-    }],
-
-    // `assetWrapper` is the same as `this` when function is declared with the function keyword
-    // + We clear the RawAsset's canvas, then draw the updated Voronoi web onto it
-    updateSource: function (assetWrapper) {
-
-        const { engine, noise, backgroundData, lineWidth, lineLengthMultiplier, lineLengthStart, linesToAdd, lineBlend, lineOpacity, offsetX, offsetY, rotationMultiplier, rotationStart } = assetWrapper;
-
-        if (noise && backgroundData) {
-
-            const { data, width, height } = backgroundData;
-
-            const { noiseValues } = noise;
-
-            if (noiseValues) {
-
-                engine.lineWidth = lineWidth;
-                engine.lineCap = 'round';
-                engine.globalCompositeOperation = lineBlend;
-                engine.globalAlpha = lineOpacity;
-
-                let x, y, pos, len, rx, ry, dx, dy, roll, r, g, b, a;
-
-                const coord = scrawl.requestCoordinate();
-
-                for (let i = 0; i < linesToAdd; i++) {
-
-                    x = Math.floor(Math.random() * width);
-                    y = Math.floor(Math.random() * height);
-
-                    len = (noiseValues[y][x] * lineLengthMultiplier) + lineLengthStart;
-
-                    pos = ((y * width) + x) * 4;
-
-                    r = data[pos];
-                    g = data[++pos];
-                    b = data[++pos];
-                    a = data[++pos];
-
-                    engine.strokeStyle = `rgb(${r} ${g} ${b} / ${a/255})`;
-
-                    rx = (x + offsetX);
-                    if (rx < 0 || rx >= width) {
-                        rx = (rx < 0) ? rx + width : rx - width;
-                    }
-
-                    ry = (y + offsetY);
-                    if (ry < 0 || ry >= height) {
-                        ry = (ry < 0) ? ry + height : ry - height;
-                    }
-
-                    roll = (noiseValues[ry][rx] * rotationMultiplier) + rotationStart;
-
-                    coord.set(len, 0).rotate(roll);
-                    [dx, dy] = coord;
-
-                    engine.beginPath();
-                    engine.moveTo(x, y);
-// @ts-expect-error
-                    engine.lineTo(x + dx, y + dy);
-                    engine.stroke();
-                }
-                scrawl.releaseCoordinate(coord);
-            }
-        }
-    },
-});
-
-impressionistAsset.set({
-    background: backgroundImage,
-    noise: noiseAsset,
+/** @ts-expect-error */
+    colors: bespokeColors['monochrome'],
 });
 
 scrawl.makePicture({
-    name: 'noise-image',
-    asset: 'my-noise-generator',
-    method: 'none',
-});
 
-scrawl.makePicture({
-    name: 'display-image',
-    asset: 'pretend-van-gogh',
-    dimensions: [dimension, dimension],
-    copyDimensions: ['100%', '100%'],
-});
+    name: name('noise-image'),
 
+    width: '100%',
+    height: '100%',
+    copyWidth: '100%',
+    copyHeight: '100%',
+
+    asset: name('noise'),
+});
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const report = reportSpeed('#reportmessage');
+const report = reportSpeed('#reportmessage', function () {
+
+    return `
+    Dimensions: width - ${dom.width.value}, height - ${dom.height.value}
+    Scale: ${dom.scale.value}; Size: ${dom.size.value}
+    Octaves: ${dom.octaves.value}; Sine frequency coefficient: ${dom.sineFrequencyCoeff.value}
+    Persistence: ${dom.persistence.value}; Lacunarity: ${dom.lacunarity.value}
+    Sum amplitude: ${dom.sumAmplitude.value}; Worley depth: ${dom.worleyDepth.value}`;
+});
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
-
-    // We need to trigger the RawAsset object to update its output at the start of each Display cycle
-    commence: () => impressionistAsset.set({ trigger: true }),
-
     afterShow: report,
 });
-
-
-// #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(
-    canvas,
-    '#my-image-store',
-    backgroundImage,
-    () => {
-        impressionistAsset.set({
-            background: backgroundImage,
-        });
-    },
-);
 
 
 // #### User interaction
@@ -270,31 +118,6 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: impressionistAsset,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        lineBlend: ['lineBlend', 'raw'],
-        lineLengthMultiplier: ['lineLengthMultiplier', 'round'],
-        lineLengthStart: ['lineLengthStart', 'round'],
-        lineWidth: ['lineWidth', 'round'],
-        linesToAdd: ['linesToAdd', 'round'],
-        lineOpacity: ['lineOpacity', 'float'],
-        offsetX: ['offsetX', 'round'],
-        offsetY: ['offsetY', 'round'],
-        rotationMultiplier: ['rotationMultiplier', 'round'],
-        rotationStart: ['rotationStart', 'round'],
-    },
-});
-
-scrawl.makeUpdater({
-
-    event: ['input', 'change'],
-    origin: '#noiseScale',
-
     target: noiseAsset,
 
     useNativeListener: true,
@@ -302,85 +125,96 @@ scrawl.makeUpdater({
 
     updates: {
 
-        noiseScale: ['scale', 'round'],
+        width: ['width', 'round'],
+        height: ['height', 'round'],
+        noiseEngine: ['noiseEngine', 'raw'],
+        octaveFunction: ['octaveFunction', 'raw'],
+        octaves: ['octaves', 'round'],
+        sumFunction: ['sumFunction', 'raw'],
+        sineFrequencyCoeff: ['sineFrequencyCoeff', 'float'],
+        smoothing: ['smoothing', 'raw'],
+        scale: ['scale', 'round'],
+        size: ['size', 'round'],
+        seed: ['seed', 'raw'],
+        persistence: ['persistence', 'float'],
+        lacunarity: ['lacunarity', 'round'],
+        sumAmplitude: ['sumAmplitude', 'float'],
+        worleyOutput: ['worleyOutput', 'raw'],
+        worleyDepth: ['worleyDepth', 'round'],
+        paletteStart: ['paletteStart', 'round'],
+        paletteEnd: ['paletteEnd', 'round'],
+        colorSpace: ['colorSpace', 'raw'],
+        returnColorAs: ['returnColorAs', 'raw'],
+        cyclePalette: ['cyclePalette', 'boolean'],
+        precision: ['precision', 'round'],
     },
+    callback: () => noiseAsset.update(),
 });
 
-// Setup form
-// @ts-expect-error
-document.querySelector('#lineBlend').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#lineWidth').value = 4;
-// @ts-expect-error
-document.querySelector('#lineLengthMultiplier').value = 20;
-// @ts-expect-error
-document.querySelector('#lineLengthStart').value = 5;
-// @ts-expect-error
-document.querySelector('#linesToAdd').value = 50;
-// @ts-expect-error
-document.querySelector('#lineOpacity').value = 1;
-// @ts-expect-error
-document.querySelector('#noiseScale').value = 80;
-// @ts-expect-error
-document.querySelector('#offsetX').value = 0;
-// @ts-expect-error
-document.querySelector('#offsetY').value = 0;
-// @ts-expect-error
-document.querySelector('#rotationMultiplier').value = 90;
-// @ts-expect-error
-document.querySelector('#rotationStart').value = 0;
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
+    e.preventDefault();
 
-// #### Video recording and download functionality
-const videoButton = document.querySelector("#my-record-video-button");
+    if (e && e.target) {
 
-let recording = false;
-let myRecorder;
-let recordedChunks;
+        const val = e.target.value;
 
-videoButton.addEventListener("click", () => {
-    recording = !recording;
-
-    if (recording) {
-
-        videoButton.textContent = "Stop recording";
-
-        const stream = canvas.domElement.captureStream(25);
-
-        myRecorder = new MediaRecorder(stream, {
-            mimeType: "video/webm;codecs=vp8"
+        noiseAsset.set({
+            colors: bespokeColors[val],
         });
 
-        recordedChunks = [];
+        noiseAsset.update();
+    }
+}, '#colorStops');
 
-        myRecorder.ondataavailable = (e) => {
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
-            if (e.data.size > 0) recordedChunks.push(e.data);
-        };
+    e.preventDefault();
 
-        myRecorder.start();
+    const val = e.target.value;
+
+    if (['user-steps', 'user-repeat'].includes(val)) {
+        noiseAsset.set({
+            easing: bespokeEasings[val],
+        });
     }
     else {
-
-        videoButton.textContent = "Record a video";
-
-        myRecorder.stop();
-
-        setTimeout(() => {
-
-            const blob = new Blob(recordedChunks, { type: "video/webm" });
-
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-
-            a.href = url;
-            a.download = `Scrawl-canvas-art-recording-${Date().slice(4, 24)}.webm`;
-            a.click();
-
-            URL.revokeObjectURL(url);
-        }, 0);
+        noiseAsset.set({
+            easing: val,
+        });
     }
-});
+    noiseAsset.update();
+
+}, '#easing');
+
+
+// Set the DOM input values
+const dom = initializeDomInputs([
+    ['input', 'height', '400'],
+    ['input', 'lacunarity', '2'],
+    ['input', 'octaves', '1'],
+    ['input', 'paletteEnd', '999'],
+    ['input', 'paletteStart', '0'],
+    ['input', 'persistence', '0.5'],
+    ['input', 'precision', '1'],
+    ['input', 'scale', '50'],
+    ['input', 'seed', 'noize'],
+    ['input', 'sineFrequencyCoeff', '1'],
+    ['input', 'size', '256'],
+    ['input', 'sumAmplitude', '5'],
+    ['input', 'width', '400'],
+    ['input', 'worleyDepth', '0'],
+    ['select', 'colorSpace', 0],
+    ['select', 'colorStops', 0],
+    ['select', 'cyclePalette', 0],
+    ['select', 'easing', 0],
+    ['select', 'noiseEngine', 1],
+    ['select', 'octaveFunction', 0],
+    ['select', 'returnColorAs', 0],
+    ['select', 'smoothing', 23],
+    ['select', 'sumFunction', 0],
+    ['select', 'worleyOutput', 0],
+]);
 
 
 // #### Development and testing

@@ -27,32 +27,22 @@
 // + Pictures (but not their source assets) can be cloned, and killed.
 
 
-// #### Demos:
-// + [Canvas-008](../../demo/canvas-008.html) - Picture entity position; manipulate copy attributes
-// + [Canvas-010](../../demo/canvas-010.html) - Use video sources and media streams for Picture entitys
-// + [Canvas-021](../../demo/canvas-021.html) - Import and use spritesheets
-// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
-// + [Canvas-025](../../demo/canvas-025.html) - Responsive images
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
-
-
 // #### Imports
 import { artefact, constructors } from '../core/library.js';
 
-import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../helper/utilities.js';
 
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from '../asset-management/video-asset.js';
 
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './image-asset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from '../asset-management/image-asset.js';
 
-import { makeCoordinate } from './coordinate.js';
+import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../core/shared-vars.js';
+import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Picture constructor
@@ -100,9 +90,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
-// + [assetConsumer](../mixin/assetConsumer.html)
 baseMix(P);
 entityMix(P);
 assetConsumerMix(P);
@@ -284,12 +271,6 @@ D.copyDimensions = function (w, h) {
     this.dirtyFilterIdentifier = true;
 };
 
-S.checkHitIgnoreTransparency = function (item) {
-
-    this.checkHitIgnoreTransparency = item;
-
-    if (item) this.stashOutput = true;
-};
 
 // Picture `get` and `set` (but not `deltaSet`) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object
 
@@ -298,7 +279,7 @@ P.get = function (item) {
 
     const source = this.source;
 
-    if ((item.indexOf($VIDEO) == 0 || item.indexOf($IMAGE) == 0) && source) {
+    if ((item.indexOf($VIDEO) === 0 || item.indexOf($IMAGE) === 0) && source) {
 
         if (gettableVideoAssetAtributes.includes(item)) return source[item.substring(6)];
         else if (gettableImageAssetAtributes.includes(item)) return source[item.substring(6)];
@@ -317,18 +298,18 @@ P.get = function (item) {
             let def = this.defs[item],
                 val;
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = this[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
 
             def = state.defs[item];
 
-            if (typeof def != UNDEF) {
+            if (typeof def !== UNDEF) {
 
                 val = state[item];
-                return (typeof val != UNDEF) ? val : def;
+                return (typeof val !== UNDEF) ? val : def;
             }
             return undefined;
         }
@@ -358,27 +339,27 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if ((key.indexOf($VIDEO) == 0 || key.indexOf($IMAGE) == 0) && source) {
+            if ((key.indexOf($VIDEO) === 0 || key.indexOf($IMAGE) === 0) && source) {
 
                 if (settableVideoAssetAtributes.includes(key)) source[key.substring(6)] = value
                 else if (settableImageAssetAtributes.includes(key)) source[key.substring(6)] = value
             }
 
-            else if (key && key != NAME && value != null) {
+            else if (key && key !== NAME && value != null) {
 
                 if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEF) this[key] = value;
+                    else if (typeof defs[key] !== UNDEF) this[key] = value;
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
+                    else if (typeof stateDefs[key] !== UNDEF) state[key] = value;
                 }
             }
         }
@@ -528,7 +509,7 @@ P.prepareStamp = function() {
     // Not content with the dirty flag, the entity now interrogates its asset via its `checkSource` to trigger it to directly rewrite key information if it has changed - particularly dimensional data
     if (this.asset) {
 
-        if (this.asset.type == T_SPRITE) this.checkSpriteFrame(this);
+        if (this.asset.type === T_SPRITE) this.checkSpriteFrame(this);
         else {
 
             if (this.asset.checkSource) this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
@@ -571,7 +552,7 @@ P.prepareStamp = function() {
     // Specifically for Loom entitys
     if (this.dirtyImageSubscribers) this.updateImageSubscribers();
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hiddenDomElements.js` file - handles updates to anchor and button objects
+    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
     this.prepareStampTabsHelper();
 };
 
@@ -606,9 +587,9 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        if (!this.pasteArray || this.pasteArray.length != 4) this.preparePasteObject();
+        if (!this.pasteArray || this.pasteArray.length !== 4) this.preparePasteObject();
 
-        if (this.pasteArray.length != 4) this.dirtyPathObject = true;
+        if (this.pasteArray.length !== 4) this.dirtyPathObject = true;
         else {
 
             const p = this.pathObject = new Path2D();
@@ -617,6 +598,7 @@ P.cleanPathObject = function () {
         }
     }
 };
+
 
 // ##### Stamp methods
 
@@ -694,23 +676,15 @@ P.fillThenDraw = function (engine) {
 };
 
 // `checkHitReturn` - overwrites mixin/position.js function
-P.checkHitReturn = function (x, y, cell) {
+P.checkHitReturn = function (x, y) {
 
-    if (this.checkHitIgnoreTransparency && cell && cell.engine) {
+    if (this.checkHitIgnoreTransparency) {
 
-        const [copyX, copyY, copyWidth, copyHeight] = this.copyArray;
+        const img = this.stashedImageData;
 
-        if (xta(copyX, copyY, copyWidth, copyHeight)) {
+        if (img) {
 
-            const pasteWidth = this.pasteArray[2];
-            const [stampX, stampY] = this.currentStampPosition;
-
-            const img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
-
-            const myX = x - stampX,
-                myY = y - stampY;
-
-            const index = (((myY * pasteWidth) + myX) * 4) + 3;
+            const index = (((y * img.width) + x) * 4) + 3;
 
             if (img.data[index]) {
 

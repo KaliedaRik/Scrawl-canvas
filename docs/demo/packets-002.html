@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -892,7 +912,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -903,12 +923,29 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
               <p>Setup Gradient style</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue-green&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blue-green&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">colors</span>: [
         [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;blue&#x27;</span>],
@@ -922,18 +959,19 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Setup Color style</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mycolor = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myColorObject&#x27;</span>),
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
 });</pre></div></div>
@@ -941,11 +979,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Setup Filter</p>
 
@@ -953,7 +991,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myfilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;emboss&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
     <span class="hljs-attr">angle</span>: <span class="hljs-number">225</span>,
     <span class="hljs-attr">strength</span>: <span class="hljs-number">3</span>,
@@ -968,11 +1006,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Test Block entity</p>
 
@@ -980,7 +1018,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myblock = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;block-tester&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;block-tester&#x27;</span>),
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">40</span>,
@@ -994,7 +1032,7 @@
 
 scrawl.<span class="hljs-title function_">makeTween</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;block-color-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;block-color-animation&#x27;</span>),
     <span class="hljs-attr">duration</span>: <span class="hljs-number">2500</span>,
     <span class="hljs-attr">targets</span>: myblock,
 
@@ -1023,11 +1061,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Test Picture entity</p>
 
@@ -1035,7 +1073,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypicture = scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;picture-tester&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;picture-tester&#x27;</span>),
 
     <span class="hljs-attr">imageSource</span>: <span class="hljs-string">&#x27;img/iris.png&#x27;</span>,
 
@@ -1057,65 +1095,30 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Test Phrase entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myphrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;phrase-tester&#x27;</span>,
-
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;H&amp;epsilon;§BOLD§lj§/BOLD§&amp;ouml;!&#x27;</span>,
-    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;40px Garamond, serif&#x27;</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">250</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">150</span>,
-
-    <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-    <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
-
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rgb(50 0 0)&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.6</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Test Wheel entity</p>
+              <p>Test Label entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypie = scrawl.<span class="hljs-title function_">makeWheel</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mylabel = scrawl.<span class="hljs-title function_">makeLabel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wheel-pie-tester&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;label-tester&#x27;</span>),
 
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;H&amp;epsilon;lj&amp;ouml;!&#x27;</span>,
+    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;bold 40px Garamond, serif&#x27;</span>,
 
-    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">50</span>,
-    <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">50</span>,
-    <span class="hljs-attr">includeCenter</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">250</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">150</span>,
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">320</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">280</span>,
-
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue-green&#x27;</span>,
-    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rgb(50 0 0)&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.6</span>,
 });</pre></div></div>
             
         </li>
@@ -1127,13 +1130,45 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
+              <p>Test Wheel entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypie = scrawl.<span class="hljs-title function_">makeWheel</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;wheel-pie-tester&#x27;</span>),
+
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">50</span>,
+
+    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">50</span>,
+    <span class="hljs-attr">includeCenter</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">320</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">280</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blue-green&#x27;</span>),
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
               <p>Test oval Shape entity</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myoval = scrawl.<span class="hljs-title function_">makeOval</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-oval-tester&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;shape-oval-tester&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">30</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">160</span>,
@@ -1149,11 +1184,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Test bezier Shape entity</p>
 
@@ -1161,7 +1196,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mybezier = scrawl.<span class="hljs-title function_">makeBezier</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-bezier-tester&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;shape-bezier-tester&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">210</span>,
@@ -1184,11 +1219,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Test Grid entity</p>
 
@@ -1196,7 +1231,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygrid = scrawl.<span class="hljs-title function_">makeGrid</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-grid&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;test-grid&#x27;</span>),
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">80</span>,
@@ -1228,11 +1263,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Test svg path.d Shape entity</p>
 
@@ -1240,7 +1275,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myshape = scrawl.<span class="hljs-title function_">makeShape</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-test&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;shape-test&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">240</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">20</span>,
@@ -1263,16 +1298,16 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;emboss&#x27;</span>],</pre></div></div>
+    <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;emboss&#x27;</span>)],</pre></div></div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>svg outline of Japan from this source:
 <a href="https://silhouettegarden.com/download/japan-silhouette/">https://silhouettegarden.com/download/japan-silhouette/</a></p>
@@ -1593,11 +1628,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1608,7 +1643,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Creating packets for all entitys in test&#x27;</span>);
     <span class="hljs-keyword">const</span> myblockPacket = myblock.<span class="hljs-title function_">saveAsPacket</span>();
     <span class="hljs-keyword">const</span> mypicturePacket = mypicture.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">const</span> myphrasePacket = myphrase.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> mylabelPacket = mylabel.<span class="hljs-title function_">saveAsPacket</span>();
     <span class="hljs-keyword">const</span> mypiePacket = mypie.<span class="hljs-title function_">saveAsPacket</span>();
     <span class="hljs-keyword">const</span> myovalPacket = myoval.<span class="hljs-title function_">saveAsPacket</span>();
     <span class="hljs-keyword">const</span> mybezierPacket = mybezier.<span class="hljs-title function_">saveAsPacket</span>();
@@ -1618,7 +1653,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Kill all entitys in test&#x27;</span>);
     myblock.<span class="hljs-title function_">kill</span>();
     mypicture.<span class="hljs-title function_">kill</span>();
-    myphrase.<span class="hljs-title function_">kill</span>();
+    mylabel.<span class="hljs-title function_">kill</span>();
     mypie.<span class="hljs-title function_">kill</span>();
     myoval.<span class="hljs-title function_">kill</span>();
     mybezier.<span class="hljs-title function_">kill</span>();
@@ -1640,10 +1675,10 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
     })
     .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.<span class="hljs-title function_">importPacket</span>(myphrasePacket)
+    canvas.<span class="hljs-title function_">importPacket</span>(mylabelPacket)
     .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-        myphrase = res;
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;myphrase resurrected&#x27;</span>);
+        mylabel = res;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;mylabel resurrected&#x27;</span>);
     })
     .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
@@ -1713,11 +1748,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Test Filter</p>
 
@@ -1738,11 +1773,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Create the Display cycle animation</p>
@@ -1751,7 +1786,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
 });
 
@@ -1761,15 +1796,15 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Fix entitys to use other objects&#x27;</span>);
     myblock.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myColorObject&#x27;</span>),
     });
 
     mypie.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue-green&#x27;</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blue-green&#x27;</span>),
     });
 
     myshape.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">filters</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
+        <span class="hljs-attr">filters</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;emboss&#x27;</span>),
     })
 };
 

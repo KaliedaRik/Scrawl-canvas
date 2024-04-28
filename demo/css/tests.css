@@ -41,11 +41,6 @@ p {
 	border: 0;
 	padding: 0;
 }
-/*img, video {
-	position: fixed;
-	visibility: hidden;
-}
-*/
 code {
 	display: block;
 	font-size: 80%;
@@ -145,7 +140,6 @@ code {
 .canvas-container {
 	overflow: hidden;
 	resize: both;
-	border: 1px solid black;
 	width: 600px;
 	height: 400px;
 	min-height: 200px;
@@ -165,4 +159,16 @@ code {
 	border-bottom: 1em solid red;
 	border-left: 1em solid transparent;
 }
+@media (scripting: none) {
+	.canvas-container {
+		resize: none;
+	}
+	.canvas-container::after {
+		border-bottom-color: transparent;
+	}
+}
 
+#test-navigation {
+	display: flex;
+	justify-content: space-between;
+}

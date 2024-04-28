@@ -6,11 +6,27 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Particles 013</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: "Mountains Of Christmas";
+      src: url("fonts/MountainsofChristmas-Bold.ttf") format("opentype");
+    }
+
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
+  </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="particles-012.html">&larr; Previous</a>
+    <a href="particles-014.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 013</h1>
   <h2>Seasons greetings</h2>
 
@@ -22,17 +38,19 @@
     data-base-background-color="navy"
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Build a Christmas scene from a Shape entity and a Phrase entity along a quadratic line.</li>
+      <li>Build a Christmas scene from a Shape entity and an EnhancedLabel entity along a quadratic line.</li>
       <li>Add an point emitter to the top of the tree (positioned along its path - the stars should float upwards, shrink and fade as they age.</li>
       <li>Add an area emitter to the tree Shape - these stars should very slowly fade in, then grow bigger (by updating one of the Star entity's radius attributes), then shrink and fade to the end of its life.</li>
       <li>Create a new Cell. In the cell setup a mini-scene consisting of a candle and its flame. The flame is a point emitter which also uses a blur filter.</li>
       <li>Create ten Picture entitys that use the Cell as their asset, and add them to the scene; these should use the tree entity's path to determine their position</li>
     </ul>
+
+    <p><b>To note:</b> Safari-based browsers do not (yet) support letter and word spacing settings within the &lt;canvas> element.</p>
 
     <p><b>Touch test:</b> not required</p>
 

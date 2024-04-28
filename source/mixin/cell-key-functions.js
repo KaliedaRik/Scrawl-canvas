@@ -3,13 +3,13 @@
 
 
 // #### Imports
-import { Ωempty } from '../core/utilities.js';
+import { Ωempty } from '../helper/utilities.js';
 
 import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../core/shared-vars.js';
+import { _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -32,15 +32,15 @@ export default function (P = Ωempty) {
             eVal = engine[key];
             sVal = state[key];
 
-            if (key == LINE_DASH) {
+            if (key === LINE_DASH) {
 
                 engine.lineDash = sVal;
                 engine.setLineDash(engine.lineDash);
             }
             else if (eVal !== sVal) engine[key] = sVal;
         }
-        if (engine.textAlign != LEFT) engine.textAlign = LEFT;
-        if (engine.textBaseline != TOP) engine.textBaseline = TOP;
+        if (engine.textAlign !== LEFT) engine.textAlign = LEFT;
+        if (engine.textBaseline !== TOP) engine.textBaseline = TOP;
 
         return this;
     };
@@ -205,6 +205,42 @@ export default function (P = Ωempty) {
             }
             else engine.strokeStyle = item.getData(entity, layer);
         },
+
+        direction: function (item, engine) {
+            engine.direction = item;
+        },
+
+        fontKerning: function (item, engine) {
+            engine.fontKerning = item;
+        },
+
+        fontStretch: function (item, engine) {
+            engine.fontStretch = item;
+        },
+
+        fontVariantCaps: function (item, engine) {
+            engine.fontVariantCaps = item;
+        },
+
+        letterSpacing: function (item, engine) {
+            engine.letterSpacing = item;
+        },
+
+        textAlign: function (item, engine) {
+            engine.textAlign = LEFT;
+        },
+
+        textBaseline: function (item, engine) {
+            engine.textBaseline = TOP;
+        },
+
+        textRendering: function (item, engine) {
+            engine.textRendering = item;
+        },
+
+        wordSpacing: function (item, engine) {
+            engine.wordSpacing = item;
+        },
     });
 
     // The following functions are used as part of entity object `stamp` functionality - specifically for those with a __method__ whose appearance is affected by shadows, and for the `clear` method
@@ -265,22 +301,6 @@ export default function (P = Ωempty) {
         this.engine.restore();
         return this;
     };
-
-    // `getComputedFontSizes` - internal function - the Cell wrapper gets passed by Phrase entitys to its fontAttributes object, which then invokes it when calculating font sizes
-    P.getComputedFontSizes = function () {
-
-        const host = this.getHost();
-
-        if (host && host.domElement) {
-
-            const em = _computed(host.domElement),
-                rem = _computed(document.documentElement);
-
-            return [parseFloat(em.fontSize), parseFloat(rem.fontSize), window.innerWidth, window.innerHeight];
-        }
-        return false;
-    }
-
 
     // `getEntityHits` - Returns an array of entity Objects responding 'true' to a checkHit call on them, for the Cell's current `.here` attribute coordinates. Used in particular with `Canvas.cascadeEventAction()` function
     P.getEntityHits = function () {

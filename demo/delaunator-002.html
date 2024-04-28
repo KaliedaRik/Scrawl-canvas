@@ -6,14 +6,11 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Delaunator 002</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    #my-image-store {
-      display: none;
-    }
-
     .canvas-container {
       overflow: hidden;
       resize: both;
@@ -24,11 +21,23 @@
       min-width: 200px;
       max-height: 600px;
       max-width: 600px;
+
+      & canvas {
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
     }
   </style>
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="delaunator-001.html">&larr; Previous</a>
+    <a href="mediapipe-001.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Delaunator test 002</h1>
   <h2>Responsive Voronoi cells in a RawAsset wrapper</h2>
   <h3>Drag the bottom right corner of the canvas to resize it<br />To change image, drag-and-drop an image file over the canvas</h3>
@@ -42,28 +51,35 @@
       data-base-height="400" 
       data-fit="cover"
       data-base-background-color="black"
-    ></canvas>
+    >
+      <div class="assets" aria-hidden="true">
+        <img
+          id="iris"
+          src="img/iris.png"
+          class="flowers"
+          alt="A purple-mauve iris flower"
+        />    
+      </div>
+    </canvas>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
       <li>Check that we can load the <a href="https://github.com/mapbox/delaunator">Delaunator JS library</a> into a module from a remote CMS.</li>
       <li>Use a set of static coordinates, alongside the mouse cursor, as the source points for the Delaunay triangulation calculations.</li>
-      <li>Use the calculated Voronoi edges to create a mosaic scene to an image</li>
-      <li>Give the scene a 3d effect using a filter</li>
+      <li>Use the calculated Voronoi edges to create a mosaic scene to an image.</li>
+      <li>Give the scene a 3d effect using a filter.</li>
       <li>Animate the scene, updating the Voronoi edges as the user moves the mouse cursor over the canvas.</li>
     </ul>
 
-    <p><b>Touch test:</b> canvas should be resizable</p>
+    <p><b>Known issue:</b> the demo runs slowly on Safari browsers.</p>
+
+    <p><b>Touch test:</b> canvas should be resizable.</p>
 
     <p><a href="../docs/demo/delaunator-002.html">Annotated code</a></p>
-  </div>
-
-  <div id="my-image-store">
-    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="delaunator-002.js" type="module"></script>

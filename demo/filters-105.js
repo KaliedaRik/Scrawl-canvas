@@ -4,20 +4,27 @@
 // [Run code](../../demo/filters-105.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const plainCanvas = scrawl.library.canvas['plain-canvas'],
-    filteredCanvas = scrawl.library.canvas['filtered-canvas'];
+const plainCanvas = scrawl.findCanvas('plain-canvas');
+const plainNamespace = plainCanvas.name;
+const plainName = (n) => `${plainNamespace}-${n}`;
 
+const filteredCanvas = scrawl.findCanvas('filtered-canvas');
+const filteredNamespace = filteredCanvas.name;
+const filteredName = (n) => `${filteredNamespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'tiles',
+    name: filteredName('tiles'),
     method: 'tiles',
     tileRadius: 50,
     offsetX: 200,
@@ -27,7 +34,7 @@ const myFilter = scrawl.makeFilter({
 // Create the target entity
 const plainImg = scrawl.makePicture({
 
-    name: 'plain-img',
+    name: plainName('image'),
     group: plainCanvas.get('baseName'),
 
     asset: 'iris',
@@ -43,16 +50,16 @@ const plainImg = scrawl.makePicture({
 
 const filteredImg = plainImg.clone({
 
-    name: 'filtered-img',
+    name: filteredName('image'),
     group: filteredCanvas.get('baseName'),
-    filters: ['tiles'],
+    filters: [filteredName('tiles')],
 });
 
 
 // Create the line spiral
 const spiral = scrawl.makeLineSpiral({
 
-    name: 'points-from-spiral',
+    name: filteredName('points-from-spiral'),
     group: filteredCanvas.get('baseName'),
     start: [200, 200],
     handle: ['center', 'center'],
@@ -68,9 +75,9 @@ const spiral = scrawl.makeLineSpiral({
 // To make show/hide for the paths (once we have more than one of them) easier
 const pathGroup = scrawl.makeGroup({
 
-    name: 'paths-group',
+    name: filteredName('paths-group'),
 
-}).addArtefacts('points-from-spiral');
+}).addArtefacts(spiral);
 
 
 // Current paths, and their shared step distance
@@ -93,15 +100,15 @@ const getPointsFromSpiral = () => {
     for (let i = step; i <= 1; i += step) {
 
         [x, y] = coord.setFromVector(spiral.getPathPositionData(i)).subtract(pos);
-// @ts-expect-error
+/** @ts-expect-error */
         points.push(Math.round(x), Math.round(y));
     }
     [x, y] = coord.setFromVector(spiral.getPathPositionData(0.00000001)).subtract(pos);
-// @ts-expect-error
+/** @ts-expect-error */
     points.push(Math.round(x), Math.round(y));
 
     [x, y] = coord.setFromVector(spiral.getPathPositionData(0.99999999)).subtract(pos);
-// @ts-expect-error
+/** @ts-expect-error */
     points.push(Math.round(x), Math.round(y));
 
     scrawl.releaseCoordinate(coord);
@@ -124,19 +131,22 @@ const updateFilterPoints = () => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Tile dimensions - radius: ${tile_radius.value}px\n    Origin offset - x: ${offset_x.value}px y: ${offset_y.value}px\n    Step along path: ${distance}\n    Spiral: radiusIncrement: ${spiralRadius.value}; radiusIncrementAdjust: ${spiralRadiusAdjust.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Tile dimensions - radius: ${dom.tile_radius.value}px
+    Origin offset - x: ${dom.offset_x.value}px, y: ${dom.offset_y.value}px
+    Step along path: ${distance}
+    Spiral: radiusIncrement: ${dom.spiral_radius.value}, radiusIncrementAdjust: ${dom.spiral_radius_adjust.value}, Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
-    name: "plain-canvas-animation",
+    name: plainName('animation'),
     target: plainCanvas,
 });
 
 scrawl.makeRender({
-    name: "filtered-canvas-animation",
+    name: filteredName('animation'),
     target: filteredCanvas,
     afterShow: report,
     afterCreated: updateFilterPoints,
@@ -144,6 +154,20 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'path_step', '50'],
+    ['input', 'offset_x', '200'],
+    ['input', 'offset_y', '200'],
+    ['input', 'tile_radius', '50'],
+    ['input', 'spiral_radius', '0.04'],
+    ['input', 'spiral_radius_adjust', '1'],
+    ['input', 'opacity', '1'],
+    ['select', 'show_path', 1],
+    ['select', 'points', 0],
+]);
+
+
 // Filter updates
 scrawl.makeUpdater({
 
@@ -173,7 +197,7 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
 
     updateFilterPoints();
 
-}, '#path-step');
+}, '#path_step');
 
 // Show or hide the paths
 scrawl.addNativeListener(['change', 'input'], (e) => {
@@ -185,14 +209,13 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
         method: (value === 'show') ? 'draw' : 'none',
     });
 
-}, '#show-path');
+}, '#show_path');
 
 // Move the paths
 scrawl.addNativeListener(['change', 'input'], () => {
 
     pathGroup.setArtefacts({
-// @ts-expect-error
-        start: [parseInt(offset_x.value, 10), parseInt(offset_y.value, 10)],
+        start: [parseInt(dom.offset_x.value, 10), parseInt(dom.offset_y.value, 10)],
     });
 
 }, '.move-paths');
@@ -201,10 +224,8 @@ scrawl.addNativeListener(['change', 'input'], () => {
 scrawl.addNativeListener(['change', 'input'], () => {
 
     spiral.set({
-// @ts-expect-error
-        radiusIncrement: parseFloat(spiralRadius.value),
-// @ts-expect-error
-        radiusIncrementAdjust: parseFloat(spiralRadiusAdjust.value),
+        radiusIncrement: parseFloat(dom.spiral_radius.value),
+        radiusIncrementAdjust: parseFloat(dom.spiral_radius_adjust.value),
     });
 
     updateFilterPoints();
@@ -212,36 +233,8 @@ scrawl.addNativeListener(['change', 'input'], () => {
 }, '.spiral-control');
 
 
-// Setup form
-const pathStep = document.querySelector('#path-step'),
-    offset_x = document.querySelector('#offset_x'),
-    offset_y = document.querySelector('#offset_y'),
-    tile_radius = document.querySelector('#tile_radius'),
-    opacity = document.querySelector('#opacity'),
-    spiralRadius = document.querySelector('#spiral-radius'),
-    spiralRadiusAdjust = document.querySelector('#spiral-radius-adjust'),
-    showPath = document.querySelector('#show-path');
-
-// @ts-expect-error
-pathStep.value = 50;
-// @ts-expect-error
-opacity.value = 1;
-// @ts-expect-error
-showPath.value = 'show';
-// @ts-expect-error
-offset_x.value = 200;
-// @ts-expect-error
-offset_y.value = 200;
-// @ts-expect-error
-tile_radius.value = 50;
-// @ts-expect-error
-spiralRadius.value = 0.04;
-// @ts-expect-error
-spiralRadiusAdjust.value = 1;
-
-
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop([plainCanvas, filteredCanvas], '#my-image-store', [plainImg, filteredImg]);
+addImageDragAndDrop([plainCanvas, filteredCanvas], `#${plainNamespace} .assets`, [plainImg, filteredImg]);
 
 
 // #### Development and testing

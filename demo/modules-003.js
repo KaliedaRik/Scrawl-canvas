@@ -17,10 +17,6 @@ import buildEntityRing from './modules/entity-ring-builder.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    compileOrder: 1,
-});
-
 
 // Namespacing boilerplate
 const namespace = 'demo';

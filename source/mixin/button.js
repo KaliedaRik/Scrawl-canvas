@@ -5,11 +5,11 @@
 
 
 // #### Imports
-import { mergeOver, Ωempty } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { makeButton } from '../factory/button.js';
 
-import { AUTOFOCUS, BLUR_ACTION, DESCRIPTION, CLICK_ACTION, DISABLED, ELEMENT_TYPE, ELEMENT_VALUE, FOCUS_ACTION, FORM, FORM_ACTION, FORM_ENCTYPE, FORM_METHOD, FORM_NOVALIDATE, FORM_TARGET, NAME, POPOVER_TARGET, POPOVER_TARGETACTION, TAB_ORDER } from '../core/shared-vars.js';
+import { AUTOFOCUS, BLUR_ACTION, DESCRIPTION, CLICK_ACTION, DISABLED, ELEMENT_TYPE, ELEMENT_VALUE, FOCUS_ACTION, FORM, FORM_ACTION, FORM_ENCTYPE, FORM_METHOD, FORM_NOVALIDATE, FORM_TARGET, NAME, POPOVER_TARGET, POPOVER_TARGETACTION, TAB_ORDER } from '../helper/shared-vars.js';
 
 
 // #### Export function

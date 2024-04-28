@@ -4,30 +4,40 @@
 // [Run code](../../demo/filters-027.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas1 = scrawl.library.canvas['canvas-1'];
-const canvas2 = scrawl.library.canvas['canvas-2'];
+const canvas1 = scrawl.findCanvas('canvas-1');
+const canvas2 = scrawl.findCanvas('canvas-2');
 
+
+// Namespacing boilerplate
+const namespace1 = canvas1.name;
+const namespace2 = canvas2.name;
+const name1 = (n) => `${namespace1}-${n}`;
+const name2 = (n) => `${namespace2}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'reducePalette',
+    name: name1('reduce-palette'),
     method: 'reducePalette',
     palette: 'black-white',
+    noiseType: 'bluenoise',
 });
 
 
 // Create the target entity
 const dithered = scrawl.makePicture({
 
-    name: 'dithered-image',
-    group: canvas1.base.name,
+    name: name1('dithered-image'),
+    group: canvas1.get('baseGroup'),
     asset: 'iris',
 
     width: '100%',
@@ -38,13 +48,13 @@ const dithered = scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['reducePalette'],
+    filters: [name1('reduce-palette')],
 });
 
 const original = dithered.clone({
 
-    name: 'original-image',
-    group: canvas2.base.name,
+    name: name2('original-image'),
+    group: canvas2.get('baseGroup'),
     filters: [],
 });
 
@@ -53,27 +63,56 @@ const original = dithered.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-// @ts-expect-error
-    return `    Commonest colors: ${commonestColors.value}\n    Minimum color distance: ${minimumColorDistance.value}\n    Opacity: ${opacity.value}`;
+    return `
+    Commonest colors: ${dom.paletteNumber.value}
+    Minimum color distance: ${dom.minimumColorDistance.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: 'animation',
     target: [canvas1, canvas2],
 });
 
 scrawl.makeRender({
 
-    name: "demo-reporter",
+    name: 'reporter',
     noTarget: true,
     afterShow: report,
 });
 
 
 // #### User interaction
+// Setup form
+const dom = initializeDomInputs([
+    ['input', 'paletteNumber', '16'],
+    ['input', 'minimumColorDistance', '1000'],
+    ['input', 'opacity', '1'],
+    ['input', 'paletteString', 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite'],
+    ['input', 'seed', 'some-random-string-or-other'],
+    ['select', 'memoizeFilterOutput', 0],
+    ['select', 'noiseType', 2],
+    ['select', 'palette', 0],
+    ['select', 'useLabForPaletteDistance', 0],
+]);
+
+
+// Handle memoizeFilterOutput input
+scrawl.addNativeListener('change', (e) => {
+
+    if (e && e.target) {
+
+        const val = (e.target.value === '0') ? false : true;
+        dithered.set({ memoizeFilterOutput: val });
+    }
+
+}, dom.memoizeFilterOutput);
+
+
+// Handle all other user input
 scrawl.makeUpdater({
 
     event: ['change'],
@@ -97,45 +136,10 @@ scrawl.makeUpdater({
     },
 });
 
-scrawl.addNativeListener('change', (e) => {
-
-    const val = (e.target.value === '0') ? false : true;
-
-    dithered.set({ memoizeFilterOutput: val });
-
-}, '#memoizeFilterOutput');
-
-
-// Setup form
-const opacity = document.querySelector('#opacity');
-const minimumColorDistance = document.querySelector('#minimumColorDistance');
-const commonestColors = document.querySelector('#paletteNumber');
-
-// @ts-expect-error
-opacity.value = 1;
-// @ts-expect-error
-minimumColorDistance.value = 1000;
-// @ts-expect-error
-commonestColors.value = 10;
-
-// @ts-expect-error
-document.querySelector('#palette').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#paletteString').value = 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite';
-// @ts-expect-error
-document.querySelector('#paletteNumber').value = 16;
-// @ts-expect-error
-document.querySelector('#seed').value = 'some-random-string-or-other';
-// @ts-expect-error
-document.querySelector('#noiseType').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#useLabForPaletteDistance').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop([canvas1, canvas2], '#my-image-store', [dithered, original]);
+addImageDragAndDrop([canvas1, canvas2], `#${namespace2} .assets`, [dithered, original]);
 
 
 // #### Development and testing

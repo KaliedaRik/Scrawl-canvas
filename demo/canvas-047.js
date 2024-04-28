@@ -7,20 +7,29 @@ import * as scrawl from '../source/scrawl.js';
 import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
-const easingDisplayComponent = function (name, ypos) {
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+const easingDisplayComponent = function (easing, ypos) {
+
+    const name = (n) => `${namespace}-${easing}-${n}`;
 
     const color = scrawl.makeColor({
-        name: `${name}-color`,
-        easing: name,
+
+        name: name('color'),
+        easing,
         minimumColor: 'red',
         maximumColor: 'green',
     });
 
     scrawl.makeLine({
-        name: `${name}-line`,
+
+        name: name('line'),
         startX: 122,
         startY: ypos + 12,
         endX: 752,
@@ -28,8 +37,9 @@ const easingDisplayComponent = function (name, ypos) {
         method: 'draw',
     });
 
-    const wheel = scrawl.makeWheel({
-        name: `${name}-wheel`,
+    scrawl.makeWheel({
+
+        name: name('bead'),
         radius: 12,
         startX: 110,
         startY: ypos,
@@ -37,16 +47,19 @@ const easingDisplayComponent = function (name, ypos) {
         fillStyle: color.getRangeColor(0),
     });
 
-    scrawl.makePhrase({
-        name: `${name}-label`,
-        text: name,
+    scrawl.makeLabel({
+
+        name: name('label'),
+        text: easing,
+        accessibleText: 'Example of §',
         startX: 10,
         startY: ypos + 6,
     });
 
     scrawl.makeTween({
-        name: `${name}-move-tween`,
-        targets: wheel,
+
+        name: name('move-tween'),
+        targets: name('bead'),
         duration: 8000,
         cycles: 0,
         reverseOnCycleEnd: true,
@@ -55,14 +68,15 @@ const easingDisplayComponent = function (name, ypos) {
                 attribute: 'startX',
                 start: 110,
                 end: 740,
-                engine: name,
+                engine: easing,
             },
         ],
     }).run();
 
     scrawl.makeTween({
-        name: `${name}-color-tween`,
-        targets: wheel,
+
+        name: name('color-tween'),
+        targets: name('bead'),
         duration: 8000,
         cycles: 0,
         reverseOnCycleEnd: true,
@@ -90,7 +104,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

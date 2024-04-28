@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="../canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="../canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="../canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="../canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="../canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="../canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="../canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="../canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="../canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="../canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="../canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="../canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -1005,11 +1025,6 @@
                 </a>
               
                 
-                <a class="source" href="text-snippet-helper.html">
-                  ./demo/snippets/text-snippet-helper.js
-                </a>
-              
-                
                 <a class="source" href="word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
                 </a>
@@ -1070,7 +1085,7 @@
 
     artefacts {
         trackLine     <span class="hljs-comment">// Shape entity</span>
-        label         <span class="hljs-comment">// Phrase entity</span>
+        label         <span class="hljs-comment">// Label entity</span>
     }
 
     assets {
@@ -1168,7 +1183,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> color = styles.<span class="hljs-property">color</span> || <span class="hljs-string">&#x27;black&#x27;</span>,
-            font = styles.<span class="hljs-property">font</span> || <span class="hljs-string">`<span class="hljs-subst">${(styles.fontStyle != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(styles.fontVariant != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${styles.fontSize}</span> <span class="hljs-subst">${styles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
+            fontString = styles.<span class="hljs-property">font</span> || <span class="hljs-string">`<span class="hljs-subst">${(styles.fontStyle !== <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(styles.fontVariant !== <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${styles.fontSize}</span> <span class="hljs-subst">${styles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
 
         canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
@@ -1243,15 +1258,23 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>The phrase entity that will display the text</p>
+              <p>The EnhancedLabel entity that will display the text</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> label = scrawl.<span class="hljs-title function_">makePhrase</span>({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> label = scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-label`</span>,
+            <span class="hljs-attr">text</span>: <span class="hljs-string">`Hello - <span class="hljs-subst">${setClickText()}</span>`</span>,
+            fontString,
+            <span class="hljs-attr">fillStyle</span>: color,
 
-            <span class="hljs-attr">text</span>: <span class="hljs-string">`Hello - <span class="hljs-subst">${setClickText()}</span>`</span>,</pre></div></div>
+            <span class="hljs-attr">layoutTemplate</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-line`</span>,
+            <span class="hljs-attr">useLayoutTemplateAsPath</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
+
+            <span class="hljs-attr">textHandleY</span>: <span class="hljs-string">&#x27;bottom&#x27;</span>,
+        });</pre></div></div>
             
         </li>
         
@@ -1262,30 +1285,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Use the font set on the DOM element via CSS</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            font,
-            <span class="hljs-attr">fillStyle</span>: color,
-
-            <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;68%&#x27;</span>,
-
-            <span class="hljs-attr">textPath</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-line`</span>,
-            <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">textPathLoop</span>: <span class="hljs-literal">false</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Animate the phrase entity along the line when button element is clicked</p>
+              <p>Animate the label entity along the line when button element is clicked</p>
 
             </div>
             
@@ -1295,7 +1295,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <span class="hljs-attr">targets</span>: label,
             <span class="hljs-attr">definitions</span>: [
                 {
-                    <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;textPathPosition&#x27;</span>,
+                    <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;pathPosition&#x27;</span>,
                     <span class="hljs-attr">start</span>: <span class="hljs-number">1</span>,
                     <span class="hljs-attr">end</span>: <span class="hljs-number">0</span>,
                     <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeIn&#x27;</span>
@@ -1312,11 +1312,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Animate the gradient for the Line the text moves along</p>
 
@@ -1348,13 +1348,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Increase the local counter; update the Phrase entity with new text</p>
+              <p>Increase the local counter; update the Label entity with new text</p>
 
             </div>
             
@@ -1367,11 +1367,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Both tweens need to halt and restart if user clicks on them while they are running</p>
 

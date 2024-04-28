@@ -6,12 +6,17 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Canvas 007</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
     }
     img {
       display: none;
@@ -21,6 +26,10 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="canvas-006.html">&larr; Previous</a>
+    <a href="canvas-008.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 007</h1>
   <h2>Apply filters at the entity, group and cell level</h2>
 
@@ -94,6 +103,7 @@
         <option value="block2">block2</option>
         <option value="wheel1">wheel1</option>
         <option value="wheel2">wheel2</option>
+        <option value="words">words</option>
         <option value="group">group</option>
         <option value="cell">cell</option>
       </select>
@@ -109,23 +119,22 @@
     data-base-background-color="beige"
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create and clone block and wheel entitys with no name attribute, and dimensions in %strings</li>
-      <li>Create a selection of filters for testing</li>
+      <li>Create and clone Block and Wheel entitys; create an EnhancedLabel entity</li>
+      <li>Create a selection of filters, including compound filters (blend, compose, displace, drop shadow, border) for testing</li>
       <li>Check that the selected filter applies correctly to the selected entity only</li>
       <li>Make sure the filter correctly covers animated entitys (when selected), and no other part of the canvas</li>
-      <li>Check that when the filter is applied to the group, all entitys (but not the cell) are affected</li>
+      <li>Check that when the filter is applied to the group, all entitys (but not the cell) are affected; drop shadow and border filters should outline the group of entitys, not each entity individually</li>
       <li>Check that when the filter is applied to the cell, the entire canvas is affected</li>
     </ul>
 
     <h4>Notes</h4>
     <ul>
-      <li>The gray areas when chroma filter is applied at the group level is expected behaviour - all entitys get filtered at the same time, thus when a pixel is removed the underlying color will be the cell's background color</li>
-      <li>The blur filter is generally much slower than other filters. Unless we specifically need some of the additional features offered by the blur filter, use gaussianBlur instead.</li>
+      <li>The (legacy) blur filter is generally much slower than other filters. Unless we specifically need some of the additional features offered by the blur filter, use gaussianBlur instead.</li>
       <li>Other slower filters include matrix5, reducePalette.</li>
     </ul>
 

@@ -4,39 +4,38 @@
 // [Run code](../../demo/filters-501.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Import the initial image used by the Picture entity
 scrawl.importDomImage('.flowers');
 
 
 // Create the target entitys
 const piccy = scrawl.makePicture({
 
-    name: 'base-piccy',
-
+    name: name('image'),
     asset: 'iris',
-
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 });
 
-const text = scrawl.makePhrase({
+const text = scrawl.makeLabel({
 
-    name: 'demo-text',
+    name: name('demo-text'),
     text: 'Hello world',
-    font: 'bold 70px sans-serif',
+    fontString: 'bold 70px sans-serif',
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    lineHeight: 0.5,
     fillStyle: 'aliceblue',
     strokeStyle: 'red',
     lineWidth: 3,
@@ -52,7 +51,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: "demo-animation",
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -80,7 +79,14 @@ scrawl.makeRender({
 let filterTarget = piccy,
     filterString = 'none';
 
-// Setup form functionality
+
+// Setup form
+initializeDomInputs([
+    ['select', 'filter', 0],
+    ['select', 'target', 0],
+]);
+
+
 const updateTarget = (e) => {
 
     e.preventDefault();
@@ -95,14 +101,16 @@ const updateTarget = (e) => {
         canvas.setBase({ filter: 'none'});
 
         if (val === 'picture') filterTarget = piccy;
-// @ts-expect-error
-        else if (val === 'phrase') filterTarget = text;
-        else if (val === 'cell') filterTarget = canvas.base;
+/** @ts-expect-error */
+        else if (val === 'label') filterTarget = text;
+/** @ts-expect-error */
+        else if (val === 'cell') filterTarget = canvas.getBase();
 
         filterTarget.set({ filter: filterString });
     }
 };
 scrawl.addNativeListener(['input', 'change'], updateTarget, '#target');
+
 
 const updateFilter = (e) => {
 
@@ -117,10 +125,9 @@ const updateFilter = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
-// @ts-expect-error
-document.querySelector('#filter').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#target').options.selectedIndex = 0;
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

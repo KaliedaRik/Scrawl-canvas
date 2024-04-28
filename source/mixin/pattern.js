@@ -6,11 +6,11 @@
 
 
 // #### Imports
-import { isa_number, mergeOver, Ωempty } from '../core/utilities.js';
+import { isa_number, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { cell } from '../core/library.js';
 
-import { _isArray, _A, _B, _C, _D, _E, _F, BLANK, MAT_POS, MAT_REPEAT, REPEAT, T_CELL, T_NOISE } from '../core/shared-vars.js';
+import { _isArray, _A, _B, _C, _D, _E, _F, BLANK, MAT_POS, MAT_REPEAT, REPEAT, T_CELL, T_NOISE } from '../helper/shared-vars.js';
 
 // #### Export function
 export default function (P = Ωempty) {
@@ -49,7 +49,8 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    const S = P.setters;
+    const S = P.setters,
+        G = P.getters;
 
 // __repeat__
     S.repeat = function (item) {
@@ -58,10 +59,16 @@ export default function (P = Ωempty) {
         else this.repeat = this.defs.repeat;
     };
 
+// `checkMatrixExists` - internal helper function
+    P.checkMatrixExists = function () {
+
+        if (!this.patternMatrix) this.patternMatrix = new DOMMatrix();
+    };
+
 // `updateMatrixNumber` - internal helper function
     P.updateMatrixNumber = function (item, pos) {
 
-        if (!this.patternMatrix) this.patternMatrix = new DOMMatrix();
+        this.checkMatrixExists();
 
         item = (item.substring) ? parseFloat(item) : item;
 
@@ -85,6 +92,27 @@ export default function (P = Ωempty) {
     S.stretchY = function (item) { this.updateMatrixNumber(item, _D); };
     S.shiftX = function (item) { this.updateMatrixNumber(item, _E); };
     S.shiftY = function (item) { this.updateMatrixNumber(item, _F); };
+
+// `retrieveMatrixNumber` - internal helper function
+    P.retrieveMatrixNumber = function (pos) {
+
+        this.checkMatrixExists();
+        return this.patternMatrix[pos];
+    };
+
+    G.matrixA = function () { return this.retrieveMatrixNumber(_A); };
+    G.matrixB = function () { return this.retrieveMatrixNumber(_B); };
+    G.matrixC = function () { return this.retrieveMatrixNumber(_C); };
+    G.matrixD = function () { return this.retrieveMatrixNumber(_D); };
+    G.matrixE = function () { return this.retrieveMatrixNumber(_E); };
+    G.matrixF = function () { return this.retrieveMatrixNumber(_F); };
+
+    G.stretchX = function () { return this.retrieveMatrixNumber(_A); };
+    G.skewY = function () { return this.retrieveMatrixNumber(_B); };
+    G.skewX = function () { return this.retrieveMatrixNumber(_C); };
+    G.stretchY = function () { return this.retrieveMatrixNumber(_D); };
+    G.shiftX = function () { return this.retrieveMatrixNumber(_E); };
+    G.shiftY = function () { return this.retrieveMatrixNumber(_F); };
 
 // __patternMatrix__ - the argument must be an Array containing 6 Number elements in the form of `[a, b, c, d, e, f]`
     S.patternMatrix = function (item) {
@@ -118,7 +146,7 @@ export default function (P = Ωempty) {
             const repeat = this.repeat,
                 engine = mycell.engine;
 
-            if (this.type == T_CELL || this.type == T_NOISE) {
+            if (this.type === T_CELL || this.type === T_NOISE) {
 
                 source = this.element;
                 loaded = true;

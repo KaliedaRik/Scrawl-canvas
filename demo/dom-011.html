@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo DOM 011</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -15,12 +16,25 @@
     }
     #mystack {
       touch-action: none;
+      border: 0;
+      box-shadow: 0px 0px 0px 1px black;
+      margin: 1em auto;
+      overflow: hidden;
+      resize: both;
+      background-color: red;
+    }
+    #mycanvas {
+      background-color: yellow;
     }
   </style>
 
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="dom-010.html">&larr; Previous</a>
+    <a href="dom-012.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 011</h1>
   <h2>Canvas controller 'fit' attribute; Cell positioning (mouse)</h2>
 
@@ -43,6 +57,14 @@
     <div class="yellow">Height: <input class="controlItem" id="height" type="range" value="400" min="200" max="1000" step="10" />
     </div>
 
+    <div class="pink label">Cell set rel dims using base</div>
+    <div class="pink">
+        <select class="controlItem" id="setRelativeDimensionsUsingBase">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
   </div>
 
   <div id="mystack" data-scrawl-stack>
@@ -52,20 +74,37 @@
       data-is-responsive="true" 
       data-base-width="800" 
       data-base-height="600" 
-      data-base-background-color="lightblue"
+      data-base-background-color="honeydew"
       data-fit="fill"
     ></canvas>
   </div>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
+
+    <p>We set up a Scrawl-canvas Stack artefact (a &lt;div> element) in HTML, whose dimensions can be controlled by the user. The element is given a red background color, and initial dimensions of 400px by 400px. Within the Stack, we include a &lt;canvas> element and mark it as responsive, so its dimensions will always match its parent Stack element's dimensions. This canvas has a yellow background color, set via CSS.</p>
+
+    <p>We set the canvas element's base canvas (which is not part of the DOM) to have fixed dimensions (800px by 600px) and tell the canvas to fit its base canvas into itself using the 'fill' algorithm. The user can change the fit parameter to other algorithms ('cover', 'contain', 'none'). The base canvas is given a background color of light green via the &lt;canvas> element's `data-base-background-color` attribute.</p>
+
+    <p>Finally we add a non-base Cell to the canvas. This has relative dimensions of 50% by 50%, scaled by a factor of 1.1 and rotated 10deg. The non-base Cell will initially calculate its dimensions relative to the display canvas's dimensions; the user can change this by updating the Cell's `setRelativeDimensionsToBase` attribute to `true`. The Cell has a background color of dark blue.</p>
     <ul>
-      <li>Check that the canvas completely fills the stack's dimensions on initial display</li>
-      <li>Check the various fit modes by which the base (hidden) canvas can be copied over to its display canvas</li>
-      <li>Check the canvas responds to changes in its container stack's dimensions, with no flickering as the dimensions change</li>
-      <li>Check that the darker blue 'cell' canvas correctly tracks the mouse cursor when it hovers over the stack element, with no errors in positioning whatever the setting of the canvas object's 'fit' attribute</li>
+      <li>Check that the display canvas completely fills the stack's dimensions at all times; at no point should we see the stack element's red background color.</li>
+      <li>Resize the stack to check that the base canvas fits as expected into the display canvas. As the user resizes the stack, the canvas should display with no discernable flicker:</li>
+      <ul>
+        <li><b>Fill algorithm:</b> the display should show a light green background at all times. The blue box will disappear at the smallest stack width and/or height.</li>
+        <li><b>None algorithm:</b> the display should show a light green background at smaller stack dimensions, but at dimensions above 800px by 600px the green box will appear centered, surrounded by yellow. In contrast to the 'fill' algorithm, the blue box will not disappear at the smallest dimensions.</li>
+        <li><b>Cover algorithm:</b> the display should show a light green background at all times. The blue box will appear to be smaller than its equivalent in the 'none' algorithm at smaller stack dimensions, and larger at larger stack dimensions.</li>
+        <li><b>Contain algorithm:</b> the display will include yellow borders (either top-bottom, or left-right) at almost all stack dimensions, and the green box will always have a constant 3:2 aspect ratio.</li>
+      </ul>
+      <li>While resizing the stack, check that the non-base cell's dimensions adapt as expected:</li>
+      <ul>
+        <li>At the start, the blue box should grow-shrink its dimensions to match (in proportion) those of the stack  / responsive canvas.</li>
+        <li>After the user updates the non-base cell's `setRelativeDimensionsUsingBase` attribute to `true`, the blue box should stop responding to changes in the stack's dimensions when using the 'none' fit, and will grow-shrink in line with the green box's (apparent) dimensions - most easily seen in the 'contain' fit.</li>
+      </ul>
+      <li>Check that the cell correctly tracks the mouse cursor when the user hovers it over the stack element, with no errors in positioning whatever the setting of the canvas object's 'fit' attribute</li>
+      <li>Drag the browser between screens with different resolutions (eg: retina vs non-retina displays). The display should appear the same on both screens for all the above tests.</li>
     </ul>
 
     <p>See <a href="canvas-036.html">Demo Canvas-036</a> for additional Cell functionality tests.</p>

@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Scrawl-canvas Documentation</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link rel="stylesheet" media="all" href="docco.css" />
   <style>
     body {
@@ -56,9 +57,6 @@
       <li>library.world</li>
     </ul>
     <ul>
-      <li>library.sectionClasses</li>
-    </ul>
-    <ul>
       <li>library.purge()</li>
     </ul>
   </ul>
@@ -73,7 +71,7 @@
       <li>render</li>
     </ul>
     <li><a href="source/core/document.html">core/document.js</a></li>
-    <li><a href="source/core/document-root-elements.html">core/document-root-elements.js</a></li>
+    <li><a href="source/helper/document-root-elements.html">helper/document-root-elements.js</a></li>
     <li><a href="source/core/events.html">core/events.js</a></li>
     <ul>
       <li>addListener</li>
@@ -126,10 +124,6 @@
     <ul>
       <li>makeCrescent</li>
     </ul>
-    <li><a href="source/factory/phrase.html">factory/phrase.js</a></li>
-    <ul>
-      <li>makePhrase</li>
-    </ul>
     <li><a href="source/factory/picture.html">factory/picture.js</a></li>
     <ul>
       <li>makePicture</li>
@@ -140,11 +134,25 @@
     </ul>
   </ul>
 
+  <h4>Canvas text entity artefacts</h4>
+  <ul>
+    <li><a href="source/mixin/text.html">mixin/text.js</a></li>
+    <li><a href="source/untracked-factory/text-style.html">untracked-factory/text-style.js</a></li>
+    <li><a href="source/factory/enhancedLabel.html">factory/enhancedLabel.js</a></li>
+    <ul>
+      <li>makeEnhancedLabel</li>
+    </ul>
+    <li><a href="source/factory/label.html">factory/label.js</a></li>
+    <ul>
+      <li>makeLabel</li>
+    </ul>
+  </ul>
+
   <h4>Canvas path-based entity artefacts</h4>
   <ul>
     <li><a href="source/mixin/shape-basic.html">mixin/shape-basic.js</a></li>
     <li><a href="source/mixin/shape-curve.html">mixin/shape-curve.js</a></li>
-    <li><a href="source/mixin/shape-path-calculation.html">mixin/shape-path-calculation.js</a></li>
+    <li><a href="source/helper/shape-path-calculation.html">helper/shape-path-calculation.js</a></li>
     <li><a href="source/factory/bezier.html">factory/bezier.js</a></li>
     <ul>
       <li>makeBezier</li>
@@ -241,8 +249,9 @@
       <li>getCanvas</li>
       <li>setCurrentCanvas</li>
     </ul>
+    <li><a href="source/mixin/cell-key-functions.html">mixin/cell-key-functions.js</a></li>
     <li><a href="source/factory/cell.html">factory/cell.js</a></li>
-    <li><a href="source/factory/cell-fragment.html">factory/cell-fragment.js</a></li>
+    <li><a href="source/untracked-factory/cell-fragment.html">untracked-factory/cell-fragment.js</a></li>
     <li><a href="source/factory/element.html">factory/element.js</a></li>
     <ul>
       <li>makeElement</li>
@@ -259,7 +268,7 @@
     <li><a href="source/mixin/asset.html">mixin/asset.js</a></li>
     <li><a href="source/mixin/asset-consumer.html">mixin/asset-consumer.js</a></li>
     <li><a href="source/mixin/asset-advanced-functionality.html">mixin/asset-advanced-functionality.js</a></li>
-    <li><a href="source/factory/image-asset.html">factory/image-asset.js</a></li>
+    <li><a href="source/asset/image-asset.html">asset/image-asset.js</a></li>
     <ul>
       <li>importImage</li>
       <li>importDomImage</li>
@@ -269,23 +278,23 @@
       <li>createImageFromEntity</li>
       <li>createImageFromGroup</li>
     </ul>
-    <li><a href="source/factory/noise-asset.html">factory/noise-asset.js</a> (for Perlin noise, etc)</li>
+    <li><a href="source/asset/noise-asset.html">asset/noise-asset.js</a> (for Perlin noise, etc)</li>
     <ul>
       <li>makeNoiseAsset</li>
     </ul>
-    <li><a href="source/factory/raw-asset.html">factory/raw-asset.js</a></li>
+    <li><a href="source/asset/raw-asset.html">asset/raw-asset.js</a></li>
     <ul>
       <li>makeRawAsset</li>
     </ul>
-    <li><a href="source/factory/reaction-diffusion-asset.html">factory/reaction-diffusion-asset.js</a></li>
+    <li><a href="source/asset/reaction-diffusion-asset.html">asset/reaction-diffusion-asset.js</a></li>
     <ul>
       <li>makeReactionDiffusionAsset</li>
     </ul>
-    <li><a href="source/factory/sprite-asset.html">factory/sprite-asset.js</a></li>
+    <li><a href="source/asset/sprite-asset.html">asset/sprite-asset.js</a></li>
     <ul>
       <li>importSprite</li>
     </ul>
-    <li><a href="source/factory/video-asset.html">factory/video-asset.js</a></li>
+    <li><a href="source/asset/video-asset.html">asset/video-asset.js</a></li>
     <ul>
       <li>importDomVideo</li>
       <li>importMediaStream</li>
@@ -311,7 +320,7 @@
     <ul>
       <li>makeGradient</li>
     </ul>
-    <li><a href="source/factory/palette.html">factory/palette.js</a></li>
+    <li><a href="source/untracked-factory/palette.html">untracked-factory/palette.js</a></li>
     <li><a href="source/factory/pattern.html">factory/pattern.js</a></li>
     <ul>
       <li>makePattern</li>
@@ -329,7 +338,8 @@
     <ul>
       <li>makeFilter</li>
     </ul>
-    <li><a href="source/factory/filter-engine.html">factory/filter-engine.js</a></li>
+    <li><a href="source/helper/filter-engine.html">helper/filter-engine.js</a></li>
+    <li><a href="source/helper/filter-engine-bluenoise-data.html">helper/filter-engine-bluenoise-data.js</a></li>
   </ul>
 
   <h4>Particles and Physics</h4>
@@ -339,7 +349,7 @@
     <ul>
       <li>makeForce</li>
     </ul>
-    <li><a href="source/factory/particle-history.html">factory/particle-history.js</a></li>
+    <li><a href="source/untracked-factory/particle-history.html">untracked-factory/particle-history.js</a></li>
     <li><a href="source/factory/particle-spring.html">factory/particle-spring.js</a></li>
     <ul>
       <li>makeSpring</li>
@@ -376,6 +386,7 @@
     </ul>
   </ul>
   <ul>
+    <li><a href="source/mixin/tween.html">mixin/tween.js</a></li>
     <li><a href="source/factory/action.html">factory/action.js</a></li>
     <ul>
       <li>makeAction</li>
@@ -396,20 +407,20 @@
     <li><a href="source/factory/anchor.html">factory/anchor.js</a></li>
     <li><a href="source/mixin/button.html">mixin/button.js</a></li>
     <li><a href="source/factory/button.html">factory/button.js</a></li>
-    <li><a href="source/mixin/hiddenDomElements.html">mixin/hiddenDomElements.js</a></li>
+    <li><a href="source/mixin/hidden-dom-elements.html">mixin/hidden-dom-elements.js</a></li>
   </ul>
 
   <h4>User interaction</h4>
   <ul>
-    <li><a href="source/factory/drag-zone.html">factory/drag-zone.js</a></li>
+    <li><a href="source/untracked-factory/drag-zone.html">untracked-factory/drag-zone.js</a></li>
     <ul>
       <li>makeDragZone</li>
     </ul>
-    <li><a href="source/factory/keyboard-zone.html">factory/keyboard-zone.js</a></li>
+    <li><a href="source/untracked-factory/keyboard-zone.html">untracked-factory/keyboard-zone.js</a></li>
     <ul>
       <li>makeKeyboardZone</li>
     </ul>
-    <li><a href="source/factory/observe-update.html">factory/observe-update.js</a></li>
+    <li><a href="source/untracked-factory/observe-update.html">untracked-factory/observe-update.js</a></li>
     <ul>
       <li>makeUpdater</li>
       <li>observeAndUpdate</li>
@@ -428,35 +439,34 @@
 
   <h4>Other modules</h4>
   <ul>
-    <li><a href="source/core/random-seed.html">core/random-seed.js</a></li>
+    <li><a href="source/helper/random-seed.html">helper/random-seed.js</a></li>
     <ul>
       <li>seededRandomNumberGenerator</li>
     </ul>
-    <li><a href="source/core/shared-vars.html">core/shared-vars.js</a></li>
-    <li><a href="source/core/system-flags.html">core/system-flags.js</a></li>
-    <li><a href="source/core/utilities.html">core/utilities.js</a></li>
-    <li><a href="source/core/workstore.html">core/workstore.js</a></li>
+    <li><a href="source/helper/shared-vars.html">helper/shared-vars.js</a></li>
+    <li><a href="source/helper/system-flags.html">helper/system-flags.js</a></li>
+    <li><a href="source/helper/utilities.html">helper/utilities.js</a></li>
+    <li><a href="source/helper/workstore.html">helper/workstore.js</a></li>
     <ul>
       <li>setFilterMemoizationChoke</li>
       <li>setWorkstoreLifetimeLength</li>
       <li>setWorkstorePurgeChoke</li>
     </ul>
-    <li><a href="source/factory/array-pool.html">factory/array-pool.js</a></li>
-    <li><a href="source/factory/font-attributes.html">factory/font-attributes.js</a></li>
-    <li><a href="source/factory/state.html">factory/state.js</a></li>
+    <li><a href="source/helper/array-pool.html">helper/array-pool.js</a></li>
+    <li><a href="source/untracked-factory/state.html">untracked-factory/state.js</a></li>
   </ul>
   <ul>
-    <li><a href="source/factory/coordinate.html">factory/coordinate.js</a></li>
+    <li><a href="source/untracked-factory/coordinate.html">untracked-factory/coordinate.js</a></li>
     <ul>
       <li>requestCoordinate</li>
       <li>releaseCoordinate</li>
     </ul>
-    <li><a href="source/factory/quaternion.html">factory/quaternion.js</a></li>
+    <li><a href="source/untracked-factory/quaternion.html">untracked-factory/quaternion.js</a></li>
     <ul>
       <li>requestQuaternion</li>
       <li>releaseQuaternion</li>
     </ul>
-    <li><a href="source/factory/vector.html">factory/vector.js</a></li>
+    <li><a href="source/untracked-factory/vector.html">untracked-factory/vector.js</a></li>
     <ul>
       <li>requestVector</li>
       <li>releaseVector</li>
@@ -482,13 +492,11 @@
     <li><a href="demo/canvas-012.html">Canvas-012</a> Shape entity position; shape entity as a path for other artefacts to follow</li>
     <li><a href="demo/canvas-013.html">Canvas-013</a> Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog</li>
     <li><a href="demo/canvas-014.html">Canvas-014</a> Line, Quadratic and Bezier entitys - control lock alternatives</li>
-    <li><a href="demo/canvas-015.html">Canvas-015</a> Phrase entity (make, clone, method, multiline)</li>
-    <li><a href="demo/canvas-015a.html">Canvas-015a</a> Phrase entity - cache output to improve render speeds</li>
-    <li><a href="demo/canvas-016.html">Canvas-016</a> Phrase entity position and font attributes; Block mimic functionality</li>
-    <li><a href="demo/canvas-017.html">Canvas-017</a> Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality</li>
-    <li><a href="demo/canvas-018.html">Canvas-018</a> Phrase entity - text along a path</li>
-    <li><a href="demo/canvas-019.html">Canvas-019</a> Gradient and Color factories - transparency</li>
-    <li><a href="demo/canvas-019a.html">Canvas-019a</a> Gradient and Color factories - transparency - alternative approach using Cells instead of images</li>
+    <li><a href="demo/canvas-015.html">Canvas-015</a> CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()</li>
+    <li><a href="demo/canvas-016.html">Canvas-016</a> CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz</li>
+    <li><a href="demo/canvas-017.html">Canvas-017</a> Gradients stress test</li>
+    <li><a href="demo/canvas-018.html">Canvas-018</a> Gradient and Color factories - transparency</li>
+    <li><a href="demo/canvas-019.html">Canvas-019</a> Gradient and Color factories - transparency - alternative approach using Cells instead of images</li>
     <li><a href="demo/canvas-020.html">Canvas-020</a> Testing createImageFromXXX functionality</li>
     <li><a href="demo/canvas-021.html">Canvas-021</a> Import and use spritesheets</li>
     <li><a href="demo/canvas-022.html">Canvas-022</a> Grid entity - basic functionality (color, gradients)</li>
@@ -496,9 +504,9 @@
     <li><a href="demo/canvas-024.html">Canvas-024</a> Loom entity functionality</li>
     <li><a href="demo/canvas-025.html">Canvas-025</a> Various responsive and non-responsive canvases; responsive images</li>
     <li><a href="demo/canvas-026.html">Canvas-026</a> Tower of Hanoi</li>
-    <li><a href="demo/canvas-027.html">Canvas-027</a> Video control and manipulation; chroma-based hit zone</li>
+    <li><a href="demo/canvas-027.html">Canvas-027</a> Video control and manipulation; filter-based hit zone</li>
     <li><a href="demo/canvas-028.html">Canvas-028</a> Image magnifier; test some composite operations</li>
-    <li><a href="demo/canvas-029.html">Canvas-029</a> Phrase entitys and gradients</li>
+    <li><a href="demo/canvas-029.html">Canvas-029</a> Image smoothing</li>
     <li><a href="demo/canvas-030.html">Canvas-030</a> Polyline entity functionality</li>
     <li><a href="demo/canvas-031.html">Canvas-031</a> Cell generation and processing order - kaliedoscope clock</li>
     <li><a href="demo/canvas-032.html">Canvas-032</a> Freehand drawing</li>
@@ -521,20 +529,27 @@
     <li><a href="demo/canvas-049.html">Canvas-049</a> Conic gradients</li>
     <li><a href="demo/canvas-050.html">Canvas-050</a> Manipulate artefact delta animation values; test animation maxFrameRate</li>
     <li><a href="demo/canvas-051.html">Canvas-051</a> Line Spirals</li>
-    <li><a href="demo/canvas-052.html">Canvas-052</a> Create and use a RawAsset object to modify an image asset</li>
+    <li><a href="demo/canvas-052.html">Canvas-052</a> Noise asset functionality</li>
     <li><a href="demo/canvas-053.html">Canvas-053</a> Display output from a Reaction-Diffusion asset</li>
     <li><a href="demo/canvas-054.html">Canvas-054</a> Animated contour lines: map a complex gradient to NoiseAsset output</li>
     <li><a href="demo/canvas-055.html">Canvas-055</a> Crescent entity functionality</li>
     <li><a href="demo/canvas-056.html">Canvas-056</a> Seeded random number generator; point on path</li>
-    <li><a href="demo/canvas-057.html">Canvas-057</a> CSS color space strings - srgb, srgb-linear, display-p3, a98-rgb, prophoto-rgb, rec2020, xyz-d50, xyz-d65, xyz</li>
-    <li><a href="demo/canvas-058.html">Canvas-058</a> Image smoothing</li>
-    <li><a href="demo/canvas-059.html">Canvas-059</a> CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklab(), oklch()</li>
-    <li><a href="demo/canvas-060.html">Canvas-060</a> Noise asset functionality</li>
-    <li><a href="demo/canvas-061.html">Canvas-061</a> Gradients stress test</li>
-    <li><a href="demo/canvas-062.html">Canvas-062</a> Group and ungroup entitys; create a bespoke drag-drop UX</li>
-    <li><a href="demo/canvas-063.html">Canvas-063</a> Semi-accessible Minimap; multiple drag zones</li>
-    <li><a href="demo/canvas-064.html">Canvas-064</a> Animation object: gradient along a line</li>
-    <li><a href="demo/canvas-065.html">Canvas-065</a> Wide Gamut 2D Graphics using HTML Canvas</li>
+    <li><a href="demo/canvas-057.html">Canvas-057</a> Create and use a RawAsset object to modify an image asset</li>
+    <li><a href="demo/canvas-058.html">Canvas-058</a> Group and ungroup entitys; create a bespoke drag-drop UX</li>
+    <li><a href="demo/canvas-059.html">Canvas-059</a> Semi-accessible Minimap; multiple drag zones</li>
+    <li><a href="demo/canvas-060.html">Canvas-060</a> Wide Gamut 2D Graphics using HTML Canvas</li>
+
+    <li><a href="demo/canvas-201.html">Canvas-201</a> Label entity (make, clone, method); Label accessible text</li>
+    <li><a href="demo/canvas-202.html">Canvas-202</a> Label entity - basic support for non-western fonts</li>
+    <li><a href="demo/canvas-203.html">Canvas-203</a> Label entity - underline text</li>
+    <li><a href="demo/canvas-204.html">Canvas-204</a> Label entity - gradients and patterns</li>
+    <li><a href="demo/canvas-205.html">Canvas-205</a> Label entity - updating font parts; experiments with variable font</li>
+    <li><a href="demo/canvas-206.html">Canvas-206</a> EnhancedLabel entity - basic multiline text</li>
+    <li><a href="demo/canvas-207.html">Canvas-207</a> EnhancedLabel entity - styling multiline text</li>
+    <li><a href="demo/canvas-208.html">Canvas-208</a> EnhancedLabel entity - text along a path</li>
+    <li><a href="demo/canvas-209.html">Canvas-209</a> EnhancedLabel - clone entity, drag-drop; shadows, gradients and patterns</li>
+    <li><a href="demo/canvas-210.html">Canvas-210</a> EnhancedLabel - TextUnit dynamic manipulation</li>
+    <li><a href="demo/canvas-211.html">Canvas-211</a> EnhancedLabel entity - keyboard navigation; hit tests</li>
   </ul>
 
   <h4>Filters demos</h4>

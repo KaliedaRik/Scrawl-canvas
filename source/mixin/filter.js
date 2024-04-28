@@ -2,21 +2,16 @@
 // The filter mixin adds functionality to Cell, Group and all entity factories which allows those objects to use Scrawl-canvas [Filter objects](../factory/filter.html) in their output.
 
 
-// #### Demos:
-// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
-
-
 // #### Imports
 import { asset, filter, styles } from '../core/library.js';
 
-import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Export function
@@ -37,7 +32,7 @@ export default function (P = Ωempty) {
         isStencil: false,
 
 // __memoizeFilterOutput__ - SC uses memoization as a means to enhance the speed of filter application. When an entity has filters sety on it, and the `memoizeFilterOutput` flag is set to `true`, the filter engine will cache the generated output after its first run and, for subsequent Display cycles, serve up the cached result rather than perform the filter calculations again. Things to note:
-// + Entitys will automatically request their filters to recalculate and re-memoize after any start, handle, offset, scale, rotation or flip change. They also request re-memoization when other attributes change, for instance: dimensions, fill or stroke styles, line parameters, font or text updates (Phrase), etc.
+// + Entitys will automatically request their filters to recalculate and re-memoize after any start, handle, offset, scale, rotation or flip change. They also request re-memoization when other attributes change, for instance: dimensions, fill or stroke styles, line parameters, font or text updates, etc.
 // + Re-memoization is also triggered by any changes to the entity's `filters` array, or when the attributes of a filter in the array update.
 // + Memoization is limited to entitys (not Groups or Cells). If the `isStencil` flag is set to `true` the `memoizeFilterOutput` flag is ignored.
 // + Memoization is also ignored for Picture entitys using a spritesheet or video asset for their source.
@@ -213,6 +208,12 @@ export default function (P = Ωempty) {
         return this;
     };
 
+// `hasFilters` - A quick check to see if any filters have been assigned to this artefact
+    P.hasFilters = function () {
+
+        return !!this.filters.length;
+    };
+
 // `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.
     P.preprocessFilters = function (filters) {
 
@@ -226,7 +227,7 @@ export default function (P = Ωempty) {
 
                 obj = filter.actions[j];
 
-                if (obj.action == PROCESS_IMAGE) {
+                if (obj.action === PROCESS_IMAGE) {
 
                     flag = true;
 

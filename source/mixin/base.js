@@ -16,9 +16,9 @@
 // #### Imports
 import * as library from '../core/library.js';
 
-import { addStrings, generateUniqueString, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { addStrings, generateUniqueString, isa_boolean, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _entries, _isArray, _keys, _parse, _string, ARG_SPLITTER, BAD_PACKET_CHECK, HAS_PACKET_CHECK, NAME, NATIVE_CODE, PACKET_DIVIDER, TYPE_EXCLUSIONS, UNDEF, ZERO_STR } from '../core/shared-vars.js'
+import { _entries, _isArray, _keys, _parse, _string, ARG_SPLITTER, BAD_PACKET_CHECK, HAS_PACKET_CHECK, NAME, NATIVE_CODE, PACKET_DIVIDER, TYPE_EXCLUSIONS, UNDEF, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // #### Export function
@@ -60,10 +60,10 @@ export default function (P = Ωempty) {
 
                 const def = this.defs[item];
 
-                if (typeof def != UNDEF) {
+                if (typeof def !== UNDEF) {
 
                     val = this[item];
-                    return (typeof val != UNDEF) ? val : def;
+                    return (typeof val !== UNDEF) ? val : def;
                 }
             }
         }
@@ -96,12 +96,12 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, val);
-                    else if (typeof defs[key] != UNDEF) this[key] = val;
+                    else if (typeof defs[key] !== UNDEF) this[key] = val;
                 }
             }
         }
@@ -134,12 +134,12 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 val = items[key];
 
-                if (key && key != NAME && val != null) {
+                if (key && key !== NAME && val != null) {
 
                     fn = setters[key];
 
                     if (fn) fn.call(this, val);
-                    else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
+                    else if (typeof defs[key] !== UNDEF) this[key] = addStrings(this[key], val);
                 }
             }
         }
@@ -372,7 +372,7 @@ export default function (P = Ωempty) {
 
                 if (!url.substring) reject(new Error('Packet url supplied for import is not a string'));
 
-                if (url[0] == HAS_PACKET_CHECK) {
+                if (url[0] === HAS_PACKET_CHECK) {
 
                     // Looks like we already have a packet for processing
                     report = self.actionPacket(url);
@@ -437,7 +437,7 @@ export default function (P = Ωempty) {
 
             if (packet && packet.substring) {
 
-                if (packet[0] == HAS_PACKET_CHECK) {
+                if (packet[0] === HAS_PACKET_CHECK) {
 
                     let name, type, lib, update;
 
@@ -517,16 +517,6 @@ export default function (P = Ωempty) {
                                 this.actionPacketFunctions(obj.button, item)
 
                                 obj.button.build();
-                            });
-                        }
-
-
-                        // Specific to Phrase entitys, which doesn't include a simple way to set or update glyphStyle objects
-                        if (update.glyphStyles && obj.glyphStyles) {
-
-                            update.glyphStyles.forEach((gStyle, index) => {
-
-                                if (isa_obj(gStyle)) obj.setGlyphStyles(gStyle, index);
                             });
                         }
 

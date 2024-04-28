@@ -20,13 +20,6 @@
 // Canvas wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Canvas wrapper will remove its &lt;canvas> element from the DOM, alongside the additional elements added to the DOM during Canvas creation.
 
 
-// #### Demos:
-// + All canvas and packets demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.
-// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
-// + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
-
-
 // #### Imports
 import {
     canvas as libCanvas,
@@ -37,24 +30,24 @@ import {
     purge,
 } from '../core/library.js';
 
-import { domShow, scrawlCanvasHold } from '../core/document.js';
+import { domShow } from '../core/document.js';
 
-import { rootElementsAdd, rootElementsRemove } from "../core/document-root-elements.js";
+import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-elements.js";
 
-import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
-import { uiSubscribedElements, currentCorePosition } from '../core/user-interaction.js';
+import { uiSubscribedElements } from '../core/user-interaction.js';
 
-import { makeState } from './state.js';
-import { makeCell } from './cell.js';
+import { makeState } from '../untracked-factory/state.js';
+import { getCanvasColorSpace, makeCell } from './cell.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -92,17 +85,13 @@ const Canvas = function (items = Ωempty) {
 
     this.set(items);
 
-    // Question: why are we invoking `cleanDimensions` here? See if it can be removed
-    this.cleanDimensions();
-
     const el = this.domElement;
 
-    if (!el) this.cleanDimensions();
-    else {
+    if (el) {
 
         const ds = el.dataset;
 
-        this.useDisplayP3WhereAvailable = ds.canvasColorSpace == DISPLAY_P3 || items.canvasColorSpace == DISPLAY_P3;
+        this.useDisplayP3WhereAvailable = ds.canvasColorSpace === DISPLAY_P3 || items.canvasColorSpace === DISPLAY_P3;
         this.canvasColorSpace = getCanvasColorSpace(this.useDisplayP3WhereAvailable);
 
         this.engine = this.domElement.getContext(_2D, { colorSpace: this.canvasColorSpace });
@@ -117,8 +106,8 @@ const Canvas = function (items = Ωempty) {
         this.cellBatchesCompile = [];
         this.cellBatchesShow = [];
 
-        let baseWidth = this.currentDimensions[0],
-            baseHeight = this.currentDimensions[1];
+        let baseWidth = el.width,
+            baseHeight = el.height;
 
         if (ds.isResponsive) {
 
@@ -140,9 +129,9 @@ const Canvas = function (items = Ωempty) {
                 ignoreCanvasCssDimensions: true,
                 fit: ds.fit || this.fit,
             });
-
-            this.cleanDimensions();
         }
+
+        this.cleanDimensions();
 
         // setup base cell
         const cellArgs = {
@@ -181,15 +170,8 @@ const Canvas = function (items = Ωempty) {
 
         const navigation = document.createElement(NAV);
         navigation.id = `${this.name}-navigation`;
-        navigation.style.width = PX0;
-        navigation.style.height = PX0;
-        navigation.style.maxWidth = PX0;
-        navigation.style.maxHeight = PX0;
-        navigation.style.border = PX0;
-        navigation.style.padding = PX0;
-        navigation.style.margin = PX0;
-        navigation.style.overflow = HIDDEN;
         navigation.setAttribute(ARIA_LIVE, POLITE);
+        navigation.setAttribute(ARIA_BUSY, 'false');
         this.navigation = navigation;
         el.appendChild(navigation);
 
@@ -197,32 +179,51 @@ const Canvas = function (items = Ωempty) {
 
         const textHold = document.createElement(DIV);
         textHold.id = `${this.name}-text-hold`;
-        textHold.style.width = PX0;
-        textHold.style.height = PX0;
-        textHold.style.maxWidth = PX0;
-        textHold.style.maxHeight = PX0;
-        textHold.style.border = PX0;
-        textHold.style.padding = PX0;
-        textHold.style.margin = PX0;
-        textHold.style.overflow = HIDDEN;
+        textHold.setAttribute(ARIA_LIVE, POLITE);
+        textHold.setAttribute(ARIA_BUSY, 'false');
         this.textHold = textHold;
         el.appendChild(textHold);
 
+        this.dirtyTextTabOrder = true;
+
+        const canvasHold = document.createElement('div');
+        canvasHold.id = `${this.name}-canvas-hold`;
+        canvasHold.style.display = NONE;
+        canvasHold.setAttribute(ARIA_HIDDEN, TRUE);
+        this.canvasHold = canvasHold;
+        el.appendChild(canvasHold);
+
+        const fontSizeCalculator = document.createElement(DIV);
+        fontSizeCalculator.id = `${this.name}-fontSizeCalculator`;
+        fontSizeCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.fontSizeCalculator = fontSizeCalculator;
+        this.fontSizeCalculatorValues = _computed(fontSizeCalculator);
+        canvasHold.appendChild(fontSizeCalculator);
+
+        const labelStylesCalculator = document.createElement(DIV);
+        labelStylesCalculator.id = `${this.name}-styles`;
+        labelStylesCalculator.setAttribute(ARIA_HIDDEN, TRUE);
+        this.labelStylesCalculator = labelStylesCalculator;
+        this.labelStylesCalculatorValues = _computed(labelStylesCalculator);
+        canvasHold.appendChild(labelStylesCalculator);
+
         const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
+        ariaLabel.setAttribute(ARIA_LIVE, POLITE);
         this.ariaLabelElement = ariaLabel;
-        scrawlCanvasHold.appendChild(ariaLabel);
+        el.appendChild(ariaLabel);
         el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
-        el.setAttribute(ARIA_LIVE, POLITE);
 
         const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
+        ariaDescription.setAttribute(ARIA_LIVE, POLITE);
         this.ariaDescriptionElement = ariaDescription;
-        scrawlCanvasHold.appendChild(ariaDescription);
+        el.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
-        el.setAttribute(ARIA_LIVE, POLITE);
 
         this.cleanAria();
+
+        this.computedStyles = _computed(el);
     }
 
     this.dirtyCells = true;
@@ -244,9 +245,6 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [dom](../mixin/dom.html)
-// + [display](../mixin/displayShape.html)
 baseMix(P);
 domMix(P);
 displayMix(P);
@@ -291,7 +289,7 @@ const defaultAttributes = {
 //
 // If no label value is supplied to the Canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual `set()` functionality.
 //
-// Beyond the Canvas object, Scrawl-canvas also encourages Phrase entitys (which handle graphical text in the canvas display) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
+// Beyond the Canvas object, Scrawl-canvas also encourages text-based entitys (Label, EnhancedLabel) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
     title: ZERO_STR,
     label: ZERO_STR,
     description: ZERO_STR,
@@ -300,6 +298,9 @@ const defaultAttributes = {
 
 // __navigationAriaLive__ - the ARIA-live attribute applied to the &lt;nav> element added to the &lt;canvas> element. Accepted string values are: 'off', 'polite' (default), 'assertive'.
     navigationAriaLive: POLITE,
+
+// __textAriaLive__ - the ARIA-live attribute applied to the text hold's &lt;div> element added to the &lt;canvas> element. Accepted string values are: 'off', 'polite' (default), 'assertive'.
+    textAriaLive: POLITE,
 
 // #### Canvas Color space
 // Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'`` (default); `'display-p3'`.
@@ -332,7 +333,7 @@ P.factoryKill = function () {
     removeItem(uiSubscribedElements, name);
 
     // Host and host Group
-    if (host && host != ROOT) {
+    if (host && host !== ROOT) {
 
         const h = (this.currentHost) ? this.currentHost : artefact[host];
 
@@ -352,10 +353,6 @@ P.factoryKill = function () {
     this.base.kill();
 
     // DOM removals
-    this.navigation.remove();
-    this.textHold.remove();
-    this.ariaLabelElement.remove();
-    this.ariaDescriptionElement.remove();
     this.domElement.remove();
 };
 
@@ -405,6 +402,16 @@ S.navigationAriaLive = function (item) {
     if (item.substring && ARIA_LIVE_VALUES.includes(item)) {
 
         this.navigationAriaLive = item;
+        this.dirtyAria = true;
+    }
+};
+
+// `textAriaLive` - String
+S.textAriaLive = function (item) {
+
+    if (item.substring && ARIA_LIVE_VALUES.includes(item)) {
+
+        this.textAriaLive = item;
         this.dirtyAria = true;
     }
 };
@@ -527,6 +534,16 @@ P.deltaSetBase = function (items) {
         this.setBaseHelper();
     }
     return this;
+};
+
+P.getBase = function () {
+
+    return this.base;
+};
+
+P.getBaseHere = function () {
+
+    return this.base.here;
 };
 
 // Internal function - passes the Canvas wrapper's current __here__ object and __fit__ attribute to the base Cell for further processing
@@ -671,6 +688,7 @@ P.clear = function () {
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesClear;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].clear();
@@ -689,6 +707,7 @@ P.compile = function () {
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesCompile;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].compile();
@@ -715,6 +734,7 @@ P.show = function(){
     if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesShow;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].show();
@@ -728,6 +748,7 @@ P.show = function(){
     if (this.dirtyAria) this.cleanAria();
 
     if (this.dirtyNavigationTabOrder) this.reorderNavElements();
+    if (this.dirtyTextTabOrder) this.reorderTextElements();
 };
 
 // `reorderNavElements` - Handle Anchor and Button DOM element ordering within the &lt;nav> element
@@ -737,6 +758,8 @@ P.reorderNavElements = function () {
 
     const elArray = [],
         navEl = this.navigation;
+
+    navEl.setAttribute(ARIA_BUSY, 'true');
 
     while (navEl.firstChild) {
 
@@ -754,6 +777,38 @@ P.reorderNavElements = function () {
     });
 
     elArray.forEach(e => navEl.appendChild(e));
+
+    navEl.setAttribute(ARIA_BUSY, 'false');
+};
+
+// `reorderTextElements` - handle Label and EnhancedLabel ordering within the textHold's &lt;div> element
+P.reorderTextElements = function () {
+
+    this.dirtyTextTabOrder = false;
+
+    const elArray = [],
+        divEl = this.textHold;
+
+    divEl.setAttribute(ARIA_BUSY, 'true');
+
+    while (divEl.firstChild) {
+
+        elArray.push(divEl.removeChild(divEl.firstChild));
+    }
+
+    elArray.sort((a, b) => {
+
+        const A = parseInt(a.getAttribute(DATA_TAB_ORDER), 10);
+        const B = parseInt(b.getAttribute(DATA_TAB_ORDER), 10);
+
+        if (A < B) return -1;
+        if (A > B) return 1;
+        return 0;
+    });
+
+    elArray.forEach(e => divEl.appendChild(e));
+
+    divEl.setAttribute(ARIA_BUSY, 'false');
 };
 
 // `render` - orchestrate a single Display cycle - clear, then compile, then show.
@@ -787,7 +842,7 @@ P.cleanCells = function () {
 
         mycell = cell[cells[i]];
 
-        if (mycell) {
+        if (mycell && !mycell.isBase) {
 
             if (mycell.cleared) tempClear.push(mycell);
 
@@ -796,7 +851,6 @@ P.cleanCells = function () {
                 order = mycell.compileOrder;
 
                 if (!tempCompile[order]) tempCompile[order] = requestArray();
-
                 tempCompile[order].push(mycell);
             }
 
@@ -811,7 +865,7 @@ P.cleanCells = function () {
     }
 
     cellBatchesClear.length = 0;
-    cellBatchesClear.push(...tempClear);
+    cellBatchesClear.push(...tempClear, this.base);
     releaseArray(tempClear);
 
     cellBatchesCompile.length = 0;
@@ -825,6 +879,7 @@ P.cleanCells = function () {
             releaseArray(arr);
         }
     }
+    cellBatchesCompile.push(this.base);
     releaseArray(tempCompile);
 
     cellBatchesShow.length = 0;
@@ -838,6 +893,7 @@ P.cleanCells = function () {
             releaseArray(arr);
         }
     }
+    cellBatchesShow.push(this.base);
     releaseArray(tempShow);
 };
 
@@ -988,6 +1044,7 @@ P.cleanAria = function () {
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
     this.navigation.setAttribute(ARIA_LIVE, this.navigationAriaLive);
+    this.textHold.setAttribute(ARIA_LIVE, this.textAriaLive);
 };
 
 
@@ -1092,7 +1149,7 @@ export const setCurrentCanvas = function (item) {
                 changeFlag = true;
             }
         }
-        else if (item.type == T_CANVAS) {
+        else if (item.type === T_CANVAS) {
 
             currentCanvas = item;
             changeFlag = true;
@@ -1140,7 +1197,7 @@ export const addCanvas = function (items = Ωempty) {
 
     if (host) {
 
-        if (host.type == T_STACK) {
+        if (host.type === T_STACK) {
 
             mygroup = host.name;
             position = ABSOLUTE;
@@ -1181,12 +1238,4 @@ export const addCanvas = function (items = Ωempty) {
     mycanvas.set(items);
 
     return mycanvas;
-};
-
-// Wide gamut colors helper
-const getCanvasColorSpace = (useP3) => {
-
-    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
-    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
-    return SRGB;
 };

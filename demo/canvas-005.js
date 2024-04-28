@@ -2,32 +2,23 @@
 // Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween; trigger canvas hover and drag UX
 
 // [Run code](../../demo/canvas-005.html)
-import {
-    library as L,
-    makeBlock,
-    makeDragZone,
-    makeGradient,
-    makeRadialGradient,
-    makeRender,
-    makeTween,
-    makeWheel,
-} from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-const namespace = 'demo';
+const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
 // Build the gradient objects
-const myRadial = makeRadialGradient({
+const myRadial = scrawl.makeRadialGradient({
     name: name('circle-waves'),
 
     startX: '30%',
@@ -63,7 +54,7 @@ const myRadial = makeRadialGradient({
     ],
 });
 
-makeGradient({
+scrawl.makeGradient({
     name: name('colored-pipes'),
     endX: '100%',
     cyclePalette: true,
@@ -96,7 +87,7 @@ makeGradient({
     ],
 });
 
-makeGradient({
+scrawl.makeGradient({
     name: name('linear'),
     endX: '100%',
 
@@ -113,7 +104,7 @@ makeGradient({
 
 
 // Build the block and wheel entitys
-makeBlock({
+scrawl.makeBlock({
     name: name('cell-locked-block'),
 
     width: 150,
@@ -159,7 +150,7 @@ makeBlock({
     },
 });
 
-makeWheel({
+scrawl.makeWheel({
     name: name('cell-locked-wheel'),
 
     radius: 75,
@@ -218,7 +209,7 @@ const setCursorTo = {
     pointer: () => {
         canvas.set({
             css: {
-                cursor: 'pointer',
+                cursor: 'grab',
             },
         });
     },
@@ -232,7 +223,7 @@ const setCursorTo = {
 };
 
 // Create the drag-and-drop zone
-const current = makeDragZone({
+const current = scrawl.makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -265,7 +256,7 @@ const tweenEngine = (start, change, position) => {
     return val % 1000;
 };
 
-const tweeny = makeTween({
+const tweeny = scrawl.makeTween({
     name: name('mytween'),
     targets: name('colored-pipes'),
     duration: 5000,
@@ -290,15 +281,12 @@ const tweeny = makeTween({
 const report = reportSpeed('#reportmessage', function () {
     const dragging = current();
 
-    if (typeof dragging !== 'boolean') {
-
-        if (dragging && dragging.artefact) return `Currently dragging: ${dragging.artefact.name}`
-    }
+    if (typeof dragging !== 'boolean' && dragging) return `Currently dragging: ${dragging.artefact.name}`
     return 'Currently dragging: nothing';
 });
 
 
-// Function to animate the gradients
+// Function to animate the 'pipes' gradient
 const animateGradients = function () {
 
     const dragging = current();
@@ -307,20 +295,19 @@ const animateGradients = function () {
 
         if (typeof dragging !== 'boolean' && dragging) {
 
-            if (dragging.artefact && dragging.artefact.name === name('animated-block')) tweeny.run();
+            if (dragging.artefact.name === name('animated-block')) tweeny.run();
         }
     }
 };
 
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
 
-    // Gradient animation is not automatically handled by the Display cycle
-    // - instead we have to trigger it manually
+    // We're animating the 'pipes' gradient by means of a tween. This checks to see if we have to invoke that tween as a result of user interaction
     commence: animateGradients,
 
     // We have to tell the canvas to check UI for hovering states every Display cycle
@@ -332,4 +319,4 @@ makeRender({
 
 
 // #### Development and testing
-console.log(L);
+console.log(scrawl.library);

@@ -8,6 +8,7 @@
 
   <title>Demo Modules 005</title>
 
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -66,11 +67,15 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="modules-004.html">&larr; Previous</a>
+    <a href="modules-006.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Modules test 005</h1>
   <h2>Proof of concept: accessible GUI-based simple canvas editor</h2>
   <h3 class="centered">Instructions for using the editor appear below the canvas</h3>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="outer-container">
     <div class="canvas-container">

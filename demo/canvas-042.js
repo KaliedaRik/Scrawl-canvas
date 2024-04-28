@@ -8,17 +8,22 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.artefact.mycanvas,
-    entity = scrawl.library.entity;
+const canvas = scrawl.findCanvas('mycanvas');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 
 // Import image from DOM, and create Picture entity using it
 scrawl.importDomImage('.canal');
 
+
 // The image to be clipped
 scrawl.makePicture({
 
-    name: 'background',
+    name: name('background'),
     asset: 'factory',
 
     dimensions: ['100%', '100%'],
@@ -37,99 +42,124 @@ const generics = {
     }
 };
 
+
 // The entitys to be used as clip regions
 let clipzone = scrawl.makeBlock({
-    name: 'block-clipper',
+
+    name: name('block-clipper'),
     dimensions: [200, 200],
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics).set({ visibility: true });
 
+
 scrawl.makeWheel({
-    name: 'wheel-clipper',
+
+    name: name('wheel-clipper'),
     radius: 150,
     startAngle: 30,
     endAngle: -30,
     includeCenter: true,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
-scrawl.makePhrase({
-    name: 'phrase-clipper',
+scrawl.makeLabel({
+
+    name: name('label-clipper'),
     text: 'HELLO!',
-    font: '50px arial, sans-serif',
-// @ts-expect-error
+    fontString: '50px arial, sans-serif',
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makeCog({
-    name: 'cog-clipper',
+
+    name: name('cog-clipper'),
     outerRadius: 140,
     innerRadius: 120,
     outerControlsDistance: 20,
     innerControlsDistance: 16,
     points: 24,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makeOval({
-    name: 'oval-clipper',
+
+    name: name('oval-clipper'),
     radiusX: 120,
     radiusY: 150,
     intersectY: 0.55,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makePolygon({
-    name: 'polygon-clipper',
+
+    name: name('polygon-clipper'),
     sideLength: 150,
     sides: 6,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makeRectangle({
-    name: 'rectangle-clipper',
+
+    name: name('rectangle-clipper'),
     rectangleWidth: 240,
     rectangleHeight: 180,
     radius: 30,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makeShape({
-    name: 'shape-clipper',
+
+    name: name('shape-clipper'),
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
     scale: 0.4,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makeSpiral({
-    name: 'spiral-clipper',
+
+    name: name('spiral-clipper'),
     loops: 2,
     loopIncrement: 80,
     drawFromLoop: 1,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makeStar({
-    name: 'star-clipper',
+
+    name: name('star-clipper'),
     radius1: 80,
     radius2: 140,
     points: 6,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makeTetragon({
-    name: 'tetragon-clipper',
+
+    name: name('tetragon-clipper'),
     radiusX: 120,
     radiusY: 150,
     intersectY: 1.2,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 scrawl.makePolyline({
-    name: 'polyline-clipper',
+    name: name('polyline-clipper'),
     pins: [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]],
     tension: 0.5,
     closed: true,
-// @ts-expect-error
+
+/** @ts-expect-error */
 }).set(generics);
 
 
@@ -152,7 +182,7 @@ const checkForActivity = function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: checkForActivity,
     afterShow: report,
@@ -164,25 +194,21 @@ scrawl.makeRender({
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
     const val = e.target.value,
-        selected = entity[val];
+        selected = scrawl.findEntity(name(val));
 
     if (selected) {
 
-        clipzone.set({
-            visibility: false,
-        });
+        clipzone.set({ visibility: false });
 
         clipzone = selected;
 
-        clipzone.set({
-            visibility: true,
-        });
+        clipzone.set({ visibility: true });
     }
 
 }, '#clip-entity')
 
 // Setup form
-// @ts-expect-error
+/** @ts-expect-error */
 document.querySelector('#clip-entity').options.selectedIndex = 0;
 
 

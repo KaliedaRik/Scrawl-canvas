@@ -133,31 +133,29 @@ scrawl.makePicture({
     start: getRandomPosition(),
 });
 
-scrawl.makePhrase({
+scrawl.makeLabel({
 
-    name: 'phrase-entity-1',
+    name: 'label-entity-1',
     group: sceneLayer.name,
     text: 'Hello',
-    font: 'serif',
-    size: '40px',
-    lineHeight: 0,
+    fontString: '40px serif',
     start: getRandomPosition(),
     handle: ['center', 'center'],
     ...addControllerAttributes,
 
 }).clone({
 
-    name: 'phrase-entity-2',
+    name: 'label-entity-2',
     start: getRandomPosition(),
 
 }).clone({
 
-    name: 'phrase-entity-3',
+    name: 'label-entity-3',
     start: getRandomPosition(),
 
 }).clone({
 
-    name: 'phrase-entity-4',
+    name: 'label-entity-4',
     start: getRandomPosition(),
 });
 
@@ -173,7 +171,7 @@ const buttonClickAction = () => {
     setGuiControlChars(keys);
 };
 
-// @ts-expect-error
+/** @ts-expect-error */
 button.onclick = buttonClickAction;
 
 

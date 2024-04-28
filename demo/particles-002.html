@@ -6,6 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo Particles 002</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -22,28 +23,32 @@
 </head>
 
 <body>
+  <div id="test-navigation">
+    <a href="particles-001.html">&larr; Previous</a>
+    <a href="particles-003.html">Next &rarr;</a>
+  </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 002</h1>
   <h2>Emitter using artefacts</h2>
 
   <div class="controls">
 
     <div class="green label">World speed</div>
-    <div class="green"><input class="controlItem" id="world-speed" type="range" value="2" min="0.5" max="4" step="0.01" /></div>
+    <div class="green"><input class="controlItem" id="world_speed" type="range" value="2" min="0.5" max="4" step="0.01" /></div>
 
     <div class="green label">Opacity</div>
     <div class="green"><input class="controlItem" id="opacity" type="range" value="0.2" min="0.01" max="1" step="0.01" /></div>
 
     <div class="green label">Outline color</div>
-    <div class="green"><input class="controlItem" id="outline-color" type="color" value="#b9b5df" /></div>
+    <div class="green"><input class="controlItem" id="outline_color" type="color" value="#b9b5df" /></div>
 
     <div class="green label">Background color</div>
     <div class="green"><input class="controlItem" id="background" type="color" value="#000040" /></div>
 
     <div class="green label">Minimum fill color</div>
-    <div class="green"><input class="controlItem" id="min-fill" type="color" value="#000000" /></div>
+    <div class="green"><input class="controlItem" id="min_fill" type="color" value="#000000" /></div>
 
     <div class="green label">Maximum fill color</div>
-    <div class="green"><input class="controlItem" id="max-fill" type="color" value="#ffffff" /></div>
+    <div class="green"><input class="controlItem" id="max_fill" type="color" value="#ffffff" /></div>
 
     <div class="blue label">Generation rate (per sec)</div>
     <div class="blue"><input class="controlItem" id="generationRate" type="range" value="10" min="0" max="200" step="1" /></div>
@@ -52,10 +57,10 @@
     <div class="blue"><input class="controlItem" id="historyLength" type="range" value="20" min="1" max="200" step="1" /></div>
 
     <div class="blue label">Kill radius (px)</div>
-    <div class="blue"><input class="controlItem" id="kill-radius" type="range" value="50" min="5" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem" id="kill_radius" type="range" value="50" min="5" max="100" step="1" /></div>
 
     <div class="blue label">Kill radius variation (px)</div>
-    <div class="blue"><input class="controlItem" id="kill-radius-variation" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem" id="kill_radius_variation" type="range" value="0" min="0" max="100" step="1" /></div>
 
     <div class="pink label">Artefact</div>
     <div class="pink">
@@ -64,7 +69,7 @@
         <option value="wheel">Wheel</option>
         <option value="block">Block</option>
         <option value="picture">Picture</option>
-        <option value="phrase">Phrase</option>
+        <option value="label">Label</option>
       </select>
     </div>
 
@@ -79,7 +84,7 @@
     data-scrawl-canvas
   ></canvas>
 
-  <p id="reportmessage"></p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

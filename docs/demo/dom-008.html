@@ -95,11 +95,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-015a.html">
-                  ./demo/canvas-015a.js
-                </a>
-              
-                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -117,11 +112,6 @@
                 
                 <a class="source" href="canvas-019.html">
                   ./demo/canvas-019.js
-                </a>
-              
-                
-                <a class="source" href="canvas-019a.html">
-                  ./demo/canvas-019a.js
                 </a>
               
                 
@@ -330,28 +320,58 @@
                 </a>
               
                 
-                <a class="source" href="canvas-061.html">
-                  ./demo/canvas-061.js
+                <a class="source" href="canvas-201.html">
+                  ./demo/canvas-201.js
                 </a>
               
                 
-                <a class="source" href="canvas-062.html">
-                  ./demo/canvas-062.js
+                <a class="source" href="canvas-202.html">
+                  ./demo/canvas-202.js
                 </a>
               
                 
-                <a class="source" href="canvas-063.html">
-                  ./demo/canvas-063.js
+                <a class="source" href="canvas-203.html">
+                  ./demo/canvas-203.js
                 </a>
               
                 
-                <a class="source" href="canvas-064.html">
-                  ./demo/canvas-064.js
+                <a class="source" href="canvas-204.html">
+                  ./demo/canvas-204.js
                 </a>
               
                 
-                <a class="source" href="canvas-065.html">
-                  ./demo/canvas-065.js
+                <a class="source" href="canvas-205.html">
+                  ./demo/canvas-205.js
+                </a>
+              
+                
+                <a class="source" href="canvas-206.html">
+                  ./demo/canvas-206.js
+                </a>
+              
+                
+                <a class="source" href="canvas-207.html">
+                  ./demo/canvas-207.js
+                </a>
+              
+                
+                <a class="source" href="canvas-208.html">
+                  ./demo/canvas-208.js
+                </a>
+              
+                
+                <a class="source" href="canvas-209.html">
+                  ./demo/canvas-209.js
+                </a>
+              
+                
+                <a class="source" href="canvas-210.html">
+                  ./demo/canvas-210.js
+                </a>
+              
+                
+                <a class="source" href="canvas-211.html">
+                  ./demo/canvas-211.js
                 </a>
               
                 
@@ -895,32 +915,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
-  stack = artefact.<span class="hljs-property">mystack</span>,
-  pin = artefact.<span class="hljs-property">pin</span>,
-  front = artefact.<span class="hljs-property">frontface</span>,
-  back = artefact.<span class="hljs-property">backface</span>,
-  top = artefact.<span class="hljs-property">topface</span>,
-  bottom = artefact.<span class="hljs-property">bottomface</span>,
-  left = artefact.<span class="hljs-property">leftface</span>,
-  right = artefact.<span class="hljs-property">rightface</span>;
-
-<span class="hljs-keyword">const</span> faces = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;faces&quot;</span>
-}).<span class="hljs-title function_">addArtefacts</span>(left, right, top, bottom, front, back);
-
-stack.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">perspectiveX</span>: <span class="hljs-string">&quot;50%&quot;</span>,
-    <span class="hljs-attr">perspectiveY</span>: <span class="hljs-string">&quot;50%&quot;</span>,
-    <span class="hljs-attr">perspectiveZ</span>: <span class="hljs-number">1200</span>
-});
-
-pin.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">width</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&quot;start&quot;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stack = scrawl.<span class="hljs-title function_">findStack</span>(<span class="hljs-string">&#x27;mystack&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -930,6 +925,50 @@ pin.<span class="hljs-title function_">set</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = stack.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
+
+
+<span class="hljs-keyword">const</span> pin = scrawl.<span class="hljs-title function_">findElement</span>(<span class="hljs-string">&#x27;pin&#x27;</span>),
+    front = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;frontface&#x27;</span>),
+    back = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;backface&#x27;</span>),
+    top = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;topface&#x27;</span>),
+    bottom = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;bottomface&#x27;</span>),
+    left = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;leftface&#x27;</span>),
+    right = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;rightface&#x27;</span>);
+
+<span class="hljs-keyword">const</span> faces = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;faces&#x27;</span>),
+
+}).<span class="hljs-title function_">addArtefacts</span>(left, right, top, bottom, front, back);
+
+stack.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">perspectiveX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">perspectiveY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">perspectiveZ</span>: <span class="hljs-number">1200</span>
+});
+
+pin.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;start&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>To spin the cube we only need to rotate this element</p>
 <ul>
@@ -948,11 +987,11 @@ pin.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Give our canvases some common values, via their Group</p>
 
@@ -963,11 +1002,11 @@ pin.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Make sure the canvases get processed after the pin</p>
 <ul>
@@ -978,26 +1017,7 @@ pin.<span class="hljs-title function_">set</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
 
-    <span class="hljs-attr">trackHere</span>: <span class="hljs-string">&quot;local&quot;</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>Common dimensions; common start/handle values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>,
-    <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],</pre></div></div>
+    <span class="hljs-attr">trackHere</span>: <span class="hljs-string">&#x27;local&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1008,11 +1028,15 @@ pin.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Offset each canvas from the pin</p>
+              <p>Common dimensions; common start/handle values</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">offsetZ</span>: <span class="hljs-number">150</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],</pre></div></div>
             
         </li>
         
@@ -1023,12 +1047,11 @@ pin.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Set each canvas to pivot to the pin</p>
+              <p>Offset each canvas from the pin</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&quot;pivot&quot;</span>,
-    <span class="hljs-attr">pivot</span>: pin,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">offsetZ</span>: <span class="hljs-number">150</span>,</pre></div></div>
             
         </li>
         
@@ -1039,11 +1062,12 @@ pin.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Automatically add the pin’s rotation values to each canvas’s initial rotation value (set below)</p>
+              <p>Set each canvas to pivot to the pin</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: pin,</pre></div></div>
             
         </li>
         
@@ -1054,14 +1078,11 @@ pin.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Styling common to all the canvas elements</p>
+              <p>Automatically add the pin’s rotation values to each canvas’s initial rotation value (set below)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">css</span>: {
-        <span class="hljs-attr">backfaceVisibility</span>: <span class="hljs-string">&quot;hidden&quot;</span>
-    }
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -1072,24 +1093,13 @@ pin.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Give each canvas its initial rotation</p>
+              <p>Styling common to all the canvas elements</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>right.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">yaw</span>: <span class="hljs-number">90</span>
-});
-top.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">pitch</span>: <span class="hljs-number">90</span>
-});
-back.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">pitch</span>: <span class="hljs-number">180</span>
-});
-left.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">yaw</span>: <span class="hljs-number">270</span>
-});
-bottom.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">pitch</span>: <span class="hljs-number">270</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">css</span>: {
+        <span class="hljs-attr">backfaceVisibility</span>: <span class="hljs-string">&#x27;hidden&#x27;</span>,
+    },
 });</pre></div></div>
             
         </li>
@@ -1101,67 +1111,15 @@ bottom.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Build some gradients to color the canvases</p>
+              <p>Give each canvas its initial rotation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeGradient</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;red-gradient&quot;</span>,
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">&quot;100%&quot;</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">&quot;100%&quot;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&quot;#fff&quot;</span>],
-        [<span class="hljs-number">499</span>, <span class="hljs-string">&quot;#f00&quot;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&quot;#000&quot;</span>]
-    ],
-    <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;OKLAB&#x27;</span>,
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;green-gradient&quot;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&quot;#fff&quot;</span>],
-        [<span class="hljs-number">499</span>, <span class="hljs-string">&quot;#0f0&quot;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&quot;#000&quot;</span>]
-    ]
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;blue-gradient&quot;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&quot;#fff&quot;</span>],
-        [<span class="hljs-number">499</span>, <span class="hljs-string">&quot;#00f&quot;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&quot;#000&quot;</span>]
-    ]
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;yellow-gradient&quot;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&quot;#fff&quot;</span>],
-        [<span class="hljs-number">499</span>, <span class="hljs-string">&quot;#ff0&quot;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&quot;#000&quot;</span>]
-    ]
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;magenta-gradient&quot;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&quot;#fff&quot;</span>],
-        [<span class="hljs-number">499</span>, <span class="hljs-string">&quot;#f0f&quot;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&quot;#000&quot;</span>]
-    ]
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;cyan-gradient&quot;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&quot;#fff&quot;</span>],
-        [<span class="hljs-number">499</span>, <span class="hljs-string">&quot;#0ff&quot;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&quot;#000&quot;</span>]
-    ]
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>right.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">yaw</span>: <span class="hljs-number">90</span> });
+top.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">pitch</span>: <span class="hljs-number">90</span> });
+back.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">pitch</span>: <span class="hljs-number">180</span> });
+left.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">yaw</span>: <span class="hljs-number">270</span> });
+bottom.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">pitch</span>: <span class="hljs-number">270</span> });</pre></div></div>
             
         </li>
         
@@ -1172,52 +1130,66 @@ bottom.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Display a gradient on each canvas using a Block entity</p>
+              <p>Build some gradients to color the canvases</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeGradient</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;topface-block&quot;</span>,
-    <span class="hljs-attr">group</span>: top.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&quot;100%&quot;</span>, <span class="hljs-string">&quot;100%&quot;</span>],
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;red-gradient&quot;</span>
-
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;leftface-block&quot;</span>,
-    <span class="hljs-attr">group</span>: left.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;green-gradient&quot;</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red-gradient&#x27;</span>),
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#f00&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000&#x27;</span>],
+    ],
+    <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;OKLAB&#x27;</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;bottomface-block&quot;</span>,
-    <span class="hljs-attr">group</span>: bottom.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;yellow-gradient&quot;</span>,
-    <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;green-gradient&#x27;</span>),
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#0f0&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000&#x27;</span>],
+    ]
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;rightface-block&quot;</span>,
-    <span class="hljs-attr">group</span>: right.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;magenta-gradient&quot;</span>,
-    <span class="hljs-attr">roll</span>: <span class="hljs-number">90</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blue-gradient&#x27;</span>),
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#00f&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000&#x27;</span>],
+    ]
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;frontface-block&quot;</span>,
-    <span class="hljs-attr">group</span>: front.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;cyan-gradient&quot;</span>,
-    <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;yellow-gradient&#x27;</span>),
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#ff0&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000&#x27;</span>],
+    ]
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;backface-block&quot;</span>,
-    <span class="hljs-attr">group</span>: back.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;blue-gradient&quot;</span>,
-    <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;magenta-gradient&#x27;</span>),
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#f0f&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000&#x27;</span>],
+    ]
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cyan-gradient&#x27;</span>),
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#0ff&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000&#x27;</span>],
+    ]
 });</pre></div></div>
             
         </li>
@@ -1229,50 +1201,53 @@ bottom.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>Add a label to each canvas using a Phrase entity</p>
+              <p>Display a gradient on each canvas using a Block entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl
-  .<span class="hljs-title function_">makePhrase</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;topface-label&quot;</span>,
-    <span class="hljs-attr">group</span>: top.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;TOP&quot;</span>,
-    <span class="hljs-attr">family</span>: <span class="hljs-string">&quot;sans-serif&quot;</span>,
-    <span class="hljs-attr">weight</span>: <span class="hljs-string">&quot;bold&quot;</span>,
-    <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;3em&quot;</span>,
-    <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;yellow&quot;</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;fillThenDraw&quot;</span>
-  })
-  .<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;bottomface-label&quot;</span>,
-    <span class="hljs-attr">group</span>: bottom.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;BOTTOM&quot;</span>
-  })
-  .<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;leftface-label&quot;</span>,
-    <span class="hljs-attr">group</span>: left.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;LEFT&quot;</span>
-  })
-  .<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;rightface-label&quot;</span>,
-    <span class="hljs-attr">group</span>: right.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;RIGHT&quot;</span>
-  })
-  .<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;frontface-label&quot;</span>,
-    <span class="hljs-attr">group</span>: front.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;FRONT&quot;</span>
-  })
-  .<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;backface-label&quot;</span>,
-    <span class="hljs-attr">group</span>: back.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;BACK&quot;</span>
-  });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;topface-block&#x27;</span>),
+    <span class="hljs-attr">group</span>: top.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red-gradient&#x27;</span>),
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;leftface-block&#x27;</span>),
+    <span class="hljs-attr">group</span>: left.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;green-gradient&#x27;</span>),
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bottomface-block&#x27;</span>),
+    <span class="hljs-attr">group</span>: bottom.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;yellow-gradient&#x27;</span>),
+    <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rightface-block&#x27;</span>),
+    <span class="hljs-attr">group</span>: right.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;magenta-gradient&#x27;</span>),
+    <span class="hljs-attr">roll</span>: <span class="hljs-number">90</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;frontface-block&#x27;</span>),
+    <span class="hljs-attr">group</span>: front.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cyan-gradient&#x27;</span>),
+    <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;backface-block&#x27;</span>),
+    <span class="hljs-attr">group</span>: back.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blue-gradient&#x27;</span>),
+    <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1282,6 +1257,63 @@ bottom.<span class="hljs-title function_">set</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Add a label to each canvas using a Label entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeLabel</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;topface-label&#x27;</span>),
+    <span class="hljs-attr">group</span>: top.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;TOP&#x27;</span>,
+    <span class="hljs-attr">accessibleText</span>: <span class="hljs-string">&#x27;§ canvas element&#x27;</span>,
+    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;bold 3rem sans-serif&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+
+  }).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bottomface-label&#x27;</span>),
+    <span class="hljs-attr">group</span>: bottom.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;BOTTOM&#x27;</span>,
+
+  }).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;leftface-label&#x27;</span>),
+    <span class="hljs-attr">group</span>: left.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;LEFT&#x27;</span>,
+
+  }).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rightface-label&#x27;</span>),
+    <span class="hljs-attr">group</span>: right.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;RIGHT&#x27;</span>,
+
+  }).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;frontface-label&#x27;</span>),
+    <span class="hljs-attr">group</span>: front.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;FRONT&#x27;</span>,
+
+  }).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;backface-label&#x27;</span>),
+    <span class="hljs-attr">group</span>: back.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;BACK&#x27;</span>,
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 
@@ -1294,7 +1326,7 @@ bottom.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (here.<span class="hljs-property">active</span> != stackActive) {
+        <span class="hljs-keyword">if</span> (here.<span class="hljs-property">active</span> !== stackActive) {
 
             stackActive = here.<span class="hljs-property">active</span>;
 
@@ -1308,11 +1340,11 @@ bottom.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -1323,11 +1355,11 @@ bottom.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1335,7 +1367,7 @@ bottom.<span class="hljs-title function_">set</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation-stack&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: stack,
     <span class="hljs-attr">commence</span>: stackCheck,
     <span class="hljs-attr">afterShow</span>: report,
@@ -1343,18 +1375,18 @@ bottom.<span class="hljs-title function_">set</span>({
 
 scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation-canvases&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;canvas-animation&#x27;</span>),
     <span class="hljs-attr">target</span>: [top, bottom, left, right, front, back],
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

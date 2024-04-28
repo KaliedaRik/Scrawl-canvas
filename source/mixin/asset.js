@@ -24,7 +24,7 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
 
 // #### Export function
@@ -148,7 +148,7 @@ export default function (P = Ωempty) {
         if (sub && sub.name) {
 
             const name = sub.name,
-                index = this.subscribers.findIndex(item => item.name == name);
+                index = this.subscribers.findIndex(item => item.name === name);
 
             if (index >= 0) {
 

@@ -1,0 +1,317 @@
+/**
+ * @fontface declarations
+ */
+
+/*
+Noto Sans Arabic (rtl) - is an unmodulated (“sans serif”) design for texts in the Middle Eastern Arabic script. It has multiple weights and widths, and 1,642 glyphs.
+لا يعرض أحد لتدخل تعسفي في حياته الخاصة أو أسرته أو مسكنه أو مراسلاته أو لحملات على شرفه وسمعته. ولكل شخص الحق في حماية القانون من مثل هذا التدخل أو تلك الحملات. لكل شخص الحق في حرية التفكير والضمير والدين. ويشمل هذا الحق حرية تغيير ديانته أو عقيدته، وحرية الإعراب عنهما بالتعليم والممارسة وإقامة الشعائر ومراعاتها سواء أكان ذلك سرا أم مع الجماعة. لكل شخص الحق في حرية الرأي والتعبير. ويشمل هذا الحق حرية اعتناق الآراء دون أي تدخل، واستقاء الأنباء والأفكار وتلقيها وإذاعتها بأية وسيلة كانت دون تقيد بالحدود الجغرافية. لكل شخص بصفته عضوا في المجتمع الحق في الضمانة الاجتماعية وفي أن تحقق بوساطة المجهود القومي والتعاون الدولي وبما يتفق ونظم كل دولة ومواردها الحقوق الاقتصادية والاجتماعية والتربوية التي لا غنى عنها لكرامته وللنمو الحر لشخصيته.
+*/
+@font-face {
+  font-family: "Noto Arabic Sans";
+  src: url("../fonts/NotoSansArabic-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Naskh Arabic (rtl) - is a modulated (“serif”) Naskh design, suitable for texts in the Middle Eastern Arabic script and for use together with serif fonts. It has multiple weights and 1,598 glyphs.
+لا يعرض أحد لتدخل تعسفي في حياته الخاصة أو أسرته أو مسكنه أو مراسلاته أو لحملات على شرفه وسمعته. ولكل شخص الحق في حماية القانون من مثل هذا التدخل أو تلك الحملات. لكل شخص الحق في حرية التفكير والضمير والدين. ويشمل هذا الحق حرية تغيير ديانته أو عقيدته، وحرية الإعراب عنهما بالتعليم والممارسة وإقامة الشعائر ومراعاتها سواء أكان ذلك سرا أم مع الجماعة. لكل شخص الحق في حرية الرأي والتعبير. ويشمل هذا الحق حرية اعتناق الآراء دون أي تدخل، واستقاء الأنباء والأفكار وتلقيها وإذاعتها بأية وسيلة كانت دون تقيد بالحدود الجغرافية. لكل شخص بصفته عضوا في المجتمع الحق في الضمانة الاجتماعية وفي أن تحقق بوساطة المجهود القومي والتعاون الدولي وبما يتفق ونظم كل دولة ومواردها الحقوق الاقتصادية والاجتماعية والتربوية التي لا غنى عنها لكرامته وللنمو الحر لشخصيته.
+*/
+@font-face {
+  font-family: "Noto Arabic Naskh";
+  src: url("../fonts/NotoNaskhArabic-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Nastaliq Urdu (rtl) - is a cursive, modulated (“serif”) Nastaliq design for texts in the Middle Eastern Arabic script, especially in the Urdu language. It has 1,138 glyphs.
+ہر انسان کو آزادیٔ فکر، آزادیٔ ضمیر، اور آزادیٔ مذہب کا پورا حق حاصل ہے۔ اس حق میں مذہب یا عقیدے کو تبدیل کرنے اور کُھلے عام یا نجی طور پر، تنہا یا دوسروں کے ساتھ مل جل کر عقیدے کی تبلیغ، عمل، عبادت، اور مذہبی رسمیں پوری کرنے کی آزادی بھی شامل ہے۔ ہر شخص کو اپنی رائے رکھنے اور اظہارِ رائے کی آزادی کا حق حاصل ہے۔ اس حق میں یہ امر بھی شامل ہے کہ وہ آزادی کے ساتھ اپنی رائے قائم کرے اور سرحدوں کا خیال کیے بغیر جس ذریعے سے چاہے علم اور خیالات کی تلاش کرے، انہیں حاصل کرے، اور ان کی تبلیغ کرے۔ معاشرے کے رکن کی حیثیت سے ہر شخص کو معاشرتی تحفّظ کا حق حاصل ہے اور یہ حق بھی کہ وہ ملک کے نظام اور وسائل کے مطابق قومی کوشش اور بین الاقوامی تعاون سے ایسے اقتصادی، معاشرتی، اور ثقافتی حقوق کو حاصل کرے، جو اس کی عزت اور شخصیت کی آزادانہ نشوونما کے لیے لازم ہیں۔
+*/
+@font-face {
+  font-family: "Noto Urdu Nastaliq";
+  src: url("../fonts/NotoNastaliqUrdu-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Sans SC - is an unmodulated (“sans serif”) design for languages in mainland China that use the Simplified Chinese variant of the Han ideograms. It also supports Hiragana, Katakana, Latin, Cyrillic, Greek and Hangul. It has multiple weights.
+鉴于对人类家庭所有成员的固有尊严及其平等的和不移的权利的承认,乃是世界自由、正义与和平的基础, 鉴于对人权的无视和侮蔑已发展为野蛮暴行,这些暴行玷污了人类的良心,而一个人人享有言论和信仰自由并免予恐惧和匮乏的世界的来临,已被宣布为普通人民的最高愿望, 鉴于为使人类不致迫不得已铤而走险对暴政和压迫进行反叛,有必要使人权受法治的保护, 鉴于有必要促进各国间友好关系的发展, 鉴于各联合国国家的人民已在联合国宪章中重申他们对基本人权、人格尊严和价值以及男女平等权利的信念,并决心促成较大自由中的社会进步和生活水平的改善, 鉴于各会员国业已誓愿同联合国合作以促进对人权和基本自由的普遍尊重和遵行, 鉴于对这些权利和自由的普遍了解对于这个誓愿的充分实现具有很大的重要性,
+*/
+@font-face {
+  font-family: "Noto Chinese Simple Sans";
+  src: url("../fonts/NotoSansSC-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Serif SC - is a modulated (“serif”) design for languages in mainland China that use the Simplified Chinese variant of the Han ideograms. It also supports Hiragana, Katakana, Latin, Cyrillic, Greek and Hangul. It has multiple weights.
+鉴于对人类家庭所有成员的固有尊严及其平等的和不移的权利的承认,乃是世界自由、正义与和平的基础, 鉴于对人权的无视和侮蔑已发展为野蛮暴行,这些暴行玷污了人类的良心,而一个人人享有言论和信仰自由并免予恐惧和匮乏的世界的来临,已被宣布为普通人民的最高愿望, 鉴于为使人类不致迫不得已铤而走险对暴政和压迫进行反叛,有必要使人权受法治的保护, 鉴于有必要促进各国间友好关系的发展, 鉴于各联合国国家的人民已在联合国宪章中重申他们对基本人权、人格尊严和价值以及男女平等权利的信念,并决心促成较大自由中的社会进步和生活水平的改善, 鉴于各会员国业已誓愿同联合国合作以促进对人权和基本自由的普遍尊重和遵行, 鉴于对这些权利和自由的普遍了解对于这个誓愿的充分实现具有很大的重要性, 因此现在,大会,发布这一世界人权宣言,作为所有人民和所有国家努力实现的共同标准,以期每一个人和社会机构经常铭念本宣言,努力通过教诲和教育促进对权利和自由的尊重,并通过国家的和国际的渐进措施,使这些权利和自由在各会员国本身人民及在其管辖下领土的人民中得到普遍和有效的承认和遵行; 人人生而自由,在尊严和权利上一律平等。他们赋有理性和良心,并应以兄弟关系的精神相对待。 人人有资格享有本宣言所载的一切权利和自由,不分种族、肤色、性别、语言、宗教、政治或其他见解、国籍或社会出身、财产、出生或其他身分等任何区别。 并且不得因一人所属的国家或领土的政治的、行政的或者国际的地位之不同而有所区别,无论该领土是独立领土、托管领土、非自治领土或者处于其他任何主权受限制的情况之下。
+*/
+@font-face {
+  font-family: "Noto Chinese Simple Serif";
+  src: url("../fonts/NotoSerifSC-Regular.otf") format("opentype");
+}
+
+/*
+Noto Sans Devanagari - is an unmodulated (“sans serif”) design for texts in the Indic Devanagari script. It has 954 glyphs.
+प्रत्येक व्यक्ति को विचार और उसकी अभिव्यक्ति की स्वतन्त्रता का अधिकार है । इसके अन्तर्गत बिना हस्तक्षेप के कोई राय रखना और किसी भी माध्यम के ज़रिए से तथा सीमाओं की परवाह न कर के किसी की मूचना और धारणा का अन्वेषण, प्रहण तथा प्रदान सम्मिलित है । समाज के एक सदस्य के रूप में प्रत्येक व्यक्ति को सामाजिक सुरक्षा का अधिकार है और प्रत्येक व्यक्ति को अपने व्यक्तित्व के उस स्वतन्त्र विकास तथा गोरव के लिए—जो राष्ट्रीय प्रयत्न या अन्तर्राष्ट्रीय सहयोग तथा प्रत्येक राज्य के संगठन एवं साधनों के अनुकूल हो—अनिकार्यतः आवश्यक आर्थिक, सामाजिक, और सांस्कृतिक अधिकारों की प्राप्ति का हक़ है । प्रत्येक व्यक्ति को विश्राम और अवकाश का अधिकार है । इसके अन्तर्गत काम के घंटों की उचित हदबन्दी और समयसमय पर मज़दूरी सहित छुट्टियां सम्मिलित है । प्रत्येक व्यक्ति को ऐसी सामाजिक और अन्तर्राष्ट्रीय व्यवस्था की प्राप्ति का अधिकार है जिसमें इस घोषणा में उल्लिखित अधिकारों और स्वतन्त्रताओं को पूर्णतः प्राप्त किया जा सके ।
+*/
+@font-face {
+  font-family: "Noto Devangari Sans";
+  src: url("../fonts/NotoSansDevanagari-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Serif Devanagari - is a modulated (“serif”) design for texts in the Indic Devanagari script. It has multiple weights and widths, and 871 glyphs.
+प्रत्येक व्यक्ति को विचार और उसकी अभिव्यक्ति की स्वतन्त्रता का अधिकार है । इसके अन्तर्गत बिना हस्तक्षेप के कोई राय रखना और किसी भी माध्यम के ज़रिए से तथा सीमाओं की परवाह न कर के किसी की मूचना और धारणा का अन्वेषण, प्रहण तथा प्रदान सम्मिलित है । समाज के एक सदस्य के रूप में प्रत्येक व्यक्ति को सामाजिक सुरक्षा का अधिकार है और प्रत्येक व्यक्ति को अपने व्यक्तित्व के उस स्वतन्त्र विकास तथा गोरव के लिए—जो राष्ट्रीय प्रयत्न या अन्तर्राष्ट्रीय सहयोग तथा प्रत्येक राज्य के संगठन एवं साधनों के अनुकूल हो—अनिकार्यतः आवश्यक आर्थिक, सामाजिक, और सांस्कृतिक अधिकारों की प्राप्ति का हक़ है । प्रत्येक व्यक्ति को विश्राम और अवकाश का अधिकार है । इसके अन्तर्गत काम के घंटों की उचित हदबन्दी और समयसमय पर मज़दूरी सहित छुट्टियां सम्मिलित है । प्रत्येक व्यक्ति को ऐसी सामाजिक और अन्तर्राष्ट्रीय व्यवस्था की प्राप्ति का अधिकार है जिसमें इस घोषणा में उल्लिखित अधिकारों और स्वतन्त्रताओं को पूर्णतः प्राप्त किया जा सके ।
+*/
+@font-face {
+  font-family: "Noto Devangari Serif";
+  src: url("../fonts/NotoSerifDevanagari-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Sans Hebrew (rtl) - is an unmodulated (“sans serif”) design for texts in the Middle Eastern Hebrew script. It has multiple weights and widths, and 149 glyphs.
+כל אדם זכאי לחירות הדעה והבטוי, לרבות החירות להחיק בדעות ללא כל הפרעה, ולבקש ידיעות ודעות, ולקבלן ולמסרן בכל הדרכים וללא סייגי גבולות כל אדם, כחבר החברה, זכאי לבטחון סוציאלי וזכאי לתבוע שהזכויות הכלכליות הסוציאליות והתרבותיות, שהן חיוניות לכבודו כאדם ולהתפתחות החופשית של אישיותו, יובטחו במשמץ לאומי ובשיתוף פעולה בינלאומי בהתאם לארגונה ולאוצרותיה של המדינה כל אדם זכאי למנוחה ולפנאי, ובכלל זש הגבלת שעות העבודה במידה המתקבלת על הדעת וחופשה בשכר לעיתים מזומנות כל אדם זכאי למשטר סוציאלי ובינלאומי, שבו אפשר יהיה לקיים במלואן את הזכויות והחרויות אשר נקבעו בהכזש זו
+*/
+@font-face {
+  font-family: "Noto Hebrew Sans";
+  src: url("../fonts/NotoSansHebrew-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Serif Hebrew (rtl) is a modulated (“serif”) design for texts in the Middle Eastern Hebrew script. It has multiple weights and widths, and 150 glyphs.
+כל אדם זכאי לחירות הדעה והבטוי, לרבות החירות להחיק בדעות ללא כל הפרעה, ולבקש ידיעות ודעות, ולקבלן ולמסרן בכל הדרכים וללא סייגי גבולות כל אדם, כחבר החברה, זכאי לבטחון סוציאלי וזכאי לתבוע שהזכויות הכלכליות הסוציאליות והתרבותיות, שהן חיוניות לכבודו כאדם ולהתפתחות החופשית של אישיותו, יובטחו במשמץ לאומי ובשיתוף פעולה בינלאומי בהתאם לארגונה ולאוצרותיה של המדינה כל אדם זכאי למנוחה ולפנאי, ובכלל זש הגבלת שעות העבודה במידה המתקבלת על הדעת וחופשה בשכר לעיתים מזומנות כל אדם זכאי למשטר סוציאלי ובינלאומי, שבו אפשר יהיה לקיים במלואן את הזכויות והחרויות אשר נקבעו בהכזש זו
+*/
+@font-face {
+  font-family: "Noto Hebrew Serif";
+  src: url("../fonts/NotoSerifHebrew-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Sans JP - is an unmodulated (“sans serif”) design for the Japanese language and other languages used in Japan. It covers Hiragana, Katakana and Kanji. It also supports Latin, Cyrillic, Greek and Hangul. It has multiple weights.
+人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは、世界における自由、正義及び平和の基礎であるので、 人権の無視及び軽侮が、人類の良心を踏みにじった野蛮行為をもたらし、言論及び信仰の自由が受けられ、恐怖及び欠乏のない世界の到来が、一般の人々の最高の願望として宣言されたので、 人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするためには、法の支配によって人権を保護することが肝要であるので、 諸国間の友好関係の発展を促進することが肝要であるので、国際連合の諸国民は、国連憲章において、基本的人権、人間の尊厳及び価値並びに男女の同権についての信念を再確認し、かつ、一層大きな自由のうちで社会的進歩と生活水準の向上とを促進することを決意したので、
+*/
+@font-face {
+  font-family: "Noto Japanese Sans";
+  src: url("../fonts/NotoSansJP-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Serif JP - is a modulated (“serif”) design for the Japanese language and other languages used in Japan. It supports Hiragana, Katakana, Kanji, Latin, Cyrillic, Greek and Hangul. It has multiple weights.
+人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは、世界における自由、正義及び平和の基礎であるので、 人権の無視及び軽侮が、人類の良心を踏みにじった野蛮行為をもたらし、言論及び信仰の自由が受けられ、恐怖及び欠乏のない世界の到来が、一般の人々の最高の願望として宣言されたので、 人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするためには、法の支配によって人権を保護することが肝要であるので、 諸国間の友好関係の発展を促進することが肝要であるので、国際連合の諸国民は、国連憲章において、基本的人権、人間の尊厳及び価値並びに男女の同権についての信念を再確認し、かつ、一層大きな自由のうちで社会的進歩と生活水準の向上とを促進することを決意したので、 加盟国は、国際連合と協力して、人権及び基本的自由の普遍的な尊重及び遵守の促進を達成することを誓約したので、 これらの権利及び自由に対する共通の理解は、この誓約を完全にするためにもっとも重要であるので、 よって、ここに、国連総会は、 社会の各個人及び各機関が、この世界人権宣言を常に念頭に置きながら、加盟国自身の人民の間にも、また、加盟国の管轄下にある地域の人民の間にも、これらの権利と自由との尊重を指導及び教育によって促進すること並びにそれらの普遍的措置によって確保することに努力するように、すべての人民とすべての国とが達成すべき共通の基準として、この人権宣言を公布する。
+*/
+@font-face {
+  font-family: "Noto Japanese Serif";
+  src: url("../fonts/NotoSerifJP-Regular.otf") format("opentype");
+}
+
+/*
+Noto Sans KR - is an unmodulated (“sans serif”) design for the Korean language using Hangul and the Korean Hanja scripts. It also supports Hiragana, Katakana, Latin, Cyrillic and Greek. It has multiple weights.
+모든 사람은 의견의 자유와 표현의 자유에 대한 권리를 가진다. 이러한 권리는 간섭없이 의견을 가질 자유와 국경에 관계없이 어떠한 매체를 통해서도 정보와 사상을 추구하고, 얻으며, 전달하는 자유를 포함한다. 모든 사람은 사회의 일원으로서 사회보장을 받을 권리를 가지며, 국가적 노력과 국제적 협력을 통하여, 그리고 각 국가의 조직과 자원에 따라서 자신의 존엄과 인격의 자유로운 발전에 불가결한 경제적, 사회적 및 문화적 권리들을 실현할 권리를 가진다. 모든 사람은 노동시간의 합리적 제한과 정기적인 유급휴가를 포함하여 휴식과 여가의 권리를 가진다. 모든 사람은 이 선언에 규정된 권리와 자유가 완전히 실현될 수 있도록 사회적, 국제적 질서에 대한 권리를 가진다.
+*/
+@font-face {
+  font-family: "Noto Korean Sans";
+  src: url("../fonts/NotoSansKR-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Serif KR - is a modulated (“serif”) design for the Korean language using Hangul and the Korean Hanja scripts. It also supports Hiragana, Katakana, Latin, Cyrillic and Greek. It has multiple weights.
+이 선언의 어떠한 규정도 어떤 국가, 집단 또는 개인에게 이 선언에 규정된 어떠한 권리와 자유를 파괴하기 위한 활동에 가담하거나 또는 행위를 할 수 있는 권리가 있는 것으로 해석되어서는 아니된다. 모든 인류 구성원의 천부의 존엄성과 동등하고 양도할 수 없는 권리를 인정하는 것이 세계의 자유, 정의 및 평화의 기초이며, 인권에 대한 무시와 경멸이 인류의 양심을 격분시키는 만행을 초래하였으며, 인간이 언론과 신앙의 자유, 그리고 공포와 결핍으로부터의 자유를 누릴 수 있는 세계의 도래가 모든 사람들의 지고한 열망으로서 천명되어 왔으며, 인간이 폭정과 억압에 대항하는 마지막 수단으로서 반란을 일으키도록 강요받지 않으려면, 법에 의한 통치에 의하여 인권이 보호되어야 하는 것이 필수적이며, 국가간에 우호관계의 발전을 증진하는 것이 필수적이며, 국제연합의 모든 사람들은 그 헌장에서 기본적 인권, 인간의 존엄과 가치, 그리고 남녀의 동등한 권리에 대한 신념을 재확인하였으며, 보다 폭넓은 자유속에서 사회적 진보와 보다 나은 생활수준을 증진하기로 다짐하였고, 회원국들은 국제연합과 협력하여 인권과 기본적 자유의 보편적 존중과 준수를 증진할 것을 스스로 서약하였으며,
+*/
+@font-face {
+  font-family: "Noto Korean Serif";
+  src: url("../fonts/NotoSerifKR-Regular.otf") format("opentype");
+}
+
+/*
+Noto Sans Mongolian - is an unmodulated (“sans serif”) design for texts in the Central Asian Mongolian script. It has 1,563 glyphs.
+ᠬᠦᠮᠦᠨ ᠪᠦᠷ ᠲᠥᠷᠥᠵᠦ ᠮᠡᠨᠳᠡᠯᠡᠬᠦ ᠡᠷᠬᠡ ᠴᠢᠯᠥᠭᠡ ᠲᠡᠢ᠂ ᠠᠳᠠᠯᠢᠬᠠᠨ ᠨᠡᠷ᠎ᠡ ᠲᠥᠷᠥ ᠲᠡᠢ᠂ ᠢᠵᠢᠯ ᠡᠷᠬᠡ ᠲᠡᠢ ᠪᠠᠢᠠᠭ᠃ ᠣᠶᠤᠨ ᠤᠬᠠᠭᠠᠨ᠂ ᠨᠠᠨᠳᠢᠨ ᠴᠢᠨᠠᠷ ᠵᠠᠶᠠᠭᠠᠰᠠᠨ ᠬᠦᠮᠦᠨ ᠬᠡᠭᠴᠢ ᠥᠭᠡᠷ᠎ᠡ ᠬᠣᠭᠣᠷᠣᠨᠳᠣ᠎ᠨ ᠠᠬᠠᠨ ᠳᠡᠭᠦᠦ ᠢᠨ ᠦᠵᠢᠯ ᠰᠠᠨᠠᠭᠠ ᠥᠠᠷ ᠬᠠᠷᠢᠴᠠᠬᠥ ᠤᠴᠢᠷ ᠲᠠᠢ᠃ ᠬᠦᠮᠦᠨ ᠪᠦᠷ ᠲᠥᠷᠥᠵᠦ ᠮᠡᠨᠳᠡᠯᠡᠬᠦ ᠡᠷᠬᠡ ᠴᠢᠯᠥᠭᠡ ᠲᠡᠢ᠂ ᠠᠳᠠᠯᠢᠬᠠᠨ ᠨᠡᠷ᠎ᠡ ᠲᠥᠷᠥ ᠲᠡᠢ᠂ ᠢᠵᠢᠯ ᠡᠷᠬᠡ ᠲᠡᠢ ᠪᠠᠢᠠᠭ᠃ ᠣᠶᠤᠨ ᠤᠬᠠᠭᠠᠨ᠂ ᠨᠠᠨᠳᠢᠨ ᠴᠢᠨᠠᠷ ᠵᠠᠶᠠᠭᠠᠰᠠᠨ ᠬᠦᠮᠦᠨ ᠬᠡᠭᠴᠢ ᠥᠭᠡᠷ᠎ᠡ ᠬᠣᠭᠣᠷᠣᠨᠳᠣ᠎ᠨ ᠠᠬᠠᠨ ᠳᠡᠭᠦᠦ ᠢᠨ ᠦᠵᠢᠯ ᠰᠠᠨᠠᠭᠠ ᠥᠠᠷ ᠬᠠᠷᠢᠴᠠᠬᠥ ᠤᠴᠢᠷ ᠲᠠᠢ᠃ ᠬᠦᠮᠦᠨ ᠪᠦᠷ ᠲᠥᠷᠥᠵᠦ ᠮᠡᠨᠳᠡᠯᠡᠬᠦ ᠡᠷᠬᠡ ᠴᠢᠯᠥᠭᠡ ᠲᠡᠢ᠂ ᠠᠳᠠᠯᠢᠬᠠᠨ ᠨᠡᠷ᠎ᠡ ᠲᠥᠷᠥ ᠲᠡᠢ᠂ ᠢᠵᠢᠯ ᠡᠷᠬᠡ ᠲᠡᠢ ᠪᠠᠢᠠᠭ᠃ ᠣᠶᠤᠨ ᠤᠬᠠᠭᠠᠨ᠂ ᠨᠠᠨᠳᠢᠨ ᠴᠢᠨᠠᠷ ᠵᠠᠶᠠᠭᠠᠰᠠᠨ ᠬᠦᠮᠦᠨ ᠬᠡᠭᠴᠢ ᠥᠭᠡᠷ᠎ᠡ ᠬᠣᠭᠣᠷᠣᠨᠳᠣ᠎ᠨ ᠠᠬᠠᠨ ᠳᠡᠭᠦᠦ ᠢᠨ ᠦᠵᠢᠯ ᠰᠠᠨᠠᠭᠠ ᠥᠠᠷ ᠬᠠᠷᠢᠴᠠᠬᠥ ᠤᠴᠢᠷ ᠲᠠᠢ᠃
+*/
+@font-face {
+  font-family: "Noto Mongolian Sans";
+  src: url("../fonts/NotoSansMongolian-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Sans Tai Le - is an unmodulated (“sans serif”) design for texts in the Southeast Asian Tai Le script. It has 71 glyphs.
+ᥓᥣᥳ ᥞᥨᥛ ᥑᥤᥴ, ᥘᥤ ᥞᥨᥛ ᥓᥨᥛᥰ. ᥓᥣᥳ ᥙᥣᥰ ᥘᥤ, ᥑᥤᥴ ᥙᥣᥰ ᥓᥨᥛᥰ. ᥓᥣᥳ ᥛᥥᥰ ᥞᥭᥱ ᥛᥨᥝᥲ ᥘᥦᥝᥴ, ᥓᥣᥳ ᥛᥦᥝᥴ ᥟᥝ ᥟᥤᥰ ᥔᥣᥖᥱ. ᥓᥬ ᥐᥨᥢᥰ ᥟᥛᥱ ᥞᥨᥛ ᥗᥨᥭᥲ, ᥐᥤᥢ ᥐᥨᥭᥲ ᥐᥙᥴ ᥐᥫ ᥕᥒ ᥛᥤᥰ. ᥓᥬ ᥘᥛ ᥘᥩᥢᥰ ᥟᥛᥱ ᥘᥙᥴ, ᥓᥬ ᥓᥙᥴ ᥘᥩᥢᥰ ᥟᥛᥱ ᥘᥭᥲ. ᥓᥬ ᥙᥥᥝᥱ ᥓᥒᥱ ᥙᥤᥰ, ᥛᥤᥰ ᥒᥫᥢᥰ ᥓᥒᥱ ᥐᥭᥳ. ᥓᥬᥳ ᥙᥫᥢ ᥟᥛᥱ ᥓᥬᥳ ᥘᥣᥭ, ᥝᥣᥭᥰ ᥘᥒᥴ ᥓᥒᥱ ᥛᥣᥰ ᥗᥦᥒᥲ. ᥓᥝᥲ ᥐᥤᥢ ᥝᥣ ᥓᥝᥲ ᥛᥐ, ᥑᥣᥲ ᥐᥤᥢ ᥝᥣ ᥑᥣᥲ ᥞᥤᥖ. ᥓᥝᥲ ᥘᥣᥰ ᥛᥩᥒᥰ ᥜᥨᥢᥴ, ᥓᥝᥲ ᥐᥤᥰ ᥛᥩᥒᥰ ᥙᥩᥭᥰ. ᥓᥝᥲ ᥟᥛᥱ ᥕᥩᥒᥲ ᥑᥩᥒᥴ ᥟᥛᥱ ᥐᥣ, ᥓᥝᥲ ᥟᥛᥱ ᥔᥣ ᥑᥩᥒᥴ ᥟᥛᥱ ᥙᥨᥝᥰ. ᥓᥣᥒ ᥟᥨᥙᥱ ᥔᥪᥳ ᥘᥭᥲ ᥙᥨᥝᥰ, ᥓᥣᥒ ᥕᥨᥝᥰ ᥑᥣᥭᥴ ᥘᥭᥲ ᥐᥣ. ᥓᥝᥲ ᥙᥤ ᥘᥩᥒᥳ, ᥑᥩᥒᥴ ᥟᥛᥱ ᥙᥤ ᥘᥩᥒᥳ, ᥞᥐ ᥐᥢ ᥞᥬᥲ ᥙᥢ ᥘᥣᥭ, ᥔᥪᥳ ᥑᥣᥭᥴ ᥞᥬᥲ ᥛᥫᥢᥴ ᥙᥫᥢ.
+*/
+@font-face {
+  font-family: "Noto Tai Le Sans";
+  src: url("../fonts/NotoSansTaiLe-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Sans Tai Tham - is an unmodulated (“sans serif”) design for texts in the Southeast Asian Lanna (Tai Tham) script. It has multiple weights and 799 glyphs.
+ᨾᨶᩩᩔ᩼ᨴ᩠ᨦᩢᩉᩖᩣ᩠ᨿᨠᩮ᩠ᨯᩨᨾᩣᨾᩦᨻ᩠ᨦᩈᩁᩓᩢᨹ᩠ᨿ᩵ᨦᨻ᩠ᨿᨦᨠ᩠ᨶᩢ ᨶᩱᨠᩥᨲ᩠ᨲᩥᩈ᩠ᨠᩢ ᩓᩢᩈᩥᨴ᩠ᨵᩥ ᨲ᩵ᩣ᩠ᨦᨣᩳ᩶ᨣᩢᨾᩦᨾᨶᩮᩣᨵᨾ᩠ᨾ᩼ᩓᩢ ᨣ
+*/
+@font-face {
+  font-family: "Noto Tai Tham Sans";
+  src: url("../fonts/NotoSansTaiTham-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Sans Thai - is an unmodulated (“sans serif”) design of the Southeast Asian Thai script, suitable for all texts. It has 212 glyphs.
+โดยที่การยอมรับศักดิ์ศรีแต่กำเนิด และสิทธิที่เท่าเทียมกันและที่ไม่อาจเพิกถอนได้ของสมาชิกทั้งมวลแห่งครอบครัวมนุษยชาติ เป็นพื้นฐานแห่งอิสรภาพ ความยุติธรรม และสันติภาพในโลก การไม่นำพาและการหมิ่นในคุณค่าของสิทธิมนุษยชน ยังผลให้มีการกระทำอันป่าเถื่อน ซึ่งเป็นการขัดอย่างร้ายแรงต่อมโนธรรมของมนุษยชาติ และการมาถึงของโลกที่ได้มีการประกาศให้ความมีอิสรภาพในการพูดและความเชื่อ และอิสรภาพจากความหวาดกลัวและความต้องการของมนุษย์ เป็นความปรารถนาสูงสุดของประชาชนทั่วไป โดยที่เป็นการจำเป็นที่สิทธิมนุษยชนควรได้รับความคุ้มครองโดยหลักนิติธรรม ถ้าจะไม่บังคับให้คนต้องหันเข้าหาการลุกขึ้นต่อต้านทรราชและการกดขี่เป็นวิถีทางสุดท้าย โดยที่เป็นการจำเป็นที่จะส่งเสริมพัฒนาการแห่งความสัมพันธ์ฉันมิตรระหว่างชาติต่างๆ
+*/
+@font-face {
+  font-family: "Noto Thai Sans";
+  src: url("../fonts/NotoSansThai-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Serif Thai - is a modulated (“serif”) design for texts in the Southeast Asian Thai script. It has multiple weights and widths, and 140 glyphs.
+โดยที่การยอมรับศักดิ์ศรีแต่กำเนิด และสิทธิที่เท่าเทียมกันและที่ไม่อาจเพิกถอนได้ของสมาชิกทั้งมวลแห่งครอบครัวมนุษยชาติ เป็นพื้นฐานแห่งอิสรภาพ ความยุติธรรม และสันติภาพในโลก การไม่นำพาและการหมิ่นในคุณค่าของสิทธิมนุษยชน ยังผลให้มีการกระทำอันป่าเถื่อน ซึ่งเป็นการขัดอย่างร้ายแรงต่อมโนธรรมของมนุษยชาติ และการมาถึงของโลกที่ได้มีการประกาศให้ความมีอิสรภาพในการพูดและความเชื่อ และอิสรภาพจากความหวาดกลัวและความต้องการของมนุษย์ เป็นความปรารถนาสูงสุดของประชาชนทั่วไป โดยที่เป็นการจำเป็นที่สิทธิมนุษยชนควรได้รับความคุ้มครองโดยหลักนิติธรรม ถ้าจะไม่บังคับให้คนต้องหันเข้าหาการลุกขึ้นต่อต้านทรราชและการกดขี่เป็นวิถีทางสุดท้าย โดยที่เป็นการจำเป็นที่จะส่งเสริมพัฒนาการแห่งความสัมพันธ์ฉันมิตรระหว่างชาติต่างๆ
+*/
+@font-face {
+  font-family: "Noto Thai Serif";
+  src: url("../fonts/NotoSerifThai-Regular.ttf") format("opentype");
+}
+
+/*
+Noto Sans Tirhuta - is an unmodulated (“sans serif”) design for texts in the Indic Tirhuta script. It has 262 glyphs.
+𑒮𑒩𑓂𑒫𑒹 𑒧𑒰𑒢𑒫𑒰𑓁 𑒮𑓂𑒫𑒞𑒢𑓂𑒞𑓂𑒩𑒰𑓁 𑒮𑒧𑒳𑒞𑓂𑒣𑒢𑓂𑒢𑒰𑓁 𑒫𑒩𑓂𑒞𑒢𑓂𑒞𑒹 𑒁𑒣𑒱 𑒔, 𑒑𑒾𑒩𑒫𑒠𑒵𑒬𑒰 𑒁𑒡𑒱𑒏𑒰𑒩𑒠𑒵𑒬𑒰 𑒔 𑒮𑒧𑒰𑒢𑒰𑓁 𑒋𑒫 𑒫𑒩𑓂𑒞𑒢𑓂𑒞𑒹। 𑒋𑒞𑒹 𑒮𑒩𑓂𑒫𑒹 𑒔𑒹𑒞𑒢𑒰𑒞𑒩𑓂𑒏𑒬𑒏𑓂𑒞𑒱𑒦𑓂𑒨𑒰𑓀 𑒮𑒳𑒮𑒧𑓂𑒣𑒢𑓂𑒢𑒰𑓁 𑒮𑒢𑓂𑒞𑒱। 𑒁𑒣𑒱 𑒔, 𑒮𑒩𑓂𑒫𑒹𑓄𑒣𑒱 𑒥𑒢𑓂𑒡𑒳𑒞𑓂𑒫𑒦𑒰𑒫𑒢𑒨𑒰 𑒣𑒩𑒮𑓂𑒣𑒩𑓀 𑒫𑓂𑒨𑒫𑒯𑒩𑒢𑓂𑒞𑒳। 𑒁𑒮𑓂𑒨𑒰𑓀 𑒁𑒦𑒱𑒒𑒼𑒭𑒝𑒰𑒨𑒰𑓀 𑒢𑒱𑒩𑓂𑒠𑒱𑒭𑓂𑒙𑒰𑓁 𑒮𑒩𑓂𑒫𑒹𑓄𑒣𑒱 𑒁𑒡𑒱𑒏𑒰𑒩𑒰𑓁 𑒮𑒩𑓂𑒫𑒰𑒝𑓂𑒨𑒣𑒱 𑒔 𑒮𑓂𑒫𑒰𑒞𑒢𑓂𑒞𑓂𑒩𑓂𑒨𑒰𑒝𑒱, 𑒫𑒱𑒢𑒻𑒫 𑒖𑒰𑒞𑒱𑒫𑒩𑓂𑒝𑒪𑒱𑓀𑒑𑒦𑒰𑒭𑒰𑒡𑒩𑓂𑒧𑒩𑒰𑒖𑒢𑒲𑒞𑒱𑒏𑒞𑒠𑒱𑒞𑒩𑒧𑒢𑓂𑒞𑒫𑓂𑒨𑒰𑒠𑒱𑒦𑒹𑒠𑒧𑓂, 𑒩𑒰𑒭𑓂𑒙𑓂𑒩𑒱𑒨𑓀 𑒮𑒰𑒧𑒰𑒖𑒱𑒏𑒰𑒡𑒰𑒩𑓀 𑒮𑒧𑓂𑒣𑒖𑓂𑒖𑒢𑓂𑒧𑒞𑒠𑒱𑒞𑒩 𑒮𑓂𑒞𑒩𑒘𑓂𑒔 𑒁𑒫𑒱𑒑𑒝𑒨𑓂𑒨, 𑒁𑒡𑒱𑒑𑒢𑓂𑒞𑒳𑓀 𑒮𑒩𑓂𑒫𑒼𑓄𑒣𑒱 𑒖𑒢𑓁 𑒣𑓂𑒩𑒦𑒫𑒞𑒱। 𑒋𑒞𑒠𑒞𑒱𑒩𑒱𑒏𑓂𑒞𑒧𑓂, 𑒏𑒮𑓂𑒨𑒰𑒬𑓂𑒔𑒱𑒠𑒣𑒱 𑒣𑓂𑒩𑒦𑒳𑒮𑒞𑓂𑒞𑒰𑒨𑒰𑓁 𑒢𑒱𑒨𑒧𑒢𑒰𑒢𑓂𑒞𑒩𑓂𑒑𑒞𑒧𑓂, 𑒮𑓂𑒫𑒰𑒡𑒲𑒢𑒮𑓂𑒨 𑒂𑒞𑓂𑒧𑒣𑓂𑒩𑒬𑒰𑒮𑒢𑒹𑒞𑒩𑒞𑒢𑓂𑒞𑓂𑒩𑒮𑓂𑒨, 𑒢𑓂𑒨𑒰𑒮𑒱𑒞𑒢𑓂𑒞𑓂𑒩𑒮𑓂𑒨 𑒫𑒰 𑒫𑒰𑒮𑓂𑒞𑒫𑓂𑒨𑒮𑓂𑒨 𑒣𑓂𑒩𑒠𑒹𑒬𑒮𑓂𑒨 𑒠𑒹𑒬𑒮𑓂𑒨 𑒫𑒰 𑒩𑒰𑒖𑒢𑒲𑒞𑒱𑒏𑒮𑒲𑒧𑒰𑒢𑒱𑒥𑒢𑓂𑒡𑒢𑒰𑒢𑓂𑒞𑒰𑒩𑒰𑒭𑓂𑒙𑓂𑒩𑒱𑒏𑒮𑓂𑒞𑒩𑒰𑒡𑒰𑒩𑒹𑒝 𑒢 𑒏𑒼𑓄𑒣𑒱 𑒦𑒹𑒠𑒼 𑒫𑒱𑒡𑒰𑒮𑓂𑒨𑒞𑒹।
+*/
+@font-face {
+  font-family: "Noto Tirhuta Sans";
+  src: url("../fonts/NotoSansTirhuta-Regular.ttf") format("opentype");
+}
+
+/*
+Roboto (common alphabetic) - in Sans, Serif, Mono - each with regular, bold, italic and bolditalic versions
+*/
+@font-face {
+  font-family: "Roboto Sans";
+  src: url("../fonts/Roboto-Regular.ttf") format("opentype");
+}
+@font-face {
+  font-family: "Roboto Sans";
+  src: url("../fonts/Roboto-Bold.ttf") format("opentype");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "Roboto Sans";
+  src: url("../fonts/Roboto-Italic.ttf") format("opentype");
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto Sans";
+  src: url("../fonts/Roboto-BoldItalic.ttf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Roboto Serif";
+  src: url("../fonts/RobotoSerif-Regular.ttf") format("opentype");
+}
+@font-face {
+  font-family: "Roboto Serif";
+  src: url("../fonts/RobotoSerif-Bold.ttf") format("opentype");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "Roboto Serif";
+  src: url("../fonts/RobotoSerif-Italic.ttf") format("opentype");
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto Serif";
+  src: url("../fonts/RobotoSerif-BoldItalic.ttf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("../fonts/RobotoMono-Regular.ttf") format("opentype");
+}
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("../fonts/RobotoMono-Bold.ttf") format("opentype");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("../fonts/RobotoMono-Italic.ttf") format("opentype");
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("../fonts/RobotoMono-BoldItalic.ttf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+/*
+Roboto Flex (common alphabetic) - variable font
+See https://fonts.google.com/specimen/Roboto+Flex/about?query=roboto
+*/
+@font-face {
+  font-family: "Roboto Flex";
+  src: url("../fonts/RobotoFlex-VariableFont_GRAD,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf") format("opentype");
+  font-weight: 100 900;
+  font-stretch: 25% 150%;
+  font-style: oblique 0deg -10deg;
+}
+
+/*
+EB Garamond (common alphabetic) - Serif, with regular, bold, italic and bolditalic versions
+*/
+@font-face {
+  font-family: "Garamond";
+  src: url("../fonts/EBGaramond-Regular.ttf") format("opentype");
+}
+@font-face {
+  font-family: "Garamond";
+  src: url("../fonts/EBGaramond-Bold.ttf") format("opentype");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "Garamond";
+  src: url("../fonts/EBGaramond-Italic.ttf") format("opentype");
+  font-style: italic;
+}
+@font-face {
+  font-family: "Garamond";
+  src: url("../fonts/EBGaramond-BoldItalic.ttf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+/*
+Bungee (common alphabetic) - in Sans
+*/
+@font-face {
+  font-family: "Bungee";
+  src: url("../fonts/Bungee-Regular.ttf") format("opentype");
+}
+
+/*
+Bungee Spice (common alphabetic) - coloured font, in Sans
+See https://fonts.google.com/specimen/Bungee+Spice?query=bungee
+*/
+@font-face {
+  font-family: "Bungee Spice";
+  src: url("../fonts/BungeeSpice-Regular.ttf") format("opentype") tech("color-COLRv1");
+}
+
+/*
+Carter One (common alphabetic) - in Sans
+*/
+@font-face {
+  font-family: "Carter One";
+  src: url("../fonts/CarterOne-Regular.ttf") format("opentype");
+}
+
+/*
+Mountains Of Christmas (common alphabetic) - in Fantasy
+*/
+@font-face {
+  font-family: "Mountains Of Christmas";
+  src: url("../fonts/MountainsofChristmas-Bold.ttf") format("opentype");
+}
+
+/*
+Noto Color Emoji (emoji)
+*/
+@font-face {
+  font-family: "Noto Color Emoji";
+  src: url("../fonts/NotoColorEmoji-Regular.ttf") format("opentype");
+}
