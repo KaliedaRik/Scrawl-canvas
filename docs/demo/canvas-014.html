@@ -1394,7 +1394,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Performing tests ...&#x27;</span>);
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>), <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(scrawl, canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>), <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
 
     pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>));
 
@@ -1404,7 +1404,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     });
 });
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>), <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(scrawl, canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>), <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {
 
     pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>));
 
@@ -1414,7 +1414,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     });
 });
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>), <span class="hljs-number">4000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(scrawl, canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>), <span class="hljs-number">4000</span>, <span class="hljs-function">() =&gt;</span> {
 
     pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>));
 
@@ -1424,7 +1424,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     });
 });
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>), <span class="hljs-number">5000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(scrawl, canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>), <span class="hljs-number">5000</span>, <span class="hljs-function">() =&gt;</span> {
 
     scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;path-line&#x27;</span>)).<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">endPath</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>),

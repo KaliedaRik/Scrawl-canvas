@@ -308,7 +308,7 @@ console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
-killArtefact(canvas, name('pin-1'), 2000, () => {
+killArtefact(scrawl, canvas, name('pin-1'), 2000, () => {
 
     pins.addArtefacts(name('pin-1'));
 
@@ -318,7 +318,7 @@ killArtefact(canvas, name('pin-1'), 2000, () => {
     });
 });
 
-killArtefact(canvas, name('pin-5'), 3000, () => {
+killArtefact(scrawl, canvas, name('pin-5'), 3000, () => {
 
     pins.addArtefacts(name('pin-5'));
 
@@ -328,7 +328,7 @@ killArtefact(canvas, name('pin-5'), 3000, () => {
     });
 });
 
-killArtefact(canvas, name('pin-7'), 4000, () => {
+killArtefact(scrawl, canvas, name('pin-7'), 4000, () => {
 
     pins.addArtefacts(name('pin-7'));
 
@@ -338,7 +338,7 @@ killArtefact(canvas, name('pin-7'), 4000, () => {
     });
 });
 
-killArtefact(canvas, name('my-bezier'), 5000, () => {
+killArtefact(scrawl, canvas, name('my-bezier'), 5000, () => {
 
     scrawl.findEntity(name('path-line')).set({
         endPath: name('my-bezier'),

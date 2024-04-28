@@ -288,4 +288,4 @@ console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
-killPolylineArtefact(canvas, name('pin-2'), 3000, myline, () => myline.updatePinAt(name('pin-2'), 2));
+killPolylineArtefact(scrawl, canvas, name('pin-2'), 3000, myline, () => myline.updatePinAt(name('pin-2'), 2));

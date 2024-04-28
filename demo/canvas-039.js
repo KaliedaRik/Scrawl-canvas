@@ -84,7 +84,7 @@ scrawl.makeGroup({
 // Create draggable entitys
 scrawl.makeWheel({
 
-    name: name('wheel-1'),
+    name: name('wheel-red'),
     group: name('drag-group'),
 
     radius: 40,
@@ -96,22 +96,23 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: name('wheel-2'),
+    name: name('wheel-blue'),
     start: [250, 250],
     fillStyle: 'blue',
 
 }).clone({
 
-    name: name('wheel-3'),
+    name: name('wheel-green'),
     start: [350, 250],
     fillStyle: 'green',
 
 }).clone({
 
-    name: name('wheel-4'),
+    name: name('wheel-yellow'),
     start: [350, 150],
     fillStyle: 'yellow',
 });
+
 
 scrawl.makeBlock({
 
@@ -134,6 +135,16 @@ scrawl.makeWheel({
     handle: ['center', 'center'],
 
     lockTo: 'mouse',
+});
+
+
+// Test to make sure EnhancedLabel entitys can be used on non-base Cells
+scrawl.makeEnhancedLabel({
+    name: name('label'),
+    group: name('drag-group'),
+    layoutTemplate: name('wheel-yellow'),
+    text: 'Drag the dots around the canvas',
+    justifyLine: 'space-around',
 });
 
 

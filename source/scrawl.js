@@ -34,6 +34,7 @@ export {
     findArtefact,
     findAsset,
     findCanvas,
+    findCell,
     findElement,
     findEntity,
     findFilter,

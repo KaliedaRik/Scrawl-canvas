@@ -106,4 +106,4 @@ scrawl.addNativeListener('click', flyRocket, stack.domElement);
 console.log(scrawl.library);
 
 console.log('Performing tests ...');
-killTicker(stack, name('template_ticker'), 4000);
+killTicker(scrawl, stack, name('template_ticker'), 4000);

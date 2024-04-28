@@ -236,7 +236,7 @@ scrawl.makeUpdater({
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop([canvas, element], `#${namespace} .assets`, piccy);
+addImageDragAndDrop(scrawl, [canvas, element], `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

@@ -1687,7 +1687,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getCanvasTextHold</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CELL</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">type</span>=== <span class="hljs-variable constant_">T_CANVAS</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">textHold</span>) <span class="hljs-keyword">return</span> item.<span class="hljs-property">controller</span>;</pre></div></div>
+        <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CELL</span> &amp;&amp; item.<span class="hljs-property">controller</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CANVAS</span> &amp;&amp; item.<span class="hljs-property">controller</span>.<span class="hljs-property">textHold</span>) <span class="hljs-keyword">return</span> item.<span class="hljs-property">controller</span>;</pre></div></div>
             
         </li>
         

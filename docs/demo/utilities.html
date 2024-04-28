@@ -885,21 +885,6 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
-<span class="hljs-keyword">const</span> L = scrawl.<span class="hljs-property">library</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
@@ -948,11 +933,11 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-2">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <p>Get a full, dynamic report on the Scrawl-canvas library’s current contents</p>
 
@@ -1037,17 +1022,19 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p>Test to check that artefacts are properly killed and resurrected</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killArtefact</span> = (<span class="hljs-params">canvas, name, time, finishResurrection = () =&gt; {}</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killArtefact</span> = (<span class="hljs-params">scrawl, canvas, name, time, finishResurrection = () =&gt; {}</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> L = scrawl.<span class="hljs-property">library</span>;
 
     <span class="hljs-keyword">if</span> (canvas &amp;&amp; canvas.<span class="hljs-property">base</span> &amp;&amp; name &amp;&amp; time) {
 
@@ -1109,17 +1096,19 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>To test styles (Gradient) kill functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killStyle</span> = (<span class="hljs-params">canvas, name, time, finishResurrection = () =&gt; {}</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killStyle</span> = (<span class="hljs-params">scrawl, canvas, name, time, finishResurrection = () =&gt; {}</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> L = scrawl.<span class="hljs-property">library</span>;
 
     <span class="hljs-keyword">if</span> (canvas &amp;&amp; canvas.<span class="hljs-property">base</span> &amp;&amp; name &amp;&amp; time) {
 
@@ -1161,17 +1150,19 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>To test artefact + anchor kill functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killArtefactAndAnchor</span> = (<span class="hljs-params">canvas, name, anchorname, time, finishResurrection = () =&gt; {}</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killArtefactAndAnchor</span> = (<span class="hljs-params">scrawl, canvas, name, anchorname, time, finishResurrection = () =&gt; {}</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> L = scrawl.<span class="hljs-property">library</span>;
 
     <span class="hljs-keyword">const</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>;
 
@@ -1232,17 +1223,19 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>To test Polyline artefact kill functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killPolylineArtefact</span> = (<span class="hljs-params">canvas, name, time, myline, restore = () =&gt; {}</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killPolylineArtefact</span> = (<span class="hljs-params">scrawl, canvas, name, time, myline, restore = () =&gt; {}</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> L = scrawl.<span class="hljs-property">library</span>;
 
     <span class="hljs-keyword">const</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>;
 
@@ -1310,7 +1303,9 @@
     }, time);
 };
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">killTicker</span> = (<span class="hljs-params">stack, name, time</span>) =&gt; {
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">killTicker</span> = (<span class="hljs-params">scrawl, stack, name, time</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> L = scrawl.<span class="hljs-property">library</span>;
 
     <span class="hljs-keyword">let</span> packet;
 
@@ -1339,16 +1334,16 @@
     }, time);
 };
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">addImageDragAndDrop</span> = (<span class="hljs-params">canvas, selector, targets, callback = () =&gt; {}</span>) =&gt; {</pre></div></div>
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">addImageDragAndDrop</span> = (<span class="hljs-params">scrawl, canvas, selector, targets, callback = () =&gt; {}</span>) =&gt; {</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
 
@@ -1402,11 +1397,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Create a name for our new asset</p>
 
@@ -1418,11 +1413,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Add the image to the DOM and create our asset from it</p>
 
@@ -1440,11 +1435,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Update our Picture entity’s asset attribute so it displays the new image</p>
 
@@ -1469,11 +1464,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>HOW TO: set the Picture entity’s copy dimensions to take into account any difference between the old and new image’s dimensions</p>
 <ul>
@@ -1534,16 +1529,16 @@
     };
 };
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">addCheckerboardBackground</span> = (<span class="hljs-params">canvas, namespace</span>) =&gt; {</pre></div></div>
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">addCheckerboardBackground</span> = (<span class="hljs-params">scrawl, canvas, namespace</span>) =&gt; {</pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Namespace boilerplate</p>
 
@@ -1554,11 +1549,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Create the background</p>
 

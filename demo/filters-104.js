@@ -254,7 +254,7 @@ const target = scrawl.makePicture({
 
 // Add some Drag-and-Drop image loading functionality
 // + So users can check the filter effects against different images
-addImageDragAndDrop(canvas, `#${namespace} .assets`, target);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, target);
 
 
 // #### Scene animation

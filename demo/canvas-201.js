@@ -189,8 +189,8 @@ console.log(scrawl.library);
 
 // Kill, and packet, functionality tests
 console.log('Performing tests ...');
-killArtefact(canvas, name('mylabel_fill'), 4000);
-killArtefact(canvas, name('mylabel_fillAndDraw'), 6000);
+killArtefact(scrawl, canvas, name('mylabel_fill'), 4000);
+killArtefact(scrawl, canvas, name('mylabel_fillAndDraw'), 6000);
 
 // Accessible text manipulation
 setTimeout(() => scrawl.library.artefact[name('mylabel_clear')].set({ textIsAccessible: true }), 8000);

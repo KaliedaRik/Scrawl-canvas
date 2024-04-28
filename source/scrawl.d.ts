@@ -3244,6 +3244,7 @@ export function findArtefact(item: string): ArtefactInstance;
 export function findAsset(item: string): AssetInstance;
 export function findEntity(item: string): EntityInstance;
 export function findCanvas(item: string): CanvasInstance;
+export function findCell(item: string): CellInstance;
 export function findStyles(item: string): StylesInstance;
 export function findTween(item: string): TweenInstance;
 export function findFilter(item: string): FilterInstance;

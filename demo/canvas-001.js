@@ -215,5 +215,5 @@ console.log('canvas.get(\'baseGroup\')', canvas.get('baseGroup'));
 console.log('canvas.base.get(\'group\')', canvas.base.get('group'));
 
 // Kill, and packet, functionality tests
-killArtefact(canvas, name('block-fill'), 4000);
-killArtefact(canvas, name('wheel-fillAndDraw'), 6000);
+killArtefact(scrawl, canvas, name('block-fill'), 4000);
+killArtefact(scrawl, canvas, name('wheel-fillAndDraw'), 6000);
