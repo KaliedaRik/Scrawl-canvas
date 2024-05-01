@@ -156,7 +156,7 @@ scrawl.makeDragZone({
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, `#${namespace} .assets`, myPicture);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, myPicture);
 
 
 // #### Development and testing

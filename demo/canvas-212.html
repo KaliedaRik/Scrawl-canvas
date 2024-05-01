@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 212</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    @font-face {
+      font-family: "Roboto Flex";
+      src: url("fonts/RobotoFlex-VariableFont.ttf") format("opentype");
+      font-weight: 100 900;
+      font-stretch: 25% 150%;
+      font-style: oblique 0deg 10deg;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-211.html">&larr; Previous</a>
+    <a href="filters-001.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 212</h1>
+  <h2>EnhancedLabel entity - updating font parts; experiments with variable font</h2>
+
+  <div class="controls">
+    <div class="blue label">Style</div>
+    <div class="blue">
+      <select class="controlItem" id="fillStyle">
+        <option value="">default</option>
+        <option value="red">red</option>
+        <option value="mycanvas-linear-gradient">gradient</option>
+        <option value="mycanvas-water-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="blue label">Lock style to entity</div>
+    <div class="blue">
+      <select class="controlItem" id="lockFillStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Font size</div>
+    <div class="green">
+      <select class="controlItem" id="fontSize">
+        <option value="25px">25px</option>
+        <option value="1.2em">1.2em</option>
+        <option value="140%">140%</option>
+        <option value="2vmax">2vmax</option>
+        <option value="2cap">2cap</option>
+      </select>
+    </div>
+
+    <div class="green label">Font variant caps</div>
+    <div class="green">
+      <select class="controlItem" id="fontVariantCaps">
+        <option value="normal">normal</option>
+        <option value="small-caps">small-caps</option>
+        <option value="all-small-caps">all-small-caps</option>
+        <option value="petite-caps">petite-caps</option>
+        <option value="all-petite-caps">all-petite-caps</option>
+        <option value="unicase">unicase</option>
+        <option value="titling-caps">titling-caps</option>
+      </select>
+    </div>
+
+    <div class="green label">Font weight (bold)</div>
+    <div class="green">
+      <input class="controlItem" id="fontWeight" type="range" value="400" min="100" max="900" step="10" />
+    </div>
+
+    <div class="green label">Font style (italic/oblique)</div>
+    <div class="green">
+      <select class="controlItem" id="fontStyle">
+        <option value="normal">normal</option>
+        <option value="italic">italic</option>
+        <option value="oblique">oblique</option>
+        <option value="oblique 2deg">oblique 2deg</option>
+        <option value="oblique 4deg">oblique 4deg</option>
+        <option value="oblique 6deg">oblique 6deg</option>
+        <option value="oblique 8deg">oblique 8deg</option>
+        <option value="oblique 10deg">oblique 10deg</option>
+      </select>
+    </div>
+
+    <div class="green label">Font stretch</div>
+    <div class="green">
+      <input class="controlItem" id="fontStretch" type="range" value="100" min="25" max="150" step="1" />
+    </div>
+
+    <div class="pink label">Path</div>
+    <div class="pink">
+      <select class="controlItem" id="layoutTemplate">
+        <option value="line">Line</option>
+        <option value="quadratic">Quadratic</option>
+        <option value="bezier">Bezier</option>
+        <option value="oval">Oval</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls">
+    <div class="yellow label">Scale</div>
+    <div class="yellow">
+      <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow">
+      <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
+    </div>
+  </div>
+
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check that both the shaped text and the text along a path respond as expected to updates for:</li>
+      <ul>
+        <li>Size</li>
+        <li>Weight</li>
+        <li>Variant caps</li>
+        <li>Style (italic/oblique)</li>
+        <li>Stretch</li>
+      </ul>
+      <li>Confirm that, for whichever path is selected, the text animates along it at a constant speed, with minimal changes in spacing between letters and words.</li>
+      <li>Color, pattern and gradient styles should be applied to all the text except for "labore et dolore", whose fillStyle has been set locally.</li>
+    </ul>
+
+    <p><b>Known issues:</b></p>
+    <ul>
+      <li>The gradient styling is working as expected, but those expectations are sub-optimal. Ideally, when a gradient style is applied to an EnhancedLabel text and the style is locked to the entity, the gradient should be applied on a per-word or per-glyph basis.</li>
+      <li>When applying a color/gradient/pattern style for the first time, the final words in the shaped text ("magna aliqua") fail to pick up the style, but correct themselves when some other change is applied. Needs fixing.</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required.</p>
+
+    <p><a href="../docs/demo/canvas-212.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-212.js" type="module"></script>
+
+</body>
+
+</html>

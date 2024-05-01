@@ -436,7 +436,7 @@ scrawl.addNativeListener(['input', 'change'], () => updateOutput(), '.controlIte
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(oCanvas, `#${oNamespace} .assets`, piccy);
+addImageDragAndDrop(scrawl, oCanvas, `#${oNamespace} .assets`, piccy);
 
 
 // #### Development and testing

@@ -595,7 +595,7 @@ scrawl.findEntity(name('display')).addFilters(name('color-crt'));
 
 // #### Drag-and-Drop image loading functionality
 // We'll only add any user images to the first canvas, which contains an assets &lt;div> element
-addImageDragAndDrop(canvases, `#canvas-1 .assets`, pictures);
+addImageDragAndDrop(scrawl, canvases, `#canvas-1 .assets`, pictures);
 
 
 // #### Development and testing

@@ -112,7 +112,7 @@ const defaultAttributes = {
 //  __loopPathCursors__ - Boolean flag - For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa).
 // + To change this functionality - so that the image slowly disappears as it animates up and down past the ends of the struts, set the attribute to `false`.
     loopPathCursors: true,
-    constantPathSpeed: true,
+    constantSpeedAlongPath: true,
 
 // __isHorizontalCopy__ - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image.
 // + To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to `false`
@@ -721,7 +721,7 @@ P.prepareStamp = function() {
                 fPathEnd = this.fromPathEnd,
                 tPathStart = this.toPathStart,
                 tPathEnd = this.toPathEnd,
-                pathSpeed = this.constantPathSpeed;
+                pathSpeed = this.constantSpeedAlongPath;
 
             let fPartial, tPartial;
 

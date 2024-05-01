@@ -247,7 +247,7 @@ scrawl.makeRender({
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(scrawl, canvas, '#my-image-store', piccy);
 
 
 // #### More user interaction

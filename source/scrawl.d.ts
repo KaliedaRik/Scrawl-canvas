@@ -547,7 +547,6 @@ interface ShapeBasicMixinDeltaInputs extends EntityMixinDeltaInputs {}
 
 interface ShapeBasicMixinInputs extends EntityMixinInputs {
     boundingBoxColor?: string;
-    constantPathSpeed?: boolean;
     minimumBoundingBoxDimensions?: number;
     pathDefinition?: string;
     precision?: number;
@@ -1769,7 +1768,7 @@ interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaI
 
 interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, ButtonMixinInputs, DeltaMixinInputs, StateFactoryInputs, LoomFactoryDeltaInputs {
     boundingBoxColor?: string;
-    constantPathSpeed?: boolean;
+    constantSpeedAlongPath?: boolean;
     delta?: LoomFactoryDeltaInputs;
     fromPath?: ShapeBasedInstance | string;
     group?: GroupInstance | string;
@@ -3244,6 +3243,7 @@ export function findArtefact(item: string): ArtefactInstance;
 export function findAsset(item: string): AssetInstance;
 export function findEntity(item: string): EntityInstance;
 export function findCanvas(item: string): CanvasInstance;
+export function findCell(item: string): CellInstance;
 export function findStyles(item: string): StylesInstance;
 export function findTween(item: string): TweenInstance;
 export function findFilter(item: string): FilterInstance;

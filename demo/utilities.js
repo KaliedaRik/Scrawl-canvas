@@ -1,6 +1,3 @@
-import * as scrawl from '../source/scrawl.js';
-const L = scrawl.library;
-
 // Function to display frames-per-second data, and other information relevant to the demo
 const reportSpeed = function (output = '', xtra = () => '') {
 
@@ -123,7 +120,9 @@ ${getSectionOutput('world', world, worldnames)}
 
 
 // Test to check that artefacts are properly killed and resurrected
-const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
+const killArtefact = (scrawl, canvas, name, time, finishResurrection = () => {}) => {
+
+    const L = scrawl.library;
 
     if (canvas && canvas.base && name && time) {
 
@@ -184,7 +183,9 @@ const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
 
 
 // To test styles (Gradient) kill functionality
-const killStyle = (canvas, name, time, finishResurrection = () => {}) => {
+const killStyle = (scrawl, canvas, name, time, finishResurrection = () => {}) => {
+
+    const L = scrawl.library;
 
     if (canvas && canvas.base && name && time) {
 
@@ -224,7 +225,9 @@ const killStyle = (canvas, name, time, finishResurrection = () => {}) => {
 };
 
 // To test artefact + anchor kill functionality
-const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrection = () => {}) => {
+const killArtefactAndAnchor = (scrawl, canvas, name, anchorname, time, finishResurrection = () => {}) => {
+
+    const L = scrawl.library;
 
     const groupname = 'mycanvas_base';
 
@@ -283,7 +286,9 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
 };
 
 // To test Polyline artefact kill functionality
-const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) => {
+const killPolylineArtefact = (scrawl, canvas, name, time, myline, restore = () => {}) => {
+
+    const L = scrawl.library;
 
     const groupname = 'mycanvas_base';
 
@@ -351,7 +356,9 @@ const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) =>
     }, time);
 };
 
-const killTicker = (stack, name, time) => {
+const killTicker = (scrawl, stack, name, time) => {
+
+    const L = scrawl.library;
 
     let packet;
 
@@ -380,7 +387,7 @@ const killTicker = (stack, name, time) => {
     }, time);
 };
 
-const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => {
+const addImageDragAndDrop = (scrawl, canvas, selector, targets, callback = () => {}) => {
 
     // #### Drag-and-Drop image loading functionality
     const store = document.querySelector(selector);
@@ -513,7 +520,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
     };
 };
 
-const addCheckerboardBackground = (canvas, namespace) => {
+const addCheckerboardBackground = (scrawl, canvas, namespace) => {
 
     // Namespace boilerplate
     const name = (item) => `${namespace}-${item}`;

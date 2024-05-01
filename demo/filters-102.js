@@ -21,7 +21,7 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the background
-addCheckerboardBackground(canvas, namespace);
+addCheckerboardBackground(scrawl, canvas, namespace);
 
 
 // Create the assets
@@ -206,7 +206,7 @@ scrawl.makeUpdater({
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, `#${namespace} .assets`, imageFilter);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, imageFilter);
 
 
 // #### Development and testing

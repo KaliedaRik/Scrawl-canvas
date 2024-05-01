@@ -81,7 +81,7 @@ scrawl.addNativeListener(['input', 'change'], updateEdgeMode, dom.edgeMode);
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

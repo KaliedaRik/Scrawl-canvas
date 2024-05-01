@@ -64,7 +64,6 @@ const firstOutline = scrawl.makePolyline({
     method: 'draw',
     closed: true,
     useAsPath: true,
-    constantPathSpeed: true,
 });
 
 // The Shape entity starts with a minimal pathDefinition value. Note that the Shape's start and handle attributes are centered; this entity does not pivot or mimic to the Polyline entity which is why their borders are often misaligned.

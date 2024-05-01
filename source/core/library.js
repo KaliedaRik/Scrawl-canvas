@@ -221,6 +221,12 @@ export function findPattern (item = '') {
     return null;
 }
 
+export function findCell (item = '') {
+
+    if (cellnames.includes(item)) return cell[item];
+    return null;
+}
+
 export function findFilter (item = '') {
 
     if (filternames.includes(item)) return filter[item];
