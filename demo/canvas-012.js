@@ -12,10 +12,6 @@ const canvas = scrawl.findCanvas('mycanvas');
 
 
 // Namespacing boilerplate
-// + We don't need to give SC objects a `name` attribute - it's just a lot more convenient if we do.
-// + In particular, namespacing SC objects names helps make clearing them up after we've finished with them a lot easier!
-// + For this test demo, we forgo names and namespaces to make sure things still get generated and lodged in the library
-
 const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
@@ -93,6 +89,7 @@ const myWheel = scrawl.makeWheel({
 
     path: arrow,
     pathPosition: 0,
+    constantSpeedAlongPath: true,
     addPathRotation: true,
     lockTo: 'path',
 

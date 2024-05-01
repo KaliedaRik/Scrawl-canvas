@@ -547,7 +547,6 @@ interface ShapeBasicMixinDeltaInputs extends EntityMixinDeltaInputs {}
 
 interface ShapeBasicMixinInputs extends EntityMixinInputs {
     boundingBoxColor?: string;
-    constantPathSpeed?: boolean;
     minimumBoundingBoxDimensions?: number;
     pathDefinition?: string;
     precision?: number;
@@ -1769,7 +1768,7 @@ interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaI
 
 interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, ButtonMixinInputs, DeltaMixinInputs, StateFactoryInputs, LoomFactoryDeltaInputs {
     boundingBoxColor?: string;
-    constantPathSpeed?: boolean;
+    constantSpeedAlongPath?: boolean;
     delta?: LoomFactoryDeltaInputs;
     fromPath?: ShapeBasedInstance | string;
     group?: GroupInstance | string;

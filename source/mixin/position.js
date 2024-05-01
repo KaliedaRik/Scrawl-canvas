@@ -821,7 +821,6 @@ export default function (P = Ωempty) {
                     delete art.addPathHandle;
                     delete art.addPathOffset;
                     delete art.addPathRotation;
-                    delete art.constantPathSpeed;
                     break;
 
                 case FILTER :

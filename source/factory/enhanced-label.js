@@ -125,6 +125,7 @@ const defaultAttributes = {
 
 // __pathPosition__ - number. Where to start text positioning along the layout engine path.
     pathPosition: 0,
+    constantSpeedAlongPath: true,
 
 // __alignment__ - number. Rotational positioning of the text units along a path or guideline
     alignment: 0,
@@ -1591,6 +1592,7 @@ P.positionTextUnitsAlongPath = function () {
         layoutTemplate,
         lines,
         pathPosition,
+        constantSpeedAlongPath,
         textHandle,
         textOffset,
         textUnitFlow,
@@ -1679,7 +1681,7 @@ P.positionTextUnitsAlongPath = function () {
 
                 currentPos = currentLen / length;
 
-                unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
+                unit.pathData = layoutTemplate.getPathPositionData(currentPos, constantSpeedAlongPath);
                 ({x, y, angle} = unit.pathData);
 
                 tempX = offsetX - handleX;
@@ -1724,7 +1726,7 @@ P.positionTextUnitsAlongPath = function () {
 
                 currentPos = currentLen / length;
 
-                unit.pathData = layoutTemplate.getPathPositionData(currentPos, true);
+                unit.pathData = layoutTemplate.getPathPositionData(currentPos, constantSpeedAlongPath);
                 ({x, y, angle} = unit.pathData);
 
                 tempX = offsetX - handleX;
@@ -1744,7 +1746,8 @@ P.positionTextUnitsAlongPath = function () {
 
                 unit.localRotation = localAlignment * _radian;
 
-                currentLen += len - kernOffset - handleX;
+                currentLen -= handleX;
+                currentLen += (len - kernOffset);
             }
 
             unit.set({ boxData: null });

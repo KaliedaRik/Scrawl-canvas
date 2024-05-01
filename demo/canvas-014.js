@@ -144,6 +144,8 @@ scrawl.makeLine({
     endPathPosition: 0,
     endLockTo: 'path',
 
+    constantSpeedAlongPath: true,
+
     lineWidth: 5,
     lineCap: 'round',
     strokeStyle: 'black',

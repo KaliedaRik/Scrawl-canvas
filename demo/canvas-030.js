@@ -94,11 +94,6 @@ const myline = scrawl.makePolyline({
     startX: 0,
     startY: 0,
 
-    // The `precision` attribute determines the accuracy for positioning artefacts on the path when they have set their `constantPathSpeed` flag to `true`
-    // + Natural path speed leads to slower progression around tight corners; constant path speed attempts to even out these variations across the length of the path.
-    // + The default precision value is `10`; decreasing the value increases the positioning accuracy. The more accurate the positioning, the greater the computational (and memory) burden.
-    precision: 0.05,
-
     pivot: name('pivot-wheel'),
     lockTo: 'start',
 
@@ -120,6 +115,11 @@ const myline = scrawl.makePolyline({
     // Note: when using a Polyline entity as a pivot for other artefacts, set the `useAsPath` flag to true
     // + It generates more accurate results - particularly when the Polyline is flipped, rolled and/or scaled, and when underlying pins (particularly when those pins are artefacts) update their coordinates.
     useAsPath: true,
+
+    // The `precision` attribute determines the accuracy for positioning artefacts on the path when they have set their `constantSpeedAlongPath` flag to `true`
+    // + Natural path speed leads to slower progression around tight corners; constant path speed attempts to even out these variations across the length of the path.
+    // + The default precision value is `10`; decreasing the value increases the positioning accuracy. The more accurate the positioning, the greater the computational (and memory) burden.
+    precision: 0.05,
 
     bringToFrontOnDrag: false,
 });

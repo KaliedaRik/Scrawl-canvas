@@ -43,7 +43,6 @@ const track = scrawl.makeOval({
     },
 
     useAsPath: true,
-    constantPathSpeed: true,
     precision: 0.1
 });
 
@@ -68,6 +67,7 @@ scrawl.makeEnhancedLabel({
 
     layoutTemplate: name('loader-track'),
     useLayoutTemplateAsPath: true,
+    constantSpeedAlongPath: true,
 
     breakTextOnSpaces: false,
 
