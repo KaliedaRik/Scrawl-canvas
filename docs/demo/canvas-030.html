@@ -375,6 +375,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-212.html">
+                  ./demo/canvas-212.js
+                </a>
+              
+                
                 <a class="source" href="delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -1109,26 +1114,7 @@ pins: absoluteCoords,</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>The <code>precision</code> attribute determines the accuracy for positioning artefacts on the path when they have set their <code>constantPathSpeed</code> flag to <code>true</code></p>
-<ul>
-<li>Natural path speed leads to slower progression around tight corners; constant path speed attempts to even out these variations across the length of the path.</li>
-<li>The default precision value is <code>10</code>; decreasing the value increases the positioning accuracy. The more accurate the positioning, the greater the computational (and memory) burden.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">precision</span>: <span class="hljs-number">0.05</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
 
     <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pivot-wheel&#x27;</span>),
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;start&#x27;</span>,
@@ -1148,11 +1134,11 @@ pins: absoluteCoords,</li>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Note: the bounding box dimensions reflect the minimum/maximum coordinates of all the pins used to construct the shape. It will only reflect the actual shape of the Shape when <code>useAsPath</code> attribute is set to <code>true</code></p>
 
@@ -1163,11 +1149,11 @@ pins: absoluteCoords,</li>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Note: when using a Polyline entity as a pivot for other artefacts, set the <code>useAsPath</code> flag to true</p>
 <ul>
@@ -1176,7 +1162,26 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>The <code>precision</code> attribute determines the accuracy for positioning artefacts on the path when they have set their <code>constantSpeedAlongPath</code> flag to <code>true</code></p>
+<ul>
+<li>Natural path speed leads to slower progression around tight corners; constant path speed attempts to even out these variations across the length of the path.</li>
+<li>The default precision value is <code>10</code>; decreasing the value increases the positioning accuracy. The more accurate the positioning, the greater the computational (and memory) burden.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">precision</span>: <span class="hljs-number">0.05</span>,
 
     <span class="hljs-attr">bringToFrontOnDrag</span>: <span class="hljs-literal">false</span>,
 });</pre></div></div>

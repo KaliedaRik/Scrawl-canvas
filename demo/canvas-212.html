@@ -140,16 +140,22 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Check that both the shaped text and the text along a path respond as expected to updates for:</li>
+      <ul>
+        <li>Size</li>
+        <li>Weight</li>
+        <li>Variant caps</li>
+        <li>Style (italic/oblique)</li>
+        <li>Stretch</li>
+      </ul>
+      <li>Confirm that, for whichever path is selected, the text animates along it at a constant speed, with minimal changes in spacing between letters and words.</li>
+      <li>Color, pattern and gradient styles should be applied to all the text except for "labore et dolore", whose fillStyle has been set locally.</li>
     </ul>
 
     <p><b>Known issues:</b></p>
     <ul>
-      <li>Why is the positioning along the bezier curve so damaged?</li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
+      <li>The gradient styling is working as expected, but those expectations are sub-optimal. Ideally, when a gradient style is applied to an EnhancedLabel text and the style is locked to the entity, the gradient should be applied on a per-word or per-glyph basis.</li>
+      <li>When applying a color/gradient/pattern style for the first time, the final words in the shaped text ("magna aliqua") fail to pick up the style, but correct themselves when some other change is applied. Needs fixing.</li>
     </ul>
 
     <p><b>Touch test:</b> not required.</p>

@@ -684,7 +684,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>DEPRECATION WARNING: <code>constantSpeedAlongPath</code> replaces the old attribute <code>constantPathSpeed</code> which clashes with the attribute set by the ShapeBasic mixin.</p>
+              <p><strong>constantSpeedAlongPath</strong> - Boolean flag. When set to true, corrections will be applied to make sure the artefact moves along the path at a constant speed (rather than slowing down when it approaches a bend)</p>
 
             </div>
             
@@ -906,26 +906,11 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span>;
 
-        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span>,
-            path = <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span>;
+        <span class="hljs-keyword">const</span> path = <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span>;
 
-        <span class="hljs-keyword">if</span> (path) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>Note: the old attribute <code>constantPathSpeed</code> has been deprecated because the ShapeBasic mixin adds that attributes to shapes where it has different functionality. This code is temporary until Scrawl-canvas v9 is released</p>
+        <span class="hljs-keyword">if</span> (path) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> speed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantSpeedAlongPath</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantPathSpeed</span> || <span class="hljs-literal">false</span>;
-            <span class="hljs-keyword">const</span> val = path.<span class="hljs-title function_">getPathPositionData</span>(pos, speed);
+            <span class="hljs-keyword">const</span> val = path.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantSpeedAlongPath</span>);
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
 

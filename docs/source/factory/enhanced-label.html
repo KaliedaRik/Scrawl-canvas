@@ -820,7 +820,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">constantSpeedAlongPath</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -3240,6 +3241,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         layoutTemplate,
         lines,
         pathPosition,
+        constantSpeedAlongPath,
         textHandle,
         textOffset,
         textUnitFlow,
@@ -3342,7 +3344,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
                 currentPos = currentLen / length;
 
-                unit.<span class="hljs-property">pathData</span> = layoutTemplate.<span class="hljs-title function_">getPathPositionData</span>(currentPos, <span class="hljs-literal">true</span>);
+                unit.<span class="hljs-property">pathData</span> = layoutTemplate.<span class="hljs-title function_">getPathPositionData</span>(currentPos, constantSpeedAlongPath);
                 ({x, y, angle} = unit.<span class="hljs-property">pathData</span>);
 
                 tempX = offsetX - handleX;
@@ -3387,7 +3389,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
                 currentPos = currentLen / length;
 
-                unit.<span class="hljs-property">pathData</span> = layoutTemplate.<span class="hljs-title function_">getPathPositionData</span>(currentPos, <span class="hljs-literal">true</span>);
+                unit.<span class="hljs-property">pathData</span> = layoutTemplate.<span class="hljs-title function_">getPathPositionData</span>(currentPos, constantSpeedAlongPath);
                 ({x, y, angle} = unit.<span class="hljs-property">pathData</span>);
 
                 tempX = offsetX - handleX;
@@ -3407,7 +3409,8 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
                 unit.<span class="hljs-property">localRotation</span> = localAlignment * _radian;
 
-                currentLen += len - kernOffset - handleX;
+                currentLen -= handleX;
+                currentLen += (len - kernOffset);
             }
 
             unit.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">boxData</span>: <span class="hljs-literal">null</span> });

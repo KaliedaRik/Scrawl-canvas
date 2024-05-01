@@ -375,6 +375,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-212.html">
+                  ./demo/canvas-212.js
+                </a>
+              
+                
                 <a class="source" href="delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -926,16 +931,10 @@
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Namespacing boilerplate</p>
-<ul>
-<li>We don’t need to give SC objects a <code>name</code> attribute - it’s just a lot more convenient if we do.</li>
-<li>In particular, namespacing SC objects names helps make clearing them up after we’ve finished with them a lot easier!</li>
-<li>For this test demo, we forgo names and namespaces to make sure things still get generated and lodged in the library</li>
-</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
@@ -1099,6 +1098,7 @@
 
     <span class="hljs-attr">path</span>: arrow,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">constantSpeedAlongPath</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
 
