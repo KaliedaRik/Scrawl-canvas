@@ -588,7 +588,7 @@ P.factoryKill = function () {
         if (pathPos < 0) pathPos += 1;
         if (pathPos > 1) pathPos = pathPos % 1;
 
-        // pathPos = parseFloat(pathPos.toFixed(6));
+        pathPos = parseFloat(pathPos.toFixed(6));
         if (pathPos !== tempPos) this[`${label}PathPosition`] = pathPos;
 
         if (pathData) {

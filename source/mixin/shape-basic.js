@@ -219,10 +219,6 @@ export default function (P = Ωempty) {
     // `getConstantPosition` - internal function called by `getPathPositionData`
     P.getConstantPosition = function (pos) {
 
-        // console.log(pos, pos * this.length);
-        // console.log(this.unitPositions);
-        // console.log(this.unitProgression);
-
         if (!_isFinite(pos)) return 0;
         if (pos >= 1) return 0.9999;
 
@@ -265,61 +261,7 @@ export default function (P = Ωempty) {
 
             steadyDistance += (remainingDynamicDistance * steadyToDynamicRatio);
 
-// console.log(index, '|', pos, '|', remainingDynamicDistance, '|', steadyToDynamicRatio, '|', steadyDistance)
-
             return steadyDistance;
-
-//             const remainingProgression = pos - currentPosition;
-
-//             const sectionDistanceRatio = sectionProgression / length;
-
-//             const ratio = remainingProgression * arraysLen;
-
-//             currentPosition += sectionDistanceRatio * ratio;
-
-// console.log(index, pos, currentPosition)
-//             return currentPosition;
-
-
-//             let indexProgress, lastProgress, diffProgress,
-//                 currentPosition, indexPosition, nextPosition, diffPosition,
-//                 index = -1;
-
-//             for (let i = 0, iz = progress.length; i < iz; i++) {
-
-//                 if (requiredProgress <= progress[i]) {
-
-//                     index = i - 1;
-//                     break;
-//                 }
-//             }
-
-//             if (index < 0) {
-
-//                 // first segment
-//                 indexProgress = progress[0];
-//                 currentPosition = (requiredProgress / indexProgress) * positions[0];
-// console.log(index, pos, currentPosition)
-//             }
-//             else {
-
-//                 // subsequent segments - progress is pixel lengths
-//                 indexProgress = progress[index];
-//                 lastProgress = (index) ? progress[index - 1] : 0;
-//                 diffProgress = indexProgress - lastProgress;
-
-//                 // ... and position is in the range 0-1
-//                 indexPosition = positions[index];
-//                 nextPosition = positions[index + 1];
-//                 diffPosition = nextPosition - indexPosition;
-
-//                 currentPosition = indexPosition + (((requiredProgress - indexProgress) / diffProgress) * diffPosition);
-// console.log(index, pos, currentPosition)
-//             }
-
-
-
-            // return pos;
         }
         else return pos;
     };
@@ -506,8 +448,6 @@ export default function (P = Ωempty) {
                 currentDims = this.currentDimensions,
                 box = this.localBox;
 
-            // dims[0] = parseFloat((maxX - minX).toFixed(1));
-            // dims[1] = parseFloat((maxY - minY).toFixed(1));
             dims[0] = maxX - minX;
             dims[1] = maxY - minY;
 
@@ -519,7 +459,6 @@ export default function (P = Ωempty) {
             }
 
             box.length = 0;
-            // box.push(parseFloat(minX.toFixed(1)), parseFloat(minY.toFixed(1)), dims[0], dims[1]);
             box.push(minX, minY, dims[0], dims[1]);
 
             if (this.useAsPath) {
@@ -527,7 +466,6 @@ export default function (P = Ωempty) {
                 // we can do work here to flatten some of these arrays
                 const {units, unitLengths, unitPartials, unitProgression, unitPositions} = res;
 
-// console.log(unitProgression);
                 const flatProgression = requestArray(),
                     flatPositions = requestArray();
 
@@ -552,11 +490,9 @@ export default function (P = Ωempty) {
                         for (j = 0, jz = progression.length; j < jz; j++) {
 
                             l = lastLength + progression[j];
-                            // flatProgression.push(parseFloat(l.toFixed(1)));
                             flatProgression.push(l);
 
                             p = lastPartial + (positions[j] * currentPartial);
-                            // flatPositions.push(parseFloat(p.toFixed(6)));
                             flatPositions.push(p);
                         }
                     }

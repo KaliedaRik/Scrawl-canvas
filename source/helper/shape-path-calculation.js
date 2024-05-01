@@ -346,21 +346,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
         const curData = myData[i],
             myPts = curData.p;
 
-        if (myPts) {
-
-            // for (j = 0, jz = myPts.length; j < jz; j++) {
-
-            //     myPts[j] = myPts[j].toFixed(1);
-            // }
-
-            localPath += `${curData.c}${curData.p.join()}`;
-
-            // for (j = 0, jz = myPts.length; j < jz; j++) {
-
-            //     myPts[j] = parseFloat(myPts[j]);
-            // }
-
-        }
+        if (myPts) localPath += `${curData.c}${curData.p.join()}`;
         else localPath += `${curData.c}`;
     }
 
@@ -483,12 +469,9 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
         for (i = 0, iz = unitLengths.length; i < iz; i++) {
 
             mySum += unitLengths[i] / myLen;
-            // unitPartials[i] = parseFloat(mySum.toFixed(6));
             unitPartials[i] = mySum;
         }
     }
-
-    // result.length = parseFloat(myLen.toFixed(1));
     result.length = myLen;
 
     // calculate bounding box dimensions
