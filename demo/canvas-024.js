@@ -23,15 +23,22 @@ scrawl.importDomImage('.flowers');
 
 // Define some filters to play with
 scrawl.makeFilter({
+
     name: name('grayscale'),
     method: 'grayscale',
+
 }).clone({
+
     name: name('sepia'),
     method: 'sepia',
+
 }).clone({
+
     name: name('cyan'),
     method: 'cyan',
+
 }).clone({
+
     name: name('pixelate'),
     method: 'pixelate',
     tileWidth: 8,
@@ -95,28 +102,34 @@ scrawl.makeWheel({
     method: 'fillAndDraw',
 
 }).clone({
+
     name: name('pin-2'),
     startY: 300,
 
 }).clone({
+
     name: name('pin-3'),
     startY: 500,
 
 }).clone({
+
     name: name('pin-4'),
     fillStyle: 'green',
     startX: 500,
     startY: 100,
 
 }).clone({
+
     name: name('pin-5'),
     startY: 230,
 
 }).clone({
+
     name: name('pin-6'),
     startY: 370,
 
 }).clone({
+
     name: name('pin-7'),
     startY: 500,
 });
@@ -191,7 +204,7 @@ const myLoom = scrawl.makeLoom({
 
     name: name('display-loom'),
 
-    // Check to see that paths can be loaded either as picture name strings, or as the entity itself
+    // Check to see that paths can be loaded either as name strings, or as the entity itself
     fromPath: name('my-quad'),
     toPath: myBez,
 
