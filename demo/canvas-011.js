@@ -467,5 +467,5 @@ scrawl.makeRender({
 console.log(scrawl.library);
 
 console.log('Performing tests ...');
-killArtefact(canvas, name('japan_fill'), 4000);
-killArtefact(canvas, name('japan_fillAndDraw'), 6000);
+killArtefact(scrawl, canvas, name('japan_fill'), 4000);
+killArtefact(scrawl, canvas, name('japan_fillAndDraw'), 6000);

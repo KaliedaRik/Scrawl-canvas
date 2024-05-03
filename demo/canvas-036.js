@@ -76,7 +76,6 @@ scrawl.makeOval({
     method: 'draw',
 
     useAsPath: true,
-    precision: 0.1,
 });
 
 
@@ -97,7 +96,7 @@ const cell3 = canvas.buildCell({
     constantSpeedAlongPath: true,
 
     delta: {
-      pathPosition: -0.001,
+        pathPosition: -0.001,
     },
 
     backgroundColor: 'black',

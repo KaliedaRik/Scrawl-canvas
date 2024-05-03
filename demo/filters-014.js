@@ -21,7 +21,7 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the background
-addCheckerboardBackground(canvas, namespace);
+addCheckerboardBackground(scrawl, canvas, namespace);
 
 
 // Create the filter
@@ -129,7 +129,7 @@ scrawl.makeUpdater({
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

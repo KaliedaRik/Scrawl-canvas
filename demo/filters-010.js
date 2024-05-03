@@ -21,7 +21,7 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the background
-addCheckerboardBackground(canvas, namespace);
+addCheckerboardBackground(scrawl, canvas, namespace);
 
 
 // Create the filter
@@ -85,8 +85,7 @@ scrawl.addNativeListener(['input', 'change'], handleOpacity, '#opacity');
 
 
 // #### Drag-and-Drop image loading functionality
-// addImageDragAndDrop(canvas, '#my-image-store', piccy);
-addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

@@ -9,7 +9,7 @@
 
 
 // Current version
-export const version = '8.13.0';
+export const version = '8.13.1';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -217,6 +217,12 @@ export function findTween (item = '') {
 export function findPattern (item = '') {
 
     if (stylesnames.includes(item)) return styles[item];
+    if (cellnames.includes(item)) return cell[item];
+    return null;
+}
+
+export function findCell (item = '') {
+
     if (cellnames.includes(item)) return cell[item];
     return null;
 }

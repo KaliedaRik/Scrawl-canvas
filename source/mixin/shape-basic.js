@@ -34,7 +34,6 @@ export default function (P = Ωempty) {
         useAsPath: false,
 
         precision: 10,
-        constantPathSpeed: false,
 
         pathDefinition: ZERO_STR,
 
@@ -87,12 +86,6 @@ export default function (P = Ωempty) {
             this.precision = item;
             this.updateDirty();
         }
-    };
-
-    S.constantPathSpeed = function (item) {
-
-        this.constantPathSpeed = item;
-        this.updateDirty();
     };
 
     // Invalidate __dimensions__ setters - dimensions are an emergent property of shapes, not a defining property
@@ -229,48 +222,44 @@ export default function (P = Ωempty) {
         if (!_isFinite(pos)) return 0;
         if (pos >= 1) return 0.9999;
 
-        const positions = this.unitPositions;
+        const { unitPositions, unitProgression, length } = this;
 
-        if (positions && positions.length) {
+        if (unitPositions && unitPositions.length) {
 
-            const len = this.length,
-                progress = this.unitProgression,
-                requiredProgress = pos * len;
+            const arraysLen = unitPositions.length;
 
-            let indexProgress, lastProgress, diffProgress,
-                currentPosition, indexPosition, nextPosition, diffPosition,
-                index = -1;
+            let index = 0,
+                steadyDistance = 0,
+                dynamicDistance = 0,
+                sectionRatio;
 
-            for (let i = 0, iz = progress.length; i < iz; i++) {
+            for (let i = 0; i < arraysLen; i++) {
 
-                if (requiredProgress <= progress[i]) {
+                sectionRatio = unitProgression[i] / length;
 
-                    index = i - 1;
-                    break;
+                if (pos > sectionRatio) {
+
+                    steadyDistance = unitPositions[i];
+                    dynamicDistance = sectionRatio;
+                    index++;
                 }
             }
 
-            if (index < 0) {
+            const remainingDynamicDistance = (index) ? (pos - dynamicDistance) : pos;
 
-                // first segment
-                indexProgress = progress[0];
-                currentPosition = (requiredProgress / indexProgress) * positions[0];
-            }
-            else {
+            const dynamicSegmentLength = (index)
+                ? (unitProgression[index] - unitProgression[index - 1]) / length
+                : unitProgression[index] / length;
 
-                // subsequent segments - progress is pixel lengths
-                indexProgress = progress[index];
-                lastProgress = (index) ? progress[index - 1] : 0;
-                diffProgress = indexProgress - lastProgress;
+            const steadySegmentLength = (index)
+                ? (unitPositions[index] - unitPositions[index - 1])
+                : unitPositions[index];
 
-                // ... and position is in the range 0-1
-                indexPosition = positions[index];
-                nextPosition = positions[index + 1];
-                diffPosition = nextPosition - indexPosition;
+            const steadyToDynamicRatio = steadySegmentLength / dynamicSegmentLength;
 
-                currentPosition = indexPosition + (((requiredProgress - indexProgress) / diffProgress) * diffPosition);
-            }
-            return currentPosition;
+            steadyDistance += (remainingDynamicDistance * steadyToDynamicRatio);
+
+            return steadyDistance;
         }
         else return pos;
     };
@@ -457,8 +446,8 @@ export default function (P = Ωempty) {
                 currentDims = this.currentDimensions,
                 box = this.localBox;
 
-            dims[0] = parseFloat((maxX - minX).toFixed(1));
-            dims[1] = parseFloat((maxY - minY).toFixed(1));
+            dims[0] = maxX - minX;
+            dims[1] = maxY - minY;
 
             if(dims[0] !== currentDims[0] || dims[1] !== currentDims[1]) {
 
@@ -468,14 +457,13 @@ export default function (P = Ωempty) {
             }
 
             box.length = 0;
-            box.push(parseFloat(minX.toFixed(1)), parseFloat(minY.toFixed(1)), dims[0], dims[1]);
+            box.push(minX, minY, dims[0], dims[1]);
 
             if (this.useAsPath) {
 
                 // we can do work here to flatten some of these arrays
                 const {units, unitLengths, unitPartials, unitProgression, unitPositions} = res;
 
-// console.log(unitProgression);
                 const flatProgression = requestArray(),
                     flatPositions = requestArray();
 
@@ -500,10 +488,10 @@ export default function (P = Ωempty) {
                         for (j = 0, jz = progression.length; j < jz; j++) {
 
                             l = lastLength + progression[j];
-                            flatProgression.push(parseFloat(l.toFixed(1)));
+                            flatProgression.push(l);
 
                             p = lastPartial + (positions[j] * currentPartial);
-                            flatPositions.push(parseFloat(p.toFixed(6)));
+                            flatPositions.push(p);
                         }
                     }
                 }

@@ -139,7 +139,7 @@ scrawl.makeUpdater({
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop([canvas1, canvas2], `#${namespace2} .assets`, [dithered, original]);
+addImageDragAndDrop(scrawl, [canvas1, canvas2], `#${namespace2} .assets`, [dithered, original]);
 
 
 // #### Development and testing

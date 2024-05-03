@@ -83,7 +83,7 @@ const updateB = () => dom.feFuncB.setAttribute('tableValues', `${dom.b1.value} $
 scrawl.addNativeListener(['input', 'change'], updateB, '.feFuncB');
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, `#${namespace} .assets`, piccy);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, piccy);
 
 
 // #### Development and testing

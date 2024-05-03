@@ -308,7 +308,7 @@ console.log(scrawl.library);
 console.log('Performing tests ...');
 
 // We use the __canvas__ and __myTracker__ variables in our blocks' onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file's code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be 'undefined'. So we need to reset the block's 'on...' functions (in this module file's code) after the block has resurrected
-killArtefactAndAnchor(canvas, name('brick-in-marble'), 'wikipedia-brick-link', 2000, () => {
+killArtefactAndAnchor(scrawl, canvas, name('brick-in-marble'), 'wikipedia-brick-link', 2000, () => {
 
     scrawl.findArtefact(name('brick-in-marble')).set({
 
@@ -342,7 +342,7 @@ killArtefactAndAnchor(canvas, name('brick-in-marble'), 'wikipedia-brick-link', 2
     });
 });
 
-killStyle(canvas, name('marble-pattern'), 3000, () => {
+killStyle(scrawl, canvas, name('marble-pattern'), 3000, () => {
 
     // Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died
     scrawl.findEntity(name('brick-in-marble')).set({

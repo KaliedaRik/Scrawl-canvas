@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.13.0
+// Type definitions for Scrawl-canvas 8.13.1
 
 
 
@@ -547,7 +547,6 @@ interface ShapeBasicMixinDeltaInputs extends EntityMixinDeltaInputs {}
 
 interface ShapeBasicMixinInputs extends EntityMixinInputs {
     boundingBoxColor?: string;
-    constantPathSpeed?: boolean;
     minimumBoundingBoxDimensions?: number;
     pathDefinition?: string;
     precision?: number;
@@ -1321,6 +1320,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     cacheOutput?: boolean;
     calculateOrder?: number;
     checkHitUseTemplate?: boolean;
+    constantSpeedAlongPath?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
     dimensions?: CommonTwoElementArrayInput; 
     flipReverse?: boolean;
@@ -1638,6 +1638,7 @@ interface GroupFactoryFunctions extends BaseMixinFunctions, FilterMixinFunctions
     getArtefact: (name: string) => ArtefactInstance;
     getArtefactAt: (items: HitTests) => HitOutput | boolean;
     getArtefactNames: () => string[];
+    killArtefacts: () => void;
     moveArtefactsIntoGroup: (...args: GroupArtifactsInput) => GroupInstance;
     removeArtefactClasses: (item: string) => GroupInstance;
     removeArtefacts: (...args: GroupArtifactsInput) => GroupInstance;
@@ -1769,7 +1770,7 @@ interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaI
 
 interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, ButtonMixinInputs, DeltaMixinInputs, StateFactoryInputs, LoomFactoryDeltaInputs {
     boundingBoxColor?: string;
-    constantPathSpeed?: boolean;
+    constantSpeedAlongPath?: boolean;
     delta?: LoomFactoryDeltaInputs;
     fromPath?: ShapeBasedInstance | string;
     group?: GroupInstance | string;
@@ -3244,6 +3245,7 @@ export function findArtefact(item: string): ArtefactInstance;
 export function findAsset(item: string): AssetInstance;
 export function findEntity(item: string): EntityInstance;
 export function findCanvas(item: string): CanvasInstance;
+export function findCell(item: string): CellInstance;
 export function findStyles(item: string): StylesInstance;
 export function findTween(item: string): TweenInstance;
 export function findFilter(item: string): FilterInstance;

@@ -28,7 +28,7 @@ export default function (P = Ωempty) {
         addPathOffset: true,
         addPathRotation: false,
 
-        // DEPRECATION WARNING: `constantSpeedAlongPath` replaces the old attribute `constantPathSpeed` which clashes with the attribute set by the ShapeBasic mixin.
+// __constantSpeedAlongPath__ - Boolean flag. When set to true, corrections will be applied to make sure the artefact moves along the path at a constant speed (rather than slowing down when it approaches a bend)
         constantSpeedAlongPath: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
@@ -92,7 +92,7 @@ export default function (P = Ωempty) {
         if (item < 0) item = _abs(item);
         if (item > 1) item = item % 1;
 
-        this.pathPosition = parseFloat(item.toFixed(6));
+        this.pathPosition = item;
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
         this.currentPathData = false;
@@ -104,7 +104,7 @@ export default function (P = Ωempty) {
         if (pos < 0) pos += 1;
         if (pos > 1) pos = pos % 1;
 
-        this.pathPosition = parseFloat(pos.toFixed(6));
+        this.pathPosition = pos;
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
         this.currentPathData = false;
@@ -135,14 +135,11 @@ export default function (P = Ωempty) {
 
         if (this.currentPathData) return this.currentPathData;
 
-        const pos = this.pathPosition,
-            path = this.path;
+        const path = this.path;
 
         if (path) {
 
-            // Note: the old attribute `constantPathSpeed` has been deprecated because the ShapeBasic mixin adds that attributes to shapes where it has different functionality. This code is temporary until Scrawl-canvas v9 is released
-            const speed = this.constantSpeedAlongPath || this.constantPathSpeed || false;
-            const val = path.getPathPositionData(pos, speed);
+            const val = path.getPathPositionData(this.pathPosition, this.constantSpeedAlongPath);
 
             if (this.addPathRotation) this.dirtyRotation = true;
 

@@ -234,7 +234,7 @@ scrawl.addNativeListener(['change', 'input'], () => {
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop([plainCanvas, filteredCanvas], `#${plainNamespace} .assets`, [plainImg, filteredImg]);
+addImageDragAndDrop(scrawl, [plainCanvas, filteredCanvas], `#${plainNamespace} .assets`, [plainImg, filteredImg]);
 
 
 // #### Development and testing

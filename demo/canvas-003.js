@@ -186,7 +186,7 @@ console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
-killStyle(canvas, name('mygradient'), 3000, () => {
+killStyle(scrawl, canvas, name('mygradient'), 3000, () => {
 
     // Repopulate the graddy variable
 /** @ts-expect-error */

@@ -183,7 +183,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, `#${namespace} .assets`, pictureGroup, cacheAction);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, pictureGroup, cacheAction);
 
 
 // #### Development and testing

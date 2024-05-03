@@ -252,7 +252,7 @@ console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
-killArtefact(canvas, name('mouse-pivot'), 4000, () => {
+killArtefact(scrawl, canvas, name('mouse-pivot'), 4000, () => {
 
     myPivot = scrawl.findEntity(name('mouse-pivot'));
 
@@ -267,4 +267,4 @@ killArtefact(canvas, name('mouse-pivot'), 4000, () => {
     });
 });
 
-killArtefact(canvas, name('mimic-block'), 6000);
+killArtefact(scrawl, canvas, name('mimic-block'), 6000);

@@ -263,6 +263,7 @@ scrawl.makeRender({
 // #### Drag-and-Drop image loading functionality
 addImageDragAndDrop(
 
+    scrawl,
     canvas,
     '#my-image-store',
     backgroundImage,

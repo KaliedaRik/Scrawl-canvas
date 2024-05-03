@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.13.0 - 27 April 2024
+// #### Version 8.13.1 - 3 May 2024
 
 
 // ## Initialize Scrawl-canvas
@@ -34,6 +34,7 @@ export {
     findArtefact,
     findAsset,
     findCanvas,
+    findCell,
     findElement,
     findEntity,
     findFilter,

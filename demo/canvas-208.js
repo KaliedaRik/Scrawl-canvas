@@ -31,7 +31,6 @@ scrawl.makeSpiral({
     drawFromLoop: 2,
     scaleOutline: false,
     useAsPath: true,
-    constantPathSpeed: true,
 });
 
 const mylabel = scrawl.makeEnhancedLabel({
