@@ -92,7 +92,7 @@ export default function (P = Ωempty) {
         if (item < 0) item = _abs(item);
         if (item > 1) item = item % 1;
 
-        this.pathPosition = parseFloat(item.toFixed(6));
+        this.pathPosition = item;
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
         this.currentPathData = false;
@@ -104,7 +104,7 @@ export default function (P = Ωempty) {
         if (pos < 0) pos += 1;
         if (pos > 1) pos = pos % 1;
 
-        this.pathPosition = parseFloat(pos.toFixed(6));
+        this.pathPosition = pos;
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
         this.currentPathData = false;

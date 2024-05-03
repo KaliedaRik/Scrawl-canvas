@@ -224,9 +224,9 @@ export default function (P = Ωempty) {
 
         const { unitPositions, unitProgression, length } = this;
 
-        const arraysLen = unitPositions.length;
-
         if (unitPositions && unitPositions.length) {
+
+            const arraysLen = unitPositions.length;
 
             const requiredProgression = pos * length;
 

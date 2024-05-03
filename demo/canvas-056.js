@@ -26,13 +26,17 @@ let densityValue = 600,
     rotationValue = 360,
     pathrollValue = false;
 
-// We use a Polyline entity as the guide along which we shall calculate the hairs for our Shape entity. The Polyline's pins are a set of Wheel entitys which the user can drag around the canvas to reshape the Polyline
-const firstPins = scrawl.makeGroup({
-    name: name('first-pins'),
+
+// We use a Polyline entity as the guide along which we shall place our "frond" Shape entitys. The Polyline's pins are a set of Wheel entitys which the user can drag around the canvas to reshape the Polyline
+const pinGroup = scrawl.makeGroup({
+
+    name: name('pins'),
     host: canvas.getBase(),
+    order: 1,
 });
 
 
+// Use a pool coordinate to help quickly calculate the positions of the pins
 const coord = scrawl.requestCoordinate();
 
 for (let i = 0; i < noOfPins; i++) {
@@ -40,8 +44,9 @@ for (let i = 0; i < noOfPins; i++) {
     coord.setFromArray([0, 200]).rotate(i * pinRotationAngle).add([300, 300]);
 
     scrawl.makeWheel({
+
         name: name(`pin-1-${i}`),
-        group: name('first-pins'),
+        group: pinGroup,
 /** @ts-expect-error */
         start: [...coord],
         handle: ['center', 'center'],
@@ -51,13 +56,14 @@ for (let i = 0; i < noOfPins; i++) {
     });
 }
 
+// __Always__ release a pool coordinate after we're done using it!
 scrawl.releaseCoordinate(coord);
 
 
-const firstOutline = scrawl.makePolyline({
+const rope = scrawl.makePolyline({
 
-    name: name('first-outline'),
-    pins: firstPins.get('artefacts'),
+    name: name('rope'),
+    pins: pinGroup.get('artefacts'),
     mapToPins: true,
     tension: 0.25,
     strokeStyle: 'green',
@@ -66,73 +72,69 @@ const firstOutline = scrawl.makePolyline({
     useAsPath: true,
 });
 
-// The Shape entity starts with a minimal pathDefinition value. Note that the Shape's start and handle attributes are centered; this entity does not pivot or mimic to the Polyline entity which is why their borders are often misaligned.
-const secondOutline = scrawl.makeShape({
 
-    name: name('second-outline'),
-    pathDefinition: 'm0,0',
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
+// We'll generate the frond entitys from a template
+const template = scrawl.makeShape({
+
+    name: name('frond-template'),
+    path: rope,
+    constantSpeedAlongPath: true,
+    pathDefinition: 'm0,0 l0,0',
     lineWidth: 4,
     lineCap: 'round',
     strokeStyle: 'darkslategray',
     method: 'draw',
+    visibility: false,
 });
 
 
-// We recalculate the Shape entity's pathDefinition value each time the user updates a control or drags one of the Polyline entity's pins.
-let currentOutline = '';
+// All frond entitys go into their own group
+const fronds = scrawl.makeGroup({
+
+    name: name('fronds'),
+    host: canvas.getBase(),
+});
+
+
+// The flag stores a copy of the rope entitys pathDefinition string.
+// + When the pathDefinition changes (user action) or we set it to an empty string, we'll regenerate all of the fronds
+let flag = '';
 
 const checkOutlines = function () {
 
-    const outline = firstOutline.get('pathDefinition');
+    const def = rope.get('pathDefinition');
 
-    if (outline !== currentOutline) {
+    if (def !== flag) {
 
-        currentOutline = outline;
+        flag = def;
 
-        // Rotations are calculated with the help of a pool Coordinate object
-        const coord = scrawl.requestCoordinate();
+        // We'll just kill all the existing fronds and regenerate them
+        fronds.killArtefacts();
 
-        // Get the number generator
+        // The "random" numbers will be the same values and order every time this regeneration runs
         const numberGenerator = scrawl.seededRandomNumberGenerator('hello-world');
-
-        let pos, x, y, a, dx, dy;
-        let line = '';
 
         for (let i = 0; i < densityValue; i++) {
 
-            // __getPathPositionData__ returns an Object with attributes `x`, `y`, `angle`.
-            // + The first argument is a float Number value between `0` and `1`, representing the relative position of the required point along the path.
-            // + The second argument is a boolean which, when set to true, will return the `constant speed` coordinate rather than the `natural speed` coordinate.
-            pos = firstOutline.getPathPositionData(i / densityValue, true);
-            x = pos.x;
-            y = pos.y;
+            const frond = template.clone({
 
-            if (pathrollValue) {
+                name: name(`frond-${i}`),
+                group: fronds,
 
-                a = pos.angle + 90;
+                pathDefinition: `m0,0 l0,${lengthValue * numberGenerator.random()}`,
 
-                coord.set(0, numberGenerator.random() * lengthValue).rotate(a + (numberGenerator.random() * rotationValue)).add([x, y]);
-            }
-            else {
+                visibility: true,
 
-                coord.set(0, numberGenerator.random() * lengthValue).rotate(numberGenerator.random() * rotationValue).add([x, y]);
-            }
-            [dx, dy] = coord;
+                pathPosition: numberGenerator.random(),
+                lockTo: 'path',
 
-            line += `M${x},${y}L${dx},${dy}`;
+                roll: rotationValue * numberGenerator.random(),
+                addPathRotation: pathrollValue,
+            });
         }
-
-        // Return the Coordinate object back to the pool - failure to do this leads to memory leaks!
-        scrawl.releaseCoordinate(coord);
-
-
-        secondOutline.set({
-            pathDefinition: line,
-        });
     }
 };
+
 
 
 // #### Scene animation
@@ -159,7 +161,7 @@ scrawl.makeRender({
 // #### User interaction
 scrawl.makeDragZone({
     zone: canvas,
-    collisionGroup: name('first-pins'),
+    collisionGroup: pinGroup,
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
@@ -173,8 +175,8 @@ scrawl.addNativeListener(['input', 'change'], () => {
 
     pathrollValue = ('0' === dom.pathroll.value) ? false : true;
 
-    // Setting the `currentOutline` variable to a null string guarantees that the Shape entity's pathDefinition will be recalculated at the start of the next Display cycle
-    currentOutline = '';
+    // Setting the `flag` variable to a null string guarantees that the frond entitys will be recalculated at the start of the next Display cycle
+    flag = '';
 
 }, '.controlItem');
 
