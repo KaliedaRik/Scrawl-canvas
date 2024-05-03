@@ -829,7 +829,7 @@
         <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-title function_">_abs</span>(item);
         <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = item % <span class="hljs-number">1</span>;
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> = <span class="hljs-built_in">parseFloat</span>(item.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>));
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;
@@ -841,7 +841,7 @@
         <span class="hljs-keyword">if</span> (pos &lt; <span class="hljs-number">0</span>) pos += <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (pos &gt; <span class="hljs-number">1</span>) pos = pos % <span class="hljs-number">1</span>;
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> = <span class="hljs-built_in">parseFloat</span>(pos.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>));
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> = pos;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;

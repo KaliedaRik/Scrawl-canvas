@@ -133,7 +133,6 @@ scrawl.makeOval({
     roll: 30,
 
     useAsPath: true,
-    useStartAsControlPoint: true,
     precision: 1,
 
     method: 'none',
@@ -286,7 +285,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
             selected.set({ method: 'draw' });
 
-            pathLabelsGroup.setArtefacts({ 
+            pathLabelsGroup.setArtefacts({
 
                 // For the EnhancedLabel entitys
                 layoutTemplate: selected,

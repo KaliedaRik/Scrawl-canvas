@@ -389,6 +389,8 @@ const killTicker = (scrawl, stack, name, time) => {
 
 const addImageDragAndDrop = (scrawl, canvas, selector, targets, callback = () => {}) => {
 
+    const L = scrawl.library;
+
     // #### Drag-and-Drop image loading functionality
     const store = document.querySelector(selector);
     const timeoutDelay = 200;

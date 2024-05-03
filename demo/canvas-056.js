@@ -116,7 +116,7 @@ const checkOutlines = function () {
 
         for (let i = 0; i < densityValue; i++) {
 
-            const frond = template.clone({
+            template.clone({
 
                 name: name(`frond-${i}`),
                 group: fronds,

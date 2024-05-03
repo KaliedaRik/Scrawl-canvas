@@ -228,8 +228,6 @@ export default function (P = Ωempty) {
 
             const arraysLen = unitPositions.length;
 
-            const requiredProgression = pos * length;
-
             let index = 0,
                 steadyDistance = 0,
                 dynamicDistance = 0,

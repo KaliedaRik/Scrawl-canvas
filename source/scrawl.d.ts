@@ -1320,6 +1320,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     cacheOutput?: boolean;
     calculateOrder?: number;
     checkHitUseTemplate?: boolean;
+    constantSpeedAlongPath?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
     dimensions?: CommonTwoElementArrayInput; 
     flipReverse?: boolean;
@@ -1637,6 +1638,7 @@ interface GroupFactoryFunctions extends BaseMixinFunctions, FilterMixinFunctions
     getArtefact: (name: string) => ArtefactInstance;
     getArtefactAt: (items: HitTests) => HitOutput | boolean;
     getArtefactNames: () => string[];
+    killArtefacts: () => void;
     moveArtefactsIntoGroup: (...args: GroupArtifactsInput) => GroupInstance;
     removeArtefactClasses: (item: string) => GroupInstance;
     removeArtefacts: (...args: GroupArtifactsInput) => GroupInstance;

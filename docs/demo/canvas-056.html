@@ -980,47 +980,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>We use a Polyline entity as the guide along which we shall calculate the hairs for our Shape entity. The Polyline’s pins are a set of Wheel entitys which the user can drag around the canvas to reshape the Polyline</p>
+              <p>We use a Polyline entity as the guide along which we shall place our “frond” Shape entitys. The Polyline’s pins are a set of Wheel entitys which the user can drag around the canvas to reshape the Polyline</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> firstPins = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;first-pins&#x27;</span>),
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pinGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pins&#x27;</span>),
     <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">getBase</span>(),
-});
-
-
-<span class="hljs-keyword">const</span> coord = scrawl.<span class="hljs-title function_">requestCoordinate</span>();
-
-<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; noOfPins; i++) {
-
-    coord.<span class="hljs-title function_">setFromArray</span>([<span class="hljs-number">0</span>, <span class="hljs-number">200</span>]).<span class="hljs-title function_">rotate</span>(i * pinRotationAngle).<span class="hljs-title function_">add</span>([<span class="hljs-number">300</span>, <span class="hljs-number">300</span>]);
-
-    scrawl.<span class="hljs-title function_">makeWheel</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`pin-1-<span class="hljs-subst">${i}</span>`</span>),
-        <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;first-pins&#x27;</span>),
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-        <span class="hljs-attr">start</span>: [...coord],
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    });
-}
-
-scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
-
-
-<span class="hljs-keyword">const</span> firstOutline = scrawl.<span class="hljs-title function_">makePolyline</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;first-outline&#x27;</span>),
-    <span class="hljs-attr">pins</span>: firstPins.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;artefacts&#x27;</span>),
-    <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">tension</span>: <span class="hljs-number">0.25</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-    <span class="hljs-attr">closed</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 });</pre></div></div>
             
         </li>
@@ -1032,21 +1000,28 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>The Shape entity starts with a minimal pathDefinition value. Note that the Shape’s start and handle attributes are centered; this entity does not pivot or mimic to the Polyline entity which is why their borders are often misaligned.</p>
+              <p>Use a pool coordinate to help quickly calculate the positions of the pins</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> secondOutline = scrawl.<span class="hljs-title function_">makeShape</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coord = scrawl.<span class="hljs-title function_">requestCoordinate</span>();
 
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;second-outline&#x27;</span>),
-    <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">&#x27;m0,0&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkslategray&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-});</pre></div></div>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; noOfPins; i++) {
+
+    coord.<span class="hljs-title function_">setFromArray</span>([<span class="hljs-number">0</span>, <span class="hljs-number">200</span>]).<span class="hljs-title function_">rotate</span>(i * pinRotationAngle).<span class="hljs-title function_">add</span>([<span class="hljs-number">300</span>, <span class="hljs-number">300</span>]);
+
+    scrawl.<span class="hljs-title function_">makeWheel</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`pin-1-<span class="hljs-subst">${i}</span>`</span>),
+        <span class="hljs-attr">group</span>: pinGroup,
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-attr">start</span>: [...coord],
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+    });
+}</pre></div></div>
             
         </li>
         
@@ -1057,19 +1032,24 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>We recalculate the Shape entity’s pathDefinition value each time the user updates a control or drags one of the Polyline entity’s pins.</p>
+              <p><strong>Always</strong> release a pool coordinate after we’re done using it!</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentOutline = <span class="hljs-string">&#x27;&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
 
-<span class="hljs-keyword">const</span> checkOutlines = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> outline = firstOutline.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;pathDefinition&#x27;</span>);
+<span class="hljs-keyword">const</span> rope = scrawl.<span class="hljs-title function_">makePolyline</span>({
 
-    <span class="hljs-keyword">if</span> (outline !== currentOutline) {
-
-        currentOutline = outline;</pre></div></div>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;rope&#x27;</span>),
+    <span class="hljs-attr">pins</span>: pinGroup.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;artefacts&#x27;</span>),
+    <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">tension</span>: <span class="hljs-number">0.25</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">closed</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1080,11 +1060,22 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Rotations are calculated with the help of a pool Coordinate object</p>
+              <p>We’ll generate the frond entitys from a template</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> coord = scrawl.<span class="hljs-title function_">requestCoordinate</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> template = scrawl.<span class="hljs-title function_">makeShape</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;frond-template&#x27;</span>),
+    <span class="hljs-attr">path</span>: rope,
+    <span class="hljs-attr">constantSpeedAlongPath</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">&#x27;m0,0 l0,0&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkslategray&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1095,16 +1086,15 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Get the number generator</p>
+              <p>All frond entitys go into their own group</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> numberGenerator = scrawl.<span class="hljs-title function_">seededRandomNumberGenerator</span>(<span class="hljs-string">&#x27;hello-world&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> fronds = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
-        <span class="hljs-keyword">let</span> pos, x, y, a, dx, dy;
-        <span class="hljs-keyword">let</span> line = <span class="hljs-string">&#x27;&#x27;</span>;
-
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; densityValue; i++) {</pre></div></div>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;fronds&#x27;</span>),
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">getBase</span>(),
+});</pre></div></div>
             
         </li>
         
@@ -1115,32 +1105,22 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>getPathPositionData</strong> returns an Object with attributes <code>x</code>, <code>y</code>, <code>angle</code>.</p>
+              <p>The flag stores a copy of the rope entitys pathDefinition string.</p>
 <ul>
-<li>The first argument is a float Number value between <code>0</code> and <code>1</code>, representing the relative position of the required point along the path.</li>
-<li>The second argument is a boolean which, when set to true, will return the <code>constant speed</code> coordinate rather than the <code>natural speed</code> coordinate.</li>
+<li>When the pathDefinition changes (user action) or we set it to an empty string, we’ll regenerate all of the fronds</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            pos = firstOutline.<span class="hljs-title function_">getPathPositionData</span>(i / densityValue, <span class="hljs-literal">true</span>);
-            x = pos.<span class="hljs-property">x</span>;
-            y = pos.<span class="hljs-property">y</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> flag = <span class="hljs-string">&#x27;&#x27;</span>;
 
-            <span class="hljs-keyword">if</span> (pathrollValue) {
+<span class="hljs-keyword">const</span> checkOutlines = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                a = pos.<span class="hljs-property">angle</span> + <span class="hljs-number">90</span>;
+    <span class="hljs-keyword">const</span> def = rope.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;pathDefinition&#x27;</span>);
 
-                coord.<span class="hljs-title function_">set</span>(<span class="hljs-number">0</span>, numberGenerator.<span class="hljs-title function_">random</span>() * lengthValue).<span class="hljs-title function_">rotate</span>(a + (numberGenerator.<span class="hljs-title function_">random</span>() * rotationValue)).<span class="hljs-title function_">add</span>([x, y]);
-            }
-            <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">if</span> (def !== flag) {
 
-                coord.<span class="hljs-title function_">set</span>(<span class="hljs-number">0</span>, numberGenerator.<span class="hljs-title function_">random</span>() * lengthValue).<span class="hljs-title function_">rotate</span>(numberGenerator.<span class="hljs-title function_">random</span>() * rotationValue).<span class="hljs-title function_">add</span>([x, y]);
-            }
-            [dx, dy] = coord;
-
-            line += <span class="hljs-string">`M<span class="hljs-subst">${x}</span>,<span class="hljs-subst">${y}</span>L<span class="hljs-subst">${dx}</span>,<span class="hljs-subst">${dy}</span>`</span>;
-        }</pre></div></div>
+        flag = def;</pre></div></div>
             
         </li>
         
@@ -1151,18 +1131,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Return the Coordinate object back to the pool - failure to do this leads to memory leaks!</p>
+              <p>We’ll just kill all the existing fronds and regenerate them</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
-
-
-        secondOutline.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">pathDefinition</span>: line,
-        });
-    }
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        fronds.<span class="hljs-title function_">killArtefacts</span>();</pre></div></div>
             
         </li>
         
@@ -1172,6 +1145,42 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
               
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>The “random” numbers will be the same values and order every time this regeneration runs</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> numberGenerator = scrawl.<span class="hljs-title function_">seededRandomNumberGenerator</span>(<span class="hljs-string">&#x27;hello-world&#x27;</span>);
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; densityValue; i++) {
+
+            template.<span class="hljs-title function_">clone</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`frond-<span class="hljs-subst">${i}</span>`</span>),
+                <span class="hljs-attr">group</span>: fronds,
+
+                <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">`m0,0 l0,<span class="hljs-subst">${lengthValue * numberGenerator.random()}</span>`</span>,
+
+                <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+
+                <span class="hljs-attr">pathPosition</span>: numberGenerator.<span class="hljs-title function_">random</span>(),
+                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
+
+                <span class="hljs-attr">roll</span>: rotationValue * numberGenerator.<span class="hljs-title function_">random</span>(),
+                <span class="hljs-attr">addPathRotation</span>: pathrollValue,
+            });
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1189,11 +1198,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1210,11 +1219,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -1222,7 +1231,7 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeDragZone</span>({
     <span class="hljs-attr">zone</span>: canvas,
-    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;first-pins&#x27;</span>),
+    <span class="hljs-attr">collisionGroup</span>: pinGroup,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
     <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
 });
@@ -1239,28 +1248,28 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>Setting the <code>currentOutline</code> variable to a null string guarantees that the Shape entity’s pathDefinition will be recalculated at the start of the next Display cycle</p>
+              <p>Setting the <code>flag</code> variable to a null string guarantees that the frond entitys will be recalculated at the start of the next Display cycle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    currentOutline = <span class="hljs-string">&#x27;&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>    flag = <span class="hljs-string">&#x27;&#x27;</span>;
 
 }, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Setup form</p>
 
@@ -1276,11 +1285,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
