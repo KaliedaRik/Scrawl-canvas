@@ -324,6 +324,7 @@ P.manageHistory = function (tick, host) {
 
         const {x, y, z} = position;
 
+        // We add a pooled particleHistory object
         const h = requestParticleHistory();
 
         h[0] = remaining;
@@ -337,6 +338,7 @@ P.manageHistory = function (tick, host) {
 
             const old = history.splice(historyLength);
 
+            // We only release the particleHistory objects when we've finished with them
             old.forEach(item => releaseParticleHistory(item));
         }
     }

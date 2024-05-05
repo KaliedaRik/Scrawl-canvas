@@ -2861,6 +2861,7 @@ P.createTextCellsForPath = function (host) {
         w = el.width,
         h = el.height;
 
+    // These pool cells _should_ be returned to / released by the calling function
     const uCell = requestCell(w, h);
     const mCell = requestCell(w, h);
 
@@ -2977,6 +2978,9 @@ P.createTextCellsForPath = function (host) {
             mainCell: mCell,
         };
     }
+    // If we're returning null, we need to release the pool cells
+    releaseCell(uCell, mCell);
+    
     return null;
 };
 
@@ -2986,6 +2990,7 @@ P.createTextCellsForSpace = function (host) {
         w = el.width,
         h = el.height;
 
+    // These pool cells _should_ be returned to / released by the calling function
     const uCell = requestCell(w, h);
     const mCell = requestCell(w, h);
 
@@ -3122,6 +3127,9 @@ P.createTextCellsForSpace = function (host) {
             mainCell: mCell,
         };
     }
+    // If we're returning null, we need to release the pool cells
+    releaseCell(uCell, mCell);
+
     return null;
 };
 
@@ -3135,6 +3143,7 @@ P.addUnderlinesToCopyCell = function (host, copy) {
             w = el.width,
             h = el.height;
 
+        // This pool cell is local to the function and not returned to calling function
         const mycell = requestCell(w, h);
 
         if (mycell) {
@@ -3163,6 +3172,8 @@ P.addUnderlinesToCopyCell = function (host, copy) {
 
             return true;
         }
+        // Releasing, just in case ...
+        releaseCell(mycell);
     }
     return false;
 };
@@ -3177,6 +3188,7 @@ P.createOverlineCell = function (host) {
             w = el.width,
             h = el.height;
 
+        // Pool cell _should_ be returned to / released by the calling function
         const mycell = requestCell(w, h);
 
         if (mycell) {
@@ -3194,6 +3206,8 @@ P.createOverlineCell = function (host) {
 
             return mycell;
         }
+        // Releasing, just in case ...
+        releaseCell(mycell);
     }
     return null;
 };
@@ -3208,6 +3222,7 @@ P.createHighlightCell = function (host) {
             w = el.width,
             h = el.height;
 
+        // Pool cell _should_ be returned to / released by the calling function
         const mycell = requestCell(w, h);
 
         if (mycell) {
@@ -3225,6 +3240,8 @@ P.createHighlightCell = function (host) {
 
             return mycell;
         }
+        // Releasing, just in case ...
+        releaseCell(mycell);
     }
     return null;
 };

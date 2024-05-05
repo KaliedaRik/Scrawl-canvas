@@ -4791,8 +4791,7 @@ P.theBigActionsObject = _freeze({
                                 swirlCoords.push(dr);
                             }
                         }
-                        releaseCoordinate(coord);
-                        releaseCoordinate(start);
+                        releaseCoordinate(coord, start);
                     }
 
                     let swirlCursor = -1;

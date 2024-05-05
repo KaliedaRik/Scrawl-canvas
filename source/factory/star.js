@@ -209,8 +209,7 @@ P.makeStarPath = function () {
 
     }
 
-    releaseVector(v1);
-    releaseVector(v2);
+    releaseVector(v1, v2);
 
     const myMin = _min(...xPts),
         myXoffset = _abs(myMin).toFixed(1);

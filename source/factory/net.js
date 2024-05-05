@@ -509,6 +509,8 @@ P.pickupArtefact = function (items) {
     if (xta(items, particle)) {
 
         particle.isBeingDragged = items;
+
+        // The pool vector is requested here, but released in the `dropArtefact` function
         particle.dragOffset = requestVector(particle.position).vectorSubtract(items);
     }
     return this;
@@ -519,7 +521,10 @@ P.pickupArtefact = function (items) {
 P.dropArtefact = function () {
 
     this.lastHitParticle.isBeingDragged = null;
+
+    // Release the pool vector requested in the `pickupArtefact` function
     releaseVector(this.lastHitParticle.dragOffset);
+    
     this.lastHitParticle.dragOffset = null;
     this.lastHitParticle = null;
     return this;

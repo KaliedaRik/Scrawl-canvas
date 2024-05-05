@@ -863,15 +863,15 @@ P.cleanInput = function () {
         return false;
     }
 
-    const cell = requestCell(),
-        engine = cell.engine,
-        canvas = cell.element;
+    const mycell = requestCell(),
+        engine = mycell.engine,
+        canvas = mycell.element;
 
     canvas.width = sourceDimension;
     canvas.height = sourceDimension;
     engine.setTransform(1, 0, 0, 1, 0, 0);
 
-    this.source.stamp(true, cell, {
+    this.source.stamp(true, mycell, {
         startX: 0,
         startY: 0,
         handleX: 0,
@@ -889,8 +889,7 @@ P.cleanInput = function () {
 
     this.sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
 
-    releaseCell(cell);
-    // return engine.getImageData(0, 0, sourceDimension, sourceDimension);
+    releaseCell(mycell);
 };
 
 // `cleanOutput` - internal function called by `stamp`
@@ -1065,8 +1064,7 @@ P.cleanOutput = function () {
 
         const outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
 
-        releaseCell(inputCell);
-        releaseCell(outputCell);
+        releaseCell(inputCell, outputCell);
 
         this.dirtyTargetImage = true;
 

@@ -575,14 +575,14 @@ P.cleanScene = function () {
             if (ENTITY === initialSettingPreference && entity[initialSettingEntity]) {
 
                 const ent = entity[initialSettingEntity],
-                    cell = requestCell();
+                    mycell = requestCell();
 
-                const {engine:cellEngine, element:cellElement} = cell;
+                const {engine:cellEngine, element:cellElement} = mycell;
 
                 cellElement.width = width;
                 cellElement.height = height;
 
-                ent.simpleStamp(cell, {
+                ent.simpleStamp(mycell, {
                     fillStyle: WHITE,
                     strokeStyle: WHITE,
                 });
@@ -598,7 +598,7 @@ P.cleanScene = function () {
                     sourceB[counter] = initData[i] / 255;
                     counter++;
                 }
-                releaseCell(cell);
+                releaseCell(mycell);
             }
             else {
 

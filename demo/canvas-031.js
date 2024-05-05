@@ -270,7 +270,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: `${namespace}-animation`,
+    name: name('animation'),
     target: canvas,
 
     commence: clock.update,
