@@ -1014,15 +1014,9 @@ P.cascadeEventAction = function (action, e = {}) {
     currentActiveEntityNames.length = 0;
     currentActiveEntityNames.push(...newActiveEntityNames, ...knownActiveEntityNames);
 
-    releaseArray(currentActiveEntityObjects);
-    releaseArray(testActiveEntityObjects);
-    releaseArray(testActiveEntityNames);
-    releaseArray(newActiveEntityObjects);
-    releaseArray(newActiveEntityNames);
-    releaseArray(knownActiveEntityObjects);
-    releaseArray(knownActiveEntityNames);
+    releaseArray(currentActiveEntityObjects, testActiveEntityObjects, testActiveEntityNames, newActiveEntityObjects, newActiveEntityNames, knownActiveEntityObjects, knownActiveEntityNames);
 
-    return [].concat(currentActiveEntityNames);
+    return [...currentActiveEntityNames];
 };
 
 // `getEntityHits`, `checkHover` - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper

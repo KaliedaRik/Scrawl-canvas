@@ -1329,9 +1329,7 @@ P.convertRGBtoXYZ = function (r, g, b) {
 
     const res = this.multiplyMatrices(A, lRGB);
 
-    releaseArray(sRGB);
-    releaseArray(lRGB);
-    releaseArray(A);
+    releaseArray(sRGB, lRGB, A);
 
     return res;
 };
@@ -1383,8 +1381,7 @@ P.convertXYZtoRGB = function (x, y, z) {
     const lRGB = this.multiplyMatrices(A, B);
     const sRGB = this.gam_sRGB(lRGB);
 
-    releaseArray(A);
-    releaseArray(B);
+    releaseArray(A, B);
 
     return [
         _round(sRGB[0] * 255),
@@ -1406,8 +1403,7 @@ P.convertXYZtoLAB = function (x, y, z) {
     const xyz = toD50.map((val, i) => val / D50[i]);
     const f = xyz.map(val => val > E ? cbrt(val) : (K * val + 16) / 116);
 
-    releaseArray(A);
-    releaseArray(B);
+    releaseArray(A, B);
 
     return [
         (116 * f[1]) - 16,
@@ -1438,9 +1434,7 @@ P.convertLABtoXYZ = function (l, a, b) {
 
     const res = this.multiplyMatrices(A, toD50);
 
-    releaseArray(xyz);
-    releaseArray(A);
-    releaseArray(toD50);
+    releaseArray(xyz, A, toD50);
 
     return res;
 };
@@ -1483,9 +1477,7 @@ P.convertXYZtoOKLAB = function (x, y, z) {
 
     const res = this.multiplyMatrices(C, LMS.map(c => cbrt(c)));
 
-    releaseArray(A);
-    releaseArray(B);
-    releaseArray(C);
+    releaseArray(A, B, C);
 
     return res;
 };
@@ -1506,9 +1498,7 @@ P.convertOKLABtoXYZ = function (l, a, b) {
 
     const res = this.multiplyMatrices(C, LMSnl.map(c => c ** 3));
 
-    releaseArray(A);
-    releaseArray(B);
-    releaseArray(C);
+    releaseArray(A, B, C);
 
     return res;
 };

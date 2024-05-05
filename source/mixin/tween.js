@@ -208,6 +208,7 @@ export default function (P = Ωempty) {
         if (!this.targets) this.targets = [];
         this.targets.length = 0;
         this.targets.push(...newTargets);
+        
         releaseArray(newTargets);
 
         return this;
@@ -243,7 +244,7 @@ export default function (P = Ωempty) {
         items = [].concat(items);
 
         const identifiers = requestArray(),
-            newTargets = [].concat(this.targets);
+            newTargets = [...this.targets];
 
         newTargets.forEach(target => {
 
@@ -283,6 +284,8 @@ export default function (P = Ωempty) {
 
             if (target) t.push(target);
         }, this);
+
+        releaseArray(identifiers);
 
         return this;
     };

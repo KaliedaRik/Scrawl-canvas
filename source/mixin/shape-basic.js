@@ -512,8 +512,7 @@ export default function (P = Ωempty) {
                 this.unitPositions.length = 0;
                 this.unitPositions.push(...flatPositions);
 
-                releaseArray(flatProgression);
-                releaseArray(flatPositions);
+                releaseArray(flatProgression, flatPositions);
             }
             releasePathCalcObject(res);
 

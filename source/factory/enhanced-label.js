@@ -656,8 +656,9 @@ P.calculateLines = function () {
                     isInLayout = check;
                 }
             }
-
             rawLines.push([i, [...rawLineData]]);
+
+            releaseArray(rawLineData);
         }
 
         for (let i = rrpY + step; i < yBase; i += step) {
@@ -677,8 +678,9 @@ P.calculateLines = function () {
                     isInLayout = check;
                 }
             }
-
             rawLines.push([i, [...rawLineData]]);
+
+            releaseArray(rawLineData);            
         }
     }
 
@@ -700,14 +702,15 @@ P.calculateLines = function () {
                 isInLayout = check;
             }
         }
-
         rawLines.push([rrpY, [...rawLineData]]);
+
+        releaseArray(rawLineData);
     }
 
     const relevantLines = requestArray();
     relevantLines.push(...rawLines.filter(l => l[1].length));
 
-    releaseArray(...rawLines, rawLines);
+    releaseArray(rawLines);
 
     relevantLines.sort((a, b) => {
 

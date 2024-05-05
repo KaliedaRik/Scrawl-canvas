@@ -483,10 +483,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
     result.xRange.push(...xPoints);
     result.yRange.push(...yPoints);
 
-    releaseArray(points);
-    releaseArray(myData);
-    releaseArray(xPoints);
-    releaseArray(yPoints);
+    releaseArray(points, myData, xPoints, yPoints);
 
     return result;
 };

@@ -692,16 +692,8 @@ P.setSourceDimension = function () {
 
         this.pathObject = new Path2D(p);
 
-        lengths.forEach(a => releaseArray(a));
-        releaseArray(lengths);
-        releaseArray(results);
-        releaseArray(xPos);
-        releaseArray(yPos);
-        releaseArray(top);
-        releaseArray(left);
-        releaseArray(right);
-        releaseArray(bottom);
-        releaseArray(coords);
+        releaseArray(...lengths, lengths);
+        releaseArray(results, xPos, yPos, top, left, right, bottom, coords);
     }
 };
 
