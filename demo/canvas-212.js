@@ -78,7 +78,7 @@ const myLabel = scrawl.makeEnhancedLabel({
     lockFillStyleToEntity: true,
 });
 
-scrawl.makeLine({
+const line = scrawl.makeLine({
 
     name: name('line'),
 
@@ -87,11 +87,12 @@ scrawl.makeLine({
 
     useAsPath: true,
     useStartAsControlPoint: true,
+    precision: 1.5,
 
     method: 'none',
 });
 
-scrawl.makeQuadratic({
+const quad = scrawl.makeQuadratic({
 
     name: name('quadratic'),
 
@@ -101,12 +102,12 @@ scrawl.makeQuadratic({
 
     useAsPath: true,
     useStartAsControlPoint: true,
-    precision: 1,
+    precision: 1.5,
 
     method: 'none',
 });
 
-scrawl.makeBezier({
+const bezier = scrawl.makeBezier({
 
     name: name('bezier'),
 
@@ -117,12 +118,12 @@ scrawl.makeBezier({
 
     useAsPath: true,
     useStartAsControlPoint: true,
-    precision: 1,
+    precision: 1.5,
 
     method: 'draw',
 });
 
-scrawl.makeOval({
+const oval = scrawl.makeOval({
 
     name: name('oval'),
 
@@ -133,7 +134,7 @@ scrawl.makeOval({
     roll: 30,
 
     useAsPath: true,
-    precision: 1,
+    precision: 1.5,
 
     method: 'none',
 });
@@ -211,6 +212,9 @@ const pathGroup = scrawl.makeGroup({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', () => {
+
+    const precision = `    Units per path: Line ${line.unitPositions.length}; Quadratic: ${quad.unitPositions.length}; Bezier: ${bezier.unitPositions.length}; Oval: ${oval.unitPositions.length}`;
+
     return `
 Font.details:
     Font string (entity): ${myLabel.get('fontString')}
@@ -221,7 +225,9 @@ Font.details:
     Font stretch: ${myLabel.get('fontStretch')}
     Font variant: ${myLabel.get('fontVariantCaps')}
     Font weight: ${myLabel.get('fontWeight')}
-    `;
+
+    Path precision: ${dom.precision.value}
+    ${precision}`;
 });
 
 
@@ -241,6 +247,7 @@ const dom = initializeDomInputs([
     ['input', 'scale', '1'],
     ['input', 'fontWeight', '400'],
     ['input', 'fontStretch', '100'],
+    ['input', 'precision', '10'],
     ['select', 'fontSize', 0],
     ['select', 'fontVariantCaps', 0],
     ['select', 'fontStyle', 0],
@@ -297,6 +304,13 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     }
 
 }, dom.layoutTemplate);
+
+
+scrawl.addNativeListener(['input', 'change'], () => {
+
+    pathGroup.setArtefacts({ precision: parseFloat(dom.precision.value) });
+
+}, dom.precision);
 
 
 // #### Development and testing

@@ -104,16 +104,6 @@
       <input class="controlItem" id="fontStretch" type="range" value="100" min="25" max="150" step="1" />
     </div>
 
-    <div class="pink label">Path</div>
-    <div class="pink">
-      <select class="controlItem" id="layoutTemplate">
-        <option value="line">Line</option>
-        <option value="quadratic">Quadratic</option>
-        <option value="bezier">Bezier</option>
-        <option value="oval">Oval</option>
-      </select>
-    </div>
-
   </div>
 
   <canvas 
@@ -124,6 +114,22 @@
   ></canvas>
 
   <div class="controls">
+
+    <div class="pink label">Path</div>
+    <div class="pink">
+      <select class="controlItem" id="layoutTemplate">
+        <option value="line">Line</option>
+        <option value="quadratic">Quadratic</option>
+        <option value="bezier">Bezier</option>
+        <option value="oval">Oval</option>
+      </select>
+    </div>
+
+    <div class="pink label">Path precision</div>
+    <div class="pink">
+      <input class="controlItem" id="precision" type="range" value="1.5" min="0.05" max="2" step="0.05" />
+    </div>
+
     <div class="yellow label">Scale</div>
     <div class="yellow">
       <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
@@ -133,6 +139,7 @@
     <div class="yellow">
       <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
     </div>
+
   </div>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
