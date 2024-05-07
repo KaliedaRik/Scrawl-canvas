@@ -384,6 +384,17 @@ export default function (P = Ωempty) {
 
         this.state = makeState(Ωempty);
 
+        this.filters = [];
+        this.currentFilters = [];
+        this.dirtyFilters = false;
+        this.dirtyFiltersCache = false;
+        this.dirtyImageSubscribers = false;
+
+        this.stashOutput = false;
+        this.stashOutputAsAsset = false;
+        this.stashedImageData = null;
+        this.stashedImage = null;
+
         this.set(this.defs);
 
         if (!items.group) items.group = currentGroup;

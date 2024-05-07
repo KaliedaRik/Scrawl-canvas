@@ -35,7 +35,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _floor, _freeze, ENTITY, SPIRAL, T_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
+import { _seal, _floor, _freeze, ENTITY, SPIRAL, T_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -233,7 +233,9 @@ export const makeSpiral = function (items) {
 
     if (!items) return false;
     items.species = SPIRAL;
-    return new Spiral(items);
+
+    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
+    return _seal(new Spiral(items));
 };
 
 constructors.Spiral = Spiral;

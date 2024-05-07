@@ -17,7 +17,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
-import { _abs, _ceil, _floor, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _abs, _ceil, _floor, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Label constructor
@@ -115,6 +115,15 @@ P.entityInit = function (items = Ωempty) {
         isDefaultTextStyle: true,
     });
 
+    this.filters = [];
+    this.currentFilters = [];
+    this.dirtyFilters = false;
+    this.dirtyFiltersCache = false;
+    this.dirtyImageSubscribers = false;
+
+    this.accessibleTextHold = null;
+    this.accessibleTextHoldAttached = null;
+
     this.set(this.defs);
 
     if (!items.group) items.group = currentGroup;
@@ -131,6 +140,11 @@ P.entityInit = function (items = Ωempty) {
     this.letterSpaceValue = 0;
     this.wordSpaceValue = 0;
 
+    this.alphabeticBaseline = 0;
+    this.hangingBaseline = 0;
+    this.ideographicBaseline = 0;
+    this.fontVerticalOffset = 0;    
+
     this.delta = {};
 
     this.set(items);
@@ -142,6 +156,7 @@ P.entityInit = function (items = Ωempty) {
     this.dirtyFont = true;
     this.currentFontIsLoaded = false;
 };
+
 
 // `measureFont` - gather font metadata (uses `getFontMetadata` from text mixin)
 P.measureFont = function () {
@@ -604,7 +619,9 @@ P.none = λnull;
 export const makeLabel = function (items) {
 
     if (!items) return false;
-    return new Label(items);
+
+    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
+    return _seal(new Label(items));
 };
 
 constructors.Label = Label;

@@ -42,7 +42,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
+import { _seal, $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Picture constructor
@@ -56,6 +56,13 @@ const Picture = function (items = Ωempty) {
 
     this.copyArray = [];
     this.pasteArray = [];
+    this.dirtyPaste = true;
+
+    this.source = null;
+    this.sourceNaturalWidth = 0;
+    this.sourceNaturalHeight = 0;
+    this.sourceNaturalDimensions = [];
+    this.sourceLoaded = false;
 
     this.entityInit(items);
 
@@ -761,7 +768,9 @@ P.checkHitReturn = function (x, y) {
 export const makePicture = function (items) {
 
     if (!items) return false;
-    return new Picture(items);
+
+    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
+    return _seal(new Picture(items));
 };
 
 constructors.Picture = Picture;

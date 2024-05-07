@@ -596,13 +596,13 @@ export default function (P = Ωempty) {
             if (this.anchor) {
 
                 myAnchor = this.anchor;
-                delete this.anchor;
+                this.anchor = null;
             }
 
             if (this.button) {
 
                 myButton = this.button;
-                delete this.button;
+                this.button = null;
             }
 
             myPacket = this.saveAsPacket();

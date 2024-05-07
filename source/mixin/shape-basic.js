@@ -118,8 +118,6 @@ export default function (P = Ωempty) {
     // `shapeInit` - internal constructor helper function
     P.shapeInit = function (items) {
 
-        this.entityInit(items);
-
         this.units = [];
         this.unitLengths = [];
         this.unitPartials = [];
@@ -127,6 +125,14 @@ export default function (P = Ωempty) {
         this.pathed = [];
 
         this.localBox = [];
+
+        this.localPath = null;
+        this.length = 0;
+
+        this.unitProgression = [];
+        this.unitPositions = [];
+
+        this.entityInit(items);
     };
 
 
