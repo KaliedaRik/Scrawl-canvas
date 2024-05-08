@@ -244,7 +244,7 @@ export default function (P = Ωempty) {
         items = [].concat(items);
 
         const identifiers = requestArray(),
-            newTargets = [...this.targets];
+            newTargets = [].concat(this.targets);
 
         newTargets.forEach(target => {
 
