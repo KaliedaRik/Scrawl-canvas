@@ -22,13 +22,26 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _radian, DESTINATION_OUT, ENTITY, T_CRESCENT } from '../helper/shared-vars.js';
+import { _seal, _radian, DESTINATION_OUT, ENTITY, T_CRESCENT } from '../helper/shared-vars.js';
 
 
 // #### Crescent constructor
 const Crescent = function (items = Ωempty) {
 
     if (!xto(items.dimensions, items.width, items.height, items.radius)) items.radius = 5;
+
+    this.currentOuterRadius = 5;
+    this.currentInnerRadius = 5;
+    this.currentDisplacement = 0;
+    this.currentDimensions = [];
+    this.outerCircleStart = 0;
+    this.outerCircleEnd = 0;
+    this.innerCircleStart = 0;
+    this.innerCircleEnd = 0;
+    this.drawOuterCircle = false;
+    this.drawDonut = false;
+    this.pathObjectOuter = null;
+    this.pathObjectInner = null;
 
     this.entityInit(items);
 
@@ -462,7 +475,9 @@ P.clear = function (engine) {
 export const makeCrescent = function (items) {
 
     if (!items) return false;
-    return new Crescent(items);
+
+    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
+    return _seal(new Crescent(items));
 };
 
 constructors.Crescent = Crescent;

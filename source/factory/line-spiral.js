@@ -35,7 +35,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { ENTITY, LINE_SPIRAL, T_LINE_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
+import { _seal, ENTITY, LINE_SPIRAL, T_LINE_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // #### LineSpiral constructor
@@ -267,7 +267,9 @@ export const makeLineSpiral = function (items) {
 
     if (!items) return false;
     items.species = LINE_SPIRAL;
-    return new LineSpiral(items);
+
+    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
+    return _seal(new LineSpiral(items));
 };
 
 constructors.LineSpiral = LineSpiral;
