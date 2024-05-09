@@ -69,7 +69,7 @@ Alternatively, a zip package of the v8.13.1 files can be downloaded from this li
 </head>
 <body>
     
-    <canvas id="my-canvas"></canvas>
+    <canvas id="my-canvas" data-scrawl-canvas></canvas>
 
     <!-- The library is entirely modular and needs to be imported into a module script -->
     <script type="module">
