@@ -25,7 +25,7 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _isFinite, _piDouble, BLACK, ENTITY, T_TRACER } from '../helper/shared-vars.js';
+import { _seal, _isArray, _isFinite, _piDouble, BLACK, ENTITY, T_TRACER } from '../helper/shared-vars.js';
 
 
 // #### Tracer constructor
@@ -239,7 +239,7 @@ P.checkHit = function (items = []) {
 export const makeTracer = function (items) {
 
     if (!items) return false;
-    return new Tracer(items);
+    return _seal(new Tracer(items));
 };
 
 constructors.Tracer = Tracer;

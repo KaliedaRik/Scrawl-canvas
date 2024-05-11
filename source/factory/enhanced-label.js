@@ -98,6 +98,16 @@ const EnhancedLabel = function (items = Ωempty) {
     this.guidelinesPath = null;
     this.currentPathData = null;
 
+    this.filters = [];
+    this.currentFilters = [];
+    this.dirtyFilters = true;
+    this.dirtyFiltersCache = true;
+    this.dirtyImageSubscribers = true;
+    this.stashOutput = false;
+    this.stashOutputAsAsset = false;
+    this.stashedImageData = null;
+    this.stashedImage = null;
+
     this.set(items);
 
     this.dirtyFont = true;

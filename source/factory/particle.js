@@ -35,7 +35,7 @@ import { makeVector, releaseVector, requestVector } from '../untracked-factory/v
 // The Particle object uses the base mixin, thus it supports all the normal Scrawl-canvas functionality such as `get`, `set`, `setDelta`, `clone`, `kill`, etc.
 import baseMix from '../mixin/base.js';
 
-import { _isArray, BLACK, EULER, PARTICLE, T_PARTICLE } from '../helper/shared-vars.js';
+import { _seal, _isArray, BLACK, EULER, PARTICLE, T_PARTICLE } from '../helper/shared-vars.js';
 
 
 // #### Particle constructor
@@ -46,6 +46,13 @@ const Particle = function (items = Ωempty) {
 
     this.set(this.defs);
     this.initializePositions();
+
+    this.hasLifetime = false;
+    this.distanceLimit = 0;
+    this.killBeyondCanvas = false;
+    this.isBeingDragged = false;
+    this.dragOffset = null;
+
     this.set(items);
 
     return this;
@@ -375,7 +382,7 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas) {
 export const makeParticle = function (items) {
 
     if (!items) return false;
-    return new Particle(items);
+    return _seal(new Particle(items));
 };
 
 constructors.Particle = Particle;

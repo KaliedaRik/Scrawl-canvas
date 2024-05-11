@@ -26,7 +26,7 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _floor, _isArray, _isFinite, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../helper/shared-vars.js';
+import { _seal, _floor, _isArray, _isFinite, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../helper/shared-vars.js';
 
 
 // #### Net constructor
@@ -55,6 +55,9 @@ const Net = function (items = Ωempty) {
     // Setup the particle store, and the entity's `springs` Array
     this.particleStore = [];
     this.springs = [];
+
+    this.lastUpdated = 0;
+    this.lastHitParticle = null;
 
     if (!items.group) items.group = currentGroup;
 
@@ -1057,7 +1060,7 @@ const generators = {
 export const makeNet = function (items) {
 
     if (!items) return false;
-    return new Net(items);
+    return _seal(new Net(items));
 };
 
 constructors.Net = Net;

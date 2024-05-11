@@ -47,7 +47,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -82,6 +82,9 @@ const Canvas = function (items = Ωempty) {
 
     // Sets up the user preferences action functions
     this.initializeAccessibility();
+
+    this.currentActiveEntityNames = null;
+    this.dirtyCss = true;
 
     this.set(items);
 
@@ -220,6 +223,8 @@ const Canvas = function (items = Ωempty) {
         this.ariaDescriptionElement = ariaDescription;
         el.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
+
+        this.includeInTabNavigation = false;
 
         this.cleanAria();
 
@@ -1046,7 +1051,7 @@ P.cleanAria = function () {
 export const makeCanvas = function (items) {
 
     if (!items) return false;
-    return new Canvas(items);
+    return _seal(new Canvas(items));
 };
 
 constructors.Canvas = Canvas;

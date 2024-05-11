@@ -37,7 +37,7 @@ import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _atan2, _ceil, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _atan2, _ceil, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Mesh constructor
@@ -60,6 +60,22 @@ const Mesh = function (items = Ωempty) {
     this.onUp = λnull;
 
     this.delta = {};
+
+    this.currentHost = null;
+    this.dirtyHost = true;
+    this.badNet = true;
+    this.dirtyParticles = true;
+    this.particlePositions = null;
+    this.sourceImageData = null;
+    this.sourceDimension = 0;
+    this.rows = null;
+    this.columns = null;
+    this.struts = null;
+    this.boundingBox = null;
+    this.pathObject = null;
+    this.dirtyOutput = true;
+    this.dirtyTargetImage = true;
+    this.output = null;
 
     this.set(items);
 
@@ -1123,7 +1139,7 @@ P.checkHit = function (items = []) {
 export const makeMesh = function (items) {
 
     if (!items) return false;
-    return new Mesh(items);
+    return _seal(new Mesh(items));
 };
 
 constructors.Mesh = Mesh;
