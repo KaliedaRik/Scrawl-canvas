@@ -15,7 +15,7 @@ import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _seal, _A, _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../helper/shared-vars.js';
+import { _A, _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Anchor constructor
@@ -302,7 +302,7 @@ P.click = function () {
 export const makeAnchor = function (items) {
 
     if (!items) return false;
-    return _seal(new Anchor(items));
+    return new Anchor(items);
 };
 
 constructors.Anchor = Anchor;

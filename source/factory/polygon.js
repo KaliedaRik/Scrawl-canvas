@@ -37,7 +37,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _seal, _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Polygon constructor
@@ -198,9 +198,7 @@ export const makePolygon = function (items) {
 
     if (!items) return false;
     items.species = POLYGON;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Polygon(items));
+    return new Polygon(items);
 };
 
 constructors.Polygon = Polygon;

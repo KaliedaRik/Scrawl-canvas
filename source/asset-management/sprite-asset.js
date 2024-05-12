@@ -15,7 +15,7 @@ import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _seal, $JSON, _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE, T_SPRITE, ZERO_STR } from '../helper/shared-vars.js';
+import { $JSON, _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE, T_SPRITE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### SpriteAsset constructor
@@ -251,7 +251,7 @@ export const importSprite = function (...args) {
 const makeSpriteAsset = function (items) {
 
     if (!items) return false;
-    return _seal(new SpriteAsset(items));
+    return new SpriteAsset(items);
 };
 
 constructors.SpriteAsset = SpriteAsset;

@@ -37,7 +37,7 @@ import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _seal, _atan2, _ceil, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _ceil, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Mesh constructor
@@ -1139,7 +1139,7 @@ P.checkHit = function (items = []) {
 export const makeMesh = function (items) {
 
     if (!items) return false;
-    return _seal(new Mesh(items));
+    return new Mesh(items);
 };
 
 constructors.Mesh = Mesh;

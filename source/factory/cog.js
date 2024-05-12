@@ -36,7 +36,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _seal, _abs, _min, BEZIER, ENTITY, PERMITTED_CURVES, QUADRATIC, T_COG } from '../helper/shared-vars.js';
+import { _abs, _min, BEZIER, ENTITY, PERMITTED_CURVES, QUADRATIC, T_COG } from '../helper/shared-vars.js';
 
 
 // #### Cog constructor
@@ -428,9 +428,7 @@ export const makeCog = function (items) {
 
     if (!items) return false;
     items.species = 'cog';
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Cog(items));
+    return new Cog(items);
 };
 
 constructors.Cog = Cog;

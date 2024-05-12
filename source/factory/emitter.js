@@ -32,7 +32,7 @@ import { makeColor } from './color.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _seal, _abs, _floor, _isArray, _isFinite, _now, _piDouble, _random, _tick, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../helper/shared-vars.js';
+import { _abs, _floor, _isArray, _isFinite, _now, _piDouble, _random, _tick, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../helper/shared-vars.js';
 
 
 // #### Emitter constructor
@@ -1020,9 +1020,7 @@ P.checkHit = function (items = []) {
 export const makeEmitter = function (items) {
 
     if (!items) return false;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Emitter(items));
+    return new Emitter(items);
 };
 
 constructors.Emitter = Emitter;

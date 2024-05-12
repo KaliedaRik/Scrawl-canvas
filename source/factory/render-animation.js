@@ -33,7 +33,7 @@ import { forceUpdate } from '../helper/system-flags.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _seal, _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shared-vars.js';
+import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shared-vars.js';
 
 
 // #### RenderAnimation constructor
@@ -362,7 +362,7 @@ P.updateHook = function (hook = '', func) {
 export const makeRender = function (items) {
 
     if (!items) return false;
-    return _seal(new RenderAnimation(items));
+    return new RenderAnimation(items);
 };
 
 constructors.RenderAnimation = RenderAnimation;

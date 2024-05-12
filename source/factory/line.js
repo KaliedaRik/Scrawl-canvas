@@ -34,7 +34,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 import curveMix from '../mixin/shape-curve.js';
 
-import { _seal, ENTITY, LINE, PATH, T_LINE, ZERO_PATH } from '../helper/shared-vars.js';
+import { ENTITY, LINE, PATH, T_LINE, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // #### Line constructor
@@ -173,9 +173,7 @@ export const makeLine = function (items) {
 
     if (!items) return false;
     items.species = LINE;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Line(items));
+    return new Line(items);
 };
 
 constructors.Line = Line;

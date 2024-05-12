@@ -33,7 +33,7 @@ import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _seal, ENTITY, OVAL, RADIUS_X, RADIUS_XY, RADIUS_Y, T_OVAL, ZERO_PATH } from '../helper/shared-vars.js';
+import { ENTITY, OVAL, RADIUS_X, RADIUS_XY, RADIUS_Y, T_OVAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 
 // #### Oval constructor
@@ -291,9 +291,7 @@ export const makeOval = function (items) {
 
     if (!items) return false;
     items.species = OVAL;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Oval(items));
+    return new Oval(items);
 };
 
 constructors.Oval = Oval;

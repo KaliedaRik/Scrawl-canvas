@@ -16,7 +16,7 @@ import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _seal, _parse, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, ELEMENT, IMAGE_ELEMENTS, IMG, INTRINSIC, NONE, SLASH, T_CANVAS, T_CELL, T_GROUP, T_IMAGE, ZERO, ZERO_STR } from '../helper/shared-vars.js';
+import { _parse, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, ELEMENT, IMAGE_ELEMENTS, IMG, INTRINSIC, NONE, SLASH, T_CANVAS, T_CELL, T_GROUP, T_IMAGE, ZERO, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### ImageAsset constructor
@@ -373,7 +373,7 @@ export const createImageFromEntity = function (item, stashAsAsset = false) {
 const makeImageAsset = function (items) {
 
     if (!items) return false;
-    return _seal(new ImageAsset(items));
+    return new ImageAsset(items);
 };
 
 constructors.ImageAsset = ImageAsset;

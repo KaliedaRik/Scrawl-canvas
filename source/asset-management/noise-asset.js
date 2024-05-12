@@ -30,7 +30,7 @@ import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { _seal, $X, _abs, _floor, _freeze, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../helper/shared-vars.js';
+import { $X, _abs, _floor, _freeze, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../helper/shared-vars.js';
 
 
 // #### NoiseAsset constructor
@@ -1103,7 +1103,7 @@ export const makeNoiseAsset = function (items) {
 export const makeNoise = function (items) {
 
     if (!items) return false;
-    return _seal(new NoiseAsset(items));
+    return new NoiseAsset(items);
 };
 
 constructors.NoiseAsset = NoiseAsset;

@@ -29,7 +29,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _seal, _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
+import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
 
 
 // #### Group constructor
@@ -920,7 +920,7 @@ P.getAllArtefactsAt = function (items) {
 export const makeGroup = function (items) {
 
     if (!items) return false;
-    return _seal(new Group(items));
+    return new Group(items);
 };
 
 constructors.Group = Group;

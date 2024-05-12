@@ -47,7 +47,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _seal, _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
+import { _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -1054,7 +1054,7 @@ P.cleanAria = function () {
 export const makeCanvas = function (items) {
 
     if (!items) return false;
-    return _seal(new Canvas(items));
+    return new Canvas(items);
 };
 
 constructors.Canvas = Canvas;

@@ -25,7 +25,7 @@ import { animateAdd, animateIncludes, animateRemove } from '../core/animation-lo
 
 import baseMix from '../mixin/base.js';
 
-import { _seal, ANIMATION, T_ANIMATION } from '../helper/shared-vars.js';
+import { ANIMATION, T_ANIMATION } from '../helper/shared-vars.js';
 
 
 // #### Animation constructor
@@ -177,7 +177,7 @@ P.kill = function () {
 export const makeAnimation = function (items) {
 
     if (!items) return false;
-    return _seal(new Animation(items));
+    return new Animation(items);
 };
 
 constructors.Animation = Animation;

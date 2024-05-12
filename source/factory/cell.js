@@ -64,7 +64,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _seal, _isFinite, _floor, _round, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, DISPLAY_P3, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _floor, _round, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, DISPLAY_P3, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Cell constructor
@@ -1375,7 +1375,7 @@ P.updateHere = function () {
 export const makeCell = function (items) {
 
     if (!items) return false;
-    return _seal(new Cell(items));
+    return new Cell(items);
 };
 
 constructors.Cell = Cell;

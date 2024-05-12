@@ -18,7 +18,7 @@ import { addStrings, doCreate, isa_number, mergeOver, xt, xto, Ωempty } from '.
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _seal, _radian, DIMENSIONS, ENTITY, PC, T_WHEEL } from '../helper/shared-vars.js';
+import { _radian, DIMENSIONS, ENTITY, PC, T_WHEEL } from '../helper/shared-vars.js';
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
 const ensureFloat = (val, precision) => {
@@ -320,9 +320,7 @@ P.cleanPathObject = function () {
 export const makeWheel = function (items) {
 
     if (!items) return false;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Wheel(items));
+    return new Wheel(items);
 };
 
 constructors.Wheel = Wheel;

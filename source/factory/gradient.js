@@ -17,7 +17,7 @@ import { doCreate, pushUnique, Ωempty } from '../helper/utilities.js';
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { _seal, BLANK, STYLES, T_GRADIENT } from '../helper/shared-vars.js';
+import { BLANK, STYLES, T_GRADIENT } from '../helper/shared-vars.js';
 
 
 // #### Gradient constructor
@@ -146,7 +146,7 @@ P.updateGradientArgs = function (x, y) {
 export const makeGradient = function (items) {
 
     if (!items) return false;
-    return _seal(new Gradient(items));
+    return new Gradient(items);
 };
 
 constructors.Gradient = Gradient;

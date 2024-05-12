@@ -30,7 +30,7 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _seal, SPRING, T_PARTICLE, T_SPRING } from '../helper/shared-vars.js';
+import { SPRING, T_PARTICLE, T_SPRING } from '../helper/shared-vars.js';
 
 
 // #### Spring constructor
@@ -204,7 +204,7 @@ P.applySpring = function () {
 export const makeSpring = function (items) {
 
     if (!items) return false;
-    return _seal(new Spring(items));
+    return new Spring(items);
 };
 
 constructors.Spring = Spring;

@@ -13,7 +13,7 @@
 import { constructors } from '../core/library.js';
 import { doCreate, Ωempty } from '../helper/utilities.js';
 
-import { _seal, ENTITY, T_BLOCK } from '../helper/shared-vars.js';
+import { ENTITY, T_BLOCK } from '../helper/shared-vars.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -123,9 +123,7 @@ P.cleanPathObject = function () {
 export const makeBlock = function (items) {
 
     if (!items) return false;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Block(items));
+    return new Block(items);
 };
 
 constructors.Block = Block;

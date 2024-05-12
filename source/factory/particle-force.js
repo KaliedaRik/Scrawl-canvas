@@ -37,7 +37,7 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _seal, FORCE, GRAVITY, T_FORCE } from '../helper/shared-vars.js';
+import { FORCE, GRAVITY, T_FORCE } from '../helper/shared-vars.js';
 
 
 // #### Force constructor
@@ -136,7 +136,7 @@ S.action = function (item) {
 export const makeForce = function (items) {
 
     if (!items) return false;
-    return _seal(new Force(items));
+    return new Force(items);
 };
 
 constructors.Force = Force;

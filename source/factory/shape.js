@@ -33,7 +33,7 @@ import { doCreate, Ωempty } from '../helper/utilities.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _seal, T_SHAPE, ENTITY } from '../helper/shared-vars.js';
+import { T_SHAPE, ENTITY } from '../helper/shared-vars.js';
 
 
 // #### Shape constructor
@@ -123,9 +123,7 @@ P.cleanStampHandlePositionsAdditionalActions = function () {
 export const makeShape = function (items) {
 
     if (!items) return false;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Shape(items));
+    return new Shape(items);
 };
 
 constructors.Shape = Shape;

@@ -34,7 +34,7 @@ import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _seal, _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Loom constructor
@@ -1460,9 +1460,7 @@ P.checkHit = function (items = []) {
 export const makeLoom = function (items) {
 
     if (!items) return false;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Loom(items));
+    return new Loom(items);
 };
 
 constructors.Loom = Loom;

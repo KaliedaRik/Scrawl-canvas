@@ -42,7 +42,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { _seal, $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
+import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Picture constructor
@@ -768,9 +768,7 @@ P.checkHitReturn = function (x, y) {
 export const makePicture = function (items) {
 
     if (!items) return false;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Picture(items));
+    return new Picture(items);
 };
 
 constructors.Picture = Picture;

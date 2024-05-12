@@ -36,7 +36,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 import curveMix from '../mixin/shape-curve.js';
 
-import { _seal, BEZIER, COORD, END_CONTROL, END_CONTROL_PARTICLE, END_CONTROL_PATH, END_CONTROL_PIVOT, ENTITY, PATH, START_CONTROL, START_CONTROL_PARTICLE, START_CONTROL_PATH, START_CONTROL_PIVOT, T_BEZIER, ZERO_STR } from '../helper/shared-vars.js';
+import { BEZIER, COORD, END_CONTROL, END_CONTROL_PARTICLE, END_CONTROL_PATH, END_CONTROL_PIVOT, ENTITY, PATH, START_CONTROL, START_CONTROL_PARTICLE, START_CONTROL_PATH, START_CONTROL_PIVOT, T_BEZIER, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Bezier constructor
@@ -496,9 +496,7 @@ export const makeBezier = function (items = Ωempty) {
 
     if (!items) return false;
     items.species = BEZIER;
-
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
-    return _seal(new Bezier(items));
+    return new Bezier(items);
 };
 
 constructors.Bezier = Bezier;
