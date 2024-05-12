@@ -208,7 +208,7 @@ export default function (P = Ωempty) {
         if (!this.targets) this.targets = [];
         this.targets.length = 0;
         this.targets.push(...newTargets);
-        
+
         releaseArray(newTargets);
 
         return this;

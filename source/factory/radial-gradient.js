@@ -25,7 +25,7 @@ const RadialGradient = function (items = Ωempty) {
 
     this.currentStartRadius = 0;
     this.currentEndRadius = 0;
-    
+
     this.stylesInit(items);
     return this;
 };

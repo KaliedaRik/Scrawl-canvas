@@ -708,7 +708,7 @@ P.calculateLines = function () {
             }
             rawLines.push([i, [...rawLineData]]);
 
-            releaseArray(rawLineData);            
+            releaseArray(rawLineData);
         }
     }
 
@@ -3011,7 +3011,7 @@ P.createTextCellsForPath = function (host) {
     }
     // If we're returning null, we need to release the pool cells
     releaseCell(uCell, mCell);
-    
+
     return null;
 };
 

@@ -527,7 +527,7 @@ P.dropArtefact = function () {
 
     // Release the pool vector requested in the `pickupArtefact` function
     releaseVector(this.lastHitParticle.dragOffset);
-    
+
     this.lastHitParticle.dragOffset = null;
     this.lastHitParticle = null;
     return this;

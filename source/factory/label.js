@@ -143,7 +143,7 @@ P.entityInit = function (items = Ωempty) {
     this.alphabeticBaseline = 0;
     this.hangingBaseline = 0;
     this.ideographicBaseline = 0;
-    this.fontVerticalOffset = 0;    
+    this.fontVerticalOffset = 0;
 
     this.delta = {};
 

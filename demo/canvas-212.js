@@ -213,6 +213,7 @@ const pathGroup = scrawl.makeGroup({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', () => {
 
+/** @ts-expect-error */
     const precision = `    Units per path: Line ${line.unitPositions.length}; Quadratic: ${quad.unitPositions.length}; Bezier: ${bezier.unitPositions.length}; Oval: ${oval.unitPositions.length}`;
 
     return `

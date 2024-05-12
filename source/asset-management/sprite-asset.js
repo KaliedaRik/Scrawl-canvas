@@ -23,7 +23,7 @@ const SpriteAsset = function (items = Ωempty) {
 
     this.sourceHold = null;
     this.manifest = null;
-    
+
     this.assetConstructor(items);
 
     return this;
