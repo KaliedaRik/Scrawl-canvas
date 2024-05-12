@@ -18,7 +18,7 @@ import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, RD_SETTINGS_PREF_VALS, T_RD_ASSET, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, RD_SETTINGS_PREF_VALS, T_RD_ASSET, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### RdAsset constructor
@@ -32,6 +32,10 @@ const RdAsset = function (items = Ωempty) {
     this.subscribers = [];
 
     this.set(this.defs);
+
+    this.currentSource = null;
+    this.initialSettingEntity = null;
+
     this.set(items);
 
     if (items.subscribe) this.subscribers.push(items.subscribe);
@@ -725,7 +729,7 @@ P.getOutputValue = function (index) {
 export const makeReactionDiffusionAsset = function (items) {
 
     if (!items) return false;
-    return new RdAsset(items);
+    return _seal(new RdAsset(items));
 };
 
 constructors.RdAsset = RdAsset;

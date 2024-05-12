@@ -17,12 +17,15 @@ import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../helper/shared-vars.js';
+import { _seal, BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../helper/shared-vars.js';
 
 
 // #### RadialGradient constructor
 const RadialGradient = function (items = Ωempty) {
 
+    this.currentStartRadius = 0;
+    this.currentEndRadius = 0;
+    
     this.stylesInit(items);
     return this;
 };
@@ -234,7 +237,7 @@ P.updateGradientArgs = function (x, y) {
 export const makeRadialGradient = function (items) {
 
     if (!items) return false;
-    return new RadialGradient(items);
+    return _seal(new RadialGradient(items));
 };
 
 constructors.RadialGradient = RadialGradient;

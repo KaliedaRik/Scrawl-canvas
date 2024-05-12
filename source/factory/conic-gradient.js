@@ -17,7 +17,7 @@ import { doCreate, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { _radian, BLANK, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
+import { _seal, _radian, BLANK, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
 
 
 // #### ConicGradient constructor
@@ -153,7 +153,7 @@ P.updateGradientArgs = function (x, y) {
 export const makeConicGradient = function (items) {
 
     if (!items) return false;
-    return new ConicGradient(items);
+    return _seal(new ConicGradient(items));
 };
 
 constructors.ConicGradient = ConicGradient;

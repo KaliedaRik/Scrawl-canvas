@@ -34,7 +34,7 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
-import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../helper/shared-vars.js';
+import { _seal, ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../helper/shared-vars.js';
 
 
 // #### Element constructor
@@ -64,6 +64,14 @@ const Element = function (items = Ωempty) {
     this.set(this.defs);
 
     this.initializeAccessibility();
+
+    this.mimic = null;
+    this.pivot = null;
+    this.dirtyContent = true;
+    this.dirtyCss = true;
+    this.localMouseListener = null;
+    this.canvas = null;
+    this.elementComputedStyles = null;
 
     this.set(items);
 
@@ -272,7 +280,7 @@ P.addCanvas = function (items = Ωempty) {
 export const makeElement = function (items) {
 
     if (!items) return false;
-    return new Element(items);
+    return _seal(new Element(items));
 };
 
 constructors.Element = Element;

@@ -58,20 +58,21 @@ const Loom = function (items = Ωempty) {
 
     this.delta = {};
 
-    this.currentPathData = null;
-    this.currentHost = null;
-    this.dirtyHost = true;
     this.boundingBox = [];
-    this.sourceDimension = 0;
-    this.fromPathSteps = 1;
-    this.toPathSteps = 1;
-    this.watchFromPath = true;
+    this.currentHost = null;
+    this.currentPathData = null;
+    this.dirtyDimensions = true;
+    this.dirtyHost = true;
     this.dirtyInput = true;
     this.dirtyOutput = true;
-    this.output = null;
-    this.sourceImageData = null;
     this.dirtyTargetImage = true;
+    this.fromPathSteps = 1;
+    this.output = null;
     this.pathTests = null;
+    this.sourceDimension = 0;
+    this.sourceImageData = null;
+    this.toPathSteps = 1;
+    this.watchFromPath = true;
 
     this.set(items);
 

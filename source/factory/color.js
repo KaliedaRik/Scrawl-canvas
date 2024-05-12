@@ -11,7 +11,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -125,6 +125,8 @@ const Color = function (items = Ωempty) {
     this.oklch_min = [];
 
     this.easingFunction = λfirstArg;
+
+    this.dirtyFilterIdentifier = false;
 
     this.convert(BLANK);
     this.convert(BLACK, _MIN);
@@ -1720,7 +1722,7 @@ browserChecker();
 export const makeColor = function (items) {
 
     if (!items) return false;
-    return new Color(items);
+    return _seal(new Color(items));
 };
 
 constructors.Color = Color;

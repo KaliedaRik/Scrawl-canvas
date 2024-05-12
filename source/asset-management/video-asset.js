@@ -14,7 +14,7 @@ import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _freeze, _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _freeze, _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
@@ -583,7 +583,7 @@ export const importVideo = function (...args) {
 const makeVideoAsset = function (items) {
 
     if (!items) return false;
-    return new VideoAsset(items);
+    return _seal(new VideoAsset(items));
 };
 
 constructors.VideoAsset = VideoAsset;

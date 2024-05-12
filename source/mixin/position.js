@@ -870,7 +870,9 @@ export default function (P = Ωempty) {
 
         this.lockTo = [START, START];
 
+        this.pivot = null;
         this.pivoted = [];
+        this.mimic = null;
         this.mimicked = [];
 
         this.relativeCoordinates = [];

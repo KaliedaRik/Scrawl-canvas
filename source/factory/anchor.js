@@ -15,7 +15,7 @@ import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _A, _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _A, _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Anchor constructor
@@ -29,6 +29,10 @@ const Anchor = function (items = Ωempty) {
     this.host = items.host;
     this.controller = items.controller;
     this.hold = items.hold;
+
+    this.clickAction = null;
+    this.domElement = null;
+    this.hasBeenRecentlyClicked = null;
 
     this.set(items);
 
@@ -298,7 +302,7 @@ P.click = function () {
 export const makeAnchor = function (items) {
 
     if (!items) return false;
-    return new Anchor(items);
+    return _seal(new Anchor(items));
 };
 
 constructors.Anchor = Anchor;

@@ -33,7 +33,7 @@ import { forceUpdate } from '../helper/system-flags.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shared-vars.js';
+import { _seal, _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shared-vars.js';
 
 
 // #### RenderAnimation constructor
@@ -136,6 +136,7 @@ const RenderAnimation = function (items = Ωempty) {
 
     // The `observer` attribute
     const obs = items.observer || false;
+    this.observer = null;
 
     if (obs) {
 
@@ -361,7 +362,7 @@ P.updateHook = function (hook = '', func) {
 export const makeRender = function (items) {
 
     if (!items) return false;
-    return new RenderAnimation(items);
+    return _seal(new RenderAnimation(items));
 };
 
 constructors.RenderAnimation = RenderAnimation;

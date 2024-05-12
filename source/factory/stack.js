@@ -46,7 +46,7 @@ import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Stack constructor
@@ -84,6 +84,18 @@ const Stack = function (items = Ωempty) {
     this.initializeDisplayShapeActions();
 
     this.initializeAccessibility();
+
+    this.dirtyDomDimensions = true;
+    this.dirtyPath = true;
+    this.rotation = null;
+    this.currentCornersData = null;
+    this.currentTransformString = '';
+    this.dirtyTransform = true;
+    this.currentTransformOriginString = '';
+    this.dirtyTransformOrigin = true;
+    this.domShowRequired = true;
+    this.dirtyCss = true;
+    this.localMouseListener = null;
 
     this.set(items);
 
@@ -438,7 +450,7 @@ P.addNewElement = function (items) {
 const makeStack = function (items) {
 
     if (!items) return false;
-    return new Stack(items);
+    return _seal(new Stack(items));
 };
 
 constructors.Stack = Stack;

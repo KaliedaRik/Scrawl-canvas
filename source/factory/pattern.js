@@ -20,7 +20,7 @@ import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../helper/shared-vars.js';
+import { _seal, $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../helper/shared-vars.js';
 
 
 // #### Pattern constructor
@@ -29,6 +29,17 @@ const Pattern = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
     this.set(this.defs);
+
+    this.source = null;
+    this.sourceNaturalWidth = 0;
+    this.sourceNaturalHeight = 0;
+    this.sourceLoaded = false;
+    this.dirtyImage = true;
+    this.dirtyCopyStart = true;
+    this.dirtyCopyDimensions = true;
+    this.dirtyImageSubscribers = true;
+    this.patternMatrix = null;
+
     this.set(items);
 
     return this;
@@ -236,7 +247,7 @@ P.getData = function (entity, cell) {
 export const makePattern = function (items) {
 
     if (!items) return false;
-    return new Pattern(items);
+    return _seal(new Pattern(items));
 };
 
 constructors.Pattern = Pattern;

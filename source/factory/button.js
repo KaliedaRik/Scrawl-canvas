@@ -17,7 +17,7 @@ import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _keys, _FORMACTION, _FORMENCTYPE, _FORMMETHOD, _FORMNOVALIDATE, _POPOVERTARGET, _POPOVERTARGETACTION, ANCHOR, AUTOFOCUS, BLUR, BUTTON, CLICK, DATA_TAB_ORDER, DISABLED, FOCUS, FORM, NAME, T_BUTTON, TARGET, TYPE, UNDEF, VALUE, ZERO_STR } from '../helper/shared-vars.js';
+import { _seal, _keys, _FORMACTION, _FORMENCTYPE, _FORMMETHOD, _FORMNOVALIDATE, _POPOVERTARGET, _POPOVERTARGETACTION, ANCHOR, AUTOFOCUS, BLUR, BUTTON, CLICK, DATA_TAB_ORDER, DISABLED, FOCUS, FORM, NAME, T_BUTTON, TARGET, TYPE, UNDEF, VALUE, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // #### Button constructor
@@ -31,6 +31,10 @@ const Button = function (items = Ωempty) {
     this.host = items.host;
     this.controller = items.controller;
     this.hold = items.hold;
+
+    this.clickAction = null;
+    this.domElement = null;
+    this.hasBeenRecentlyClicked = false;
 
     this.set(items);
 
@@ -312,7 +316,7 @@ P.click = function () {
 export const makeButton = function (items) {
 
     if (!items) return false;
-    return new Button(items);
+    return _seal(new Button(items));
 };
 
 constructors.Button = Button;

@@ -29,7 +29,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
+import { _seal, _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
 
 
 // #### Group constructor
@@ -47,6 +47,18 @@ const Group = function (items = Ωempty) {
     this.onEntityHover = λnull;
     this.onEntityNoHover = λnull;
     this.isHovering = null;
+
+    this.currentHost = null;
+    this.dirtyFilters = true;
+    this.dirtyFiltersCache = true;
+    this.filters = [];
+    this.currentFilters = [];
+    this.batchResort = true;
+    this.stashOutput = false;
+    this.stashOutputAsAsset = false;
+    this.stashedImageData = null;
+    this.stashedImage = null;
+    this.dirtyImageSubscribers = true;
 
     this.set(items);
 
@@ -908,7 +920,7 @@ P.getAllArtefactsAt = function (items) {
 export const makeGroup = function (items) {
 
     if (!items) return false;
-    return new Group(items);
+    return _seal(new Group(items));
 };
 
 constructors.Group = Group;
