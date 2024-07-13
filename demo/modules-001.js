@@ -32,6 +32,7 @@ canvas.set({
 
     label: 'Crime statistics for London areas - from 1999 to 2017',
     description: 'Interactive graphic showing crimes recorded in various London areas, broken down into crime types. Data taken from https://data.london.gov.uk/dataset/recorded_crime_rates',
+    role: 'application',
 });
 
 
