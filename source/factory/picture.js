@@ -56,6 +56,13 @@ const Picture = function (items = Ωempty) {
 
     this.copyArray = [];
     this.pasteArray = [];
+    this.dirtyPaste = true;
+
+    this.source = null;
+    this.sourceNaturalWidth = 0;
+    this.sourceNaturalHeight = 0;
+    this.sourceNaturalDimensions = [];
+    this.sourceLoaded = false;
 
     this.entityInit(items);
 

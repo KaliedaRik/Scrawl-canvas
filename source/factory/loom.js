@@ -58,6 +58,22 @@ const Loom = function (items = Ωempty) {
 
     this.delta = {};
 
+    this.boundingBox = [];
+    this.currentHost = null;
+    this.currentPathData = null;
+    this.dirtyDimensions = true;
+    this.dirtyHost = true;
+    this.dirtyInput = true;
+    this.dirtyOutput = true;
+    this.dirtyTargetImage = true;
+    this.fromPathSteps = 1;
+    this.output = null;
+    this.pathTests = null;
+    this.sourceDimension = 0;
+    this.sourceImageData = null;
+    this.toPathSteps = 1;
+    this.watchFromPath = true;
+
     this.set(items);
 
     this.fromPathData = [];
@@ -863,15 +879,15 @@ P.cleanInput = function () {
         return false;
     }
 
-    const cell = requestCell(),
-        engine = cell.engine,
-        canvas = cell.element;
+    const mycell = requestCell(),
+        engine = mycell.engine,
+        canvas = mycell.element;
 
     canvas.width = sourceDimension;
     canvas.height = sourceDimension;
     engine.setTransform(1, 0, 0, 1, 0, 0);
 
-    this.source.stamp(true, cell, {
+    this.source.stamp(true, mycell, {
         startX: 0,
         startY: 0,
         handleX: 0,
@@ -889,8 +905,7 @@ P.cleanInput = function () {
 
     this.sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
 
-    releaseCell(cell);
-    // return engine.getImageData(0, 0, sourceDimension, sourceDimension);
+    releaseCell(mycell);
 };
 
 // `cleanOutput` - internal function called by `stamp`
@@ -932,145 +947,147 @@ P.cleanOutput = function () {
 
         let [, , outputWidth, outputHeight] = this.getBoundingBox();
 
-        outputWidth = ~~outputWidth;
-        outputHeight = ~~outputHeight;
+        if (outputWidth && outputHeight) {
 
-        const inputCell = requestCell(),
-            inputEngine = inputCell.engine,
-            inputCanvas = inputCell.element;
+            outputWidth = ~~outputWidth;
+            outputHeight = ~~outputHeight;
 
-        inputCanvas.width = sourceDimension;
-        inputCanvas.height = sourceDimension;
-        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
-        inputEngine.putImageData(sourceData, 0, 0);
+            const inputCell = requestCell(),
+                inputEngine = inputCell.engine,
+                inputCanvas = inputCell.element;
 
-        const outputCell = requestCell(),
-            outputEngine = outputCell.engine,
-            outputCanvas = outputCell.element;
+            inputCanvas.width = sourceDimension;
+            inputCanvas.height = sourceDimension;
+            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+            inputEngine.putImageData(sourceData, 0, 0);
 
-        outputCanvas.width = outputWidth;
-        outputCanvas.height = outputHeight;
-        outputEngine.globalAlpha = this.state.globalAlpha;
-        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+            const outputCell = requestCell(),
+                outputEngine = outputCell.engine,
+                outputCanvas = outputCell.element;
 
-        if(!engineInstructions.length) {
+            outputCanvas.width = outputWidth;
+            outputCanvas.height = outputHeight;
+            outputEngine.globalAlpha = this.state.globalAlpha;
+            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-            for (i = 0; i < sourceDimension; i++) {
+            if(!engineInstructions.length) {
 
-                if (watchIndex < 0) {
+                for (i = 0; i < sourceDimension; i++) {
 
-                    if (watchFromPath && fCursor < 1) watchIndex = i;
-                    else if (!watchFromPath && tCursor < 1) watchIndex = i;
-                }
+                    if (watchIndex < 0) {
 
-                if (fCursor < dataLen && tCursor < dataLen && fCursor >= 0 && tCursor >= 0) {
+                        if (watchFromPath && fCursor < 1) watchIndex = i;
+                        else if (!watchFromPath && tCursor < 1) watchIndex = i;
+                    }
 
-                    [fx, fy] = fromPathData[_floor(fCursor)];
-                    [tx, ty] = toPathData[_floor(tCursor)];
+                    if (fCursor < dataLen && tCursor < dataLen && fCursor >= 0 && tCursor >= 0) {
 
-                    dx = tx - fx;
-                    dy = ty - fy;
+                        [fx, fy] = fromPathData[_floor(fCursor)];
+                        [tx, ty] = toPathData[_floor(tCursor)];
 
-                    dLength = _hypot(dx, dy);
+                        dx = tx - fx;
+                        dy = ty - fy;
 
-                    if (isHorizontalCopy) {
+                        dLength = _hypot(dx, dy);
 
-                        dAngle = -_atan2(dx, dy) + _piHalf;
-                        cos = _cos(dAngle);
-                        sin = _sin(dAngle);
+                        if (isHorizontalCopy) {
 
-                        engineInstructions.push([cos, sin, -sin, cos, fx, fy]);
-                        engineDeltaLengths.push(dLength);
+                            dAngle = -_atan2(dx, dy) + _piHalf;
+                            cos = _cos(dAngle);
+                            sin = _sin(dAngle);
+
+                            engineInstructions.push([cos, sin, -sin, cos, fx, fy]);
+                            engineDeltaLengths.push(dLength);
+                        }
+                        else {
+
+                            dAngle = -_atan2(dx, dy) + magicVerticalPi;
+                            cos = _cos(dAngle);
+                            sin = _sin(dAngle);
+
+                            engineInstructions.push([cos, sin, -sin, cos, fx, fy, dLength]);
+                            engineDeltaLengths.push(dLength);
+                        }
                     }
                     else {
 
-                        dAngle = -_atan2(dx, dy) + magicVerticalPi;
-                        cos = _cos(dAngle);
-                        sin = _sin(dAngle);
+                        engineInstructions.push(false);
+                        engineDeltaLengths.push(false);
+                    }
 
-                        engineInstructions.push([cos, sin, -sin, cos, fx, fy, dLength]);
-                        engineDeltaLengths.push(dLength);
+                    fCursor += fStep;
+                    tCursor += tStep;
+
+                    if (loop) {
+
+                        if (fCursor >= dataLen) fCursor -= dataLen;
+                        if (tCursor >= dataLen) tCursor -= dataLen;
                     }
                 }
-                else {
+                if (watchIndex < 0) watchIndex = 0;
+                this.watchIndex = watchIndex;
+            }
 
-                    engineInstructions.push(false);
-                    engineDeltaLengths.push(false);
-                }
+            if (isHorizontalCopy) {
 
-                fCursor += fStep;
-                tCursor += tStep;
+                for (i = 0; i < sourceDimension; i++) {
 
-                if (loop) {
+                    instruction = engineInstructions[watchIndex];
 
-                    if (fCursor >= dataLen) fCursor -= dataLen;
-                    if (tCursor >= dataLen) tCursor -= dataLen;
+                    if (instruction) {
+
+                        outputEngine.setTransform(...instruction);
+                        outputEngine.drawImage(inputCanvas, 0, ~~watchIndex, ~~sourceDimension, 1, 0, 0, ~~engineDeltaLengths[watchIndex], 1);
+                    }
+                    watchIndex++;
+
+                    if (watchIndex >= sourceDimension) watchIndex = 0;
                 }
             }
-            if (watchIndex < 0) watchIndex = 0;
-            this.watchIndex = watchIndex;
-        }
+            else {
 
-        if (isHorizontalCopy) {
+                for (i = 0; i < sourceDimension; i++) {
 
+                    instruction = engineInstructions[watchIndex];
 
-            for (i = 0; i < sourceDimension; i++) {
+                    if (instruction) {
 
-                instruction = engineInstructions[watchIndex];
+                        outputEngine.setTransform(...instruction);
+                        outputEngine.drawImage(inputCanvas, ~~watchIndex, 0, 1, ~~sourceDimension, 0, 0, 1, ~~engineDeltaLengths[watchIndex]);
+                    }
+                    watchIndex++;
 
-                if (instruction) {
-
-                    outputEngine.setTransform(...instruction);
-                    outputEngine.drawImage(inputCanvas, 0, ~~watchIndex, ~~sourceDimension, 1, 0, 0, ~~engineDeltaLengths[watchIndex], 1);
+                    if (watchIndex >= sourceDimension) watchIndex = 0;
                 }
-                watchIndex++;
-
-                if (watchIndex >= sourceDimension) watchIndex = 0;
             }
-        }
-        else {
 
-            for (i = 0; i < sourceDimension; i++) {
+            const iFactor = this.interferenceFactor,
+                iLoops = this.interferenceLoops,
 
-                instruction = engineInstructions[watchIndex];
+                iWidth = ~~(outputWidth * iFactor) + 1,
+                iHeight = ~~(outputHeight * iFactor) + 1;
 
-                if (instruction) {
+            inputCanvas.width = iWidth;
+            inputCanvas.height = iHeight;
 
-                    outputEngine.setTransform(...instruction);
-                    outputEngine.drawImage(inputCanvas, ~~watchIndex, 0, 1, ~~sourceDimension, 0, 0, 1, ~~engineDeltaLengths[watchIndex]);
-                }
-                watchIndex++;
+            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-                if (watchIndex >= sourceDimension) watchIndex = 0;
+            for (j = 0; j < iLoops; j++) {
+
+                inputEngine.drawImage(outputCanvas, 0, 0, outputWidth, outputHeight, 0, 0, iWidth, iHeight);
+                outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
             }
+
+            const outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
+
+            releaseCell(inputCell, outputCell);
+
+            this.dirtyTargetImage = true;
+
+            return outputData;
         }
-
-        const iFactor = this.interferenceFactor,
-            iLoops = this.interferenceLoops,
-
-            iWidth = ~~(outputWidth * iFactor) + 1,
-            iHeight = ~~(outputHeight * iFactor) + 1;
-
-        inputCanvas.width = iWidth;
-        inputCanvas.height = iHeight;
-
-        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
-        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
-
-        for (j = 0; j < iLoops; j++) {
-
-            inputEngine.drawImage(outputCanvas, 0, 0, outputWidth, outputHeight, 0, 0, iWidth, iHeight);
-            outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
-        }
-
-        const outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
-
-        releaseCell(inputCell);
-        releaseCell(outputCell);
-
-        this.dirtyTargetImage = true;
-
-        return outputData;
+        else this.dirtyOutput = true;
     }
     return false;
 };
@@ -1103,6 +1120,8 @@ P.getBoundingBox = function () {
 
         if (this.dirtyStart) {
 
+            this.boundingBox.length = 0;
+
             if (fPath.getBoundingBox && tPath.getBoundingBox) {
 
                 this.dirtyStart = false;
@@ -1126,14 +1145,14 @@ P.getBoundingBox = function () {
                     minY = _min(lsy, ley),
                     maxY = _max(lsy + sh, ley + eh);
 
-                this.boundingBox = [minX, minY, maxX - minX, maxY - minY];
+                this.boundingBox.push(minX, minY, maxX - minX, maxY - minY);
 
                 this.dirtyPathData = true;
             }
-            else this.boundingBox = [0, 0, 0, 0];
+            else this.boundingBox.push(0, 0, 0, 0);
         }
     }
-    else this.boundingBox = [0, 0, 0, 0];
+    else if (!this.boundingBox.length) this.boundingBox.push(0, 0, 0, 0);
 
     return this.boundingBox;
 };

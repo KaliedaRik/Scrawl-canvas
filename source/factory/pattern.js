@@ -29,6 +29,17 @@ const Pattern = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
     this.set(this.defs);
+
+    this.source = null;
+    this.sourceNaturalWidth = 0;
+    this.sourceNaturalHeight = 0;
+    this.sourceLoaded = false;
+    this.dirtyImage = true;
+    this.dirtyCopyStart = true;
+    this.dirtyCopyDimensions = true;
+    this.dirtyImageSubscribers = true;
+    this.patternMatrix = null;
+
     this.set(items);
 
     return this;

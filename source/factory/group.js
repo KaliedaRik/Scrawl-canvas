@@ -48,6 +48,18 @@ const Group = function (items = Ωempty) {
     this.onEntityNoHover = λnull;
     this.isHovering = null;
 
+    this.currentHost = null;
+    this.dirtyFilters = true;
+    this.dirtyFiltersCache = true;
+    this.filters = [];
+    this.currentFilters = [];
+    this.batchResort = true;
+    this.stashOutput = false;
+    this.stashOutputAsAsset = false;
+    this.stashedImageData = null;
+    this.stashedImage = null;
+    this.dirtyImageSubscribers = true;
+
     this.set(items);
 
     return this;

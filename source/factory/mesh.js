@@ -61,6 +61,22 @@ const Mesh = function (items = Ωempty) {
 
     this.delta = {};
 
+    this.currentHost = null;
+    this.dirtyHost = true;
+    this.badNet = true;
+    this.dirtyParticles = true;
+    this.particlePositions = null;
+    this.sourceImageData = null;
+    this.sourceDimension = 0;
+    this.rows = null;
+    this.columns = null;
+    this.struts = null;
+    this.boundingBox = null;
+    this.pathObject = null;
+    this.dirtyOutput = true;
+    this.dirtyTargetImage = true;
+    this.output = null;
+
     this.set(items);
 
     this.fromPathData = [];
@@ -692,16 +708,8 @@ P.setSourceDimension = function () {
 
         this.pathObject = new Path2D(p);
 
-        lengths.forEach(a => releaseArray(a));
-        releaseArray(lengths);
-        releaseArray(results);
-        releaseArray(xPos);
-        releaseArray(yPos);
-        releaseArray(top);
-        releaseArray(left);
-        releaseArray(right);
-        releaseArray(bottom);
-        releaseArray(coords);
+        releaseArray(...lengths, lengths);
+        releaseArray(results, xPos, yPos, top, left, right, bottom, coords);
     }
 };
 
@@ -773,15 +781,15 @@ P.cleanInput = function () {
         return false;
     }
 
-    const cell = requestCell(),
-        engine = cell.engine,
-        canvas = cell.element;
+    const mycell = requestCell(),
+        engine = mycell.engine,
+        canvas = mycell.element;
 
     canvas.width = sourceDimension;
     canvas.height = sourceDimension;
     engine.setTransform(1, 0, 0, 1, 0, 0);
 
-    this.source.stamp(true, cell, {
+    this.source.stamp(true, mycell, {
         startX: 0,
         startY: 0,
         handleX: 0,
@@ -798,7 +806,7 @@ P.cleanInput = function () {
     })
     const sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
 
-    releaseCell(cell);
+    releaseCell(mycell);
     return sourceImageData;
 };
 
@@ -916,8 +924,7 @@ P.cleanOutput = function () {
 
         const outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
 
-        releaseCell(inputCell);
-        releaseCell(outputCell);
+        releaseCell(inputCell, outputCell);
 
         this.dirtyTargetImage = true;
 

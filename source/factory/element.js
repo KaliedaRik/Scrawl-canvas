@@ -65,6 +65,14 @@ const Element = function (items = Ωempty) {
 
     this.initializeAccessibility();
 
+    this.mimic = null;
+    this.pivot = null;
+    this.dirtyContent = true;
+    this.dirtyCss = true;
+    this.localMouseListener = null;
+    this.canvas = null;
+    this.elementComputedStyles = null;
+
     this.set(items);
 
     const myEl = this.domElement;

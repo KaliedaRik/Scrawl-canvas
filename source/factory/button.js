@@ -32,6 +32,10 @@ const Button = function (items = Ωempty) {
     this.controller = items.controller;
     this.hold = items.hold;
 
+    this.clickAction = null;
+    this.domElement = null;
+    this.hasBeenRecentlyClicked = false;
+
     this.set(items);
 
     this.dirtyButton = true;

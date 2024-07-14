@@ -37,6 +37,8 @@ const Wheel = function (items = Ωempty) {
 
     if (!xto(items.dimensions, items.width, items.height, items.radius)) items.radius = 5;
 
+    this.currentRadius = 5;
+
     this.entityInit(items);
 
     return this;

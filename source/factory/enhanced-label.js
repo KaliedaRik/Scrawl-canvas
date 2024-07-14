@@ -80,6 +80,34 @@ const EnhancedLabel = function (items = Ωempty) {
 
     this.guidelineDash = [];
 
+    this.dirtyStart = true;
+    this.dirtyHandle = true;
+    this.dirtyOffset = true;
+    this.dirtyRotation = true;
+    this.dirtyScale = true;
+    this.dirtyDimensions = true;
+
+    this.currentHost = null;
+    this.dirtyHost = true;
+    this.currentDimensions = [];
+    this.currentScale = 1;
+    this.currentStampHandlePosition = null;
+    this.pathObject = null;
+    this.accessibleTextHold = null;
+    this.accessibleTextHoldAttached = null;
+    this.guidelinesPath = null;
+    this.currentPathData = null;
+
+    this.filters = [];
+    this.currentFilters = [];
+    this.dirtyFilters = true;
+    this.dirtyFiltersCache = true;
+    this.dirtyImageSubscribers = true;
+    this.stashOutput = false;
+    this.stashOutputAsAsset = false;
+    this.stashedImageData = null;
+    this.stashedImage = null;
+
     this.set(items);
 
     this.dirtyFont = true;
@@ -656,8 +684,9 @@ P.calculateLines = function () {
                     isInLayout = check;
                 }
             }
-
             rawLines.push([i, [...rawLineData]]);
+
+            releaseArray(rawLineData);
         }
 
         for (let i = rrpY + step; i < yBase; i += step) {
@@ -677,8 +706,9 @@ P.calculateLines = function () {
                     isInLayout = check;
                 }
             }
-
             rawLines.push([i, [...rawLineData]]);
+
+            releaseArray(rawLineData);
         }
     }
 
@@ -700,14 +730,15 @@ P.calculateLines = function () {
                 isInLayout = check;
             }
         }
-
         rawLines.push([rrpY, [...rawLineData]]);
+
+        releaseArray(rawLineData);
     }
 
     const relevantLines = requestArray();
     relevantLines.push(...rawLines.filter(l => l[1].length));
 
-    releaseArray(...rawLines, rawLines);
+    releaseArray(rawLines);
 
     relevantLines.sort((a, b) => {
 
@@ -2861,6 +2892,7 @@ P.createTextCellsForPath = function (host) {
         w = el.width,
         h = el.height;
 
+    // These pool cells _should_ be returned to / released by the calling function
     const uCell = requestCell(w, h);
     const mCell = requestCell(w, h);
 
@@ -2977,6 +3009,9 @@ P.createTextCellsForPath = function (host) {
             mainCell: mCell,
         };
     }
+    // If we're returning null, we need to release the pool cells
+    releaseCell(uCell, mCell);
+
     return null;
 };
 
@@ -2986,6 +3021,7 @@ P.createTextCellsForSpace = function (host) {
         w = el.width,
         h = el.height;
 
+    // These pool cells _should_ be returned to / released by the calling function
     const uCell = requestCell(w, h);
     const mCell = requestCell(w, h);
 
@@ -3122,6 +3158,9 @@ P.createTextCellsForSpace = function (host) {
             mainCell: mCell,
         };
     }
+    // If we're returning null, we need to release the pool cells
+    releaseCell(uCell, mCell);
+
     return null;
 };
 
@@ -3135,6 +3174,7 @@ P.addUnderlinesToCopyCell = function (host, copy) {
             w = el.width,
             h = el.height;
 
+        // This pool cell is local to the function and not returned to calling function
         const mycell = requestCell(w, h);
 
         if (mycell) {
@@ -3163,6 +3203,8 @@ P.addUnderlinesToCopyCell = function (host, copy) {
 
             return true;
         }
+        // Releasing, just in case ...
+        releaseCell(mycell);
     }
     return false;
 };
@@ -3177,6 +3219,7 @@ P.createOverlineCell = function (host) {
             w = el.width,
             h = el.height;
 
+        // Pool cell _should_ be returned to / released by the calling function
         const mycell = requestCell(w, h);
 
         if (mycell) {
@@ -3194,6 +3237,8 @@ P.createOverlineCell = function (host) {
 
             return mycell;
         }
+        // Releasing, just in case ...
+        releaseCell(mycell);
     }
     return null;
 };
@@ -3208,6 +3253,7 @@ P.createHighlightCell = function (host) {
             w = el.width,
             h = el.height;
 
+        // Pool cell _should_ be returned to / released by the calling function
         const mycell = requestCell(w, h);
 
         if (mycell) {
@@ -3225,6 +3271,8 @@ P.createHighlightCell = function (host) {
 
             return mycell;
         }
+        // Releasing, just in case ...
+        releaseCell(mycell);
     }
     return null;
 };
@@ -3387,6 +3435,8 @@ P.getUnitAlignment = function (index) {
 export const makeEnhancedLabel = function (items) {
 
     if (!items) return false;
+
+    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
     return new EnhancedLabel(items);
 };
 

@@ -99,8 +99,7 @@ const actionListener = function (evt, fn, targ, action) {
     if (navigator.pointerEnabled || navigator.msPointerEnabled) actionPointerListener(events, fn, targets, action);
     else actionMouseListener(events, fn, targets, action);
 
-    releaseArray(targets);
-    releaseArray(events);
+    releaseArray(targets, events);
 };
 
 const actionMouseListener = function (events, fn, targets, action) {
@@ -247,6 +246,5 @@ const actionNativeListener = function (evt, fn, targ, action) {
             if (isa_dom(t) || t.document || t.characterSet) t[action](e, fn, false);
         }
     }
-    releaseArray(targets);
-    releaseArray(events);
+    releaseArray(targets, events);
 };

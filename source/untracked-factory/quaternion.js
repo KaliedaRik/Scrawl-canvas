@@ -213,8 +213,7 @@ P.quaternionRotate = function (item) {
 
     this.setFromQuaternion(q4.quaternionMultiply(q5));
 
-    releaseQuaternion(q4);
-    releaseQuaternion(q5);
+    releaseQuaternion(q4, q5);
 
     return this
 };

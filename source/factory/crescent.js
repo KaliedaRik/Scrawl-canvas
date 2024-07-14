@@ -30,6 +30,19 @@ const Crescent = function (items = Ωempty) {
 
     if (!xto(items.dimensions, items.width, items.height, items.radius)) items.radius = 5;
 
+    this.currentOuterRadius = 5;
+    this.currentInnerRadius = 5;
+    this.currentDisplacement = 0;
+    this.currentDimensions = [];
+    this.outerCircleStart = 0;
+    this.outerCircleEnd = 0;
+    this.innerCircleStart = 0;
+    this.innerCircleEnd = 0;
+    this.drawOuterCircle = false;
+    this.drawDonut = false;
+    this.pathObjectOuter = null;
+    this.pathObjectInner = null;
+
     this.entityInit(items);
 
     return this;

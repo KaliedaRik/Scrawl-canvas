@@ -31,6 +31,11 @@ const Grid = function (items = Ωempty) {
     this.tileFill = [];
     this.tileSources = [];
 
+    this.rowLines = null;
+    this.columnLines = null;
+    this.currentTileWidth = 0;
+    this.currentTileHeight = 0;
+
     this.entityInit(items);
 
     if (!items.tileSources) {

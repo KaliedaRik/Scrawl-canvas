@@ -21,6 +21,9 @@ import { $JSON, _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE
 // #### SpriteAsset constructor
 const SpriteAsset = function (items = Ωempty) {
 
+    this.sourceHold = null;
+    this.manifest = null;
+
     this.assetConstructor(items);
 
     return this;

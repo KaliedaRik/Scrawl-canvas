@@ -194,7 +194,7 @@ P.vectorSubtractArray = function (item) {
 // Multiply all Vector attributes by the argument Number
 P.scalarMultiply = function (item) {
 
-    if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarMultiply() argument not a number: ${item}`);
+    if (!isa_number(item)) item = 1;
 
     this.x *= item;
     this.y *= item;

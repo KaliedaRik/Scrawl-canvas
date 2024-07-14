@@ -109,6 +109,13 @@ export default function (P = Ωempty) {
         this.register();
         this.subscribers = [];
         this.set(this.defs);
+
+        this.source = null;
+        this.currentSrc = null;
+        this.currentFile = null;
+        this.sourceNaturalWidth = 0;
+        this.sourceNaturalHeight = 0;
+
         this.set(items);
 
         if (items.subscribe) this.subscribers.push(items.subscribe);

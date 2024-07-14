@@ -68,6 +68,16 @@ const Emitter = function (items = Ωempty) {
     this.deadParticles = [];
     this.liveParticles = [];
 
+    this.forces = [];
+    this.filters = [];
+    this.currentFilters = [];
+    this.dirtyFilters = false;
+    this.dirtyFiltersCache = false;
+    this.dirtyImageSubscribers = false;
+
+    this.generatorChoke = 0;
+    this.lastUpdated = 0;
+
     if (!items.group) items.group = currentGroup;
 
     this.set(items);
