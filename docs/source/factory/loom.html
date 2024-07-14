@@ -660,6 +660,22 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">delta</span> = {};
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTargetImage</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathSteps</span> = <span class="hljs-number">1</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathTests</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathSteps</span> = <span class="hljs-number">1</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchFromPath</span> = <span class="hljs-literal">true</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span> = [];
@@ -2177,15 +2193,15 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
 
-    <span class="hljs-keyword">const</span> cell = <span class="hljs-title function_">requestCell</span>(),
-        engine = cell.<span class="hljs-property">engine</span>,
-        canvas = cell.<span class="hljs-property">element</span>;
+    <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(),
+        engine = mycell.<span class="hljs-property">engine</span>,
+        canvas = mycell.<span class="hljs-property">element</span>;
 
     canvas.<span class="hljs-property">width</span> = sourceDimension;
     canvas.<span class="hljs-property">height</span> = sourceDimension;
     engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">stamp</span>(<span class="hljs-literal">true</span>, cell, {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">stamp</span>(<span class="hljs-literal">true</span>, mycell, {
         <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">handleX</span>: <span class="hljs-number">0</span>,
@@ -2203,7 +2219,8 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span> = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, sourceDimension, sourceDimension);
 
-    <span class="hljs-title function_">releaseCell</span>(cell);</pre></div></div>
+    <span class="hljs-title function_">releaseCell</span>(mycell);
+};</pre></div></div>
             
         </li>
         
@@ -2213,21 +2230,6 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-62">&#x00a7;</a>
-              </div>
-              <p>return engine.getImageData(0, 0, sourceDimension, sourceDimension);</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-63">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -2273,145 +2275,147 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
         <span class="hljs-keyword">let</span> [, , outputWidth, outputHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
 
-        outputWidth = ~~outputWidth;
-        outputHeight = ~~outputHeight;
+        <span class="hljs-keyword">if</span> (outputWidth &amp;&amp; outputHeight) {
 
-        <span class="hljs-keyword">const</span> inputCell = <span class="hljs-title function_">requestCell</span>(),
-            inputEngine = inputCell.<span class="hljs-property">engine</span>,
-            inputCanvas = inputCell.<span class="hljs-property">element</span>;
+            outputWidth = ~~outputWidth;
+            outputHeight = ~~outputHeight;
 
-        inputCanvas.<span class="hljs-property">width</span> = sourceDimension;
-        inputCanvas.<span class="hljs-property">height</span> = sourceDimension;
-        inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        inputEngine.<span class="hljs-title function_">putImageData</span>(sourceData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">const</span> inputCell = <span class="hljs-title function_">requestCell</span>(),
+                inputEngine = inputCell.<span class="hljs-property">engine</span>,
+                inputCanvas = inputCell.<span class="hljs-property">element</span>;
 
-        <span class="hljs-keyword">const</span> outputCell = <span class="hljs-title function_">requestCell</span>(),
-            outputEngine = outputCell.<span class="hljs-property">engine</span>,
-            outputCanvas = outputCell.<span class="hljs-property">element</span>;
+            inputCanvas.<span class="hljs-property">width</span> = sourceDimension;
+            inputCanvas.<span class="hljs-property">height</span> = sourceDimension;
+            inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            inputEngine.<span class="hljs-title function_">putImageData</span>(sourceData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-        outputCanvas.<span class="hljs-property">width</span> = outputWidth;
-        outputCanvas.<span class="hljs-property">height</span> = outputHeight;
-        outputEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalAlpha</span>;
-        outputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">const</span> outputCell = <span class="hljs-title function_">requestCell</span>(),
+                outputEngine = outputCell.<span class="hljs-property">engine</span>,
+                outputCanvas = outputCell.<span class="hljs-property">element</span>;
 
-        <span class="hljs-keyword">if</span>(!engineInstructions.<span class="hljs-property">length</span>) {
+            outputCanvas.<span class="hljs-property">width</span> = outputWidth;
+            outputCanvas.<span class="hljs-property">height</span> = outputHeight;
+            outputEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalAlpha</span>;
+            outputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
+            <span class="hljs-keyword">if</span>(!engineInstructions.<span class="hljs-property">length</span>) {
 
-                <span class="hljs-keyword">if</span> (watchIndex &lt; <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
 
-                    <span class="hljs-keyword">if</span> (watchFromPath &amp;&amp; fCursor &lt; <span class="hljs-number">1</span>) watchIndex = i;
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!watchFromPath &amp;&amp; tCursor &lt; <span class="hljs-number">1</span>) watchIndex = i;
-                }
+                    <span class="hljs-keyword">if</span> (watchIndex &lt; <span class="hljs-number">0</span>) {
 
-                <span class="hljs-keyword">if</span> (fCursor &lt; dataLen &amp;&amp; tCursor &lt; dataLen &amp;&amp; fCursor &gt;= <span class="hljs-number">0</span> &amp;&amp; tCursor &gt;= <span class="hljs-number">0</span>) {
+                        <span class="hljs-keyword">if</span> (watchFromPath &amp;&amp; fCursor &lt; <span class="hljs-number">1</span>) watchIndex = i;
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!watchFromPath &amp;&amp; tCursor &lt; <span class="hljs-number">1</span>) watchIndex = i;
+                    }
 
-                    [fx, fy] = fromPathData[<span class="hljs-title function_">_floor</span>(fCursor)];
-                    [tx, ty] = toPathData[<span class="hljs-title function_">_floor</span>(tCursor)];
+                    <span class="hljs-keyword">if</span> (fCursor &lt; dataLen &amp;&amp; tCursor &lt; dataLen &amp;&amp; fCursor &gt;= <span class="hljs-number">0</span> &amp;&amp; tCursor &gt;= <span class="hljs-number">0</span>) {
 
-                    dx = tx - fx;
-                    dy = ty - fy;
+                        [fx, fy] = fromPathData[<span class="hljs-title function_">_floor</span>(fCursor)];
+                        [tx, ty] = toPathData[<span class="hljs-title function_">_floor</span>(tCursor)];
 
-                    dLength = <span class="hljs-title function_">_hypot</span>(dx, dy);
+                        dx = tx - fx;
+                        dy = ty - fy;
 
-                    <span class="hljs-keyword">if</span> (isHorizontalCopy) {
+                        dLength = <span class="hljs-title function_">_hypot</span>(dx, dy);
 
-                        dAngle = -<span class="hljs-title function_">_atan2</span>(dx, dy) + _piHalf;
-                        cos = <span class="hljs-title function_">_cos</span>(dAngle);
-                        sin = <span class="hljs-title function_">_sin</span>(dAngle);
+                        <span class="hljs-keyword">if</span> (isHorizontalCopy) {
 
-                        engineInstructions.<span class="hljs-title function_">push</span>([cos, sin, -sin, cos, fx, fy]);
-                        engineDeltaLengths.<span class="hljs-title function_">push</span>(dLength);
+                            dAngle = -<span class="hljs-title function_">_atan2</span>(dx, dy) + _piHalf;
+                            cos = <span class="hljs-title function_">_cos</span>(dAngle);
+                            sin = <span class="hljs-title function_">_sin</span>(dAngle);
+
+                            engineInstructions.<span class="hljs-title function_">push</span>([cos, sin, -sin, cos, fx, fy]);
+                            engineDeltaLengths.<span class="hljs-title function_">push</span>(dLength);
+                        }
+                        <span class="hljs-keyword">else</span> {
+
+                            dAngle = -<span class="hljs-title function_">_atan2</span>(dx, dy) + magicVerticalPi;
+                            cos = <span class="hljs-title function_">_cos</span>(dAngle);
+                            sin = <span class="hljs-title function_">_sin</span>(dAngle);
+
+                            engineInstructions.<span class="hljs-title function_">push</span>([cos, sin, -sin, cos, fx, fy, dLength]);
+                            engineDeltaLengths.<span class="hljs-title function_">push</span>(dLength);
+                        }
                     }
                     <span class="hljs-keyword">else</span> {
 
-                        dAngle = -<span class="hljs-title function_">_atan2</span>(dx, dy) + magicVerticalPi;
-                        cos = <span class="hljs-title function_">_cos</span>(dAngle);
-                        sin = <span class="hljs-title function_">_sin</span>(dAngle);
+                        engineInstructions.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
+                        engineDeltaLengths.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
+                    }
 
-                        engineInstructions.<span class="hljs-title function_">push</span>([cos, sin, -sin, cos, fx, fy, dLength]);
-                        engineDeltaLengths.<span class="hljs-title function_">push</span>(dLength);
+                    fCursor += fStep;
+                    tCursor += tStep;
+
+                    <span class="hljs-keyword">if</span> (loop) {
+
+                        <span class="hljs-keyword">if</span> (fCursor &gt;= dataLen) fCursor -= dataLen;
+                        <span class="hljs-keyword">if</span> (tCursor &gt;= dataLen) tCursor -= dataLen;
                     }
                 }
-                <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">if</span> (watchIndex &lt; <span class="hljs-number">0</span>) watchIndex = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span> = watchIndex;
+            }
 
-                    engineInstructions.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
-                    engineDeltaLengths.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
-                }
+            <span class="hljs-keyword">if</span> (isHorizontalCopy) {
 
-                fCursor += fStep;
-                tCursor += tStep;
+                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
 
-                <span class="hljs-keyword">if</span> (loop) {
+                    instruction = engineInstructions[watchIndex];
 
-                    <span class="hljs-keyword">if</span> (fCursor &gt;= dataLen) fCursor -= dataLen;
-                    <span class="hljs-keyword">if</span> (tCursor &gt;= dataLen) tCursor -= dataLen;
+                    <span class="hljs-keyword">if</span> (instruction) {
+
+                        outputEngine.<span class="hljs-title function_">setTransform</span>(...instruction);
+                        outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, <span class="hljs-number">0</span>, ~~watchIndex, ~~sourceDimension, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, ~~engineDeltaLengths[watchIndex], <span class="hljs-number">1</span>);
+                    }
+                    watchIndex++;
+
+                    <span class="hljs-keyword">if</span> (watchIndex &gt;= sourceDimension) watchIndex = <span class="hljs-number">0</span>;
                 }
             }
-            <span class="hljs-keyword">if</span> (watchIndex &lt; <span class="hljs-number">0</span>) watchIndex = <span class="hljs-number">0</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span> = watchIndex;
-        }
+            <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">if</span> (isHorizontalCopy) {
+                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
 
+                    instruction = engineInstructions[watchIndex];
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
+                    <span class="hljs-keyword">if</span> (instruction) {
 
-                instruction = engineInstructions[watchIndex];
+                        outputEngine.<span class="hljs-title function_">setTransform</span>(...instruction);
+                        outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, ~~watchIndex, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ~~sourceDimension, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ~~engineDeltaLengths[watchIndex]);
+                    }
+                    watchIndex++;
 
-                <span class="hljs-keyword">if</span> (instruction) {
-
-                    outputEngine.<span class="hljs-title function_">setTransform</span>(...instruction);
-                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, <span class="hljs-number">0</span>, ~~watchIndex, ~~sourceDimension, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, ~~engineDeltaLengths[watchIndex], <span class="hljs-number">1</span>);
+                    <span class="hljs-keyword">if</span> (watchIndex &gt;= sourceDimension) watchIndex = <span class="hljs-number">0</span>;
                 }
-                watchIndex++;
-
-                <span class="hljs-keyword">if</span> (watchIndex &gt;= sourceDimension) watchIndex = <span class="hljs-number">0</span>;
             }
-        }
-        <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
+            <span class="hljs-keyword">const</span> iFactor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceFactor</span>,
+                iLoops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceLoops</span>,
 
-                instruction = engineInstructions[watchIndex];
+                iWidth = ~~(outputWidth * iFactor) + <span class="hljs-number">1</span>,
+                iHeight = ~~(outputHeight * iFactor) + <span class="hljs-number">1</span>;
 
-                <span class="hljs-keyword">if</span> (instruction) {
+            inputCanvas.<span class="hljs-property">width</span> = iWidth;
+            inputCanvas.<span class="hljs-property">height</span> = iHeight;
 
-                    outputEngine.<span class="hljs-title function_">setTransform</span>(...instruction);
-                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, ~~watchIndex, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ~~sourceDimension, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ~~engineDeltaLengths[watchIndex]);
-                }
-                watchIndex++;
+            outputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-                <span class="hljs-keyword">if</span> (watchIndex &gt;= sourceDimension) watchIndex = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; iLoops; j++) {
+
+                inputEngine.<span class="hljs-title function_">drawImage</span>(outputCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, iWidth, iHeight);
+                outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, iWidth, iHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight);
             }
+
+            <span class="hljs-keyword">const</span> outputData = outputEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight);
+
+            <span class="hljs-title function_">releaseCell</span>(inputCell, outputCell);
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTargetImage</span> = <span class="hljs-literal">true</span>;
+
+            <span class="hljs-keyword">return</span> outputData;
         }
-
-        <span class="hljs-keyword">const</span> iFactor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceFactor</span>,
-            iLoops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceLoops</span>,
-
-            iWidth = ~~(outputWidth * iFactor) + <span class="hljs-number">1</span>,
-            iHeight = ~~(outputHeight * iFactor) + <span class="hljs-number">1</span>;
-
-        inputCanvas.<span class="hljs-property">width</span> = iWidth;
-        inputCanvas.<span class="hljs-property">height</span> = iHeight;
-
-        outputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; iLoops; j++) {
-
-            inputEngine.<span class="hljs-title function_">drawImage</span>(outputCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, iWidth, iHeight);
-            outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, iWidth, iHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight);
-        }
-
-        <span class="hljs-keyword">const</span> outputData = outputEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight);
-
-        <span class="hljs-title function_">releaseCell</span>(inputCell);
-        <span class="hljs-title function_">releaseCell</span>(outputCell);
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTargetImage</span> = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">return</span> outputData;
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</pre></div></div>
@@ -2419,11 +2423,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-64">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2446,11 +2450,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-65">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>getBoundingBox</code> - internal function called by <code>prepareStamp</code> and <code>cleanOutput</code> functions, as well as the various <em><strong>method</strong></em> functions.</p>
 <ul>
@@ -2469,6 +2473,8 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">if</span>(fPath &amp;&amp; tPath) {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
             <span class="hljs-keyword">if</span> (fPath.<span class="hljs-property">getBoundingBox</span> &amp;&amp; tPath.<span class="hljs-property">getBoundingBox</span>) {
 
@@ -2493,14 +2499,14 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
                     minY = <span class="hljs-title function_">_min</span>(lsy, ley),
                     maxY = <span class="hljs-title function_">_max</span>(lsy + sh, ley + eh);
 
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span> = [minX, minY, maxX - minX, maxY - minY];
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span>.<span class="hljs-title function_">push</span>(minX, minY, maxX - minX, maxY - minY);
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">true</span>;
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span> = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+            <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
         }
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span> = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span>.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span>;
 };</pre></div></div>
@@ -2508,11 +2514,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-66">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Loom entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2522,11 +2528,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-67">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2544,11 +2550,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2564,11 +2570,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2586,11 +2592,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-70">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2608,11 +2614,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2629,11 +2635,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-72">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2650,11 +2656,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-73">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2696,11 +2702,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-74">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>none</code>, <code>clip</code></p>
 
@@ -2712,11 +2718,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-75">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.</p>
 
@@ -2725,11 +2731,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-76">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2772,11 +2778,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-77">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2818,11 +2824,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-78">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 <ul>
@@ -2857,11 +2863,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-79">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2870,11 +2876,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-80">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p>The <code>checkHit</code> functionality can be used in the same way it is for other entitys (and groups)</p>
 <ul>
@@ -2938,11 +2944,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-81">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeQuadratic</span>({

@@ -961,8 +961,7 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromQuaternion</span>(q4.<span class="hljs-title function_">quaternionMultiply</span>(q5));
 
-    <span class="hljs-title function_">releaseQuaternion</span>(q4);
-    <span class="hljs-title function_">releaseQuaternion</span>(q5);
+    <span class="hljs-title function_">releaseQuaternion</span>(q4, q5);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>
 };</pre></div></div>

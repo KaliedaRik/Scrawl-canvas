@@ -835,6 +835,15 @@ D.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">n
         <span class="hljs-attr">isDefaultTextStyle</span>: <span class="hljs-literal">true</span>,
     });
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFiltersCache</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">accessibleTextHold</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">accessibleTextHoldAttached</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
     <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
@@ -850,6 +859,11 @@ D.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">n
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">usingViewportFontSizing</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpaceValue</span> = <span class="hljs-number">0</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpaceValue</span> = <span class="hljs-number">0</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">alphabeticBaseline</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hangingBaseline</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">ideographicBaseline</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontVerticalOffset</span> = <span class="hljs-number">0</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">delta</span> = {};
 

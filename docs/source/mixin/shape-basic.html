@@ -842,8 +842,6 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">shapeInit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">entityInit</span>(items);
-
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">units</span> = [];
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitLengths</span> = [];
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span> = [];
@@ -851,6 +849,14 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathed</span> = [];
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span> = [];
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">localPath</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitProgression</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span> = [];
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">entityInit</span>(items);
     };</pre></div></div>
             
         </li>
@@ -1492,8 +1498,7 @@
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span>.<span class="hljs-title function_">push</span>(...flatPositions);
 
-                <span class="hljs-title function_">releaseArray</span>(flatProgression);
-                <span class="hljs-title function_">releaseArray</span>(flatPositions);
+                <span class="hljs-title function_">releaseArray</span>(flatProgression, flatPositions);
             }
             <span class="hljs-title function_">releasePathCalcObject</span>(res);
 

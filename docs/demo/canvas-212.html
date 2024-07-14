@@ -1000,7 +1000,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
 });
 
-scrawl.<span class="hljs-title function_">makeLine</span>({
+<span class="hljs-keyword">const</span> line = scrawl.<span class="hljs-title function_">makeLine</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;line&#x27;</span>),
 
@@ -1009,11 +1009,12 @@ scrawl.<span class="hljs-title function_">makeLine</span>({
 
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">1.5</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 });
 
-scrawl.<span class="hljs-title function_">makeQuadratic</span>({
+<span class="hljs-keyword">const</span> quad = scrawl.<span class="hljs-title function_">makeQuadratic</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;quadratic&#x27;</span>),
 
@@ -1023,12 +1024,12 @@ scrawl.<span class="hljs-title function_">makeQuadratic</span>({
 
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">1.5</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 });
 
-scrawl.<span class="hljs-title function_">makeBezier</span>({
+<span class="hljs-keyword">const</span> bezier = scrawl.<span class="hljs-title function_">makeBezier</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bezier&#x27;</span>),
 
@@ -1039,12 +1040,12 @@ scrawl.<span class="hljs-title function_">makeBezier</span>({
 
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">1.5</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 });
 
-scrawl.<span class="hljs-title function_">makeOval</span>({
+<span class="hljs-keyword">const</span> oval = scrawl.<span class="hljs-title function_">makeOval</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;oval&#x27;</span>),
 
@@ -1055,7 +1056,7 @@ scrawl.<span class="hljs-title function_">makeOval</span>({
     <span class="hljs-attr">roll</span>: <span class="hljs-number">30</span>,
 
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">1.5</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 });
@@ -1144,6 +1145,10 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+    <span class="hljs-keyword">const</span> precision = <span class="hljs-string">`    Units per path: Line <span class="hljs-subst">${line.unitPositions.length}</span>; Quadratic: <span class="hljs-subst">${quad.unitPositions.length}</span>; Bezier: <span class="hljs-subst">${bezier.unitPositions.length}</span>; Oval: <span class="hljs-subst">${oval.unitPositions.length}</span>`</span>;
+
     <span class="hljs-keyword">return</span> <span class="hljs-string">`
 Font.details:
     Font string (entity): <span class="hljs-subst">${myLabel.get(<span class="hljs-string">&#x27;fontString&#x27;</span>)}</span>
@@ -1154,7 +1159,9 @@ Font.details:
     Font stretch: <span class="hljs-subst">${myLabel.get(<span class="hljs-string">&#x27;fontStretch&#x27;</span>)}</span>
     Font variant: <span class="hljs-subst">${myLabel.get(<span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>)}</span>
     Font weight: <span class="hljs-subst">${myLabel.get(<span class="hljs-string">&#x27;fontWeight&#x27;</span>)}</span>
-    `</span>;
+
+    Path precision: <span class="hljs-subst">${dom.precision.value}</span>
+    <span class="hljs-subst">${precision}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1196,6 +1203,7 @@ Font.details:
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>, <span class="hljs-string">&#x27;400&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;precision&#x27;</span>, <span class="hljs-string">&#x27;10&#x27;</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-number">0</span>],
@@ -1275,7 +1283,14 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         }
     }
 
-}, dom.<span class="hljs-property">layoutTemplate</span>);</pre></div></div>
+}, dom.<span class="hljs-property">layoutTemplate</span>);
+
+
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">() =&gt;</span> {
+
+    pathGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">precision</span>: <span class="hljs-built_in">parseFloat</span>(dom.<span class="hljs-property">precision</span>.<span class="hljs-property">value</span>) });
+
+}, dom.<span class="hljs-property">precision</span>);</pre></div></div>
             
         </li>
         

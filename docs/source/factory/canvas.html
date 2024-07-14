@@ -701,6 +701,12 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeAccessibility</span>();
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentActiveEntityNames</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCss</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">localMouseListener</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
@@ -889,6 +895,8 @@
         el.<span class="hljs-title function_">appendChild</span>(ariaDescription);
         el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">ARIA_DESCRIBEDBY</span>, ariaDescription.<span class="hljs-property">id</span>);
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">includeInTabNavigation</span> = <span class="hljs-literal">false</span>;
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanAria</span>();
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">computedStyles</span> = <span class="hljs-title function_">_computed</span>(el);
@@ -1068,7 +1076,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <ul>
 <li><strong>title</strong> - this attribute is applied to the &lt;canvas&gt; element’s ‘title’ attribute, and will appear as a tooltip when the user hovers over the canvas</li>
 <li><strong>label</strong> and <strong>description</strong> - these attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas&gt; element using <code>aria-labelledby</code> and <code>aria-describedby</code> attributes</li>
-<li><strong>role</strong> - in most situations the &lt;canvas&gt; element’s ARIA role attribute should be left as <code>img</code> (the default value). However if the canvas contains a complex interactive GUI - for instance, a spreadsheet - then the role should be updated accordingly, for instance to <code>application</code></li>
+<li><strong>role</strong> - in most situations the &lt;canvas&gt; element’s ARIA role attribute should be left as <code>img</code> (the default value). However if the canvas contains a complex interactive GUI - for instance, a spreadsheet - then the role should be updated accordingly, for instance to <code>application</code>. See the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles">MDN ARIA Roles page</a> for a complete list.</li>
 </ul>
 <p>If no label value is supplied to the Canvas factory (as part of the function’s argument object), then Scrawl-canvas will auto-generate a label based on the canvas’s name. All three attributes can be updated dynamically using the usual <code>set()</code> functionality.</p>
 <p>Beyond the Canvas object, Scrawl-canvas also encourages text-based entitys (Label, EnhancedLabel) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor’s &lt;a&gt; element in the DOM, which allows the canvas display to become part of the document’s navigation (for example, by keyboard tabbing).</p>
@@ -1121,7 +1129,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="canvas-color-space">Canvas Color space</h4>
-<p>Canvas elements can now use different color spaces - <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace">see MDN for details</a>. Permitted values are: <code>&#39;srgb&#39;`` (default); </code>‘display-p3’`.</p>
+<p>Canvas elements can now use different color spaces - <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace">see MDN for details</a>. Permitted values are: <code>&#39;srgb&#39;</code> (default); <code>&#39;display-p3&#39;</code>.</p>
 
             </div>
             
@@ -2503,15 +2511,9 @@ P.<span class="hljs-property">getBaseHere</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>    currentActiveEntityNames.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
     currentActiveEntityNames.<span class="hljs-title function_">push</span>(...newActiveEntityNames, ...knownActiveEntityNames);
 
-    <span class="hljs-title function_">releaseArray</span>(currentActiveEntityObjects);
-    <span class="hljs-title function_">releaseArray</span>(testActiveEntityObjects);
-    <span class="hljs-title function_">releaseArray</span>(testActiveEntityNames);
-    <span class="hljs-title function_">releaseArray</span>(newActiveEntityObjects);
-    <span class="hljs-title function_">releaseArray</span>(newActiveEntityNames);
-    <span class="hljs-title function_">releaseArray</span>(knownActiveEntityObjects);
-    <span class="hljs-title function_">releaseArray</span>(knownActiveEntityNames);
+    <span class="hljs-title function_">releaseArray</span>(currentActiveEntityObjects, testActiveEntityObjects, testActiveEntityNames, newActiveEntityObjects, newActiveEntityNames, knownActiveEntityObjects, knownActiveEntityNames);
 
-    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(currentActiveEntityNames);
+    <span class="hljs-keyword">return</span> [...currentActiveEntityNames];
 };</pre></div></div>
             
         </li>

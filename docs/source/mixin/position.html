@@ -2050,16 +2050,38 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span> = [<span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">START</span>];
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> = <span class="hljs-literal">null</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivoted</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> = <span class="hljs-literal">null</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span> = [];
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">relativeCoordinates</span> = [];
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLock</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> = <span class="hljs-number">1</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRotation</span> = <span class="hljs-number">0</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicDimensions</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicOffset</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicHandle</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">false</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">false</span>;
 
@@ -3253,7 +3275,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             <span class="hljs-keyword">if</span> (!ignoreDragForX &amp;&amp; relX.<span class="hljs-property">substring</span>) start[<span class="hljs-number">0</span>] = <span class="hljs-string">`<span class="hljs-subst">${(x / w) * <span class="hljs-number">100</span>}</span>%`</span>;
             <span class="hljs-keyword">if</span> (!ignoreDragForY &amp;&amp; relY.<span class="hljs-property">substring</span>) start[<span class="hljs-number">1</span>] = <span class="hljs-string">`<span class="hljs-subst">${(y / h) * <span class="hljs-number">100</span>}</span>%`</span>;
         }
-        <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">relativeCoordinates</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">relativeCoordinates</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
         currentDragOffset.<span class="hljs-title function_">set</span>(currentDragCache);
 

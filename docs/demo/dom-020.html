@@ -1129,6 +1129,7 @@ Code taken from this <a href="https://developer.chrome.com/docs/capabilities/web
 
     } <span class="hljs-keyword">catch</span> (e) {
 
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);
         abort.<span class="hljs-title function_">abort</span>();
         dom.<span class="hljs-property">reference_selector</span>.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
     }

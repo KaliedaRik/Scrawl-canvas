@@ -663,6 +663,22 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">delta</span> = {};
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">badNet</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyParticles</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">particlePositions</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">struts</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTargetImage</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span> = [];
@@ -1740,16 +1756,8 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(p);
 
-        lengths.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> <span class="hljs-title function_">releaseArray</span>(a));
-        <span class="hljs-title function_">releaseArray</span>(lengths);
-        <span class="hljs-title function_">releaseArray</span>(results);
-        <span class="hljs-title function_">releaseArray</span>(xPos);
-        <span class="hljs-title function_">releaseArray</span>(yPos);
-        <span class="hljs-title function_">releaseArray</span>(top);
-        <span class="hljs-title function_">releaseArray</span>(left);
-        <span class="hljs-title function_">releaseArray</span>(right);
-        <span class="hljs-title function_">releaseArray</span>(bottom);
-        <span class="hljs-title function_">releaseArray</span>(coords);
+        <span class="hljs-title function_">releaseArray</span>(...lengths, lengths);
+        <span class="hljs-title function_">releaseArray</span>(results, xPos, yPos, top, left, right, bottom, coords);
     }
 };</pre></div></div>
             
@@ -1873,15 +1881,15 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
 
-    <span class="hljs-keyword">const</span> cell = <span class="hljs-title function_">requestCell</span>(),
-        engine = cell.<span class="hljs-property">engine</span>,
-        canvas = cell.<span class="hljs-property">element</span>;
+    <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(),
+        engine = mycell.<span class="hljs-property">engine</span>,
+        canvas = mycell.<span class="hljs-property">element</span>;
 
     canvas.<span class="hljs-property">width</span> = sourceDimension;
     canvas.<span class="hljs-property">height</span> = sourceDimension;
     engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">stamp</span>(<span class="hljs-literal">true</span>, cell, {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">stamp</span>(<span class="hljs-literal">true</span>, mycell, {
         <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">handleX</span>: <span class="hljs-number">0</span>,
@@ -1898,7 +1906,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
     })
     <span class="hljs-keyword">const</span> sourceImageData = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, sourceDimension, sourceDimension);
 
-    <span class="hljs-title function_">releaseCell</span>(cell);
+    <span class="hljs-title function_">releaseCell</span>(mycell);
     <span class="hljs-keyword">return</span> sourceImageData;
 };</pre></div></div>
             
@@ -2044,8 +2052,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
         <span class="hljs-keyword">const</span> outputData = outputEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight);
 
-        <span class="hljs-title function_">releaseCell</span>(inputCell);
-        <span class="hljs-title function_">releaseCell</span>(outputCell);
+        <span class="hljs-title function_">releaseCell</span>(inputCell, outputCell);
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTargetImage</span> = <span class="hljs-literal">true</span>;
 
