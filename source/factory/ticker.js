@@ -51,7 +51,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _floor, _isArray, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _now, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../helper/shared-vars.js';
 
 
 // #### Ticker constructor
@@ -919,12 +919,12 @@ const requestResultObject = function () {
 
     if (!resultObjectPool.length) {
 
-        resultObjectPool.push(_seal({
+        resultObjectPool.push({
             tick: 0,
             reverseTick: 0,
             willLoop: false,
             next: false
-        }));
+        });
     }
 
     return resultObjectPool.shift();

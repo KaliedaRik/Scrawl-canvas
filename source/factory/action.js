@@ -28,6 +28,8 @@ const Action = function (items = Ωempty) {
     this.action = λnull;
     this.revert = λnull;
 
+    this.triggered = null;
+
     this.set(items);
 
     this.calculateEffectiveTime();
