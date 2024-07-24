@@ -657,7 +657,7 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _floor, _isArray, _now, _seal, <span class="hljs-variable constant_">ANIMATIONTICKERS</span>, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_RENDER_ANIMATION</span>, <span class="hljs-variable constant_">T_TICKER</span>, <span class="hljs-variable constant_">T_TWEEN</span>, <span class="hljs-variable constant_">TICKERUPDATE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _floor, _isArray, _now, <span class="hljs-variable constant_">ANIMATIONTICKERS</span>, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_RENDER_ANIMATION</span>, <span class="hljs-variable constant_">T_TICKER</span>, <span class="hljs-variable constant_">T_TWEEN</span>, <span class="hljs-variable constant_">TICKERUPDATE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -2334,12 +2334,12 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">if</span> (!resultObjectPool.<span class="hljs-property">length</span>) {
 
-        resultObjectPool.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">_seal</span>({
+        resultObjectPool.<span class="hljs-title function_">push</span>({
             <span class="hljs-attr">tick</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">reverseTick</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">willLoop</span>: <span class="hljs-literal">false</span>,
             <span class="hljs-attr">next</span>: <span class="hljs-literal">false</span>
-        }));
+        });
     }
 
     <span class="hljs-keyword">return</span> resultObjectPool.<span class="hljs-title function_">shift</span>();

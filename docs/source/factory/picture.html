@@ -662,6 +662,13 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaste</span> = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalDimensions</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">entityInit</span>(items);
 

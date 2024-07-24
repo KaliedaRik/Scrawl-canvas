@@ -85,6 +85,18 @@ const Stack = function (items = Ωempty) {
 
     this.initializeAccessibility();
 
+    this.dirtyDomDimensions = true;
+    this.dirtyPath = true;
+    this.rotation = null;
+    this.currentCornersData = null;
+    this.currentTransformString = '';
+    this.dirtyTransform = true;
+    this.currentTransformOriginString = '';
+    this.dirtyTransformOrigin = true;
+    this.domShowRequired = true;
+    this.dirtyCss = true;
+    this.localMouseListener = null;
+
     this.set(items);
 
     const el = this.domElement;

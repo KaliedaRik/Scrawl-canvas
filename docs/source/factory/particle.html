@@ -660,6 +660,13 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hasLifetime</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">distanceLimit</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">killBeyondCanvas</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dragOffset</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -1301,25 +1308,7 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (addHistoryFlag) {
 
-        <span class="hljs-keyword">const</span> {x, y, z} = position;
-
-        <span class="hljs-keyword">const</span> h = <span class="hljs-title function_">requestParticleHistory</span>();
-
-        h[<span class="hljs-number">0</span>] = remaining;
-        h[<span class="hljs-number">1</span>] = z;
-        h[<span class="hljs-number">2</span>] = x;
-        h[<span class="hljs-number">3</span>] = y;
-
-        history.<span class="hljs-title function_">unshift</span>(h);
-
-        <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span> &gt; historyLength) {
-
-            <span class="hljs-keyword">const</span> old = history.<span class="hljs-title function_">splice</span>(historyLength);
-
-            old.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistory</span>(item));
-        }
-    }
-};</pre></div></div>
+        <span class="hljs-keyword">const</span> {x, y, z} = position;</pre></div></div>
             
         </li>
         
@@ -1330,11 +1319,22 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p><code>run</code> - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an physics entity (Emitter, Net, Tracer). Note that there is no equivalent <code>halt</code> function; instead, we set the particle’s <code>isRunning</code> attribute to false to get it removed from the system.</p>
+              <p>We add a pooled particleHistory object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">run</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">timeKill, radiusKill, killBeyondCanvas</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> h = <span class="hljs-title function_">requestParticleHistory</span>();
+
+        h[<span class="hljs-number">0</span>] = remaining;
+        h[<span class="hljs-number">1</span>] = z;
+        h[<span class="hljs-number">2</span>] = x;
+        h[<span class="hljs-number">3</span>] = y;
+
+        history.<span class="hljs-title function_">unshift</span>(h);
+
+        <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span> &gt; historyLength) {
+
+            <span class="hljs-keyword">const</span> old = history.<span class="hljs-title function_">splice</span>(historyLength);</pre></div></div>
             
         </li>
         
@@ -1344,6 +1344,39 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
               
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>We only release the particleHistory objects when we’ve finished with them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            old.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistory</span>(item));
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p><code>run</code> - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an physics entity (Emitter, Net, Tracer). Note that there is no equivalent <code>halt</code> function; instead, we set the particle’s <code>isRunning</code> attribute to false to get it removed from the system.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">run</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">timeKill, radiusKill, killBeyondCanvas</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>We can kill a Particle if it has lasted longer than its alloted lifetime. Lifetime (if required) is assigned to the Particle by its entity when generated.</p>
 
@@ -1359,11 +1392,11 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>We can kill a Particle if it has passed a certain distance beyond its initial position. Kill radius value (if required) is assigned to the Particle by its entity when generated.</p>
 
@@ -1379,11 +1412,11 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>We can kill a Particle if it has moved beyond the Cell’s canvas’s dimensions. This boolean is set on the Particle by its entity when generated.</p>
 
@@ -1397,11 +1430,11 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>Scrawl-canvas does not expose the particle factory functions in the scrawl object. Instead, particles are consumed by the physics-based entitys: <a href="./tracer.html">Tracer</a>; <a href="./emitter.html">Emitter</a>; <a href="./net.html">Net</a>.</p>
@@ -1419,11 +1452,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <h4 id="particle-pool">Particle pool</h4>
 <p>An attempt to reuse Particle objects rather than constantly creating and deleting them</p>
@@ -1435,11 +1468,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - retrieve a Particle from the particle pool</p>
 
@@ -1459,11 +1492,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a Particle to the particle pool. Failing to return Particles to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -1482,11 +1515,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Do not keep excessive numbers of under-utilised particle objects in the pool</p>
 
@@ -1504,11 +1537,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="particle-physics-engines">Particle physics engines</h4>
 <p>These functions are called by the <code>update</code> function which assigns the Particle object as <code>this</code> as part of the call. The engines calculate particle acceleration and apply it to particle velocity and then, taking into account the time elapsed since the previous tick, particle position.</p>
@@ -1520,11 +1553,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>euler</strong> - the simplest and quickest engine, and the least accurate</p>
 
@@ -1551,11 +1584,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>improved-euler</strong> is more accurate than the euler engine, but takes longer to calculate</p>
 
@@ -1586,11 +1619,11 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>runge-kutta</strong> is very accurate, but also a lot more computationally expensive</p>
 

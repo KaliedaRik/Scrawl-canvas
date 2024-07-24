@@ -321,9 +321,9 @@ export default function (P = Ωempty) {
                                 copyY = height - copyHeight - 1;
                             }
 
-                            const cell = requestCell(),
-                                engine = cell.engine,
-                                canvas = cell.element;
+                            const mycell = requestCell(),
+                                engine = mycell.engine,
+                                canvas = mycell.element;
 
                             canvas.width = destWidth;
                             canvas.height = destHeight;
@@ -338,7 +338,7 @@ export default function (P = Ωempty) {
 
                             obj.assetData = engine.getImageData(0, 0, ~~destWidth, ~~destHeight);
 
-                            releaseCell(cell);
+                            releaseCell(mycell);
                         }
                     }
 

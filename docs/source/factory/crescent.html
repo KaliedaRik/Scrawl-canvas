@@ -632,6 +632,19 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xto</span>(items.<span class="hljs-property">dimensions</span>, items.<span class="hljs-property">width</span>, items.<span class="hljs-property">height</span>, items.<span class="hljs-property">radius</span>)) items.<span class="hljs-property">radius</span> = <span class="hljs-number">5</span>;
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentOuterRadius</span> = <span class="hljs-number">5</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentInnerRadius</span> = <span class="hljs-number">5</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDisplacement</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerCircleStart</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerCircleEnd</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerCircleStart</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerCircleEnd</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawOuterCircle</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawDonut</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">entityInit</span>(items);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;

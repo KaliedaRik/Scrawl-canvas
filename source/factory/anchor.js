@@ -30,6 +30,10 @@ const Anchor = function (items = Ωempty) {
     this.controller = items.controller;
     this.hold = items.hold;
 
+    this.clickAction = null;
+    this.domElement = null;
+    this.hasBeenRecentlyClicked = null;
+
     this.set(items);
 
     this.dirtyAnchor = true;

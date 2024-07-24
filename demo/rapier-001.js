@@ -78,7 +78,6 @@ const boxes = [],
     rad = scrawl.library.radian;
 
 // Function to automate rigid body generation from Scrawl-canvas Block entitys
-/* eslint-disable-next-line */
 const createBodyFromBlock = function (world, block, density = 1, isStatic = false ) {
 
     const tempx = block.get("startX") / unit,

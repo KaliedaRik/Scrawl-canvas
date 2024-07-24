@@ -719,6 +719,9 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">springs</span> = [];
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastUpdated</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
@@ -1752,11 +1755,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(items, particle)) {
 
-        particle.<span class="hljs-property">isBeingDragged</span> = items;
-        particle.<span class="hljs-property">dragOffset</span> = <span class="hljs-title function_">requestVector</span>(particle.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(items);
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
+        particle.<span class="hljs-property">isBeingDragged</span> = items;</pre></div></div>
             
         </li>
         
@@ -1767,19 +1766,12 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
-              <p><code>dropArtefact</code> - overwrites the function defined in mixin/position.js</p>
-<ul>
-<li>One of the entity’s Particle objects is being dragged, not the entity itself</li>
-</ul>
+              <p>The pool vector is requested here, but released in the <code>dropArtefact</code> function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">dropArtefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">null</span>;
-    <span class="hljs-title function_">releaseVector</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">dragOffset</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">dragOffset</span> = <span class="hljs-literal">null</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span> = <span class="hljs-literal">null</span>;
+            <div class="content"><div class='highlight'><pre>        particle.<span class="hljs-property">dragOffset</span> = <span class="hljs-title function_">requestVector</span>(particle.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(items);
+    }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -1792,9 +1784,16 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
-              <h4 id="pre-defined-net-generators">Pre-defined Net generators</h4>
+              <p><code>dropArtefact</code> - overwrites the function defined in mixin/position.js</p>
+<ul>
+<li>One of the entity’s Particle objects is being dragged, not the entity itself</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">dropArtefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -1804,6 +1803,39 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p>Release the pool vector requested in the <code>pickupArtefact</code> function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">releaseVector</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">dragOffset</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">dragOffset</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <h4 id="pre-defined-net-generators">Pre-defined Net generators</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>springMaker</code> - internal helper function to generate the entity’s Spring objects</p>
 
@@ -1838,11 +1870,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>weak-net</code> - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to four of its closest horizontal and vertical neighbors</p>
 <ul>
@@ -1868,11 +1900,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>generate particles</p>
 
@@ -1919,11 +1951,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>generate springs</p>
 
@@ -1954,11 +1986,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>strong-net</code> - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to eight of its closest horizontal, vertical and diagonal neighbors</p>
 <ul>
@@ -1984,11 +2016,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>generate particles</p>
 
@@ -2035,11 +2067,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>generate springs</p>
 
@@ -2090,11 +2122,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>weak-shape</code> - <strong>Warning: not very stable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors</p>
 
@@ -2198,11 +2230,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>strong-shape</code> - <strong>Warning: generally unstable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors, and make an additional connection with a Particle at some distance from it (to act as a strut)</p>
 
@@ -2319,11 +2351,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>hub-spoke</code> - <strong>Warning: highly unstable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to its closest neighbors, and make an additional connection with a ‘hub’ particle at the template’s rotation-reflection point.</p>
 
@@ -2344,11 +2376,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p>build the rim</p>
 
@@ -2454,11 +2486,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

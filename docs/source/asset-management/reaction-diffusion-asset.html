@@ -631,6 +631,10 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> = [];
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSource</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">subscribe</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">push</span>(items.<span class="hljs-property">subscribe</span>);
@@ -1455,14 +1459,14 @@ G.<span class="hljs-property">generation</span> = <span class="hljs-keyword">fun
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">ENTITY</span> === initialSettingPreference &amp;&amp; entity[initialSettingEntity]) {
 
                 <span class="hljs-keyword">const</span> ent = entity[initialSettingEntity],
-                    cell = <span class="hljs-title function_">requestCell</span>();
+                    mycell = <span class="hljs-title function_">requestCell</span>();
 
-                <span class="hljs-keyword">const</span> {<span class="hljs-attr">engine</span>:cellEngine, <span class="hljs-attr">element</span>:cellElement} = cell;
+                <span class="hljs-keyword">const</span> {<span class="hljs-attr">engine</span>:cellEngine, <span class="hljs-attr">element</span>:cellElement} = mycell;
 
                 cellElement.<span class="hljs-property">width</span> = width;
                 cellElement.<span class="hljs-property">height</span> = height;
 
-                ent.<span class="hljs-title function_">simpleStamp</span>(cell, {
+                ent.<span class="hljs-title function_">simpleStamp</span>(mycell, {
                     <span class="hljs-attr">fillStyle</span>: <span class="hljs-variable constant_">WHITE</span>,
                     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-variable constant_">WHITE</span>,
                 });
@@ -1490,7 +1494,7 @@ G.<span class="hljs-property">generation</span> = <span class="hljs-keyword">fun
                     sourceB[counter] = initData[i] / <span class="hljs-number">255</span>;
                     counter++;
                 }
-                <span class="hljs-title function_">releaseCell</span>(cell);
+                <span class="hljs-title function_">releaseCell</span>(mycell);
             }
             <span class="hljs-keyword">else</span> {</pre></div></div>
             

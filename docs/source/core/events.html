@@ -748,8 +748,7 @@
     <span class="hljs-keyword">if</span> (navigator.<span class="hljs-property">pointerEnabled</span> || navigator.<span class="hljs-property">msPointerEnabled</span>) <span class="hljs-title function_">actionPointerListener</span>(events, fn, targets, action);
     <span class="hljs-keyword">else</span> <span class="hljs-title function_">actionMouseListener</span>(events, fn, targets, action);
 
-    <span class="hljs-title function_">releaseArray</span>(targets);
-    <span class="hljs-title function_">releaseArray</span>(events);
+    <span class="hljs-title function_">releaseArray</span>(targets, events);
 };
 
 <span class="hljs-keyword">const</span> actionMouseListener = <span class="hljs-keyword">function</span> (<span class="hljs-params">events, fn, targets, action</span>) {
@@ -931,8 +930,7 @@
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(t) || t.<span class="hljs-property">document</span> || t.<span class="hljs-property">characterSet</span>) t[action](e, fn, <span class="hljs-literal">false</span>);
         }
     }
-    <span class="hljs-title function_">releaseArray</span>(targets);
-    <span class="hljs-title function_">releaseArray</span>(events);
+    <span class="hljs-title function_">releaseArray</span>(targets, events);
 };</pre></div></div>
             
         </li>

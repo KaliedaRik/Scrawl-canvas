@@ -331,8 +331,7 @@ export default function (P = Ωempty) {
             }
         });
 
-        releaseArray(names);
-        releaseArray(res);
+        releaseArray(names, res);
 
         return response;
     };

@@ -1,7 +1,7 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.13.1",
-  "description": "Version 8.13.1 - 3 May 2024",
+  "version": "8.13.2",
+  "description": "Version 8.13.2 - 15 July 2024",
   "main": "./min/scrawl.js",
   "type": "module",
   "types": "./source/scrawl.d.ts",
@@ -40,15 +40,18 @@
   },
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.7.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "@types/eslint": "^8",
-    "@types/node": "^20.10.2",
-    "browser-sync": "^2.29.3",
+    "@types/eslint": "^8.56.10",
+    "@types/node": "^20.14.10",
+    "browser-sync": "^3.0.2",
     "docco": "^0.9.1",
-    "eslint": "^8.56.0",
-    "knip": "^5.8.0",
-    "rollup": "^4.9.1",
-    "typescript": "^5.3.2"
+    "eslint": "^9.7.0",
+    "globals": "^15.8.0",
+    "knip": "^5.26.0",
+    "rollup": "^4.18.1",
+    "typescript": "^5.5.3"
   },
   "packageManager": "yarn@4.0.1"
 }

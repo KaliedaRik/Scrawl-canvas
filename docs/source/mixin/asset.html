@@ -878,6 +878,13 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> = [];
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSrc</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFile</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = <span class="hljs-number">0</span>;
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
         <span class="hljs-keyword">if</span> (items.<span class="hljs-property">subscribe</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">push</span>(items.<span class="hljs-property">subscribe</span>);

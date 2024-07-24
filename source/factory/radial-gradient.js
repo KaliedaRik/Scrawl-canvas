@@ -23,6 +23,9 @@ import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } fr
 // #### RadialGradient constructor
 const RadialGradient = function (items = Ωempty) {
 
+    this.currentStartRadius = 0;
+    this.currentEndRadius = 0;
+
     this.stylesInit(items);
     return this;
 };

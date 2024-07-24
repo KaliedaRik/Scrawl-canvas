@@ -49,6 +49,9 @@ const Tween = function (items = Ωempty) {
     this.register();
 
     this.set(this.defs);
+
+    this.setObj = null;
+
     this.set(items);
 
     this.setDefinitionsValues();

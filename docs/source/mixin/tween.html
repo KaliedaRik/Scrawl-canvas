@@ -1046,6 +1046,7 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span> = [];
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(...newTargets);
+
         <span class="hljs-title function_">releaseArray</span>(newTargets);
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -1145,6 +1146,8 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
 
             <span class="hljs-keyword">if</span> (target) t.<span class="hljs-title function_">push</span>(target);
         }, <span class="hljs-variable language_">this</span>);
+
+        <span class="hljs-title function_">releaseArray</span>(identifiers);
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>

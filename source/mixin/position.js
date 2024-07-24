@@ -870,16 +870,38 @@ export default function (P = Ωempty) {
 
         this.lockTo = [START, START];
 
+        this.pivot = null;
         this.pivoted = [];
+        this.mimic = null;
         this.mimicked = [];
 
-        this.dirtyScale = true;
+        this.relativeCoordinates = [];
+
         this.dirtyDimensions = true;
         this.dirtyLock = true;
         this.dirtyStart = true;
         this.dirtyOffset = true;
         this.dirtyHandle = true;
+
+        this.pathObject = null;
+        this.dirtyPathObject = true;
+
+        this.currentHost = null;
+        this.dirtyHost = true;
+
+        this.currentScale = 1;
+        this.dirtyScale = true;
+
+        this.currentRotation = 0;
         this.dirtyRotation = true;
+
+        this.dirtyPositionSubscribers = true;
+
+        this.dirtyMimicScale = false;
+        this.dirtyMimicDimensions = false;
+        this.dirtyMimicOffset = false;
+        this.dirtyMimicHandle = false;
+        this.dirtyMimicRotation = false;
 
         this.isBeingDragged = false;
 
@@ -1720,7 +1742,7 @@ export default function (P = Ωempty) {
             if (!ignoreDragForX && relX.substring) start[0] = `${(x / w) * 100}%`;
             if (!ignoreDragForY && relY.substring) start[1] = `${(y / h) * 100}%`;
         }
-        delete this.relativeCoordinates;
+        this.relativeCoordinates.length = 0;
 
         currentDragOffset.set(currentDragCache);
 

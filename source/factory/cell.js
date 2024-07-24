@@ -93,6 +93,21 @@ const Cell = function (items = Ωempty) {
     // The `willReadFrequently` argument attribute is not retained by the cell, but is used during the Cell element's construction. Defaults to `true`
     this.set(this.defs);
 
+    this.dirtyAssetSubscribers = true;
+    this.basePaste = null;
+    this.dirtyFilters = true;
+    this.dirtyFiltersCache = true;
+    this.filters = [];
+    this.currentFilters = [];
+    this.dirtyImageSubscribers = true;
+    this.stashOutput = false;
+    this.stashOutputAsAsset = false;
+    this.stashedImageData = null;
+    this.stashedImage = null;
+    this.paste = null;
+    this.patternMatrix = null;
+    this.pivot = null;
+
     this.set(items);
 
     this.installElement(mycanvas, items.canvasColorSpace);

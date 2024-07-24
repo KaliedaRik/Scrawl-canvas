@@ -119,6 +119,7 @@ async function sampleColorFromScreen(abort) {
 
     } catch (e) {
 
+        console.log(e);
         abort.abort();
         dom.reference_selector.removeAttribute('disabled');
     }

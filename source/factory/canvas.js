@@ -83,6 +83,12 @@ const Canvas = function (items = Ωempty) {
     // Sets up the user preferences action functions
     this.initializeAccessibility();
 
+    this.currentActiveEntityNames = null;
+    this.dirtyCss = true;
+    this.localMouseListener = null;
+    this.mimic = null;
+    this.pivot = null;
+
     this.set(items);
 
     const el = this.domElement;
@@ -221,6 +227,8 @@ const Canvas = function (items = Ωempty) {
         el.appendChild(ariaDescription);
         el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
 
+        this.includeInTabNavigation = false;
+
         this.cleanAria();
 
         this.computedStyles = _computed(el);
@@ -285,7 +293,7 @@ const defaultAttributes = {
 // Scrawl-canvas attempts to automate _some_ (but not _all_) accessibility work through inclusion of the following Canvas attributes (specifically, Scrawl-canvas implements [ARIA attributes](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)):
 // + __title__ - this attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
 // + __label__ and __description__ - these attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using `aria-labelledby` and `aria-describedby` attributes
-// + __role__ - in most situations the &lt;canvas> element's ARIA role attribute should be left as `img` (the default value). However if the canvas contains a complex interactive GUI - for instance, a spreadsheet - then the role should be updated accordingly, for instance to `application`
+// + __role__ - in most situations the &lt;canvas> element's ARIA role attribute should be left as `img` (the default value). However if the canvas contains a complex interactive GUI - for instance, a spreadsheet - then the role should be updated accordingly, for instance to `application`. See the [MDN ARIA Roles page](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles) for a complete list.
 //
 // If no label value is supplied to the Canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual `set()` functionality.
 //
@@ -303,7 +311,7 @@ const defaultAttributes = {
     textAriaLive: POLITE,
 
 // #### Canvas Color space
-// Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'`` (default); `'display-p3'`.
+// Canvas elements can now use different color spaces - [see MDN for details](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext#colorspace). Permitted values are: `'srgb'` (default); `'display-p3'`.
     canvasColorSpace: SRGB,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -1014,15 +1022,9 @@ P.cascadeEventAction = function (action, e = {}) {
     currentActiveEntityNames.length = 0;
     currentActiveEntityNames.push(...newActiveEntityNames, ...knownActiveEntityNames);
 
-    releaseArray(currentActiveEntityObjects);
-    releaseArray(testActiveEntityObjects);
-    releaseArray(testActiveEntityNames);
-    releaseArray(newActiveEntityObjects);
-    releaseArray(newActiveEntityNames);
-    releaseArray(knownActiveEntityObjects);
-    releaseArray(knownActiveEntityNames);
+    releaseArray(currentActiveEntityObjects, testActiveEntityObjects, testActiveEntityNames, newActiveEntityObjects, newActiveEntityNames, knownActiveEntityObjects, knownActiveEntityNames);
 
-    return [].concat(currentActiveEntityNames);
+    return [...currentActiveEntityNames];
 };
 
 // `getEntityHits`, `checkHover` - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper

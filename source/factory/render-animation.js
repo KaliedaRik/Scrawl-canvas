@@ -136,6 +136,7 @@ const RenderAnimation = function (items = Ωempty) {
 
     // The `observer` attribute
     const obs = items.observer || false;
+    this.observer = null;
 
     if (obs) {
 

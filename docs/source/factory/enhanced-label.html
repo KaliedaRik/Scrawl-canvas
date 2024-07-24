@@ -679,6 +679,34 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">guidelineDash</span> = [];
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> = <span class="hljs-number">1</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">accessibleTextHold</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">accessibleTextHoldAttached</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">guidelinesPath</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">null</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFiltersCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-literal">null</span>;
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
@@ -1795,8 +1823,9 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
                     isInLayout = check;
                 }
             }
-
             rawLines.<span class="hljs-title function_">push</span>([i, [...rawLineData]]);
+
+            <span class="hljs-title function_">releaseArray</span>(rawLineData);
         }
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = rrpY + step; i &lt; yBase; i += step) {
@@ -1816,8 +1845,9 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
                     isInLayout = check;
                 }
             }
-
             rawLines.<span class="hljs-title function_">push</span>([i, [...rawLineData]]);
+
+            <span class="hljs-title function_">releaseArray</span>(rawLineData);
         }
     }</pre></div></div>
             
@@ -1851,14 +1881,15 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
                 isInLayout = check;
             }
         }
-
         rawLines.<span class="hljs-title function_">push</span>([rrpY, [...rawLineData]]);
+
+        <span class="hljs-title function_">releaseArray</span>(rawLineData);
     }
 
     <span class="hljs-keyword">const</span> relevantLines = <span class="hljs-title function_">requestArray</span>();
     relevantLines.<span class="hljs-title function_">push</span>(...rawLines.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">l</span> =&gt;</span> l[<span class="hljs-number">1</span>].<span class="hljs-property">length</span>));
 
-    <span class="hljs-title function_">releaseArray</span>(...rawLines, rawLines);
+    <span class="hljs-title function_">releaseArray</span>(rawLines);
 
     relevantLines.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> {
 
@@ -4866,9 +4897,22 @@ P.<span class="hljs-property">createTextCellsForPath</span> = <span class="hljs-
 
     <span class="hljs-keyword">const</span> el = host.<span class="hljs-property">element</span>,
         w = el.<span class="hljs-property">width</span>,
-        h = el.<span class="hljs-property">height</span>;
+        h = el.<span class="hljs-property">height</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-119">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-119">&#x00a7;</a>
+              </div>
+              <p>These pool cells <em>should</em> be returned to / released by the calling function</p>
 
-    <span class="hljs-keyword">const</span> uCell = <span class="hljs-title function_">requestCell</span>(w, h);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> uCell = <span class="hljs-title function_">requestCell</span>(w, h);
     <span class="hljs-keyword">const</span> mCell = <span class="hljs-title function_">requestCell</span>(w, h);
 
     <span class="hljs-keyword">if</span> (uCell &amp;&amp; mCell) {
@@ -4983,7 +5027,23 @@ P.<span class="hljs-property">createTextCellsForPath</span> = <span class="hljs-
             <span class="hljs-attr">copyCell</span>: uCell,
             <span class="hljs-attr">mainCell</span>: mCell,
         };
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-120">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-120">&#x00a7;</a>
+              </div>
+              <p>If we’re returning null, we need to release the pool cells</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">releaseCell</span>(uCell, mCell);
+
     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
 };
 
@@ -4991,9 +5051,22 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
 
     <span class="hljs-keyword">const</span> el = host.<span class="hljs-property">element</span>,
         w = el.<span class="hljs-property">width</span>,
-        h = el.<span class="hljs-property">height</span>;
+        h = el.<span class="hljs-property">height</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-121">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-121">&#x00a7;</a>
+              </div>
+              <p>These pool cells <em>should</em> be returned to / released by the calling function</p>
 
-    <span class="hljs-keyword">const</span> uCell = <span class="hljs-title function_">requestCell</span>(w, h);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> uCell = <span class="hljs-title function_">requestCell</span>(w, h);
     <span class="hljs-keyword">const</span> mCell = <span class="hljs-title function_">requestCell</span>(w, h);
 
     <span class="hljs-keyword">if</span> (uCell &amp;&amp; mCell) {
@@ -5060,11 +5133,11 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
         </li>
         
         
-        <li id="section-119">
+        <li id="section-122">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-119">&#x00a7;</a>
+                <a class="ss" href="#section-122">&#x00a7;</a>
               </div>
               <ul>
 <li>Soft hyphens and truncation marking is deliberately suppressed for RTL fonts</li>
@@ -5142,7 +5215,23 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
             <span class="hljs-attr">copyCell</span>: uCell,
             <span class="hljs-attr">mainCell</span>: mCell,
         };
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-123">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-123">&#x00a7;</a>
+              </div>
+              <p>If we’re returning null, we need to release the pool cells</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">releaseCell</span>(uCell, mCell);
+
     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
 };
 
@@ -5154,9 +5243,22 @@ P.<span class="hljs-property">addUnderlinesToCopyCell</span> = <span class="hljs
 
         <span class="hljs-keyword">const</span> el = host.<span class="hljs-property">element</span>,
             w = el.<span class="hljs-property">width</span>,
-            h = el.<span class="hljs-property">height</span>;
+            h = el.<span class="hljs-property">height</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-124">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-124">&#x00a7;</a>
+              </div>
+              <p>This pool cell is local to the function and not returned to calling function</p>
 
-        <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(w, h);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(w, h);
 
         <span class="hljs-keyword">if</span> (mycell) {
 
@@ -5183,7 +5285,22 @@ P.<span class="hljs-property">addUnderlinesToCopyCell</span> = <span class="hljs
             <span class="hljs-title function_">releaseCell</span>(mycell);
 
             <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-        }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-125">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-125">&#x00a7;</a>
+              </div>
+              <p>Releasing, just in case …</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">releaseCell</span>(mycell);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };
@@ -5196,9 +5313,22 @@ P.<span class="hljs-property">createOverlineCell</span> = <span class="hljs-keyw
 
         <span class="hljs-keyword">const</span> el = host.<span class="hljs-property">element</span>,
             w = el.<span class="hljs-property">width</span>,
-            h = el.<span class="hljs-property">height</span>;
+            h = el.<span class="hljs-property">height</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-126">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-126">&#x00a7;</a>
+              </div>
+              <p>Pool cell <em>should</em> be returned to / released by the calling function</p>
 
-        <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(w, h);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(w, h);
 
         <span class="hljs-keyword">if</span> (mycell) {
 
@@ -5214,7 +5344,22 @@ P.<span class="hljs-property">createOverlineCell</span> = <span class="hljs-keyw
             });
 
             <span class="hljs-keyword">return</span> mycell;
-        }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-127">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-127">&#x00a7;</a>
+              </div>
+              <p>Releasing, just in case …</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">releaseCell</span>(mycell);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
 };
@@ -5227,9 +5372,22 @@ P.<span class="hljs-property">createHighlightCell</span> = <span class="hljs-key
 
         <span class="hljs-keyword">const</span> el = host.<span class="hljs-property">element</span>,
             w = el.<span class="hljs-property">width</span>,
-            h = el.<span class="hljs-property">height</span>;
+            h = el.<span class="hljs-property">height</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-128">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-128">&#x00a7;</a>
+              </div>
+              <p>Pool cell <em>should</em> be returned to / released by the calling function</p>
 
-        <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(w, h);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(w, h);
 
         <span class="hljs-keyword">if</span> (mycell) {
 
@@ -5245,7 +5403,22 @@ P.<span class="hljs-property">createHighlightCell</span> = <span class="hljs-key
             });
 
             <span class="hljs-keyword">return</span> mycell;
-        }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-129">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-129">&#x00a7;</a>
+              </div>
+              <p>Releasing, just in case …</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">releaseCell</span>(mycell);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
 };
@@ -5365,11 +5538,11 @@ P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-120">
+        <li id="section-130">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-120">&#x00a7;</a>
+                <a class="ss" href="#section-130">&#x00a7;</a>
               </div>
               <p><code>updatePivotSubscribers</code></p>
 
@@ -5415,11 +5588,11 @@ P.<span class="hljs-property">getUnitAlignment</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-121">
+        <li id="section-131">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-121">&#x00a7;</a>
+                <a class="ss" href="#section-131">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-variable constant_">TODO</span>...
@@ -5429,8 +5602,22 @@ P.<span class="hljs-property">getUnitAlignment</span> = <span class="hljs-keywor
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeEnhancedLabel = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">EnhancedLabel</span>(items);
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-132">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-132">&#x00a7;</a>
+              </div>
+              <p>REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">EnhancedLabel</span>(items);
 };
 
 constructors.<span class="hljs-property">EnhancedLabel</span> = <span class="hljs-title class_">EnhancedLabel</span>;</pre></div></div>
@@ -5438,11 +5625,11 @@ constructors.<span class="hljs-property">EnhancedLabel</span> = <span class="hlj
         </li>
         
         
-        <li id="section-122">
+        <li id="section-133">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-122">&#x00a7;</a>
+                <a class="ss" href="#section-133">&#x00a7;</a>
               </div>
               <h4 id="textunit-objects">TextUnit objects</h4>
 
@@ -5686,11 +5873,11 @@ P.<span class="hljs-property">applyTextUnitUpdates</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-123">
+        <li id="section-134">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-123">&#x00a7;</a>
+                <a class="ss" href="#section-134">&#x00a7;</a>
               </div>
               <h4 id="textunit-pool">TextUnit pool</h4>
 
@@ -5711,11 +5898,11 @@ P.<span class="hljs-property">applyTextUnitUpdates</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-124">
+        <li id="section-135">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-124">&#x00a7;</a>
+                <a class="ss" href="#section-135">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a TextUnit to the text unit pool. Failing to return text units to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -5732,11 +5919,11 @@ P.<span class="hljs-property">applyTextUnitUpdates</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-125">
+        <li id="section-136">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-125">&#x00a7;</a>
+                <a class="ss" href="#section-136">&#x00a7;</a>
               </div>
               <h4 id="line-objects">Line objects</h4>
 
@@ -5804,11 +5991,11 @@ L.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-126">
+        <li id="section-137">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-126">&#x00a7;</a>
+                <a class="ss" href="#section-137">&#x00a7;</a>
               </div>
               <h4 id="lineobject-pool">LineObject pool</h4>
 
@@ -5837,11 +6024,11 @@ L.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-127">
+        <li id="section-138">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-127">&#x00a7;</a>
+                <a class="ss" href="#section-138">&#x00a7;</a>
               </div>
               <p>Line object pool</p>
 
@@ -5859,11 +6046,11 @@ L.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-128">
+        <li id="section-139">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-128">&#x00a7;</a>
+                <a class="ss" href="#section-139">&#x00a7;</a>
               </div>
               <h4 id="textunit-array">TextUnit array</h4>
 
@@ -5891,11 +6078,11 @@ A.<span class="hljs-property">findByIndex</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-129">
+        <li id="section-140">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-129">&#x00a7;</a>
+                <a class="ss" href="#section-140">&#x00a7;</a>
               </div>
               <p>Note: this could be more sophisticated if we allowed regexes …</p>
 
@@ -5917,11 +6104,11 @@ A.<span class="hljs-property">findByIndex</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-130">
+        <li id="section-141">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-130">&#x00a7;</a>
+                <a class="ss" href="#section-141">&#x00a7;</a>
               </div>
               <p>Note: this could be more sophisticated if we allowed regexes …</p>
 
