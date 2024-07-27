@@ -11,13 +11,18 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _floor, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
 const E = 216/24389;
 const K = 24389/27;
 const cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);
+
+// Note that, when developing in this file, all of the following arrays should be frozen - `Object.freeze([...etc])` - including the outer arrays. This is to prevent any accidental changes to the values contained in the arrays (they should be immutable). Sadly, Object freezing (and sealing) has a slight detriment to performance as the JS engine may perform additional checks when encountering frozen arrays which are not required when we already know the code does not change any values in the arrays
+
+/*
+import { _freeze } from '../helper/shared-vars.js';
 
 const D50 = _freeze([0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585]);
 // const D65 = _freeze([0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290]);
@@ -65,13 +70,64 @@ const LMStoXYZ =  _freeze([
 ]);
 
 const OKLabtoLMS = _freeze([
-/* eslint-disable-next-line */
     _freeze([ 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ]),
-/* eslint-disable-next-line */
     _freeze([ 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ]),
-/* eslint-disable-next-line */
     _freeze([ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ])
 ]);
+*/
+const D50 = [0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585];
+// const D65 = [0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290];
+
+const D65_to_D50_matrix = [
+    [  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ],
+    [  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ],
+    [ -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  ]
+];
+
+const D50_to_D65_matrix = [
+    [  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ],
+    [ -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ],
+    [  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   ]
+];
+
+const convertRGBtoXYZ_matrix = [
+    [ 506752 / 1228815,  87881 / 245763,   12673 /   70218 ],
+    [  87098 /  409605, 175762 / 245763,   12673 /  175545 ],
+    [   7918 /  409605,  87881 / 737289, 1001167 / 1053270 ]
+];
+
+const convertXYZtoRGB_matrix = [
+    [   12831 /   3959,    -329 /    214, -1974 /   3959 ],
+    [ -851781 / 878810, 1648619 / 878810, 36519 / 878810 ],
+    [     705 /  12673,   -2585 /  12673,   705 /    667 ]
+];
+
+const XYZtoLMS = [
+    [ 0.8190224432164319,    0.3619062562801221,   -0.12887378261216414  ],
+    [ 0.0329836671980271,    0.9292868468965546,     0.03614466816999844 ],
+    [ 0.048177199566046255,  0.26423952494422764,    0.6335478258136937  ]
+];
+
+const LMStoOKLab = [
+    [  0.2104542553,   0.7936177850,  -0.0040720468 ],
+    [  1.9779984951,  -2.4285922050,   0.4505937099 ],
+    [  0.0259040371,   0.7827717662,  -0.8086757660 ]
+];
+
+const LMStoXYZ = [
+    [  1.2268798733741557,  -0.5578149965554813,   0.28139105017721583 ],
+    [ -0.04057576262431372,  1.1122868293970594,  -0.07171106666151701 ],
+    [ -0.07637294974672142, -0.4214933239627914,   1.5869240244272418  ]
+];
+
+const OKLabtoLMS = [
+/* eslint-disable-next-line */
+    [ 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ],
+/* eslint-disable-next-line */
+    [ 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ],
+/* eslint-disable-next-line */
+    [ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ]
+];
 
 
 // Local dedicated canvas

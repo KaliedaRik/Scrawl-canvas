@@ -14,14 +14,14 @@ import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _freeze, _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../helper/shared-vars.js';
 
 
 // Local constants
 
 // `gettableVideoAssetAtributes`, `settableVideoAssetAtributes` - exported Arrays.
 // + TODO - I was planning to make the &lt;video> element's attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.
-export const gettableVideoAssetAtributes = _freeze([
+export const gettableVideoAssetAtributes = [
     'video_audioTracks',
     'video_autoPlay',
     'video_buffered',
@@ -53,9 +53,9 @@ export const gettableVideoAssetAtributes = _freeze([
     'video_textTracks',
     'video_videoTracks',
     'video_volume',
-]);
+];
 
-export const settableVideoAssetAtributes = _freeze([
+export const settableVideoAssetAtributes = [
     'video_autoPlay',
     'video_controller',
     'video_controls',
@@ -71,7 +71,7 @@ export const settableVideoAssetAtributes = _freeze([
     'video_src',
     'video_srcObject',
     'video_volume',
-]);
+];
 
 
 // #### VideoAsset constructor

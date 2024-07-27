@@ -27,7 +27,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { _create, _seal, _setPrototypeOf, T_PARTICLE_HISTORY } from '../helper/shared-vars.js';
+import { _create, _setPrototypeOf, T_PARTICLE_HISTORY } from '../helper/shared-vars.js';
 
 
 // #### ParticleHistory constructor
@@ -37,7 +37,7 @@ const ParticleHistory = function () {
 
     _setPrototypeOf(h, ParticleHistory.prototype);
 
-    return _seal(h);
+    return h;
 };
 
 

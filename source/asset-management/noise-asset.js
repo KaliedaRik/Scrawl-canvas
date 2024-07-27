@@ -30,7 +30,7 @@ import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { $X, _abs, _floor, _freeze, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../helper/shared-vars.js';
+import { $X, _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../helper/shared-vars.js';
 
 
 // #### NoiseAsset constructor
@@ -484,16 +484,16 @@ const simplexConstantF = 0.5 * (_sqrt(3) - 1);
 const simplexConstantG = (3 - _sqrt(3)) / 6;
 const simplexConstantDoubleG = ((3 - _sqrt(3)) / 6) * 2;
 
-const perlinGrad = _freeze([
-    _freeze([1, 1]),
-    _freeze([-1, 1]),
-    _freeze([1, -1]),
-    _freeze([-1, -1]),
-    _freeze([1, 0]),
-    _freeze([-1, 0]),
-    _freeze([0, 1]),
-    _freeze([0, -1])
-]);
+const perlinGrad = [
+    [1, 1],
+    [-1, 1],
+    [1, -1],
+    [-1, -1],
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1]
+];
 
 // `noiseEngines` - a {key:object} object. Each named object contains two functions:
 // + __init__ - invoked to prepare the engine for a bout of calculations - called by the `cleanNoise` function

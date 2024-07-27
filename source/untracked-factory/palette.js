@@ -56,7 +56,7 @@ import { makeColor } from '../factory/color.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _entries, _floor, _freeze, _isArray, _isFinite, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
 
 
 // #### Palette constructor
@@ -75,7 +75,7 @@ const Palette = function (items = Ωempty) {
 
     this.colors = items.colors || {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
 
-    this.stops = _seal(Array(1000).fill(BLANK));
+    this.stops = Array(1000).fill(BLANK);
 
     this.easingFunction = λfirstArg;
 
@@ -553,7 +553,6 @@ P.getStopData = function (gradient, start, end, cycle) {
                 data.push(1, stops[end]);
             }
         }
-        _freeze(data);
         setWorkstoreItem(workstoreName, data);
     }
 

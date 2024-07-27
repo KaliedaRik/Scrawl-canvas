@@ -23,13 +23,13 @@ import { makeColor } from '../factory/color.js';
 
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
-import { _abs, _ceil, _entries, _exp, _floor, _freeze, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _entries, _exp, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from './shared-vars.js';
 
 
 // Local constants
 const orderedNoise = new Float32Array([0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33]);
 
-const newspaperPatterns = _freeze([
+const newspaperPatterns = [
     new Uint8Array([0,0,0,0]),
     new Uint8Array([0,0,0,180]),
     new Uint8Array([180,0,0,0]),
@@ -43,7 +43,7 @@ const newspaperPatterns = _freeze([
     new Uint8Array([180,255,255,255]),
     new Uint8Array([255,255,255,180]),
     new Uint8Array([255,255,255,255])
-]);
+];
 
 const LOW_ARRAY = new Uint8Array([0,255,0]);
 const HIGH_ARRAY = new Uint8Array([0,255,255]);
@@ -203,10 +203,9 @@ P.buildImageGrid = function (image) {
                 row.push(counter);
                 counter++;
             }
-            grid.push(_freeze(row));
+            grid.push(row);
         }
 
-        _freeze(grid);
         setWorkstoreItem(name, grid);
         return grid;
     }
@@ -325,11 +324,10 @@ P.buildImageCoordinateLookup = function (image) {
 
             for (let x = 0; x < width; x++) {
 
-                lookup.push(_freeze([x, y]));
+                lookup.push([x, y]);
             }
         }
 
-        _freeze(lookup);
         setWorkstoreItem(name, lookup);
         return lookup;
     }
@@ -393,7 +391,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push(_freeze([].concat(hold)));
+                tiles.push([].concat(hold));
 
                 hold = [];
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
@@ -403,7 +401,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push(_freeze([].concat(hold)));
+                tiles.push([].concat(hold));
 
                 hold = [];
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
@@ -413,7 +411,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push(_freeze([].concat(hold)));
+                tiles.push([].concat(hold));
 
                 hold = [];
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
@@ -423,11 +421,10 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push(_freeze([].concat(hold)));
+                tiles.push([].concat(hold));
             }
         }
 
-        _freeze(tiles);
         setWorkstoreItem(name, tiles);
         return tiles;
     }
@@ -484,11 +481,10 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
                         }
                     }
                 }
-                if (hold.length) tiles.push(_freeze(hold));
+                if (hold.length) tiles.push(hold);
             }
         }
 
-        _freeze(tiles);
         setWorkstoreItem(name, tiles);
         return tiles;
     }
@@ -607,7 +603,6 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         }
                     }
 
-                    _freeze(newPoints);
                     points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
                 break;
@@ -634,7 +629,6 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         counter++;
                     }
 
-                    _freeze(newPoints);
                     points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
                 tileW = doubleR * 2;
@@ -665,7 +659,6 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         newPoints.push(_round(x), _round(y));
                     }
 
-                    _freeze(newPoints);
                     points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
                 tileW = tileR;
@@ -682,7 +675,6 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                     // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
                     const newPoints = [...pointVals];
 
-                    _freeze(newPoints);
                     points = getOrAddWorkstoreItem(pointsName, newPoints);
                 }
 
@@ -776,7 +768,6 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         // Filter the tiles Array to remove undefined indexes, then stash the result in the workstore (for future quick-serve) and return the array.
         tiles = tiles.filter(t => t != null);
 
-        _freeze(tiles);
         setWorkstoreItem(name, tiles);
         return tiles;
     }
@@ -810,11 +801,10 @@ P.buildHorizontalBlur = function (grid, radius) {
 
                 if (c >= 0 && c < gridWidth) cellsToProcess.push(grid[y][c] * 4);
             }
-            horizontalBlur[(y * gridWidth) + x] = _freeze(cellsToProcess);
+            horizontalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
     }
 
-    _freeze(horizontalBlur);
     setWorkstoreItem(name, horizontalBlur);
     return horizontalBlur;
 };
@@ -846,11 +836,10 @@ P.buildVerticalBlur = function (grid, radius) {
 
                 if (c >= 0 && c < gridHeight) cellsToProcess.push(grid[c][x] * 4);
             }
-            verticalBlur[(y * gridWidth) + x] = _freeze(cellsToProcess);
+            verticalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
     }
 
-    _freeze(verticalBlur);
     setWorkstoreItem(name, verticalBlur);
     return verticalBlur;
 };
@@ -906,13 +895,12 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
                 if (val < 0) val += dataLength;
                 else if (val >= dataLength) val -= dataLength;
 
-                cell.push(_freeze(val));
+                cell.push(val);
             }
-            grid.push(_freeze(cell));
+            grid.push(cell);
         }
     }
 
-    _freeze(grid);
     setWorkstoreItem(name, grid);
     return grid;
 };
@@ -1096,7 +1084,7 @@ P.transferDataUnchanged = function (oData, iData, len) {
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
-P.theBigActionsObject = _freeze({
+P.theBigActionsObject = {
 
 // __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
     [ALPHA_TO_CHANNELS]: function (requirements) {
@@ -5145,7 +5133,7 @@ P.theBigActionsObject = _freeze({
         else this.processResults(this.cache.work, output, opacity);
     },
 
-});
+};
 
 // We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their `dirtyFilterIdentifier` flag to false.
 makeAnimation({
