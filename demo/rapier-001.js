@@ -3,169 +3,106 @@
 // Rapier physics engine - stacking boxes
 
 // [Run code](../../demo/rapier-001.html)
+
+
+// #### Import statements
+// Rapier runs in Wasm-land, SC runs as it normally does in these demos
 import * as scrawl from '../source/scrawl.js';
 
 /** @ts-expect-error */
-import rapier from "https://cdn.skypack.dev/@dimforge/rapier2d-compat";
+import rapier from 'https://cdn.skypack.dev/@dimforge/rapier2d-compat';
 
 import { reportSpeed } from './utilities.js';
 
 
-// We are using a 600px x 600px canvas
-// + which means we can assume 1 rapierUnit = 60px
-// + remember that the y coordinates are positive-up from the bottom left corner
-// + and rapier cube dimensions are measured as halfwidth, halfheight
-// + also, rapier rotation is the opposite direction to Scrawl-canvas roll
-const unit = 60,
-    halfUnit = unit / 2,
-    thirdUnit = unit / 3,
-    sixthUnit = unit / 6,
-    rows = 10,
-    cols = 10,
-    height = 600;
+// To handle the Rapier-SC interface, we can create a Rapier factory in another file and import it
+// + This Rapier factory is just a proof-of-concept showing one approach to the interface problem
+import { makeRapier } from './modules/rapier-utilities.js';
+
 
 // #### Scene setup
-const artefacts = scrawl.library.artefact;
+const canvas = scrawl.findCanvas('mycanvas');
 
-const canvas = artefacts.mycanvas;
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
-// Keep the dynamic boxes in their own group (for drag-and-drop functionality later)
-const boxesGroup = scrawl.makeGroup({
-    name: "boxes-group",
-    host: canvas.base.name
-});
 
-// #### Scrawl-canvas entitys
-// Build static boxes
-const ground = scrawl.makeBlock({
-    name: "my-ground",
-    dimensions: [600, 40],
-    start: [300, 580],
-    handle: ["center", "center"],
-    fillStyle: "green",
-    method: "fill"
-});
-
-// A color generator to make our dynamic boxes look pretty
 const colorMaker = scrawl.makeColor({
-    name: "box-color-fill-generator",
+    name: name('color-generator'),
     maximumColor: "orange",
     minimumColor: "brown"
 });
 
-// Build dynamic boxes
-for (let y = 0; y < rows; y++) {
 
-    for (let x = 0; x < cols; x++) {
+// Create the Rapier model data we will be animating. We'll do this using a bespoke data model to define the rigid bodies used in the rapier world, which also includes some SC-related data used when we display these models
+// + The rapier model's scene dimensions are, in this instance, a 1m x 1m square. The starting position and dimensions of the boxes we are designing should thus be given as a portion of that square.
+// + Rapier's coordinate system starts at the bottom-left corner of the scene; the canvas coordinate system starts at the top-left corner. We'll handle this coordinate complexity as part of the Rapier factory's setup. For defining starting positions, we'll stick to Rapier coordinates.
+// + Rapier automatically sets its rigid body block coordinates at the center of the block.
+// + Rapier gives many of its objects `handles` (names) automatically - these are unique Integers. SC `handle` attributes are something completely different.
+//
+// ```
+// {
+//   startX: Number between 0 and 1 
+//   startY: Number between 0 and 1 
+//   width: Number between 0 and 1 
+//   height: Number between 0 and 1 
+//   color: valid CSS color String
+//   isFixed: Boolean
+// }
+// ```
 
-        scrawl.makeBlock({
-            name: `block-${y}-${x}`,
-            group: "boxes-group",
-            startX: halfUnit + x * unit,
-            startY: -sixthUnit + y * unit,
-            handle: ["center", "center"],
-            width: thirdUnit + Math.ceil(Math.random() * halfUnit),
-            height: thirdUnit + Math.ceil(Math.random() * halfUnit),
-            fillStyle: colorMaker.getRangeColor(Math.random()),
-            method: "fillThenDraw"
+const bodies = [];
+
+// We need a fixed ground object
+// + Rapier automatically centers cuboid shapes around their start coordinates
+bodies.push({
+    startX: 300 / 600,
+    startY: 5 / 600,
+    width: 1200 / 600,
+    height: 10 / 600,
+    color: 'green',
+    isFixed: true,
+});
+
+// Build out the blocks in a 6 by 6 grid
+// + We know the canvas dimensions are 600 x 600px; to convert to Rapier positions we divide by 600
+// for (let x = 50; x < 600; x += 100) {
+
+//     for (let y = 50; y < 600; y += 100) {
+
+//         bodies.push({
+//             startX: x / 600,
+//             startY: y / 600,
+//             width: (((Math.random() * 50) + 30) / 600),
+//             height: (((Math.random() * 40) + 30) / 600),
+//             color: colorMaker.getRangeColor(Math.random()),
+//             isFixed: false,
+//         });
+//     }
+// }
+
+        bodies.push({
+            startX: 0.5,
+            startY: 0.85,
+            width: 0.2,
+            height: 0.2,
+            color: colorMaker.getRangeColor(Math.random()),
+            isFixed: false,
         });
-    }
-}
 
-// ### Rapier rigid bodies
-const boxes = [],
-    boxnames = [...boxesGroup.artefacts],
-    rad = scrawl.library.radian;
-
-// Function to automate rigid body generation from Scrawl-canvas Block entitys
-const createBodyFromBlock = function (world, block, density = 1, isStatic = false ) {
-
-    const tempx = block.get("startX") / unit,
-        tempy = (height - block.get("startY")) / unit,
-        tempw = block.get("width") / unit,
-        temph = block.get("height") / unit;
-
-    let rbDesc, colDesc, rigidBody;
-
-    const bodyType = isStatic
-        ? rapier.RigidBodyType.Static
-        : rapier.RigidBodyType.Dynamic;
-
-    rbDesc = new rapier.RigidBodyDesc(bodyType);
-    rbDesc.setTranslation(tempx, tempy);
-    rigidBody = world.createRigidBody(rbDesc);
-    colDesc = rapier.ColliderDesc.cuboid(tempw / 2, temph / 2);
-    world.createCollider(colDesc, rigidBody.handle);
-
-    return rigidBody;
+// Bring together all the arguments we're going to push into the Rapier factory
+const args = {
+    scrawl,
+    rapier,
+    canvas,
+    pixelsPerMeter: 600,
+    bodies,
+    genericWorld: true,
 };
 
-// Function to update Scrawl-canvas entitys with Rapier rigid body position/rotation data
-const updatePosition = function (box) {
-
-    const { entity, body } = box;
-    const { x, y } = body.translation();
-
-    const r = -body.rotation() / rad;
-
-    let sx = x * unit,
-        sy = y * unit;
-
-    sy = height - sy;
-
-    entity.set({
-        startX: sx,
-        startY: sy,
-        roll: r
-    });
-};
-
-// Flag to run/halt the physics simulation
-let isRunning = false;
-
-
-// Initialize Rapier (involves web assembly, thus asynchronous)
-rapier.init()
-.then(() => {
-
-    // Create the world, with added gravity
-    const gravity = new rapier.Vector2(0.0, -9.8),
-        world = new rapier.World(gravity);
-
-    // Create rigid body for static ground entity
-    createBodyFromBlock(world, ground, null, true);
-
-    // Create dynamic rigid-bodies for the other boxes
-    boxnames.forEach((name) => {
-
-        const ent = artefacts[name];
-
-        if (ent) {
-
-            boxes.push({
-                entity: ent,
-                body: createBodyFromBlock(world, ent, 2)
-            });
-        }
-    });
-
-    // Simulation loop
-    const physicsLoop = () => {
-
-        if (isRunning) {
-
-            world.step();
-            boxes.forEach(b => updatePosition(b));
-        }
-    };
-
-
-    // Add the simulation loop to our Scrawl-canvas animation object
-    animation.set({
-        commence: physicsLoop,
-    });
-})
-.catch(e => console.log(e));
+// Invoke the Rapier factory
+const model = makeRapier(args);
 
 
 // #### Scene animation
@@ -173,12 +110,24 @@ rapier.init()
 const report = reportSpeed('#reportmessage');
 
 
-// Create the Display cycle animation
-const animation = scrawl.makeRender({
-    name: "demo-animation",
+// Create the Display cycle animations
+scrawl.makeRender({
+
+    name: name('visual-display'),
     target: canvas,
-    afterShow: report
+    afterShow: report,
 });
+
+const modelAnimation = scrawl.makeRender({
+
+    name: name('model-animation'),
+    noTarget: true,
+    delay: true,
+
+    // @ts-ignore
+    commence: () => model.update(),
+});
+
 
 // #### User interaction
 const runButton = document.querySelector("#run"),
@@ -188,7 +137,8 @@ scrawl.addNativeListener("click", () => {
 
     runButton.setAttribute("disabled", "disabled");
     haltButton.removeAttribute("disabled");
-    isRunning = true;
+
+    if (!modelAnimation.isRunning()) modelAnimation.run();
 
 }, runButton);
 
@@ -196,11 +146,12 @@ scrawl.addNativeListener("click", () => {
 
     runButton.removeAttribute("disabled");
     haltButton.setAttribute("disabled", "disabled");
-    isRunning = false;
+
+    if (modelAnimation.isRunning()) modelAnimation.halt();
 
 }, haltButton);
 
 
 // #### Development and testing
+console.log(model);
 console.log(scrawl.library);
-

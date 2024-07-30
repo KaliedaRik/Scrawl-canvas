@@ -23,6 +23,10 @@
       text-align: center;
       padding: 6px 0;
     }
+    .center {
+      margin: 0 auto;
+      width: 600px;
+    }
   </style>
 </head>
 
@@ -33,19 +37,20 @@
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Rapier test 001</h1>
   <h2>Rapier physics engine - stacking boxes</h2>
-  <p>This test is currently failing - probably due to significant changes in the Rapier JS library which we have not yet had time to investigate and fix. Priority not urgent.</p>
 
-  <div class="controls">
-    <button id="run">Run</button>
-    <button id="halt" disabled>Halt</button>
+  <div class="center">
+    <div class="controls">
+      <button id="run">Run</button>
+      <button id="halt" disabled>Halt</button>
+    </div>
+
+    <canvas 
+      id="mycanvas" 
+      width="600" 
+      height="600"
+      data-scrawl-canvas
+    ></canvas>
   </div>
-
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="600"
-    data-scrawl-canvas
-  ></canvas>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
