@@ -30,7 +30,24 @@ import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { $X, _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../helper/shared-vars.js';
+// Shared constants
+import { _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, DEFAULT_SEED, NONE, VALUE } from '../helper/shared-vars.js';
+
+// Local constants
+const $X = 'X',
+    BESPOKE_NOISE_ENGINES = ['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'],
+    EUCLIDEAN_DISTANCE = 'euclidian-distance',
+    IMPROVED_PERLIN = 'improved-perlin',
+    MANHATTAN_DISTANCE = 'manhattan-distance',
+    PERLIN = 'perlin',
+    QUINTIC = 'quintic',
+    SIMPLEX = 'simplex',
+    SMOOTHED_STRIPES = 'smoothed-stripes',
+    STRIPES = 'stripes',
+    T_NOISE_ASSET = 'NoiseAsset',
+    WORLEY_EUCLIDEAN = 'worley-euclidean',
+    WORLEY_MANHATTAN = 'worley-manhattan',
+    WORLEY_OUTPUTS = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
 
 
 // #### NoiseAsset constructor

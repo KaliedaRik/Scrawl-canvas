@@ -14,10 +14,12 @@ import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../helper/shared-vars.js';
-
+// Shared constants
+import { _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
+const _VIDEO = 'VIDEO',
+    MAYBE = 'maybe';
 
 // `gettableVideoAssetAtributes`, `settableVideoAssetAtributes` - exported Arrays.
 // + TODO - I was planning to make the &lt;video> element's attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.

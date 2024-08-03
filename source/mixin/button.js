@@ -9,7 +9,19 @@ import { mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { makeButton } from '../factory/button.js';
 
-import { AUTOFOCUS, BLUR_ACTION, DESCRIPTION, CLICK_ACTION, DISABLED, ELEMENT_TYPE, ELEMENT_VALUE, FOCUS_ACTION, FORM, FORM_ACTION, FORM_ENCTYPE, FORM_METHOD, FORM_NOVALIDATE, FORM_TARGET, NAME, POPOVER_TARGET, POPOVER_TARGETACTION, TAB_ORDER } from '../helper/shared-vars.js';
+// Shared constants
+import { AUTOFOCUS, BLUR_ACTION, DESCRIPTION, CLICK_ACTION, DISABLED, FOCUS_ACTION, FORM, NAME, TAB_ORDER } from '../helper/shared-vars.js';
+
+// Local constants
+const ELEMENT_TYPE = 'elementType',
+    ELEMENT_VALUE = 'elementValue',
+    FORM_ACTION = 'formAction',
+    FORM_ENCTYPE = 'formEnctype',
+    FORM_METHOD = 'formMethod',
+    FORM_NOVALIDATE = 'formNoValidate',
+    FORM_TARGET = 'formTarget',
+    POPOVER_TARGET = 'popoverTarget',
+    POPOVER_TARGETACTION = 'popoverTargetAction';
 
 
 // #### Export function

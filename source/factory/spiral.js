@@ -35,10 +35,13 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _floor, ENTITY, SPIRAL, T_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
-
+// Shared constants
+import { _floor, ENTITY, ZERO_PATH } from '../helper/shared-vars.js';
 
 // Local constants
+const SPIRAL = 'spiral',
+    T_SPIRAL = 'Spiral';
+
 const FIRST_TURN = [
     [0.043, 0, 0.082, -0.035, 0.088, -0.088],
     [0.007, -0.057, -0.024, -0.121, -0.088, -0.162],

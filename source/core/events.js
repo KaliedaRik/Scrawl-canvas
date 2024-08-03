@@ -18,7 +18,13 @@ import { isa_fn, isa_dom, λnull, Ωempty } from "../helper/utilities.js";
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _isArray, ADD_EVENT_LISTENER, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, TOUCH_END, TOUCH_ENTER, TOUCH_FOLLOW, TOUCH_LEAVE, TOUCH_MOVE, TOUCH_START, UP } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, ADD_EVENT_LISTENER, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from '../helper/shared-vars.js';
+
+// Local constants
+const TOUCH_ENTER = 'touchenter',
+    TOUCH_FOLLOW = 'touchfollow',
+    TOUCH_LEAVE = 'touchleave';
 
 
 // #### Functionality

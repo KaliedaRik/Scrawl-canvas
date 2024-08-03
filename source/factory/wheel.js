@@ -18,7 +18,11 @@ import { addStrings, doCreate, isa_number, mergeOver, xt, xto, Ωempty } from '.
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _radian, DIMENSIONS, ENTITY, PC, T_WHEEL } from '../helper/shared-vars.js';
+// Shared constants
+import { _radian, DIMENSIONS, ENTITY, PC } from '../helper/shared-vars.js';
+
+// Local constants
+const T_WHEEL = 'Wheel';
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
 const ensureFloat = (val, precision) => {

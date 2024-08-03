@@ -17,7 +17,11 @@ import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../helper/shared-vars.js';
+// Shared constants
+import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, TOP } from '../helper/shared-vars.js';
+
+// Local constants
+const T_RADIAL_GRADIENT = 'RadialGradient';
 
 
 // #### RadialGradient constructor

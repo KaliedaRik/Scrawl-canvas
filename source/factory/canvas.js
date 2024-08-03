@@ -47,7 +47,18 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _2D, _computed, ABSOLUTE, ARIA_HIDDEN, ARIA_LIVE, CANVAS, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, IMG, LEAVE, MOVE, NAME, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const ARIA_BUSY = 'aria-busy',
+    ARIA_DESCRIBEDBY = 'aria-describedby',
+    ARIA_LABELLEDBY = 'aria-labelledby',
+    ARIA_LIVE_VALUES = ['assertive', 'polite', 'off'],
+    CANVAS_QUERY = '[data-scrawl-canvas]',
+    FIT_DEFS = ['fill', 'contain', 'cover'],
+    NAV = 'nav',
+    TITLE = 'title';
 
 
 // #### Canvas constructor

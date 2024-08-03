@@ -36,7 +36,13 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 import curveMix from '../mixin/shape-curve.js';
 
-import { CONTROL, CONTROL_PARTICLE, CONTROL_PATH, CONTROL_PIVOT, ENTITY, PATH, QUADRATIC, T_QUADRATIC, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { CONTROL, ENTITY, PATH, QUADRATIC, T_QUADRATIC, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const CONTROL_PARTICLE = 'controlParticle',
+    CONTROL_PATH = 'controlPath',
+    CONTROL_PIVOT = 'controlPivot';
 
 
 // #### Quadratic constructor

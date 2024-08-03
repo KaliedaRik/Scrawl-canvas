@@ -46,7 +46,14 @@ import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
+    $SCRIPT = 'SCRIPT',
+    DATA_SCRAWL_STACK = 'data-scrawl-stack',
+    STACK = 'stack';
 
 
 // #### Stack constructor

@@ -2,7 +2,15 @@
 // A ragtag collection of helper functions which other modules can import and use
 
 
-import { _cos, _create, _entries, _floor, _isArray, _isFinite, _pi, _pow, _random, _sin, _sqrt, $CANVAS_ELEMENT, $OBJECT, BOOLEAN, BOTTOM, CENTER, FUNCTION, LEFT, MS, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
+// Shared constants
+import { _cos, _create, _entries, _floor, _isArray, _isFinite, _pow, _random, _sin, _sqrt, BOTTOM, CENTER, FUNCTION, LEFT, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
+
+// Local constants
+const _pi = Math.PI,
+    $CANVAS_ELEMENT = '[object HTMLCanvasElement]',
+    $OBJECT = '[object Object]',
+    BOOLEAN = 'boolean',
+    MS = 'ms';
 
 
 // #### Functions

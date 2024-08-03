@@ -41,13 +41,15 @@ import { getDoAnimation, getResortBatchAnimations, setDoAnimation, setResortBatc
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
+// Shared constants
 import { _floor, _now } from '../helper/shared-vars.js';
-
 
 // Local constants
 const animate_sorted = [];
 const animate = [];
 
+
+// Helper functions
 export const animateAdd = (val) => {
     pushUnique(animate, val);
     setResortBatchAnimations(true);

@@ -27,7 +27,11 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { _create, _setPrototypeOf, T_PARTICLE_HISTORY } from '../helper/shared-vars.js';
+// Shared constants
+import { _create, _setPrototypeOf } from '../helper/shared-vars.js';
+
+// Local constants
+const T_PARTICLE_HISTORY = 'ParticleHistory';
 
 
 // #### ParticleHistory constructor

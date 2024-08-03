@@ -11,13 +11,43 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
-
+// Shared constants
+import { _abs, _atan2, _cos, _floor, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _2D, BLACK, BLANK, CANVAS, FUNCTION, INT_COLOR_SPACES, LINEAR, NAME, NONE, PC, RANDOM, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const E = 216/24389;
-const K = 24389/27;
-const cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);
+const _inverseRadian = 180 / Math.PI,
+    _0 = '0',
+    _HSL = 'hsl',
+    _HWB = 'hwb',
+    _LAB = 'lab',
+    _LCH = 'lch',
+    _MAX = '_max',
+    _MIN = '_min',
+    _OKLAB = 'oklab',
+    _OKLCH = 'oklch',
+    _RGB = 'rgb',
+    _XYZ = 'xyz',
+    BLACK_HEX = '#000000',
+    DEG = 'deg',
+    GRAD = 'grad',
+    HSL_HWB_ARRAY = ['HSL', 'HWB'],
+    HSL = 'HSL',
+    HWB = 'HWB',
+    LAB = 'LAB',
+    LCH = 'LCH',
+    MAX = 'max',
+    MIN = 'min',
+    OKLAB = 'OKLAB',
+    OKLCH = 'OKLCH',
+    RAD = 'rad',
+    RET_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
+    TURN = 'turn',
+    XYZ = 'XYZ';
+
+const E = 216/24389,
+    K = 24389/27,
+    _cbrt = Math.cbrt,
+    cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);
 
 // Note that, when developing in this file, all of the following arrays should be frozen - `Object.freeze([...etc])` - including the outer arrays. This is to prevent any accidental changes to the values contained in the arrays (they should be immutable). Sadly, Object freezing (and sealing) has a slight detriment to performance as the JS engine may perform additional checks when encountering frozen arrays which are not required when we already know the code does not change any values in the arrays
 

@@ -16,7 +16,14 @@ import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { _parse, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, ELEMENT, IMAGE_ELEMENTS, IMG, INTRINSIC, NONE, SLASH, T_CANVAS, T_CELL, T_GROUP, T_IMAGE, ZERO, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _parse, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, ELEMENT, IMG, NONE, T_CANVAS, T_CELL, T_GROUP, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const IMAGE_ELEMENTS = ['IMG', 'PICTURE'],
+    INTRINSIC = 'intrinsic',
+    SLASH = '/',
+    ZERO = 'zero';
 
 
 // #### ImageAsset constructor

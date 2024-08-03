@@ -56,7 +56,11 @@ import { makeColor } from '../factory/color.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+// Shared constants
+import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+
+// Local constants
+const PALETTE = 'palette';
 
 
 // #### Palette constructor

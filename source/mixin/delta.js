@@ -5,7 +5,20 @@
 // #### Imports
 import { mergeDiscard, mergeOver, Ωempty } from '../helper/utilities.js';
 
-import { _isArray, _keys, ADD, LONGCHECK, LOOP, MULTIPLY, NEWNUMBER, NEWSTRING, PC, REMOVE, REVERSE, SEPARATOR, SHORTCHECK, UPDATE, ZERO_STR } from '../helper/shared-vars.js'
+// Shared constants
+import { _isArray, _keys, MULTIPLY, PC, ZERO_STR } from '../helper/shared-vars.js'
+
+// Local constants
+const ADD = 'add',
+    LONGCHECK = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'],
+    LOOP = 'loop',
+    NEWNUMBER = 'newNumber',
+    NEWSTRING = 'newString',
+    REMOVE = 'remove',
+    REVERSE = 'reverse',
+    SEPARATOR = ':',
+    SHORTCHECK = ['startY', 'handleY', 'offsetY', 'height'],
+    UPDATE = 'update';
 
 
 // #### Export function

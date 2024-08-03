@@ -7,7 +7,10 @@ import { constructors } from '../core/library.js';
 
 import { xt } from '../helper/utilities.js';
 
+// Shared constants
 import { _atan2, _cos, _create, _hypot, _isArray, _setPrototypeOf, _sin, T_COORDINATE, T_QUATERNION, T_VECTOR } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Coordinate constructor

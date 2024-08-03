@@ -38,7 +38,12 @@ import { addListener, removeListener } from "../core/events.js";
 
 import { touchAction } from "../core/user-interaction.js";
 
-import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, DROP, EXIT, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from "../helper/shared-vars.js";
+// Shared constants
+import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from "../helper/shared-vars.js";
+
+// Local constants
+const DROP = 'drop',
+    EXIT = 'exit';
 
 
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.

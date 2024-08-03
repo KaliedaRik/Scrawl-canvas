@@ -12,7 +12,11 @@ import cellMix from '../mixin/cell-key-functions.js';
 
 import { getCanvasColorSpace } from '../factory/cell.js'
 
-import { _2D, CANVAS, DISPLAY_P3, LEFT, SRGB, T_CELLFRAGMENT, TOP } from '../helper/shared-vars.js';
+// Shared constants
+import { _2D, CANVAS, DISPLAY_P3, LEFT, SRGB, TOP } from '../helper/shared-vars.js';
+
+// Local constants
+const T_CELLFRAGMENT = 'CellFragment';
 
 
 // #### CellFragment constructor

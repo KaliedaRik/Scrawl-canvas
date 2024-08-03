@@ -15,7 +15,11 @@ import { calculatePath, releasePathCalcObject, requestPathCalcObject } from '../
 
 import entityMix from './entity.js';
 
-import { _atan2, _ceil, _floor, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, HALFTRANS, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _atan2, _ceil, _floor, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const HALFTRANS = 'rgb(0 0 0 / 0.5)';
 
 
 // #### Export function

@@ -35,7 +35,10 @@ import { makeVector, releaseVector, requestVector } from '../untracked-factory/v
 // The Particle object uses the base mixin, thus it supports all the normal Scrawl-canvas functionality such as `get`, `set`, `setDelta`, `clone`, `kill`, etc.
 import baseMix from '../mixin/base.js';
 
+// Shared constants
 import { _isArray, BLACK, EULER, PARTICLE, T_PARTICLE } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Particle constructor

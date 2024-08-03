@@ -9,7 +9,11 @@ import { mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 
-import { ANCHORTYPE, BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DISABLED, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, TAB_ORDER, TARGET } from '../helper/shared-vars.js';
+// Shared constants
+import { BLUR_ACTION, CLICK_ACTION, DESCRIPTION, DISABLED, DOWNLOAD, FOCUS_ACTION, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, TAB_ORDER, TARGET } from '../helper/shared-vars.js';
+
+// Local constants
+const ANCHORTYPE = 'anchorType';
 
 
 // #### Export function

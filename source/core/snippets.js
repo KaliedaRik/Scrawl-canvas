@@ -15,7 +15,11 @@ import { makeAnimationObserver } from './events.js';
 import { makeRender } from "../factory/render-animation.js";
 import { makeUnstackedElement } from "../factory/unstacked-element.js";
 
-import { _computed, NON_SNIPPET_ELEMENTS } from '../helper/shared-vars.js';
+// Shared constants
+import { _computed } from '../helper/shared-vars.js';
+
+// Local constants
+const NON_SNIPPET_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
 
 
 // TODO - documentation

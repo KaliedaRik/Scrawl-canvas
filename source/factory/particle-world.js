@@ -23,7 +23,11 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _entries, T_COORDINATE, T_QUATERNION, T_VECTOR, T_WORLD, WORLD } from '../helper/shared-vars.js';
+// Shared constants
+import { _entries, T_COORDINATE, T_QUATERNION, T_VECTOR, T_WORLD } from '../helper/shared-vars.js';
+
+// Local constants
+const WORLD = 'world';
 
 
 // #### World constructor

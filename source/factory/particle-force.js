@@ -37,7 +37,12 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 
-import { FORCE, GRAVITY, T_FORCE } from '../helper/shared-vars.js';
+// Shared constants (none imported)
+
+// Local constants
+const FORCE = 'force',
+    GRAVITY = 'gravity',
+    T_FORCE = 'Force';
 
 
 // #### Force constructor

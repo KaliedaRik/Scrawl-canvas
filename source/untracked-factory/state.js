@@ -16,7 +16,17 @@ import { doCreate, xt, xtGet } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { AUTO, BLACK, BUTT, DEFAULT_FONT, FONT_USERS, HIGH, LEFT, LINE_DASH, LINE_WIDTH, LTR, MITER, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, T_COLOR, T_STATE, TOP, UNDEF } from '../helper/shared-vars.js';
+// Shared constants
+import { AUTO, BLACK, DEFAULT_FONT, FONT_USERS, HIGH, LEFT, LINE_DASH, LTR, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, T_COLOR, TOP, UNDEF } from '../helper/shared-vars.js';
+
+// Local constants
+const BUTT = 'butt',
+    LINE_WIDTH = 'lineWidth',
+    MITER = 'miter',
+    STATE_LINE_KEYS = ['lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'],
+    STATE_MAIN_KEYS = ['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'],
+    STATE_STYLE_KEYS = ['fillStyle', 'shadowColor', 'strokeStyle'],
+    T_STATE = 'State';
 
 
 // #### State constructor

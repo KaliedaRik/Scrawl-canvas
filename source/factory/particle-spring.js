@@ -30,7 +30,12 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
 import baseMix from '../mixin/base.js';
 
-import { SPRING, T_PARTICLE, T_SPRING } from '../helper/shared-vars.js';
+// Shared constants
+import { T_PARTICLE } from '../helper/shared-vars.js';
+
+// Local constants
+const SPRING = 'spring',
+    T_SPRING = 'Spring';
 
 
 // #### Spring constructor

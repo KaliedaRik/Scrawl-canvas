@@ -37,7 +37,10 @@ import { makeTicker } from './ticker.js';
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
+// Shared constants
 import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Tween constructor

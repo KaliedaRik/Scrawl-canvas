@@ -10,7 +10,20 @@ import { isa_number, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { cell } from '../core/library.js';
 
-import { _isArray, _A, _B, _C, _D, _E, _F, BLANK, MAT_POS, MAT_REPEAT, REPEAT, T_CELL, T_NOISE } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, BLANK, T_CELL, T_NOISE } from '../helper/shared-vars.js';
+
+// Local constants
+const _A = 'a',
+    _B = 'b',
+    _C = 'c',
+    _D = 'd',
+    _E = 'e',
+    _F = 'f',
+    MAT_POS = ['a', 'b', 'c', 'd', 'e', 'f'],
+    MAT_REPEAT = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'],
+    REPEAT = 'repeat';
+
 
 // #### Export function
 export default function (P = Ωempty) {

@@ -23,10 +23,45 @@ import { makeColor } from '../factory/color.js';
 
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
-import { _abs, _ceil, _entries, _exp, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from './shared-vars.js';
-
+// Shared constants
+import { _abs, _ceil, _entries, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MULTIPLY, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
+const _exp = Math.exp,
+    BLUE = 'blue',
+    COLOR_BURN = 'color-burn',
+    COLOR_DODGE = 'color-dodge',
+    CURRENT = 'current',
+    DARKEN = 'darken',
+    DESTINATION_ATOP = 'destination-atop',
+    DESTINATION_IN = 'destination-in',
+    DESTINATION_ONLY = 'destination-only',
+    DIFFERENCE = 'difference',
+    EXCLUSION = 'exclusion',
+    GRAY_PALETTES = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'],
+    HARD_LIGHT = 'hard-light',
+    HEX_GRID = 'hex-grid',
+    HUE = 'hue',
+    LIGHTEN = 'lighten',
+    LIGHTER = 'lighter',
+    LUMINOSITY = 'luminosity',
+    MONOCHROME_16 = 'monochrome-16',
+    MONOCHROME_4 = 'monochrome-4',
+    MONOCHROME_8 = 'monochrome-8',
+    ORDERED = 'ordered',
+    OVERLAY = 'overlay',
+    POINTS_ARRAY = 'points-array',
+    RANDOM_POINTS = 'random-points',
+    SATURATION = 'saturation',
+    SCREEN = 'screen',
+    SOFT_LIGHT = 'soft-light',
+    SOURCE_ALPHA = 'source-alpha',
+    SOURCE_ATOP = 'source-atop',
+    SOURCE_ONLY = 'source-only',
+    T_FILTER_ENGINE = 'FilterEngine',
+    UNSET = 'unset',
+    XOR = 'xor';
+
 const orderedNoise = new Float32Array([0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33]);
 
 const newspaperPatterns = [
@@ -45,8 +80,8 @@ const newspaperPatterns = [
     new Uint8Array([255,255,255,255])
 ];
 
-const LOW_ARRAY = new Uint8Array([0,255,0]);
-const HIGH_ARRAY = new Uint8Array([0,255,255]);
+const LOW_ARRAY = new Uint8Array([0,255,0]),
+    HIGH_ARRAY = new Uint8Array([0,255,255]);
 
 
 // The filter Color object - used by various filters

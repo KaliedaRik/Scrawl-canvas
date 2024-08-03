@@ -35,7 +35,12 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { ENTITY, LINE_SPIRAL, T_LINE_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
+// Shared constants
+import { ENTITY, ZERO_PATH } from '../helper/shared-vars.js';
+
+// Local constants
+const LINE_SPIRAL = 'linespiral',
+    T_LINE_SPIRAL = 'LineSpiral';
 
 
 // #### LineSpiral constructor

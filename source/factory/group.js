@@ -29,7 +29,16 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, IMG, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, _floor, _values, ENTITY, IMG, REVERSE_BY_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
+
+// Local constants
+const ACCEPTED_OWNERS = ['Cell', 'Stack'],
+    ADD_CLASSES = 'addClasses',
+    GROUP = 'group',
+    REMOVE_CLASSES = 'removeClasses',
+    SET = 'set',
+    SET_DELTA = 'setDelta';
 
 
 // #### Group constructor
