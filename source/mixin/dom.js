@@ -827,7 +827,6 @@ export default function (P = Ωempty) {
 
 // `stamp` - builds a set of Strings which can then be applied to the DOM wrapper's element's `style` attribute.
 // + The functionality for performing the update is defined in the [document](../core/document.html) module's `domShow` function, which will be called for each DOM-based artefact during the 'show' stage of the Display cycle
-// + Function returns a promise
 //
 // Only DOM elements whose attribute values have changed will be updated - as made clear by setting the appropriate dirty flags. Affected style attributes are:
 // + `perspectiveOrigin` and `perspective` - Stack wrappers only

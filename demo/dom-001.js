@@ -53,9 +53,7 @@ scrawl.makeAnimation({
     // Giving the animation object a name will make it easy to find in the Scrawl-canvas library object
     name: name('animation'),
 
-    // Every animation object must include a __fn__ function attribute which ___MUST___ return a Promise object - even if the functionality within the function is entirely synchronous.
-    //
-    // This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise
+    // Every animation object must include a __fn__ function attribute.
     fn: function () {
 
         scrawl.render()

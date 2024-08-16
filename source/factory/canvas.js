@@ -15,7 +15,7 @@
 //
 // By default, all Canvas wrappers will track mouse/touch movements across their &lt;canvas> elements, supplying this data to constituent Cell objects and artefacts as-and-when-required.
 //
-// Canvas wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle. These functions are asynchronous, returning Promises.
+// Canvas wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle.
 //
 // Canvas wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Canvas wrapper will remove its &lt;canvas> element from the DOM, alongside the additional elements added to the DOM during Canvas creation.
 

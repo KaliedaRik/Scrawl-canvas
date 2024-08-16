@@ -9,7 +9,7 @@ import { constructors } from '../core/library.js';
 import { _create, _setPrototypeOf } from './shared-vars.js';
 
 // Local constants
-export const T_GENERIC_ARRAY = 'GenericArray';
+const T_GENERIC_ARRAY = 'GenericArray';
 
 
 // #### GenericArray constructor

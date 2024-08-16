@@ -519,7 +519,7 @@ P.midInitActions = λnull;
 // #### Display cycle functionality
 
 // `prepareStamp` - function called as part of the Display cycle `compile` step.
-// + This function is called before we get into the entity stamp promise cascade (thus it's a synchronous function). This is where we need to check whether we need to recalculate the path data which we'll use later to build the Mesh entity's output image.
+// + This is where we need to check whether we need to recalculate the path data which we'll use later to build the Mesh entity's output image.
 // + We only need to recalculate the path data on the initial render, and afterwards when the __dirtyPathData__ flag has been set.
 // + If we perform the recalculation, then we need to make sure to set the __dirtyOutput__ flag, which will trigger the output image build.
 P.prepareStamp = function() {
@@ -735,7 +735,7 @@ P.simpleStamp = function (host, changes) {
     }
 };
 
-// `stamp` - All entity stamping, except for simple stamps, goes through this function, which needs to return a Promise which will resolve in due course.
+// `stamp` - All entity stamping, except for simple stamps, goes through this function.
 // + While other entitys have to worry about applying filters as part of the stamping process, this is not an issue for Mesh entitys because filters are defined on, and applied to, the source Picture entity, not the Mesh itself
 //
 // Here we check which dirty flags need actioning, and call a range of different functions to process the work. These flags are:
