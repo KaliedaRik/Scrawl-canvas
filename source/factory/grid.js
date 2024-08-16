@@ -25,7 +25,7 @@ import entityMix from '../mixin/entity.js';
 // Shared constants
 import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_IN, SOURCE_OVER, WHITE } from '../helper/shared-vars.js';
 
-// Local constants 
+// Local constants
 const _isInteger = Number.isSafeInteger || Number.isInteger,
     CELL_GRADIENT = 'cellGradient',
     GRAY = 'rgb(127 127 127 / 1)',
