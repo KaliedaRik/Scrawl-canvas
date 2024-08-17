@@ -12,6 +12,7 @@ import { _atan2, _cos, _isArray, _sin, _sqrt, T_VECTOR } from '../helper/shared-
 
 // Local constants (none defined)
 
+
 // #### Vector constructor
 const Vector = function (x, y, z) {
 

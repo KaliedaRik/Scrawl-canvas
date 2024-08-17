@@ -139,10 +139,10 @@ import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIME
 
 // Local constants
 const ALL = 'all',
-        HANDLE = 'handle',
-        LOCKTO = 'lockTo',
-        STARTX = 'startX',
-        STARTY = 'startY';
+    HANDLE = 'handle',
+    LOCKTO = 'lockTo',
+    STARTX = 'startX',
+    STARTY = 'startY';
 
 
 // #### Export function
