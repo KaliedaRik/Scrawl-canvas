@@ -24,7 +24,7 @@ import { makeColor } from '../factory/color.js';
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _entries, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MULTIPLY, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _entries, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -3698,7 +3698,64 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __newsprint__ - TODO documentation
+// __negative__ - For each pixel, inverts the the pixel channel values and converts the result to OKLAB, rotates the hue value by 180deg and converts back to RGB
+
+    [NEGATIVE]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const toOKLCH = (r, g, b) => colorEngine.convertOKLABtoOKLCH(...colorEngine.convertRGBtoOKLAB(r, g, b));
+
+        const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
+
+        const angle = 180;
+
+        let r, g, b, a, i, l, c, h, _r, _g, _b;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            if (iData[a]) {
+
+                [l, c, h] = toOKLCH(iData[r], iData[g], iData[b]);
+
+                h += angle;
+                l = 1 - l;
+
+                [_r, _g, _b] = toRGB(l, c, h);
+
+                oData[r] = _r;
+                oData[g] = _g;
+                oData[b] = _b;
+                oData[a] = iData[a];
+            }
+            else {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
+            }
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __newsprint__ - Attempts to simulate a black-white dither effect similar to newsprint
     [NEWSPRINT]: function (requirements) {
 
         const doCalculations = function (inChannel, outChannel, tile) {
@@ -4566,6 +4623,65 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// __rotate-hue__ - For each pixel, converts the pixel to OKLAB, rotates the hue value by the given amount and converts back to RGB
+
+    [ROTATE_HUE]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const toOKLCH = (r, g, b) => colorEngine.convertOKLABtoOKLCH(...colorEngine.convertRGBtoOKLAB(r, g, b));
+
+        const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            angle = 0,
+            lineOut,
+        } = requirements;
+
+        if (angle) {
+
+            let r, g, b, a, i, l, c, h, _r, _g, _b;
+
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                if (iData[a]) {
+
+                    [l, c, h] = toOKLCH(iData[r], iData[g], iData[b]);
+
+                    h += angle;
+
+                    [_r, _g, _b] = toRGB(l, c, h);
+
+                    oData[r] = _r;
+                    oData[g] = _g;
+                    oData[b] = _b;
+                    oData[a] = iData[a];
+                }
+                else {
+
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = iData[a];
+                }
+            }
+        }
+        else this.transferDataUnchanged(oData, iData, len);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
     [SET_CHANNEL_TO_LEVEL]: function (requirements) {
 
@@ -5086,14 +5202,18 @@ P.theBigActionsObject = {
 
     [USER_DEFINED_LEGACY]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputChannels(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        this.transferDataUnchanged(input, output);
+        this.transferDataUnchanged(oData, iData, len);
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);

@@ -1367,6 +1367,7 @@ P.convertRGBtoXYZ = function (r, g, b) {
     return res;
 };
 
+// The following calculations taken from [Björn Ottosson's](https://bottosson.github.io/) blogpost: [A perceptual color space for image processing](https://bottosson.github.io/posts/oklab/)
 P.convertRGBtoOKLAB = function (r, g, b) {
 
     const sRGB = requestArray();
@@ -1389,6 +1390,34 @@ P.convertRGBtoOKLAB = function (r, g, b) {
         1.9779984951 * _l - 2.4285922050 * _m + 0.4505937099 * _s,
         0.0259040371 * _l + 0.7827717662 * _m - 0.8086757660 * _s,
     ];
+};
+
+P.convertOKLABtoRGB = function (L, A, B) {
+
+    const l_ = L + 0.3963377774 * A + 0.2158037573 * B;
+    const m_ = L - 0.1055613458 * A - 0.0638541728 * B;
+    const s_ = L - 0.0894841775 * A - 1.2914855480 * B;
+
+    const l = l_ * l_ * l_;
+    const m = m_ * m_ * m_;
+    const s = s_ * s_ * s_;
+
+    const sRGB = requestArray();
+    sRGB.push(
+        +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+    );
+
+    const [r_, g_, b_] = this.gam_sRGB(sRGB);
+
+    const r = _round(r_ * 255);
+    const g = _round(g_ * 255);
+    const b = _round(b_ * 255);
+
+    releaseArray(sRGB);
+
+    return [r, g, b];
 };
 
 // `convertXYZtoRGB` - internal helper function

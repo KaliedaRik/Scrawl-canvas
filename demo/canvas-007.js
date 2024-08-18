@@ -308,6 +308,11 @@ scrawl.makeFilter({
 }).clone({
     name: name('sharpen'),
     method: 'sharpen',
+
+// __Negative__ filter
+}).clone({
+    name: name('negative'),
+    method: 'negative',
 });
 
 // __Emboss__ filter
@@ -394,6 +399,13 @@ scrawl.makeFilter({
     name: name('newsprint'),
     method: 'newsprint',
     width: 2,
+});
+
+// __Rotate Hue__ filter
+scrawl.makeFilter({
+    name: name('rotateHue'),
+    method: 'rotateHue',
+    angle: 180,
 });
 
 // __Tint__ filter
