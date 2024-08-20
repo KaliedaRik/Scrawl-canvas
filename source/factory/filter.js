@@ -50,7 +50,7 @@
 //
 // `modulate-channels` - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at the color range mid point. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha, saturation`; pseudo-argument: `level`
 //
-// `negative` - For each pixel, inverts the the pixel channel values and converts the result to OKLAB, rotates the hue value by 180deg and converts back to RGB. Object attributes: `action, lineIn, lineOut, opacity`.
+// `negative` - For each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB. Object attributes: `action, lineIn, lineOut, opacity`.
 //
 // `offset` - Offset the input image in the output image. Object attributes: `action, lineIn, lineOut, opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY; pseudo-argument: offsetX, offsetY`.
 //
@@ -60,7 +60,7 @@
 //
 // `reduce-palette` - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: 'black-white'. All internal color comparisons to match pixels to the closest palette color happen in the LAB color space. Dithering is applied to select the closest, or second closest, color when setting each pixel's final output color; dithering can be random (default), or blue-noise. When calculating commonest colors, a minimum color distance can be set to get a better representative spread for images which have a predominant color (eg: images containing sky, clouds, vegetation or a plain background); calculating the commonest colors can take place in either the RGB space, or the LAB space. The Object attributes: `action, lineIn, lineOut, lineMix, opacity, palette, useBluenoise, minimumColorDistance, useLabForPaletteDistance`.
 //
-// `rotate-hue` - For each pixel, converts the pixel to OKLAB, rotates the hue value by the given amount and converts back to RGB. Angles are measured in degrees. Object attributes: `action, lineIn, lineOut, angle, opacity`.
+// `rotate-hue` - For each pixel: convert to OKLCH; rotate hue value by supplied angle; convert back to RGB. Object attributes: `action, lineIn, lineOut, angle, opacity`.
 //
 // `set-channel-to-level` - Sets the value of each pixel's included channel to the value supplied in the "level" argument. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, level`.
 //
@@ -1088,7 +1088,7 @@ const setActionsArray = {
         }];
     },
 
-// __negative__ - For each pixel, inverts the the pixel channel values and converts the result to OKLAB, rotates the hue value by 180deg and converts back to RGB
+// __negative__ - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
     negative: function (f) {
         f.actions = [{
             action: NEGATIVE,
@@ -1269,7 +1269,7 @@ const setActionsArray = {
         });
     },
 
-// __rotateHue__ - For each pixel, converts the pixel to OKLAB, rotates the hue value by the given amount and converts back to RGB
+// __rotateHue__ - for each pixel: convert to OKLCH; rotate hue value by given angle; convert back to RGB
     rotateHue: function (f) {
         f.actions = [{
             action: ROTATE_HUE,

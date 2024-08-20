@@ -3731,8 +3731,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __negative__ - For each pixel, inverts the the pixel channel values and converts the result to OKLAB, rotates the hue value by 180deg and converts back to RGB
-
+// __negative__ - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
     [NEGATIVE]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
@@ -4652,7 +4651,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __rotate-hue__ - For each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB
+// __rotate-hue__ - for each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB
     [ROTATE_HUE]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
