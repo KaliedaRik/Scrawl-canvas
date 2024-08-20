@@ -168,6 +168,7 @@ P.colorSpaceIndices = function () {
     }
 };
 
+
 // `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
 P.unknit = function (image) {
 
@@ -1037,6 +1038,38 @@ P.getInputAndOutputLines = function (requirements) {
 P.getGrayscaleValue = function (r, g, b) {
 
     return _floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
+};
+
+// `getOkColorVals` - creates an array of OKLAB/OKLCH calculated values for a given RGB color point
+// + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
+P.getOkColorVals = function (r, g, b) {
+
+    if (!this.okColorLib) this.okColorLib = Array(256 * 256 * 256);
+
+    const index = this.getOkColorIndex(r, g, b);
+
+    if (this.okColorLib[index]) return this.okColorLib[index];
+
+    return this.setOkColorVals(r, g, b, index);
+};
+
+P.getOkColorIndex = function (r, g, b) {
+
+    return (r * 256 * 256) + (g * 256) + b;
+};
+
+P.setOkColorVals = function (r, g, b, index) {
+
+    const vals = [];
+
+    const lab = colorEngine.convertRGBtoOKLAB(r, g, b);
+    const lch = colorEngine.convertOKLABtoOKLCH(...lab);
+
+    vals.push(...lab, lch[1], lch[2]);
+
+    this.okColorLib[index] = vals;
+
+    return vals;
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
@@ -3704,10 +3737,6 @@ P.theBigActionsObject = {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        const toOKLCH = (r, g, b) => colorEngine.convertOKLABtoOKLCH(...colorEngine.convertRGBtoOKLAB(r, g, b));
-
-        const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
-
         const iData = input.data,
             oData = output.data,
             len = iData.length;
@@ -3717,9 +3746,9 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const angle = 180;
+        const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
 
-        let r, g, b, a, i, l, c, h, _r, _g, _b;
+        let r, g, b, a, i, L, A, B, C, H, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3730,12 +3759,12 @@ P.theBigActionsObject = {
 
             if (iData[a]) {
 
-                [l, c, h] = toOKLCH(iData[r], iData[g], iData[b]);
+                [L, A, B, C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
 
-                h += angle;
-                l = 1 - l;
+                L = 1 - L;
+                H += 180;
 
-                [_r, _g, _b] = toRGB(l, c, h);
+                [_r, _g, _b] = toRGB(L, C, H);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -4221,7 +4250,7 @@ P.theBigActionsObject = {
                 colorEngine.convert(color);
 
                 const [pr, pg, pb] = colorEngine.rgb;
-                const pix = (pr * tfx2) + (pg * tfx) + pb
+                const pix = (pr * tfx2) + (pg * tfx) + pb;
                 p.push(pix);
 
                 if (!memoRecord[pix]) {
@@ -4623,15 +4652,10 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __rotate-hue__ - For each pixel, converts the pixel to OKLAB, rotates the hue value by the given amount and converts back to RGB
-
+// __rotate-hue__ - For each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB
     [ROTATE_HUE]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
-
-        const toOKLCH = (r, g, b) => colorEngine.convertOKLABtoOKLCH(...colorEngine.convertRGBtoOKLAB(r, g, b));
-
-        const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
 
         const iData = input.data,
             oData = output.data,
@@ -4645,7 +4669,9 @@ P.theBigActionsObject = {
 
         if (angle) {
 
-            let r, g, b, a, i, l, c, h, _r, _g, _b;
+            const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
+
+            let r, g, b, a, i, L, A, B, C, H, _r, _g, _b;
 
             for (i = 0; i < len; i += 4) {
 
@@ -4656,11 +4682,11 @@ P.theBigActionsObject = {
 
                 if (iData[a]) {
 
-                    [l, c, h] = toOKLCH(iData[r], iData[g], iData[b]);
+                    [L, A, B, C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
 
-                    h += angle;
+                    H += angle;
 
-                    [_r, _g, _b] = toRGB(l, c, h);
+                    [_r, _g, _b] = toRGB(L, C, H);
 
                     oData[r] = _r;
                     oData[g] = _g;
@@ -5287,7 +5313,6 @@ P.theBigActionsObject = {
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
-
 };
 
 // We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their `dirtyFilterIdentifier` flag to false.
@@ -5319,3 +5344,5 @@ constructors.FilterEngine = FilterEngine;
 
 // Create a singleton filter engine, for export and use within this code base
 export const filterEngine = new FilterEngine();
+
+
