@@ -1044,21 +1044,25 @@ P.getGrayscaleValue = function (r, g, b) {
 // + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
 P.getOkColorVals = function (r, g, b) {
 
-    if (!this.okColorLib) this.okColorLib = Array(256 * 256 * 256);
+    const lib = this.okColorLib;
 
-    const index = this.getOkColorIndex(r, g, b);
+    // if (lib != null && lib[r] != null && lib[r][g] != null && lib[r][g][b] != null) return lib[r][g][b];
 
-    if (this.okColorLib[index]) return this.okColorLib[index];
+    // return this.setOkColorVals(r, g, b);
 
-    return this.setOkColorVals(r, g, b, index);
-};
+    if (!lib || !lib[r] || !lib[r][g] || !lib[r][g][b]) return this.setOkColorVals(r, g, b);
 
-P.getOkColorIndex = function (r, g, b) {
-
-    return (r * 256 * 256) + (g * 256) + b;
+    return lib[r][g][b];
 };
 
 P.setOkColorVals = function (r, g, b, index) {
+
+    if (!this.okColorLib) this.okColorLib = Array(256);
+
+    const lib = this.okColorLib;
+
+    if (!lib[r]) lib[r] = Array(256);
+    if (!lib[r][g]) lib[r][g] = Array(256);
 
     const vals = [];
 
@@ -1067,7 +1071,7 @@ P.setOkColorVals = function (r, g, b, index) {
 
     vals.push(...lab, lch[1], lch[2]);
 
-    this.okColorLib[index] = vals;
+    lib[r][g][b] = vals;
 
     return vals;
 };
