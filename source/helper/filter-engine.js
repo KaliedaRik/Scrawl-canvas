@@ -1046,10 +1046,6 @@ P.getOkColorVals = function (r, g, b) {
 
     const lib = this.okColorLib;
 
-    // if (lib != null && lib[r] != null && lib[r][g] != null && lib[r][g][b] != null) return lib[r][g][b];
-
-    // return this.setOkColorVals(r, g, b);
-
     if (!lib || !lib[r] || !lib[r][g] || !lib[r][g][b]) return this.setOkColorVals(r, g, b);
 
     return lib[r][g][b];
