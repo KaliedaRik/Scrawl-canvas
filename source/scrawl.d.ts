@@ -1455,6 +1455,9 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     blend?: string;
     blue?: number | number[];
     blueColor?: string;
+    channelA?: number;
+    channelB?: number;
+    channelL?: number;
     channelX?: string;
     channelY?: string;
     clamp?: string | number;

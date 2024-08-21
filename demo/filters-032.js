@@ -1,7 +1,7 @@
-// # Demo Filters 030
-// Parameters for: negative filter
+// # Demo Filters 032
+// Parameters for: modulateOk filter
 
-// [Run code](../../demo/filters-030.html)
+// [Run code](../../demo/filters-032.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
@@ -24,8 +24,11 @@ scrawl.importDomImage('.flowers');
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: name('negative'),
-    method: 'negative',
+    name: name('modulateOk'),
+    method: 'modulateOk',
+    channelA: 0,
+    channelB: 1,
+    channelL: 1,
 });
 
 
@@ -37,7 +40,7 @@ const piccy = scrawl.makePicture({
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
 
-    filters: [name('negative')],
+    filters: [name('modulateOk')],
 });
 
 
@@ -46,6 +49,9 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
+    Channel A (green-red): ${dom.channelA.value}
+    Channel B (blue-yellow): ${dom.channelB.value}
+    Channel L (luminance): ${dom.channelL.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -62,6 +68,9 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = initializeDomInputs([
+    ['input', 'channelA', '0'],
+    ['input', 'channelB', '1'],
+    ['input', 'channelL', '1'],
     ['input', 'opacity', '1'],
     ['select', 'memoizeFilterOutput', 0],
 ]);
@@ -80,6 +89,9 @@ scrawl.makeUpdater({
 
     updates: {
 
+        channelA: ['channelA', 'float'],
+        channelB: ['channelB', 'float'],
+        channelL: ['channelL', 'float'],
         opacity: ['opacity', 'float'],
     },
 });

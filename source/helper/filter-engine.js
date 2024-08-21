@@ -24,7 +24,7 @@ import { makeColor } from '../factory/color.js';
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _entries, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _entries, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -3667,6 +3667,70 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// modify-ok-channels__ - Adds a value to each of the OKLAB channels. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
+    [MODIFY_OK_CHANNELS]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            channelA = 0,
+            channelB = 0,
+            channelL = 0,
+            lineOut,
+        } = requirements;
+
+        const toRGB = (l, a, b) => colorEngine.convertOKLABtoRGB(l, a, b);
+
+        let r, g, b, a, i, L, A, B, _r, _g, _b;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            if (iData[a]) {
+
+                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+
+                L += channelL;
+                if (L > 1) L = 1;
+                else if (L < 0) L = 0;
+
+                A += channelA;
+                if (A > 0.4) A = 0.4;
+                else if (A < -0.4) A = -0.4;
+
+                B += channelB;
+                if (B > 0.4) B = 0.4;
+                else if (B < -0.4) B = -0.4;
+
+                [_r, _g, _b] = toRGB(L, A, B);
+
+                oData[r] = _r;
+                oData[g] = _g;
+                oData[b] = _b;
+                oData[a] = iData[a];
+            }
+            else {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
+            }
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
     [MODULATE_CHANNELS]: function (requirements) {
 
@@ -3724,6 +3788,70 @@ P.theBigActionsObject = {
                 oData[g] = iData[g] * green;
                 oData[b] = iData[b] * blue;
                 oData[a] = iData[a] * alpha;
+            }
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __modulate-ok-channels__ - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
+    [MODULATE_OK_CHANNELS]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            channelA = 1,
+            channelB = 1,
+            channelL = 1,
+            lineOut,
+        } = requirements;
+
+        const toRGB = (l, a, b) => colorEngine.convertOKLABtoRGB(l, a, b);
+
+        let r, g, b, a, i, L, A, B, _r, _g, _b;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            if (iData[a]) {
+
+                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+
+                L *= channelL;
+                if (L > 1) L = 1;
+                else if (L < 0) L = 0;
+
+                A *= channelA;
+                if (A > 0.4) A = 0.4;
+                else if (A < -0.4) A = -0.4;
+
+                B *= channelB;
+                if (B > 0.4) B = 0.4;
+                else if (B < -0.4) B = -0.4;
+
+                [_r, _g, _b] = toRGB(L, A, B);
+
+                oData[r] = _r;
+                oData[g] = _g;
+                oData[b] = _b;
+                oData[a] = iData[a];
+            }
+            else {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
             }
         }
 
