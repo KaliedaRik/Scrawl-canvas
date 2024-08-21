@@ -1051,14 +1051,19 @@ P.getOkColorVals = function (r, g, b) {
     return lib[r][g][b];
 };
 
-P.setOkColorVals = function (r, g, b, index) {
+P.setOkColorVals = function (r, g, b) {
 
-    if (!this.okColorLib) this.okColorLib = Array(256);
+    if (!this.okColorLib) {
 
-    const lib = this.okColorLib;
+        this.okColorLib = [];
+        this.regularColorLib = {};
+    }
 
-    if (!lib[r]) lib[r] = Array(256);
-    if (!lib[r][g]) lib[r][g] = Array(256);
+    const lib = this.okColorLib,
+        reg = this.regularColorLib;
+
+    if (!lib[r]) lib[r] = [];
+    if (!lib[r][g]) lib[r][g] = [];
 
     const vals = [];
 
@@ -1069,8 +1074,63 @@ P.setOkColorVals = function (r, g, b, index) {
 
     lib[r][g][b] = vals;
 
+    reg[this.calculateLabLabel(...lab)] = [r, g, b];
+    reg[this.calculateLchLabel(...lch)] = [r, g, b];
+
     return vals;
 };
+
+P.calculateLabLabel = function (l, a, b) {
+
+    const L = _floor((l * 1000) / 3.2),
+        A = _floor(((a + 4) * 100) / 2.5),
+        B = _floor(((b + 4) * 100) / 2.5);
+
+    return `b${L}-${A}-${B}`;
+};
+
+P.calculateLchLabel = function (l, c, h) {
+
+    const L = _floor((l * 1000) / 3.2),
+        C = _floor((c * 1000) / 1.25),
+        H = _floor(h / 1.2);
+
+    return `h${L}-${C}-${H}`;
+};
+
+P.getRegularColorVals = function (l, ac, bh, isLch = false) {
+
+    const reg = this.regularColorLib;
+
+    let label, rgb;
+
+    if (isLch) {
+
+        label = this.calculateLchLabel(l, ac, bh);
+
+        if (reg[label]) return reg[label];
+        else {
+
+            rgb = colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, ac, bh));
+            reg[label] = rgb;
+            return rgb;
+        }
+    }
+    else {
+
+        label = this.calculateLabLabel(l, ac, bh);
+
+        if (reg[label]) return reg[label];
+        else {
+
+            rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
+            reg[label] = rgb;
+            return rgb;
+        }
+    }
+};
+
+
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
 P.processResults = function (store, incoming, ratio) {
@@ -3684,8 +3744,6 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const toRGB = (l, a, b) => colorEngine.convertOKLABtoRGB(l, a, b);
-
         let r, g, b, a, i, L, A, B, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
@@ -3711,7 +3769,7 @@ P.theBigActionsObject = {
                 if (B > 0.4) B = 0.4;
                 else if (B < -0.4) B = -0.4;
 
-                [_r, _g, _b] = toRGB(L, A, B);
+                [_r, _g, _b] = this.getRegularColorVals(L, A, B);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -3812,8 +3870,6 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const toRGB = (l, a, b) => colorEngine.convertOKLABtoRGB(l, a, b);
-
         let r, g, b, a, i, L, A, B, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
@@ -3839,7 +3895,7 @@ P.theBigActionsObject = {
                 if (B > 0.4) B = 0.4;
                 else if (B < -0.4) B = -0.4;
 
-                [_r, _g, _b] = toRGB(L, A, B);
+                [_r, _g, _b] = this.getRegularColorVals(L, A, B);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -3873,8 +3929,6 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
-
         let r, g, b, a, i, L, A, B, C, H, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
@@ -3891,7 +3945,7 @@ P.theBigActionsObject = {
                 L = 1 - L;
                 H += 180;
 
-                [_r, _g, _b] = toRGB(L, C, H);
+                [_r, _g, _b] = this.getRegularColorVals(L, C, H, true);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -4796,8 +4850,6 @@ P.theBigActionsObject = {
 
         if (angle) {
 
-            const toRGB = (l, c, h) => colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, c, h));
-
             let r, g, b, a, i, L, A, B, C, H, _r, _g, _b;
 
             for (i = 0; i < len; i += 4) {
@@ -4813,7 +4865,7 @@ P.theBigActionsObject = {
 
                     H += angle;
 
-                    [_r, _g, _b] = toRGB(L, C, H);
+                    [_r, _g, _b] = this.getRegularColorVals(L, C, H, true);
 
                     oData[r] = _r;
                     oData[g] = _g;
