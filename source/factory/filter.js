@@ -1097,7 +1097,7 @@ const setActionsArray = {
         }];
     },
 
-// __modifyOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB 
+// __modifyOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB
     modifyOk: function (f) {
         f.actions = [{
             action: MODIFY_OK_CHANNELS,
@@ -1110,7 +1110,7 @@ const setActionsArray = {
         }];
     },
 
-// __modulateOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB 
+// __modulateOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB
     modulateOk: function (f) {
         f.actions = [{
             action: MODULATE_OK_CHANNELS,

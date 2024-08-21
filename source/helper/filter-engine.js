@@ -3930,7 +3930,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i, L, A, B, C, H, _r, _g, _b;
+        let r, g, b, a, i, L, C, H, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3941,7 +3941,7 @@ P.theBigActionsObject = {
 
             if (iData[a]) {
 
-                [L, A, B, C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+                [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
 
                 L = 1 - L;
                 H += 180;
@@ -4851,7 +4851,7 @@ P.theBigActionsObject = {
 
         if (angle) {
 
-            let r, g, b, a, i, L, A, B, C, H, _r, _g, _b;
+            let r, g, b, a, i, L, C, H, _r, _g, _b;
 
             for (i = 0; i < len; i += 4) {
 
@@ -4862,7 +4862,7 @@ P.theBigActionsObject = {
 
                 if (iData[a]) {
 
-                    [L, A, B, C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+                    [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
 
                     H += angle;
 
