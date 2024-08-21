@@ -1082,18 +1082,18 @@ P.setOkColorVals = function (r, g, b) {
 
 P.calculateLabLabel = function (l, a, b) {
 
-    const L = _floor((l * 1000) / 3.2),
-        A = _floor(((a + 4) * 100) / 2.5),
-        B = _floor(((b + 4) * 100) / 2.5);
+    const L = _floor(l * 1000),
+        A = _floor((a + 4) * 120),
+        B = _floor((b + 4) * 120);
 
     return `b${L}-${A}-${B}`;
 };
 
 P.calculateLchLabel = function (l, c, h) {
 
-    const L = _floor((l * 1000) / 3.2),
-        C = _floor((c * 1000) / 1.25),
-        H = _floor(h / 1.2);
+    const L = _floor(l * 1000),
+        C = _floor(c * 2500),
+        H = _floor(h * 3);
 
     return `h${L}-${C}-${H}`;
 };

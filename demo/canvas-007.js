@@ -394,6 +394,20 @@ scrawl.makeFilter({
     tileRadius: 24,
 });
 
+// __Modulate Ok__ filter
+scrawl.makeFilter({
+    name: name('modulateOk'),
+    method: 'modulateOk',
+    channelA: 0,
+});
+
+// __Modify Ok__ filter
+scrawl.makeFilter({
+    name: name('modifyOk'),
+    method: 'modifyOk',
+    channelA: -0.5,
+});
+
 // __Newsprint__ filter
 scrawl.makeFilter({
     name: name('newsprint'),
