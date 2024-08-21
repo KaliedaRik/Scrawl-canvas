@@ -1065,17 +1065,18 @@ P.setOkColorVals = function (r, g, b) {
     if (!lib[r]) lib[r] = [];
     if (!lib[r][g]) lib[r][g] = [];
 
-    const vals = [];
+    const vals = [],
+        rgb = [r, g, b];
 
-    const lab = colorEngine.convertRGBtoOKLAB(r, g, b);
+    const lab = colorEngine.convertRGBtoOKLAB(...rgb);
     const lch = colorEngine.convertOKLABtoOKLCH(...lab);
 
     vals.push(...lab, lch[1], lch[2]);
 
     lib[r][g][b] = vals;
 
-    reg[this.calculateLabLabel(...lab)] = [r, g, b];
-    reg[this.calculateLchLabel(...lch)] = [r, g, b];
+    reg[this.calculateLabLabel(...lab)] = rgb;
+    reg[this.calculateLchLabel(...lch)] = rgb;
 
     return vals;
 };
