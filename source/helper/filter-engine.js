@@ -9,7 +9,7 @@ import { seededRandomNumberGenerator } from './random-seed.js';
 
 import { correctAngle, doCreate, easeEngines, isa_fn } from './utilities.js';
 
-import { getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from './workstore.js';
+import { checkForWorkstoreItem, getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from './workstore.js';
 
 import { makeAnimation } from '../factory/animation.js';
 
@@ -31,6 +31,7 @@ const _exp = Math.exp,
     BLUE = 'blue',
     COLOR_BURN = 'color-burn',
     COLOR_DODGE = 'color-dodge',
+    COLOR_POINT_ARRAYS = 'color-point-arrays',
     CURRENT = 'current',
     DARKEN = 'darken',
     DESTINATION_ATOP = 'destination-atop',
@@ -1042,19 +1043,32 @@ P.getGrayscaleValue = function (r, g, b) {
 
 // `getOkColorVals` - creates an array of OKLAB/OKLCH calculated values for a given RGB color point
 // + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
-P.getOkColorVals = function (r, g, b) {
+P.retrieveColorPointLibraries = function () {
 
-    const lib = this.rgbColorLib;
+    if (!checkForWorkstoreItem(COLOR_POINT_ARRAYS)) {
 
-    if (!lib || !lib[r] || !lib[r][g] || lib[r][g][b] == null) return this.setOkColorVals(r, g, b);
+        setWorkstoreItem(COLOR_POINT_ARRAYS, {
+
+            labColorLib: [],
+            lchColorLib: [],
+            rgbColorLib: [],
+        });
+    }
+    return getWorkstoreItem(COLOR_POINT_ARRAYS);
+};
+
+P.getOkColorVals = function (r, g, b, libs) {
+
+    const lib = libs.rgbColorLib;
+
+    if (!lib[r] || !lib[r][g] || lib[r][g][b] == null) return this.setOkColorVals(r, g, b, libs);
+
     return lib[r][g][b];
 };
 
-P.setOkColorVals = function (r, g, b) {
+P.setOkColorVals = function (r, g, b, libs) {
 
-    if (!this.rgbColorLib) this.initializeColorLibs();
-
-    const lib = this.rgbColorLib;
+    const { rgbColorLib: lib, labColorLib, lchColorLib } = libs;
 
     if (!lib[r]) lib[r] = [];
     if (!lib[r][g]) lib[r][g] = [];
@@ -1069,15 +1083,13 @@ P.setOkColorVals = function (r, g, b) {
 
     lib[r][g][b] = vals;
 
-    this.memoizeLab(...lab, rgb);
-    this.memoizeLch(...lch, rgb);
+    this.memoizeLab(...lab, rgb, labColorLib);
+    this.memoizeLch(...lch, rgb, lchColorLib);
 
     return vals;
 };
 
-P.memoizeLab = function (l, a, b, rgb) {
-
-    const lib = this.labColorLib;
+P.memoizeLab = function (l, a, b, rgb, lib) {
 
     const [L, A, B] = this.getColorLabIndices(l, a, b);
 
@@ -1087,9 +1099,7 @@ P.memoizeLab = function (l, a, b, rgb) {
     lib[L][A][B] = rgb;
 };
 
-P.memoizeLch = function (l, c, h, rgb) {
-    
-    const lib = this.lchColorLib;
+P.memoizeLch = function (l, c, h, rgb, lib) {
 
     const [L, C, H] = this.getColorLchIndices(l, c, h);
 
@@ -1097,13 +1107,6 @@ P.memoizeLch = function (l, c, h, rgb) {
     if (!lib[L][C]) lib[L][C] = [];
 
     lib[L][C][H] = rgb;
-};
-
-P.initializeColorLibs = function () {
-
-    this.labColorLib = [];
-    this.lchColorLib = [];
-    this.rgbColorLib = [];
 };
 
 P.getColorLabIndices = function (l, a, b) {
@@ -1116,39 +1119,35 @@ P.getColorLchIndices = function (l, c, h) {
     return [_floor(l * 1000), _floor(c * 2500), _floor(h * 3)];
 };
 
-P.getRegularColorVals = function (l, ac, bh, isLch = false) {
+P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
 
-    if (!this.rgbColorLib) this.initializeColorLibs();
+    const { labColorLib, lchColorLib } = libs;
 
-    let lib, L, AC, BH, rgb;
+    let L, AC, BH, rgb;
 
     if (isLch) {
 
-        lib = this.lchColorLib;
         [L, AC, BH] = this.getColorLchIndices(l, ac, bh);
 
-        if (!lib[L] || !lib[L][AC] || lib[L][AC][BH] == null) {
+        if (!lchColorLib[L] || !lchColorLib[L][AC] || lchColorLib[L][AC][BH] == null) {
 
             rgb = colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, ac, bh));
-            this.memoizeLch(l, ac, bh, rgb);
+            this.memoizeLch(l, ac, bh, rgb, lchColorLib);
             return rgb;
         }
-
-        return lib[L][AC][BH];
+        return lchColorLib[L][AC][BH];
     }
     else {
 
-        lib = this.labColorLib;
         [L, AC, BH] = this.getColorLabIndices(l, ac, bh);
 
-        if (!lib[L] || !lib[L][AC] || lib[L][AC][BH] == null) {
+        if (!labColorLib[L] || !labColorLib[L][AC] || labColorLib[L][AC][BH] == null) {
 
             rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
-            this.memoizeLab(l, ac, bh, rgb);
+            this.memoizeLab(l, ac, bh, rgb, labColorLib);
             return rgb;
         }
-
-        return lib[L][AC][BH];
+        return labColorLib[L][AC][BH];
     }
 };
 
@@ -3764,6 +3763,8 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
+        const libs = this.retrieveColorPointLibraries();
+
         let r, g, b, a, i, L, A, B, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
@@ -3775,7 +3776,7 @@ P.theBigActionsObject = {
 
             if (iData[a]) {
 
-                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
 
                 L += channelL;
                 if (L > 1) L = 1;
@@ -3789,7 +3790,7 @@ P.theBigActionsObject = {
                 if (B > 0.4) B = 0.4;
                 else if (B < -0.4) B = -0.4;
 
-                [_r, _g, _b] = this.getRegularColorVals(L, A, B);
+                [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -3890,6 +3891,8 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
+        const libs = this.retrieveColorPointLibraries();
+
         let r, g, b, a, i, L, A, B, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
@@ -3901,7 +3904,7 @@ P.theBigActionsObject = {
 
             if (iData[a]) {
 
-                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
 
                 L *= channelL;
                 if (L > 1) L = 1;
@@ -3915,7 +3918,7 @@ P.theBigActionsObject = {
                 if (B > 0.4) B = 0.4;
                 else if (B < -0.4) B = -0.4;
 
-                [_r, _g, _b] = this.getRegularColorVals(L, A, B);
+                [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -3949,6 +3952,8 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
+        const libs = this.retrieveColorPointLibraries();
+
         let r, g, b, a, i, L, C, H, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
@@ -3960,12 +3965,12 @@ P.theBigActionsObject = {
 
             if (iData[a]) {
 
-                [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+                [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
 
                 L = 1 - L;
                 H += 180;
 
-                [_r, _g, _b] = this.getRegularColorVals(L, C, H, true);
+                [_r, _g, _b] = this.getRegularColorVals(L, C, H, libs, true);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -4870,6 +4875,8 @@ P.theBigActionsObject = {
 
         if (angle) {
 
+            const libs = this.retrieveColorPointLibraries();
+
             let r, g, b, a, i, L, C, H, _r, _g, _b;
 
             for (i = 0; i < len; i += 4) {
@@ -4881,11 +4888,11 @@ P.theBigActionsObject = {
 
                 if (iData[a]) {
 
-                    [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b]);
+                    [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
 
                     H += angle;
 
-                    [_r, _g, _b] = this.getRegularColorVals(L, C, H, true);
+                    [_r, _g, _b] = this.getRegularColorVals(L, C, H, libs, true);
 
                     oData[r] = _r;
                     oData[g] = _g;
