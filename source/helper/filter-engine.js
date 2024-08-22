@@ -1044,23 +1044,17 @@ P.getGrayscaleValue = function (r, g, b) {
 // + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
 P.getOkColorVals = function (r, g, b) {
 
-    const lib = this.okColorLib;
+    const lib = this.rgbColorLib;
 
-    if (!lib || !lib[r] || !lib[r][g] || !lib[r][g][b]) return this.setOkColorVals(r, g, b);
-
+    if (!lib || !lib[r] || !lib[r][g] || lib[r][g][b] == null) return this.setOkColorVals(r, g, b);
     return lib[r][g][b];
 };
 
 P.setOkColorVals = function (r, g, b) {
 
-    if (!this.okColorLib) {
+    if (!this.rgbColorLib) this.initializeColorLibs();
 
-        this.okColorLib = [];
-        this.regularColorLib = {};
-    }
-
-    const lib = this.okColorLib,
-        reg = this.regularColorLib;
+    const lib = this.rgbColorLib;
 
     if (!lib[r]) lib[r] = [];
     if (!lib[r][g]) lib[r][g] = [];
@@ -1075,63 +1069,88 @@ P.setOkColorVals = function (r, g, b) {
 
     lib[r][g][b] = vals;
 
-    reg[this.calculateLabLabel(...lab)] = rgb;
-    reg[this.calculateLchLabel(...lch)] = rgb;
+    this.memoizeLab(...lab, rgb);
+    this.memoizeLch(...lch, rgb);
 
     return vals;
 };
 
-P.calculateLabLabel = function (l, a, b) {
+P.memoizeLab = function (l, a, b, rgb) {
 
-    const L = _floor(l * 1000),
-        A = _floor((a + 4) * 120),
-        B = _floor((b + 4) * 120);
+    const lib = this.labColorLib;
 
-    return `b${L}-${A}-${B}`;
+    const [L, A, B] = this.getColorLabIndices(l, a, b);
+
+    if (!lib[L]) lib[L] = [];
+    if (!lib[L][A]) lib[L][A] = [];
+
+    lib[L][A][B] = rgb;
 };
 
-P.calculateLchLabel = function (l, c, h) {
+P.memoizeLch = function (l, c, h, rgb) {
+    
+    const lib = this.lchColorLib;
 
-    const L = _floor(l * 1000),
-        C = _floor(c * 2500),
-        H = _floor(h * 3);
+    const [L, C, H] = this.getColorLchIndices(l, c, h);
 
-    return `h${L}-${C}-${H}`;
+    if (!lib[L]) lib[L] = [];
+    if (!lib[L][C]) lib[L][C] = [];
+
+    lib[L][C][H] = rgb;
+};
+
+P.initializeColorLibs = function () {
+
+    this.labColorLib = [];
+    this.lchColorLib = [];
+    this.rgbColorLib = [];
+};
+
+P.getColorLabIndices = function (l, a, b) {
+
+    return [_floor(l * 1000), _floor((a + 4) * 120), _floor((b + 4) * 120)];
+};
+
+P.getColorLchIndices = function (l, c, h) {
+
+    return [_floor(l * 1000), _floor(c * 2500), _floor(h * 3)];
 };
 
 P.getRegularColorVals = function (l, ac, bh, isLch = false) {
 
-    const reg = this.regularColorLib;
+    if (!this.rgbColorLib) this.initializeColorLibs();
 
-    let label, rgb;
+    let lib, L, AC, BH, rgb;
 
     if (isLch) {
 
-        label = this.calculateLchLabel(l, ac, bh);
+        lib = this.lchColorLib;
+        [L, AC, BH] = this.getColorLchIndices(l, ac, bh);
 
-        if (reg[label]) return reg[label];
-        else {
+        if (!lib[L] || !lib[L][AC] || lib[L][AC][BH] == null) {
 
             rgb = colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, ac, bh));
-            reg[label] = rgb;
+            this.memoizeLch(l, ac, bh, rgb);
             return rgb;
         }
+
+        return lib[L][AC][BH];
     }
     else {
 
-        label = this.calculateLabLabel(l, ac, bh);
+        lib = this.labColorLib;
+        [L, AC, BH] = this.getColorLabIndices(l, ac, bh);
 
-        if (reg[label]) return reg[label];
-        else {
+        if (!lib[L] || !lib[L][AC] || lib[L][AC][BH] == null) {
 
             rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
-            reg[label] = rgb;
+            this.memoizeLab(l, ac, bh, rgb);
             return rgb;
         }
+
+        return lib[L][AC][BH];
     }
 };
-
-
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
 P.processResults = function (store, incoming, ratio) {
