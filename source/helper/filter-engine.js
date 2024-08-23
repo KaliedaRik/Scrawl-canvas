@@ -1391,7 +1391,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations.
+// __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations).
 // + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'.
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [BLEND]: function (requirements) {
@@ -1507,7 +1507,10 @@ P.theBigActionsObject = {
 
         const normalCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
 
-        let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb;
+        const libs = this.retrieveColorPointLibraries();
+
+        // let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb;
+        let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb, IL, IC, IH, ML, MC, MH;
 
         switch (blend) {
 
@@ -1903,7 +1906,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [cr, cg, cb] = colorEngine.calculateColorBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
+                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+
+                                // Creates a color with the hue and saturation of the source color and the luminosity of the backdrop color. 
+                                [cr, cg, cb] = this.getRegularColorVals(ML, IC, IH, libs, true);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
@@ -1936,7 +1943,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [cr, cg, cb] = colorEngine.calculateHueBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
+                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+
+                                // Creates a color with the hue of the source color and the saturation and luminosity of the backdrop color.
+                                [cr, cg, cb] = this.getRegularColorVals(ML, MC, IH, libs, true);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
@@ -1969,7 +1980,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [cr, cg, cb] = colorEngine.calculateLuminosityBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
+                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+
+                                // Creates a color with the luminosity of the source color and the hue and saturation of the backdrop color.
+                                [cr, cg, cb] = this.getRegularColorVals(IL, MC, MH, libs, true);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
@@ -2002,7 +2017,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [cr, cg, cb] = colorEngine.calculateSaturationBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
+                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+
+                                // Creates a color with the saturation of the source color and the hue and luminosity of the backdrop color.
+                                [cr, cg, cb] = this.getRegularColorVals(ML, IC, MH, libs, true);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;

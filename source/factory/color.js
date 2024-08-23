@@ -1588,48 +1588,6 @@ P.convertOKLCHtoOKLAB = function (l, c, h) {
 };
 
 
-// #### Color blending
-// The following functions are used by the Blend filter
-// + Input is the six RGB parts (Integers clamped to the 0-255 range) of the input and mix channels
-// + Output is the RGB version of the mixed HSL colors generated from the RGB inputs
-
-// `calculateColorBlend` - internal helper function
-P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(i[0], i[1], m[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-// `calculateHueBlend` - internal helper function
-P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(i[0], m[1], m[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-// `calculateSaturationBlend` - internal helper function
-P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(m[0], i[1], m[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-// `calculateLuminosityBlend` - internal helper function
-P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(m[0], m[1], i[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-
 // #### Browser color space support
 // We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element's engine, stamp a pixel, then check to see if the pixel is black (space not supported)
 // + We check for HWB, LAB, LCH, OKLAB, OKLCH, P3 color space support
