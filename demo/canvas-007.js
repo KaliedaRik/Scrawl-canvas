@@ -207,7 +207,7 @@ scrawl.makeFilter({
         {
             action: 'blend',
             lineMix: 'flower',
-            blend: 'color-burn',
+            blend: 'color',
         }
     ],
 });
@@ -609,6 +609,7 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: name('reducePalette'),
     method: 'reducePalette',
+    noiseType: 'ordered',
 });
 
 scrawl.makeGradient({
