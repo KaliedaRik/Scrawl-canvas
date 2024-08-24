@@ -1041,8 +1041,10 @@ P.getGrayscaleValue = function (r, g, b) {
     return _floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
 };
 
-// `getOkColorVals` - creates an array of OKLAB/OKLCH calculated values for a given RGB color point
-// + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
+// `retrieveColorPointLibraries` - manages the three color point libraries. The function retrieves them from the workstore or - if they have not yet been created or have been deleted - creates, stores and returns them to the calling function. Returns an object with the following attributes:
+// + __labColorLib__ maps quantized OKLAB color values to their RGB equivalent values, stored as an `[r, g, b]` array
+// + __lchColorLib__ maps quantized OKLCH color values to their RGB equivalent values, stored as an `[r, g, b]` array
+// + __rgbColorLib__ maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
 P.retrieveColorPointLibraries = function () {
 
     if (!checkForWorkstoreItem(COLOR_POINT_ARRAYS)) {
@@ -1051,12 +1053,16 @@ P.retrieveColorPointLibraries = function () {
 
             labColorLib: [],
             lchColorLib: [],
-            rgbColorLib: [],
+            rgbColorLib: new Map(),
         });
     }
     return getWorkstoreItem(COLOR_POINT_ARRAYS);
 };
 
+// `getOkColorVals` - returns an array of OKLAB/OKLCH calculated values for a given RGB color point
+// + Arguments __r, g, b__ - positive integer clamped between 0-255 - RGB red, green and blue channel values
+// + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
+// + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
 P.getOkColorVals = function (r, g, b, libs) {
 
     const lib = libs.rgbColorLib;
@@ -1066,6 +1072,46 @@ P.getOkColorVals = function (r, g, b, libs) {
     return lib[r][g][b];
 };
 
+// `getRegularColorVals` - returns an array of RGB channel values for a given OKLAB or OKLCH color point. Note that arguments must represent an OKLAB color point only, or an OKLCH color point only 
+// + Argument __l__ - float number between 0 and 1 - OKLAB/OKLCH luminance value
+// + Argument __ac__ - either the OKLAB __a__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __c__ channel value (positive float Number between `0`-`4.0`)
+// + Argument __bh__ - either the OKLAB __b__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __h__ channel value (signed float Number generally between `0`-`360`)
+// + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
+// + Argument __isLch__ - boolean - true if arguments represent an OKLCH color point; false otherwise (default)
+// + Return an array of RGB color values: `[r, g, b]`
+P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
+
+    const { labColorLib, lchColorLib } = libs;
+
+    let L, AC, BH, rgb;
+
+    if (isLch) {
+
+        [L, AC, BH] = this.getColorLchIndices(l, ac, bh);
+
+        if (!lchColorLib[L] || !lchColorLib[L][AC] || lchColorLib[L][AC][BH] == null) {
+
+            rgb = colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, ac, bh));
+            this.memoizeLch(l, ac, bh, rgb, lchColorLib);
+            return rgb;
+        }
+        return lchColorLib[L][AC][BH];
+    }
+    else {
+
+        [L, AC, BH] = this.getColorLabIndices(l, ac, bh);
+
+        if (!labColorLib[L] || !labColorLib[L][AC] || labColorLib[L][AC][BH] == null) {
+
+            rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
+            this.memoizeLab(l, ac, bh, rgb, labColorLib);
+            return rgb;
+        }
+        return labColorLib[L][AC][BH];
+    }
+};
+
+// Color point library helper functions
 P.setOkColorVals = function (r, g, b, libs) {
 
     const { rgbColorLib: lib, labColorLib, lchColorLib } = libs;
@@ -1117,38 +1163,6 @@ P.getColorLabIndices = function (l, a, b) {
 P.getColorLchIndices = function (l, c, h) {
 
     return [_floor(l * 1000), _floor(c * 2500), _floor(h * 3)];
-};
-
-P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
-
-    const { labColorLib, lchColorLib } = libs;
-
-    let L, AC, BH, rgb;
-
-    if (isLch) {
-
-        [L, AC, BH] = this.getColorLchIndices(l, ac, bh);
-
-        if (!lchColorLib[L] || !lchColorLib[L][AC] || lchColorLib[L][AC][BH] == null) {
-
-            rgb = colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, ac, bh));
-            this.memoizeLch(l, ac, bh, rgb, lchColorLib);
-            return rgb;
-        }
-        return lchColorLib[L][AC][BH];
-    }
-    else {
-
-        [L, AC, BH] = this.getColorLabIndices(l, ac, bh);
-
-        if (!labColorLib[L] || !labColorLib[L][AC] || labColorLib[L][AC][BH] == null) {
-
-            rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
-            this.memoizeLab(l, ac, bh, rgb, labColorLib);
-            return rgb;
-        }
-        return labColorLib[L][AC][BH];
-    }
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
@@ -1509,7 +1523,6 @@ P.theBigActionsObject = {
 
         const libs = this.retrieveColorPointLibraries();
 
-        // let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb;
         let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb, IL, IC, IH, ML, MC, MH;
 
         switch (blend) {
