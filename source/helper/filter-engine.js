@@ -24,7 +24,7 @@ import { makeColor } from '../factory/color.js';
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _entries, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -159,26 +159,6 @@ P.action = function (packet) {
 
 
 // ### Permanent variables
-
-// ColorSpaceIndices are used by the reducePalette filter. Hoping to expand this to other filters to allow a wider use of OKLAB/OKLCH color spaces.
-P.colorSpaceIndices = function () {
-
-    if (!this.tfx) {
-
-        this.tfx = 256
-        this.tfx2 = this.tfx * 256;
-        this.tfx3 = this.tfx2 * 256;
-
-        this.indicesLen = this.tfx3 * 3;
-
-        this.labIndicesMultiplier = 512;
-
-        this.rgbIndices = new Uint8ClampedArray(this.indicesLen);
-        this.labIndices = new Float32Array(this.indicesLen);
-        this.indicesMemoRecord = new Uint8ClampedArray(this.tfx3);
-    }
-};
-
 
 // `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
 P.unknit = function (image) {
@@ -4470,12 +4450,13 @@ P.theBigActionsObject = {
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
     [REDUCE_PALETTE]: function (requirements) {
 
+        const getRGBIndex = (r, g, b) => (r * _256_SQUARE) + (g * _256) + b;
+
         // Filter generics (as used by all filters)
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
             iWidth = input.width,
-            iHeight = input.height,
             oData = output.data,
             len = iData.length;
 
@@ -4483,8 +4464,7 @@ P.theBigActionsObject = {
             opacity = 1,
             seed = DEFAULT_SEED,
             useBluenoise = false,
-            minimumColorDistance = 1000,
-            useLabForPaletteDistance = false,
+            minimumColorDistance = 500,
             lineOut,
         } = requirements;
 
@@ -4506,8 +4486,6 @@ P.theBigActionsObject = {
 
         let rndCursor = -1;
 
-        const { transferDataUnchanged, getGrayscaleValue } = this;
-
         // Check we have a valid palette value
         if (palette.substring && !predefinedPalette[palette]) palette = BLACK_WHITE;
         else if (_isArray(palette) && palette.length < 2) palette = BLACK_WHITE;
@@ -4520,17 +4498,21 @@ P.theBigActionsObject = {
         const distances = [];
 
         let selectedPalette, selectedPaletteLength,
-            i, iz, index, r, g, b, a;
+            i, iz, index, r, g, b, a, _r, _g, _b,
+            okPaletteVals, distance, distance0, distance1,
+            candidate0, candidate1,
+            totalScore, propensity, test, selectedColor,
+            IL, IA, IB, PL, PA, PB, L, A, B;
 
         // Grayscale palette
         if (isGray) {
 
+            const { getGrayscaleValue } = this;
+
             selectedPalette = predefinedPalette[palette];
             selectedPaletteLength = selectedPalette.length;
 
-            let paletteColor, gray,
-                distance, distance0, distance1, totalScore,
-                candidate0, candidate1, propensity, test, selectedColor;
+            let paletteColor, gray;
 
             for (i = 0; i < len; i += 4) {
 
@@ -4589,17 +4571,12 @@ P.theBigActionsObject = {
 
             const name = palette.join(ARG_SPLITTER);
 
-            let IL, IA, IB, PL, PA, PB, L, A, B,
-                distance, distance0, distance1, candidate0, candidate1,
-                totalScore, propensity, test, selectedColor,
-                _r, _g, _b;
-
             if (predefinedPalette[name]) selectedPalette = predefinedPalette[name];
             else {
 
                 selectedPalette = [];
 
-                let eRed, eGreen, eBlue, okPaletteVals;
+                let eRed, eGreen, eBlue;
 
                 for (i = 0, iz = palette.length; i < iz; i++) {
 
@@ -4632,9 +4609,9 @@ P.theBigActionsObject = {
 
                         [,,,PL, PA, PB] = selectedPalette[index];
 
-                        L = (IL * 500) - (PL * 500);
-                        A = ((IA + 4) * 625) - ((PA + 4) * 625);
-                        B = ((IB + 4) * 625) - ((PB + 4) * 625);
+                        L = (IL * 100) - (PL * 100);
+                        A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
+                        B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
                         distance = _sqrt((L * L) + (A * A) + (B * B));
                         distances.push([index, distance]);
                     }
@@ -4674,12 +4651,140 @@ P.theBigActionsObject = {
         // + We need to calculate the commonest colors palette for this image
         else {
 
-            // Create a temporary imageData object
-            const tempInput = new ImageData(iWidth, iHeight),
-                tData = tempInput.data;
+            // 1. Go through the data to collect metadata: frequency, values, etc
+            const metadata = Array(_256_CUBE);
 
-            transferDataUnchanged(tData, iData, len);
-            transferDataUnchanged(oData, tData, len);
+            let rgbIndex, j, jz;
+
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                _r = iData[r];
+                _g = iData[g];
+                _b = iData[b];
+
+                // Ignore transparent pixels
+                if (iData[a]) {
+
+                    rgbIndex = getRGBIndex(_r, _g, _b);
+
+                    if (metadata[rgbIndex]) metadata[rgbIndex][0] += 1;
+                    else {
+
+                        [L, A, B] = this.getOkColorVals(_r, _g, _b, libs);
+                        L *= 100;
+                        A = (A + 0.4) * 125;
+                        B = (B + 0.4) * 125;
+
+                        metadata[rgbIndex] = [1, _r, _g, _b, L, A, B];
+                    }
+                }
+            }
+
+            // 2. Filter metadata, then sort for commonest colors
+            const filteredMetadata = metadata.filter(e => e != null);
+            filteredMetadata.sort((a, b) => b[0] - a[0]);
+
+            // 3. Generate the palette, using minimumColorDistance to winnow out similar colors
+            selectedPalette = [[...filteredMetadata[0]]];
+
+            const difference = [];
+
+            for (i = 1, iz = filteredMetadata.length; i < iz; i++) {
+
+                [,,,, IL, IA, IB] = filteredMetadata[i];
+
+                difference.length = 0;
+
+                for (j = 0, jz = selectedPalette.length; j < jz; j++) {
+
+                    [,,,, PL, PA, PB] = selectedPalette[j];
+
+                    L = (IL * 100) - (PL * 100);
+                    A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
+                    B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
+                    distance = _sqrt((L * L) + (A * A) + (B * B));
+                    difference.push(distance);
+                }
+
+                difference.sort((a, b) => a - b);
+
+                if (difference[0] > minimumColorDistance) selectedPalette.push([...filteredMetadata[i]]);
+                if (selectedPalette.length >= palette) break;
+            }
+
+            selectedPaletteLength = selectedPalette.length;
+
+            // 4. Update metadata, replacing each entry's RGB with its 2 closest candidates in the palette
+            metadata.forEach(item => {
+
+                [,,,, IL, IA, IB] = item;
+
+                distances.length = 0;
+
+                for (index = 0; index < selectedPaletteLength; index++) {
+
+                    [,,,, PL, PA, PB] = selectedPalette[index];
+
+                    L = (IL * 100) - (PL * 100);
+                    A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
+                    B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
+                    distance = _sqrt((L * L) + (A * A) + (B * B));
+                    distances.push([index, distance]);
+                }
+
+                distances.sort((a, b) => a[1] - b[1]);
+
+                [candidate0, distance0] = distances[0];
+                [candidate1, distance1] = distances[1];
+                totalScore = distance0 + distance1;
+                propensity = totalScore - distance0;
+
+                item.length = 0;
+
+                item.push(totalScore, propensity, selectedPalette[candidate0], selectedPalette[candidate1]);
+            });
+
+            // 5. Apply the filter results to the output
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                if (iData[a]) {
+
+                    rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
+
+                    [totalScore, propensity, candidate0, candidate1] = metadata[rgbIndex];
+
+                    test = rnd[++rndCursor] * totalScore;
+
+                    if (test < propensity) selectedColor = candidate0;
+                    else selectedColor = candidate1;
+
+                    [, _r, _g, _b] = selectedColor;
+
+                    oData[r] = _r;
+                    oData[g] = _g;
+                    oData[b] = _b;
+                    oData[a] = iData[a];
+                }
+                else {
+
+                    ++rndCursor;
+
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = iData[a];
+                }
+            }
         }
 
         // Boilerplate filter post-processing

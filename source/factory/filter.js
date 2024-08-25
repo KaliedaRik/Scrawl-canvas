@@ -62,7 +62,7 @@
 //
 // `process-image` - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The "width" and "height" arguments are measured in integer Number pixels; the "copy" arguments can be either percentage Strings (relative to the asset's natural dimensions) or absolute Number values (in pixels). The "lineOut" argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data. Object attributes: `action, lineOut, asset, width, height, copyWidth, copyHeight, copyX, copyY`.
 //
-// `reduce-palette` - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: 'black-white'. All internal color comparisons to match pixels to the closest palette color happen in the LAB color space. Dithering is applied to select the closest, or second closest, color when setting each pixel's final output color; dithering can be random (default), or blue-noise. When calculating commonest colors, a minimum color distance can be set to get a better representative spread for images which have a predominant color (eg: images containing sky, clouds, vegetation or a plain background); calculating the commonest colors can take place in either the RGB space, or the LAB space. The Object attributes: `action, lineIn, lineOut, lineMix, opacity, palette, useBluenoise, minimumColorDistance, useLabForPaletteDistance`.
+// `reduce-palette` - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: 'black-white'. All internal color comparisons to match pixels to the closest palette color happen in the LAB color space. Dithering is applied to select the closest, or second closest, color when setting each pixel's final output color; dithering can be random (default), ordered or blue-noise. When calculating commonest colors, a minimum color distance can be set to get a better representative spread for images which have a predominant color (eg: images containing sky, clouds, vegetation or a plain background); calculating the commonest colors can take place in either the RGB space, or the LAB space. The Object attributes: `action, lineIn, lineOut, lineMix, opacity, palette, useBluenoise, minimumColorDistance`.
 //
 // `rotate-hue` - For each pixel: convert to OKLCH; rotate hue value by supplied angle; convert back to RGB. Object attributes: `action, lineIn, lineOut, angle, opacity`.
 //
@@ -1297,7 +1297,6 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
             minimumColorDistance: (f.minimumColorDistance != null) ? f.minimumColorDistance : 1000,
-            useLabForPaletteDistance: (f.useLabForPaletteDistance != null) ? f.useLabForPaletteDistance : false,
             palette,
             noiseType,
             opacity: (f.opacity != null) ? f.opacity : 1,
