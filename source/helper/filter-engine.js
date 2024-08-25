@@ -1082,7 +1082,7 @@ P.getOkColorVals = function (r, g, b, libs) {
     return lib[r][g][b];
 };
 
-// `getRegularColorVals` - returns an array of RGB channel values for a given OKLAB or OKLCH color point. Note that arguments must represent an OKLAB color point only, or an OKLCH color point only 
+// `getRegularColorVals` - returns an array of RGB channel values for a given OKLAB or OKLCH color point. Note that arguments must represent an OKLAB color point only, or an OKLCH color point only
 // + Argument __l__ - float number between 0 and 1 - OKLAB/OKLCH luminance value
 // + Argument __ac__ - either the OKLAB __a__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __c__ channel value (positive float Number between `0`-`4.0`)
 // + Argument __bh__ - either the OKLAB __b__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __h__ channel value (signed float Number generally between `0`-`360`)
@@ -1932,7 +1932,7 @@ P.theBigActionsObject = {
                                 [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
                                 [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
 
-                                // Creates a color with the hue and saturation of the source color and the luminosity of the backdrop color. 
+                                // Creates a color with the hue and saturation of the source color and the luminosity of the backdrop color.
                                 [cr, cg, cb] = this.getRegularColorVals(ML, IC, IH, libs, true);
 
                                 oData[ir] = cr;
@@ -4470,26 +4470,6 @@ P.theBigActionsObject = {
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
     [REDUCE_PALETTE]: function (requirements) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // Filter generics (as used by all filters)
         const [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -4501,7 +4481,6 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            palette = BLACK_WHITE,
             seed = DEFAULT_SEED,
             useBluenoise = false,
             minimumColorDistance = 1000,
@@ -4509,7 +4488,13 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
+        let {
+            palette = BLACK_WHITE,
+        } = requirements;
+
         const noiseType = (useBluenoise) ? BLUENOISE : requirements.noiseType || RANDOM;
+
+        const libs = this.retrieveColorPointLibraries();
 
         // Noise - used for dithering the output
         const rnd = this.getRandomNumbers({
@@ -4523,23 +4508,30 @@ P.theBigActionsObject = {
 
         const { transferDataUnchanged, getGrayscaleValue } = this;
 
-        // Grayscale vs non-grayscale palettes follow different computing paths
-        const isGray = GRAY_PALETTES.includes(palette);
+        // Check we have a valid palette value
+        if (palette.substring && !predefinedPalette[palette]) palette = BLACK_WHITE;
+        else if (_isArray(palette) && palette.length < 2) palette = BLACK_WHITE;
+        else if (palette.toFixed && (palette < 2 || palette > 256)) palette = BLACK_WHITE;
 
-        // Grayscale computing path
+        // Grayscale vs array vs commonest colors palettes follow different computing paths
+        const isGray = GRAY_PALETTES.includes(palette);
+        const isArrayPalette = _isArray(palette);
+
+        const distances = [];
+
+        let selectedPalette, selectedPaletteLength,
+            i, iz, index, r, g, b, a;
+
+        // Grayscale palette
         if (isGray) {
 
-            const selectedPalette = predefinedPalette[palette],
-                selectedPaletteLength = selectedPalette.length,
-                distances = [];
+            selectedPalette = predefinedPalette[palette];
+            selectedPaletteLength = selectedPalette.length;
 
-            let i, index,
-                r, g, b, a,
-                paletteColor, gray,
+            let paletteColor, gray,
                 distance, distance0, distance1, totalScore,
                 candidate0, candidate1, propensity, test, selectedColor;
 
-            // Grayscale input data and copy to temporary imageData object
             for (i = 0; i < len; i += 4) {
 
                 r = i;
@@ -4560,7 +4552,7 @@ P.theBigActionsObject = {
                         distances.push([paletteColor, distance]);
 
                         // Because of the palette's ordered data shape, we can short-circuit calculations for G8/G16 palettes
-                        if (index > 3 && distance >= distances[index - 1][1] && distance >= distances[index - 2][1]) break;
+                        if (index && distance >= distances[index - 1][1]) break;
                     }
 
                     distances.sort((a, b) => a[1] - b[1]);
@@ -4592,17 +4584,101 @@ P.theBigActionsObject = {
             }
         }
 
-        // Non-grayscale computing path
+        // Array of colors palette
+        else if (isArrayPalette) {
+
+            const name = palette.join(ARG_SPLITTER);
+
+            let IL, IA, IB, PL, PA, PB, L, A, B,
+                distance, distance0, distance1, candidate0, candidate1,
+                totalScore, propensity, test, selectedColor,
+                _r, _g, _b;
+
+            if (predefinedPalette[name]) selectedPalette = predefinedPalette[name];
+            else {
+
+                selectedPalette = [];
+
+                let eRed, eGreen, eBlue, okPaletteVals;
+
+                for (i = 0, iz = palette.length; i < iz; i++) {
+
+                    colorEngine.convert(palette[i]);
+                    [eRed, eGreen, eBlue] = colorEngine.rgb;
+
+                    okPaletteVals = this.getOkColorVals(eRed, eGreen, eBlue, libs);
+                    selectedPalette.push([eRed, eGreen, eBlue, ...okPaletteVals]);
+                }
+
+                predefinedPalette[name] = selectedPalette;
+            }
+
+            selectedPaletteLength = selectedPalette.length;
+
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                if (iData[a]) {
+
+                    distances.length = 0;
+
+                    [IL, IA, IB] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+
+                    for (index = 0; index < selectedPaletteLength; index++) {
+
+                        [,,,PL, PA, PB] = selectedPalette[index];
+
+                        L = (IL * 500) - (PL * 500);
+                        A = ((IA + 4) * 625) - ((PA + 4) * 625);
+                        B = ((IB + 4) * 625) - ((PB + 4) * 625);
+                        distance = _sqrt((L * L) + (A * A) + (B * B));
+                        distances.push([index, distance]);
+                    }
+
+                    distances.sort((a, b) => a[1] - b[1]);
+
+                    [candidate0, distance0] = distances[0];
+                    [candidate1, distance1] = distances[1];
+                    totalScore = distance0 + distance1;
+                    propensity = totalScore - distance0;
+
+                    test = rnd[++rndCursor] * totalScore;
+
+                    if (test < propensity) selectedColor = selectedPalette[candidate0];
+                    else selectedColor = selectedPalette[candidate1];
+
+                    [_r, _g, _b] = selectedColor;
+
+                    oData[r] = _r;
+                    oData[g] = _g;
+                    oData[b] = _b;
+                    oData[a] = iData[a];
+                }
+                else {
+
+                    ++rndCursor;
+
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = iData[a];
+                }
+            }
+        }
+
+        // Commonest colors palette
+        // + We need to calculate the commonest colors palette for this image
         else {
 
             // Create a temporary imageData object
             const tempInput = new ImageData(iWidth, iHeight),
                 tData = tempInput.data;
 
-            // Copy input data over to temporary imageData object
             transferDataUnchanged(tData, iData, len);
-
-            // Transfer temporary data over to output data
             transferDataUnchanged(oData, tData, len);
         }
 
