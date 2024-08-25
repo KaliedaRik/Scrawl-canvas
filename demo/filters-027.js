@@ -89,14 +89,13 @@ scrawl.makeRender({
 // Setup form
 const dom = initializeDomInputs([
     ['input', 'paletteNumber', '16'],
-    ['input', 'minimumColorDistance', '1000'],
+    ['input', 'minimumColorDistance', '500'],
     ['input', 'opacity', '1'],
     ['input', 'paletteString', 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite'],
     ['input', 'seed', 'some-random-string-or-other'],
     ['select', 'memoizeFilterOutput', 0],
     ['select', 'noiseType', 2],
     ['select', 'palette', 0],
-    ['select', 'useLabForPaletteDistance', 0],
 ]);
 
 
@@ -131,7 +130,6 @@ scrawl.makeUpdater({
         minimumColorDistance: ['minimumColorDistance', 'round'],
         seed: ['seed', 'raw'],
         noiseType: ['noiseType', 'raw'],
-        useLabForPaletteDistance: ['useLabForPaletteDistance', 'boolean'],
         opacity: ['opacity', 'float'],
     },
 });
