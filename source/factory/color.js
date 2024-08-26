@@ -1598,17 +1598,16 @@ let supportsLAB = false;
 let supportsLCH = false;
 let supportsOKLAB = false;
 let supportsOKLCH = false;
-let supportsP3 = false;
 
 const browserChecker = function () {
 
     let r = 0,
         g = 0,
         b = 0,
-        image,
-        col = '#ffffff00';
+        image;
 
     // Test for HWB support
+    engine.save();
     engine.fillStyle = 'hwb(90 10% 10%)';
     engine.fillRect(0, 0, 1, 1);
 
@@ -1619,15 +1618,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsHWB = true;
-
-    // Firefox (v96.0.1) fails silently when setting engine to unsupported color, leaving engine value unchanged, which in turn leaves our test rgb values unchanged, thus giving us a false positive for the test
-    // - This additional safety net test identifies and corrects for that bug
-    if (supportsHWB && col === engine.fillStyle) supportsHWB = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for LAB support
+    engine.save();
     engine.fillStyle = 'lab(29.2345% 39.3825 20.0664)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1637,14 +1632,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsLAB = true;
-
-    // Firefox safety net
-    if (supportsLAB && col === engine.fillStyle) supportsLAB = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for LCH support
+    engine.save();
     engine.fillStyle = 'lch(52.2345% 72.2 56.2)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1654,14 +1646,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsLCH = true;
-
-    // Firefox safety net
-    if (supportsLCH && col === engine.fillStyle) supportsLCH = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for OKLAB support
+    engine.save();
     engine.fillStyle = 'oklab(59.686% 0.1009 0.1192)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1671,14 +1660,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsOKLAB = true;
-
-    // Firefox safety net
-    if (supportsOKLAB && col === engine.fillStyle) supportsOKLAB = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for OKLCH support
+    engine.save();
     engine.fillStyle = 'oklch(59.686% 0.15619 49.7694)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1688,27 +1674,7 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsOKLCH = true;
-
-    // Firefox safety net
-    if (supportsOKLCH && col === engine.fillStyle) supportsOKLCH = false;
-    else col = engine.fillStyle;
-
-    // Test for display-p3 support
-    engine.fillStyle = 'color(display-p3 0 1 0)';
-    engine.clearRect(0, 0, 1, 1);
-    engine.fillRect(0, 0, 1, 1);
-
-    image = engine.getImageData(0, 0, 1, 1);
-
-    if (image && image.data) {
-
-        [r, g, b] = image.data;
-    }
-    if (r || g || b) supportsP3 = true;
-
-    // Firefox safety net
-    if (supportsP3 && col === engine.fillStyle) supportsP3 = false;
-    else col = engine.fillStyle;
+    engine.restore();
 };
 browserChecker();
 

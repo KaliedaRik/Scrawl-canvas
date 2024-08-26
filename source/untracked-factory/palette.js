@@ -66,7 +66,6 @@ const PALETTE = 'palette';
 // #### Palette constructor
 const Palette = function (items = Ωempty) {
 
-
     this.makeName(items.name);
     this.register();
 

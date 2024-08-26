@@ -91,7 +91,7 @@ const dom = initializeDomInputs([
     ['input', 'paletteNumber', '16'],
     ['input', 'minimumColorDistance', '500'],
     ['input', 'opacity', '1'],
-    ['input', 'paletteString', 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite'],
+    ['input', 'paletteString', 'rgb(255 0 0), rgb(0 255 0), rgb(0 0 255), rgb(255 255 0), rgb(0 0 0), rgb(255 255 255)'],
     ['input', 'seed', 'some-random-string-or-other'],
     ['select', 'memoizeFilterOutput', 0],
     ['select', 'noiseType', 2],

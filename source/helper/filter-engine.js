@@ -4567,6 +4567,7 @@ P.theBigActionsObject = {
         }
 
         // Array of colors palette
+        // - Known issue (2024-08-26): Safari browser does not like named colors (eg: `red`) in the array, but seems happy to process structured colors (eg: `rgb(255 0 0)`). Firefox and Chrome just get on with the job (as normal)
         else if (isArrayPalette) {
 
             const name = palette.join(ARG_SPLITTER);
