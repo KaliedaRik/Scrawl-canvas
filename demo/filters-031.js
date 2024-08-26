@@ -26,7 +26,7 @@ const myFilter = scrawl.makeFilter({
 
     name: name('modifyOk'),
     method: 'modifyOk',
-    channelA: -0.5,
+    channelA: -0.2,
     channelB: 0,
     channelL: 0,
 });
@@ -68,7 +68,7 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = initializeDomInputs([
-    ['input', 'channelA', '-0.5'],
+    ['input', 'channelA', '-0.2'],
     ['input', 'channelB', '0'],
     ['input', 'channelL', '0'],
     ['input', 'opacity', '1'],

@@ -1145,14 +1145,14 @@ P.memoizeLch = function (l, c, h, rgb, lib) {
     lib[L][C][H] = rgb;
 };
 
+// Warning: magic numbers!
 P.getColorLabIndices = function (l, a, b) {
 
-    return [_floor(l * 1000), _floor((a + 4) * 120), _floor((b + 4) * 120)];
+    return [_floor(l * 500), _floor((a + 0.4) * 625), _floor((b + 0.4) * 625)];
 };
-
 P.getColorLchIndices = function (l, c, h) {
 
-    return [_floor(l * 1000), _floor(c * 2500), _floor(h * 3)];
+    return [_floor(l * 500), _floor(c * 1250), _floor(h * 3)];
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
