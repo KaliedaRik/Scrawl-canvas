@@ -3260,6 +3260,8 @@ export function findPattern(item: string): PatternInstance | CellInstance;
 export function checkFontIsLoaded(font: string): boolean;
 export function getFontMetadata(font: string): CommonObjectInput;
 
+export function getLastUsedReducePalette(): string;
+
 
 
 

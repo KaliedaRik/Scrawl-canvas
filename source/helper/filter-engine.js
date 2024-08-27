@@ -100,6 +100,12 @@ export const colorEngine = makeColor({
     name: 'SC-core-color-engine',
 });
 
+// A backdoor to retrieve the last palette used by the `reduce-palette` filter
+// + We use this in Demo filters-027 to report the colors used in the commonest colors palette
+let lastUsedReducePalette = 'black-white';
+const setLastUsedReducePalette = (val) => lastUsedReducePalette = val;
+export const getLastUsedReducePalette = () => lastUsedReducePalette;
+
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
@@ -4487,7 +4493,8 @@ P.theBigActionsObject = {
         let rndCursor = -1;
 
         // Check we have a valid palette value
-        if (palette.substring && !predefinedPalette[palette]) palette = BLACK_WHITE;
+        if (palette == null) palette = BLACK_WHITE;
+        else if (palette.substring && !predefinedPalette[palette]) palette = BLACK_WHITE;
         else if (_isArray(palette) && palette.length < 2) palette = BLACK_WHITE;
         else if (palette.toFixed && (palette < 2 || palette > 256)) palette = BLACK_WHITE;
 
@@ -4564,6 +4571,7 @@ P.theBigActionsObject = {
                     oData[a] = iData[a];
                 }
             }
+            setLastUsedReducePalette(palette);
         }
 
         // Array of colors palette
@@ -4581,8 +4589,7 @@ P.theBigActionsObject = {
 
                 for (i = 0, iz = palette.length; i < iz; i++) {
 
-                    colorEngine.convert(palette[i]);
-                    [eRed, eGreen, eBlue] = colorEngine.rgb;
+                    [eRed, eGreen, eBlue] = colorEngine.getColorFromCanvas(palette[i].trim());
 
                     okPaletteVals = this.getOkColorVals(eRed, eGreen, eBlue, libs);
                     selectedPalette.push([eRed, eGreen, eBlue, ...okPaletteVals]);
@@ -4646,6 +4653,7 @@ P.theBigActionsObject = {
                     oData[a] = iData[a];
                 }
             }
+            setLastUsedReducePalette(palette);
         }
 
         // Commonest colors palette
@@ -4719,6 +4727,8 @@ P.theBigActionsObject = {
             }
 
             selectedPaletteLength = selectedPalette.length;
+
+            setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
 
             // 4. Update metadata, replacing each entry's RGB with its 2 closest candidates in the palette
             metadata.forEach(item => {

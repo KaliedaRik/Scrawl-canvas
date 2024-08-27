@@ -63,10 +63,17 @@ const original = dithered.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+    let LUP = scrawl.getLastUsedReducePalette();
+    if (Array.isArray(LUP)) LUP = JSON.stringify(LUP);
+    console.log(LUP);
+
     return `
     Commonest colors: ${dom.paletteNumber.value}
     Minimum color distance: ${dom.minimumColorDistance.value}
-    Opacity: ${dom.opacity.value}`;
+    Opacity: ${dom.opacity.value}
+
+Last used palette:
+    ${LUP}`;
 });
 
 
