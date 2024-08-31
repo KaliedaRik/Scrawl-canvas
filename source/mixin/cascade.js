@@ -13,7 +13,14 @@ import { mergeOver, pushUnique, removeItem, xtGet, Ωempty } from '../helper/uti
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _floor, ADD_ARTEFACT_CLASSES, REMOVE_ARTEFACT_CLASSES, REVERSE_BY_DELTA, SET_ARTEFACTS, UPDATE_ARTEFACTS, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
+// Shared constants
+import { _floor, REVERSE_BY_DELTA, UPDATE_BY_DELTA } from '../helper/shared-vars.js';
+
+// Local constants
+const ADD_ARTEFACT_CLASSES = 'addArtefactClasses',
+    REMOVE_ARTEFACT_CLASSES = 'removeArtefactClasses',
+    SET_ARTEFACTS = 'setArtefacts',
+    UPDATE_ARTEFACTS = 'updateArtefacts';
 
 
 // #### Export function

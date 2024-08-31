@@ -15,7 +15,11 @@ import { correctForZero, doCreate, isa_number, isa_quaternion, xt, xto, Ωempty 
 
 import { makeVector } from './vector.js';
 
-import { _acos, _cos, _radian, _seal, _sin, _sqrt, T_QUATERNION } from '../helper/shared-vars.js';
+// Shared constants
+import { _cos, _radian, _sin, _sqrt, T_QUATERNION } from '../helper/shared-vars.js';
+
+// Local constants
+const _acos = Math.acos;
 
 
 // #### Quaternion constructor
@@ -23,8 +27,6 @@ const Quaternion = function (items = Ωempty) {
 
     this.n = items.n || 1;
     this.v = makeVector();
-
-    _seal(this);
 
     this.set(items);
 

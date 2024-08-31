@@ -11,67 +11,98 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../helper/shared-vars.js';
-
+// Shared constants
+import { _abs, _atan2, _cos, _floor, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _2D, BLACK, BLANK, CANVAS, FUNCTION, INT_COLOR_SPACES, LINEAR, NAME, NONE, PC, RANDOM, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const E = 216/24389;
-const K = 24389/27;
-const cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);
+const _inverseRadian = 180 / Math.PI,
+    _0 = '0',
+    _HSL = 'hsl',
+    _HWB = 'hwb',
+    _LAB = 'lab',
+    _LCH = 'lch',
+    _MAX = '_max',
+    _MIN = '_min',
+    _OKLAB = 'oklab',
+    _OKLCH = 'oklch',
+    _RGB = 'rgb',
+    _XYZ = 'xyz',
+    BLACK_HEX = '#000000',
+    DEG = 'deg',
+    GRAD = 'grad',
+    HSL_HWB_ARRAY = ['HSL', 'HWB'],
+    HSL = 'HSL',
+    HWB = 'HWB',
+    LAB = 'LAB',
+    LCH = 'LCH',
+    MAX = 'max',
+    MIN = 'min',
+    OKLAB = 'OKLAB',
+    OKLCH = 'OKLCH',
+    RAD = 'rad',
+    RET_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
+    TURN = 'turn',
+    XYZ = 'XYZ';
 
-const D50 = _freeze([0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585]);
-// const D65 = _freeze([0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290]);
+const E = 216/24389,
+    K = 24389/27,
+    _cbrt = Math.cbrt,
+    cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);
 
-const D65_to_D50_matrix = _freeze([
-    _freeze([  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ]),
-    _freeze([  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ]),
-    _freeze([ -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  ])
-]);
+// Note that, when developing in this file, all of the following arrays should be frozen - `Object.freeze([...etc])` - including the outer arrays. This is to prevent any accidental changes to the values contained in the arrays (they should be immutable). Sadly, Object freezing (and sealing) has a slight detriment to performance as the JS engine may perform additional checks when encountering frozen arrays which are not required when we already know the code does not change any values in the arrays
 
-const D50_to_D65_matrix = _freeze([
-    _freeze([  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ]),
-    _freeze([ -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ]),
-    _freeze([  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   ])
-]);
+const D50 = [0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585];
 
-const convertRGBtoXYZ_matrix = _freeze([
-    _freeze([ 506752 / 1228815,  87881 / 245763,   12673 /   70218 ]),
-    _freeze([  87098 /  409605, 175762 / 245763,   12673 /  175545 ]),
-    _freeze([   7918 /  409605,  87881 / 737289, 1001167 / 1053270 ])
-]);
+const D65_to_D50_matrix = [
+    [  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ],
+    [  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ],
+    [ -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  ]
+];
 
-const convertXYZtoRGB_matrix = _freeze([
-    _freeze([   12831 /   3959,    -329 /    214, -1974 /   3959 ]),
-    _freeze([ -851781 / 878810, 1648619 / 878810, 36519 / 878810 ]),
-    _freeze([     705 /  12673,   -2585 /  12673,   705 /    667 ])
-]);
+const D50_to_D65_matrix = [
+    [  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ],
+    [ -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ],
+    [  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   ]
+];
 
-const XYZtoLMS = _freeze([
-    _freeze([ 0.8190224432164319,    0.3619062562801221,   -0.12887378261216414  ]),
-    _freeze([ 0.0329836671980271,    0.9292868468965546,     0.03614466816999844 ]),
-    _freeze([ 0.048177199566046255,  0.26423952494422764,    0.6335478258136937  ])
-]);
+const convertRGBtoXYZ_matrix = [
+    [ 506752 / 1228815,  87881 / 245763,   12673 /   70218 ],
+    [  87098 /  409605, 175762 / 245763,   12673 /  175545 ],
+    [   7918 /  409605,  87881 / 737289, 1001167 / 1053270 ]
+];
 
-const LMStoOKLab = _freeze([
-    _freeze([  0.2104542553,   0.7936177850,  -0.0040720468 ]),
-    _freeze([  1.9779984951,  -2.4285922050,   0.4505937099 ]),
-    _freeze([  0.0259040371,   0.7827717662,  -0.8086757660 ])
-]);
+const convertXYZtoRGB_matrix = [
+    [   12831 /   3959,    -329 /    214, -1974 /   3959 ],
+    [ -851781 / 878810, 1648619 / 878810, 36519 / 878810 ],
+    [     705 /  12673,   -2585 /  12673,   705 /    667 ]
+];
 
-const LMStoXYZ =  _freeze([
-    _freeze([  1.2268798733741557,  -0.5578149965554813,   0.28139105017721583 ]),
-    _freeze([ -0.04057576262431372,  1.1122868293970594,  -0.07171106666151701 ]),
-    _freeze([ -0.07637294974672142, -0.4214933239627914,   1.5869240244272418  ])
-]);
+const XYZtoLMS = [
+    [ 0.8190224432164319,    0.3619062562801221,   -0.12887378261216414  ],
+    [ 0.0329836671980271,    0.9292868468965546,     0.03614466816999844 ],
+    [ 0.048177199566046255,  0.26423952494422764,    0.6335478258136937  ]
+];
 
-const OKLabtoLMS = _freeze([
+const LMStoOKLab = [
+    [  0.2104542553,   0.7936177850,  -0.0040720468 ],
+    [  1.9779984951,  -2.4285922050,   0.4505937099 ],
+    [  0.0259040371,   0.7827717662,  -0.8086757660 ]
+];
+
+const LMStoXYZ = [
+    [  1.2268798733741557,  -0.5578149965554813,   0.28139105017721583 ],
+    [ -0.04057576262431372,  1.1122868293970594,  -0.07171106666151701 ],
+    [ -0.07637294974672142, -0.4214933239627914,   1.5869240244272418  ]
+];
+
+const OKLabtoLMS = [
 /* eslint-disable-next-line */
-    _freeze([ 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ]),
+    [ 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ],
 /* eslint-disable-next-line */
-    _freeze([ 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ]),
+    [ 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ],
 /* eslint-disable-next-line */
-    _freeze([ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ])
-]);
+    [ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ]
+];
 
 
 // Local dedicated canvas
@@ -1336,6 +1367,7 @@ P.convertRGBtoXYZ = function (r, g, b) {
     return res;
 };
 
+// The following calculations taken from [Björn Ottosson's](https://bottosson.github.io/) blogpost: [A perceptual color space for image processing](https://bottosson.github.io/posts/oklab/)
 P.convertRGBtoOKLAB = function (r, g, b) {
 
     const sRGB = requestArray();
@@ -1358,6 +1390,34 @@ P.convertRGBtoOKLAB = function (r, g, b) {
         1.9779984951 * _l - 2.4285922050 * _m + 0.4505937099 * _s,
         0.0259040371 * _l + 0.7827717662 * _m - 0.8086757660 * _s,
     ];
+};
+
+P.convertOKLABtoRGB = function (L, A, B) {
+
+    const l_ = L + 0.3963377774 * A + 0.2158037573 * B;
+    const m_ = L - 0.1055613458 * A - 0.0638541728 * B;
+    const s_ = L - 0.0894841775 * A - 1.2914855480 * B;
+
+    const l = l_ * l_ * l_;
+    const m = m_ * m_ * m_;
+    const s = s_ * s_ * s_;
+
+    const sRGB = requestArray();
+    sRGB.push(
+        +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+    );
+
+    const [r_, g_, b_] = this.gam_sRGB(sRGB);
+
+    const r = _round(r_ * 255);
+    const g = _round(g_ * 255);
+    const b = _round(b_ * 255);
+
+    releaseArray(sRGB);
+
+    return [r, g, b];
 };
 
 // `convertXYZtoRGB` - internal helper function
@@ -1528,48 +1588,6 @@ P.convertOKLCHtoOKLAB = function (l, c, h) {
 };
 
 
-// #### Color blending
-// The following functions are used by the Blend filter
-// + Input is the six RGB parts (Integers clamped to the 0-255 range) of the input and mix channels
-// + Output is the RGB version of the mixed HSL colors generated from the RGB inputs
-
-// `calculateColorBlend` - internal helper function
-P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(i[0], i[1], m[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-// `calculateHueBlend` - internal helper function
-P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(i[0], m[1], m[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-// `calculateSaturationBlend` - internal helper function
-P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(m[0], i[1], m[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-// `calculateLuminosityBlend` - internal helper function
-P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
-
-    const i = this.convertRGBtoHSL(iR, iG, iB);
-    const m = this.convertRGBtoHSL(mR, mG, mB);
-    const c = this.convertHSLtoRGB(m[0], m[1], i[2]);
-    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
-};
-
-
 // #### Browser color space support
 // We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element's engine, stamp a pixel, then check to see if the pixel is black (space not supported)
 // + We check for HWB, LAB, LCH, OKLAB, OKLCH, P3 color space support
@@ -1580,17 +1598,16 @@ let supportsLAB = false;
 let supportsLCH = false;
 let supportsOKLAB = false;
 let supportsOKLCH = false;
-let supportsP3 = false;
 
 const browserChecker = function () {
 
     let r = 0,
         g = 0,
         b = 0,
-        image,
-        col = '#ffffff00';
+        image;
 
     // Test for HWB support
+    engine.save();
     engine.fillStyle = 'hwb(90 10% 10%)';
     engine.fillRect(0, 0, 1, 1);
 
@@ -1601,15 +1618,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsHWB = true;
-
-    // Firefox (v96.0.1) fails silently when setting engine to unsupported color, leaving engine value unchanged, which in turn leaves our test rgb values unchanged, thus giving us a false positive for the test
-    // - This additional safety net test identifies and corrects for that bug
-    if (supportsHWB && col === engine.fillStyle) supportsHWB = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for LAB support
+    engine.save();
     engine.fillStyle = 'lab(29.2345% 39.3825 20.0664)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1619,14 +1632,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsLAB = true;
-
-    // Firefox safety net
-    if (supportsLAB && col === engine.fillStyle) supportsLAB = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for LCH support
+    engine.save();
     engine.fillStyle = 'lch(52.2345% 72.2 56.2)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1636,14 +1646,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsLCH = true;
-
-    // Firefox safety net
-    if (supportsLCH && col === engine.fillStyle) supportsLCH = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for OKLAB support
+    engine.save();
     engine.fillStyle = 'oklab(59.686% 0.1009 0.1192)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1653,14 +1660,11 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsOKLAB = true;
-
-    // Firefox safety net
-    if (supportsOKLAB && col === engine.fillStyle) supportsOKLAB = false;
-    else col = engine.fillStyle;
+    engine.restore();
 
     // Test for OKLCH support
+    engine.save();
     engine.fillStyle = 'oklch(59.686% 0.15619 49.7694)';
-    engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
     image = engine.getImageData(0, 0, 1, 1);
@@ -1670,27 +1674,7 @@ const browserChecker = function () {
         [r, g, b] = image.data;
     }
     if (r || g || b) supportsOKLCH = true;
-
-    // Firefox safety net
-    if (supportsOKLCH && col === engine.fillStyle) supportsOKLCH = false;
-    else col = engine.fillStyle;
-
-    // Test for display-p3 support
-    engine.fillStyle = 'color(display-p3 0 1 0)';
-    engine.clearRect(0, 0, 1, 1);
-    engine.fillRect(0, 0, 1, 1);
-
-    image = engine.getImageData(0, 0, 1, 1);
-
-    if (image && image.data) {
-
-        [r, g, b] = image.data;
-    }
-    if (r || g || b) supportsP3 = true;
-
-    // Firefox safety net
-    if (supportsP3 && col === engine.fillStyle) supportsP3 = false;
-    else col = engine.fillStyle;
+    engine.restore();
 };
 browserChecker();
 

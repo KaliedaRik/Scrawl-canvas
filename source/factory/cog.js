@@ -36,7 +36,12 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _abs, _min, BEZIER, ENTITY, PERMITTED_CURVES, QUADRATIC, T_COG } from '../helper/shared-vars.js';
+// Shared constants
+import { _abs, _min, BEZIER, ENTITY, QUADRATIC } from '../helper/shared-vars.js';
+
+// Local constants
+const PERMITTED_CURVES = ['line', 'quadratic', 'bezier'],
+    T_COG = 'Cog';
 
 
 // #### Cog constructor

@@ -30,7 +30,11 @@ import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
 
-import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const NONZERO = 'nonzero';
 
 
 // #### Export function
@@ -116,6 +120,9 @@ export default function (P = Ωempty) {
 // __onUp__ - define tasks to be performed for `up` events
         onUp: null,
 
+// __onOtherInteraction__ - define tasks to be performed for `up` events
+        onOtherInteraction: null,
+
 // ##### State object attributes
 // We can treat the following attributes as if they are entity object attributes, though in fact they are stored and managed by __State objects__
 //
@@ -179,7 +186,7 @@ export default function (P = Ωempty) {
 
 // #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
-    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
+    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp', 'onOtherInteraction']);
 
     P.processEntityPacketOut = function (key, value, incs) {
 
@@ -213,6 +220,7 @@ export default function (P = Ωempty) {
         if (this.onLeave) clone.onLeave = this.onLeave;
         if (this.onDown) clone.onDown = this.onDown;
         if (this.onUp) clone.onUp = this.onUp;
+        if (this.onOtherInteraction) clone.onOtherInteraction = this.onOtherInteraction;
 
         // Shared state
         if (items.sharedState) clone.state = this.state;
@@ -403,6 +411,7 @@ export default function (P = Ωempty) {
         this.onLeave = λnull;
         this.onDown = λnull;
         this.onUp = λnull;
+        this.onOtherInteraction = λnull;
 
         this.set(items);
 

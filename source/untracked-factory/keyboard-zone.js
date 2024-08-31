@@ -15,10 +15,17 @@ import { mergeDiscard, λnull, Ωempty } from "../helper/utilities.js";
 
 import { addNativeListener, removeNativeListener } from "../core/events.js";
 
-import { $BODY, _keys, ACCEPTED_WRAPPERS, KEY_DOWN, KEY_UP, KEYBOARD_GROUPS, NONE, T_ESCAPE, T_TAB } from '../helper/shared-vars.js';
-
+// Shared constants
+import { $BODY, _keys, ACCEPTED_WRAPPERS, NONE } from '../helper/shared-vars.js';
 
 // Local constants
+const KEY_DOWN = 'keydown',
+    KEY_UP = 'keyup',
+    KEYBOARD_GROUPS = ['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'],
+    T_ESCAPE = 'Escape',
+    T_TAB = 'Tab';
+
+
 const keyboardZones = {};
 
 const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {

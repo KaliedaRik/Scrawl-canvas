@@ -33,7 +33,10 @@ import { forceUpdate } from '../helper/system-flags.js';
 
 import baseMix from '../mixin/base.js';
 
+// Shared constants
 import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### RenderAnimation constructor

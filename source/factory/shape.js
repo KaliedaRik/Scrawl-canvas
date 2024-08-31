@@ -33,7 +33,11 @@ import { doCreate, Ωempty } from '../helper/utilities.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { T_SHAPE, ENTITY } from '../helper/shared-vars.js';
+// Shared constants
+import { ENTITY } from '../helper/shared-vars.js';
+
+// Local constants
+const T_SHAPE = 'Shape';
 
 
 // #### Shape constructor

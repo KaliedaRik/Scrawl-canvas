@@ -7,7 +7,10 @@ import { mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from '../factory/gradient.js';
 
+// Shared constants
 import { _floor, _now, _2D, CANVAS, PC100 } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Export function

@@ -34,7 +34,11 @@ import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
-import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const T_LOOM = 'Loom';
 
 
 // #### Loom constructor
@@ -680,7 +684,7 @@ P.update = function () {
 // #### Display cycle functionality
 
 // `prepareStamp` - function called as part of the Display cycle `compile` step.
-// + This function is called before we get into the entity stamp promise cascade (thus it's a synchronous function). This is where we need to check whether we need to recalculate the path data which we'll use later to build the Loom entity's output image.
+// + This is where we need to check whether we need to recalculate the path data which we'll use later to build the Loom entity's output image.
 // + We only need to recalculate the path data on the initial render, and afterwards when the __dirtyPathData__ flag has been set.
 // + If we perform the recalculation, then we need to make sure to set the __dirtyOutput__ flag, which will trigger the output image build.
 P.prepareStamp = function() {

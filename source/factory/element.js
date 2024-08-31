@@ -34,7 +34,11 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
-import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../helper/shared-vars.js';
+// Shared constants
+import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC } from '../helper/shared-vars.js';
+
+// Local constants
+const T_ELEMENT = 'Element';
 
 
 // #### Element constructor

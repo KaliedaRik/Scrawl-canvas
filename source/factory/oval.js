@@ -33,7 +33,12 @@ import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { ENTITY, OVAL, RADIUS_X, RADIUS_XY, RADIUS_Y, T_OVAL, ZERO_PATH } from '../helper/shared-vars.js';
+// Shared constants
+import { ENTITY, RADIUS_X, RADIUS_XY, RADIUS_Y, ZERO_PATH } from '../helper/shared-vars.js';
+
+// Local constants
+const OVAL = 'oval',
+    T_OVAL = 'Oval';
 
 
 // #### Oval constructor

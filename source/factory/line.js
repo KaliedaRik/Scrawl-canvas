@@ -34,7 +34,11 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 import curveMix from '../mixin/shape-curve.js';
 
-import { ENTITY, LINE, PATH, T_LINE, ZERO_PATH } from '../helper/shared-vars.js';
+// Shared constants
+import { ENTITY, PATH, T_LINE, ZERO_PATH } from '../helper/shared-vars.js';
+
+// Local constants
+const LINE = 'line';
 
 
 // #### Line constructor

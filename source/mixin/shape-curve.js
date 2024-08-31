@@ -11,8 +11,15 @@ import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } f
 
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
-import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_ENHANCED_LABEL, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_ENHANCED_LABEL, T_LINE, T_PARTICLE, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 
+// Local constants
+const END_PARTICLE = 'endParticle',
+    END_PATH = 'endPath',
+    END_PIVOT = 'endPivot',
+    T_PATH = 'Path',
+    T_PIVOT = 'Pivot';
 
 const capitalize = (s) => {
 

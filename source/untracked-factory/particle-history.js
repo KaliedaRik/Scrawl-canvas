@@ -1,15 +1,15 @@
 // # ParticleHistory factory
 // The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:
-// + [Particle objects](./particle.html), which represent a 3-dimensional coordinate - based on a Scrawl-canvas [Vector object](./vector.html) - and include a history of recent positions which we can use to determine how to display that particle on screen.
+// + [Particle objects](../factory/particle.html), which represent a 3-dimensional coordinate - based on a Scrawl-canvas [Vector object](./vector.html) - and include a history of recent positions which we can use to determine how to display that particle on screen.
 // + [History arrays](./particleHistory.html) which can be pooled (reused) to cut down on Array creation and distruction during the animation.
-// + [Force objects](./particleForce.html) which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a __gravity__ force object is pre-defined by Scrawl-canvas.
-// + [Spring objects](./particleSpring.html) used to define a constraint (connection) between two particles in a system.
-// + [World objects](./particleWorld.html) where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.
+// + [Force objects](../factory/particleForce.html) which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a __gravity__ force object is pre-defined by Scrawl-canvas.
+// + [Spring objects](../factory/particleSpring.html) used to define a constraint (connection) between two particles in a system.
+// + [World objects](../factory/particleWorld.html) where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.
 //
 // We do not have to handle particle generation and manipulation ourselves. Instead, Scrawl-canvas gives us three dedicated __entitys__ which we use to add particle animation effects to the canvas scene. These entitys are:
-// + [Tracer](./tracer.html) - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.
-// + [Emitter](./emitter.html) - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.
-// + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
+// + [Tracer](../factory/tracer.html) - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.
+// + [Emitter](../factory/emitter.html) - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.
+// + [Net](../factory/net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
 //
 // __ParticleHistory__ objects are Arrays in which Scrawl-canvas records history data for a given particle at a specified time. The array holds data in the following format:
 // ```
@@ -27,7 +27,11 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { _create, _seal, _setPrototypeOf, T_PARTICLE_HISTORY } from '../helper/shared-vars.js';
+// Shared constants
+import { _create, _setPrototypeOf } from '../helper/shared-vars.js';
+
+// Local constants
+const T_PARTICLE_HISTORY = 'ParticleHistory';
 
 
 // #### ParticleHistory constructor
@@ -37,7 +41,7 @@ const ParticleHistory = function () {
 
     _setPrototypeOf(h, ParticleHistory.prototype);
 
-    return _seal(h);
+    return h;
 };
 
 

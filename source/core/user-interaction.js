@@ -17,7 +17,15 @@ import { makeAnimation } from "../factory/animation.js";
 
 import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from '../helper/system-flags.js';
 
-import { _floor, _isFinite, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
+// Shared constants
+import { _floor, _isFinite, _now, _round, _values, ADD_EVENT_LISTENER, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, T_CANVAS, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
+
+// Local constants
+const CHANGE = 'change',
+    POINTER = 'pointer',
+    RESIZE = 'resize',
+    SCROLL = 'scroll',
+    TOUCH = 'touch';
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -25,7 +33,7 @@ export const uiSubscribedElements = [];
 
 
 // `Exported object` (to modules and the scrawl object). The __currentCorePosition__ object holds the __global__ mouse cursor position, alongside browser view dimensions and scroll position
-export const currentCorePosition = _seal({
+export const currentCorePosition = {
     x: 0,
     y: 0,
     scrollX: 0,
@@ -42,7 +50,7 @@ export const currentCorePosition = _seal({
     canvasSupportsP3Color: false,
     devicePixelRatio: 0,
     rawTouches: [],
-});
+};
 
 
 // ### Accessibility preferences

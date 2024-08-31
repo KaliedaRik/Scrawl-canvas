@@ -2,7 +2,15 @@
 // A ragtag collection of helper functions which other modules can import and use
 
 
-import { _cos, _create, _entries, _floor, _freeze, _isArray, _isFinite, _pi, _pow, _random, _sin, _sqrt, $CANVAS_ELEMENT, $OBJECT, BOOLEAN, BOTTOM, CENTER, FUNCTION, LEFT, MS, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
+// Shared constants
+import { _cos, _create, _entries, _floor, _isArray, _isFinite, _pow, _random, _sin, _sqrt, BOTTOM, CENTER, FUNCTION, LEFT, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
+
+// Local constants
+const _pi = Math.PI,
+    $CANVAS_ELEMENT = '[object HTMLCanvasElement]',
+    $OBJECT = '[object Object]',
+    BOOLEAN = 'boolean',
+    MS = 'ms';
 
 
 // #### Functions
@@ -133,8 +141,13 @@ export const correctForZero = (item) => {
 export const λnull = () => {};
 export const λfirstArg = function (a) { return a; };
 export const λthis = function () { return this; };
-export const λpromise = () => Promise.resolve(true);
-export const Ωempty = _freeze({});
+
+// Note that, when developing in this file, the Ωempty object should be frozen - `Object.freeze({})`. This is to prevent any code adding attributes to it (`Object.seal({})`) would also do the job). Sadly, Object freezing (and sealing) has a slight detriment to performance as the JS engine may perform additional checks when encountering the Ωempty object which are not required when we already know the code does not add any attributes to it
+
+/*
+export const Ωempty = Object.freeze({});
+*/
+export const Ωempty = {};
 
 
 // __generateUuid__ is a simple (crude) uuid generator

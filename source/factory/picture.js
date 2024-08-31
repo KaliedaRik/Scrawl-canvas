@@ -42,7 +42,12 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
+// Shared constants
+import { $IMAGE, $VIDEO, _keys, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
+
+// Local constants
+const COPY_DIMENSIONS = 'copyDimensions',
+    COPY_START = 'copyStart';
 
 
 // #### Picture constructor

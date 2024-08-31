@@ -66,10 +66,11 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 027</h1>
   <h2>Parameters for: reducePalette filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
+  <p>When calculating the "commonest colors" palette, color selection is dependent on the "minimum color distance" attribute - changing this will affect colors selected for the palette. Be aware that every image is different: settings that produce a good result in one image will produce terrible results for other images.</p>
 
   <div class="controls">
 
-    <div class="green label">Predefined palette</div>
+    <div class="green label">Palette string (predefined grays)</div>
     <div class="green">
       <select class="controlItem" id="palette">
         <option value="black-white">black-white</option>
@@ -79,27 +80,16 @@
       </select>
     </div>
 
-    <div class="green label">String of colors</div>
+    <div class="green label">Palette array (string colors)</div>
     <div class="green"><input class="controlItem" id="paletteString" type="text" value="" /></div>
 
-    <div class="blue label">Commonest colors</div>
+    <div class="blue label">Palette number (commonest colors)</div>
     <div class="blue"><input class="controlItem" id="paletteNumber" type="range" value="10" min="2" max="48" step="1" /></div>
 
-    <div class="blue label">Min color distance</div>
-    <div class="blue"><input class="controlItem" id="minimumColorDistance" type="range" value="1000" min="250" max="8000" step="250" /></div>
+    <div class="blue label">Min color distance (for commonest colors)</div>
+    <div class="blue"><input class="controlItem" id="minimumColorDistance" type="range" value="650" min="300" max="3000" step="5" /></div>
 
-    <div class="yellow label">Use OKLAB for distance</div>
-    <div class="yellow">
-      <select class="controlItem" id="useLabForPaletteDistance">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-
-    <div class="yellow label">Random seed</div>
-    <div class="yellow"><input class="controlItem" id="seed" type="text" value="some-random-string-or-other" /></div>
-
-    <div class="yellow label">Noise type</div>
+    <div class="yellow label">Noise type (for dithers)</div>
     <div class="yellow">
       <select class="controlItem" id="noiseType">
         <option value="random">Random</option>
@@ -107,6 +97,9 @@
         <option value="bluenoise">Blue noise</option>
       </select>
     </div>
+
+    <div class="yellow label">Random seed (for dithers)</div>
+    <div class="yellow"><input class="controlItem" id="seed" type="text" value="some-random-string-or-other" /></div>
 
     <div class="lavender label">Opacity</div>
     <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
@@ -176,6 +169,10 @@
     <p>Note that this is a resource-intensive filter. Memoization is strongly advised!</p>
 
     <p><b>Touch test:</b> not required</p>
+
+    <p><b>Known issue (2024-08-26):</b> Beyond the simplest of predefined grayscale settings, this filter can becomes very computationally intensive (thus very slow). Performance in Firefox and Safari browsers appears to be significantly worse than in Chrome. Wherever possible, memoize the filter output to prevent significant page performance degradation!</p>
+
+    <p><b>Known issue (2024-08-26):</b> Safari browser does not like named colors strings - eg: 'red' - in a palette defined as an array of color strings, but seems happy to process structured color strings - eg: 'rgb(255 0 0)'. Firefox and Chrome just get on with the job (as normal).</p>
 
     <p><a href="../docs/demo/filters-027.html">Annotated code</a></p>
   </div>

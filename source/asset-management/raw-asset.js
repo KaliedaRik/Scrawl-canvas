@@ -17,7 +17,10 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
+// Shared constants
 import { _2D, _entries, ASSET, CANVAS, T_COORDINATE, T_QUATERNION, T_RAW_ASSET, T_VECTOR } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### RawAsset constructor

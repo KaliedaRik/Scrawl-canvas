@@ -11,10 +11,27 @@ import { getPixelRatio } from '../core/user-interaction.js';
 
 import { addStrings, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DEF_SECTION_PLACEHOLDER, DIV, FONT_LENGTH_REGEX, FONT_VARIANT_VALS, HIGH, ITALIC, LABEL_DIRTY_FONT_KEYS, LABEL_UPDATE_FONTSTRING_KEYS, LABEL_UNLOADED_FONT_KEYS, LABEL_UPDATE_PARTS_KEYS, LAYOUT_KEYS, LEFT, NAME, NORMAL, OBLIQUE, POLITE, ROLE, ROUND, SMALL_CAPS, SPACE, STATE_KEYS, SYSTEM_FONTS, TEMPLATE_PASS_THROUGH_KEYS, TEXTSTYLE_KEYS, TOP, T_CANVAS, T_CELL, T_LABEL, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DIV, HIGH, LEFT, NAME, NORMAL, POLITE, ROLE, ROUND, SPACE, STATE_KEYS, TOP, T_CANVAS, T_CELL, T_LABEL, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const DEF_SECTION_PLACEHOLDER = '§',
+    FONT_LENGTH_REGEX = /[0-9.,]+(%|cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvmax|dvmin|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvmax|lvmin|lvw|mm|pc|pt|px|Q|rcap|rch|rem|rex|ric|rlh|svb|svh|svi|svmax|svmin|svw|vb|vh|vi|vmax|vmin|vw)/i,
+    FONT_VARIANT_VALS = ['small-caps', 'all-small-caps', 'petite-caps', 'all-petite-caps', 'unicase', 'titling-caps'],
+    ITALIC = 'italic',
+    LABEL_DIRTY_FONT_KEYS = ['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing'],
+    LABEL_UNLOADED_FONT_KEYS = ['fontString'],
+    LABEL_UPDATE_FONTSTRING_KEYS = ['fontString', 'scale'],
+    LABEL_UPDATE_PARTS_KEYS = ['fontFamily', 'fontSize', 'fontStretch', 'fontStyle', 'fontVariantCaps', 'fontWeight'],
+    LAYOUT_KEYS = ['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'flipReverse', 'flipUpend', 'alignTextUnitsToPath', 'lockFillStyleToEntity', 'lockStrokeStyleToEntity'],
+    OBLIQUE = 'oblique',
+    SMALL_CAPS = 'small-caps',
+    SYSTEM_FONTS = ['serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui', 'ui-serif', 'ui-sans-serif', 'ui-monospace', 'ui-rounded', 'emoji', 'math', 'fangsong'],
+    TEMPLATE_PASS_THROUGH_KEYS = ['width', 'height', 'dimensions', 'startX', 'startY', 'start', 'position', 'handleX', 'handleY', 'handle', 'offsetX', 'offsetY', 'offset', 'roll', 'scale', 'flipReverse', 'flipUpend'],
+    TEXTSTYLE_KEYS = [ 'canvasFont', 'direction','fillStyle', 'fontFamily', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'highlightStyle', 'includeHighlight', 'includeUnderline', 'letterSpaceValue', 'letterSpacing', 'lineDash', 'lineDashOffset', 'lineWidth', 'overlineOffset', 'overlineStyle', 'overlineWidth', 'strokeStyle', 'textRendering', 'underlineGap', 'underlineOffset', 'underlineStyle', 'underlineWidth', 'wordSpaceValue', 'wordSpacing', 'method'];
 
 
-// #### Local variables
+// Internal helper &lt;div> element used to quickly convert text by exposing it to the browser engine
 const textEntityConverter = document.createElement(DIV);
 
 

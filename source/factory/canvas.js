@@ -15,7 +15,7 @@
 //
 // By default, all Canvas wrappers will track mouse/touch movements across their &lt;canvas> elements, supplying this data to constituent Cell objects and artefacts as-and-when-required.
 //
-// Canvas wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle. These functions are asynchronous, returning Promises.
+// Canvas wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle.
 //
 // Canvas wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Canvas wrapper will remove its &lt;canvas> element from the DOM, alongside the additional elements added to the DOM during Canvas creation.
 
@@ -47,7 +47,19 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, _computed, ABSOLUTE, ARIA_BUSY, ARIA_DESCRIBEDBY, ARIA_HIDDEN, ARIA_LABELLEDBY, ARIA_LIVE, ARIA_LIVE_VALUES, CANVAS, CANVAS_QUERY, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, FIT_DEFS, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _2D, _computed, ABSOLUTE, ARIA_HIDDEN, ARIA_LIVE, CANVAS, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, IMG, LEAVE, MOVE, NAME, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const ARIA_BUSY = 'aria-busy',
+    ARIA_DESCRIBEDBY = 'aria-describedby',
+    ARIA_LABELLEDBY = 'aria-labelledby',
+    ARIA_LIVE_VALUES = ['assertive', 'polite', 'off'],
+    CANVAS_QUERY = '[data-scrawl-canvas]',
+    FIT_DEFS = ['fill', 'contain', 'cover'],
+    NAV = 'nav',
+    OTHER_INTERACTION = 'otherInteraction',
+    TITLE = 'title';
 
 
 // #### Canvas constructor
@@ -1014,6 +1026,12 @@ P.cascadeEventAction = function (action, e = {}) {
             doLeave(e);
             for (i = 0; i < newActiveLen; i++) {
                 newActiveEntityObjects[i].onEnter(e);
+            }
+            break;
+
+        case OTHER_INTERACTION :
+            for (i = 0; i < currentActiveLen; i++) {
+                currentActiveEntityObjects[i].onOtherInteraction(e);
             }
             break;
     }

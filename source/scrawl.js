@@ -52,7 +52,8 @@ export {
     setFilterMemoizationChoke,
     setWorkstoreLifetimeLength,
     setWorkstorePurgeChoke,
- } from './helper/workstore.js';
+} from './helper/workstore.js';
+export { getLastUsedReducePalette } from './helper/filter-engine.js';
 export {
     currentCorePosition,
     startCoreListeners,

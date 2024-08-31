@@ -25,6 +25,8 @@ interface CommonHereObjectInput {
 
 type CommonTwoElementArrayInput = [StringOrNumberInput, StringOrNumberInput] | number[];
 
+type CascadeFunction = (item: string | string[], event?: MouseEvent | PointerEvent) => string | string[];
+type OnCascadeFunction = (event?: MouseEvent | PointerEvent) => void;
 
 
 // MIXINS
@@ -341,10 +343,11 @@ interface EntityMixinInputs extends PositionMixinInputs, PivotMixinInputs, Mimic
     lockFillStyleToEntity?: boolean;
     lockStrokeStyleToEntity?: boolean;
     method?: MethodValues;
-    onDown?: DefaultInputFunction;
-    onEnter?: DefaultInputFunction;
-    onLeave?: DefaultInputFunction;
-    onUp?: DefaultInputFunction;
+    onDown?: OnCascadeFunction;
+    onEnter?: OnCascadeFunction;
+    onLeave?: OnCascadeFunction;
+    onUp?: OnCascadeFunction;
+    onOtherInteraction?: OnCascadeFunction;
     scaleOutline?: boolean;
     sharedState?: boolean;
     winding?: WindingValues;
@@ -900,7 +903,7 @@ type CanvasPositionValues = 'relative' | 'absolute';
 
 type CanvasFitValues = 'none' | 'contain' | 'cover' | 'fill';
 
-type CanvasCascadeStrings = 'down' | 'up' | 'enter' | 'leave' | 'move';
+type CanvasCascadeStrings = 'down' | 'up' | 'enter' | 'leave' | 'move' | 'otherInteraction';
 
 type CanvasColorSpaceValues = 'srgb' | 'display-p3';
 
@@ -957,7 +960,7 @@ export interface CanvasInstance extends CanvasFactoryInputs, CanvasFactoryFuncti
     here: CommonHereObjectInput;
     elementComputedStyles?: CommonObjectInput;
     domElement: any;
-    cascadeEventAction (item: CanvasCascadeStrings | CanvasCascadeStrings[]);
+    cascadeEventAction?: CascadeFunction;
 }
 
 
@@ -1455,6 +1458,9 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     blend?: string;
     blue?: number | number[];
     blueColor?: string;
+    channelA?: number;
+    channelB?: number;
+    channelL?: number;
     channelX?: string;
     channelY?: string;
     clamp?: string | number;
@@ -3256,6 +3262,8 @@ export function findPattern(item: string): PatternInstance | CellInstance;
 
 export function checkFontIsLoaded(font: string): boolean;
 export function getFontMetadata(font: string): CommonObjectInput;
+
+export function getLastUsedReducePalette(): string;
 
 
 

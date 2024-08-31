@@ -48,7 +48,13 @@
 //
 // `matrix` - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights`.
 //
+// `modify-ok-channels` - Adds a value to each of the OKLAB channels. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow). Object attributes: `action, lineIn, lineOut, opacity, channelA, channelB, channelL`
+//
 // `modulate-channels` - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at the color range mid point. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha, saturation`; pseudo-argument: `level`
+//
+// `modulate-ok-channels` - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow). Object attributes: `action, lineIn, lineOut, opacity, channelA, channelB, channelL`
+//
+// `negative` - For each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB. Object attributes: `action, lineIn, lineOut, opacity`.
 //
 // `offset` - Offset the input image in the output image. Object attributes: `action, lineIn, lineOut, opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY; pseudo-argument: offsetX, offsetY`.
 //
@@ -56,7 +62,9 @@
 //
 // `process-image` - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The "width" and "height" arguments are measured in integer Number pixels; the "copy" arguments can be either percentage Strings (relative to the asset's natural dimensions) or absolute Number values (in pixels). The "lineOut" argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data. Object attributes: `action, lineOut, asset, width, height, copyWidth, copyHeight, copyX, copyY`.
 //
-// `reduce-palette` - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: 'black-white'. All internal color comparisons to match pixels to the closest palette color happen in the LAB color space. Dithering is applied to select the closest, or second closest, color when setting each pixel's final output color; dithering can be random (default), or blue-noise. When calculating commonest colors, a minimum color distance can be set to get a better representative spread for images which have a predominant color (eg: images containing sky, clouds, vegetation or a plain background); calculating the commonest colors can take place in either the RGB space, or the LAB space. The Object attributes: `action, lineIn, lineOut, lineMix, opacity, palette, useBluenoise, minimumColorDistance, useLabForPaletteDistance`.
+// `reduce-palette` - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: 'black-white'. All internal color comparisons to match pixels to the closest palette color happen in the LAB color space. Dithering is applied to select the closest, or second closest, color when setting each pixel's final output color; dithering can be random (default), ordered or blue-noise. When calculating commonest colors, a minimum color distance can be set to get a better representative spread for images which have a predominant color (eg: images containing sky, clouds, vegetation or a plain background); calculating the commonest colors can take place in either the RGB space, or the LAB space. The Object attributes: `action, lineIn, lineOut, lineMix, opacity, palette, useBluenoise, minimumColorDistance`.
+//
+// `rotate-hue` - For each pixel: convert to OKLCH; rotate hue value by supplied angle; convert back to RGB. Object attributes: `action, lineIn, lineOut, angle, opacity`.
 //
 // `set-channel-to-level` - Sets the value of each pixel's included channel to the value supplied in the "level" argument. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, level`.
 //
@@ -82,7 +90,14 @@ import { colorEngine } from '../helper/filter-engine.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _freeze, _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const CLAMP_VALUES = ['down', 'round', 'up'],
+	EMBOSS_WORK = 'emboss-work',
+	NOISE_VALUES = ['random', 'ordered', 'bluenoise'],
+	PC30 = '30%';
 
 
 // #### Filter constructor
@@ -121,7 +136,7 @@ const defaultAttributes = {
     // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array.
     // + Filter factory invocations which include the `method` attribute in their argument object do not need to include an `actions` attribute; the factory will build the action objects for us.
     // + When using the `method` attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
-    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'userDefined', 'yellow'`.
+    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'modifyOk', 'modulateOk', 'negative', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'rotateHue', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'userDefined', 'yellow'`.
     method: ZERO_STR,
 
     // ##### How filters process data
@@ -177,6 +192,10 @@ const defaultAttributes = {
 // + [Filters-025](../../demo/filters-025.html) - Parameters for: glitch filter
 // + [Filters-026](../../demo/filters-026.html) - Parameters for: swirl filter
 // + [Filters-027](../../demo/filters-027.html) - Parameters for: reducePalette filter
+// + [Filters-029](../../demo/filters-029.html) - Parameters for: rotateHue filter
+// + [Filters-030](../../demo/filters-030.html) - Parameters for: negative filter
+// + [Filters-031](../../demo/filters-031.html) - Parameters for: modifyOk filter
+// + [Filters-032](../../demo/filters-032.html) - Parameters for: modulateOk filter
     alpha: 255,
     angle: 0,
     areaAlphaLevels: null,
@@ -187,6 +206,9 @@ const defaultAttributes = {
     blueColor: BLACK,
     blueInGreen: 0,
     blueInRed: 0,
+    channelA: 1,
+    channelB: 1,
+    channelL: 1,
     channelX: RED,
     channelY: GREEN,
     clamp: 0,
@@ -440,7 +462,7 @@ S.actions = function (item) {
 // ```
 
 // `setActionsArray` - an object containing a large number of functions which will convert legacy factory function invocations (using `method` strings) into modern Filter objects (using `actions` arrays):
-const setActionsArray = _freeze({
+const setActionsArray = {
 
 // __alphaToChannels__ (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate `includeChannel` flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate `excludeChannel` flag will set that channel's value to zero.
     alphaToChannels: function (f) {
@@ -1075,7 +1097,43 @@ const setActionsArray = _freeze({
         }];
     },
 
-// __newsprint__ - removes red and green channel color from the image
+// __modifyOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB
+    modifyOk: function (f) {
+        f.actions = [{
+            action: MODIFY_OK_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channelL: (f.channelL != null) ? f.channelL : 0,
+            channelA: (f.channelA != null) ? f.channelA : 0,
+            channelB: (f.channelB != null) ? f.channelB : 0,
+        }];
+    },
+
+// __modulateOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB
+    modulateOk: function (f) {
+        f.actions = [{
+            action: MODULATE_OK_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channelL: (f.channelL != null) ? f.channelL : 1,
+            channelA: (f.channelA != null) ? f.channelA : 1,
+            channelB: (f.channelB != null) ? f.channelB : 1,
+        }];
+    },
+
+// __negative__ - (new in v8.13.3) - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
+    negative: function (f) {
+        f.actions = [{
+            action: NEGATIVE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        }];
+    },
+
+// __newsprint__ - Attempts to simulate a black-white dither effect similar to newsprint
     newsprint: function (f) {
         f.actions = [{
             action: NEWSPRINT,
@@ -1239,11 +1297,21 @@ const setActionsArray = _freeze({
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
             minimumColorDistance: (f.minimumColorDistance != null) ? f.minimumColorDistance : 1000,
-            useLabForPaletteDistance: (f.useLabForPaletteDistance != null) ? f.useLabForPaletteDistance : false,
             palette,
             noiseType,
             opacity: (f.opacity != null) ? f.opacity : 1,
         });
+    },
+
+// __rotateHue__ - (new in v8.13.3) - for each pixel: convert to OKLCH; rotate hue value by given angle; convert back to RGB
+    rotateHue: function (f) {
+        f.actions = [{
+            action: ROTATE_HUE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            angle: (f.angle != null) ? f.angle : 0,
+        }];
     },
 
 // __saturation__ - alters the saturation level of the image
@@ -1509,7 +1577,7 @@ const setActionsArray = _freeze({
             excludeBlue: true,
         }];
     },
-});
+};
 
 
 // #### Prototype functions

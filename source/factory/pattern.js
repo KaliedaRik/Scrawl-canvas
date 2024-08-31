@@ -20,7 +20,11 @@ import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../helper/shared-vars.js';
+// Shared constants
+import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, UNDEF } from '../helper/shared-vars.js';
+
+// Local constants
+const T_PATTERN = 'Pattern';
 
 
 // #### Pattern constructor

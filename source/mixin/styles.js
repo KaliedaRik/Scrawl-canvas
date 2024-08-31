@@ -23,7 +23,12 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 import { makePalette } from '../untracked-factory/palette.js';
 
-import { _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
+
+// Local constants
+const COLORS = 'colors',
+    PALETTE_KEYS = ['colors', 'cyclic', 'stops'];
 
 
 // Create an animation to handle automated delta gradient animation

@@ -5,7 +5,19 @@
 // #### Imports
 import { isa_fn, isa_number, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _entries, BANNER, LANDSCAPE, LARGER, LARGEST, PORTRAIT, RECTANGLE, REGULAR, SKYSCRAPER, SMALLER, SMALLEST, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _entries, RECTANGLE, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const BANNER = 'banner',
+    LANDSCAPE = 'landscape',
+    LARGER = 'larger',
+    LARGEST = 'largest',
+    PORTRAIT = 'portrait',
+    REGULAR = 'regular',
+    SKYSCRAPER = 'skyscraper',
+    SMALLER = 'smaller',
+    SMALLEST = 'smallest';
 
 
 // #### Export function

@@ -43,7 +43,11 @@
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 009</h1>
   <h2>Pattern styles; Entity web link anchors; Dynamic accessibility</h2>
-  <h3>Move cursor over canvas, or use keyboard tab,<br />to see dynamic hover and accessibility functionality<br />Click (or press keyboard enter) on a highlighted entity<br />to open a new web page</h3>
+  <h3>
+    Move cursor over canvas, or use keyboard tab, to see dynamic hover and accessibility functionality
+    <br />&nbsp;<br />Keyboard navigate between blocks using the tab key. Click (or press keyboard enter) on an entity<br />to open a new web page
+    <br />&nbsp;<br />Right-click on an entity to reveal a normal &lt;a> anchor link element
+  </h3>
 
   <canvas 
     id="mycanvas" 
@@ -88,6 +92,18 @@
       <li>Adapt the 'on...' functions to trigger tailored analytics messages as user focuses and blurs across the Block entitys</li>
       <li>Adapt the anchor so that it, too, sends a tailored analytics message when the link is invoked</li>
       <li>Check that the tracking functionality works as expected, both for mouse/touch interactions and for keyboard interactions</li>
+    </ul>
+
+    <p>Handle a right-click <i>contextmenu</i> user interaction on a block</p>
+    <ul>
+      <li>MVP of a method for dealing with the right-click functionality that happens on normal &lt;a> link elements in a web page</li>
+      <li>Right-click on a block entity</li>
+      <li>A new &lt;a> link element should appear over the block, centred on the mouse pointer</li>
+      <li>Right-click on the new element - a link-related context menu should appear</li>
+      <li>The new element should disappear after 5 seconds. If the context menu is visible, it should remain visible and interactive; it should disappear after the user interacts with it, or clicks on the page surrounding it</li>
+      <li>Right-clicking on the canvas element outside of the block entitys should display the normal image-related context menu</li>
+      <li>Note that the new element has <i>position: fixed</i> styling - it will not move when the user scrolls through the web page</li>
+      <li>Note that this MVP solution does not listen for keyboard <i>context menu key</i> presses</li>
     </ul>
 
     <p>Kill and resurrect</p>

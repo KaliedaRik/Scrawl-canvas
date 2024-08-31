@@ -39,7 +39,12 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PINS, PIVOT, POLYLINE, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../helper/shared-vars.js';
+// Shared constants
+import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PIVOT, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../helper/shared-vars.js';
+
+// Local constants
+const PINS = 'pins',
+    POLYLINE = 'polyline';
 
 
 // #### Polyline constructor

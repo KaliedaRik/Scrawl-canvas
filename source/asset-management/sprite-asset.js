@@ -15,7 +15,11 @@ import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { $JSON, _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE, T_SPRITE, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE, T_SPRITE, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const $JSON = '.json';
 
 
 // #### SpriteAsset constructor

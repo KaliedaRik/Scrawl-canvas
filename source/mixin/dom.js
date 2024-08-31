@@ -36,7 +36,20 @@ import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 
-import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../helper/shared-vars.js'
+// Shared constants
+import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
+
+// Local constants
+const BOTTOMLEFT = 'bottomLeft',
+    BOTTOMRIGHT = 'bottomRight',
+    CLASS_REGEX = /[\s\uFEFF\xA0]+/g,
+    CORNER_ATTR = 'data-scrawl-corner-div',
+    CORNER_ATTR_VAL = 'sc',
+    LOCAL = 'local',
+    NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'],
+    TABINDEX = 'tabindex',
+    TOPLEFT = 'topLeft',
+    TOPRIGHT = 'topRight';
 
 
 // #### Export function
@@ -814,7 +827,6 @@ export default function (P = Ωempty) {
 
 // `stamp` - builds a set of Strings which can then be applied to the DOM wrapper's element's `style` attribute.
 // + The functionality for performing the update is defined in the [document](../core/document.html) module's `domShow` function, which will be called for each DOM-based artefact during the 'show' stage of the Display cycle
-// + Function returns a promise
 //
 // Only DOM elements whose attribute values have changed will be updated - as made clear by setting the appropriate dirty flags. Affected style attributes are:
 // + `perspectiveOrigin` and `perspective` - Stack wrappers only

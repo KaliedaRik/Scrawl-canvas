@@ -11,7 +11,10 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAW_ASSET, T_RD_ASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Export function
@@ -241,7 +244,7 @@ export default function (P = Ωempty) {
                             this.dirtyFilterIdentifier = true;
                         }
 
-                        if (img.type === T_VIDEO || img.type === T_SPRITE || img.type === T_NOISE || img.type === T_CELL || img.type === T_RAWASSET || img.type === T_RDASSET) {
+                        if (img.type === T_VIDEO || img.type === T_SPRITE || img.type === T_NOISE || img.type === T_CELL || img.type === T_RAW_ASSET || img.type === T_RD_ASSET) {
 
                             img.checkSource();
                         }

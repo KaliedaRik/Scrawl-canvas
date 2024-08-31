@@ -36,7 +36,16 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 import curveMix from '../mixin/shape-curve.js';
 
-import { BEZIER, COORD, END_CONTROL, END_CONTROL_PARTICLE, END_CONTROL_PATH, END_CONTROL_PIVOT, ENTITY, PATH, START_CONTROL, START_CONTROL_PARTICLE, START_CONTROL_PATH, START_CONTROL_PIVOT, T_BEZIER, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { BEZIER, COORD, END_CONTROL, ENTITY, PATH, START_CONTROL, T_BEZIER, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const END_CONTROL_PARTICLE = 'endControlParticle',
+    END_CONTROL_PATH = 'endControlPath',
+    END_CONTROL_PIVOT = 'endControlPivot',
+    START_CONTROL_PARTICLE = 'startControlParticle',
+    START_CONTROL_PATH = 'startControlPath',
+    START_CONTROL_PIVOT = 'startControlPivot';
 
 
 // #### Bezier constructor

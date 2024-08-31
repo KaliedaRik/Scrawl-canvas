@@ -63,10 +63,17 @@ const original = dithered.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+    let LUP = scrawl.getLastUsedReducePalette();
+    if (Array.isArray(LUP)) LUP = JSON.stringify(LUP);
+    console.log(LUP);
+
     return `
     Commonest colors: ${dom.paletteNumber.value}
     Minimum color distance: ${dom.minimumColorDistance.value}
-    Opacity: ${dom.opacity.value}`;
+    Opacity: ${dom.opacity.value}
+
+Last used palette:
+    ${LUP}`;
 });
 
 
@@ -89,14 +96,13 @@ scrawl.makeRender({
 // Setup form
 const dom = initializeDomInputs([
     ['input', 'paletteNumber', '16'],
-    ['input', 'minimumColorDistance', '1000'],
+    ['input', 'minimumColorDistance', '650'],
     ['input', 'opacity', '1'],
-    ['input', 'paletteString', 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite'],
+    ['input', 'paletteString', 'rgb(255 0 0), rgb(0 255 0), rgb(0 0 255), rgb(255 255 0), rgb(0 0 0), rgb(255 255 255)'],
     ['input', 'seed', 'some-random-string-or-other'],
     ['select', 'memoizeFilterOutput', 0],
     ['select', 'noiseType', 2],
     ['select', 'palette', 0],
-    ['select', 'useLabForPaletteDistance', 0],
 ]);
 
 
@@ -131,7 +137,6 @@ scrawl.makeUpdater({
         minimumColorDistance: ['minimumColorDistance', 'round'],
         seed: ['seed', 'raw'],
         noiseType: ['noiseType', 'raw'],
-        useLabForPaletteDistance: ['useLabForPaletteDistance', 'boolean'],
         opacity: ['opacity', 'float'],
     },
 });

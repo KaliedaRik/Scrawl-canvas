@@ -66,7 +66,11 @@ import { isa_fn, xt, xta, λnull, Ωempty } from "../helper/utilities.js";
 
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "../core/events.js";
 
-import { _ceil, _floor, _round, FALSE, T_GROUP, TRUE } from '../helper/shared-vars.js';
+// Shared constants
+import { _ceil, _floor, _round, T_GROUP, TRUE } from '../helper/shared-vars.js';
+
+// Local constants
+const FALSE = 'false';
 
 
 // __observeAndUpdate__ - exported function
