@@ -635,9 +635,7 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;
-<span class="hljs-keyword">import</span> assetConsumerMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset-consumer.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { $IMAGE, $VIDEO, _keys, <span class="hljs-variable constant_">COPY_DIMENSIONS</span>, <span class="hljs-variable constant_">COPY_START</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">STATE_KEYS</span>, <span class="hljs-variable constant_">T_PICTURE</span>, <span class="hljs-variable constant_">T_SPRITE</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> assetConsumerMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset-consumer.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -647,6 +645,37 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { $IMAGE, $VIDEO, _keys, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">STATE_KEYS</span>, <span class="hljs-variable constant_">T_PICTURE</span>, <span class="hljs-variable constant_">T_SPRITE</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">COPY_DIMENSIONS</span> = <span class="hljs-string">&#x27;copyDimensions&#x27;</span>,
+    <span class="hljs-variable constant_">COPY_START</span> = <span class="hljs-string">&#x27;copyStart&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="picture-constructor">Picture constructor</h4>
 
@@ -696,11 +725,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="picture-prototype">Picture prototype</h4>
 
@@ -715,11 +744,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -732,11 +761,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="picture-attributes">Picture attributes</h4>
 
@@ -747,11 +776,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>copyStart</strong> - Coordinate array</p>
 <ul>
@@ -765,11 +794,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>copyDimensions</strong> - Coordinate array</p>
 <ul>
@@ -783,11 +812,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>checkHitIgnoreTransparency</strong> - Boolean - when set, will check the stashedImage data to return whether a coordinate is hitting the image; otherwise checkHit will use the Picture entity’s dimensions to calculate the hit</p>
 
@@ -798,11 +827,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><em><strong>Additional attributes and pseudo-attributes</strong></em> are defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a></p>
 
@@ -814,11 +843,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -830,11 +859,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -844,11 +873,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -865,11 +894,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Cascade kill invocation to the asset object, if required</p>
 
@@ -882,11 +911,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -899,11 +928,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>copyStart</strong></p>
 <ul>
@@ -977,11 +1006,11 @@ D.<span class="hljs-property">copyStart</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>copyDimensions</strong></p>
 <ul>
@@ -1056,11 +1085,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Picture <code>get</code> and <code>set</code> (but not <code>deltaSet</code>) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object</p>
 
@@ -1069,11 +1098,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>get</code></p>
 
@@ -1123,11 +1152,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>set</code></p>
 
@@ -1186,11 +1215,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="subscriber-management">Subscriber management</h4>
 
@@ -1199,11 +1228,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>updateImageSubscribers</code></p>
 
@@ -1227,11 +1256,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>imageSubscribe</code></p>
 
@@ -1245,11 +1274,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>imageUnsubscribe</code></p>
 
@@ -1263,11 +1292,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 
@@ -1276,11 +1305,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>cleanImage</code></p>
 
@@ -1316,11 +1345,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>cleanCopyStart</code></p>
 
@@ -1359,11 +1388,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>cleanCopyDimensions</code></p>
 
@@ -1410,11 +1439,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code></p>
 
@@ -1425,11 +1454,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>The asset itself will update the Picture entity object when changes occur, by setting the entity’s <code>dirtyAsset</code> flag</p>
 
@@ -1440,11 +1469,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Not content with the dirty flag, the entity now interrogates its asset via its <code>checkSource</code> to trigger it to directly rewrite key information if it has changed - particularly dimensional data</p>
 
@@ -1463,11 +1492,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p> See the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> for details on the following checks and actions</p>
 
@@ -1504,11 +1533,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
@@ -1519,11 +1548,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Specifically for Loom entitys</p>
 
@@ -1534,11 +1563,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hidden-dom-elements.js</code> file - handles updates to anchor and button objects</p>
 
@@ -1550,11 +1579,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>preparePasteObject</code> - internal function</p>
 <ul>
@@ -1587,11 +1616,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - internal function</p>
 <ul>
@@ -1621,11 +1650,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 
@@ -1634,11 +1663,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -1652,11 +1681,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1671,11 +1700,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1701,11 +1730,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -1733,11 +1762,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -1756,11 +1785,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -1779,11 +1808,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>checkHitReturn</code> - overwrites mixin/position.js function</p>
 
@@ -1823,11 +1852,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);

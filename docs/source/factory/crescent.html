@@ -611,9 +611,7 @@
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _radian, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">T_CRESCENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -623,6 +621,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _radian, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">ENTITY</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_CRESCENT</span> = <span class="hljs-string">&#x27;Crescent&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="crescent-constructor">Crescent constructor</h4>
 
@@ -653,11 +681,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="crescent-prototype">Crescent prototype</h4>
 
@@ -672,11 +700,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -688,11 +716,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="crescent-attributes">Crescent attributes</h4>
 
@@ -703,11 +731,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>outerRadius</strong>, <strong>innerRadius</strong> - the circles’ radius measured in Number pixels, or as a String% - <code>&#39;10%&#39;</code> - of the Cell’s width</p>
 
@@ -719,11 +747,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>displacement</strong> - the displacement (rightwards) of the inner circle relative to the outer circle. Measured in positive Number pixels; negative values will be set to <code>0</code></p>
 
@@ -734,11 +762,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>displayIntersect</strong> - a Boolean flag determining which of the two parts of the combined circles to display. Defaults to <code>false</code>, which shows the portion of the outer circle not covered by the inner circle; set to <code>true</code>, will display the intersection of the inner and outer circles</p>
 
@@ -751,42 +779,14 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -799,12 +799,10 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -815,7 +813,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p><strong>width</strong> and <strong>height</strong> (and dimensions) values are largely irrelevant to Crescent entitys; they get used internally purely as part of the Display cycle stamp functionality.</p>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
             
@@ -827,6 +826,35 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p><strong>width</strong> and <strong>height</strong> (and dimensions) values are largely irrelevant to Crescent entitys; they get used internally purely as part of the Display cycle stamp functionality.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>If they are used to (delta)set the entity’s values then outerRadius will be set to the supplied width value with String% values calculated from the entity’s host’s width, while innerRadius will be set to the supplied height value with String% values calculated from the entity’s host’s height</p>
 
@@ -912,11 +940,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -925,11 +953,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Dimensions calculations - overwrites mixin/position.js function</p>
 
@@ -962,11 +990,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>calculateInterception</code> - internal function to calculate how the two circles interact</p>
 
@@ -1008,11 +1036,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Decided to calculate the start/end angles for each circle through brute force</p>
 <ul>
@@ -1069,11 +1097,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Calculate the Crescent entity’s <strong>Path2D object</strong></p>
 
@@ -1132,11 +1160,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -1154,11 +1182,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>fill</code> - fill the entity with the entity’s <code>fillStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -1172,11 +1200,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity stroke, then fill, then remove shadow and repeat</p>
 
@@ -1213,11 +1241,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity fill, then stroke, then remove shadow and repeat</p>
 
@@ -1254,11 +1282,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</p>
 
@@ -1288,11 +1316,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</p>
 
@@ -1322,11 +1350,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>clip</code> - restrict drawing activities to the entity’s enclosed area</p>
 
@@ -1340,11 +1368,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</p>
 
@@ -1363,11 +1391,11 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>

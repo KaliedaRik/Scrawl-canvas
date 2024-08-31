@@ -1097,7 +1097,7 @@ const setActionsArray = {
         }];
     },
 
-// __modifyOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB
+// __modifyOk__ - (new in v8.14.0) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB
     modifyOk: function (f) {
         f.actions = [{
             action: MODIFY_OK_CHANNELS,
@@ -1110,7 +1110,7 @@ const setActionsArray = {
         }];
     },
 
-// __modulateOk__ - (new in v8.13.3) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB
+// __modulateOk__ - (new in v8.14.0) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB
     modulateOk: function (f) {
         f.actions = [{
             action: MODULATE_OK_CHANNELS,
@@ -1123,7 +1123,7 @@ const setActionsArray = {
         }];
     },
 
-// __negative__ - (new in v8.13.3) - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
+// __negative__ - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
     negative: function (f) {
         f.actions = [{
             action: NEGATIVE,
@@ -1303,7 +1303,7 @@ const setActionsArray = {
         });
     },
 
-// __rotateHue__ - (new in v8.13.3) - for each pixel: convert to OKLCH; rotate hue value by given angle; convert back to RGB
+// __rotateHue__ - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value by given angle; convert back to RGB
     rotateHue: function (f) {
         f.actions = [{
             action: ROTATE_HUE,

@@ -596,9 +596,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _atan2, _cos, _isFinite, _max, _min, _pow, _seal, _sin, _sqrt, <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">CLOSE</span>, <span class="hljs-variable constant_">GET_BEZIER</span>, <span class="hljs-variable constant_">GET_QUADRATIC</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -609,15 +607,59 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _atan2, _cos, _isFinite, _max, _min, _pow, _sin, _sqrt, <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">CLOSE</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">GET_BEZIER</span> = <span class="hljs-string">&#x27;getBezierXY&#x27;</span>,
+    <span class="hljs-variable constant_">GET_QUADRATIC</span> = <span class="hljs-string">&#x27;getQuadraticXY&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
               <p>We only use one pathCalcObject, but treat it like a pool of such objects for resetting to defaults</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pathCalcObjectPool = [];
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pathCalcObjectPool = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Exported helper functions</p>
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestPathCalcObject = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestPathCalcObject = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (!pathCalcObjectPool.<span class="hljs-property">length</span>) pathCalcObjectPool.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">_seal</span>({
+    <span class="hljs-keyword">if</span> (!pathCalcObjectPool.<span class="hljs-property">length</span>) pathCalcObjectPool.<span class="hljs-title function_">push</span>({
         <span class="hljs-attr">localPath</span>: <span class="hljs-literal">null</span>,
         <span class="hljs-attr">length</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">maxX</span>: <span class="hljs-number">0</span>,
@@ -631,7 +673,7 @@
         <span class="hljs-attr">unitProgression</span>: [],
         <span class="hljs-attr">xRange</span>: [],
         <span class="hljs-attr">yRange</span>: [],
-    }));
+    });
 
     <span class="hljs-keyword">return</span> pathCalcObjectPool.<span class="hljs-title function_">shift</span>();
 };
@@ -658,11 +700,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="export-function">Export function</h4>
 
@@ -673,11 +715,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Setup local variables</p>
 
@@ -710,11 +752,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Local function to populate the temporary myData array with data for every path partial</p>
 
@@ -746,11 +788,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The purpose of this loop is to</p>
 <ol>
@@ -994,11 +1036,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>This loop builds the local path string</p>
 
@@ -1018,11 +1060,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box</p>
 
@@ -1033,11 +1075,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Request a vector - used for reflection points</p>
 
@@ -1049,11 +1091,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>This loop calculates this.units array data</p>
 <ul>
@@ -1178,11 +1220,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>calculate bounding box dimensions</p>
 
@@ -1204,11 +1246,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="locally-defined-vector">Locally defined Vector</h4>
 <ul>
@@ -1243,11 +1285,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="helper-functions">Helper functions</h4>
 
@@ -1256,11 +1298,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>getShapeUnitMetaData</code></p>
 
@@ -1279,11 +1321,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>We want to separate out linear species before going into the while loop</p>
 <ul>
@@ -1349,11 +1391,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Stop the while loop if we’re getting close to the true length of the curve</p>
 
@@ -1368,11 +1410,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Stop the while loop after checking a maximum of 129 points along the curve</p>
 
@@ -1394,11 +1436,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>getXY</code></p>
 

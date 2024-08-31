@@ -600,9 +600,7 @@
 
 <span class="hljs-keyword">import</span> { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _keys, _FORMACTION, _FORMENCTYPE, _FORMMETHOD, _FORMNOVALIDATE, _POPOVERTARGET, _POPOVERTARGETACTION, <span class="hljs-variable constant_">ANCHOR</span>, <span class="hljs-variable constant_">AUTOFOCUS</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">BUTTON</span>, <span class="hljs-variable constant_">CLICK</span>, <span class="hljs-variable constant_">DATA_TAB_ORDER</span>, <span class="hljs-variable constant_">DISABLED</span>, <span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-variable constant_">FORM</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">T_BUTTON</span>, <span class="hljs-variable constant_">TARGET</span>, <span class="hljs-variable constant_">TYPE</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">VALUE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -612,6 +610,43 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _keys, <span class="hljs-variable constant_">ANCHOR</span>, <span class="hljs-variable constant_">AUTOFOCUS</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CLICK</span>, <span class="hljs-variable constant_">DATA_TAB_ORDER</span>, <span class="hljs-variable constant_">DISABLED</span>, <span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-variable constant_">FORM</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">TARGET</span>, <span class="hljs-variable constant_">TYPE</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">VALUE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> _FORMACTION = <span class="hljs-string">&#x27;formaction&#x27;</span>,
+    _FORMENCTYPE = <span class="hljs-string">&#x27;formenctype&#x27;</span>,
+    _FORMMETHOD = <span class="hljs-string">&#x27;formmethod&#x27;</span>,
+    _FORMNOVALIDATE = <span class="hljs-string">&#x27;formnovalidate&#x27;</span>,
+    _POPOVERTARGET = <span class="hljs-string">&#x27;popovertarget&#x27;</span>,
+    _POPOVERTARGETACTION = <span class="hljs-string">&#x27;popovertargetaction&#x27;</span>,
+    <span class="hljs-variable constant_">BUTTON</span> = <span class="hljs-string">&#x27;button&#x27;</span>,
+    <span class="hljs-variable constant_">T_BUTTON</span> = <span class="hljs-string">&#x27;Button&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="button-constructor">Button constructor</h4>
 
@@ -642,11 +677,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="button-prototype">Button prototype</h4>
 <p>Note that button objects are stored in the <code>anchor</code> section of the SC Library</p>
@@ -662,11 +697,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -677,11 +712,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="button-attributes">Button attributes</h4>
 
@@ -692,11 +727,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>host</strong> - Every button will belong to exactly one Artefact.</p>
 
@@ -707,11 +742,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>description</strong> - The text that Scrawl-canvas will include between the button tags, when building the button. <strong>Always include a description</strong> for accessibility.</p>
 
@@ -722,11 +757,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>tabOrder</strong> - All hidden Button &lt;button&gt; elements have a default tabOrder attribute value of 0. SC does not touch this attribute. Instead, to order Button (and Anchor) DOM elements within the host &lt;canvas&gt; element’s &lt;nav&gt; element we set a <code>data-tab-order</code> attribute with the tabOrder value, which the Canvas wrapper can then use to reorder the elements as part of the Display cycle.</p>
 
@@ -737,11 +772,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>The following attributes are detailed in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button">MDN’s &lt;button&gt; reference page</a>.</p>
 <ul>
@@ -766,11 +801,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>clickAction</strong> - function - actions to be performed when user tabs to the hidden button element and presses the keyboard return button. Function cannot take any arguments.</p>
 
@@ -781,11 +816,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>We can instruct the button to add event listeners for focus and blur events using the <strong>focusAction</strong> and <strong>blurAction</strong> Boolean flags. When set to true, the <em><strong>focus</strong></em> event listener will invoke the host entity’s <code>onEnter</code> function; the <em><strong>blur</strong></em> event listener invokes the <code>onLeave</code> function. Default is to ignore these events</p>
 
@@ -799,11 +834,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h2 id="packet-management">Packet management</h2>
 
@@ -816,11 +851,11 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -830,11 +865,11 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -860,11 +895,11 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p>The artefact with which a button object is associated maps these additional attributes to itself as follows:</p>
@@ -920,11 +955,11 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>The <code>build</code> function builds the &lt;button&gt; element and adds it to the DOM</p>
@@ -1001,11 +1036,11 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>rebuild</code> - called as part of the Display cycle</p>
 
@@ -1023,11 +1058,11 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>To action a user <code>click</code> on an artifact with an associated button object, we generate a DOM MouseEvent originating from the button element which the browser can act on in the usual manner (browser/device dependent)</p>
 
@@ -1046,11 +1081,11 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>This choke mechanism is intended to prevent “Maximum call stack size exceeded” errors occurring</p>
 <ul>
@@ -1072,11 +1107,11 @@ button.<span class="hljs-property">tabOrder</span>            ~~&gt;  artefact.<
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>To create a button, include an button definition object in any artefact object’s factory argument:</p>

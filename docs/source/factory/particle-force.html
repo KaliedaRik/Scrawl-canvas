@@ -577,8 +577,8 @@
               <h1 id="force-factory">Force factory</h1>
 <p>The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:</p>
 <ul>
-<li><a href="./particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="./vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
-<li><a href="./particleHistory.html">History arrays</a> which can be pooled (reused) to cut down on Array creation and distruction during the animation.</li>
+<li><a href="./particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="../untracked-factory/vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
+<li><a href="../untracked-factory/particleHistory.html">History arrays</a> which can be pooled (reused) to cut down on Array creation and distruction during the animation.</li>
 <li><a href="./particleForce.html">Force objects</a> which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a <strong>gravity</strong> force object is pre-defined by Scrawl-canvas.</li>
 <li><a href="./particleSpring.html">Spring objects</a> used to define a constraint (connection) between two particles in a system.</li>
 <li><a href="./particleWorld.html">World objects</a> where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.</li>
@@ -623,9 +623,7 @@
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/vector.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">FORCE</span>, <span class="hljs-variable constant_">GRAVITY</span>, <span class="hljs-variable constant_">T_FORCE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -635,6 +633,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants (none imported)</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">FORCE</span> = <span class="hljs-string">&#x27;force&#x27;</span>,
+    <span class="hljs-variable constant_">GRAVITY</span> = <span class="hljs-string">&#x27;gravity&#x27;</span>,
+    <span class="hljs-variable constant_">T_FORCE</span> = <span class="hljs-string">&#x27;Force&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="force-constructor">Force constructor</h4>
 
@@ -657,11 +685,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="force-prototype">Force prototype</h4>
 
@@ -676,11 +704,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -691,11 +719,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="force-attributes">Force attributes</h4>
 
@@ -710,11 +738,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -725,11 +753,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -739,11 +767,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -759,11 +787,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -780,11 +808,11 @@ S.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> myRepellorBall = scrawl.<span class="hljs-title function_">makeWheel</span>({
@@ -829,11 +857,11 @@ constructors.<span class="hljs-property">Force</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="gravity-force">Gravity force</h4>
 <p>Seeing as it’s such a common requirement, we pre-create it here</p>

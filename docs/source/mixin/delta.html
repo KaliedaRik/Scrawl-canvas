@@ -592,9 +592,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeDiscard, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _isArray, _keys, <span class="hljs-variable constant_">ADD</span>, <span class="hljs-variable constant_">LONGCHECK</span>, <span class="hljs-variable constant_">LOOP</span>, <span class="hljs-variable constant_">MULTIPLY</span>, <span class="hljs-variable constant_">NEWNUMBER</span>, <span class="hljs-variable constant_">NEWSTRING</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">REMOVE</span>, <span class="hljs-variable constant_">REVERSE</span>, <span class="hljs-variable constant_">SEPARATOR</span>, <span class="hljs-variable constant_">SHORTCHECK</span>, <span class="hljs-variable constant_">UPDATE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeDiscard, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -605,11 +603,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="export-function">Export function</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _keys, <span class="hljs-variable constant_">MULTIPLY</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -620,11 +618,20 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="shared-attributes">Shared attributes</h4>
+              <p>Local constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ADD</span> = <span class="hljs-string">&#x27;add&#x27;</span>,
+    <span class="hljs-variable constant_">LONGCHECK</span> = [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;width&#x27;</span>, <span class="hljs-string">&#x27;height&#x27;</span>],
+    <span class="hljs-variable constant_">LOOP</span> = <span class="hljs-string">&#x27;loop&#x27;</span>,
+    <span class="hljs-variable constant_">NEWNUMBER</span> = <span class="hljs-string">&#x27;newNumber&#x27;</span>,
+    <span class="hljs-variable constant_">NEWSTRING</span> = <span class="hljs-string">&#x27;newString&#x27;</span>,
+    <span class="hljs-variable constant_">REMOVE</span> = <span class="hljs-string">&#x27;remove&#x27;</span>,
+    <span class="hljs-variable constant_">REVERSE</span> = <span class="hljs-string">&#x27;reverse&#x27;</span>,
+    <span class="hljs-variable constant_">SEPARATOR</span> = <span class="hljs-string">&#x27;:&#x27;</span>,
+    <span class="hljs-variable constant_">SHORTCHECK</span> = [<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;height&#x27;</span>],
+    <span class="hljs-variable constant_">UPDATE</span> = <span class="hljs-string">&#x27;update&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -634,6 +641,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="export-function">Export function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <h4 id="shared-attributes">Shared attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><strong>delta</strong> - a Javascript object containing <code>{key:value, key:value, etc}</code> attributes.</p>
 <ul>
@@ -668,11 +705,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>We do not want to perform any delta checks on any uninitalized attributes - in other words: no checks on the first iteration of the Display cycle</p>
 
@@ -686,42 +723,14 @@
         </li>
         
         
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet management functionality defined here</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality defined here</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality defined here</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet management functionality defined here</p>
 
             </div>
             
@@ -734,11 +743,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -748,6 +756,35 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>delta</strong></p>
 
@@ -767,11 +804,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -780,11 +817,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code> - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the <strong>delta</strong> attribute object then those <strong>delta animations</strong> will start playing immediately.</p>
 
@@ -802,11 +839,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>reverseByDelta</code> - The opposite action to ‘updateByDelta’; values in the <strong>delta</strong> attribute object will be subtracted from the current value for that Scrawl-canvas object.</p>
 
@@ -981,11 +1018,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>setDeltaValues</code>
 Update the artefact’s <code>delta</code> object in a more intelligent way. The function accepts an object argument containing a set of instructions which will be interpreted and applied to the delat object.</p>

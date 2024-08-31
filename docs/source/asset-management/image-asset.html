@@ -600,9 +600,7 @@
 <span class="hljs-keyword">import</span> { doCreate, isa_obj, mergeOver, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _parse, <span class="hljs-variable constant_">ANONYMOUS</span>, <span class="hljs-variable constant_">ASSET</span>, <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>, <span class="hljs-variable constant_">BLOCK</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">IMAGE_ELEMENTS</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">INTRINSIC</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SLASH</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">T_IMAGE</span>, <span class="hljs-variable constant_">ZERO</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -612,6 +610,39 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _parse, <span class="hljs-variable constant_">ANONYMOUS</span>, <span class="hljs-variable constant_">ASSET</span>, <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>, <span class="hljs-variable constant_">BLOCK</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">T_IMAGE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">IMAGE_ELEMENTS</span> = [<span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;PICTURE&#x27;</span>],
+    <span class="hljs-variable constant_">INTRINSIC</span> = <span class="hljs-string">&#x27;intrinsic&#x27;</span>,
+    <span class="hljs-variable constant_">SLASH</span> = <span class="hljs-string">&#x27;/&#x27;</span>,
+    <span class="hljs-variable constant_">ZERO</span> = <span class="hljs-string">&#x27;zero&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="imageasset-constructor">ImageAsset constructor</h4>
 
@@ -625,11 +656,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="imageasset-prototype">ImageAsset prototype</h4>
 
@@ -644,11 +675,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -660,11 +691,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="imageasset-attributes">ImageAsset attributes</h4>
 
@@ -675,11 +706,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>intrinsicDimensions</strong> - Javascript object which defines the intrinsic dimensions of each image contributing to an &lt;img&gt; element’s <code>srcset</code> attribute. Can also be set in Javascript code:</p>
 <pre><code>filename-<span class="hljs-title class_">String</span>: [width-<span class="hljs-title class_">Number</span>, height-<span class="hljs-title class_">Number</span>]
@@ -699,11 +730,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
@@ -721,11 +752,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -736,11 +767,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -750,11 +781,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -766,11 +797,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>source</strong></p>
 
@@ -792,11 +823,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>For &lt;img&gt; and &lt;picture&gt; elements</p>
 
@@ -817,11 +848,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>currentSrc</strong> - this attribute is not part of the defs object</p>
 
@@ -836,11 +867,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -849,11 +880,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>checkSource</code></p>
 
@@ -922,11 +953,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>gettableImageAssetAtributes</code>, <code>settableImageAssetAtributes</code> - exported Arrays.</p>
 
@@ -938,11 +969,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="importing-images-into-scrawl-canvas">Importing images into Scrawl-canvas</h4>
 
@@ -951,11 +982,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>importImage</code> - load images from a remote server and create assets from them</p>
 <p>Arguments can be a comma-separated list of String urls. For example, for aimage file at server url <code>http://www.example.com/path/to/image/flower.jpg</code>:</p>
@@ -1054,11 +1085,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>importDomImage</code> - import images defined in the web page HTML code</p>
 <ul>
@@ -1109,11 +1140,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles</p>
 <ul>
@@ -1126,11 +1157,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>createImageFromCell</code></p>
 
@@ -1153,11 +1184,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>createImageFromGroup</code></p>
 
@@ -1186,11 +1217,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>createImageFromEntity</code></p>
 
@@ -1211,11 +1242,11 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="factory-not-exported">Factory (not exported)</h4>
 

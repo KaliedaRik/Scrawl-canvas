@@ -577,17 +577,17 @@
               <h1 id="particlehistory-factory">ParticleHistory factory</h1>
 <p>The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:</p>
 <ul>
-<li><a href="./particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="./vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
+<li><a href="../factory/particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="./vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
 <li><a href="./particleHistory.html">History arrays</a> which can be pooled (reused) to cut down on Array creation and distruction during the animation.</li>
-<li><a href="./particleForce.html">Force objects</a> which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a <strong>gravity</strong> force object is pre-defined by Scrawl-canvas.</li>
-<li><a href="./particleSpring.html">Spring objects</a> used to define a constraint (connection) between two particles in a system.</li>
-<li><a href="./particleWorld.html">World objects</a> where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.</li>
+<li><a href="../factory/particleForce.html">Force objects</a> which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a <strong>gravity</strong> force object is pre-defined by Scrawl-canvas.</li>
+<li><a href="../factory/particleSpring.html">Spring objects</a> used to define a constraint (connection) between two particles in a system.</li>
+<li><a href="../factory/particleWorld.html">World objects</a> where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.</li>
 </ul>
 <p>We do not have to handle particle generation and manipulation ourselves. Instead, Scrawl-canvas gives us three dedicated <strong>entitys</strong> which we use to add particle animation effects to the canvas scene. These entitys are:</p>
 <ul>
-<li><a href="./tracer.html">Tracer</a> - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.</li>
-<li><a href="./emitter.html">Emitter</a> - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.</li>
-<li><a href="./net.html">Net</a> - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.</li>
+<li><a href="../factory/tracer.html">Tracer</a> - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.</li>
+<li><a href="../factory/emitter.html">Emitter</a> - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.</li>
+<li><a href="../factory/net.html">Net</a> - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.</li>
 </ul>
 <p><strong>ParticleHistory</strong> objects are Arrays in which Scrawl-canvas records history data for a given particle at a specified time. The array holds data in the following format:</p>
 <pre><code>[
@@ -614,9 +614,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _create, _seal, _setPrototypeOf, <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -626,6 +624,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _create, _setPrototypeOf } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span> = <span class="hljs-string">&#x27;ParticleHistory&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="particlehistory-constructor">ParticleHistory constructor</h4>
 
@@ -637,17 +665,17 @@
 
     <span class="hljs-title function_">_setPrototypeOf</span>(h, <span class="hljs-title class_">ParticleHistory</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_seal</span>(h);
+    <span class="hljs-keyword">return</span> h;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="particlehistory-prototype">ParticleHistory prototype</h4>
 
@@ -660,42 +688,14 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <h4 id="mixins">Mixins</h4>
-<p>ParticleHistory Arrays do not use mixins - they are regular Javascript Arrays. As such, they do not possess packet, clone or kill functionality.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h4 id="particlehistory-attributes">ParticleHistory attributes</h4>
-<p>There are no attributes. The constructor returns an Array containing two members, whose prototype object includes functions for manipulating those members in various ways.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>There are no getter or setter functions.</p>
+              <h4 id="mixins">Mixins</h4>
+<p>ParticleHistory Arrays do not use mixins - they are regular Javascript Arrays. As such, they do not possess packet, clone or kill functionality.</p>
 
             </div>
             
@@ -708,8 +708,8 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-<p>There are no additional prototype functions.</p>
+              <h4 id="particlehistory-attributes">ParticleHistory attributes</h4>
+<p>There are no attributes. The constructor returns an Array containing two members, whose prototype object includes functions for manipulating those members in various ways.</p>
 
             </div>
             
@@ -722,6 +722,34 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>There are no getter or setter functions.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+<p>There are no additional prototype functions.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
               <h4 id="particlehistory-pool">ParticleHistory pool</h4>
 <p>An attempt to reuse history arrays rather than constantly creating and deleting them</p>
 
@@ -732,11 +760,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - retrieve a ParticleHistory from the history pool</p>
 
@@ -752,11 +780,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a ParticleHistory array to the history pool. Failing to return arrays to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -774,11 +802,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Do not keep excessive numbers of under-utilised arrays in the pool</p>
 

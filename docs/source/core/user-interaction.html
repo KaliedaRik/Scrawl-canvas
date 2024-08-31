@@ -602,9 +602,7 @@
 
 <span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/animation.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/system-flags.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _floor, _isFinite, _now, _round, _seal, _values, <span class="hljs-variable constant_">ADD_EVENT_LISTENER</span>, <span class="hljs-variable constant_">CHANGE</span>, <span class="hljs-variable constant_">DISPLAY_P3</span>, <span class="hljs-variable constant_">FONT_USERS</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">MOUSE_DOWN</span>, <span class="hljs-variable constant_">MOUSE_ENTER</span>, <span class="hljs-variable constant_">MOUSE_LEAVE</span>, <span class="hljs-variable constant_">MOUSE_MOVE</span>, <span class="hljs-variable constant_">MOUSE_UP</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">POINTER</span>, <span class="hljs-variable constant_">POINTER_DOWN</span>, <span class="hljs-variable constant_">POINTER_ENTER</span>, <span class="hljs-variable constant_">POINTER_LEAVE</span>, <span class="hljs-variable constant_">POINTER_MOVE</span>, <span class="hljs-variable constant_">POINTER_UP</span>, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>, <span class="hljs-variable constant_">RESIZE</span>, <span class="hljs-variable constant_">SCROLL</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">TOUCH</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span></pre></div></div>
+<span class="hljs-keyword">import</span> { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/system-flags.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -615,11 +613,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><code>Exported array</code> (to modules). DOM element wrappers subscribe for updates by adding themselves to the <strong>uiSubscribedElements</strong> array. When an event fires, the updated data will be pushed to them automatically</p>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> uiSubscribedElements = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, _isFinite, _now, _round, _values, <span class="hljs-variable constant_">ADD_EVENT_LISTENER</span>, <span class="hljs-variable constant_">DISPLAY_P3</span>, <span class="hljs-variable constant_">FONT_USERS</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">MOUSE_DOWN</span>, <span class="hljs-variable constant_">MOUSE_ENTER</span>, <span class="hljs-variable constant_">MOUSE_LEAVE</span>, <span class="hljs-variable constant_">MOUSE_MOVE</span>, <span class="hljs-variable constant_">MOUSE_UP</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">POINTER_DOWN</span>, <span class="hljs-variable constant_">POINTER_ENTER</span>, <span class="hljs-variable constant_">POINTER_LEAVE</span>, <span class="hljs-variable constant_">POINTER_MOVE</span>, <span class="hljs-variable constant_">POINTER_UP</span>, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -630,11 +628,45 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">CHANGE</span> = <span class="hljs-string">&#x27;change&#x27;</span>,
+    <span class="hljs-variable constant_">POINTER</span> = <span class="hljs-string">&#x27;pointer&#x27;</span>,
+    <span class="hljs-variable constant_">RESIZE</span> = <span class="hljs-string">&#x27;resize&#x27;</span>,
+    <span class="hljs-variable constant_">SCROLL</span> = <span class="hljs-string">&#x27;scroll&#x27;</span>,
+    <span class="hljs-variable constant_">TOUCH</span> = <span class="hljs-string">&#x27;touch&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p><code>Exported array</code> (to modules). DOM element wrappers subscribe for updates by adding themselves to the <strong>uiSubscribedElements</strong> array. When an event fires, the updated data will be pushed to them automatically</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> uiSubscribedElements = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
               <p><code>Exported object</code> (to modules and the scrawl object). The <strong>currentCorePosition</strong> object holds the <strong>global</strong> mouse cursor position, alongside browser view dimensions and scroll position</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> currentCorePosition = <span class="hljs-title function_">_seal</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> currentCorePosition = {
     <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">scrollX</span>: <span class="hljs-number">0</span>,
@@ -651,16 +683,16 @@
     <span class="hljs-attr">canvasSupportsP3Color</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">devicePixelRatio</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">rawTouches</span>: [],
-});</pre></div></div>
+};</pre></div></div>
             
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h3 id="accessibility-preferences">Accessibility preferences</h3>
 
@@ -669,11 +701,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>contrastMediaQuery</strong> - real-time check on the <code>prefers-reduced-motion</code> user preference, as set for the device or OS</p>
 
@@ -696,11 +728,11 @@ currentCorePosition.<span class="hljs-property">prefersContrast</span> = contras
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>reducedMotionMediaQuery</strong> - real-time check on the <code>prefers-reduced-motion</code> user preference, as set for the device or OS</p>
 
@@ -723,11 +755,11 @@ currentCorePosition.<span class="hljs-property">prefersReducedMotion</span> = re
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>colorSchemeMediaQuery</strong> - real-time check on the <code>prefers-color-scheme</code> user preference, as set for the device or OS</p>
 
@@ -750,11 +782,11 @@ currentCorePosition.<span class="hljs-property">prefersDarkColorScheme</span> = 
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>reducedTransparencyMediaQuery</strong> - real-time check on the <code>prefers-reduced-transparency</code> user preference, as set for the device or OS</p>
 
@@ -777,11 +809,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceTransparency</span>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>reducedDataMediaQuery</strong> - real-time check on the <code>prefers-reduced-data</code> user preference, as set for the device or OS</p>
 
@@ -804,11 +836,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h3 id="watch-for-changes-when-user-drags-browser-window-between-screens">Watch for changes when user drags browser window between screens</h3>
 <p><strong>displaySupportsP3ColorMediaQuery</strong> - real-time check on whether the browser is being displayed on a device screen which supports wide gamut colors</p>
@@ -831,11 +863,11 @@ currentCorePosition.<span class="hljs-property">displaySupportsP3Color</span> = 
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Also check to see if the canvas supports DisplayP3 - this is a one-time check as support is device/screen independent</p>
 
@@ -848,11 +880,11 @@ currentCorePosition.<span class="hljs-property">displaySupportsP3Color</span> = 
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Needs to be done in try-catch because (apparently) Safari throws a fit if colorSpace option is supported by the canvas engine but the minimum macOS/iOS system requirements for display-p3 support are not met</p>
 
@@ -871,11 +903,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="monitoring-the-device-pixel-ratio">Monitoring the device pixel ratio</h4>
 <p>DPR is detected here, but mainly handled in the <code>factory/cell.js</code> file</p>
@@ -892,11 +924,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>getIgnorePixelRatio</strong>, <strong>setIgnorePixelRatio</strong> - exported to the API</p>
 
@@ -909,11 +941,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>setPixelRatioChangeAction</strong> - exported to the API</p>
 
@@ -936,11 +968,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>We use a one-time media query for checking when the device pixel ratio changes</p>
 <ul>
@@ -959,11 +991,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h3 id="watch-for-browser-window-resize-or-device-rotation-which-trigger-changes-in-the-viewport-dimensions">Watch for browser window resize, or device rotation, which trigger changes in the viewport dimensions</h3>
 
@@ -972,11 +1004,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>resizeAction</strong> function - to check if a view resize has occurred; if yes, flag that currentCorePosition object needs to be updated</p>
 
@@ -999,11 +1031,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h3 id="watch-for-scrolling-interactions">Watch for scrolling interactions</h3>
 
@@ -1012,11 +1044,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>scrollAction</strong> function - to check if a view scroll has occurred; if yes, flag that currentCorePosition object needs to be updated</p>
 
@@ -1039,11 +1071,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h3 id="watch-for-mouse-pointer-and-touch-movement">Watch for mouse, pointer and touch movement</h3>
 
@@ -1052,11 +1084,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><strong>moveAction</strong> function - to check if mouse cursor position has changed; if yes, update currentCorePosition object and flag that the updated needs to cascade to subscribed elements at the next RAF invocation.</p>
 
@@ -1065,11 +1097,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>The events that trigger this function (pointermove, pointerup, pointerdown, pointerleave, pointerenter; or mousemove, mouseup, mousedown, mouseleave, mouseenter) are tied to the window object, not to any particular DOM element.</p>
 
@@ -1091,11 +1123,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>touchAction</strong> function - maps touch coordinates to the mouse cursor position (via currentCorePosition) and then immediately invokes a cascade update action to all subscribed elements.</p>
 
@@ -1104,11 +1136,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>The events that trigger this function (touchstart, touchmove, touchend, touchcancel) are tied to the window object, not to any particular DOM element.</p>
 
@@ -1117,11 +1149,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame.</p>
 <p>TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.</p>
@@ -1183,11 +1215,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h2 id="cascade-interaction-results-down-to-subscribed-elements">Cascade interaction results down to subscribed elements</h2>
 
@@ -1196,11 +1228,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Functions to update uiSubscribedElements attached to specified DOM elements. Each stack or canvas element tracked by Scrawl-canvas will include a local <strong>here</strong> object which includes details of the element’s current dimensions, relative position, and the position of the mouse cursor in relation to its top-left corner. These all need to be updated whenever there’s a resize, scroll or cursor movement.</p>
 
@@ -1227,11 +1259,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Accessibility</p>
 
@@ -1253,11 +1285,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>DOM-element-dependant values</p>
 
@@ -1280,11 +1312,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Position of the artefact in the browser/device viewport</p>
 
@@ -1301,11 +1333,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions.</p>
 
@@ -1330,11 +1362,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Default mouse tracking behaviour</p>
 
@@ -1372,11 +1404,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Canvas <code>fit</code> attribute adjustments</p>
 
@@ -1387,11 +1419,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Automatically check for element resize</p>
 <ul>
@@ -1411,11 +1443,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Regardless of the setting of &lt;canvas&gt; element’s <code>boxSizing</code> style attribute:</p>
 <ul>
@@ -1445,11 +1477,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>Stack and Element artefacts resize test.</p>
 <ul>
@@ -1482,11 +1514,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Internal functions that get triggered when setting a DOM-based artefact’s <code>trackHere</code> attribute. They add/remove an event listener to the artefact’s domElement.</p>
 
@@ -1527,11 +1559,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Animation object which checks whether any window event listeners have fired, and actions accordingly</p>
 
@@ -1573,11 +1605,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>This is to capture changes in the browser viewport size which can affect Label-related text using a font size measured relative to the viewport size</p>
 
@@ -1591,11 +1623,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas’s impact on those pages by switching off the core listeners (and also the core animation loop).</p>
 
@@ -1623,11 +1655,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Helper function</p>
 
@@ -1664,11 +1696,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.</p>
 
@@ -1690,11 +1722,11 @@ currentCorePosition.<span class="hljs-property">canvasSupportsP3Color</span> = <
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Putting this small library-related function here as this file gets all <code>core/library</code> objects rather than selectively importing some of them</p>
 

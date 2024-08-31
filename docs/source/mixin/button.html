@@ -595,9 +595,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeButton } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/button.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">AUTOFOCUS</span>, <span class="hljs-variable constant_">BLUR_ACTION</span>, <span class="hljs-variable constant_">DESCRIPTION</span>, <span class="hljs-variable constant_">CLICK_ACTION</span>, <span class="hljs-variable constant_">DISABLED</span>, <span class="hljs-variable constant_">ELEMENT_TYPE</span>, <span class="hljs-variable constant_">ELEMENT_VALUE</span>, <span class="hljs-variable constant_">FOCUS_ACTION</span>, <span class="hljs-variable constant_">FORM</span>, <span class="hljs-variable constant_">FORM_ACTION</span>, <span class="hljs-variable constant_">FORM_ENCTYPE</span>, <span class="hljs-variable constant_">FORM_METHOD</span>, <span class="hljs-variable constant_">FORM_NOVALIDATE</span>, <span class="hljs-variable constant_">FORM_TARGET</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">POPOVER_TARGET</span>, <span class="hljs-variable constant_">POPOVER_TARGETACTION</span>, <span class="hljs-variable constant_">TAB_ORDER</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { makeButton } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/button.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -608,11 +606,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="export-function">Export function</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">AUTOFOCUS</span>, <span class="hljs-variable constant_">BLUR_ACTION</span>, <span class="hljs-variable constant_">DESCRIPTION</span>, <span class="hljs-variable constant_">CLICK_ACTION</span>, <span class="hljs-variable constant_">DISABLED</span>, <span class="hljs-variable constant_">FOCUS_ACTION</span>, <span class="hljs-variable constant_">FORM</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">TAB_ORDER</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -623,11 +621,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="shared-attributes">Shared attributes</h4>
+              <p>Local constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ELEMENT_TYPE</span> = <span class="hljs-string">&#x27;elementType&#x27;</span>,
+    <span class="hljs-variable constant_">ELEMENT_VALUE</span> = <span class="hljs-string">&#x27;elementValue&#x27;</span>,
+    <span class="hljs-variable constant_">FORM_ACTION</span> = <span class="hljs-string">&#x27;formAction&#x27;</span>,
+    <span class="hljs-variable constant_">FORM_ENCTYPE</span> = <span class="hljs-string">&#x27;formEnctype&#x27;</span>,
+    <span class="hljs-variable constant_">FORM_METHOD</span> = <span class="hljs-string">&#x27;formMethod&#x27;</span>,
+    <span class="hljs-variable constant_">FORM_NOVALIDATE</span> = <span class="hljs-string">&#x27;formNoValidate&#x27;</span>,
+    <span class="hljs-variable constant_">FORM_TARGET</span> = <span class="hljs-string">&#x27;formTarget&#x27;</span>,
+    <span class="hljs-variable constant_">POPOVER_TARGET</span> = <span class="hljs-string">&#x27;popoverTarget&#x27;</span>,
+    <span class="hljs-variable constant_">POPOVER_TARGETACTION</span> = <span class="hljs-string">&#x27;popoverTargetAction&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -637,6 +643,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="export-function">Export function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <h4 id="shared-attributes">Shared attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><strong>button</strong> - a handle to the button object. When creating or setting an artefact this can be supplied in the argument object as a Javascript object containing the data required to create the button.</p>
 
@@ -649,11 +685,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>No additional packet functionality required</p>
@@ -663,11 +699,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -677,11 +713,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p><code>demolishButton</code> - Note that Button objects use the <code>handlePacketAnchor</code> function defined in the <a href="./position.html">position</a> mixin, to manage the surrounding kill functionality.</p>
@@ -696,11 +732,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -712,11 +748,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>The following attributes (which largely map to <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button">HTML button attributes</a>) can be included in the argument object passed to the artefact’s factory and <code>set</code> functions, or passed as a String to the <code>get</code> function:</p>
 <pre><code>artefact.<span class="hljs-property">buttonAutofocus</span>       ~~&gt;  button.<span class="hljs-property">autofocus</span>       boolean - <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>
@@ -754,11 +790,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>buttonAutofocus</strong></p>
 
@@ -770,11 +806,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>buttonDescription</strong></p>
 
@@ -786,11 +822,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>buttonDisabled</strong></p>
 
@@ -802,11 +838,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>buttonTabOrder</strong></p>
 
@@ -818,11 +854,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>buttonForm</strong></p>
 
@@ -834,11 +870,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>buttonFormAction</strong></p>
 
@@ -850,11 +886,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>buttonFormEnctype</strong></p>
 
@@ -866,11 +902,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>buttonFormMethod</strong></p>
 
@@ -882,11 +918,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>buttonFormNoValidate</strong></p>
 
@@ -898,11 +934,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>buttonFormTarget</strong></p>
 
@@ -914,11 +950,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>buttonPopoverTarget</strong></p>
 
@@ -930,11 +966,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>buttonPopoverTargetAction</strong></p>
 
@@ -946,11 +982,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><strong>buttonElementType</strong></p>
 
@@ -962,11 +998,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><strong>buttonElementValue</strong></p>
 
@@ -978,11 +1014,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>buttonFocusAction</strong></p>
 
@@ -993,11 +1029,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>buttonBlurAction</strong></p>
 
@@ -1008,11 +1044,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>buttonClickAction</strong></p>
 
@@ -1023,11 +1059,11 @@ artefact.buttonTabOrder        ~~&gt;  button.tabOrder        number - default: 
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>button</strong>
 The artefact’s factory and <code>set</code> functions’ argument object can include a single <strong>button</strong> attribute, whose value should be an object containing button key:value pairs</p>
@@ -1048,11 +1084,11 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Internal helper functions</p>
 
@@ -1073,11 +1109,11 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1086,11 +1122,11 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>The <code>buildButton</code> function triggers the (re)build of the &lt;a&gt; element and adds it to the DOM</p>
 
@@ -1113,11 +1149,11 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>rebuildButton</code> - triggers the Button object’s <code>build</code> function</p>
 
@@ -1131,11 +1167,11 @@ The artefact’s factory and <code>set</code> functions’ argument object can i
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>clickButton</code> - function to pass a user click (or whatever event has been set up) on the artefact through to the button object, for action.</p>
 
