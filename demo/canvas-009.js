@@ -200,7 +200,7 @@ scrawl.makeBlock({
         myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
     },
 
-    // Used by the Scrawl-canvas `click` event, below. 
+    // Used by the Scrawl-canvas `click` event, below.
     // + This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor's clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology
     onUp: function () {
 
@@ -213,7 +213,7 @@ scrawl.makeBlock({
         this.clickAnchor();
     },
 
-    // Used by the Scrawl-canvas `contextmenu` event, below. 
+    // Used by the Scrawl-canvas `contextmenu` event, below.
     // + When the user right-clicks on a block, we want them to see the context menu for a link element, not an image element
     // + Sadly I don't know a good way to achieve this - creating a `contextmenu` Pointer event and dispatching it on the anchor's element associated with the block doesn't work for me
     // + Instead, the following functionality clones the anchor's element, styles and positions it, then adds it to the web page where user can (again) right-click on it to display the context menu
