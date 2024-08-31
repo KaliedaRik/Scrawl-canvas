@@ -58,6 +58,7 @@ const ARIA_BUSY = 'aria-busy',
     CANVAS_QUERY = '[data-scrawl-canvas]',
     FIT_DEFS = ['fill', 'contain', 'cover'],
     NAV = 'nav',
+    OTHER_INTERACTION = 'otherInteraction',
     TITLE = 'title';
 
 
@@ -1025,6 +1026,12 @@ P.cascadeEventAction = function (action, e = {}) {
             doLeave(e);
             for (i = 0; i < newActiveLen; i++) {
                 newActiveEntityObjects[i].onEnter(e);
+            }
+            break;
+
+        case OTHER_INTERACTION :
+            for (i = 0; i < currentActiveLen; i++) {
+                currentActiveEntityObjects[i].onOtherInteraction(e);
             }
             break;
     }
