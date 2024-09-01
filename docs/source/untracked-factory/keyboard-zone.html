@@ -604,9 +604,7 @@
 
 <span class="hljs-keyword">import</span> { mergeDiscard, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../helper/utilities.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { addNativeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
-
-<span class="hljs-keyword">import</span> { $BODY, _keys, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">KEY_DOWN</span>, <span class="hljs-variable constant_">KEY_UP</span>, <span class="hljs-variable constant_">KEYBOARD_GROUPS</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">T_ESCAPE</span>, <span class="hljs-variable constant_">T_TAB</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { addNativeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -617,15 +615,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Local constants</p>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> keyboardZones = {};
-
-<span class="hljs-keyword">const</span> processKeyboardZoneData = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty, doAddListeners, doRemoveListeners</span>) {
-
-    <span class="hljs-keyword">let</span> zone = items.<span class="hljs-property">zone</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { $BODY, _keys, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">NONE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -635,6 +629,32 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">KEY_DOWN</span> = <span class="hljs-string">&#x27;keydown&#x27;</span>,
+    <span class="hljs-variable constant_">KEY_UP</span> = <span class="hljs-string">&#x27;keyup&#x27;</span>,
+    <span class="hljs-variable constant_">KEYBOARD_GROUPS</span> = [<span class="hljs-string">&#x27;none&#x27;</span>, <span class="hljs-string">&#x27;shiftOnly&#x27;</span>, <span class="hljs-string">&#x27;altOnly&#x27;</span>, <span class="hljs-string">&#x27;ctrlOnly&#x27;</span>, <span class="hljs-string">&#x27;metaOnly&#x27;</span>, <span class="hljs-string">&#x27;shiftAlt&#x27;</span>, <span class="hljs-string">&#x27;shiftCtrl&#x27;</span>, <span class="hljs-string">&#x27;shiftMeta&#x27;</span>, <span class="hljs-string">&#x27;altCtrl&#x27;</span>, <span class="hljs-string">&#x27;altMeta&#x27;</span>, <span class="hljs-string">&#x27;ctrlMeta&#x27;</span>, <span class="hljs-string">&#x27;shiftAltCtrl&#x27;</span>, <span class="hljs-string">&#x27;shiftAltMeta&#x27;</span>, <span class="hljs-string">&#x27;shiftCtrlMeta&#x27;</span>, <span class="hljs-string">&#x27;altCtrlMeta&#x27;</span>, <span class="hljs-string">&#x27;all&#x27;</span>],
+    <span class="hljs-variable constant_">T_ESCAPE</span> = <span class="hljs-string">&#x27;Escape&#x27;</span>,
+    <span class="hljs-variable constant_">T_TAB</span> = <span class="hljs-string">&#x27;Tab&#x27;</span>;
+
+
+<span class="hljs-keyword">const</span> keyboardZones = {};
+
+<span class="hljs-keyword">const</span> processKeyboardZoneData = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty, doAddListeners, doRemoveListeners</span>) {
+
+    <span class="hljs-keyword">let</span> zone = items.<span class="hljs-property">zone</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p><code>zone</code> is required</p>
 <ul>
@@ -701,11 +721,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Tab, Esc</p>
 
@@ -797,11 +817,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><strong>kill</strong> - A function to remove the internal key mappings associated with the target DOM element, and then remove the keyboard listeners attached to that element</p>
 
@@ -819,11 +839,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>getMappedKeys</strong> - A function which returns an Array of the defined keys for the given group, the name of which should be supplied as the function’s argument</p>
 <ul>
@@ -844,11 +864,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The return includes both the <code>kill</code> and <code>getMappedKeys</code> functions</p>
 
@@ -863,11 +883,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules and the SC object). Add keyboard listenning functionality to a canvas or stack wrapper.</p>
 
@@ -878,11 +898,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>The exposed <code>actionKeyDown</code> function will search for the target element (if user has started the drag while the mouse cursor was over a child of the Stack wrapper) and then apply the required keystroke actions while that element remains focussed</p>
 
@@ -916,11 +936,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>The exposed <code>actionKeyUp</code> function will change to match the equivalent funtions supplied by the zone selected during the <code>actionKeyDown</code> stage of the operation</p>
 
@@ -935,11 +955,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Listeners are added to the DOM element when the first keyboard zone is created for that target</p>
 
@@ -954,11 +974,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Listeners are only removed from the DOM element when all the keyboard zones associated with that target have been killed</p>
 
@@ -973,11 +993,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Returns an object containing the <code>kill</code> and <code>getMappedKeys</code> functions for this keyboard mapping</p>
 

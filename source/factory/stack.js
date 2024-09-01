@@ -22,7 +22,7 @@
 //
 // By default, all Stack wrappers will track mouse/touch movements across their DOM element, supplying this data to constituent Canvas objects and artefacts as-and-when-required.
 //
-// Stack wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle. These functions are asynchronous, returning Promises.
+// Stack wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle.
 //
 // Stack wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Stack wrapper will remove its DOM element from the document - __including all Elements and Canvases that it contains__.
 
@@ -46,7 +46,14 @@ import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
+    $SCRIPT = 'SCRIPT',
+    DATA_SCRAWL_STACK = 'data-scrawl-stack',
+    STACK = 'stack';
 
 
 // #### Stack constructor

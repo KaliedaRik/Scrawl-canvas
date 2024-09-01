@@ -12,7 +12,12 @@ import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } f
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { FUNCTION, PC, TARGET_SECTIONS, UNKNOWN, UNNAMED, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { FUNCTION, PC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'],
+    UNNAMED = 'unnamed';
 
 
 // Helper function

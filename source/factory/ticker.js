@@ -51,7 +51,13 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _floor, _isArray, _now, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../helper/shared-vars.js';
+// Shared constants
+import { _floor, _isArray, _now, FUNCTION, PC, T_RENDER_ANIMATION, T_TWEEN } from '../helper/shared-vars.js';
+
+// Local constants
+const ANIMATIONTICKERS = 'animationtickers',
+    T_TICKER = 'Ticker',
+    TICKERUPDATE = 'tickerupdate';
 
 
 // #### Ticker constructor

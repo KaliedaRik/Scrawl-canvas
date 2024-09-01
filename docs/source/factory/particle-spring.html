@@ -577,8 +577,8 @@
               <h1 id="spring-factory">Spring factory</h1>
 <p>The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:</p>
 <ul>
-<li><a href="./particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="./vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
-<li><a href="./particleHistory.html">History arrays</a> which can be pooled (reused) to cut down on Array creation and distruction during the animation.</li>
+<li><a href="./particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="../untracked-factory/vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
+<li><a href="../untracked-factory/particleHistory.html">History arrays</a> which can be pooled (reused) to cut down on Array creation and distruction during the animation.</li>
 <li><a href="./particleForce.html">Force objects</a> which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a <strong>gravity</strong> force object is pre-defined by Scrawl-canvas.</li>
 <li><a href="./particleSpring.html">Spring objects</a> used to define a constraint (connection) between two particles in a system.</li>
 <li><a href="./particleWorld.html">World objects</a> where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.</li>
@@ -619,9 +619,7 @@
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/vector.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">SPRING</span>, <span class="hljs-variable constant_">T_PARTICLE</span>, <span class="hljs-variable constant_">T_SPRING</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -631,6 +629,37 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">T_PARTICLE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SPRING</span> = <span class="hljs-string">&#x27;spring&#x27;</span>,
+    <span class="hljs-variable constant_">T_SPRING</span> = <span class="hljs-string">&#x27;Spring&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="spring-constructor">Spring constructor</h4>
 
@@ -653,11 +682,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="spring-prototype">Spring prototype</h4>
 
@@ -672,11 +701,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -687,11 +716,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="spring-attributes">Spring attributes</h4>
 
@@ -702,11 +731,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>particleFrom</strong>, <strong>particleTo</strong> - String name of a Particle, or the Particle object itself. These attributes hold references to the Particle objects involved in this constraint.</p>
 
@@ -721,11 +750,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><code>springConstant</code> - float Number. Larger values make the spring stiffer. Suggested values: 5 - 300</p>
 
@@ -736,11 +765,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><code>damperConstant</code> - float Number. Larger values forces the spring to take a longer time to come to equilibrium. Suggested values: 5 - 50</p>
 
@@ -751,11 +780,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><code>restLength</code> - The spring’s ideal length - the further away from its ideal, the more force the spring will apply to its connected body objects to get them back to their optimal distance</p>
 
@@ -768,11 +797,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -783,11 +812,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -797,11 +826,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -817,11 +846,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -832,11 +861,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>particleFrom</code>, <code>particleTo</code></p>
 
@@ -858,11 +887,11 @@ S.<span class="hljs-property">particleTo</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>applySpring</code> - internal function</p>
@@ -899,11 +928,11 @@ S.<span class="hljs-property">particleTo</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeNet</span>({

@@ -635,9 +635,7 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;
-<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-curve.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">CONTROL</span>, <span class="hljs-variable constant_">CONTROL_PARTICLE</span>, <span class="hljs-variable constant_">CONTROL_PATH</span>, <span class="hljs-variable constant_">CONTROL_PIVOT</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">T_QUADRATIC</span>, <span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-curve.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -647,6 +645,38 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">CONTROL</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">T_QUADRATIC</span>, <span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">CONTROL_PARTICLE</span> = <span class="hljs-string">&#x27;controlParticle&#x27;</span>,
+    <span class="hljs-variable constant_">CONTROL_PATH</span> = <span class="hljs-string">&#x27;controlPath&#x27;</span>,
+    <span class="hljs-variable constant_">CONTROL_PIVOT</span> = <span class="hljs-string">&#x27;controlPivot&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="quadratic-constructor">Quadratic constructor</h4>
 
@@ -669,11 +699,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="quadratic-prototype">Quadratic prototype</h4>
 
@@ -688,11 +718,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -705,11 +735,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="quadratic-attributes">Quadratic attributes</h4>
 
@@ -720,11 +750,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The <strong>control</strong> coordinate (‘pin’) defines the quadratic curve’s control point.</p>
 <ul>
@@ -738,11 +768,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>controlPivot</strong>, <strong>controlPivotCorner</strong>, <strong>addControlPivotHandle</strong>, <strong>addControlPivotOffset</strong></p>
 <ul>
@@ -760,11 +790,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>controlPath</strong>, <strong>controlPathPosition</strong>, <strong>addControlPathHandle</strong>, <strong>addControlPathOffset</strong></p>
 <ul>
@@ -781,11 +811,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>controlParticle</strong> - attribute to store any particle the artefact mey be using for its position reference</p>
 
@@ -796,11 +826,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>controlLockTo</strong></p>
 <ul>
@@ -818,11 +848,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -834,11 +864,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -848,11 +878,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -862,11 +892,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -879,11 +909,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>controlPivot</strong></p>
 
@@ -899,11 +929,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>controlParticle</strong></p>
 
@@ -919,11 +949,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>controlPath</strong></p>
 
@@ -940,11 +970,11 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>controlPathPosition</strong></p>
 
@@ -968,11 +998,11 @@ D.<span class="hljs-property">controlPathPosition</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>control</strong></p>
 <ul>
@@ -1048,11 +1078,11 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>controlLockTo</strong></p>
 
@@ -1069,11 +1099,11 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1082,11 +1112,11 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -1101,11 +1131,11 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>makeQuadraticPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
@@ -1123,11 +1153,11 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code></p>
 <ul>
@@ -1179,11 +1209,11 @@ P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -1192,11 +1222,11 @@ P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h5 id="makequadratic">makeQuadratic</h5>
 <p>Accepts argument with attributes:</p>

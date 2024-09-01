@@ -38,7 +38,7 @@ scrawl.makePicture({
 
     name: name('edgeDetect-image'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
+    dimensions: ['50%', '100%'],
     copyDimensions: ['100%', '100%'],
 
     filters: [name('edgeDetect')],

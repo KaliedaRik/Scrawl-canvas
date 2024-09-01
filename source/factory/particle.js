@@ -1,7 +1,7 @@
 // # Particle factory
 // The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:
-// + [Particle objects](./particle.html), which represent a 3-dimensional coordinate - based on a Scrawl-canvas [Vector object](./vector.html) - and include a history of recent positions which we can use to determine how to display that particle on screen.
-// + [History arrays](./particleHistory.html) which can be pooled (reused) to cut down on Array creation and distruction during the animation.
+// + [Particle objects](./particle.html), which represent a 3-dimensional coordinate - based on a Scrawl-canvas [Vector object](../untracked-factory/vector.html) - and include a history of recent positions which we can use to determine how to display that particle on screen.
+// + [History arrays](../untracked-factory/particleHistory.html) which can be pooled (reused) to cut down on Array creation and distruction during the animation.
 // + [Force objects](./particleForce.html) which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a __gravity__ force object is pre-defined by Scrawl-canvas.
 // + [Spring objects](./particleSpring.html) used to define a constraint (connection) between two particles in a system.
 // + [World objects](./particleWorld.html) where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.
@@ -35,7 +35,10 @@ import { makeVector, releaseVector, requestVector } from '../untracked-factory/v
 // The Particle object uses the base mixin, thus it supports all the normal Scrawl-canvas functionality such as `get`, `set`, `setDelta`, `clone`, `kill`, etc.
 import baseMix from '../mixin/base.js';
 
+// Shared constants
 import { _isArray, BLACK, EULER, PARTICLE, T_PARTICLE } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Particle constructor

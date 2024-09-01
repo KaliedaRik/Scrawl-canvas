@@ -37,7 +37,12 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _abs, _max, _min, ENTITY, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const POLYGON = 'polygon',
+    T_POLYGON = 'Polygon';
 
 
 // #### Polygon constructor

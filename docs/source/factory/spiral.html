@@ -634,9 +634,7 @@
 <span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/array-pool.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _floor, _freeze, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">SPIRAL</span>, <span class="hljs-variable constant_">T_SPIRAL</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -647,30 +645,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Local constants</p>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">FIRST_TURN</span> = <span class="hljs-title function_">_freeze</span>([
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.043</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.082</span>, -<span class="hljs-number">0.035</span>, <span class="hljs-number">0.088</span>, -<span class="hljs-number">0.088</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.007</span>, -<span class="hljs-number">0.057</span>, -<span class="hljs-number">0.024</span>, -<span class="hljs-number">0.121</span>, -<span class="hljs-number">0.088</span>, -<span class="hljs-number">0.162</span>]),
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.07</span>, -<span class="hljs-number">0.045</span>, -<span class="hljs-number">0.169</span>, -<span class="hljs-number">0.054</span>, -<span class="hljs-number">0.265</span>, -<span class="hljs-number">0.015</span>]),
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.106</span>, <span class="hljs-number">0.043</span>, -<span class="hljs-number">0.194</span>, <span class="hljs-number">0.138</span>, -<span class="hljs-number">0.235</span>, <span class="hljs-number">0.265</span>]),
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.044</span>, <span class="hljs-number">0.139</span>, -<span class="hljs-number">0.026</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.058</span>, <span class="hljs-number">0.442</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.091</span>, <span class="hljs-number">0.153</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.267</span>, <span class="hljs-number">0.442</span>, <span class="hljs-number">0.308</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.206</span>, <span class="hljs-number">0.044</span>, <span class="hljs-number">0.431</span>, -<span class="hljs-number">0.001</span>, <span class="hljs-number">0.619</span>, -<span class="hljs-number">0.131</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.2</span>, -<span class="hljs-number">0.139</span>, <span class="hljs-number">0.34</span>, -<span class="hljs-number">0.361</span>, <span class="hljs-number">0.381</span>, -<span class="hljs-number">0.619</span>])
-]);
-<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SUBSEQUENT_TURNS</span> = <span class="hljs-title function_">_freeze</span>([
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0</span>, -<span class="hljs-number">0.27</span>, -<span class="hljs-number">0.11</span>, -<span class="hljs-number">0.52</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>]),
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>]),
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">0.52</span>, <span class="hljs-number">0.11</span>, -<span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>]),
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0</span>, <span class="hljs-number">0.27</span>, <span class="hljs-number">0.11</span>, <span class="hljs-number">0.52</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, <span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.52</span>, -<span class="hljs-number">0.11</span>, <span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>]),
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>])
-]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -680,6 +659,43 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SPIRAL</span> = <span class="hljs-string">&#x27;spiral&#x27;</span>,
+    <span class="hljs-variable constant_">T_SPIRAL</span> = <span class="hljs-string">&#x27;Spiral&#x27;</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">FIRST_TURN</span> = [
+    [<span class="hljs-number">0.043</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.082</span>, -<span class="hljs-number">0.035</span>, <span class="hljs-number">0.088</span>, -<span class="hljs-number">0.088</span>],
+    [<span class="hljs-number">0.007</span>, -<span class="hljs-number">0.057</span>, -<span class="hljs-number">0.024</span>, -<span class="hljs-number">0.121</span>, -<span class="hljs-number">0.088</span>, -<span class="hljs-number">0.162</span>],
+    [-<span class="hljs-number">0.07</span>, -<span class="hljs-number">0.045</span>, -<span class="hljs-number">0.169</span>, -<span class="hljs-number">0.054</span>, -<span class="hljs-number">0.265</span>, -<span class="hljs-number">0.015</span>],
+    [-<span class="hljs-number">0.106</span>, <span class="hljs-number">0.043</span>, -<span class="hljs-number">0.194</span>, <span class="hljs-number">0.138</span>, -<span class="hljs-number">0.235</span>, <span class="hljs-number">0.265</span>],
+    [-<span class="hljs-number">0.044</span>, <span class="hljs-number">0.139</span>, -<span class="hljs-number">0.026</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.058</span>, <span class="hljs-number">0.442</span>],
+    [<span class="hljs-number">0.091</span>, <span class="hljs-number">0.153</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.267</span>, <span class="hljs-number">0.442</span>, <span class="hljs-number">0.308</span>],
+    [<span class="hljs-number">0.206</span>, <span class="hljs-number">0.044</span>, <span class="hljs-number">0.431</span>, -<span class="hljs-number">0.001</span>, <span class="hljs-number">0.619</span>, -<span class="hljs-number">0.131</span>],
+    [<span class="hljs-number">0.2</span>, -<span class="hljs-number">0.139</span>, <span class="hljs-number">0.34</span>, -<span class="hljs-number">0.361</span>, <span class="hljs-number">0.381</span>, -<span class="hljs-number">0.619</span>]
+];
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SUBSEQUENT_TURNS</span> = [
+    [<span class="hljs-number">0</span>, -<span class="hljs-number">0.27</span>, -<span class="hljs-number">0.11</span>, -<span class="hljs-number">0.52</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>],
+    [-<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>],
+    [-<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">0.52</span>, <span class="hljs-number">0.11</span>, -<span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>],
+    [-<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>],
+    [<span class="hljs-number">0</span>, <span class="hljs-number">0.27</span>, <span class="hljs-number">0.11</span>, <span class="hljs-number">0.52</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>],
+    [<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, <span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>],
+    [<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.52</span>, -<span class="hljs-number">0.11</span>, <span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>],
+    [<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>]
+];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="spiral-constructor">Spiral constructor</h4>
 
@@ -694,11 +710,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="spiral-prototype">Spiral prototype</h4>
 
@@ -713,11 +729,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -729,11 +745,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="spiral-attributes">Spiral attributes</h4>
 
@@ -750,28 +766,14 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -784,8 +786,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -798,6 +800,20 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
@@ -808,11 +824,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>loops</strong></p>
 
@@ -832,11 +848,11 @@ D.<span class="hljs-property">loops</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>loopIncrement</strong></p>
 
@@ -856,11 +872,11 @@ D.<span class="hljs-property">loopIncrement</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>drawFromLoop</strong></p>
 
@@ -880,11 +896,11 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -893,11 +909,11 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -912,11 +928,11 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>makeSpiralPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
@@ -969,11 +985,11 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
 <ul>
@@ -988,11 +1004,11 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -1001,11 +1017,11 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h5 id="makespiral">makeSpiral</h5>
 <p>A spiral drawn from an inner-radius outwards by a given number of loops, with the distance between each loop determined by a given increment. Accepts argument with attributes:</p>

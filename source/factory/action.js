@@ -15,7 +15,11 @@ import { doCreate, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, _keys, FUNCTION, NAME, TWEEN, UNDEF } from '../helper/shared-vars.js';
+
+// Local constants
+const T_ACTION = 'Action';
 
 
 // #### Action constructor

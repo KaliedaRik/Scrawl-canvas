@@ -18,7 +18,15 @@ import * as library from '../core/library.js';
 
 import { addStrings, generateUniqueString, isa_boolean, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _entries, _isArray, _keys, _parse, _string, ARG_SPLITTER, BAD_PACKET_CHECK, HAS_PACKET_CHECK, NAME, NATIVE_CODE, PACKET_DIVIDER, TYPE_EXCLUSIONS, UNDEF, ZERO_STR } from '../helper/shared-vars.js'
+// Shared constants
+import { _entries, _isArray, _keys, _parse, ARG_SPLITTER, NAME, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const BAD_PACKET_CHECK = '"name":',
+    HAS_PACKET_CHECK = '[',
+    NATIVE_CODE = '[native code]',
+    PACKET_DIVIDER = '~~~',
+    TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
 
 
 // #### Export function
@@ -323,7 +331,7 @@ export default function (P = Ωempty) {
         copy = this.finalizePacketOut(copy, items);
 
         // Return a JSON string
-        return _string([this.name, this.type, this.lib, copy]);
+        return JSON.stringify([this.name, this.type, this.lib, copy]);
     };
 
 

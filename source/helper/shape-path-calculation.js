@@ -5,17 +5,22 @@
 
 
 // #### Imports
-import { _atan2, _cos, _isFinite, _max, _min, _pow, _seal, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from './shared-vars.js';
-
 import { releaseArray, requestArray } from './array-pool.js';
 
+// Shared constants
+import { _atan2, _cos, _isFinite, _max, _min, _pow, _sin, _sqrt, BEZIER, CLOSE, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from './shared-vars.js';
+
+// Local constants
+const GET_BEZIER = 'getBezierXY',
+    GET_QUADRATIC = 'getQuadraticXY';
 
 // We only use one pathCalcObject, but treat it like a pool of such objects for resetting to defaults
 const pathCalcObjectPool = [];
 
+// Exported helper functions
 export const requestPathCalcObject = function () {
 
-    if (!pathCalcObjectPool.length) pathCalcObjectPool.push(_seal({
+    if (!pathCalcObjectPool.length) pathCalcObjectPool.push({
         localPath: null,
         length: 0,
         maxX: 0,
@@ -29,7 +34,7 @@ export const requestPathCalcObject = function () {
         unitProgression: [],
         xRange: [],
         yRange: [],
-    }));
+    });
 
     return pathCalcObjectPool.shift();
 };

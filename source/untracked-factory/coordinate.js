@@ -7,7 +7,10 @@ import { constructors } from '../core/library.js';
 
 import { xt } from '../helper/utilities.js';
 
-import { _atan2, _cos, _create, _hypot, _isArray, _seal, _setPrototypeOf, _sin, T_COORDINATE, T_QUATERNION, T_VECTOR } from '../helper/shared-vars.js';
+// Shared constants
+import { _atan2, _cos, _create, _hypot, _isArray, _setPrototypeOf, _sin, T_COORDINATE, T_QUATERNION, T_VECTOR } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Coordinate constructor
@@ -16,7 +19,6 @@ const Coordinate = function (items, y) {
     const coords = [0, 0];
 
     _setPrototypeOf(coords, Coordinate.prototype);
-    _seal(coords);
 
     if (items) coords.set(items, y);
 

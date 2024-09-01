@@ -37,7 +37,12 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _abs, _min, ENTITY, STAR, T_STAR, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _abs, _min, ENTITY, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const STAR = 'star',
+    T_STAR = 'Star';
 
 
 // #### Star constructor

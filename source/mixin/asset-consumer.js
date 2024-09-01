@@ -15,7 +15,20 @@ import { importImage } from '../asset-management/image-asset.js';
 import { importVideo } from '../asset-management/video-asset.js';
 import { importSprite } from '../asset-management/sprite-asset.js';
 
-import { ADD_TEXT_TRACK, CAN_PLAY_TYPE, CAPTURE_STREAM, DEFAULT, FAST_SEEK, LOAD, PAUSE, PLAY, SET_MEDIA_KEYS, SET_SINK_ID, T_SPRITE, T_VIDEO } from '../helper/shared-vars.js';
+// Shared constants
+import { T_SPRITE, T_VIDEO } from '../helper/shared-vars.js';
+
+// Local constants
+const ADD_TEXT_TRACK = 'addTextTrack',
+    CAN_PLAY_TYPE = 'canPlayType',
+    CAPTURE_STREAM = 'captureStream',
+    DEFAULT = 'default',
+    FAST_SEEK = 'fastSeek',
+    LOAD = 'load',
+    PAUSE = 'pause',
+    PLAY = 'play',
+    SET_MEDIA_KEYS = 'setMediaKeys',
+    SET_SINK_ID = 'setSinkId';
 
 
 // #### Export function

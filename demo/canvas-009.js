@@ -200,7 +200,8 @@ scrawl.makeBlock({
         myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
     },
 
-    // Used by the Scrawl-canvas click event, below. This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor's clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology
+    // Used by the Scrawl-canvas `click` event, below.
+    // + This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor's clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology
     onUp: function () {
 
         // Track the action in Google Analytics
@@ -210,6 +211,35 @@ scrawl.makeBlock({
         // Trigger the click event on the anchor element we added to the DOM
 /** @ts-expect-error */
         this.clickAnchor();
+    },
+
+    // Used by the Scrawl-canvas `contextmenu` event, below.
+    // + When the user right-clicks on a block, we want them to see the context menu for a link element, not an image element
+    // + Sadly I don't know a good way to achieve this - creating a `contextmenu` Pointer event and dispatching it on the anchor's element associated with the block doesn't work for me
+    // + Instead, the following functionality clones the anchor's element, styles and positions it, then adds it to the web page where user can (again) right-click on it to display the context menu
+    // + We then destroy the cloned element after five seconds
+    // + (If anyone has a better solution for this functionality, please create a PR!)
+    onOtherInteraction: function (e) {
+
+        e.preventDefault();
+
+/** @ts-expect-error */
+        const el = this.anchor.domElement;
+        const clone = el.cloneNode(true);
+        const style = clone.style;
+
+        clone.id = `${el.id}_clone`;
+        style.position = 'fixed';
+        style.left = `${e.clientX}px`;
+        style.top = `${e.clientY}px`;
+        style.transform = 'translate(-50%, -50%)';
+        style.backgroundColor = 'rgb(200 200 200)';
+        style.padding = '4px';
+        style.border = '1px solid black';
+        style.borderRadius = '4px';
+
+        document.body.append(clone);
+        setTimeout(() => clone.remove(), 5000);
     },
 
 }).clone({
@@ -268,11 +298,11 @@ scrawl.makeBlock({
 // Additionally, it will update the &lt;canvas> element's title attribute (for tool tips) and its ARIA label value (for accessibility)
 //
 // The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates
-let interactionResults = '';
+const interactionResults = [];
 const interactions = function () {
 
-    if (canvas.here.active) interactionResults = canvas.cascadeEventAction('move');
-    else interactionResults = '';
+    interactionResults.length = 0;
+    if (canvas.here.active) interactionResults.push(...canvas.cascadeEventAction('move'));
 };
 scrawl.addListener('move', interactions, canvas.domElement);
 
@@ -283,7 +313,17 @@ const mylinks = function () {
 
     if (canvas.here.active) canvas.cascadeEventAction('up');
 };
-scrawl.addListener('up', mylinks, canvas.domElement);
+scrawl.addNativeListener('click', mylinks, canvas.domElement);
+
+// Handle a right-click `contextmenu` user interaction on a block
+// + Note that the `otherInteraction` string was introduced with SC v8.14.0
+// + An entity can have a maximum of one other interaction
+// + The `cascadeEventAction` function can include the (mouse or pointer) event object as its second argument
+const myLinksContextMenu = function (e) {
+
+    if (canvas.here.active) canvas.cascadeEventAction('otherInteraction', e);
+};
+scrawl.addNativeListener('contextmenu', (e) => myLinksContextMenu(e), canvas.domElement);
 
 
 // #### Scene animation
@@ -338,6 +378,24 @@ killArtefactAndAnchor(scrawl, canvas, name('brick-in-marble'), 'wikipedia-brick-
             myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
 /** @ts-expect-error */
             this.clickAnchor();
+        },
+        onOtherInteraction: function (e) {
+            e.preventDefault();
+/** @ts-expect-error */
+            const el = this.anchor.domElement;
+            const clone = el.cloneNode(true);
+            const style = clone.style;
+            clone.id = `${el.id}_clone`;
+            style.position = 'fixed';
+            style.left = `${e.clientX}px`;
+            style.top = `${e.clientY}px`;
+            style.transform = 'translate(-50%, -50%)';
+            style.backgroundColor = 'rgb(255 200 180)';
+            style.padding = '4px';
+            style.border = '1px solid black';
+            style.borderRadius = '4px';
+            document.body.append(clone);
+            setTimeout(() => clone.remove(), 5000);
         },
     });
 });

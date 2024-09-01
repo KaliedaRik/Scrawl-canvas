@@ -601,9 +601,7 @@
 
 <span class="hljs-keyword">import</span> { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/array-pool.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">TARGET_SECTIONS</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">UNNAMED</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/array-pool.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -613,6 +611,37 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">TARGET_SECTIONS</span> = [<span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;group&#x27;</span>, <span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationtickers&#x27;</span>, <span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;tween&#x27;</span>, <span class="hljs-string">&#x27;styles&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>],
+    <span class="hljs-variable constant_">UNNAMED</span> = <span class="hljs-string">&#x27;unnamed&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Helper function</p>
 
@@ -637,11 +666,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="export-function">Export function</h4>
 
@@ -652,11 +681,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
@@ -667,11 +696,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>order</strong> - integer Number (defaults to <code>1</code>) - the order in which Tween/Actions run is determined by their order value: Tween/Actions with a lower order value run before those with a higher value</p>
 <ul>
@@ -685,11 +714,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>ticker</strong> - String - the name-String of the Ticker the Tween/Action uses for its timeline</p>
 
@@ -700,11 +729,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>targets</strong> - Array containing the Scrawl-canvas objects on which the Tween/Action will act; one Tween/Action can modify attributes in multiple objects</p>
 
@@ -715,11 +744,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>time</strong> - the timeline time when the Tween/Action activates and runs.</p>
 <ul>
@@ -736,11 +765,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>action</strong> - a user-defined function which will run every time the Tween/Action completes an update - generally once each Display cycle while the Tween/Action is running</p>
 
@@ -751,11 +780,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>reverseOnCycleEnd</strong> - Boolean flag; when set, the Tween/Action will reverse its direction and continue running, rather than halt.</p>
 
@@ -766,11 +795,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>reversed</strong> - internal Boolean flag indicating whether the Tween/Action is running in <code>forwards</code> or <code>backwards</code> mode</p>
 
@@ -783,11 +812,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>No additional packet functionality defined here</p>
@@ -797,11 +826,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality defined here</p>
@@ -811,11 +840,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -841,11 +870,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -857,11 +886,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>targets</strong></p>
 <ul>
@@ -883,11 +912,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>action</strong></p>
 
@@ -903,11 +932,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -916,11 +945,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>calculateEffectiveTime</code>
 The <em><strong>effective time</strong></em> is the time, relative to the Tween/Action’s associated Ticker timeline, when the Tween/Action will start running</p>
@@ -950,11 +979,11 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>addToTicker</code></p>
 
@@ -982,11 +1011,11 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>removeFromTicker</code></p>
 
@@ -1012,11 +1041,11 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>setTargets</code></p>
 
@@ -1055,11 +1084,11 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>addToTargets</code></p>
 
@@ -1091,11 +1120,11 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>removeFromTargets</code></p>
 
@@ -1155,11 +1184,11 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>checkForTarget</code></p>
 

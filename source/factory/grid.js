@@ -22,7 +22,17 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _isArray, _isFinite, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_IN, SOURCE_OVER, WHITE } from '../helper/shared-vars.js';
+
+// Local constants
+const _isInteger = Number.isSafeInteger || Number.isInteger,
+    CELL_GRADIENT = 'cellGradient',
+    GRAY = 'rgb(127 127 127 / 1)',
+    GRID_GRADIENT = 'gridGradient',
+    GRID_PICTURE = 'gridPicture',
+    T_GRID = 'Grid',
+    TILE_PICTURE = 'tilePicture';
 
 
 // #### Grid constructor

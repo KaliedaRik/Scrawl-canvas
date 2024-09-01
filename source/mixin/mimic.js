@@ -7,7 +7,10 @@ import { artefact, asset } from '../core/library.js';
 
 import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
+// Shared constants
 import { MIMIC, START, T_CELL, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Export function

@@ -18,7 +18,11 @@ import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, RD_SETTINGS_PREF_VALS, T_RD_ASSET, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, T_RD_ASSET, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const RD_SETTINGS_PREF_VALS = ['random', 'entity'];
 
 
 // #### RdAsset constructor

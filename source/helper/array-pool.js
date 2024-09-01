@@ -5,7 +5,11 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { _create, _setPrototypeOf, T_GENERIC_ARRAY } from './shared-vars.js';
+// Shared constants
+import { _create, _setPrototypeOf } from './shared-vars.js';
+
+// Local constants
+const T_GENERIC_ARRAY = 'GenericArray';
 
 
 // #### GenericArray constructor

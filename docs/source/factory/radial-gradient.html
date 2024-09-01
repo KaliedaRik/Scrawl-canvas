@@ -607,9 +607,7 @@
 <span class="hljs-keyword">import</span> { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> stylesMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/styles.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> stylesMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/styles.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -619,6 +617,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span> = <span class="hljs-string">&#x27;RadialGradient&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="radialgradient-constructor">RadialGradient constructor</h4>
 
@@ -636,11 +664,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="radialgradient-prototype">RadialGradient prototype</h4>
 
@@ -655,11 +683,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -671,11 +699,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="radialgradient-attributes">RadialGradient attributes</h4>
 
@@ -686,11 +714,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>RadialGradients calculate their gradients spanning between two circles, whose sizes are determined by the <code>startRadius</code> and <code>endRadius</code> attributes. Values can be:</p>
 <ul>
@@ -708,11 +736,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>In addition to the attributes defined in the <strong>base</strong> and <strong>styles</strong> mixins, Gradients also pass through Palette attributes to their Palette object.</p>
 <p>Attributes from <strong>base</strong> mixin:</p>
@@ -743,11 +771,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -758,11 +786,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -772,11 +800,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -786,11 +814,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -803,11 +831,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>The getter functions <code>myradialgradient.get(&#39;startRadius&#39;)</code> and <code>myradialgradient.get(&#39;endRadius&#39;)</code> return the current radius values as Numbers, measuring pixels</p>
 
@@ -825,11 +853,11 @@ G.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Both <code>startRadius</code> and <code>endRadius</code> attributes can be set and deltaSet</p>
 
@@ -859,11 +887,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -872,11 +900,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>cleanRadius</code> - internal function to calculate the current radius values (in px) of the start and end radii</p>
 
@@ -920,11 +948,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>buildStyle</code> - internal function: creates the radial gradient on the Cell’s CanvasRenderingContext2D engine, and then adds the color stops to it.</p>
 
@@ -949,11 +977,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>updateGradientArgs</code> - internal function</p>
 
@@ -976,11 +1004,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>check to correct situation where coordinates represent a ‘0 x 0’ box - which will cause errors in some browsers</p>
 
@@ -995,11 +1023,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> graddy = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({

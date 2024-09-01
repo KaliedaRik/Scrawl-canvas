@@ -635,6 +635,26 @@
                 </a>
               
                 
+                <a class="source" href="filters-029.html">
+                  ./demo/filters-029.js
+                </a>
+              
+                
+                <a class="source" href="filters-030.html">
+                  ./demo/filters-030.js
+                </a>
+              
+                
+                <a class="source" href="filters-031.html">
+                  ./demo/filters-031.js
+                </a>
+              
+                
+                <a class="source" href="filters-032.html">
+                  ./demo/filters-032.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -817,11 +837,6 @@
                 
                 <a class="source" href="particles-016.html">
                   ./demo/particles-016.js
-                </a>
-              
-                
-                <a class="source" href="rapier-001.html">
-                  ./demo/rapier-001.js
                 </a>
               
                 
@@ -1395,7 +1410,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p>Used by the Scrawl-canvas click event, below. This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor’s clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology</p>
+              <p>Used by the Scrawl-canvas <code>click</code> event, below.</p>
+<ul>
+<li>This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor’s clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology</li>
+</ul>
 
             </div>
             
@@ -1432,6 +1450,49 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>Used by the Scrawl-canvas <code>contextmenu</code> event, below.</p>
+<ul>
+<li>When the user right-clicks on a block, we want them to see the context menu for a link element, not an image element</li>
+<li>Sadly I don’t know a good way to achieve this - creating a <code>contextmenu</code> Pointer event and dispatching it on the anchor’s element associated with the block doesn’t work for me</li>
+<li>Instead, the following functionality clones the anchor’s element, styles and positions it, then adds it to the web page where user can (again) right-click on it to display the context menu</li>
+<li>We then destroy the cloned element after five seconds</li>
+<li>(If anyone has a better solution for this functionality, please create a PR!)</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">onOtherInteraction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+
+        e.<span class="hljs-title function_">preventDefault</span>();
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">domElement</span>;
+        <span class="hljs-keyword">const</span> clone = el.<span class="hljs-title function_">cloneNode</span>(<span class="hljs-literal">true</span>);
+        <span class="hljs-keyword">const</span> style = clone.<span class="hljs-property">style</span>;
+
+        clone.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${el.id}</span>_clone`</span>;
+        style.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;fixed&#x27;</span>;
+        style.<span class="hljs-property">left</span> = <span class="hljs-string">`<span class="hljs-subst">${e.clientX}</span>px`</span>;
+        style.<span class="hljs-property">top</span> = <span class="hljs-string">`<span class="hljs-subst">${e.clientY}</span>px`</span>;
+        style.<span class="hljs-property">transform</span> = <span class="hljs-string">&#x27;translate(-50%, -50%)&#x27;</span>;
+        style.<span class="hljs-property">backgroundColor</span> = <span class="hljs-string">&#x27;rgb(200 200 200)&#x27;</span>;
+        style.<span class="hljs-property">padding</span> = <span class="hljs-string">&#x27;4px&#x27;</span>;
+        style.<span class="hljs-property">border</span> = <span class="hljs-string">&#x27;1px solid black&#x27;</span>;
+        style.<span class="hljs-property">borderRadius</span> = <span class="hljs-string">&#x27;4px&#x27;</span>;
+
+        <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">append</span>(clone);
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> clone.<span class="hljs-title function_">remove</span>(), <span class="hljs-number">5000</span>);
     },
 
 }).<span class="hljs-title function_">clone</span>({
@@ -1483,11 +1544,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Demonstrate zoned actions on a canvas element as a result of user interaction</p>
 <ul>
@@ -1500,22 +1561,22 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> interactionResults = <span class="hljs-string">&#x27;&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> interactionResults = [];
 <span class="hljs-keyword">const</span> interactions = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) interactionResults = canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>);
-    <span class="hljs-keyword">else</span> interactionResults = <span class="hljs-string">&#x27;&#x27;</span>;
+    interactionResults.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) interactionResults.<span class="hljs-title function_">push</span>(...canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>));
 };
 scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, interactions, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>To capture other user interaction with the &lt;a&gt; DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page</p>
 <p>In this case, clicking on one of the tiles will open a related Wikipedia page in a new browser tab - as defined in the  <strong>onUp</strong> function in the block factories above</p>
@@ -1526,16 +1587,40 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
     <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>);
 };
-scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, mylinks, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, mylinks, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p>Handle a right-click <code>contextmenu</code> user interaction on a block</p>
+<ul>
+<li>Note that the <code>otherInteraction</code> string was introduced with SC v8.14.0</li>
+<li>An entity can have a maximum of one other interaction</li>
+<li>The <code>cascadeEventAction</code> function can include the (mouse or pointer) event object as its second argument</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myLinksContextMenu = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+
+    <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;otherInteraction&#x27;</span>, e);
+};
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;contextmenu&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-title function_">myLinksContextMenu</span>(e), canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1549,11 +1634,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1569,11 +1654,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1586,11 +1671,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>We use the <strong>canvas</strong> and <strong>myTracker</strong> variables in our blocks’ onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file’s code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be ‘undefined’. So we need to reset the block’s ‘on…’ functions (in this module file’s code) after the block has resurrected</p>
 
@@ -1627,6 +1712,24 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
         },
+        <span class="hljs-attr">onOtherInteraction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+            e.<span class="hljs-title function_">preventDefault</span>();
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+            <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">domElement</span>;
+            <span class="hljs-keyword">const</span> clone = el.<span class="hljs-title function_">cloneNode</span>(<span class="hljs-literal">true</span>);
+            <span class="hljs-keyword">const</span> style = clone.<span class="hljs-property">style</span>;
+            clone.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${el.id}</span>_clone`</span>;
+            style.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;fixed&#x27;</span>;
+            style.<span class="hljs-property">left</span> = <span class="hljs-string">`<span class="hljs-subst">${e.clientX}</span>px`</span>;
+            style.<span class="hljs-property">top</span> = <span class="hljs-string">`<span class="hljs-subst">${e.clientY}</span>px`</span>;
+            style.<span class="hljs-property">transform</span> = <span class="hljs-string">&#x27;translate(-50%, -50%)&#x27;</span>;
+            style.<span class="hljs-property">backgroundColor</span> = <span class="hljs-string">&#x27;rgb(255 200 180)&#x27;</span>;
+            style.<span class="hljs-property">padding</span> = <span class="hljs-string">&#x27;4px&#x27;</span>;
+            style.<span class="hljs-property">border</span> = <span class="hljs-string">&#x27;1px solid black&#x27;</span>;
+            style.<span class="hljs-property">borderRadius</span> = <span class="hljs-string">&#x27;4px&#x27;</span>;
+            <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">append</span>(clone);
+            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> clone.<span class="hljs-title function_">remove</span>(), <span class="hljs-number">5000</span>);
+        },
     });
 });
 
@@ -1635,11 +1738,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died</p>
 

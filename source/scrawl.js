@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.13.2 - 15 July 2024
+// #### Version 8.14.0 - 1 September 2024
 
 
 // ## Initialize Scrawl-canvas
@@ -52,7 +52,8 @@ export {
     setFilterMemoizationChoke,
     setWorkstoreLifetimeLength,
     setWorkstorePurgeChoke,
- } from './helper/workstore.js';
+} from './helper/workstore.js';
+export { getLastUsedReducePalette } from './helper/filter-engine.js';
 export {
     currentCorePosition,
     startCoreListeners,

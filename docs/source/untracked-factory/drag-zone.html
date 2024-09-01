@@ -619,9 +619,7 @@
 
 <span class="hljs-keyword">import</span> { addListener, removeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { touchAction } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/user-interaction.js&quot;</span>;
-
-<span class="hljs-keyword">import</span> { _isArray, $BODY, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">DROP</span>, <span class="hljs-variable constant_">EXIT</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../helper/shared-vars.js&quot;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { touchAction } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/user-interaction.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -632,11 +630,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>NOTE: drag-and-drop functionality using this factory function <strong>is not guaranteed</strong> for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.</p>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dragZones = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, $BODY, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../helper/shared-vars.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -646,6 +644,37 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DROP</span> = <span class="hljs-string">&#x27;drop&#x27;</span>,
+    <span class="hljs-variable constant_">EXIT</span> = <span class="hljs-string">&#x27;exit&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>NOTE: drag-and-drop functionality using this factory function <strong>is not guaranteed</strong> for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dragZones = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Generate the drag zone and associate it with the zone element</p>
 
@@ -675,11 +704,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p><code>zone</code> is required</p>
 <ul>
@@ -701,11 +730,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><code>collisionGroup</code> is optional; defaults to zone’s namesake group</p>
 <ul>
@@ -726,11 +755,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><code>coordinateSource</code> will be an object containing <code>x</code> and <code>y</code> attributes</p>
 <ul>
@@ -755,11 +784,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><code>startOn</code>, <code>endOn</code> - if supplied, then need to be arrays</p>
 
@@ -775,11 +804,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><code>updateOnStart</code>, <code>updateOnEnd</code>, <code>updateOnShiftStart</code>, <code>updateOnShiftEnd</code> - if supplied, then needs to be key:value objects which will be applied to the entity (using set) or, alternatively, a callback function</p>
 
@@ -800,11 +829,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><code>updateWhileMoving</code>, <code>updateWhileShiftMoving</code> - if supplied, needs to be a callback function</p>
 
@@ -816,11 +845,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><code>updateOnPrematureExit</code> - if supplied, needs to be a callback function</p>
 
@@ -831,11 +860,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><code>exposeCurrentArtefact</code> - if supplied, then needs to be a boolean</p>
 
@@ -848,11 +877,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>We can only drag one artefact at a time; that artefact - alongside the hit coordinate’s x and y values -  is stored in the <code>current</code> variable</p>
 
@@ -991,11 +1020,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules and the SC object). Add drag-and-drop functionality to a canvas or stack wrapper.</p>
 
@@ -1006,11 +1035,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>The exposed <code>pickup</code> function will search for the target element (if user has started the drag while the mouse cursor was over a child of the Stack wrapper) and then interrogate each drag zone associated with that target until it finds a zone reporting a hit</p>
 
@@ -1023,11 +1052,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>name cannot be ZERO_STR</p>
 
@@ -1067,11 +1096,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>The exposed <code>move</code> and <code>drop</code> functions will change to match the equivalent funtions supplied by the zone selected during the <code>pickup</code> stage of the operation</p>
 
@@ -1094,11 +1123,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Listeners are added to the DOM element when the first drag zone is created for that target</p>
 
@@ -1114,11 +1143,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Listeners are only removed from the DOM element when all the drag zones associated with that target have been killed</p>
 
@@ -1136,11 +1165,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Return the appropriate function based on the value of the <code>exposeCurrentArtefact</code> attribute</p>
 

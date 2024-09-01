@@ -6,7 +6,12 @@ import { canvas } from '../core/library.js';
 
 import { Ωempty } from '../helper/utilities.js';
 
-import { _keys, ANCHOR_ATTRIBUTES, BUTTON_ATTRIBUTES, T_CANVAS, T_CELL } from '../helper/shared-vars.js';
+// Shared constants
+import { _keys, T_CANVAS, T_CELL } from '../helper/shared-vars.js';
+
+// Local constants
+const ANCHOR_ATTRIBUTES = ['anchor', 'anchorHref', 'anchorName', 'anchorDescription', 'anchorType', 'anchorTarget', 'anchorTabOrder', 'anchorDisabled', 'anchorRel', 'anchorReferrerPolicy', 'anchorPing', 'anchorHreflang', 'anchorDownload', 'anchorFocusAction', 'anchorBlurAction', 'anchorClickAction'],
+    BUTTON_ATTRIBUTES = ['button', 'buttonName', 'buttonAutofocus', 'buttonDescription', 'buttonDisabled', 'buttonTabOrder', 'buttonForm', 'buttonFormAction', 'buttonFormEnctype', 'buttonFormMethod', 'buttonFormNoValidate', 'buttonFormTarget', 'buttonElementName', 'buttonPopoverTarget', 'buttonPopoverTargetAction', 'buttonElementType', 'buttonElementValue', 'buttonFocusAction', 'buttonBlurAction', 'buttonClickAction'];
 
 
 // #### Export function

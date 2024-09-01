@@ -597,9 +597,7 @@
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { getPixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addStrings, mergeOver, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _abs, _ceil, _isFinite, _keys, _parse, <span class="hljs-variable constant_">ARIA_LIVE</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">DATA_TAB_ORDER</span>, <span class="hljs-variable constant_">DEF_SECTION_PLACEHOLDER</span>, <span class="hljs-variable constant_">DIV</span>, <span class="hljs-variable constant_">FONT_LENGTH_REGEX</span>, <span class="hljs-variable constant_">FONT_VARIANT_VALS</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">ITALIC</span>, <span class="hljs-variable constant_">LABEL_DIRTY_FONT_KEYS</span>, <span class="hljs-variable constant_">LABEL_UPDATE_FONTSTRING_KEYS</span>, <span class="hljs-variable constant_">LABEL_UNLOADED_FONT_KEYS</span>, <span class="hljs-variable constant_">LABEL_UPDATE_PARTS_KEYS</span>, <span class="hljs-variable constant_">LAYOUT_KEYS</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OBLIQUE</span>, <span class="hljs-variable constant_">POLITE</span>, <span class="hljs-variable constant_">ROLE</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SMALL_CAPS</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">STATE_KEYS</span>, <span class="hljs-variable constant_">SYSTEM_FONTS</span>, <span class="hljs-variable constant_">TEMPLATE_PASS_THROUGH_KEYS</span>, <span class="hljs-variable constant_">TEXTSTYLE_KEYS</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_LABEL</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { addStrings, mergeOver, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -610,11 +608,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="local-variables">Local variables</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> textEntityConverter = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">DIV</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _ceil, _isFinite, _keys, _parse, <span class="hljs-variable constant_">ARIA_LIVE</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">DATA_TAB_ORDER</span>, <span class="hljs-variable constant_">DIV</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">POLITE</span>, <span class="hljs-variable constant_">ROLE</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">STATE_KEYS</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_LABEL</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -625,11 +623,24 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="export-function">Export function</h4>
+              <p>Local constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DEF_SECTION_PLACEHOLDER</span> = <span class="hljs-string">&#x27;§&#x27;</span>,
+    <span class="hljs-variable constant_">FONT_LENGTH_REGEX</span> = <span class="hljs-regexp">/[0-9.,]+(%|cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvmax|dvmin|dvw|em|ex|ic|in|lh|lvb|lvh|lvi|lvmax|lvmin|lvw|mm|pc|pt|px|Q|rcap|rch|rem|rex|ric|rlh|svb|svh|svi|svmax|svmin|svw|vb|vh|vi|vmax|vmin|vw)/i</span>,
+    <span class="hljs-variable constant_">FONT_VARIANT_VALS</span> = [<span class="hljs-string">&#x27;small-caps&#x27;</span>, <span class="hljs-string">&#x27;all-small-caps&#x27;</span>, <span class="hljs-string">&#x27;petite-caps&#x27;</span>, <span class="hljs-string">&#x27;all-petite-caps&#x27;</span>, <span class="hljs-string">&#x27;unicase&#x27;</span>, <span class="hljs-string">&#x27;titling-caps&#x27;</span>],
+    <span class="hljs-variable constant_">ITALIC</span> = <span class="hljs-string">&#x27;italic&#x27;</span>,
+    <span class="hljs-variable constant_">LABEL_DIRTY_FONT_KEYS</span> = [<span class="hljs-string">&#x27;direction&#x27;</span>, <span class="hljs-string">&#x27;fontKerning&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontString&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>, <span class="hljs-string">&#x27;letterSpaceValue&#x27;</span>, <span class="hljs-string">&#x27;letterSpacing&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;textRendering&#x27;</span>, <span class="hljs-string">&#x27;wordSpaceValue&#x27;</span>, <span class="hljs-string">&#x27;wordSpacing&#x27;</span>],
+    <span class="hljs-variable constant_">LABEL_UNLOADED_FONT_KEYS</span> = [<span class="hljs-string">&#x27;fontString&#x27;</span>],
+    <span class="hljs-variable constant_">LABEL_UPDATE_FONTSTRING_KEYS</span> = [<span class="hljs-string">&#x27;fontString&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>],
+    <span class="hljs-variable constant_">LABEL_UPDATE_PARTS_KEYS</span> = [<span class="hljs-string">&#x27;fontFamily&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>],
+    <span class="hljs-variable constant_">LAYOUT_KEYS</span> = [<span class="hljs-string">&#x27;lineSpacing&#x27;</span>, <span class="hljs-string">&#x27;textUnitFlow&#x27;</span>, <span class="hljs-string">&#x27;lineAdjustment&#x27;</span>, <span class="hljs-string">&#x27;alignment&#x27;</span>, <span class="hljs-string">&#x27;justifyLine&#x27;</span>, <span class="hljs-string">&#x27;flipReverse&#x27;</span>, <span class="hljs-string">&#x27;flipUpend&#x27;</span>, <span class="hljs-string">&#x27;alignTextUnitsToPath&#x27;</span>, <span class="hljs-string">&#x27;lockFillStyleToEntity&#x27;</span>, <span class="hljs-string">&#x27;lockStrokeStyleToEntity&#x27;</span>],
+    <span class="hljs-variable constant_">OBLIQUE</span> = <span class="hljs-string">&#x27;oblique&#x27;</span>,
+    <span class="hljs-variable constant_">SMALL_CAPS</span> = <span class="hljs-string">&#x27;small-caps&#x27;</span>,
+    <span class="hljs-variable constant_">SYSTEM_FONTS</span> = [<span class="hljs-string">&#x27;serif&#x27;</span>, <span class="hljs-string">&#x27;sans-serif&#x27;</span>, <span class="hljs-string">&#x27;monospace&#x27;</span>, <span class="hljs-string">&#x27;cursive&#x27;</span>, <span class="hljs-string">&#x27;fantasy&#x27;</span>, <span class="hljs-string">&#x27;system-ui&#x27;</span>, <span class="hljs-string">&#x27;ui-serif&#x27;</span>, <span class="hljs-string">&#x27;ui-sans-serif&#x27;</span>, <span class="hljs-string">&#x27;ui-monospace&#x27;</span>, <span class="hljs-string">&#x27;ui-rounded&#x27;</span>, <span class="hljs-string">&#x27;emoji&#x27;</span>, <span class="hljs-string">&#x27;math&#x27;</span>, <span class="hljs-string">&#x27;fangsong&#x27;</span>],
+    <span class="hljs-variable constant_">TEMPLATE_PASS_THROUGH_KEYS</span> = [<span class="hljs-string">&#x27;width&#x27;</span>, <span class="hljs-string">&#x27;height&#x27;</span>, <span class="hljs-string">&#x27;dimensions&#x27;</span>, <span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;start&#x27;</span>, <span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;handle&#x27;</span>, <span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;offset&#x27;</span>, <span class="hljs-string">&#x27;roll&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;flipReverse&#x27;</span>, <span class="hljs-string">&#x27;flipUpend&#x27;</span>],
+    <span class="hljs-variable constant_">TEXTSTYLE_KEYS</span> = [ <span class="hljs-string">&#x27;canvasFont&#x27;</span>, <span class="hljs-string">&#x27;direction&#x27;</span>,<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;fontFamily&#x27;</span>, <span class="hljs-string">&#x27;fontKerning&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontString&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>, <span class="hljs-string">&#x27;highlightStyle&#x27;</span>, <span class="hljs-string">&#x27;includeHighlight&#x27;</span>, <span class="hljs-string">&#x27;includeUnderline&#x27;</span>, <span class="hljs-string">&#x27;letterSpaceValue&#x27;</span>, <span class="hljs-string">&#x27;letterSpacing&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;overlineOffset&#x27;</span>, <span class="hljs-string">&#x27;overlineStyle&#x27;</span>, <span class="hljs-string">&#x27;overlineWidth&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, <span class="hljs-string">&#x27;textRendering&#x27;</span>, <span class="hljs-string">&#x27;underlineGap&#x27;</span>, <span class="hljs-string">&#x27;underlineOffset&#x27;</span>, <span class="hljs-string">&#x27;underlineStyle&#x27;</span>, <span class="hljs-string">&#x27;underlineWidth&#x27;</span>, <span class="hljs-string">&#x27;wordSpaceValue&#x27;</span>, <span class="hljs-string">&#x27;wordSpacing&#x27;</span>, <span class="hljs-string">&#x27;method&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -639,6 +650,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Internal helper &lt;div&gt; element used to quickly convert text by exposing it to the browser engine</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> textEntityConverter = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">DIV</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <h4 id="export-function">Export function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
@@ -657,11 +698,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -723,11 +764,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality defined here</p>
@@ -737,11 +778,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -760,11 +801,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p>Label-related <code>get</code>, <code>set</code> and <code>deltaSet</code> functions need to take into account the entity State and default TextStyles objects, whose attributes can be retrieved/amended directly on the entity object</p>
@@ -995,11 +1036,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1008,11 +1049,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>EnhancedLabel function not relevant to Labels, but an integral part of the set functionality</p>
 <ul>
@@ -1026,11 +1067,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><code>recalculateFont</code> - force the entity to recalculate its dimensions without having to set anything.</p>
 <ul>
@@ -1053,11 +1094,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>convertTextEntityCharacters</code>, <code>textEntityConverter</code> - (not part of the Label prototype!) - a &lt;textarea&gt; element not attached to the DOM which we can use to temper user-supplied text</p>
 <ul>
@@ -1076,11 +1117,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>updateCanvasFont</code> - Updates the given TextStyle object’s canvasFont string attribute’</p>
 
@@ -1104,11 +1145,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>updateFontString</code> - Updates the given TextStyle object’s fontString string attribute’</p>
 
@@ -1133,11 +1174,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>getControllerCell</code> - Retrieve the entity’s controller Cell wrapper</p>
 
@@ -1170,11 +1211,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>temperFont</code> - manipulate the user-supplied font string to create a font string the canvas engine can use</p>
 <ul>
@@ -1202,11 +1243,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>temperFont</code> - manipulate the user-supplied font string to create a font string the canvas engine can use</p>
 <ul>
@@ -1267,11 +1308,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>calculateTextStyleFontStrings</code> - manipulate the user-supplied font string to create a font string the canvas engine can use</p>
 <ul>
@@ -1292,11 +1333,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>We always start with the ‘raw’ fontString as supplied by the user (or previously calculated by this function if only part of the font definition is changing)</p>
 
@@ -1310,11 +1351,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>On initial load <code>this.fontSize</code> will be empty or undefined</p>
 
@@ -1334,11 +1375,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>We only adjust if a part of the font string has been recently ‘set’</p>
 
@@ -1358,11 +1399,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Extract and manipulate data for font weight, variant and style</p>
 
@@ -1377,11 +1418,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Update elVariant, if required</p>
 
@@ -1392,11 +1433,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Update elStyle, if required</p>
 
@@ -1407,11 +1448,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Extract data for font size</p>
 
@@ -1425,11 +1466,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Work specifically for EnhancedLabel entitys, but performed here for efficiency</p>
 <ul>
@@ -1448,11 +1489,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Update <code>textStyle</code> attributes</p>
 
@@ -1467,11 +1508,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Rebuild font strings</p>
 
@@ -1488,11 +1529,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Only EnhancedLabels have a layoutTemplate attribute</p>
 
@@ -1503,11 +1544,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Labels, on the other hand, track their own scale</p>
 
@@ -1519,11 +1560,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>getStyle</code> - internal helper function to find a gradient, pattern, cell or string style</p>
 
@@ -1554,11 +1595,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>getFontMetadata</code> - generate basic font metadata</p>
 
@@ -1595,11 +1636,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Currently used by Label and EnhancedLabel</p>
 
@@ -1611,11 +1652,11 @@
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>currently used by EnhancedLabel</p>
 
@@ -1628,11 +1669,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Currently used by Label</p>
 
@@ -1674,11 +1715,11 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="accessibility-functions">Accessibility functions</h4>
 <p><code>getCanvasTextHold</code> - get a handle for the &lt;canvas&gt; element’s child text hold &lt;div&gt;</p>
@@ -1692,11 +1733,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>For non-based Cells we have to make a recursive call to find the &lt;canvas&gt; host</p>
 

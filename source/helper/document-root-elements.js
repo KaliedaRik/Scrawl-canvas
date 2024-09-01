@@ -16,13 +16,14 @@ import { pushUnique, removeItem } from './utilities.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 
+// Shared constants
 import { _floor } from './shared-vars.js';
 
+// Local constants
+const rootElements = [],
+    rootElements_sorted = [];
 
-// #### Local variables
-const rootElements = [];
-const rootElements_sorted = [];
-
+// Exported helper functions
 export const rootElementsAdd = (val) => {
     pushUnique(rootElements, val);
     setRootElementsSort(true);

@@ -603,9 +603,7 @@
 
 <span class="hljs-keyword">import</span> { correctForZero, doCreate, isa_number, isa_quaternion, xt, xto, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _acos, _cos, _radian, _seal, _sin, _sqrt, <span class="hljs-variable constant_">T_QUATERNION</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { makeVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -616,21 +614,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="quaternion-constructor">Quaternion constructor</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Quaternion</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span> = items.<span class="hljs-property">n</span> || <span class="hljs-number">1</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">v</span> = <span class="hljs-title function_">makeVector</span>();
-
-    <span class="hljs-title function_">_seal</span>(<span class="hljs-variable language_">this</span>);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _cos, _radian, _sin, _sqrt, <span class="hljs-variable constant_">T_QUATERNION</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -640,6 +628,44 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> _acos = <span class="hljs-title class_">Math</span>.<span class="hljs-property">acos</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="quaternion-constructor">Quaternion constructor</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Quaternion</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span> = items.<span class="hljs-property">n</span> || <span class="hljs-number">1</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">v</span> = <span class="hljs-title function_">makeVector</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="quaternion-prototype">Quaternion prototype</h4>
 
@@ -651,42 +677,14 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <h4 id="mixins">Mixins</h4>
-<p>Quaternion objects do not use mixins - they are regular Javascript objects. As such, they do not possess packet, clone or kill functionality.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h4 id="quaternion-attributes">Quaternion attributes</h4>
-<p>The <strong>name</strong>, <strong>n</strong> and <strong>v</strong> (Vector object) attributes are set in the Quaternion constructor - the Quaternion object does not have a <code>defs</code> object. The Vector attributes <strong>v.x</strong>, <strong>v.y</strong>, <strong>v.z</strong> can also be set directly.</p>
-<p><strong>We strongly advise against setting Quaternion object attributes directly!</strong> Quaternions are complex beasts and their <code>n</code> and <code>v</code> attributes are linked in mysterious (and possibly debauched) ways. Set and manipulate your Quaternion object’s attributes using the functions below.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="mixins">Mixins</h4>
+<p>Quaternion objects do not use mixins - they are regular Javascript objects. As such, they do not possess packet, clone or kill functionality.</p>
 
             </div>
             
@@ -699,7 +697,9 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Quaternion attributes can be retrieved directly - <code>myquaternion.n</code>, <code>myquaternion.v</code>. The <strong>v</strong> attribute is a Vector object, thus its attributes can be retrieved using that object’s convenience functions <code>myquaternion.v.getXYCoordinate</code> and <code>myquaternion.v.getXYZCoordinate</code> - these functions will return Arrays.</p>
+              <h4 id="quaternion-attributes">Quaternion attributes</h4>
+<p>The <strong>name</strong>, <strong>n</strong> and <strong>v</strong> (Vector object) attributes are set in the Quaternion constructor - the Quaternion object does not have a <code>defs</code> object. The Vector attributes <strong>v.x</strong>, <strong>v.y</strong>, <strong>v.z</strong> can also be set directly.</p>
+<p><strong>We strongly advise against setting Quaternion object attributes directly!</strong> Quaternions are complex beasts and their <code>n</code> and <code>v</code> attributes are linked in mysterious (and possibly debauched) ways. Set and manipulate your Quaternion object’s attributes using the functions below.</p>
 
             </div>
             
@@ -711,6 +711,32 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Quaternion attributes can be retrieved directly - <code>myquaternion.n</code>, <code>myquaternion.v</code>. The <strong>v</strong> attribute is a Vector object, thus its attributes can be retrieved using that object’s convenience functions <code>myquaternion.v.getXYCoordinate</code> and <code>myquaternion.v.getXYZCoordinate</code> - these functions will return Arrays.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>The Quaternion <code>set</code> function is overloaded. It can accept the following arguments:</p>
 <ul>
@@ -788,11 +814,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -801,11 +827,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Set the Quaternion attributes to their default values</p>
 
@@ -826,11 +852,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Get the Quaternion’s <strong>magnitude</strong> value</p>
 
@@ -846,11 +872,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Normalize the Quaternion</p>
 
@@ -874,11 +900,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Multiply the Quaternion by another Quaternion</p>
 
@@ -913,11 +939,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Retrieve the Quaternion’s current angle (returns a Number representing degrees, not radians)</p>
 
@@ -942,11 +968,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Rotate the Quaternion using another Quaternion’s values</p>
 
@@ -969,11 +995,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="quaternion-pool">Quaternion pool</h4>
 <p>An attempt to reuse quaternions rather than constantly creating and deleting them</p>
@@ -985,11 +1011,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - retrieve a Quaternion from the quaternion pool</p>
 
@@ -1009,11 +1035,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a Quaternion to the quaternion pool. Failing to return Quaternion to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -1033,11 +1059,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

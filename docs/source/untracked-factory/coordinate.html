@@ -594,9 +594,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _atan2, _cos, _create, _hypot, _isArray, _seal, _setPrototypeOf, _sin, <span class="hljs-variable constant_">T_COORDINATE</span>, <span class="hljs-variable constant_">T_QUATERNION</span>, <span class="hljs-variable constant_">T_VECTOR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -607,21 +605,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="coordinate-constructor">Coordinate constructor</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Coordinate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
-
-    <span class="hljs-keyword">const</span> coords = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
-
-    <span class="hljs-title function_">_setPrototypeOf</span>(coords, <span class="hljs-title class_">Coordinate</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-    <span class="hljs-title function_">_seal</span>(coords);
-
-    <span class="hljs-keyword">if</span> (items) coords.<span class="hljs-title function_">set</span>(items, y);
-
-    <span class="hljs-keyword">return</span> coords;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _atan2, _cos, _create, _hypot, _isArray, _setPrototypeOf, _sin, <span class="hljs-variable constant_">T_COORDINATE</span>, <span class="hljs-variable constant_">T_QUATERNION</span>, <span class="hljs-variable constant_">T_VECTOR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -631,6 +619,43 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants (none defined)</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="coordinate-constructor">Coordinate constructor</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Coordinate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
+
+    <span class="hljs-keyword">const</span> coords = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+
+    <span class="hljs-title function_">_setPrototypeOf</span>(coords, <span class="hljs-title class_">Coordinate</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+
+    <span class="hljs-keyword">if</span> (items) coords.<span class="hljs-title function_">set</span>(items, y);
+
+    <span class="hljs-keyword">return</span> coords;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="coordinate-prototype">Coordinate prototype</h4>
 
@@ -643,11 +668,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <p>Coordinate Arrays do not use mixins - they are regular Javascript Arrays. As such, they do not possess packet, clone or kill functionality.</p>
@@ -657,11 +682,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="coordinate-attributes">Coordinate attributes</h4>
 <p>There are no attributes. The constructor returns an Array containing two members, whose prototype object includes functions for manipulating those members in various ways.</p>
@@ -671,11 +696,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p>The Array members can be set using a <code>set</code> function, which is overloaded as follows:</p>
@@ -721,11 +746,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>Set the Coordinate array to <code>[0, 0]</code></p>
@@ -743,11 +768,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Add a Vector object’s <strong>x</strong> and <strong>y</strong> attributes to the Coordinate members’ values</p>
 
@@ -764,11 +789,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Subtract a Vector object’s <strong>x</strong> and <strong>y</strong> attributes from the Coordinate members’ values</p>
 
@@ -785,11 +810,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Array addition - argument is a <code>[Number, Number]</code> Array</p>
 
@@ -806,11 +831,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Array subtraction - argument is a <code>[Number, Number]</code> Array</p>
 
@@ -827,11 +852,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Array multiplication - argument is a <code>[Number, Number]</code> Array</p>
 
@@ -848,11 +873,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Array division - argument is a <code>[Number, Number]</code> Array</p>
 
@@ -875,11 +900,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Multiply both Coordinate Array members by the argument Number</p>
 
@@ -896,11 +921,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Divide both Coordinate Array members by the argument Number</p>
 
@@ -920,11 +945,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Get the Array’s <strong>magnitude</strong> value (treating the Coordinate as if it was a 2D vector)</p>
 
@@ -938,11 +963,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians</p>
 
@@ -966,11 +991,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Reverse the numerical sign on each of the Array’s members</p>
 
@@ -987,11 +1012,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Get the Array’s <strong>dot product</strong> value (treating the Coordinate as if it was a 2D vector)</p>
 
@@ -1005,11 +1030,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>Normalize</strong> the Array’s members (treating the Coordinate as if it was a 2D vector)</p>
 
@@ -1029,11 +1054,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="coordinate-pool">Coordinate pool</h4>
 <p>An attempt to reuse coordinates rather than constantly creating and deleting them</p>
@@ -1045,11 +1070,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - retrieve a Coordinate from the coordinate pool</p>
 
@@ -1067,11 +1092,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -1088,11 +1113,11 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

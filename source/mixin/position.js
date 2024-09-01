@@ -134,7 +134,15 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untrack
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
-import { _isArray, _isFinite, _keys, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_ENHANCED_LABEL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const ALL = 'all',
+    HANDLE = 'handle',
+    LOCKTO = 'lockTo',
+    STARTX = 'startX',
+    STARTY = 'startY';
 
 
 // #### Export function

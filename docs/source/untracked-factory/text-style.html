@@ -655,9 +655,7 @@ CSS custom property <code>--SC-local-alignment</code>    maps to TextUnit <code>
 
 <span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _isFinite, _keys, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">DEFAULT_FONT_SIZE</span>, <span class="hljs-variable constant_">DEFAULT_FONT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">FONT_STRETCH_VALS</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">LTR</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">SANS_SERIF</span>, <span class="hljs-variable constant_">T_TEXT_STYLE</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -668,7 +666,40 @@ CSS custom property <code>--SC-local-alignment</code>    maps to TextUnit <code>
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="wheel-constructor">Wheel constructor</h4>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isFinite, _keys, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">DEFAULT_FONT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">LTR</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DEFAULT_FONT_SIZE</span> = <span class="hljs-string">&#x27;12px&#x27;</span>,
+    <span class="hljs-variable constant_">FONT_STRETCH_VALS</span> = [<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>,<span class="hljs-string">&#x27;extra-condensed&#x27;</span>,<span class="hljs-string">&#x27;condensed&#x27;</span>,<span class="hljs-string">&#x27;semi-condensed&#x27;</span>,<span class="hljs-string">&#x27;semi-expanded&#x27;</span>,<span class="hljs-string">&#x27;expanded&#x27;</span>,<span class="hljs-string">&#x27;extra-expanded&#x27;</span>,<span class="hljs-string">&#x27;ultra-expanded&#x27;</span>],
+    <span class="hljs-variable constant_">SANS_SERIF</span> = <span class="hljs-string">&#x27;sans-serif&#x27;</span>,
+    <span class="hljs-variable constant_">T_TEXT_STYLE</span> = <span class="hljs-string">&#x27;TextStyle&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <h4 id="textstyle-constructor">TextStyle constructor</h4>
 
             </div>
             
@@ -693,11 +724,11 @@ CSS custom property <code>--SC-local-alignment</code>    maps to TextUnit <code>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="textstyle-prototype">TextStyle prototype</h4>
 
@@ -709,11 +740,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -724,11 +755,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="textstyle-attributes">TextStyle attributes</h4>
 
@@ -739,11 +770,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="canvas-state---text-related-attributes-used-by-text-units">Canvas state - text-related attributes used by text units</h4>
 
@@ -758,11 +789,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="canvas-state---non-text-related-attributes-used-by-text-units">Canvas state - non-text-related attributes used by text units</h4>
 
@@ -777,11 +808,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="canvas-state---text-related-attributes-ignored-by-text-units">Canvas state - text-related attributes ignored by text units</h4>
 
@@ -802,11 +833,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="canvas-state---non-text-related-attributes-ignored-by-text-units">Canvas state - non-text-related attributes ignored by text units</h4>
 
@@ -832,11 +863,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="unit-font-related-attributes">Unit font-related attributes</h4>
 
@@ -854,11 +885,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="unit-underline-styling">Unit underline styling</h4>
 <p>Underlines go behind the text, with clear guttering between the text characters and the underline</p>
@@ -880,11 +911,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="unit-overline-styling">Unit overline styling</h4>
 <p>Overlines go over the text, with no guttering</p>
@@ -904,11 +935,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="unit-highlight-styling">Unit highlight styling</h4>
 <p>Highlight goes behind the text and any underline, with no guttering provided. It is the full font height.</p>
@@ -924,11 +955,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="unit-stamp-method">Unit stamp method</h4>
 <p>One from: ‘fill’ (default), ‘draw’, ‘fillAndDraw’, ‘drawAndFill’</p>
@@ -945,11 +976,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -990,11 +1021,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>Handled by Label and EnhancedLabel entity, not by the TextStyle object</p>
@@ -1004,11 +1035,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>Handled by Label and EnhancedLabel entity, not by the TextStyle object</p>
@@ -1018,11 +1049,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p><code>set</code> - overwrites ‘mixin/entity.js’ function</p>
@@ -1064,11 +1095,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>setDelta</code> - overwrites ‘mixin/entity.js’ function</p>
 
@@ -1268,11 +1299,11 @@ S.<span class="hljs-property">textBaseline</span> = λ<span class="hljs-literal"
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional functionality defined</p>
@@ -1282,11 +1313,11 @@ S.<span class="hljs-property">textBaseline</span> = λ<span class="hljs-literal"
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>example needed

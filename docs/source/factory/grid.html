@@ -611,9 +611,7 @@
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _isArray, _isFinite, _isInteger, _parse, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">CELL_GRADIENT</span>, <span class="hljs-variable constant_">COLOR</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GRAY</span>, <span class="hljs-variable constant_">GRID_GRADIENT</span>, <span class="hljs-variable constant_">GRID_PICTURE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_GRID</span>, <span class="hljs-variable constant_">TILE_PICTURE</span>, <span class="hljs-variable constant_">WHITE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -623,6 +621,42 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _isFinite, _parse, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">COLOR</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">WHITE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> _isInteger = <span class="hljs-title class_">Number</span>.<span class="hljs-property">isSafeInteger</span> || <span class="hljs-title class_">Number</span>.<span class="hljs-property">isInteger</span>,
+    <span class="hljs-variable constant_">CELL_GRADIENT</span> = <span class="hljs-string">&#x27;cellGradient&#x27;</span>,
+    <span class="hljs-variable constant_">GRAY</span> = <span class="hljs-string">&#x27;rgb(127 127 127 / 1)&#x27;</span>,
+    <span class="hljs-variable constant_">GRID_GRADIENT</span> = <span class="hljs-string">&#x27;gridGradient&#x27;</span>,
+    <span class="hljs-variable constant_">GRID_PICTURE</span> = <span class="hljs-string">&#x27;gridPicture&#x27;</span>,
+    <span class="hljs-variable constant_">T_GRID</span> = <span class="hljs-string">&#x27;Grid&#x27;</span>,
+    <span class="hljs-variable constant_">TILE_PICTURE</span> = <span class="hljs-string">&#x27;tilePicture&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="grid-constructor">Grid constructor</h4>
 
@@ -680,11 +714,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="block-prototype">Block prototype</h4>
 
@@ -699,11 +733,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -715,11 +749,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="grid-attributes">Grid attributes</h4>
 
@@ -730,11 +764,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>columns</strong>, <strong>rows</strong> - integer Numbers representing the number of columns and rows in the Grid</p>
 
@@ -746,11 +780,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>columnGutterWidth</strong>, <strong>rowGutterWidth</strong> - float Number distances (measured in px) between tiles in the grid.</p>
 
@@ -762,11 +796,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>tileSources</strong> - Array of Javascript Objects</p>
 <ul>
@@ -781,11 +815,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>tileFill</strong> - Array of integer Numbers</p>
 <ul>
@@ -801,11 +835,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>gutterColor</strong> - can accept the following sources:</p>
 <ul>
@@ -823,11 +857,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -861,11 +895,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -875,11 +909,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -889,11 +923,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -905,11 +939,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>columns</strong></p>
 
@@ -950,11 +984,11 @@ D.<span class="hljs-property">columns</span> = λ<span class="hljs-literal">null
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>rows</strong></p>
 
@@ -985,11 +1019,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="tile-management">Tile management</h4>
 
@@ -998,11 +1032,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>setAllTilesTo</code> - change the fill for all tiles in a Grid</p>
 <ul>
@@ -1026,11 +1060,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>setTileFill</code> - update the tileFill array</p>
 <ul>
@@ -1054,11 +1088,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>setTilesTo</code> - change the fill for a (set of) tile(s) in a Grid - requires two arguments:</p>
 <ul>
@@ -1092,11 +1126,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>setTileSourceTo</code> - update or replace a tileSource object - requires two arguments:</p>
 <ul>
@@ -1118,11 +1152,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>removeTileSource</code> - remove a tileSource object</p>
 <ul>
@@ -1146,11 +1180,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>getTileSource</code> - returns the tileSource index Number for the given tile. Function is overloaded:</p>
 <ul>
@@ -1172,11 +1206,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>getTilesUsingSource</code> - returns an Array of tileFill index Numbers representing tiles that are currently using the tileSource Object at the given tileSource index.</p>
 
@@ -1194,11 +1228,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - internal - used for entity stamping (Display cycle), and collision detection</p>
 
@@ -1288,11 +1322,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 
@@ -1301,11 +1335,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>performFill</code> - internal stamp method helper function</p>
 <ul>
@@ -1321,11 +1355,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Grab the current engine values for various things</p>
 
@@ -1354,11 +1388,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Iterate through the grid’s tileSources</p>
 
@@ -1369,11 +1403,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Set up the engine fillStyle value (where required)</p>
 
@@ -1405,11 +1439,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Get an map of tiles using this source</p>
 
@@ -1424,11 +1458,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Use pool canvas to compose the output</p>
 
@@ -1504,11 +1538,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Assign (or construct) the appropriate object to gObject</p>
 
@@ -1527,11 +1561,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Set the engine’s strokeStyle to the appropriate value (if needed)</p>
 
@@ -1562,11 +1596,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Use pool canvas to compose the output</p>
 <ul>
@@ -1626,11 +1660,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>We have a color/gradient all set up - stroke the lines directly onto grid</p>
 
@@ -1661,11 +1695,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1679,11 +1713,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1701,11 +1735,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -1724,11 +1758,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -1745,11 +1779,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -1766,11 +1800,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>checkHit</code> - overrides position mixin function</p>
 <ul>
@@ -1876,11 +1910,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> blueSource = {

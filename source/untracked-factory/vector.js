@@ -7,7 +7,10 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, isa_number, isa_obj, xt, xta, Ωempty } from '../helper/utilities.js';
 
-import { _atan2, _cos, _isArray, _sin, _sqrt, _stringify, T_VECTOR } from '../helper/shared-vars.js';
+// Shared constants
+import { _atan2, _cos, _isArray, _sin, _sqrt, T_VECTOR } from '../helper/shared-vars.js';
+
+// Local constants (none defined)
 
 
 // #### Vector constructor
@@ -118,7 +121,7 @@ P.setFromArray = function (args) {
 
 P.setFromVector = function (item) {
 
-    if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${_stringify(item)}`);
+    if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${JSON.stringify(item)}`);
 
     const {x, y, z} = item;
 

@@ -33,7 +33,12 @@ import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { ENTITY, RADIUS_X, RADIUS_XY, RADIUS_Y, T_TETRAGON, TETRAGON, ZERO_PATH } from '../helper/shared-vars.js';
+// Shared constants
+import { ENTITY, RADIUS_X, RADIUS_XY, RADIUS_Y, ZERO_PATH } from '../helper/shared-vars.js';
+
+// Local constants
+const T_TETRAGON = 'Tetragon',
+    TETRAGON = 'tetragon';
 
 
 // #### Tetragon constructor

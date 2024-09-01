@@ -599,9 +599,7 @@
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> cellMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/cell-key-functions.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { getCanvasColorSpace } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span>
-
-<span class="hljs-keyword">import</span> { _2D, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DISPLAY_P3</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">SRGB</span>, <span class="hljs-variable constant_">T_CELLFRAGMENT</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { getCanvasColorSpace } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -611,6 +609,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _2D, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DISPLAY_P3</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">SRGB</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_CELLFRAGMENT</span> = <span class="hljs-string">&#x27;CellFragment&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="cellfragment-constructor">CellFragment constructor</h4>
 
@@ -640,11 +668,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="cellfragment-prototype">CellFragment prototype</h4>
 
@@ -656,11 +684,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -672,11 +700,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="packetclone-management">Packet/Clone management</h4>
 <p>This functionality is disabled for CellFragments objects</p>
@@ -695,11 +723,11 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="kill-functionality">Kill functionality</h4>
 <p>None required</p>
@@ -718,11 +746,11 @@ P.<span class="hljs-property">setDimensions</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Resetting canvas dimensions sets the canvas engine back to system default values</p>
 <ul>
@@ -744,11 +772,11 @@ P.<span class="hljs-property">clearCell</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="cell-pool">Cell pool</h4>
 <p>A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas&gt; element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.</p>
@@ -764,11 +792,11 @@ P.<span class="hljs-property">clearCell</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> - <strong>requestCell</strong></p>
 

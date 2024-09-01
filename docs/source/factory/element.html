@@ -620,9 +620,7 @@
 <span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span>, <span class="hljs-variable constant_">T_ELEMENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -632,6 +630,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_ELEMENT</span> = <span class="hljs-string">&#x27;Element&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="element-constructor">Element constructor</h4>
 
@@ -649,11 +677,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities)</p>
 
@@ -698,11 +726,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="element-prototype">Element prototype</h4>
 
@@ -717,11 +745,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -733,42 +761,14 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <h4 id="element-attributes">Element attributes</h4>
-<p>No additional attributes required beyond those supplied by the mixins</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="element-attributes">Element attributes</h4>
+<p>No additional attributes required beyond those supplied by the mixins</p>
 
             </div>
             
@@ -780,6 +780,34 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -795,11 +823,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -810,11 +838,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><code>text</code> - <strong>this is the preferred way to update an element’s text content</strong> because the text supplied in the argument is not treated as HTML by the browser.</p>
 <p>When we update the DOM attribute <code>element.textContent</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -840,11 +868,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>content</code> - <strong>WARNING - this is a dangerous function!</strong> It does not perform any character escaping before inserting the supplied argument into the element. Raw HTML (including, for instance, &lt;script&gt; tags) will be added to the DOM. It’s up to the developer to make sure this content is safe!</p>
 <p>When we update the DOM attribute <code>element.innerHTML</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -870,11 +898,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -883,11 +911,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function.</p>
 
@@ -901,11 +929,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="snippet-related-functions">Snippet-related functions</h4>
 
@@ -914,11 +942,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>addCanvas</code> - adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
 <ul>
@@ -981,11 +1009,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-title class_">Get</span> a handle to a <span class="hljs-title class_">Stack</span> wrapper

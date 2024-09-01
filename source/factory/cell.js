@@ -64,7 +64,14 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isFinite, _floor, _round, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, DISPLAY_P3, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _isFinite, _floor, _round, _values, _2D, AUTO, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const CELL = 'cell',
+    CONTAIN = 'contain',
+    COVER = 'cover',
+    TRANSPARENT_VALS = ['rgb(0 0 0 / 0)', 'rgba(0 0 0 / 0)', 'rgba(0,0,0,0)', 'rgba(0, 0, 0, 0)', 'transparent', '#00000000', '#0000'];
 
 
 // #### Cell constructor

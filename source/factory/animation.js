@@ -2,7 +2,7 @@
 // Animations lie at the heart of Scrawl-canvas functionality. While static [Canvas](./canvas.html) and [Stack](./stack.html) displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.
 //
 // There are a number of ways to create an Animation object:
-// + `scrawl.makeAnimation` - as coded by this factory - will supply a very basic Animation object. The factory requires that we supply it with a Promise-based `fn` function which will be added to the core Scrawl-canvas animation loop.
+// + `scrawl.makeAnimation` - as coded by this factory - will supply a very basic Animation object.
 //
 // Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier:
 // + `scrawl.makeRender` - use this function to create an animation object which will __control the Display cycle for a canvas or stack__. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.
@@ -17,7 +17,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, xt, λnull, λpromise, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
 
 import { forceUpdate } from '../helper/system-flags.js';
 
@@ -25,7 +25,11 @@ import { animateAdd, animateIncludes, animateRemove } from '../core/animation-lo
 
 import baseMix from '../mixin/base.js';
 
-import { ANIMATION, T_ANIMATION } from '../helper/shared-vars.js';
+// Shared constants
+import { ANIMATION } from '../helper/shared-vars.js';
+
+// Local constants
+const T_ANIMATION = 'Animation';
 
 
 // #### Animation constructor
@@ -33,7 +37,7 @@ const Animation = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.order = (xt(items.order)) ? items.order : this.defs.order;
-    this.fn = items.fn || λpromise;
+    this.fn = items.fn || λnull;
     this.onRun = items.onRun || λnull;
     this.onHalt = items.onHalt || λnull;
     this.onKill = items.onKill || λnull;
@@ -73,7 +77,7 @@ const defaultAttributes = {
 // __maxFrameRate__ - positive integer Number. A frames-per-second choke to prevent animation running too fast.
     maxFrameRate: 60,
 
-// __fn__ - the main function that the Animation object will run on each RequestAnimationFrame tick. This function __must return a Promise__.
+// __fn__ - the main function that the Animation object will run on each RequestAnimationFrame tick.
     fn: null,
 
 // The Animation object supports some __animation hook functions__:
@@ -161,17 +165,9 @@ P.kill = function () {
 //
 //     name: 'demo-animation',
 //
-//     // Function MUST return a Promise object, and that promise must ALWAYS resolve (not reject)
-//     fn: function () {
-//
-//         return new Promise((resolve) => {
-//
-//             // Renders all stack and canvas elements in the document
-//             scrawl.render()
-//             .then(() => resolve(true))
-//             .catch(err => resolve(false));
-//         });
-//     }
+//     fn: () => {
+//         scrawl.render();
+//     },
 // });
 // ```
 export const makeAnimation = function (items) {

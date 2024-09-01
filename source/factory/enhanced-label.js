@@ -26,7 +26,36 @@ import textMix from '../mixin/text.js';
 
 import { doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _freeze, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, DRAW, DRAW_AND_FILL, END, ENTITY, FILL, FILL_AND_DRAW, FONT_VIEWPORT_LENGTH_REGEX, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, ROW, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, SPACE_AROUND, SPACE_BETWEEN, START, T_CELL, T_ENHANCED_LABEL, T_ENHANCED_LABEL_LINE, T_ENHANCED_LABEL_UNIT, T_ENHANCED_LABEL_UNITARRAY, T_GROUP, TEXT_HARD_HYPHEN_REGEX, TEXT_LAYOUT_FLOW_COLUMNS, TEXT_LAYOUT_FLOW_REVERSE, TEXT_NO_BREAK_REGEX, TEXT_SOFT_HYPHEN_REGEX, TEXT_SPACES_REGEX, TEXT_TYPE_CHARS, TEXT_TYPE_HYPHEN, TEXT_TYPE_NO_BREAK, TEXT_TYPE_SOFT_HYPHEN, TEXT_TYPE_SPACE, TEXT_TYPE_TRUNCATE, TEXT_TYPE_ZERO_SPACE, TEXT_ZERO_SPACE_REGEX, TOP, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const DRAW = 'draw',
+    DRAW_AND_FILL = 'drawAndFill',
+    FILL_AND_DRAW = 'fillAndDraw',
+    FONT_VIEWPORT_LENGTH_REGEX = /[0-9.,]+(svh|lvh|dvh|vh|svw|lvw|dvw|vw|svmax|lvmax|dvmax|vmax|svmin|lvmin|dvmin|vmin|svb|lvb|dvb|vb|svi|lvi|dvi|vi)/i,
+    ROW = 'row',
+    SPACE_AROUND = 'space-around',
+    SPACE_BETWEEN = 'space-between',
+    T_ENHANCED_LABEL_LINE = 'EnhancedLabelLine',
+    T_ENHANCED_LABEL_UNIT = 'EnhancedLabelUnit',
+    T_ENHANCED_LABEL_UNITARRAY = 'EnhancedLabelUnitArray',
+    TEXT_HARD_HYPHEN_REGEX = /[-]/,
+    TEXT_LAYOUT_FLOW_COLUMNS = ['column', 'column-reverse'],
+    TEXT_LAYOUT_FLOW_REVERSE = ['row-reverse', 'column-reverse'],
+    TEXT_NO_BREAK_REGEX = /[\u2060]/,
+    TEXT_SOFT_HYPHEN_REGEX = /[\u00ad]/;
+
+// Excludes \u00A0 (no-break-space) and includes \u200b
+const TEXT_SPACES_REGEX = /[ \f\n\r\t\v\u2028\u2029\u200b]/,
+    TEXT_TYPE_CHARS = 'C',
+    TEXT_TYPE_HYPHEN = 'H',
+    TEXT_TYPE_NO_BREAK = 'B',
+    TEXT_TYPE_SOFT_HYPHEN = 'h',
+    TEXT_TYPE_SPACE = 'S',
+    TEXT_TYPE_ZERO_SPACE = 'Z',
+    TEXT_TYPE_TRUNCATE = 'T',
+    TEXT_ZERO_SPACE_REGEX = /[\u200b]/;
 
 
 // #### EnhancedLabel constructor
@@ -3436,7 +3465,6 @@ export const makeEnhancedLabel = function (items) {
 
     if (!items) return false;
 
-    // REMOVE SEAL AFTER EFFICIENCY WORK COMPLETES
     return new EnhancedLabel(items);
 };
 
@@ -3446,7 +3474,7 @@ constructors.EnhancedLabel = EnhancedLabel;
 // #### TextUnit objects
 const UNIT_CHARS = 'chars',
     UNIT_TYPE = 'charType',
-    UNIT_SETTABLE_KEYS = _freeze(['localStyle', 'localHandleX', 'localHandleY', 'localOffsetX', 'localOffsetY', 'localAlignment']);
+    UNIT_SETTABLE_KEYS = ['localStyle', 'localHandleX', 'localHandleY', 'localOffsetX', 'localOffsetY', 'localAlignment'];
 
 const UnitObject = function () {
 

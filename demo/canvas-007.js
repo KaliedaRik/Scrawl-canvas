@@ -207,7 +207,7 @@ scrawl.makeFilter({
         {
             action: 'blend',
             lineMix: 'flower',
-            blend: 'color-burn',
+            blend: 'color',
         }
     ],
 });
@@ -308,6 +308,11 @@ scrawl.makeFilter({
 }).clone({
     name: name('sharpen'),
     method: 'sharpen',
+
+// __Negative__ filter
+}).clone({
+    name: name('negative'),
+    method: 'negative',
 });
 
 // __Emboss__ filter
@@ -389,11 +394,32 @@ scrawl.makeFilter({
     tileRadius: 24,
 });
 
+// __Modulate Ok__ filter
+scrawl.makeFilter({
+    name: name('modulateOk'),
+    method: 'modulateOk',
+    channelA: 0,
+});
+
+// __Modify Ok__ filter
+scrawl.makeFilter({
+    name: name('modifyOk'),
+    method: 'modifyOk',
+    channelA: -0.5,
+});
+
 // __Newsprint__ filter
 scrawl.makeFilter({
     name: name('newsprint'),
     method: 'newsprint',
     width: 2,
+});
+
+// __Rotate Hue__ filter
+scrawl.makeFilter({
+    name: name('rotateHue'),
+    method: 'rotateHue',
+    angle: 180,
 });
 
 // __Tint__ filter
@@ -583,6 +609,7 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: name('reducePalette'),
     method: 'reducePalette',
+    noiseType: 'ordered',
 });
 
 scrawl.makeGradient({

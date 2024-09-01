@@ -593,9 +593,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _keys, <span class="hljs-variable constant_">ANCHOR_ATTRIBUTES</span>, <span class="hljs-variable constant_">BUTTON_ATTRIBUTES</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -606,11 +604,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="export-function">Export function</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _keys, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -621,10 +619,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="shared-attributes">Shared attributes</h4>
-<p>No additional attributes required</p>
+              <p>Local constants</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ANCHOR_ATTRIBUTES</span> = [<span class="hljs-string">&#x27;anchor&#x27;</span>, <span class="hljs-string">&#x27;anchorHref&#x27;</span>, <span class="hljs-string">&#x27;anchorName&#x27;</span>, <span class="hljs-string">&#x27;anchorDescription&#x27;</span>, <span class="hljs-string">&#x27;anchorType&#x27;</span>, <span class="hljs-string">&#x27;anchorTarget&#x27;</span>, <span class="hljs-string">&#x27;anchorTabOrder&#x27;</span>, <span class="hljs-string">&#x27;anchorDisabled&#x27;</span>, <span class="hljs-string">&#x27;anchorRel&#x27;</span>, <span class="hljs-string">&#x27;anchorReferrerPolicy&#x27;</span>, <span class="hljs-string">&#x27;anchorPing&#x27;</span>, <span class="hljs-string">&#x27;anchorHreflang&#x27;</span>, <span class="hljs-string">&#x27;anchorDownload&#x27;</span>, <span class="hljs-string">&#x27;anchorFocusAction&#x27;</span>, <span class="hljs-string">&#x27;anchorBlurAction&#x27;</span>, <span class="hljs-string">&#x27;anchorClickAction&#x27;</span>],
+    <span class="hljs-variable constant_">BUTTON_ATTRIBUTES</span> = [<span class="hljs-string">&#x27;button&#x27;</span>, <span class="hljs-string">&#x27;buttonName&#x27;</span>, <span class="hljs-string">&#x27;buttonAutofocus&#x27;</span>, <span class="hljs-string">&#x27;buttonDescription&#x27;</span>, <span class="hljs-string">&#x27;buttonDisabled&#x27;</span>, <span class="hljs-string">&#x27;buttonTabOrder&#x27;</span>, <span class="hljs-string">&#x27;buttonForm&#x27;</span>, <span class="hljs-string">&#x27;buttonFormAction&#x27;</span>, <span class="hljs-string">&#x27;buttonFormEnctype&#x27;</span>, <span class="hljs-string">&#x27;buttonFormMethod&#x27;</span>, <span class="hljs-string">&#x27;buttonFormNoValidate&#x27;</span>, <span class="hljs-string">&#x27;buttonFormTarget&#x27;</span>, <span class="hljs-string">&#x27;buttonElementName&#x27;</span>, <span class="hljs-string">&#x27;buttonPopoverTarget&#x27;</span>, <span class="hljs-string">&#x27;buttonPopoverTargetAction&#x27;</span>, <span class="hljs-string">&#x27;buttonElementType&#x27;</span>, <span class="hljs-string">&#x27;buttonElementValue&#x27;</span>, <span class="hljs-string">&#x27;buttonFocusAction&#x27;</span>, <span class="hljs-string">&#x27;buttonBlurAction&#x27;</span>, <span class="hljs-string">&#x27;buttonClickAction&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -635,10 +635,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
+              <h4 id="export-function">Export function</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
             
         </li>
         
@@ -649,8 +650,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="shared-attributes">Shared attributes</h4>
+<p>No additional attributes required</p>
 
             </div>
             
@@ -663,8 +664,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -677,7 +678,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -689,6 +691,33 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><code>getCanvasNavElement</code> - internal function. Locate the &lt;nav&gt; DOM hold element to which &lt;button&gt; and &lt;a&gt; elements get added.</p>
 
@@ -715,11 +744,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><code>getCanvasWrapper</code> - internal function. Retrieve the Canvas wrapper object that controls the DOM hold element.</p>
 
@@ -746,11 +775,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><code>prepareStampTabsHelper</code> - internal function. Called by various <code>prepareStamp</code> functions</p>
 
@@ -765,11 +794,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><code>modifyConstructorInputForAnchorButton</code> - internal function. Called by various <code>prepareStamp</code> functions</p>
 

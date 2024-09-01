@@ -9,7 +9,11 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
+// Shared constants
+import { _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, TOP } from '../helper/shared-vars.js';
+
+// Local constants
+const STYLES_ARR = ['Gradient', 'RadialGradient', 'Pattern'];
 
 
 // #### Export function
@@ -101,7 +105,7 @@ export default function (P = Ωempty) {
     };
 
     // __setEngineActions__ - an Object containing functions for updating the engine's attributes; used by `setEngine`
-    P.setEngineActions = _freeze({
+    P.setEngineActions = {
 
         fillStyle: function (item, engine, STYLES_ARR, entity, layer) {
 
@@ -241,7 +245,7 @@ export default function (P = Ωempty) {
         wordSpacing: function (item, engine) {
             engine.wordSpacing = item;
         },
-    });
+    };
 
     // The following functions are used as part of entity object `stamp` functionality - specifically for those with a __method__ whose appearance is affected by shadows, and for the `clear` method
     // + Scrawl-canvas, for the most part, avoids using engine.save() and engine.restore() functionality, instead preferring to keep track of engine state in State objects.

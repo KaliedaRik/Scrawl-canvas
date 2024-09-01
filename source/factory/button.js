@@ -17,7 +17,18 @@ import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../helper/util
 
 import baseMix from '../mixin/base.js';
 
-import { _keys, _FORMACTION, _FORMENCTYPE, _FORMMETHOD, _FORMNOVALIDATE, _POPOVERTARGET, _POPOVERTARGETACTION, ANCHOR, AUTOFOCUS, BLUR, BUTTON, CLICK, DATA_TAB_ORDER, DISABLED, FOCUS, FORM, NAME, T_BUTTON, TARGET, TYPE, UNDEF, VALUE, ZERO_STR } from '../helper/shared-vars.js';
+// Shared constants
+import { _keys, ANCHOR, AUTOFOCUS, BLUR, CLICK, DATA_TAB_ORDER, DISABLED, FOCUS, FORM, NAME, TARGET, TYPE, UNDEF, VALUE, ZERO_STR } from '../helper/shared-vars.js';
+
+// Local constants
+const _FORMACTION = 'formaction',
+    _FORMENCTYPE = 'formenctype',
+    _FORMMETHOD = 'formmethod',
+    _FORMNOVALIDATE = 'formnovalidate',
+    _POPOVERTARGET = 'popovertarget',
+    _POPOVERTARGETACTION = 'popovertargetaction',
+    BUTTON = 'button',
+    T_BUTTON = 'Button';
 
 
 // #### Button constructor

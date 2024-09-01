@@ -110,10 +110,10 @@ const composeFilter = scrawl.makeFilter({
 
     name: name('block-filter'),
     method: 'blend',
-    lineIn: 'source',
-    lineMix: 'star',
-    offsetX: 30,
-    offsetY: 30,
+    lineIn: 'wheel',
+    lineMix: 'flower',
+    offsetX: 0,
+    offsetY: 0,
     compose: 'normal',
 });
 
@@ -173,11 +173,11 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = initializeDomInputs([
-    ['input', 'offset_x', '30'],
-    ['input', 'offset_y', '30'],
+    ['input', 'offset_x', '0'],
+    ['input', 'offset_y', '0'],
     ['input', 'opacity', '1'],
-    ['select', 'source', 2],
-    ['select', 'destination', 0],
+    ['select', 'source', 3],
+    ['select', 'destination', 4],
     ['select', 'blend', 0],
 ]);
 

@@ -617,9 +617,7 @@
 <span class="hljs-keyword">import</span> hiddenElementsMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/hidden-dom-elements.js&#x27;</span>;
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;
 <span class="hljs-keyword">import</span> buttonMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/button.js&#x27;</span>;
-<span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _floor, _keys, _parse, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONZERO</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_KEYS</span>,  <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -630,11 +628,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="export-function">Export function</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, _keys, _parse, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_KEYS</span>,  <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -644,6 +642,36 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">NONZERO</span> = <span class="hljs-string">&#x27;nonzero&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="export-function">Export function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -662,11 +690,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
@@ -677,11 +705,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>method</strong> - String value which tells the entity <em>how</em> it will display itself on the canvas. Available options are:</p>
 <ul>
@@ -703,11 +731,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>pathObject</strong> - Scrawl-canvas holds details of every type of entity’s outline in a <code>Path2D</code> object - used both for draw/fill operations, and for collision detection work</p>
 
@@ -718,11 +746,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>winding</strong> - String with value <code>evenodd</code> or <code>nonzero</code> (default)</p>
 <ul>
@@ -736,11 +764,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>flipReverse</strong>, <strong>flipUpend</strong> - Boolean flags which determine the orientation of the entity when it stamps itself on the display.</p>
 <ul>
@@ -756,11 +784,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>scaleOutline</strong> - Boolean flag. When set, the entity will increase its <code>lineWidth</code> proportionat to the entity’s <code>scale</code> value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1</p>
 
@@ -771,11 +799,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>lockFillStyleToEntity</strong>, <strong>lockStrokeStyleToEntity</strong> - Boolean flags.</p>
 <ul>
@@ -791,11 +819,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h5 id="event-listener-functions">Event listener functions</h5>
 <p>Entity objects have the ability to act as ‘hotspots’ within a canvas display, reacting to mouse/pointer movements over the canvas. Four mouse-like events are supported:</p>
@@ -823,11 +851,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>onEnter</strong> - define tasks to be performed for <code>enter</code> events</p>
 
@@ -838,11 +866,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>onLeave</strong> - define tasks to be performed for <code>leave</code> events</p>
 
@@ -853,11 +881,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>onDown</strong> - define tasks to be performed for <code>down</code> events</p>
 
@@ -868,11 +896,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>onUp</strong> - define tasks to be performed for <code>up</code> events</p>
 
@@ -883,11 +911,26 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p><strong>onOtherInteraction</strong> - define tasks to be performed for <code>up</code> events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">onOtherInteraction</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h5 id="state-object-attributes">State object attributes</h5>
 <p>We can treat the following attributes as if they are entity object attributes, though in fact they are stored and managed by <strong>State objects</strong></p>
@@ -953,18 +996,18 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;state&#x27;</span>]);
-    P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;onEnter&#x27;</span>, <span class="hljs-string">&#x27;onLeave&#x27;</span>, <span class="hljs-string">&#x27;onDown&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>]);
+    P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;onEnter&#x27;</span>, <span class="hljs-string">&#x27;onLeave&#x27;</span>, <span class="hljs-string">&#x27;onDown&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>, <span class="hljs-string">&#x27;onOtherInteraction&#x27;</span>]);
 
     P.<span class="hljs-property">processEntityPacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, incs</span>) {
 
@@ -993,11 +1036,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -1008,16 +1051,17 @@
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>) clone.<span class="hljs-property">onEnter</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>) clone.<span class="hljs-property">onLeave</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span>) clone.<span class="hljs-property">onDown</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>) clone.<span class="hljs-property">onUp</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>;</pre></div></div>
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>) clone.<span class="hljs-property">onUp</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onOtherInteraction</span>) clone.<span class="hljs-property">onOtherInteraction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onOtherInteraction</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Shared state</p>
 
@@ -1028,11 +1072,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Cloned anchors</p>
 
@@ -1055,11 +1099,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality defined here</p>
@@ -1069,11 +1113,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1085,11 +1129,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>group</strong> - returns the entity’s latest Group’s String name, not the Group object itself</p>
 
@@ -1103,11 +1147,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>lockStylesToEntity</strong> - a pseudo-attribute which will set the <code>lockFillStyleToEntity</code> and <code>lockStrokeStyleToEntity</code> flags to the same Boolean value</p>
 
@@ -1122,11 +1166,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Entity <code>get</code>, <code>set</code> and <code>deltaSet</code> functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object</p>
 
@@ -1250,11 +1294,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1263,11 +1307,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>entityInit</code> - internal function, called by all entity factory constructors</p>
 
@@ -1302,6 +1346,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span> = λ<span class="hljs-literal">null</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span> = λ<span class="hljs-literal">null</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">onOtherInteraction</span> = λ<span class="hljs-literal">null</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
@@ -1315,11 +1360,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 <p>Entitys - as artefacts - take part in the Display cycle at the <code>compile</code> stage, when Cell wrappers trigger a compile action cascade through their associated Group objects to entity objects included in those groups.</p>
@@ -1335,11 +1380,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h5 id="step-1-prepare-the-entity-for-stamping">Step 1: prepare the entity for stamping</h5>
 <p><code>prepareStamp</code> - all entity objects need to check the following dirty flags and take corrective action when a flag is set.</p>
@@ -1362,11 +1407,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>dirtyHost</code> - set by a Cell wrapper on the entitys associated with it (via the Cell’s associated Group objects) whenever the Cell’s dimensions change. The entity sets its own <code>dirtyDimensions</code> flag as a result.</p>
 
@@ -1381,11 +1426,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>A number of updates (<strong>scale</strong>, <strong>dimensions</strong>, <strong>start</strong>, <strong>offset</strong>, <strong>handle</strong>) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own <code>dirtyPathObject</code> flag as a result.</p>
 
@@ -1396,11 +1441,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>dirtyScale</code> - triggers <strong>cleanScale</strong> function - which in turn sets the <code>dirtyDimensions</code>, <code>dirtyHandle</code> and (if required) <code>dirtyPositionSubscribers</code>, <code>dirtyMimicScale</code> flags on the entity.</p>
 
@@ -1411,11 +1456,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>dirtyDimensions</code> - triggers <strong>cleanDimensions</strong> function - which in turn sets the <code>dirtyStart</code>, <code>dirtyHandle</code>, <code>dirtyOffset</code> and (if required) <code>dirtyPositionSubscribers</code>, <code>dirtyMimicDimensions</code> flags on the entity.</p>
 
@@ -1426,11 +1471,11 @@
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>dirtyLock</code> - triggers <strong>cleanLock</strong> function - which in turn sets the <code>dirtyStart</code> and <code>dirtyHandle</code> flags on the entity.</p>
 
@@ -1441,11 +1486,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>dirtyStart</code> - triggers <strong>cleanStart</strong> function - which in turn sets the <code>dirtyStampPositions</code> flag on the entity.</p>
 
@@ -1456,11 +1501,11 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>dirtyOffset</code> - triggers <strong>cleanOffset</strong> function - which in turn sets the <code>dirtyStampPositions</code> and (if required) <code>dirtyMimicOffset</code> flags on the entity.</p>
 
@@ -1471,11 +1516,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>dirtyHandle</code> - triggers <strong>cleanHandle</strong> function - which in turn sets the <code>dirtyStampHandlePositions</code> and (if required) <code>dirtyMimicHandle</code> flags on the entity.</p>
 
@@ -1486,11 +1531,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>dirtyRotation</code> - triggers <strong>cleanRotation</strong> function - which in turn sets (if required) <code>dirtyMimicRotation</code>, <code>dirtyPivotRotation</code>, <code>dirtyPositionSubscribers</code> flags on the entity.</p>
 
@@ -1501,11 +1546,11 @@
         </li>
         
         
-        <li id="section-40">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>To handle situations where the entity position is currently under the influence of the mouse/touch cursor - where true, entity will set its own <code>dirtyStampPositions</code>, <code>dirtyStampHandlePositions</code> flags</p>
 
@@ -1520,11 +1565,11 @@
         </li>
         
         
-        <li id="section-41">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Invoke the <strong>cleanStampPositions</strong> and <strong>cleanStampHandlePositions</strong> functions, if needed, to update current positional data prior to the stamping operation. Both functions will set the <code>dirtyPositionSubscribers</code> flag if changes to positional values result from the calculations.</p>
 
@@ -1536,11 +1581,11 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>If the entity’s Path2D object has been marked as dirty by the <code>dirtyPathObject</code> flag, rebuild it by invoking the <strong>cleanPathObject</strong> function.</p>
 
@@ -1551,11 +1596,11 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>dirtyPositionSubscribers</code> - update any artefacts subscribed to this entity as their <code>pivot</code> or <code>mimic</code> source, if required, by invoking the <strong>updatePositionSubscribers</strong> function.</p>
 
@@ -1566,11 +1611,11 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hidden-dom-elements.js</code> file - handles updates to anchor and button objects</p>
 
@@ -1582,11 +1627,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>The <code>dirtyFilters</code> flag is checked and handled by the <strong>filteredStamp</strong> function.</p>
 
@@ -1595,11 +1640,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - <em><strong>this function will be overwritten by every entity Factory</strong></em>, to meet their individual requirements.</p>
 <ul>
@@ -1613,11 +1658,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <h5 id="step-2-invoke-the-entitys-stamp-action">Step 2: invoke the entity’s stamp action</h5>
 <p><code>stamp</code> - this is the function invoked by Group objects as they cascade the Display cycle <strong>compile</strong> step through to their member artefacts.</p>
@@ -1645,11 +1690,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>To note: <code>checkHitIgnoreTransparency</code> is specific to Picture entity</p>
 
@@ -1663,11 +1708,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - this function <em><strong>coordinates the actions required</strong></em> for an entity to display its output on a Cell wrapper’s &lt;canvas&gt; element.</p>
 <p>Scrawl-canvas stamps an entity onto a Cell by moving and rotating the Cell engine’s <code>transformation</code> (its coordinate grid) to match the entity’s <strong>start</strong> and <strong>offset</strong> coordinates, alongside any requirements to rotate (<strong>roll</strong>) and flip (<strong>flipReverse</strong>, <strong>flipUpend</strong>) the transformation as set out by the entity object.</p>
@@ -1693,11 +1738,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>Get the Cell wrapper to perform required transformations on its &lt;canvas&gt; element’s 2D engine</p>
 
@@ -1708,11 +1753,11 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Get the Cell wrapper to update its 2D engine’s attributes to match the entity’s requirements</p>
 
@@ -1723,11 +1768,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>Invoke the appropriate <strong>stamping method</strong> (below)</p>
 
@@ -1740,11 +1785,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>filteredStamp</code> - handles stamping functionality for all <strong>entitys that have filter functions</strong> associated with them.</p>
 
@@ -1757,11 +1802,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>Clean and sort the Entity-level filters before sending them to the filter engine for application</p>
 
@@ -1772,11 +1817,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>Save current host data into a set of vars, ready for restoration after web engine completes or fails</p>
 
@@ -1796,11 +1841,11 @@
         </li>
         
         
-        <li id="section-56">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>Get and prepare a pool Cell for the filter operations</p>
 
@@ -1818,11 +1863,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>Switch off fast stamp</p>
 
@@ -1834,11 +1879,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>Stamp the entity onto the pool Cell</p>
 
@@ -1853,11 +1898,11 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>If we’re using the entity as a stencil, copy the entity cell’s current display over the entity in the pool Cell</p>
 
@@ -1897,11 +1942,11 @@
         </li>
         
         
-        <li id="section-60">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>To note: <code>checkHitIgnoreTransparency</code> is specific to Picture entity</p>
 
@@ -1922,11 +1967,11 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img&gt; elements for use elsewhere in the Scrawl-canvas ecosystem.</p>
 
@@ -1947,11 +1992,11 @@
         </li>
         
         
-        <li id="section-62">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p>KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo <a href="../../demo/canvas-020.html">Canvas-020</a> for a workaround.</p>
 
@@ -2000,11 +2045,11 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>getCellCoverage</code> - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the <code>scrawl.createImageFromEntity</code> function is invoked.</p>
 
@@ -2042,11 +2087,11 @@
         </li>
         
         
-        <li id="section-64">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - an alternative to the <code>stamp</code> function, to get an entity to stamp its output onto a Cell.</p>
 <ul>
@@ -2072,11 +2117,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
@@ -2086,11 +2131,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2104,11 +2149,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>fill</code> - fill the entity with the entity’s <code>fillStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2122,11 +2167,11 @@
         </li>
         
         
-        <li id="section-68">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity stroke, then fill, then remove shadow and repeat</p>
 
@@ -2146,11 +2191,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity fill, then stroke, then remove shadow and repeat</p>
 
@@ -2170,11 +2215,11 @@
         </li>
         
         
-        <li id="section-70">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</p>
 
@@ -2191,11 +2236,11 @@
         </li>
         
         
-        <li id="section-71">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</p>
 
@@ -2212,11 +2257,11 @@
         </li>
         
         
-        <li id="section-72">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>clip</code> - restrict drawing activities to the entity’s enclosed area</p>
 
@@ -2230,11 +2275,11 @@
         </li>
         
         
-        <li id="section-73">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</p>
 
@@ -2253,11 +2298,11 @@
         </li>
         
         
-        <li id="section-74">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>none</code> - perform all the calculations required, but don’t perform the final stamping</p>
 

@@ -26,7 +26,20 @@ import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _floor, _isArray, _isFinite, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../helper/shared-vars.js';
+// Shared constants
+import { _floor, _isArray, _isFinite, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, SOURCE_OVER, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD } from '../helper/shared-vars.js';
+
+// Local constants
+const FILL_STYLE = 'fillStyle',
+    HUB_SPOKE = 'hub-spoke',
+    POSITION = 'position',
+    STROKE_STYLE = 'strokeStyle',
+    STRONG_NET = 'strong-net',
+    STRONG_SHAPE = 'strong-shape',
+    WEAK_NET = 'weak-net',
+    WEAK_SHAPE = 'weak-shape';
+
+const HUB_ARTEFACTS_1 = ['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'];
 
 
 // #### Net constructor

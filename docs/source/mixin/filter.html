@@ -598,9 +598,7 @@
 
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/array-pool.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _abs, _floor, _isArray, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">T_IMAGE</span>, <span class="hljs-variable constant_">T_NOISE</span>, <span class="hljs-variable constant_">T_RAWASSET</span>, <span class="hljs-variable constant_">T_RDASSET</span>, <span class="hljs-variable constant_">T_SPRITE</span>, <span class="hljs-variable constant_">T_VIDEO</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/array-pool.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -611,11 +609,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="export-function">Export function</h4>
+              <p>Shared constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _floor, _isArray, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">T_IMAGE</span>, <span class="hljs-variable constant_">T_NOISE</span>, <span class="hljs-variable constant_">T_RAW_ASSET</span>, <span class="hljs-variable constant_">T_RD_ASSET</span>, <span class="hljs-variable constant_">T_SPRITE</span>, <span class="hljs-variable constant_">T_VIDEO</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -625,6 +623,34 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Local constants (none defined)</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="export-function">Export function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="filter-related-attributes">Filter-related attributes</h4>
 <p>All factories using the filter mixin will add these attributes to their objects</p>
@@ -636,11 +662,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><strong>filters</strong> - An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.</p>
 <ul>
@@ -656,11 +682,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>isStencil</strong> - Use the entity as a stencil. When this flag is set filter effects will be applied to the background imagery covered by the entity (or Group of entitys, or Cell), the results of which will replace the entity/Group/Cell in the final display.</p>
 
@@ -671,11 +697,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>memoizeFilterOutput</strong> - SC uses memoization as a means to enhance the speed of filter application. When an entity has filters sety on it, and the <code>memoizeFilterOutput</code> flag is set to <code>true</code>, the filter engine will cache the generated output after its first run and, for subsequent Display cycles, serve up the cached result rather than perform the filter calculations again. Things to note:</p>
 <ul>
@@ -694,11 +720,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -709,11 +735,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><code>filters</code> - _<strong>Dangerous action!</strong> - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array</p>
 
@@ -747,11 +773,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><code>memoizeFilterOutput</code></p>
 
@@ -766,11 +792,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><code>updateFilterIdentifier</code> - manually trigger re-memoization. The function’s (optional) argument is a boolean.</p>
 
@@ -789,42 +815,14 @@
         </li>
         
         
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality defined here</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality defined here</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality defined here</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality defined here</p>
 
             </div>
             
@@ -837,8 +835,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>No additional functionality defined here</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
             
@@ -850,6 +848,34 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>No additional functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>cleanFilters</code> - Internal housekeeping</p>
@@ -906,11 +932,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>addFilters</code>, <code>removeFilters</code> - Add or remove one or more filter name strings to/from the filters array. Filter name strings, or the filter objects themselves, can be supplied as comma-separated arguments to the function.</p>
 <ul>
@@ -958,11 +984,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>clearFilters</code> - Clears the filters array</p>
 
@@ -984,11 +1010,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>hasFilters</code> - A quick check to see if any filters have been assigned to this artefact</p>
 
@@ -1002,11 +1028,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>preprocessFilters</code> - internal function called as part of the Display cycle. The <strong>process-image</strong> filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.</p>
 
@@ -1038,7 +1064,7 @@
                             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
                         }
 
-                        <span class="hljs-keyword">if</span> (img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_VIDEO</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_SPRITE</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_NOISE</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CELL</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_RAWASSET</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_RDASSET</span>) {
+                        <span class="hljs-keyword">if</span> (img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_VIDEO</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_SPRITE</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_NOISE</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CELL</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_RAW_ASSET</span> || img.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_RD_ASSET</span>) {
 
                             img.<span class="hljs-title function_">checkSource</span>();
                         }
