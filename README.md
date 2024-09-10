@@ -12,9 +12,8 @@ Scrawl-canvas on Discord: [discord.com/channels/...](https://discord.com/channel
 
 __Do you want to contribute?__ Don't be afraid - reach out and let's see what website magic we can create together!
 
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5605/badge)](https://bestpractices.coreinfrastructure.org/projects/5605)
-[![Rate on Openbase](https://badges.openbase.io/js/rating/scrawl-canvas.svg)](https://openbase.io/js/scrawl-canvas?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
-[![justforfunnoreally.dev badge](https://img.shields.io/badge/justforfunnoreally-dev-9ff)](https://justforfunnoreally.dev)
++ [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5605/badge)](https://bestpractices.coreinfrastructure.org/projects/5605)
++ [![justforfunnoreally.dev badge](https://img.shields.io/badge/justforfunnoreally-dev-9ff)](https://justforfunnoreally.dev)
 
 ### What?
 Scrawl-canvas is a Javascript library for working with the HTML5 &lt;canvas> element. The library:
