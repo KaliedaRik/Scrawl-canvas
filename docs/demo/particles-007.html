@@ -1137,7 +1137,7 @@ scrawl.<span class="hljs-title function_">makeForce</span>({
 
             <span class="hljs-keyword">const</span> mag = v.<span class="hljs-title function_">getMagnitude</span>();
 
-            <span class="hljs-keyword">if</span> (mag &lt; <span class="hljs-number">100</span>) load.<span class="hljs-title function_">vectorAdd</span>(v);
+            <span class="hljs-keyword">if</span> (mag &lt; <span class="hljs-number">200</span>) load.<span class="hljs-title function_">vectorAdd</span>(v);
 
             scrawl.<span class="hljs-title function_">releaseVector</span>(v);
         }
@@ -1150,7 +1150,7 @@ scrawl.<span class="hljs-title function_">makeForce</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;field-emitter&#x27;</span>),
     <span class="hljs-attr">world</span>: myWorld,
 
-    <span class="hljs-attr">generationRate</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">generationRate</span>: <span class="hljs-number">1000</span>,
     <span class="hljs-attr">particleCount</span>: <span class="hljs-number">50</span>,
 
     <span class="hljs-attr">generateInArea</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;field-block&#x27;</span>),
