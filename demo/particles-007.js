@@ -133,7 +133,7 @@ scrawl.makeForce({
 
             const mag = v.getMagnitude();
 
-            if (mag < 100) load.vectorAdd(v);
+            if (mag < 200) load.vectorAdd(v);
 
             scrawl.releaseVector(v);
         }
@@ -146,7 +146,7 @@ const myEmitter = scrawl.makeEmitter({
     name: name('field-emitter'),
     world: myWorld,
 
-    generationRate: 100,
+    generationRate: 1000,
     particleCount: 50,
 
     generateInArea: name('field-block'),
