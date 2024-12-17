@@ -3,21 +3,20 @@ const reportSpeed = function (output = '', xtra = () => '') {
 
     if (!output) return function () {};
 
-        const testMessage = document.querySelector(output),
-            history = []
+    const testMessage = document.querySelector(output),
+        history = []
 
-        let testTicker = Date.now(),
-            testTime, testNow,
-            averageTime = 0;
+    let testTicker = Date.now(),
+        testTime, testNow,
+        averageTime = 0;
 
-        const addTime = (t) => {
+    const addTime = (t) => {
 
-            if (history.length > 60) history.shift();
-            history.push(t);
-            averageTime = history.reduce((p, c) => p + c, 0);
-            averageTime /= history.length;
-        }
-
+        if (history.length > 60) history.shift();
+        history.push(t);
+        averageTime = history.reduce((p, c) => p + c, 0);
+        averageTime /= history.length;
+    }
 
     return function () {
 
