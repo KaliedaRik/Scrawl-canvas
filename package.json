@@ -48,11 +48,9 @@
     "docco": "^0.9.1",
     "eslint": "^9.7.0",
     "globals": "^15.8.0",
+    "knip": "^5.41.1",
     "rollup": "^4.26.0",
     "typescript": "^5.5.3"
   },
-  "packageManager": "yarn@4.0.1",
-  "dependencies": {
-    "knip": "^5.41.1"
-  }
+  "packageManager": "yarn@4.0.1"
 }
