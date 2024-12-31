@@ -22,7 +22,7 @@ Furthermore, **positioning** refers to the *location* of an entity on the Cell, 
 
 Also, while we concentrate on the positioning of graphical entitys in this document, SC extends the positioning system to include DOM elements within an SC "stack" element.
 
-## The rotation-reflection point
+### The rotation-reflection point
 When we position an entity, we are in fact positioning that entity's ***rotation-reflection*** point, around which the entity will stamp itself onto the Cell.
 
 By default, the rotation-reflection point is located at the top-left corner of the entity, and represents the `[0, 0]` coordinate of that entity's local coordinate system.
@@ -36,6 +36,9 @@ SC allows us to position an entity's rotation-reflection point in several differ
 + ***Relative positioning*** using percentage ratio coordinates (`['x%', 'y%']`) relative to the Cell's current width and height dimensions - for example `['50%', '50%']` represents a position at the centre of the Cell.
 
 + ***Positioning by reference*** where an entity can use the current position of another entity to calculate its own position on the Cell.
+
+## Absolute and relative positioning
+The most direct way to position an entity is to give it `start`, `offset` and `handle` values, from which it will calculate its position on the Cell. Each of these attributes are Coordinates with a default value of `[0,0]`. Each atteribute also comes with a set of pseudo-attributes which allow the user to set and get the x and y components of the Coordinate separately.
 
 ### The `start` entity attribute
 We **set** an entity's rotation-reflection point using its `start` attribute. For convenience, we can also set each part of the point's coordinate using the `startX` and `startY` pseudo-attributes.
@@ -180,6 +183,23 @@ When we **get** an entity's `handle` coordinate, the `currentHandle` value will 
 
 ```
 
+## Positioning by reference
+A foundational tenet of the SC positioning system is that any artefact (and thus entity) can position itself on the Cell by referencing any other artefact. 
+
+In essence, this means that instead of using its own `currentStart` values when calculating the value of its rotation-reflection point, our entity will instead use the referenced artefact's `currentStart` values. SC manages this through a system of locks, alongside a (bespoke, and rudimentary) signals system.
+
+### The `lockTo` entity attribute
+The `lockTo` attribute is an Array containing two String values. Each value indicates how the entity wants to calculate its position along the Cell's `x` and `y` axes - `['x-axis-string', 'y-axis-string']`. The default value is `['start', 'start']`, indicating that the entity wishes both parts of its start coordinate to use absolute or relative positioning as described above.
+
+Like the other coordinate-like attributes, `lockTo` comes with a set of pseudo-attributes - `lockXTo`, `lockYTo` - which users can use to set the individual elements of the attribute.
+
+The following String values can be used in the `lockTo` attribute's Array:
++ `start` - (default): use absolute or relative positioning
++ `pivot`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point
++ `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point
++ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point
++ `particle`: use the referenced particle's current position to calculate the rotation-reflection point
++ `mouse`: use the mouse cursor's calculated position relative to the Cell to calculate the rotation-reflection point
 
 
 
