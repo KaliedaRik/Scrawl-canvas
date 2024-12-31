@@ -194,11 +194,17 @@ The `lockTo` attribute is an Array containing two String values. Each value indi
 Like the other coordinate-like attributes, `lockTo` comes with a set of pseudo-attributes - `lockXTo`, `lockYTo` - which users can use to set the individual elements of the attribute.
 
 The following String values can be used in the `lockTo` attribute's Array:
+
 + `start` - (default): use absolute or relative positioning
-+ `pivot`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point
-+ `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point
-+ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point
-+ `particle`: use the referenced particle's current position to calculate the rotation-reflection point
+
++ `pivot`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Users can reference an artefact by setting the entity's `pivot` attribute to the artefact's name String, or the artefact itself.
+
++ `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Users can reference an artefact by setting the entity's `mimic` attribute to the artefact's name String, or the artefact itself, alongside setting its `useMimicStart` flag to `true`.
+
++ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point. Users can reference a [path-based entity](sc-path-based-entitys.md) by setting our entity's `path` attribute to the referenced entity's name String, or the referenced entity itself. The position along the path is a float Number between `0` and `1` set on our entity's `pathPosition` attribute; note that this position can be affected by the value of the `constantSpeedAlongPath` boolean attribute - see [demo Canvas-030](../demo/canvas-030.html) for an example of this in action.
+
++ `particle`: use the referenced particle's current position to calculate the rotation-reflection point.
+
 + `mouse`: use the mouse cursor's calculated position relative to the Cell to calculate the rotation-reflection point
 
 
