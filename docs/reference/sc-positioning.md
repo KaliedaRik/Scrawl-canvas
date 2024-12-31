@@ -37,38 +37,148 @@ SC allows us to position an entity's rotation-reflection point in several differ
 
 + ***Positioning by reference*** where an entity can use the current position of another entity to calculate its own position on the Cell.
 
-### The `start` and `position` entity attribute
-We **set** an entity's relative, or absolute, position using its `start` attribute. For convenience, we can also set each part of the coordinate using the `startX` and `startY` pseudo-attributes.
+### The `start` entity attribute
+We **set** an entity's rotation-reflection point using its `start` attribute. For convenience, we can also set each part of the point's coordinate using the `startX` and `startY` pseudo-attributes.
 
 We can mix-and-match absolute and relative values in a coordinate: `[200, '40%']` is a legitimate coordinate, as is `['40%', 200]`.
 
-Setting an entity's `start` attribute will also set the entity's `dirtyStart` boolean flag to true. At the start of the next [Display cycle](https://sc-display-cycle.md) the SC system performs a check across all entitys and, for those marked dirty, will perform calculations to ***clean*** their `start` attribute, placing the result (measured in cell coordinate space pixels) into the private `currentStart` attribute.
+Setting an entity's `start` attribute will also set the entity's `dirtyStart` boolean flag to `true`. At the start of the next [Display cycle](https://sc-display-cycle.md) the SC system performs a check across all entitys and, for those marked dirty, will perform calculations to ***clean*** their `start` attribute, placing the result (measured in cell coordinate space pixels) into the private `currentStart` attribute.
 
-When we **get** an entity's `start` coordinate, the `currentStart` attribute will be returned. Note that any attempt to ***set*** `the currentStart` will have no effect on the entity.
+When we **get** an entity's `start` coordinate, the `currentStart` attribute will be returned. Note that any attempt to ***set*** the `currentStart` will have unexpected effects on the entity.
 
-Directly setting an entity's `start` or (worse!) `currentStart` attribute will lead to unexpected behaviours and bugs. Always use the `entity.set({ start: [x, y]})` or `entity.deltaSet({ start: [x, y]})` functionality!
+Directly setting an entity's `start` or (worse!) `currentStart` value will lead to unexpected behaviours and bugs. Always use the `entity.set({ start: [x, y]})` or `entity.deltaSet({ start: [x, y]})` functionality!
 
 ### The `offset` and `position` entity attributes
-An entity's `start` (and `currentStart`) value does not represent its rotation-reflection point. We are able to offset the rotation-reflection point from the start coordinate using the entity's `offset` attribute. See [Demo Canvas-002](../demo/canvas-002.html) for an example of this functionality.
+An entity's `start` (and `currentStart`) value does not fully represent its rotation-reflection point. We are able to ***offset*** the rotation-reflection point from the start coordinate using the entity's `offset` attribute. See [Demo Canvas-002](../demo/canvas-002.html) for an example of this functionality.
 
-We can **get** an entity's current cell coordinate space rotation-reflection coordinate at any time using the `position` pseudo-attribute; the `positionX` and `positionY` pseudo-attributes are also supported. Note that any attempt to ***set*** these pseudo-attributes will have no effect on the entity.
+These `offset` values, like `start` values, can be ***absolute*** (measured in pixels) or ***relative*** (as a percentage of the host Cell's current dimensions). When we **set** the entity's `offset` (`offsetX`, `offsetY`) value, we also set its `dirtyOffset` boolean flag to `true`. Similar to the `start` attribute, entitys will clean their dirty offsets and store the result in the private `currentOffset` attribute.
+
+When we **get** an entity's `offset` coordinate, the `currentOffset` value will be returned. Note that any attempt to ***set*** the `currentOffset` will have unexpected effects on the entity.
+
+We can **get** an entity's current rotation-reflection coordinate at any time using the `position` pseudo-attribute; the `positionX` and `positionY` pseudo-attributes are also supported. Note that any attempt to ***set*** these pseudo-attributes will have no effect on the entity.
+
+```
+{0,0} host coordinate system
+    .---------|---------|---------|---------|---------.
+    |                                                 |
+    |    start        offset        handle            | @: start coordinate
+    |    [10,5]       [5,2]         [0,0]             |
+    |                                                 | o: rotation-reflection point
+    |         @                                       | = currentStart + currentOffset
+    |                                                 | = [10,5]       + [5,2]
+    |              o---------+                        | = [15,7]
+    |              |         | entity width: 10       |
+    |              |         | entity height: 5       |
+    -              |         | roll: 0                -
+    |              |         | scale: 1               |
+    |              +---------+                        |
+    |                                                 | *: path-start-coordinate
+    |    currentStart currentOffset currentHandle     | = rot-ref-point - (currentHandle * scale)
+    |    [10,5]       [5,2]         [0,0]             | = [15,7]        - [0*1,0*1]
+    |                                                 | = [15,7]        - [0,0]
+    |                                                 | = [15,7]
+    |                                                 |
+    |                                                 |
+    .---------|---------|---------|---------|---------.
+                                                      {50,20}
 
 
+{0,0} host coordinate system
+    .---------|---------|---------|---------|---------.
+    |                                                 |
+    |    start         offset        handle           | @: start coordinate
+    |    ['20%','50%'] ['10%','10%'] [0,0]            |
+    |                                                 | o: rotation-reflection point
+    |         @                                       | = currentStart + currentOffset
+    |                                                 | = [10,5]       + [5,2]
+    |              o---------+                        | = [15,7]
+    |              |         | entity width: 10       |
+    |              |         | entity height: 5       |
+    -              |         | roll: 0                -
+    |              |         | scale: 1               |
+    |              +---------+                        |
+    |                                                 | *: path-start-coordinate
+    |    currentStart  currentOffset currentHandle    | = rot-ref-point - (currentHandle * scale)
+    |    [10,5]        [5,2]         [0,0]            | = [15,7]        - [0*1,0*1]
+    |                                                 | = [15,7]        - [0,0]
+    |                                                 | = [15,7]
+    |                                                 |
+    |                                                 |
+    .---------|---------|---------|---------|---------.
+                                                      {50,20}
 
-
-
-
-
+```
 
 ### The `handle` entity attribute.
+In brief, SC ***paints*** an entity onto the canvas using the following protocol:
+1. If necessary, clean the entity's dirty attributes and recalculate its rotation-reflection point.
+2. If necessary, recalculate the entity's ***path2D object***, which will be used during the painting step to `fill` and/or `stroke` the entity onto the Cell.
+3. Position and rotate the host Cell's context engine using the Canvas API `setTransform()` function - it is at this moment that we move the Cell's engine's coordinate system origin point - `[0,0]` - to match the entity's rotation-reflection point.
+4. Update the Cell's engine state to match the entity's engine state.
+5. Stamp the entity onto the Cell's DOM &lt;canvas> element.
+
+The `start` and `offset` attributes discussed above both feed into the first step of the protocol.
+
+Every entity has a [path2D object](https://developer.mozilla.org/en-US/docs/Web/API/Path2D), which SC uses for stroke/fill painting operations as well as the entity's ***hit*** functionality (for example: hover, and drag-and-drop, operations).
+
+When building the entity's path2D object, SC takes into account the entity's ***dimensions*** and ***scale***. It also includes a (scaled) ***local displacement*** value which has the apparent effect of moving the rotation-reflection point away from the entity's top-left corner. Users can set this displacement value in the entity's `handle` attribute.
+
+Similar to the `start` and `offset` values, `handle` values can be ***absolute*** (measured in pixels) or ***relative*** (as a percentage of the entity's current scaled dimensions). When we **set** the entity's `handle` (`handleX`, `handleY`) value, we also set its `dirtyHandle` boolean flag to `true`. After cleaning, the handle's calculated values get stored in the private `currentHandle` attribute.
+
+When we **get** an entity's `handle` coordinate, the `currentHandle` value will be returned. Note that any attempt to ***set*** the `currentHandle` will have unexpected effects on the entity.
+
+```
+{0,0} host coordinate system
+    .---------|---------|---------|---------|---------.
+    |                                                 |
+    |    start        offset        handle            | @: start coordinate
+    |    [10,5]       [5,2]         [-4,1]            |
+    |                                                 | o: rotation-reflection point
+    |         @                                       | = currentStart + currentOffset
+    |                  *---------+                    | = [10,5]       + [5,2]
+    |              o   |         | entity width: 10   | = [15,7]
+    |                  |         | entity height: 5   |
+    -                  |         | roll: 0            |
+    |                  |         | scale: 1           -
+    |                  +---------+                    |
+    |                                                 |
+    |                                                 | *: path-start-coordinate
+    |    currentStart currentOffset currentHandle     | = rot-ref-point - (currentHandle * scale)
+    |    [10,5]       [5,2]         [-4,1]            | = [15,7]        - [-4*1,1*1]
+    |                                                 | = [15,7]        - [-4,1]
+    |                                                 | = [19,6]
+    |                                                 |
+    |                                                 |
+    .---------|---------|---------|---------|---------.
+                                                      {50,20}
 
 
+{0,0} host coordinate system
+    .---------|---------|---------|---------|---------.
+    |                                                 |
+    |    start        offset         handle           | @: start coordinate
+    |    ['20%','50%'] ['10%','10%'] ['-40%','20%']   |
+    |                                                 | o: rotation-reflection point
+    |         @                                       | = currentStart + currentOffset
+    |                  *---------+                    | = [10,5]       + [5,2]
+    |              o   |         | entity width: 10   | = [15,7]
+    |                  |         | entity height: 5   |
+    -                  |         | roll: 0            |
+    |                  |         | scale: 1           -
+    |                  +---------+                    |
+    |                                                 |
+    |                                                 | *: path-start-coordinate
+    |    currentStart currentOffset currentHandle     | = rot-ref-point - (currentHandle * scale)
+    |    [10,5]       [5,2]         [-4,1]            | = [15,7]        - [-4*1,1*1]
+    |                                                 | = [15,7]        - [-4,1]
+    |                                                 | = [19,6]
+    |                                                 |
+    |                                                 |
+    .---------|---------|---------|---------|---------.
+                                                      {50,20}
 
 
-
-
-
-
+```
 
 
 
