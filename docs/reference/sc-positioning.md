@@ -207,6 +207,256 @@ The following String values can be used in the `lockTo` attribute's Array:
 
 + `mouse`: use the mouse cursor's calculated position relative to the Cell to calculate the rotation-reflection point
 
+Users are able to set an entity to reference multiple artefacts, one each for the `pivot`, `mimic`, `path` and `particle` attributes. These attributes can be updated at any time. It is the `lockTo` attribute which determines which reference will be used to position the entity.
+
+#### Pivot specifics
++ If the referenced artefact is an ***Element***, the entity is able to pivot to either the Element's start value, or to the position of any of the Element's current corner positions, depending on the value set on the entity's `pivotCorner` attribute.
+
++ If the referenced artefact is a ***Polyline***, the entity is able to pivot to any of the Polyline's pins, set on the entity's `pivotPin` attribute.
+
++ If the referenced artefact is an ***EnhancedLabel***, the entity is able to pivot to the EnhancedLabel's template artefact's start value, or to the position of a given textUnit within the EnhancedLabel, depending on the value set on the entity's `pivotIndex` attribute.
+
++ If the entity's `addPivotRotation` boolean flag is set to `true`, the entity will add the referenced artifact's rotation value to its own rotation value.
+
++ If the entity's `addPivotOffset` boolean flag is set to `true`, the entity will add the referenced artifact's `currentOffset` value to its own offset value.
+
++ If the entity's `addPivotHandle` boolean flag is set to `true`, the entity will add the referenced artifact's `currentHandle` value to its own handle value.
+
+#### Mimic specifics
+Mimic functionality allows an entity to mimic a range of the referenced artefacts attributes, as follows:
+
++ `start` - setting `useMimicStart` to `true` makes the entity use the referenced artefact's start attribute; setting `addOwnStartToMimic` will add together both the entity's and the referenced artefact's start values to generate the final result.
+
++ `offset` - setting `useMimicOffset` to `true` makes the entity use the referenced artefact's offset attribute; setting `addOwnOffsetToMimic` will add together both the entity's and the referenced artefact's offset values to generate the final result.
+
++ `handle` - setting `useMimicHandle` to `true` makes the entity use the referenced artefact's handle attribute; setting `addOwnHandleToMimic` will add together both the entity's and the referenced artefact's handle values to generate the final result.
+
++ `roll` - setting `useMimicRotation` to `true` makes the entity use the referenced artefact's roll attribute; setting `addOwnRotationToMimic` will add together both the entity's and the referenced artefact's roll values to generate the final result.
+
++ `dimensions` - setting `useMimicDimensions` to `true` makes the entity use the referenced artefact's dimensions attribute; setting `addOwnDimensionsToMimic` will add together both the entity's and the referenced artefact's dimensions values to generate the final result.
+
++ `scale` - setting `useMimicScale` to `true` makes the entity use the referenced artefact's scale attribute; setting `addOwnScaleToMimic` will add together both the entity's and the referenced artefact's scale values to generate the final result.
+
++ `flipReverse` and `flipUpend` - setting `useMimicFlip` to `true` makes the entity use the referenced artefact's flipReverse and flipUpend boolean flags as part of its calculations.
+
+#### Path specifics
++ If the entity's `addPathRotation` boolean flag is set to `true`, the entity will add the referenced artifact's rotation value to its own rotation value.
+
++ If the entity's `addPathOffset` boolean flag is set to `true`, the entity will add the referenced artifact's `currentOffset` value to its own offset value.
+
++ If the entity's `addPathHandle` boolean flag is set to `true`, the entity will add the referenced artifact's `currentHandle` value to its own handle value.
+
+### The SC signals system
+(TODO - think of a good way to explain this)
+
+### Calculation order
+When the user adds `pivot`, `mimic`, and `path` references into their SC code, they also introduce artefact dependencies: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.
+
+> tl;dr; - SC includes no functionality to internally construct and maintain a dependency graph describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the user to tell SC the order in which artefacts should calculate/update their state.
+
+The SC Display cycle comprises the following steps:
+1. Clear
+2. Compile
+   - Calculate
+   - Stamp
+3. Show
+
+A number of attributes are used across the code base to describer ordering; it's important not to confuse them:
+
++ SC ***Cell*** artefacts use their `compileOrder` and `showOrder` attributes to determine in which order they will perform the Display cycle compile and show steps.
+
++ SC ***Group*** objects have an `order` attribute which comes into play when two or more Groups contribute entitys to a Cell's display.
+
++ SC ***Artefacts*** have `calculateOrder` and `stampOrder` attributes (which can both be set to the same value using the `order` pseudo-attribute).
+
+To understand ordering, consider the following code:
+
+```
+const canvas = scrawl.findCanvas('my-canvas');
+
+canvas.addCell({
+    name: 'my-extra-cell',
+});
+
+scrawl.makeGroup({
+    name: 'my-additional-group',
+    host: my-extra-cell,
+});
+
+canvas.addCell({
+    name: 'my-hidden-cell',
+    shown: false,
+});
+
+scrawl.makeBlock({
+    name: 'yellow-block',
+    group: 'my-hidden-group',
+});
+
+scrawl.makeBlock({
+    name: 'black-block',
+    pivot: 'white-block',
+    lockTo: 'pivot'
+});
+
+scrawl.makeBlock({
+    name: 'white-block',
+});
+
+scrawl.makeBlock({
+    name: 'blue-block',
+    group: 'my-additional-group',
+});
+
+scrawl.makeBlock({
+    name: 'red-block',
+    group: 'my-extra-cell',
+    pivot: 'blue-block',
+    lockTo: 'pivot',
+});
+
+scrawl.makeBlock({
+    name: 'green-block',
+    group: 'my-extra-cell',
+    fillStyle: 'my-hidden-cell',
+});
+```
+
+The SC Display cycle will process the above code in the following order:
+
+```
+Canvas {name: 'my-canvas'}
+
+    Cell {name: 'my-extra-cell', compileOrder: 0, shown: true}
+
+        Group {name: 'my-extra-cell', order: 0}
+            Block {name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', calculateOrder: 0}
+            Block {name: 'green-block', lockTo: 'start', fillStyle: 'my-hidden-cell', calculateOrder: 0}
+
+        Group {name: 'my-additional-group', order: 0}
+            Block {name: 'blue-block', lockTo: 'start', calculateOrder: 0}
+
+    Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
+
+        Group {name: 'my-hidden-cell', order: 0}
+            Block {name: 'yellow-block', lockTo: 'start', calculateOrder: 0}
+
+	Cell {name: 'my-canvas_base', compileOrder: 9999}
+
+        Group {name: 'my-canvas-base'}
+            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 0}
+            Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
+```
+
+Which will lead to failure:
+1. `red-block` - has a ***pivot*** dependency on `blue-block`
+2. `green-block` - has a ***stamp*** dependency on `my-hidden-cell`
+3. `blue-block` - has no dependencies
+4. `yellow-block` - has no dependencies
+5. `black-block` - has a ***pivot*** dependency on `white-block`
+6. `white-block` - has no dependencies
+
+To fix this, the user needs to give SC details about ordering, like this:
+
+```
+const canvas = scrawl.findCanvas('my-canvas');
+
+// 'my-extra-cell' Cell needs to compile after 'my-hidden-cell'
+canvas.addCell({
+    name: 'my-extra-cell',
+    compileOrder: 1,
+});
+
+// 'my-extra-cell' Group needs to compile after 'my-additional-group'
+scrawl.findGroup('my-extra-cell').set({ order: 1 });
+
+scrawl.makeGroup({
+    name: 'my-additional-group',
+    host: my-extra-cell,
+});
+
+// 'my-hidden-cell' Cell needs to compile before 'my-extra-cell'
+canvas.addCell({
+    name: 'my-hidden-cell',
+    shown: false,
+    compileOrder: 0,
+});
+
+scrawl.makeBlock({
+    name: 'yellow-block',
+    group: 'my-hidden-group',
+});
+
+// Reverse the definition order of 'white-block' and 'black-block'
+scrawl.makeBlock({
+    name: 'white-block',
+});
+
+// Reverse the definition order of 'white-block' and 'black-block'
+scrawl.makeBlock({
+    name: 'black-block',
+    pivot: 'white-block',
+    lockTo: 'pivot'
+});
+
+scrawl.makeBlock({
+    name: 'blue-block',
+    group: 'my-additional-group',
+});
+
+scrawl.makeBlock({
+    name: 'red-block',
+    group: 'my-extra-cell',
+    pivot: 'blue-block',
+    lockTo: 'pivot',
+});
+
+scrawl.makeBlock({
+    name: 'green-block',
+    group: 'my-extra-cell',
+    fillStyle: 'my-hidden-cell',
+});
+```
+
+Now the SC Display cycle processes the code like this:
+```
+Canvas {name: 'my-canvas'}
+
+    Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
+
+        Group {name: 'my-hidden-cell', order: 0}
+            Block {name: 'yellow-block', lockTo: 'start', calculateOrder: 0}
+
+    Cell {name: 'my-extra-cell', compileOrder: 1, shown: true}
+
+        Group {name: 'my-additional-group', order: 0}
+            Block {name: 'blue-block', lockTo: 'start', calculateOrder: 0}
+
+        Group {name: 'my-extra-cell', order: 1}
+            Block {name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', calculateOrder: 0}
+            Block {name: 'green-block', lockTo: 'start', fillStyle: 'my-hidden-cell', calculateOrder: 0}
+
+    Cell {name: 'my-canvas_base', compileOrder: 9999}
+
+        Group {name: 'my-canvas-base'}
+            Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
+            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 0}
+```
+
+Which will lead to success:
+1. `yellow-block` - has no dependencies
+2. `blue-block` - has no dependencies
+3. `red-block` - has a ***pivot*** dependency on `blue-block`
+4. `green-block` - has a ***stamp*** dependency on `my-hidden-cell`
+5. `white-block` - has no dependencies
+6. `black-block` - has a ***pivot*** dependency on `white-block`
+
+
+
+
+
+
+
 
 
 
