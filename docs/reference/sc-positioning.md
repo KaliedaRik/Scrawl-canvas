@@ -343,7 +343,7 @@ Canvas {name: 'my-canvas'}
 
     Cell {name: 'my-canvas_base', compileOrder: 9999}
 
-        Group {name: 'my-canvas-base'}
+        Group {name: 'my-canvas_base'}
             Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 0}
             Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
 ```
@@ -447,7 +447,7 @@ Canvas {name: 'my-canvas'}
 
     Cell {name: 'my-canvas_base', compileOrder: 9999}
 
-        Group {name: 'my-canvas-base'}
+        Group {name: 'my-canvas_base'}
             Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
             Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 1}
 ```
