@@ -280,7 +280,7 @@ canvas.addCell({
 
 scrawl.makeGroup({
     name: 'my-additional-group',
-    host: my-extra-cell,
+    host: 'my-extra-cell',
 });
 
 canvas.addCell({
@@ -348,11 +348,17 @@ Canvas {name: 'my-canvas'}
             Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
 ```
 
-Which will lead to failure:
+Which will lead to an incorrect canvas output:
+
+`my-extra-cell`
 1. `red-block` - has a ***pivot*** dependency on `blue-block`
 2. `green-block` - has a ***stamp*** dependency on `my-hidden-cell`
 3. `blue-block` - has no dependencies
+
+`my-hidden-cell`
 4. `yellow-block` - has no dependencies
+
+`my-canvas_base`
 5. `black-block` - has a ***pivot*** dependency on `white-block`
 6. `white-block` - has no dependencies
 
@@ -387,16 +393,16 @@ scrawl.makeBlock({
     group: 'my-hidden-group',
 });
 
-// Reverse the definition order of 'white-block' and 'black-block'
-scrawl.makeBlock({
-    name: 'white-block',
-});
-
-// Reverse the definition order of 'white-block' and 'black-block'
+// This block needs to calculate after its pivot
 scrawl.makeBlock({
     name: 'black-block',
     pivot: 'white-block',
-    lockTo: 'pivot'
+    lockTo: 'pivot',
+    calculateOrder: 1,
+});
+
+scrawl.makeBlock({
+    name: 'white-block',
 });
 
 scrawl.makeBlock({
@@ -440,14 +446,20 @@ Canvas {name: 'my-canvas'}
 
         Group {name: 'my-canvas-base'}
             Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
-            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 0}
+            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 1}
 ```
 
-Which will lead to success:
+Which will lead to the expected outcome:
+
+`my-hidden-cell`
 1. `yellow-block` - has no dependencies
+
+`my-extra-cell`
 2. `blue-block` - has no dependencies
 3. `red-block` - has a ***pivot*** dependency on `blue-block`
 4. `green-block` - has a ***stamp*** dependency on `my-hidden-cell`
+
+`my-canvas_base`
 5. `white-block` - has no dependencies
 6. `black-block` - has a ***pivot*** dependency on `white-block`
 
