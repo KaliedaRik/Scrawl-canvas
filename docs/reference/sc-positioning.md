@@ -290,7 +290,7 @@ canvas.addCell({
 
 scrawl.makeBlock({
     name: 'yellow-block',
-    group: 'my-hidden-group',
+    group: 'my-hidden-cell',
 });
 
 scrawl.makeBlock({
@@ -393,7 +393,7 @@ canvas.addCell({
 
 scrawl.makeBlock({
     name: 'yellow-block',
-    group: 'my-hidden-group',
+    group: 'my-hidden-cell',
 });
 
 // This block needs to calculate after its pivot
