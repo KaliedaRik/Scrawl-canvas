@@ -341,7 +341,7 @@ Canvas {name: 'my-canvas'}
         Group {name: 'my-hidden-cell', order: 0}
             Block {name: 'yellow-block', lockTo: 'start', calculateOrder: 0}
 
-	Cell {name: 'my-canvas_base', compileOrder: 9999}
+    Cell {name: 'my-canvas_base', compileOrder: 9999}
 
         Group {name: 'my-canvas-base'}
             Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 0}
@@ -350,15 +350,18 @@ Canvas {name: 'my-canvas'}
 
 Which will lead to an incorrect canvas output:
 
-`my-extra-cell`
+**my-extra-cell**
+
 1. `red-block` - has a ***pivot*** dependency on `blue-block`
 2. `green-block` - has a ***stamp*** dependency on `my-hidden-cell`
 3. `blue-block` - has no dependencies
 
-`my-hidden-cell`
+**my-hidden-cell**
+
 4. `yellow-block` - has no dependencies
 
-`my-canvas_base`
+**my-canvas_base**
+
 5. `black-block` - has a ***pivot*** dependency on `white-block`
 6. `white-block` - has no dependencies
 
@@ -451,15 +454,18 @@ Canvas {name: 'my-canvas'}
 
 Which will lead to the expected outcome:
 
-`my-hidden-cell`
+**my-hidden-cell**
+
 1. `yellow-block` - has no dependencies
 
-`my-extra-cell`
+**my-extra-cell**
+
 2. `blue-block` - has no dependencies
 3. `red-block` - has a ***pivot*** dependency on `blue-block`
 4. `green-block` - has a ***stamp*** dependency on `my-hidden-cell`
 
-`my-canvas_base`
+**my-canvas_base**
+
 5. `white-block` - has no dependencies
 6. `black-block` - has a ***pivot*** dependency on `white-block`
 
