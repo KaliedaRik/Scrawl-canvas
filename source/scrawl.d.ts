@@ -1770,6 +1770,7 @@ interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaI
     fromPathStart?: number;
     interferenceFactor?: number;
     interferenceLoops?: number;
+    sourceExpansionFactor?: number;
     toPathEnd?: number;
     toPathStart?: number;
 }

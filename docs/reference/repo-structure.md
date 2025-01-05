@@ -25,13 +25,13 @@ The Scrawl-canvas repo on GitHub is a complete package to maintain and develop t
 ### Top level documentation
 The essential files are as follows:
 
-**./package.json**
+**package.json**
 We release Scrawl-canvas as an NPM package. The file needs to be updated with version data for each new release.
 
-**./README.md**
+**README.md**
 This file displays in various places, thus needs to be updated for each release.
 
-**./LICENSE.md**
+**LICENSE.md**
 Scrawl-canvas uses the standard MIT license.
 
 ### Development toolchain

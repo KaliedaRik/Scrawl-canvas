@@ -159,6 +159,9 @@ const defaultAttributes = {
     interferenceLoops: 2,
     interferenceFactor: 1.03,
 
+// __sourceExpansionFactor__ (positive integer Number) - Unpainted lines sometimes appear in the output. The solution appears to be to expand the source picture by a given factor.
+    sourceExpansionFactor: 2,
+
 // The Loom entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.
 //
 // It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__.
@@ -735,7 +738,7 @@ P.prepareStamp = function() {
             const fPathLength = _ceil(fPath.length),
                 tPathLength = _ceil(tPath.length);
 
-            const pathSteps = this.setSourceDimension(_max(fPathLength, tPathLength));
+            const pathSteps = this.setSourceDimension(_max(fPathLength, tPathLength) * this.sourceExpansionFactor);
 
             const fPathStart = this.fromPathStart,
                 fPathEnd = this.fromPathEnd,
