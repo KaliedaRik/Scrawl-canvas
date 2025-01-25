@@ -54,9 +54,9 @@ const tween = scrawl.makeTween({
         }
     ],
 
+/** @this {import('../source/scrawl.js').TweenInstance} */
     commenceAction: function () {
 
-/** @ts-expect-error */
         this.set({
             targets: rocket.clone({
                 name: `${this.name}-element`,

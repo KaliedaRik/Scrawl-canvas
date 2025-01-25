@@ -81,23 +81,23 @@ const playPause = scrawl.makeLabel({
     underlineOffset: 0.96,
     underlineGap: 0,
 
+/** @this {import('../source/scrawl.js').LabelInstance} */
     onEnter: function () {
 
         canvas.set({
             css: { cursor: 'pointer' }
         });
 
-/** @ts-expect-error */
         this.set({ includeUnderline: true });
     },
 
+/** @this {import('../source/scrawl.js').LabelInstance} */
     onLeave: function () {
 
         canvas.set({
             css: { cursor: 'auto' }
         });
 
-/** @ts-expect-error */
         this.set({ includeUnderline: false });
     },
 
@@ -187,9 +187,9 @@ scrawl.makePicture({
 
     globalAlpha: 0.1,
 
+/** @this {import('../source/scrawl.js').PictureInstance} */
     onEnter: function () {
 
-/** @ts-expect-error */
         this.set({ globalAlpha: 0.3 });
 
         canvas.set({
@@ -199,9 +199,9 @@ scrawl.makePicture({
         });
     },
 
+/** @this {import('../source/scrawl.js').PictureInstance} */
     onLeave: function () {
 
-/** @ts-expect-error */
         this.set({ globalAlpha: 0.1 });
 
         canvas.set({
@@ -209,9 +209,9 @@ scrawl.makePicture({
         });
     },
 
+/** @this {import('../source/scrawl.js').PictureInstance} */
     onUp: function () {
 
-/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -284,29 +284,29 @@ const mygoose = scrawl.makeBlock({
 
     method: 'none',
 
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onEnter: function () {
 
         canvas.set({
             css: { cursor: 'pointer' }
         });
 
-/** @ts-expect-error */
         this.set({ method: 'draw' });
     },
 
+/** @this {import('../source/scrawl.js').PictureInstance} */
     onLeave: function () {
 
         canvas.set({
             css: { cursor: 'auto' }
         });
 
-/** @ts-expect-error */
         this.set({ method: 'none' });
     },
 
+/** @this {import('../source/scrawl.js').PictureInstance} */
     onUp: function () {
 
-/** @ts-expect-error */
         this.clickAnchor();
     },
 
