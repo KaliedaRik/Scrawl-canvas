@@ -499,7 +499,7 @@ interface PositionMixinDeltaInputs {
 
 interface PositionMixinInputs {
     bringToFrontOnDrag?: boolean;
-    group?: GroupInstance | string;
+    group?: GroupInstance | CellInstance | string;
     ignoreDragForX?: boolean;
     ignoreDragForY?: boolean;
     lockTo?: LockToValues | [LockToValues, LockToValues];
