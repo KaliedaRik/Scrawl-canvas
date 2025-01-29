@@ -217,6 +217,10 @@ const myLoom = scrawl.makeLoom({
     boundingBoxColor: 'red',
     showBoundingBox: true,
 
+    interferenceLoops: 2,
+    interferenceFactor: 1.03,
+    sourceExpansionFactor: 1,
+
     method: 'fillThenDraw',
 
 /** @this {import('../source/scrawl.js').LoomInstance} */
@@ -285,6 +289,9 @@ scrawl.makeUpdater({
         looping: ['loopPathCursors', 'boolean'],
         rendering: ['isHorizontalCopy', 'boolean'],
         method: ['method', 'raw'],
+        interferenceLoops: ['interferenceLoops', 'int'],
+        interferenceFactor: ['interferenceFactor', 'float'],
+        sourceExpansionFactor: ['sourceExpansionFactor', 'float'],
     },
 });
 
@@ -388,6 +395,9 @@ initializeDomInputs([
     ['input', 'copy_start_yAbsolute', '0'],
     ['input', 'copy_dims_heightPercent', '100'],
     ['input', 'copy_dims_heightAbsolute', '400'],
+    ['input', 'interferenceLoops', '2'],
+    ['input', 'interferenceFactor', '1.03'],
+    ['input', 'sourceExpansionFactor', '1'],
     ['select', 'sync', 1],
     ['select', 'looping', 1],
     ['select', 'rendering', 0],
@@ -395,7 +405,6 @@ initializeDomInputs([
     ['select', 'filter', 0],
     ['select', 'method', 4],
 ]);
-
 
 // #### Development and testing
 // Test packet functionality
