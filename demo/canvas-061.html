@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 061</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    canvas {
+      margin: 1em auto;
+      box-shadow: 0px 0px 0px 1px black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-060.html">&larr; Previous</a>
+    <a href="canvas-201.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 061</h1>
+  <h2>Interactions between filters, GCO and GlobalAlpha applied to an entity</h2>
+
+  <canvas 
+    id="mycanvas" 
+    data-scrawl-canvas
+    width="600"
+    height="600"
+  ></canvas>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>In each square, a gray box should appear</li>
+      <li>For the right-hand column the gray box is translucent, making them a different color from the other gray boxes</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/canvas-061.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-061.js" type="module"></script>
+
+</body>
+
+</html>

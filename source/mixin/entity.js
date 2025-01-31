@@ -591,8 +591,15 @@ export default function (P = Ωempty) {
             const oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
             this.noCanvasEngineUpdates = false;
 
+            // Handle GCO
+            const oldGCO = (state) ? state.globalCompositeOperation : SOURCE_OVER;
+            state.globalCompositeOperation = SOURCE_OVER;
+
             // Stamp the entity onto the pool Cell
             this.regularStamp();
+
+            // Restore GCO
+            state.globalCompositeOperation = oldGCO;
 
             if (hasFilters) {
 

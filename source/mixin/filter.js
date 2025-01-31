@@ -51,25 +51,20 @@ export default function (P = Ωempty) {
 // `filters` - ___Dangerous action!__ - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array
     S.filters = function (item) {
 
-        if (!_isArray(this.filters)) this.filters = [];
-
         if (item) {
 
-            if (_isArray(item)) {
+            this.filters.length = 0;
 
-                this.filters = item;
+            if (!_isArray(item)) item = [item];
 
-                this.dirtyFilters = true;
-                this.dirtyImageSubscribers = true;
+            item.forEach(f => {
 
-            }
-            else if (item.substring) {
+                if (f.substring) this.filters.push(f);
+                else if (f.type === T_FILTER) this.filters.push(f.name);
+            }, this);
 
-                pushUnique(this.filters, item);
-
-                this.dirtyFilters = true;
-                this.dirtyImageSubscribers = true;
-            }
+            this.dirtyFilters = true;
+            this.dirtyImageSubscribers = true;
             this.dirtyFilterIdentifier = true;
         }
     };
@@ -116,9 +111,6 @@ export default function (P = Ωempty) {
         this.dirtyFilters = false;
         this.dirtyFiltersCache = true;
 
-        if (!this.filters) this.filters = [];
-        if (!this.currentFilters) this.currentFilters = [];
-
         const {filters, currentFilters} = this;
 
         if (filters.length) {
@@ -163,12 +155,10 @@ export default function (P = Ωempty) {
 // + Filters are added to the end of the `filters` array. If the filters need to be reordered, use the `set` functionality instead to replace the array with an array containing the desired filter order
     P.addFilters = function (...args) {
 
-        if (!_isArray(this.filters)) this.filters = [];
-
         args.forEach(f => {
 
             if (f && f.type === T_FILTER) f = f.name;
-            pushUnique(this.filters, f);
+            this.filters.push(f);
 
         }, this);
 
@@ -180,8 +170,6 @@ export default function (P = Ωempty) {
     };
 
     P.removeFilters = function (...args) {
-
-        if (!_isArray(this.filters)) this.filters = [];
 
         args.forEach(f => {
 
@@ -199,8 +187,6 @@ export default function (P = Ωempty) {
 
 // `clearFilters` - Clears the filters array
     P.clearFilters = function () {
-
-        if (!_isArray(this.filters)) this.filters = [];
 
         this.filters.length = 0;
 
