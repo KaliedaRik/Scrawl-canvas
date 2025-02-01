@@ -100,9 +100,6 @@ const defaultAttributes = {
 // __visibility__ - Boolean flag; when unset, the Group will __not__ be processed by Stack and Cell controllers as part of the Display cycle
     visibility: true,
 
-// __regionRadius__ - positive Number (measured in px), used as an initial test as part of collision detection functionality
-    regionRadius: 0,
-
 // __checkForEntityHover__ - we can trigger groups, as part of the Display cycle, to check if any of their entitys are currently hittable (the mouse cursor is hovering over them) and run functions based on changes in hover state. This is not the same as canvas `cascadeEventActions`
     checkForEntityHover: false,
 

@@ -499,7 +499,7 @@ interface PositionMixinDeltaInputs {
 
 interface PositionMixinInputs {
     bringToFrontOnDrag?: boolean;
-    group?: GroupInstance | string;
+    group?: GroupInstance | CellInstance | string;
     ignoreDragForX?: boolean;
     ignoreDragForY?: boolean;
     lockTo?: LockToValues | [LockToValues, LockToValues];
@@ -1770,6 +1770,7 @@ interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaI
     fromPathStart?: number;
     interferenceFactor?: number;
     interferenceLoops?: number;
+    sourceExpansionFactor?: number;
     toPathEnd?: number;
     toPathStart?: number;
 }

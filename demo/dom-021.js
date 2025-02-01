@@ -81,14 +81,14 @@ const shapeLabel = scrawl.makeLabel({
     lineWidth: 1,
     method: 'fill',
 
+/** @this {import('../source/scrawl.js').LabelInstance} */
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-/** @ts-expect-error */
         this.set({ showBoundingBox: true});
     },
+/** @this {import('../source/scrawl.js').LabelInstance} */
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-/** @ts-expect-error */
         this.set({ showBoundingBox: false});
     },
 });
@@ -120,14 +120,14 @@ const closeButton = scrawl.makeRectangle({
     strokeStyle: 'orange',
     lineWidth: 2,
 
+/** @this {import('../source/scrawl.js').RectangleInstance} */
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-/** @ts-expect-error */
         this.set({ fillStyle: 'yellow'});
     },
+/** @this {import('../source/scrawl.js').RectangleInstance} */
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-/** @ts-expect-error */
         this.set({ fillStyle: 'white'});
     },
     button: {
@@ -138,8 +138,8 @@ const closeButton = scrawl.makeRectangle({
         disabled: true,
     },
 
+/** @this {import('../source/scrawl.js').RectangleInstance} */
     onUp: function () {
-/** @ts-expect-error */
         this.clickButton();
     },
 });

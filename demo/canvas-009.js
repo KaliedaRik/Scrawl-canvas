@@ -159,20 +159,17 @@ scrawl.makeBlock({
     },
 
     // Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas> element. Note that 'this' refers to the entity object, meaning the functions can be safely cloned into other entitys.
-    // + Scrawl-canvas TypeScript definitions don't (at this time) extend as far as identifying types within a function set up as part of an SC object instantiation; be prepared to include TS error suppression markup wherever justified (for instance, when using `this`).
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onEnter: function () {
 
         // Update the block entity's visual display
-/** @ts-expect-error */
         this.set({
             lineWidth: 30,
         });
 
         // This is where we update the accessibility information tied to the canvas element. We're using the anchor attribute object's description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.
         canvas.set({
-/** @ts-expect-error */
             title: `${this.get('name')} tile`,
-/** @ts-expect-error */
             label: this.get('anchorDescription'),
         });
 
@@ -181,10 +178,10 @@ scrawl.makeBlock({
         myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
     },
 
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onLeave: function () {
 
         // Reset the block entity's visual display
-/** @ts-expect-error */
         this.set({
             lineWidth: 20,
         });
@@ -202,6 +199,7 @@ scrawl.makeBlock({
 
     // Used by the Scrawl-canvas `click` event, below.
     // + This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor's clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onUp: function () {
 
         // Track the action in Google Analytics
@@ -209,7 +207,6 @@ scrawl.makeBlock({
         myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.get('anchorHref')}`);
 
         // Trigger the click event on the anchor element we added to the DOM
-/** @ts-expect-error */
         this.clickAnchor();
     },
 
@@ -352,19 +349,18 @@ killArtefactAndAnchor(scrawl, canvas, name('brick-in-marble'), 'wikipedia-brick-
 
     scrawl.findArtefact(name('brick-in-marble')).set({
 
+/** @this {import('../source/scrawl.js').BlockInstance} */
         onEnter: function () {
-/** @ts-expect-error */
             this.set({ lineWidth: 30 });
             canvas.set({
                 title: `${this.name} tile`,
-/** @ts-expect-error */
                 label: this.get('anchorDescription'),
             });
 /** @ts-expect-error */
             myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
         },
+/** @this {import('../source/scrawl.js').BlockInstance} */
         onLeave: function () {
-/** @ts-expect-error */
             this.set({ lineWidth: 20 });
             canvas.set({
                 title: '',
@@ -373,10 +369,10 @@ killArtefactAndAnchor(scrawl, canvas, name('brick-in-marble'), 'wikipedia-brick-
 /** @ts-expect-error */
             myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
         },
+/** @this {import('../source/scrawl.js').BlockInstance} */
         onUp: function () {
 /** @ts-expect-error */
             myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
-/** @ts-expect-error */
             this.clickAnchor();
         },
         onOtherInteraction: function (e) {

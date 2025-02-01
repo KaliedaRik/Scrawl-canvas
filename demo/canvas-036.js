@@ -208,16 +208,16 @@ const cell5 = canvas.buildCell({
 // Add in a hover check
 scrawl.findEntity(name('block-1')).set({
 
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onEnter: function () {
 
-/** @ts-expect-error */
         this.set({ scale: 1.2 });
         cell4.set({ backgroundColor: 'pink' });
     },
 
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onLeave: function () {
 
-/** @ts-expect-error */
         this.set({ scale: 1 });
         cell4.set({ backgroundColor: 'lavender' });
     },

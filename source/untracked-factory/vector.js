@@ -253,7 +253,7 @@ P.getMagnitude = function () {
 // Rotate a Vector by a given angle. Argument is a Number representing degrees, not radians.
 P.rotate = function (angle) {
 
-    if (!isa_number(angle)) throw new Error(`${this.name} Vector error - rotate() argument not a number: ${angle}`);
+    if (!isa_number(angle)) angle = 0;
 
     let arg = _atan2(this.y, this.x);
     arg += (angle * 0.01745329251);
