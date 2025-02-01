@@ -1,7 +1,7 @@
-// # Demo Canvas 060
-// Wheel entity attributes and functionality
+// # Demo Canvas 064
+// Polygon entity attributes and functionality
 
-// [Run code](../../demo/canvas-060.html)
+// [Run code](../../demo/filters-064.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, initializeDomInputs } from './utilities.js';
@@ -16,15 +16,17 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-const myWheel = scrawl.makeWheel({
-    name: name('my-wheel'),
+const myPolygon = scrawl.makePolygon({
+    name: name('my-polygon'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    radius: 150,
 
-    fillStyle: 'lightblue',
-    strokeStyle: 'sienna',
-    lineWidth: 6,
+    sides: 4,
+    sideLength: 80,
+
+    fillStyle: 'gold',
+    strokeStyle: 'tomato',
+    lineWidth: 4,
     lineJoin: 'round',
     method: 'fillThenDraw',
 });
@@ -33,7 +35,7 @@ scrawl.makeWheel({
     name: name('pin'),
     radius: 5,
     fillStyle: 'red',
-    pivot: name('my-wheel'),
+    pivot: name('my-polygon'),
     lockTo: 'pivot',
     handle: ['center', 'center'],
 });
@@ -46,13 +48,12 @@ const report = reportSpeed('#reportmessage', function () {
     const {
         roll,
         scale,
-        radius,
-        startAngle,
-        endAngle,
+        sides,
+        sideLength,
         start,
         handle,
         offset,
-    } = myWheel;
+    } = myPolygon;
 
     const {
         lineWidth,
@@ -60,9 +61,9 @@ const report = reportSpeed('#reportmessage', function () {
         shadowOffsetY,
         shadowBlur
 /** @ts-expect-error */
-    } = myWheel.state;
+    } = myPolygon.state;
 
-    return `    Wheel - radius: ${radius}, startAngle: ${startAngle}, endAngle: ${endAngle}
+    return `    Polygon - sides: ${sides}, sideLength: ${sideLength}
     Start - [${start}]; Handle - [${handle}]; Offset - [${offset}]
     Roll: ${roll}; Scale: ${scale}; lineWidth: ${lineWidth}
     Shadow - offsetX: ${shadowOffsetX}; offsetY: ${shadowOffsetY}; blur: ${shadowBlur}; `;
@@ -85,19 +86,14 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: myWheel,
+    target: myPolygon,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
-        clockwise: ['clockwise', 'boolean'],
-        closed: ['closed', 'boolean'],
-        endAngle: ['endAngle', 'round'],
-        includeCenter: ['includeCenter', 'boolean'],
-        radius_absolute: ['radius', 'round'],
-        radius_relative: ['radius', '%'],
-        startAngle: ['startAngle', 'round'],
+        sides: ['sides', 'round'],
+        sideLength: ['sideLength', 'round'],
 
         handle_xAbsolute: ['handleX', 'round'],
         handle_xPercent: ['handleX', '%'],
@@ -119,6 +115,7 @@ scrawl.makeUpdater({
         shadowBlur: ['shadowBlur', 'round'],
         shadowOffsetX: ['shadowOffsetX', 'round'],
         shadowOffsetY: ['shadowOffsetY', 'round'],
+        showBoundingBox: ['showBoundingBox', 'boolean'],
         start_xAbsolute: ['startX', 'round'],
         start_xPercent: ['startX', '%'],
         start_xString: ['startX', 'raw'],
@@ -132,19 +129,14 @@ scrawl.makeUpdater({
 
 // Setup form
 initializeDomInputs([
-    ['input', 'endAngle', '360'],
-    ['input', 'radius_absolute', '150'],
-    ['input', 'radius_relative', '37.5'],
-    ['input', 'startAngle', '0'],
-    ['select', 'clockwise', 1],
-    ['select', 'closed', 1],
-    ['select', 'includeCenter', 0],
+    ['input', 'sides', '4'],
+    ['input', 'sideLength', '80'],
 
     ['input', 'handle_xAbsolute', '150'],
     ['input', 'handle_xPercent', '50'],
     ['input', 'handle_yAbsolute', '100'],
     ['input', 'handle_yPercent', '50'],
-    ['input', 'lineWidth', '6'],
+    ['input', 'lineWidth', '2'],
     ['input', 'offset_xAbsolute', '0'],
     ['input', 'offset_xPercent', '0'],
     ['input', 'offset_yAbsolute', '0'],
@@ -164,6 +156,7 @@ initializeDomInputs([
     ['select', 'method', 4],
     ['select', 'reverse', 0],
     ['select', 'scaleOutline', 1],
+    ['select', 'showBoundingBox', 0],
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],

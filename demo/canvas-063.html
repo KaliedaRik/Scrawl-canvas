@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 063</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+    .canvas-hold {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      gap: 20px;
+      margin: 1em auto;
+    }
+    .radius-controls {
+      width: 40%;
+      grid-template-columns: 1fr 2fr 2fr;
+    }
+    #reportmessage {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #60d060;
+      padding: 0.5em 1em;
+      margin: 0 auto 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-062.html">&larr; Previous</a>
+    <a href="canvas-064.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 063</h1>
+  <h2>Rectangle entity attributes and functionality</h2>
+
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
+
+  <div class="controls">
+    <div class="orange label">Rectangle width</div>
+    <div class="orange">(n) <input class="controlItem" id="rectangleWidth_absolute" type="range" value="300" min="-100" max="500" step="1" /></div>
+    <div class="orange">('n%') <input class="controlItem" id="rectangleWidth_relative" type="range" value="75" min="-10" max="110" step="0.1" /></div>
+    
+    <div class="orange label">Rectangle height</div>
+    <div class="orange">(n) <input class="controlItem" id="rectangleHeight_absolute" type="range" value="300" min="-100" max="500" step="1" /></div>
+    <div class="orange">('n%') <input class="controlItem" id="rectangleHeight_relative" type="range" value="75" min="-10" max="110" step="0.1" /></div>
+    
+    <div class="orange label">Offshoot A</div>
+    <div class="orange"><input class="controlItem" id="offshootA" type="range" value="0.55" min="-2" max="2" step="0.01" /></div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="orange label">Offshoot B</div>
+    <div class="orange"><input class="controlItem" id="offshootB" type="range" value="0" min="-2" max="2" step="0.01" /></div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="bluegreen label">Show bounding box</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="showBoundingBox">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="bluegreen">&nbsp;</div>
+
+    <div class="orange">&nbsp;</div>
+    <div class="orange">&nbsp;</div>
+    <div class="orange">&nbsp;</div>
+  </div>
+
+  <div class="canvas-hold">
+    <canvas 
+      id="mycanvas" 
+      data-scrawl-canvas
+      width="400"
+      height="400"
+      data-base-background-color="honeydew"
+    ></canvas>
+
+    <div class="controls radius-controls">
+      <div class="pink label"><i>[radius]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radius_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radius_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusX]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusY]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusT]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusT_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusT_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusR]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusR_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusR_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusB]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusB_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusB_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusL]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusL_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusL_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusTX]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusTX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusTX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusTY]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusTY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusTY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusRX]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusRX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusRX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusRY]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusRY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusRY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusBX]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusBX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusBX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusBY]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusBY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusBY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusLX]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusLX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusLX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label"><i>[radiusLY]</i></div>
+      <div class="pink">(n) <input class="controlItem" id="radiusLY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusLY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusTLX</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusTLX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusTLX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusTLY</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusTLY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusTLY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusTRX</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusTRX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusTRX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusTRY</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusTRY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusTRY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusBRX</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusBRX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusBRX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusBRY</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusBRY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusBRY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusBLX</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusBLX_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusBLX_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+      
+      <div class="pink label">radiusBLY</div>
+      <div class="pink">(n) <input class="controlItem" id="radiusBLY_absolute" type="range" value="0" min="-100" max="400" step="1" /></div>
+      <div class="pink">('n%') <input class="controlItem" id="radiusBLY_relative" type="range" value="0" min="-50" max="150" step="0.1" /></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="150" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Offset ('n%')</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="lavender label">Offset (n)</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-100" max="100" step="1" /></div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0" max="2" step="0.01" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Line join</div>
+    <div class="yellow">
+      <select class="controlItem" id="lineJoin">
+        <option value="mitre">mitre</option>
+        <option value="round">round</option>
+        <option value="bevel">bevel</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Line width</div>
+    <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="6" min="0" max="40" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Method</div>
+    <div class="yellow">
+      <select class="controlItem" id="method">
+        <option value="fill">fill</option>
+        <option value="draw">draw</option>
+        <option value="fillAndDraw">fillAndDraw</option>
+        <option value="drawAndFill">drawAndFill</option>
+        <option value="fillThenDraw">fillThenDraw</option>
+        <option value="drawThenFill">drawThenFill</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale outline</div>
+    <div class="yellow">
+      <select class="controlItem" id="scaleOutline">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Winding</div>
+    <div class="yellow">
+      <select class="controlItem" id="winding">
+        <option value="nonzero">nonzero</option>
+        <option value="evenodd">evenodd</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow">&nbsp;</div>
+    <div class="yellow">&nbsp;</div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="bluegreen label">Shadow offset</div>
+    <div class="bluegreen">X: <input class="controlItem" id="shadowOffsetX" type="range" value="0" min="-20" max="20" step="1" /></div>
+    <div class="bluegreen">Y: <input class="controlItem" id="shadowOffsetY" type="range" value="0" min="-20" max="20" step="1" /></div>
+
+    <div class="bluegreen label">Shadow blur</div>
+    <div class="bluegreen"><input class="controlItem" id="shadowBlur" type="range" value="0" min="0" max="20" step="1" /></div>
+    <div class="bluegreen">&nbsp;</div>
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a Rectangle entity</li>
+      <li>Check that we can position the Rectangle on the canvas, including handle and offset</li>
+      <li>Check that flip values, roll and scaling does not affect Rectangle positioning</li>
+      <li>Check that we can manipulate the Rectangle-specific attributes - in particular the various corner pseudo-attributes</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/canvas-063.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-063.js" type="module"></script>
+
+</body>
+
+</html>

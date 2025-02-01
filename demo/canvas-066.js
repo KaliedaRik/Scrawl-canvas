@@ -1,7 +1,7 @@
-// # Demo Canvas 060
-// Wheel entity attributes and functionality
+// # Demo Canvas 066
+// Spiral entity attributes and functionality
 
-// [Run code](../../demo/canvas-060.html)
+// [Run code](../../demo/filters-066.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, initializeDomInputs } from './utilities.js';
@@ -16,24 +16,26 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-const myWheel = scrawl.makeWheel({
-    name: name('my-wheel'),
+const mySpiral = scrawl.makeSpiral({
+    name: name('my-spiral'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    radius: 150,
 
-    fillStyle: 'lightblue',
-    strokeStyle: 'sienna',
-    lineWidth: 6,
+    loops: 5,
+    loopIncrement: 20,
+
+    fillStyle: 'plum',
+    strokeStyle: 'black',
+    lineWidth: 2,
     lineJoin: 'round',
-    method: 'fillThenDraw',
+    method: 'draw',
 });
 
 scrawl.makeWheel({
     name: name('pin'),
     radius: 5,
     fillStyle: 'red',
-    pivot: name('my-wheel'),
+    pivot: name('my-spiral'),
     lockTo: 'pivot',
     handle: ['center', 'center'],
 });
@@ -46,13 +48,13 @@ const report = reportSpeed('#reportmessage', function () {
     const {
         roll,
         scale,
-        radius,
-        startAngle,
-        endAngle,
+        loops,
+        loopIncrement,
+        drawFromLoop,
         start,
         handle,
         offset,
-    } = myWheel;
+    } = mySpiral;
 
     const {
         lineWidth,
@@ -60,9 +62,9 @@ const report = reportSpeed('#reportmessage', function () {
         shadowOffsetY,
         shadowBlur
 /** @ts-expect-error */
-    } = myWheel.state;
+    } = mySpiral.state;
 
-    return `    Wheel - radius: ${radius}, startAngle: ${startAngle}, endAngle: ${endAngle}
+    return `    Spiral - loops: ${loops}, loopIncrement: ${loopIncrement}, drawFromLoop: ${drawFromLoop}
     Start - [${start}]; Handle - [${handle}]; Offset - [${offset}]
     Roll: ${roll}; Scale: ${scale}; lineWidth: ${lineWidth}
     Shadow - offsetX: ${shadowOffsetX}; offsetY: ${shadowOffsetY}; blur: ${shadowBlur}; `;
@@ -85,19 +87,16 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: myWheel,
+    target: mySpiral,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
-        clockwise: ['clockwise', 'boolean'],
-        closed: ['closed', 'boolean'],
-        endAngle: ['endAngle', 'round'],
-        includeCenter: ['includeCenter', 'boolean'],
-        radius_absolute: ['radius', 'round'],
-        radius_relative: ['radius', '%'],
-        startAngle: ['startAngle', 'round'],
+        curve: ['curve', 'raw'],
+        loops: ['loops', 'round'],
+        loopIncrement: ['loopIncrement', 'round'],
+        drawFromLoop: ['drawFromLoop', 'round'],
 
         handle_xAbsolute: ['handleX', 'round'],
         handle_xPercent: ['handleX', '%'],
@@ -119,6 +118,7 @@ scrawl.makeUpdater({
         shadowBlur: ['shadowBlur', 'round'],
         shadowOffsetX: ['shadowOffsetX', 'round'],
         shadowOffsetY: ['shadowOffsetY', 'round'],
+        showBoundingBox: ['showBoundingBox', 'boolean'],
         start_xAbsolute: ['startX', 'round'],
         start_xPercent: ['startX', '%'],
         start_xString: ['startX', 'raw'],
@@ -132,19 +132,15 @@ scrawl.makeUpdater({
 
 // Setup form
 initializeDomInputs([
-    ['input', 'endAngle', '360'],
-    ['input', 'radius_absolute', '150'],
-    ['input', 'radius_relative', '37.5'],
-    ['input', 'startAngle', '0'],
-    ['select', 'clockwise', 1],
-    ['select', 'closed', 1],
-    ['select', 'includeCenter', 0],
+    ['input', 'loops', '5'],
+    ['input', 'loopIncrement', '2'],
+    ['input', 'drawFromLoop', '0'],
 
     ['input', 'handle_xAbsolute', '150'],
     ['input', 'handle_xPercent', '50'],
     ['input', 'handle_yAbsolute', '100'],
     ['input', 'handle_yPercent', '50'],
-    ['input', 'lineWidth', '6'],
+    ['input', 'lineWidth', '2'],
     ['input', 'offset_xAbsolute', '0'],
     ['input', 'offset_xPercent', '0'],
     ['input', 'offset_yAbsolute', '0'],
@@ -161,9 +157,10 @@ initializeDomInputs([
     ['select', 'handle_xString', 1],
     ['select', 'handle_yString', 1],
     ['select', 'lineJoin', 1],
-    ['select', 'method', 4],
+    ['select', 'method', 1],
     ['select', 'reverse', 0],
     ['select', 'scaleOutline', 1],
+    ['select', 'showBoundingBox', 0],
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
