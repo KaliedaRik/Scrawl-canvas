@@ -349,6 +349,7 @@ interface EntityMixinInputs extends PositionMixinInputs, PivotMixinInputs, Mimic
     onUp?: OnCascadeFunction;
     onOtherInteraction?: OnCascadeFunction;
     scaleOutline?: boolean;
+    scaleShadow?: boolean;
     sharedState?: boolean;
     winding?: WindingValues;
 }
