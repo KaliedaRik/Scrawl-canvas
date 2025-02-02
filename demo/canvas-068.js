@@ -134,7 +134,7 @@ scrawl.makeUpdater({
 });
 
 // Set the DOM input values
-const dom = initializeDomInputs([
+initializeDomInputs([
     ['input', 'startRadius', '0'],
     ['input', 'radiusIncrement', '5'],
     ['input', 'radiusIncrementAdjust', '1'],

@@ -36,7 +36,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _abs, _min, ENTITY, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
+import { ENTITY, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const STAR = 'star',
