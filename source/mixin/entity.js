@@ -81,8 +81,11 @@ export default function (P = Ωempty) {
         flipReverse: false,
         flipUpend: false,
 
-// __scaleOutline__ - Boolean flag. When set, the entity will increase its `lineWidth` proportionat to the entity's `scale` value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1
+// __scaleOutline__ - Boolean flag. When set, the entity will increase its `lineWidth` value proportionate to the entity's `scale` value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1
         scaleOutline: true,
+
+// __scaleShadow__ - Boolean flag. When set, the entity will increase its `shadowOffsetX`, `shadowOffsetY` and `shadowBlur` values proportionate to the entity's `scale` value - an entity of scale = 2 will display shadows twice the size of the same entity at scale = 1
+        scaleShadow: false,
 
 // __lockFillStyleToEntity__, __lockStrokeStyleToEntity__ - Boolean flags.
 // + When set, these flags instruct any gradient-type style (Scrawl-canvas Gradient, RadialGradient) to map their `start` and `end` coordinates to the entity's dimensions

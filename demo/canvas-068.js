@@ -117,6 +117,7 @@ scrawl.makeUpdater({
         roll: ['roll', 'float'],
         scale: ['scale', 'float'],
         scaleOutline: ['scaleOutline', 'boolean'],
+        scaleShadow: ['scaleShadow', 'boolean'],
         shadowBlur: ['shadowBlur', 'round'],
         shadowOffsetX: ['shadowOffsetX', 'round'],
         shadowOffsetY: ['shadowOffsetY', 'round'],
@@ -133,7 +134,7 @@ scrawl.makeUpdater({
 });
 
 // Set the DOM input values
-const dom = initializeDomInputs([
+initializeDomInputs([
     ['input', 'startRadius', '0'],
     ['input', 'radiusIncrement', '5'],
     ['input', 'radiusIncrementAdjust', '1'],
@@ -166,6 +167,7 @@ const dom = initializeDomInputs([
     ['select', 'method', 2],
     ['select', 'reverse', 0],
     ['select', 'scaleOutline', 1],
+    ['select', 'scaleShadow', 0],
     ['select', 'showBoundingBox', 0],
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],

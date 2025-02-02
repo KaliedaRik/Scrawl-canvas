@@ -125,7 +125,7 @@ S.intersectX = function (item) {
 S.intersectY = function (item) {
 
     if (item.toFixed) {
-        
+
         this.intersectY = item;
         this.updateDirty();
     }

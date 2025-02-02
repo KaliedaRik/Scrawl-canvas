@@ -35,7 +35,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _abs, _min, BEZIER, ENTITY, QUADRATIC, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
+import { BEZIER, ENTITY, QUADRATIC, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const PERMITTED_CURVES = ['line', 'quadratic', 'bezier'],
