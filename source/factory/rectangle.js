@@ -544,9 +544,13 @@ P.makeRectanglePath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
+    let scale = this.scale;
+
+    if (scale < 0.001) scale = 0.001;
+
     const [x, y] = this.localBox;
 
-    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
 
     this.pathCalculatedOnce = false;
 

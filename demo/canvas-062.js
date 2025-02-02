@@ -1,43 +1,75 @@
-// # Demo Canvas 060
-// Wheel entity attributes and functionality
+// # Demo Canvas 062
+// Tetragon and Oval entity attributes and functionality
 
-// [Run code](../../demo/canvas-060.html)
+// [Run code](../../demo/filters-062.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, initializeDomInputs } from './utilities.js';
 
-
 // #### Scene setup
-const canvas = scrawl.findCanvas('mycanvas');
+const ovalCanvas = scrawl.findCanvas('oval-canvas');
+const ovalNamespace = ovalCanvas.name;
+const oName = (n) => `${ovalNamespace}-${n}`;
 
+ovalCanvas.setAsCurrentCanvas();
 
-// Namespacing boilerplate
-const namespace = canvas.name;
-const name = (n) => `${namespace}-${n}`;
-
-
-const myWheel = scrawl.makeWheel({
-    name: name('my-wheel'),
+const myOval = scrawl.makeOval({
+    name: oName('my-oval'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
+
     radius: 150,
 
-    fillStyle: 'lightblue',
-    strokeStyle: 'sienna',
-    lineWidth: 6,
+    fillStyle: 'khaki',
+    strokeStyle: 'teal',
+    lineWidth: 4,
     lineJoin: 'round',
     method: 'fillThenDraw',
 });
 
 scrawl.makeWheel({
-    name: name('pin'),
+    name: oName('pin'),
     radius: 5,
     fillStyle: 'red',
-    pivot: name('my-wheel'),
+    pivot: oName('my-oval'),
     lockTo: 'pivot',
     handle: ['center', 'center'],
 });
 
+const tetraCanvas = scrawl.findCanvas('tetragon-canvas');
+const tetraNamespace = tetraCanvas.name;
+const tName = (n) => `${tetraNamespace}-${n}`;
+
+tetraCanvas.setAsCurrentCanvas();
+
+scrawl.makeTetragon({
+    name: tName('my-tetra'),
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    radius: 150,
+
+    fillStyle: 'skyblue',
+    strokeStyle: 'maroon',
+    lineWidth: 4,
+    lineJoin: 'round',
+    method: 'fillThenDraw',
+});
+
+scrawl.makeWheel({
+    name: tName('pin'),
+    radius: 5,
+    fillStyle: 'red',
+    pivot: tName('my-tetra'),
+    lockTo: 'pivot',
+    handle: ['center', 'center'],
+});
+
+const shared = scrawl.makeGroup({
+
+    name: 'shared',
+
+}).addArtefacts(myOval, tName('my-tetra'));
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -46,13 +78,16 @@ const report = reportSpeed('#reportmessage', function () {
     const {
         roll,
         scale,
-        radius,
-        startAngle,
-        endAngle,
+        radiusX,
+        radiusY,
+        intersectX,
+        intersectY,
+        offshootA,
+        offshootB,
         start,
         handle,
         offset,
-    } = myWheel;
+    } = myOval;
 
     const {
         lineWidth,
@@ -60,9 +95,11 @@ const report = reportSpeed('#reportmessage', function () {
         shadowOffsetY,
         shadowBlur
 /** @ts-expect-error */
-    } = myWheel.state;
+    } = myOval.state;
 
-    return `    Wheel - radius: ${radius}, startAngle: ${startAngle}, endAngle: ${endAngle}
+    return `    Radius - radiusX: ${radiusX}, radiusY: ${radiusY}, 
+    Intersect - intersectX: ${intersectX}, intersectY: ${intersectY}, 
+    Offshoot - offshootA: ${offshootA}, offshootB: ${offshootB}, 
     Start - [${start}]; Handle - [${handle}]; Offset - [${offset}]
     Roll: ${roll}; Scale: ${scale}; lineWidth: ${lineWidth}
     Shadow - offsetX: ${shadowOffsetX}; offsetY: ${shadowOffsetY}; blur: ${shadowBlur}; `;
@@ -72,9 +109,15 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: name('animation'),
-    target: canvas,
+    name: oName('animation'),
+    target: ovalCanvas,
     afterShow: report,
+});
+
+scrawl.makeRender({
+
+    name: tName('animation'),
+    target: tetraCanvas,
 });
 
 
@@ -85,19 +128,20 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: myWheel,
+    target: shared,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
-        clockwise: ['clockwise', 'boolean'],
-        closed: ['closed', 'boolean'],
-        endAngle: ['endAngle', 'round'],
-        includeCenter: ['includeCenter', 'boolean'],
-        radius_absolute: ['radius', 'round'],
-        radius_relative: ['radius', '%'],
-        startAngle: ['startAngle', 'round'],
+        radiusX_absolute: ['radiusX', 'round'],
+        radiusX_relative: ['radiusX', '%'],
+        radiusY_absolute: ['radiusY', 'round'],
+        radiusY_relative: ['radiusY', '%'],
+        intersectX: ['intersectX', 'float'],
+        intersectY: ['intersectY', 'float'],
+        offshootA: ['offshootA', 'float'],
+        offshootB: ['offshootB', 'float'],
 
         handle_xAbsolute: ['handleX', 'round'],
         handle_xPercent: ['handleX', '%'],
@@ -119,6 +163,7 @@ scrawl.makeUpdater({
         shadowBlur: ['shadowBlur', 'round'],
         shadowOffsetX: ['shadowOffsetX', 'round'],
         shadowOffsetY: ['shadowOffsetY', 'round'],
+        showBoundingBox: ['showBoundingBox', 'boolean'],
         start_xAbsolute: ['startX', 'round'],
         start_xPercent: ['startX', '%'],
         start_xString: ['startX', 'raw'],
@@ -126,25 +171,27 @@ scrawl.makeUpdater({
         start_yPercent: ['startY', '%'],
         start_yString: ['startY', 'raw'],
         upend: ['flipUpend', 'boolean'],
+        winding: ['winding', 'raw'],
     },
 });
 
 
 // Setup form
 initializeDomInputs([
-    ['input', 'endAngle', '360'],
-    ['input', 'radius_absolute', '150'],
-    ['input', 'radius_relative', '37.5'],
-    ['input', 'startAngle', '0'],
-    ['select', 'clockwise', 1],
-    ['select', 'closed', 1],
-    ['select', 'includeCenter', 0],
+    ['input', 'radiusX_absolute', '150'],
+    ['input', 'radiusX_relative', '37.5'],
+    ['input', 'radiusY_absolute', '150'],
+    ['input', 'radiusY_relative', '37.5'],
+    ['input', 'intersectX', '0.5'],
+    ['input', 'intersectY', '0.5'],
+    ['input', 'offshootA', '0.55'],
+    ['input', 'offshootB', '0'],
 
     ['input', 'handle_xAbsolute', '150'],
     ['input', 'handle_xPercent', '50'],
     ['input', 'handle_yAbsolute', '100'],
     ['input', 'handle_yPercent', '50'],
-    ['input', 'lineWidth', '6'],
+    ['input', 'lineWidth', '2'],
     ['input', 'offset_xAbsolute', '0'],
     ['input', 'offset_xPercent', '0'],
     ['input', 'offset_yAbsolute', '0'],
@@ -164,9 +211,11 @@ initializeDomInputs([
     ['select', 'method', 4],
     ['select', 'reverse', 0],
     ['select', 'scaleOutline', 1],
+    ['select', 'showBoundingBox', 0],
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
+    ['select', 'winding', 0],
 ]);
 
 

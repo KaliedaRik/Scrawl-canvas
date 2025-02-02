@@ -1,7 +1,7 @@
-// # Demo Canvas 060
-// Wheel entity attributes and functionality
+// # Demo Canvas 065
+// Star entity attributes and functionality
 
-// [Run code](../../demo/canvas-060.html)
+// [Run code](../../demo/filters-065.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, initializeDomInputs } from './utilities.js';
@@ -16,14 +16,17 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-const myWheel = scrawl.makeWheel({
-    name: name('my-wheel'),
+const myStar = scrawl.makeStar({
+    name: name('my-star'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    radius: 150,
 
-    fillStyle: 'lightblue',
-    strokeStyle: 'sienna',
+    radius1: 150,
+    radius2: 100,
+    points: 5,
+
+    fillStyle: 'beige',
+    strokeStyle: 'darkred',
     lineWidth: 6,
     lineJoin: 'round',
     method: 'fillThenDraw',
@@ -33,7 +36,7 @@ scrawl.makeWheel({
     name: name('pin'),
     radius: 5,
     fillStyle: 'red',
-    pivot: name('my-wheel'),
+    pivot: name('my-star'),
     lockTo: 'pivot',
     handle: ['center', 'center'],
 });
@@ -46,13 +49,14 @@ const report = reportSpeed('#reportmessage', function () {
     const {
         roll,
         scale,
-        radius,
-        startAngle,
-        endAngle,
+        radius1,
+        radius2,
+        points,
+        twist,
         start,
         handle,
         offset,
-    } = myWheel;
+    } = myStar;
 
     const {
         lineWidth,
@@ -60,9 +64,10 @@ const report = reportSpeed('#reportmessage', function () {
         shadowOffsetY,
         shadowBlur
 /** @ts-expect-error */
-    } = myWheel.state;
+    } = myStar.state;
 
-    return `    Wheel - radius: ${radius}, startAngle: ${startAngle}, endAngle: ${endAngle}
+    return `    Radius - 1: ${radius1}, 2: ${radius2}
+    Points - ${points}, Twist - ${twist}
     Start - [${start}]; Handle - [${handle}]; Offset - [${offset}]
     Roll: ${roll}; Scale: ${scale}; lineWidth: ${lineWidth}
     Shadow - offsetX: ${shadowOffsetX}; offsetY: ${shadowOffsetY}; blur: ${shadowBlur}; `;
@@ -85,19 +90,18 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: myWheel,
+    target: myStar,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
-        clockwise: ['clockwise', 'boolean'],
-        closed: ['closed', 'boolean'],
-        endAngle: ['endAngle', 'round'],
-        includeCenter: ['includeCenter', 'boolean'],
-        radius_absolute: ['radius', 'round'],
-        radius_relative: ['radius', '%'],
-        startAngle: ['startAngle', 'round'],
+        radius1_absolute: ['radius1', 'round'],
+        radius1_relative: ['radius1', '%'],
+        radius2_absolute: ['radius2', 'round'],
+        radius2_relative: ['radius2', '%'],
+        points: ['points', 'round'],
+        twist: ['twist', 'round'],
 
         handle_xAbsolute: ['handleX', 'round'],
         handle_xPercent: ['handleX', '%'],
@@ -119,6 +123,7 @@ scrawl.makeUpdater({
         shadowBlur: ['shadowBlur', 'round'],
         shadowOffsetX: ['shadowOffsetX', 'round'],
         shadowOffsetY: ['shadowOffsetY', 'round'],
+        showBoundingBox: ['showBoundingBox', 'boolean'],
         start_xAbsolute: ['startX', 'round'],
         start_xPercent: ['startX', '%'],
         start_xString: ['startX', 'raw'],
@@ -126,19 +131,19 @@ scrawl.makeUpdater({
         start_yPercent: ['startY', '%'],
         start_yString: ['startY', 'raw'],
         upend: ['flipUpend', 'boolean'],
+        winding: ['winding', 'raw'],
     },
 });
 
 
 // Setup form
 initializeDomInputs([
-    ['input', 'endAngle', '360'],
-    ['input', 'radius_absolute', '150'],
-    ['input', 'radius_relative', '37.5'],
-    ['input', 'startAngle', '0'],
-    ['select', 'clockwise', 1],
-    ['select', 'closed', 1],
-    ['select', 'includeCenter', 0],
+    ['input', 'radius1_absolute', '150'],
+    ['input', 'radius1_relative', '37.5'],
+    ['input', 'radius2_absolute', '100'],
+    ['input', 'radius2_relative', '25'],
+    ['input', 'points', '5'],
+    ['input', 'twist', '0'],
 
     ['input', 'handle_xAbsolute', '150'],
     ['input', 'handle_xPercent', '50'],
@@ -164,11 +169,12 @@ initializeDomInputs([
     ['select', 'method', 4],
     ['select', 'reverse', 0],
     ['select', 'scaleOutline', 1],
+    ['select', 'showBoundingBox', 0],
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
+    ['select', 'winding', 0],
 ]);
-
 
 // #### Development and testing
 console.log(scrawl.library);

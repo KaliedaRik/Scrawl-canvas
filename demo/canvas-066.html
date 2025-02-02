@@ -5,11 +5,10 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 061</title>
+  <title>Demo Canvas 066</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
-
   <style>
     canvas {
       margin: 1em auto;
@@ -31,42 +30,42 @@
 
 <body>
   <div id="test-navigation">
-    <a href="canvas-060.html">&larr; Previous</a>
-    <a href="canvas-062.html">Next &rarr;</a>
+    <a href="canvas-065.html">&larr; Previous</a>
+    <a href="canvas-067.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 061</h1>
-  <h2>Crescent entity attributes and functionality</h3>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 066</h1>
+  <h2>Spiral entity attributes and functionality</h2>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="controls">
-    <div class="pink label">Outer radius</div>
-    <div class="pink"><input class="controlItem" id="outerRadius" type="range" value="150" min="0" max="250" step="1" /></div>
-    <div class="pink">&nbsp;</div>
-
-    <div class="pink label">Inner Radius</div>
-    <div class="pink"><input class="controlItem" id="innerRadius" type="range" value="100" min="0" max="250" step="1" /></div>
-    <div class="pink">&nbsp;</div>
-
-    <div class="orange label">Displacement</div>
-    <div class="orange"><input class="controlItem" id="displacement" type="range" value="80" min="0" max="200" step="1" /></div>
+    <div class="orange label">Loops</div>
+    <div class="orange"><input class="controlItem" id="loops" type="range" value="5" min="0" max="20" step="1" /></div>
     <div class="orange">&nbsp;</div>
 
-    <div class="orange label">Display intersect</div>
-    <div class="orange">
-      <select class="controlItem" id="displayIntersect">
+    <div class="orange label">Loop increment</div>
+    <div class="orange"><input class="controlItem" id="loopIncrement" type="range" value="20" min="0" max="80" step="1" /></div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="orange label">Draw from loop</div>
+    <div class="orange"><input class="controlItem" id="drawFromLoop" type="range" value="0" min="0" max="20" step="1" /></div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="bluegreen label">Show bounding box</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="showBoundingBox">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
     </div>
-    <div class="orange">&nbsp;</div>
+    <div class="bluegreen">&nbsp;</div>
   </div>
 
   <canvas 
     id="mycanvas" 
-    width="400" 
-    height="400"
     data-scrawl-canvas
+    width="400"
+    height="400"
   ></canvas>
 
   <div class="controls">
@@ -141,7 +140,7 @@
     <div class="yellow">&nbsp;</div>
 
     <div class="yellow label">Line width</div>
-    <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="4" min="0" max="40" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="6" min="0" max="40" step="1" /></div>
     <div class="yellow">&nbsp;</div>
 
     <div class="yellow label">Method</div>
@@ -164,6 +163,19 @@
         <option value="1">true</option>
       </select>
     </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Winding</div>
+    <div class="yellow">
+      <select class="controlItem" id="winding">
+        <option value="nonzero">nonzero</option>
+        <option value="evenodd">evenodd</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow">&nbsp;</div>
+    <div class="yellow">&nbsp;</div>
     <div class="yellow">&nbsp;</div>
 
     <div class="yellow label">Flip-upend</div>
@@ -195,19 +207,20 @@
 
   <div class="testinfo">
     <h4>Test purpose</h4>
+
     <ul>
-      <li>Create a Crescent entity</li>
-      <li>Check that we can position the Crescent on the canvas, including handle and offset</li>
-      <li>Check that flip values, roll and scaling does not affect Crescent positioning</li>
-      <li>Check that we can manipulate the Crescent-specific attributes</li>
+      <li>Create a Spiral entity</li>
+      <li>Check that we can position the Spiral on the canvas, including handle and offset</li>
+      <li>Check that flip values, roll and scaling does not affect Spiral positioning</li>
+      <li>Check that we can manipulate the Spiral-specific attributes</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>
 
-    <p><a href="../docs/demo/canvas-061.html">Annotated code</a></p>
+    <p><a href="../docs/demo/canvas-066.html">Annotated code</a></p>
   </div>
 
-  <script src="canvas-061.js" type="module"></script>
+  <script src="canvas-066.js" type="module"></script>
 
 </body>
 

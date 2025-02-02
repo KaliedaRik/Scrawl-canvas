@@ -31,13 +31,11 @@ import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
-import { releaseArray, requestArray } from '../helper/array-pool.js';
-
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _abs, _min, BEZIER, ENTITY, QUADRATIC } from '../helper/shared-vars.js';
+import { _abs, _min, BEZIER, ENTITY, QUADRATIC, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const PERMITTED_CURVES = ['line', 'quadratic', 'bezier'],
@@ -213,11 +211,10 @@ P.makeCogPath = function () {
 
     let { outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset } = this;
 
-    const turn = 360 / points,
-        xPts = requestArray();
+    const turn = 360 / points;
 
     let currentPointX, currentPointY, deltaX, deltaY, i,
-        myPath = '';
+        myPath = ZERO_STR;
 
     if (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
 
@@ -253,8 +250,6 @@ P.makeCogPath = function () {
     currentPointX = outerPoint.x;
     currentPointY = outerPoint.y;
 
-    xPts.push(currentPointX);
-
     if (curve === BEZIER) {
 
         for (i = 0; i < points; i++) {
@@ -273,7 +268,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((innerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -292,7 +286,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -311,7 +304,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((innerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -325,7 +317,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -337,7 +328,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPointLead.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPointLead.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -348,21 +338,18 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((innerPointTrail.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPointTrail.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
 
             deltaX = parseFloat((innerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
 
             deltaX = parseFloat((innerPointLead.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPointLead.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -373,14 +360,12 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPointTrail.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPointTrail.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
 
             deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -388,14 +373,26 @@ P.makeCogPath = function () {
     }
     releaseVector(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
 
-    const myMin = _min(...xPts),
-        myXoffset = _abs(myMin).toFixed(1);
+    if (curve === BEZIER) return `${ZERO_PATH}c${myPath}z`;
+    if (curve === QUADRATIC) return `${ZERO_PATH}q${myPath}z`;
+    return `${ZERO_PATH}l${myPath}z`;
+};
 
-    releaseArray(xPts);
+P.calculateLocalPathAdditionalActions = function () {
 
-    if (curve === BEZIER) return `m${myXoffset},0c${myPath}z`;
-    if (curve === QUADRATIC) return `m${myXoffset},0q${myPath}z`;
-    return `m${myXoffset},0l${myPath}z`;
+    let scale = this.scale;
+
+    if (scale < 0.001) scale = 0.001;
+
+    const [x, y] = this.localBox;
+
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
+
+    this.pathCalculatedOnce = false;
+
+    // ALWAYS, when invoking `calculateLocalPath` from `calculateLocalPathAdditionalActions`, include the second argument, set to `true`! Failure to do this leads to an infinite loop which will make your machine weep.
+    // + We need to recalculate the local path to take into account the offset required to put the Rectangle entity's start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.
+    this.calculateLocalPath(this.pathDefinition, true);
 };
 
 

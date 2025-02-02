@@ -1,7 +1,7 @@
-// # Demo Canvas 060
-// Wheel entity attributes and functionality
+// # Demo Canvas 067
+// Cog entity attributes and functionality
 
-// [Run code](../../demo/canvas-060.html)
+// [Run code](../../demo/filters-067.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, initializeDomInputs } from './utilities.js';
@@ -16,11 +16,14 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-const myWheel = scrawl.makeWheel({
-    name: name('my-wheel'),
+const myCog = scrawl.makeCog({
+    name: name('my-cog'),
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    radius: 150,
+
+    outerRadius: 150,
+    innerRadius: 100,
+    points: 5,
 
     fillStyle: 'lightblue',
     strokeStyle: 'sienna',
@@ -33,7 +36,7 @@ scrawl.makeWheel({
     name: name('pin'),
     radius: 5,
     fillStyle: 'red',
-    pivot: name('my-wheel'),
+    pivot: name('my-cog'),
     lockTo: 'pivot',
     handle: ['center', 'center'],
 });
@@ -46,13 +49,18 @@ const report = reportSpeed('#reportmessage', function () {
     const {
         roll,
         scale,
-        radius,
-        startAngle,
-        endAngle,
+        outerRadius,
+        outerControlsDistance,
+        outerControlsOffset,
+        innerRadius,
+        innerControlsDistance,
+        innerControlsOffset,
+        points,
+        twist,
         start,
         handle,
         offset,
-    } = myWheel;
+    } = myCog;
 
     const {
         lineWidth,
@@ -60,9 +68,11 @@ const report = reportSpeed('#reportmessage', function () {
         shadowOffsetY,
         shadowBlur
 /** @ts-expect-error */
-    } = myWheel.state;
+    } = myCog.state;
 
-    return `    Wheel - radius: ${radius}, startAngle: ${startAngle}, endAngle: ${endAngle}
+    return `    Outer - radius: ${outerRadius}, controlsDistance: ${outerControlsDistance}, controlsOffset: ${outerControlsOffset}
+    Inner - radius: ${innerRadius}, controlsDistance: ${innerControlsDistance}, controlsOffset: ${innerControlsOffset}
+    Points - ${points}, Twist - ${twist}
     Start - [${start}]; Handle - [${handle}]; Offset - [${offset}]
     Roll: ${roll}; Scale: ${scale}; lineWidth: ${lineWidth}
     Shadow - offsetX: ${shadowOffsetX}; offsetY: ${shadowOffsetY}; blur: ${shadowBlur}; `;
@@ -85,19 +95,27 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: myWheel,
+    target: myCog,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
-        clockwise: ['clockwise', 'boolean'],
-        closed: ['closed', 'boolean'],
-        endAngle: ['endAngle', 'round'],
-        includeCenter: ['includeCenter', 'boolean'],
-        radius_absolute: ['radius', 'round'],
-        radius_relative: ['radius', '%'],
-        startAngle: ['startAngle', 'round'],
+        curve: ['curve', 'raw'],
+        innerControlsDistance_absolute: ['innerControlsDistance', 'round'],
+        innerControlsDistance_relative: ['innerControlsDistance', '%'],
+        innerControlsOffset_absolute: ['innerControlsOffset', 'round'],
+        innerControlsOffset_relative: ['innerControlsOffset', '%'],
+        innerRadius_absolute: ['innerRadius', 'round'],
+        innerRadius_relative: ['innerRadius', '%'],
+        outerControlsDistance_absolute: ['outerControlsDistance', 'round'],
+        outerControlsDistance_relative: ['outerControlsDistance', '%'],
+        outerControlsOffset_absolute: ['outerControlsOffset', 'round'],
+        outerControlsOffset_relative: ['outerControlsOffset', '%'],
+        outerRadius_absolute: ['outerRadius', 'round'],
+        outerRadius_relative: ['outerRadius', '%'],
+        points: ['points', 'round'],
+        twist: ['twist', 'round'],
 
         handle_xAbsolute: ['handleX', 'round'],
         handle_xPercent: ['handleX', '%'],
@@ -119,6 +137,7 @@ scrawl.makeUpdater({
         shadowBlur: ['shadowBlur', 'round'],
         shadowOffsetX: ['shadowOffsetX', 'round'],
         shadowOffsetY: ['shadowOffsetY', 'round'],
+        showBoundingBox: ['showBoundingBox', 'boolean'],
         start_xAbsolute: ['startX', 'round'],
         start_xPercent: ['startX', '%'],
         start_xString: ['startX', 'raw'],
@@ -126,19 +145,28 @@ scrawl.makeUpdater({
         start_yPercent: ['startY', '%'],
         start_yString: ['startY', 'raw'],
         upend: ['flipUpend', 'boolean'],
+        winding: ['winding', 'raw'],
     },
 });
 
 
 // Setup form
 initializeDomInputs([
-    ['input', 'endAngle', '360'],
-    ['input', 'radius_absolute', '150'],
-    ['input', 'radius_relative', '37.5'],
-    ['input', 'startAngle', '0'],
-    ['select', 'clockwise', 1],
-    ['select', 'closed', 1],
-    ['select', 'includeCenter', 0],
+    ['input', 'innerControlsDistance_absolute', '0'],
+    ['input', 'innerControlsDistance_relative', '0'],
+    ['input', 'innerControlsOffset_absolute', '0'],
+    ['input', 'innerControlsOffset_relative', '0'],
+    ['input', 'innerRadius_absolute', '100'],
+    ['input', 'innerRadius_relative', '25'],
+    ['input', 'outerControlsDistance_absolute', '0'],
+    ['input', 'outerControlsDistance_relative', '0'],
+    ['input', 'outerControlsOffset_absolute', '0'],
+    ['input', 'outerControlsOffset_relative', '0'],
+    ['input', 'outerRadius_absolute', '150'],
+    ['input', 'outerRadius_relative', '37.5'],
+    ['input', 'points', '5'],
+    ['input', 'twist', '0'],
+    ['select', 'curve', 2],
 
     ['input', 'handle_xAbsolute', '150'],
     ['input', 'handle_xPercent', '50'],
@@ -164,9 +192,11 @@ initializeDomInputs([
     ['select', 'method', 4],
     ['select', 'reverse', 0],
     ['select', 'scaleOutline', 1],
+    ['select', 'showBoundingBox', 0],
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
+    ['select', 'winding', 0],
 ]);
 
 

@@ -118,13 +118,19 @@ D.radiusY = function (item) {
 
 S.offshootA = function (item) {
 
-    this.offshootA = item;
-    this.updateDirty();
+    if (item.toFixed) {
+
+        this.offshootA = item;
+        this.updateDirty();
+    }
 };
 S.offshootB = function (item) {
 
-    this.offshootB = item;
-    this.updateDirty();
+    if (item.toFixed) {
+
+        this.offshootB = item;
+        this.updateDirty();
+    }
 };
 D.offshootA = function (item) {
 
@@ -143,29 +149,35 @@ D.offshootB = function (item) {
     }
 };
 
-S.intersectA = function (item) {
-
-    this.intersectA = item;
-    this.updateDirty();
-};
-S.intersectB = function (item) {
-
-    this.intersectB = item;
-    this.updateDirty();
-};
-D.intersectA = function (item) {
+S.intersectX = function (item) {
 
     if (item.toFixed) {
 
-        this.intersectA += item;
+        this.intersectX = item;
         this.updateDirty();
     }
 };
-D.intersectB = function (item) {
+S.intersectY = function (item) {
+
+    if (item.toFixed) {
+        
+        this.intersectY = item;
+        this.updateDirty();
+    }
+};
+D.intersectX = function (item) {
 
     if (item.toFixed) {
 
-        this.intersectB += item;
+        this.intersectX += item;
+        this.updateDirty();
+    }
+};
+D.intersectY = function (item) {
+
+    if (item.toFixed) {
+
+        this.intersectY += item;
         this.updateDirty();
     }
 };
@@ -252,9 +264,13 @@ P.makeOvalPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
+    let scale = this.scale;
+
+    if (scale < 0.001) scale = 0.001;
+
     const [x, y] = this.localBox;
 
-    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
 
     this.pathCalculatedOnce = false;
 

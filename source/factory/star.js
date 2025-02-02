@@ -32,13 +32,11 @@ import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
-import { releaseArray, requestArray } from '../helper/array-pool.js';
-
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _abs, _min, ENTITY, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _min, ENTITY, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const STAR = 'star',
@@ -155,8 +153,7 @@ P.makeStarPath = function () {
 
     const points = this.points,
         twist = this.twist,
-        turn = 360 / points,
-        xPts = requestArray();
+        turn = 360 / points;
 
     let radius1 = this.radius1,
         radius2 = this.radius2;
@@ -183,8 +180,6 @@ P.makeStarPath = function () {
     currentX = v1.x;
     currentY = v1.y;
 
-    xPts.push(currentX);
-
     v2.rotate(-turn/2);
     v2.rotate(twist);
 
@@ -194,7 +189,6 @@ P.makeStarPath = function () {
 
         x = parseFloat((v2.x - currentX).toFixed(1));
         currentX += x;
-        xPts.push(currentX);
 
         y = parseFloat((v2.y - currentY).toFixed(1));
         currentY += y;
@@ -205,7 +199,6 @@ P.makeStarPath = function () {
 
         x = parseFloat((v1.x - currentX).toFixed(1));
         currentX += x;
-        xPts.push(currentX);
 
         y = parseFloat((v1.y - currentY).toFixed(1));
         currentY += y;
@@ -216,14 +209,24 @@ P.makeStarPath = function () {
 
     releaseVector(v1, v2);
 
-    const myMin = _min(...xPts),
-        myXoffset = _abs(myMin).toFixed(1);
+    return `${ZERO_PATH}l${myPath}z`;
+};
 
-    myPath = `m${myXoffset},0l${myPath}z`;
+P.calculateLocalPathAdditionalActions = function () {
 
-    releaseArray(xPts);
+    let scale = this.scale;
 
-    return myPath;
+    if (scale < 0.001) scale = 0.001;
+
+    const [x, y] = this.localBox;
+
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
+
+    this.pathCalculatedOnce = false;
+
+    // ALWAYS, when invoking `calculateLocalPath` from `calculateLocalPathAdditionalActions`, include the second argument, set to `true`! Failure to do this leads to an infinite loop which will make your machine weep.
+    // + We need to recalculate the local path to take into account the offset required to put the Rectangle entity's start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.
+    this.calculateLocalPath(this.pathDefinition, true);
 };
 
 

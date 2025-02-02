@@ -114,29 +114,35 @@ D.radiusY = function (item) {
     this.deltaRectHelper(item, RADIUS_Y);
 };
 
-S.intersectA = function (item) {
-
-    this.intersectA = item;
-    this.updateDirty();
-};
-S.intersectB = function (item) {
-
-    this.intersectB = item;
-    this.updateDirty();
-};
-D.intersectA = function (item) {
+S.intersectX = function (item) {
 
     if (item.toFixed) {
 
-        this.intersectA += item;
+        this.intersectX = item;
         this.updateDirty();
     }
 };
-D.intersectB = function (item) {
+S.intersectY = function (item) {
+
+    if (item.toFixed) {
+        
+        this.intersectY = item;
+        this.updateDirty();
+    }
+};
+D.intersectX = function (item) {
 
     if (item.toFixed) {
 
-        this.intersectB += item;
+        this.intersectX += item;
+        this.updateDirty();
+    }
+};
+D.intersectY = function (item) {
+
+    if (item.toFixed) {
+
+        this.intersectY += item;
         this.updateDirty();
     }
 };
@@ -218,9 +224,13 @@ P.makeTetragonPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
+    let scale = this.scale;
+
+    if (scale < 0.001) scale = 0.001;
+
     const [x, y] = this.localBox;
 
-    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
 
     this.pathCalculatedOnce = false;
 
