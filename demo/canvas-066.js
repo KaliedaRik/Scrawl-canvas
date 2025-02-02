@@ -22,13 +22,13 @@ const mySpiral = scrawl.makeSpiral({
     handle: ['center', 'center'],
 
     loops: 5,
-    loopIncrement: 20,
+    loopIncrement: 30,
 
     fillStyle: 'plum',
-    strokeStyle: 'black',
+    strokeStyle: 'darkslateblue',
     lineWidth: 2,
     lineJoin: 'round',
-    method: 'draw',
+    method: 'fillAndDraw',
 });
 
 scrawl.makeWheel({
@@ -126,6 +126,7 @@ scrawl.makeUpdater({
         start_yPercent: ['startY', '%'],
         start_yString: ['startY', 'raw'],
         upend: ['flipUpend', 'boolean'],
+        winding: ['winding', 'raw'],
     },
 });
 
@@ -133,7 +134,7 @@ scrawl.makeUpdater({
 // Setup form
 initializeDomInputs([
     ['input', 'loops', '5'],
-    ['input', 'loopIncrement', '2'],
+    ['input', 'loopIncrement', '30'],
     ['input', 'drawFromLoop', '0'],
 
     ['input', 'handle_xAbsolute', '150'],
@@ -157,13 +158,14 @@ initializeDomInputs([
     ['select', 'handle_xString', 1],
     ['select', 'handle_yString', 1],
     ['select', 'lineJoin', 1],
-    ['select', 'method', 1],
+    ['select', 'method', 2],
     ['select', 'reverse', 0],
     ['select', 'scaleOutline', 1],
     ['select', 'showBoundingBox', 0],
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
+    ['select', 'winding', 0],
 ]);
 
 

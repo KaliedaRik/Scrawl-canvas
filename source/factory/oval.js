@@ -211,7 +211,6 @@ P.deltaRectHelper = function (item, corners) {
 // `cleanSpecies` - internal helper function - called by `prepareStamp`
 P.cleanSpecies = function () {
 
-console.log(this.name, 'cleanSpecies');
     this.dirtySpecies = false;
     this.pathDefinition = this.makeOvalPath();
 };
@@ -265,9 +264,13 @@ P.makeOvalPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
+    let scale = this.scale;
+
+    if (scale < 0.001) scale = 0.001;
+
     const [x, y] = this.localBox;
 
-    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
 
     this.pathCalculatedOnce = false;
 
