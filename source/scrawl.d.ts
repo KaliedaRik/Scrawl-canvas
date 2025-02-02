@@ -1003,6 +1003,12 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
 
 interface CellSaveInputs extends CellFactoryInputs, SaveInputs {}
 
+interface CellSplitShiftArguments {
+    px: StringOrNumberInput;
+    vertical?: boolean;
+    cycle?: boolean;
+}
+
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
     clear: () => void;
     compile: () => void;
@@ -1012,11 +1018,7 @@ interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunction
     show: () => void;
     updateArtefacts: (items: CommonObjectInput) => void;
     updateHere: () => void;
-
-    // // This is a LIE! Added to ignore TS complaints
-    // clone: (item?: CellFactoryInputs) => CellInstance;
-    // // This is also a LIE! Added to ignore TS complaints
-    // saveAsPacket: (item?: CellSaveInputs | boolean) => string;
+    splitShift: (arg0: CellSplitShiftArguments) => void;
 }
 
 export interface CellInstance extends CellFactoryInputs, CellFactoryFunctions {

@@ -1378,6 +1378,75 @@ P.updateHere = function () {
 };
 
 
+// `splitShift` - split and shift functionality works only on cells that are not being cleared as part of the Display cycle. The single argument is an object containing the following attributes:
+// + __px__ (required) - Number or String value for the amount of pixels to be shifted. Can be positive (move pixels right/down) or negative (move pixels left/up)
+// + __vertical__ (optional) - Boolean flag (default: `false`); when set to `true` we move the pixels up/down, otherwise we move them left/right
+// + __cycle__ (optional) - Boolean flag (default: `false`; when set to `true`) we save the area of the screen about to be overwritten and reinsert it on the opposite side after the shift operation completes
+P.splitShift = function (item) {
+
+    if (item && item.px) {
+
+        const {
+            px,
+            vertical = false,
+            cycle = false
+        } = item;
+
+        const [width, height] = this.currentDimensions;
+
+        let speed = 0,
+            edge = null;
+
+        if (px.toFixed) speed = _round(px);
+        else if (px.substring) {
+
+            if (vertical) speed = _round((parseFloat(px) / 100) * height);
+            else speed = _round((parseFloat(px) / 100) * width);
+        }
+
+        if (speed) {
+
+            const engine = this.engine;
+
+            if (vertical) {
+
+                // Move up
+                if (speed < 0) {
+
+                    if (cycle) edge = engine.getImageData(0, 0, width, -speed);
+                    engine.putImageData(engine.getImageData(0, -speed, width, height + speed), 0, 0);
+                    if (cycle) engine.putImageData(edge, 0, height + speed);
+                }
+                // Move down
+                else {
+
+                    if (cycle) edge = engine.getImageData(0, height - speed, width, speed);
+                    engine.putImageData(engine.getImageData(0, 0, width, height - speed), 0, speed);
+                    if (cycle) engine.putImageData(edge, 0, 0);
+                }
+            }
+           else {
+
+                // Move left
+                if (speed < 0) {
+
+                    if (cycle) edge = engine.getImageData(0, 0, -speed, height);
+                    engine.putImageData(engine.getImageData(-speed, 0, width + speed, height), 0, 0);
+                    if (cycle) engine.putImageData(edge, width + speed, 0);
+                }
+                // Move right
+                else {
+
+                    if (cycle) edge = engine.getImageData(width - speed, 0, speed, height);
+                    engine.putImageData(engine.getImageData(0, 0, width - speed, height), speed, 0);
+                    if (cycle) engine.putImageData(edge, 0, 0);
+                }
+            }
+        }
+    }
+};
+
+
 // #### Factory
 export const makeCell = function (items) {
 
