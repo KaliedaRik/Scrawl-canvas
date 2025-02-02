@@ -171,6 +171,7 @@ scrawl.makeUpdater({
         start_yPercent: ['startY', '%'],
         start_yString: ['startY', 'raw'],
         upend: ['flipUpend', 'boolean'],
+        winding: ['winding', 'raw'],
     },
 });
 
@@ -214,6 +215,7 @@ initializeDomInputs([
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
+    ['select', 'winding', 0],
 ]);
 
 
