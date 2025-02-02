@@ -1395,7 +1395,7 @@ P.splitShift = function (item) {
         const [width, height] = this.currentDimensions;
 
         let speed = 0,
-            fragment = null;
+            edge = null;
 
         if (px.toFixed) speed = _round(px);
         else if (px.substring) {
@@ -1413,20 +1413,16 @@ P.splitShift = function (item) {
                 // Move up
                 if (speed < 0) {
 
-                    if (cycle) {}
-
+                    if (cycle) edge = engine.getImageData(0, 0, width, -speed);
                     engine.putImageData(engine.getImageData(0, -speed, width, height + speed), 0, 0);
-
-                    if (cycle) {}
+                    if (cycle) engine.putImageData(edge, 0, height + speed);
                 }
                 // Move down
                 else {
 
-                    if (cycle) {}
-
+                    if (cycle) edge = engine.getImageData(0, height - speed, width, speed);
                     engine.putImageData(engine.getImageData(0, 0, width, height - speed), 0, speed);
-
-                    if (cycle) {}
+                    if (cycle) engine.putImageData(edge, 0, 0);
                 }
             }
            else {
@@ -1434,20 +1430,16 @@ P.splitShift = function (item) {
                 // Move left
                 if (speed < 0) {
 
-                    if (cycle) {}
-
+                    if (cycle) edge = engine.getImageData(0, 0, -speed, height);
                     engine.putImageData(engine.getImageData(-speed, 0, width + speed, height), 0, 0);
-
-                    if (cycle) {}
+                    if (cycle) engine.putImageData(edge, width + speed, 0);
                 }
                 // Move right
                 else {
 
-                    if (cycle) {}
-
+                    if (cycle) edge = engine.getImageData(width - speed, 0, speed, height);
                     engine.putImageData(engine.getImageData(0, 0, width - speed, height), speed, 0);
-
-                    if (cycle) {}
+                    if (cycle) engine.putImageData(edge, 0, 0);
                 }
             }
         }
