@@ -149,9 +149,9 @@ const generateCarpet = () => {
 
     const background = backgrounds[floor(rnd() * backgroundsLength)];
 
-    let min = floor(rnd() * (foregroundsLength - 1)),
-        max = min + (1 + floor(rnd() * (foregroundsLength - 2)));
+    const min = floor(rnd() * (foregroundsLength - 1));
 
+    let max = min + (1 + floor(rnd() * (foregroundsLength - 2)));
     if (max >= foregroundsLength) max -= foregroundsLength;
 
     const minimumColor = foregrounds[min],
