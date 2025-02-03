@@ -1447,6 +1447,28 @@ P.splitShift = function (item) {
 };
 
 
+// __getCellData__, __paintCellData__ - get the Cell engine's image data object; paint the image data object back to the Cell's engine.
+// + Allows for direct pixel manipulation
+// + Works best on Cells that are not being cleared and compiled
+// + An alternative approach is to use a RawAsset asset object, which comes with its own dedicated Canvas element
+P.getCellData = function () {
+
+    const [width, height] = this.currentDimensions;
+
+    return this.engine.getImageData(0, 0, width, height);
+};
+
+P.paintCellData = function (iData = Ωempty) {
+
+    const { width, height, data} = iData;
+    const [w, h] = this.currentDimensions;
+
+    if (width && height && data && w === width && h === height) {
+
+        this.engine.putImageData(iData, 0, 0);
+    }
+};
+
 // #### Factory
 export const makeCell = function (items) {
 
