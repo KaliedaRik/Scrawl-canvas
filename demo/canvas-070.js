@@ -224,8 +224,8 @@ const commence = () => {
 
     if (x >= 0 && x < 600 && y >= 0 && y < 400) {
 
-        const dx = -floor((350 - x) / 100),
-           dy = -floor((250 - y) / 100);
+        const dx = floor((350 - x) / 100),
+           dy = floor((250 - y) / 100);
 
         carpetTile.splitShift({ px: dx, vertical: false, cycle: true });
         carpetTile.splitShift({ px: dy, vertical: true, cycle: true });
