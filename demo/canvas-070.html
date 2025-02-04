@@ -40,10 +40,11 @@
 <body>
   <div id="test-navigation">
     <a href="canvas-069.html">&larr; Previous</a>
-    <a href="canvas-201.html">Next &rarr;</a>
+    <a href="canvas-071.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 070</h1>
   <h2>Test Cell splitShift functionality (infinite scroll)</h2>
+  <h3>Click on the canvas to launch a new carpet</h3>
 
   <div class="canvas-progressive-enhancement-wrapper">
     <canvas 
@@ -73,7 +74,11 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Generate new Cells to act as the carpet fabric and pattern respectively.</li>
+      <li>Create a scene with a background carpet fabric and a repeating tiled pattern.</li>
+      <li>Animate the scene using the new Cell's splitShift() function. The canvas will react to mouse position over it, shifting the carpet and pattern Cells to create an "infinite scrolling" effect.</li>
+      <li>Clicking on the canvas will generate a new carpet and pattern.</li>
+      <li>Check also that all entitys used to create the pattern get properly cleared from the library as soon as pattern creation completes.</li>
     </ul>
     <p><b>Touch test:</b> not required</p>
 

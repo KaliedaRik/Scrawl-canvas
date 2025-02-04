@@ -5,16 +5,11 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 069</title>
+  <title>Demo Canvas 072</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    .speed-control {
-      width: 50%;
-      margin: 0 auto 1em;
-      text-align: center;
-    }
     /* For progressive enhancement */
     .canvas-progressive-enhancement-wrapper {
       display: flex;
@@ -22,12 +17,11 @@
 
       & canvas {
         box-shadow: 0px 0px 0px 1px black;
-        background-color: aliceblue;
 
         /* In no-JS environments, the image should display in place of the canvas element */
         & .placeholder {
           text-align: center;
-          width: 600px;
+          width: 500px;
           max-width: 100%;
 
           & img {
@@ -41,28 +35,33 @@
 
 <body>
   <div id="test-navigation">
-    <a href="canvas-068.html">&larr; Previous</a>
-    <a href="canvas-070.html">Next &rarr;</a>
+    <a href="canvas-071.html">&larr; Previous</a>
+    <a href="canvas-201.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 069</h1>
-  <h2>Test Cell splitShift functionality (shift only)</h2>
-
-  <p class="speed-control">
-    Speed: <input class="controlItem" id="speed" type="range" value="3" min="-2" max="12" step="1" />
-  </p>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 072</h1>
+  <h2>Public transport furniture cover design</h2>
+  <h3>Click on the canvas to generate a new design</h3>
 
   <div class="canvas-progressive-enhancement-wrapper">
     <canvas 
-      id="mycanvas" 
+      id="my-canvas" 
       width="600" 
       height="400"
       data-scrawl-canvas
     >
       <div class="placeholder">
         <img
-          src="thumbs/canvas-069.webp"
+          src="thumbs/canvas-072.webp"
           alt="Screen capture image of the demo canvas"
         />    
+      </div>
+      <div class="asset-hold" aria-hidden="true">
+        <img 
+          src="img/weave-tile.webp" 
+          id="weave" 
+          class="image-assets"
+          alt=""
+        />
       </div>
     </canvas>
   </div>
@@ -72,17 +71,15 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Generate a new Cell to act as paper for the scene</li>
-      <li>Create a scene with a Line entity on the right and a number of Wheel entitys using it as their path.</li>
-      <li>Animate the scene using the new Cell's splitShift() function. The Wheels will appear to create streaming ribbons as the paper Cell's contents shift leftwards.</li>
-      <li>Vary the animation speed. When the speed drops below zero the animation will shift the paper to the right.</li>
+      <li>...</li>
     </ul>
+
     <p><b>Touch test:</b> not required</p>
 
-    <p><a href="../docs/demo/canvas-069.html">Annotated code</a></p>
+    <p><a href="../docs/demo/canvas-072.html">Annotated code</a></p>
   </div>
 
-  <script src="canvas-069.js" type="module"></script>
+  <script src="canvas-072.js" type="module"></script>
 
 </body>
 

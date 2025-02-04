@@ -211,8 +211,12 @@ console.log(scrawl.library);
 console.log('Performing tests ...');
 
 // Test to make sure the shorthand ways to find a Canvas wrapper's base Cell's group are working as expected
+console.log('canvas.get(\'baseName\')', canvas.get('baseName'));
 console.log('canvas.get(\'baseGroup\')', canvas.get('baseGroup'));
 console.log('canvas.base.get(\'group\')', canvas.base.get('group'));
+console.log('canvas.getBase()', canvas.getBase());
+console.log('canvas.getBaseHere()', canvas.getBaseHere());
+console.log('canvas.here', canvas.here);
 
 // Kill, and packet, functionality tests
 killArtefact(scrawl, canvas, name('block-fill'), 4000);
