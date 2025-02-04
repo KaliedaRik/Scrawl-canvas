@@ -1450,20 +1450,87 @@ P.splitShift = function (item) {
 // __getCellData__, __paintCellData__ - get the Cell engine's image data object; paint the image data object back to the Cell's engine.
 // + Allows for direct pixel manipulation
 // + Works best on Cells that are not being cleared and compiled
+// + The `paintCellData` functionality will fail if the Cell resizes for any reason; when that happens, a new image data object needs to be obtained before it can be repainted back to the Cell
 // + An alternative approach is to use a RawAsset asset object, which comes with its own dedicated Canvas element
-P.getCellData = function () {
+P.getCellData = function (opaque = false) {
 
-    const [width, height] = this.currentDimensions;
+    const [width, height] = this.currentDimensions,
+        halfWidth = _floor(width / 2),
+        halfHeight = _floor(height / 2);
 
-    return this.engine.getImageData(0, 0, width, height);
+    const iData = this.engine.getImageData(0, 0, width, height),
+        data = iData.data;
+
+    const pixelState = [];
+
+    const coord = requestCoordinate();
+
+    for (let row = 0; row < height; row++) {
+
+        for (let col = 0; col < width; col++) {
+
+            const index = ((row * width) + col) * 4;
+
+            coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
+
+            pixelState.push({
+                indexR: index,
+                indexG: index + 1,
+                indexB: index + 2,
+                indexA: index + 3,
+                red: data[index + 0],
+                green: data[index + 1],
+                blue: data[index + 2],
+                alpha: (opaque) ? 255 : data[index + 3],
+                row,
+                col,
+                distance: coord.getMagnitude(),
+            });
+        }
+    }
+
+    releaseCoordinate(coord);
+
+    return {
+        iData,
+        pixelState,
+    }
 };
 
-P.paintCellData = function (iData = Ωempty) {
+P.paintCellData = function (item = Ωempty) {
 
+    const { iData, pixelState} = item;
     const { width, height, data} = iData;
     const [w, h] = this.currentDimensions;
 
-    if (width && height && data && w === width && h === height) {
+    if (width && height && data && pixelState && w === width && h === height) {
+
+        pixelState.forEach(p => {
+
+            let {red, green, blue, alpha, indexR, indexG, indexB, indexA} = p;
+
+            if (red < 0) red = 0;
+            else if (red > 255) red = 255;
+
+            if (green < 0) green = 0;
+            else if (green > 255) green = 255;
+
+            if (blue < 0) blue = 0;
+            else if (blue > 255) blue = 255;
+
+            if (alpha < 0) alpha = 0;
+            else if (alpha > 255) alpha = 255;
+
+            p.red = red;
+            p.green = green;
+            p.blue = blue;
+            p.alpha = alpha;
+
+            data[indexR] = red;
+            data[indexG] = green;
+            data[indexB] = blue;
+            data[indexA] = alpha;
+        });
 
         this.engine.putImageData(iData, 0, 0);
     }

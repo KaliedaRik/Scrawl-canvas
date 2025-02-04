@@ -1,0 +1,504 @@
+// # Demo Canvas 071
+// Using getCellData, paintCellData functionality
+
+// [Run code](../../demo/canvas-071.html)
+import * as scrawl from '../source/scrawl.js';
+
+import { reportSpeed } from './utilities.js';
+
+
+// #### Scene setup
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.findCanvas('my-canvas');
+
+// Get a handle to the DOM current status element
+const currentStatus = document.querySelector('#current-status');
+
+const [width, height] = canvas.get('dimensions');
+
+
+// Namespacing boilerplate
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
+
+
+// Create a Cell whose pixels we can directly manipulate
+const easel = canvas.buildCell({
+    name: name('easel'),
+    dimensions: ['100%', '100%'],
+    cleared: false,
+    compiled: false,
+});
+
+
+// #### Pixel data manipulation functions
+const setTowardsRed = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue } = pixel;
+
+        if (red < 255) red++;
+        if (green > 0) green--;
+        if (blue > 0) blue--;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const setTowardsGreen = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue } = pixel;
+
+        if (red > 0) red--;
+        if (green < 255) green++;
+        if (blue > 0) blue--;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const setTowardsBlue = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue } = pixel;
+
+        if (red > 0) red--;
+        if (green > 0) green--;
+        if (blue < 255) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const setTowardsBlack = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue } = pixel;
+
+        if (red > 0) red--;
+        if (green > 0) green--;
+        if (blue > 0) blue--;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const setTowardsWhite = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue } = pixel;
+
+        if (red < 255) red++;
+        if (green < 255) green++;
+        if (blue < 255) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const redBlueAxes = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, row, col } = pixel;
+
+        const redAmount = Math.floor((row / height) * 255),
+            greenAmount = 127,
+            blueAmount = Math.floor((col / width) * 255);
+
+        if (red > redAmount) red--;
+        else if (red < redAmount) red++;
+
+        if (green > greenAmount) green--;
+        else if (green < greenAmount) green++;
+
+        if (blue > blueAmount) blue--;
+        else if (blue < blueAmount) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const blueGreenAxes = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, row, col } = pixel;
+
+        const redAmount = 127,
+            greenAmount = Math.floor((col / width) * 255),
+            blueAmount = Math.floor((row / height) * 255);
+
+        if (red > redAmount) red--;
+        else if (red < redAmount) red++;
+
+        if (green > greenAmount) green--;
+        else if (green < greenAmount) green++;
+
+        if (blue > blueAmount) blue--;
+        else if (blue < blueAmount) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const greenRedAxes = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, row, col } = pixel;
+
+        const redAmount = Math.floor((col / width) * 255),
+            greenAmount = Math.floor((row / height) * 255),
+            blueAmount = 127;
+
+        if (red > redAmount) red--;
+        else if (red < redAmount) red++;
+
+        if (green > greenAmount) green--;
+        else if (green < greenAmount) green++;
+
+        if (blue > blueAmount) blue--;
+        else if (blue < blueAmount) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+  update();
+};
+
+const distancesOne = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, distance } = pixel;
+
+        const redDistance = 100,
+            greenDistance = 250,
+            blueDistance = 400;
+
+        if (distance > redDistance) red--;
+        else if (distance < redDistance) red++;
+
+        if (distance > greenDistance) green--;
+        else if (distance < greenDistance) green++;
+
+        if (distance > blueDistance) blue--;
+        else if (distance < blueDistance) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const distancesTwo = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, distance } = pixel;
+
+        const redDistance = 440,
+            greenDistance = 120,
+            blueDistance = 270;
+
+        if (distance > redDistance) red--;
+        else if (distance < redDistance) red++;
+
+        if (distance > greenDistance) green--;
+        else if (distance < greenDistance) green++;
+
+        if (distance > blueDistance) blue--;
+        else if (distance < blueDistance) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const distancesThree = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, distance } = pixel;
+
+        const redDistance = 230,
+            greenDistance = 380,
+            blueDistance = 80;
+
+        if (distance > redDistance) red--;
+        else if (distance < redDistance) red++;
+
+        if (distance > greenDistance) green--;
+        else if (distance < greenDistance) green++;
+
+        if (distance > blueDistance) blue--;
+        else if (distance < blueDistance) blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const yellowStripes = () => {
+
+    const stripeWidth = width / 5;
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, col } = pixel;
+
+        const stripeVal = Math.floor(col / stripeWidth) * 50;
+
+        if (red > stripeVal) red--;
+        else if (red < stripeVal) red++;
+
+        if (green > stripeVal) green--;
+        else if (green < stripeVal) green++;
+
+        if (blue > 0) blue--;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const cyanStripes = () => {
+
+    const stripeHeight = height / 5;
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, row } = pixel;
+
+        const stripeVal = Math.floor(row / stripeHeight) * 50;
+
+        if (green > stripeVal) green--;
+        else if (green < stripeVal) green++;
+
+        if (blue > stripeVal) blue--;
+        else if (blue < stripeVal) blue++;
+
+        if (red > 0) red--;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const fizzBang = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, row, col } = pixel;
+
+        if (row % 3 === 0) {
+            red++;
+        }
+        if (row % 5 === 0) {
+            green++;
+        }
+        if (row % 11 === 0 ) {
+            blue++;
+        }
+        if (col % 3 === 0) {
+            red--;
+        }
+        if (col % 5 === 0) {
+            green--;
+        }
+        if (col % 11 === 0 ) {
+            blue--;
+        }
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const thinStripe = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, row, col } = pixel;
+
+        if (row % 3 === col % 3) {
+            red++;
+        }
+        if (row % 5 === col % 5) {
+            green++;
+        }
+        if (row % 11 === col % 11 ) {
+            blue++;
+        }
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const thinStripeReverse = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, row, col } = pixel;
+
+        if ((width - row) % 3 === col % 3) {
+            red++;
+        }
+        if ((width - row) % 5 === col % 5) {
+            green++;
+        }
+        if ((width - row) % 11 === col % 11 ) {
+            blue++;
+        }
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const circlesGradient = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue, distance } = pixel;
+
+        const d = (distance * 5) % 255;
+
+        (red > d) ? red-- : red++;
+        (green > d) ? green-- : green++;
+        (blue > d) ? blue-- : blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+
+// #### Scene animation
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage');
+
+const easelData = easel.getCellData(true),
+    pixelState = easelData.pixelState;
+
+const update = () => easel.paintCellData(easelData);
+
+update();
+
+
+// Create the Display cycle animation
+const render = scrawl.makeRender({
+
+    name: name('animation'),
+    target: canvas,
+    afterShow: report,
+});
+
+
+// Update to a new pixel manipulation function every 2.5 seconds
+const updateOptions = [
+    setTowardsBlack,
+    setTowardsWhite,
+    redBlueAxes,
+    blueGreenAxes,
+    greenRedAxes,
+    setTowardsRed,
+    setTowardsGreen,
+    setTowardsBlue,
+    distancesOne,
+    distancesTwo,
+    distancesThree,
+    yellowStripes,
+    cyanStripes,
+    fizzBang,
+    thinStripe,
+    circlesGradient,
+    thinStripeReverse,
+];
+
+const optionNames = [
+    'setTowardsBlack',
+    'setTowardsWhite',
+    'redBlueAxes',
+    'blueGreenAxes',
+    'greenRedAxes',
+    'setTowardsRed',
+    'setTowardsGreen',
+    'setTowardsBlue',
+    'distancesOne',
+    'distancesTwo',
+    'distancesThree',
+    'yellowStripes',
+    'cyanStripes',
+    'fizzBang',
+    'thinStripe',
+    'circlesGradient',
+    'thinStripeReverse',
+];
+
+const len = updateOptions.length;
+
+let choice = Math.floor(Math.random() * len),
+    currentChoice = choice;
+
+render.set({ commence: updateOptions[currentChoice] });
+currentStatus.textContent = `Starting with ${optionNames[currentChoice]}`;
+
+setInterval(() => {
+
+    choice = Math.floor(Math.random() * len);
+    render.set({ commence: updateOptions[choice] });
+    currentStatus.textContent = `Changing from ${optionNames[currentChoice]} to ${optionNames[choice]}`;
+    currentChoice = choice;
+}, 2500);
+
+
+// #### Development and testing
+console.log(scrawl.library);

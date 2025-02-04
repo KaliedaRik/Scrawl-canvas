@@ -1009,6 +1009,32 @@ interface CellSplitShiftArguments {
     cycle?: boolean;
 }
 
+interface CellPixelStateObject {
+    indexR: number;
+    indexG: number;
+    indexB: number;
+    indexA: number;
+    red: number;
+    green: number;
+    blue: number;
+    alpha: number;
+    row: number;
+    col: number;
+    distance: number;
+}
+
+interface CellImageDataObject {
+    width: number;
+    height: number;
+    data: number[];
+    colorSpace?: string;
+}
+
+interface EnhancedCellImageDataObject {
+    iData: CellImageDataObject;
+    pixelState: CellPixelStateObject[]
+}
+
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
     clear: () => void;
     compile: () => void;
@@ -1018,7 +1044,9 @@ interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunction
     show: () => void;
     updateArtefacts: (items: CommonObjectInput) => void;
     updateHere: () => void;
-    splitShift: (arg0: CellSplitShiftArguments) => void;
+    splitShift: (item: CellSplitShiftArguments) => void;
+    getCellData: (opaque?: boolean) => EnhancedCellImageDataObject;
+    paintCellData: (item: EnhancedCellImageDataObject) => void;
 }
 
 export interface CellInstance extends CellFactoryInputs, CellFactoryFunctions {
