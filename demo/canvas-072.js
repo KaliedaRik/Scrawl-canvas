@@ -145,7 +145,7 @@ const initialize = () => {
             landscape[index] = baby;
         }
     }
-    counter = 0,
+    counter = 0;
     generations = 0;
 
     finalize();
@@ -172,14 +172,14 @@ const move = () => {
 
         const nextIndex = nextY * eWidth + nextX;
 
-        if (landscape[nextIndex].name === "empty") {
+        if (landscape[nextIndex].name === 'empty') {
 
             beast.currentX = nextX;
             beast.currentY = nextY;
             beast.currentIndex = nextIndex;
 
             landscape[nextIndex] = beast;
-        } 
+        }
         else {
 
             beast.isAlive = false;

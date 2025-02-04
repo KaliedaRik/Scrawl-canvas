@@ -1507,7 +1507,8 @@ P.paintCellData = function (item = Ωempty) {
 
         pixelState.forEach(p => {
 
-            let {red, green, blue, alpha, indexR, indexG, indexB, indexA} = p;
+            const {indexR, indexG, indexB, indexA} = p;
+            let {red, green, blue, alpha} = p;
 
             if (red < 0) red = 0;
             else if (red > 255) red = 255;

@@ -121,7 +121,8 @@ const redBlueAxes = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, row, col } = pixel;
+        const { row, col } = pixel;
+        let { red, green, blue } = pixel;
 
         const redAmount = Math.floor((row / height) * 255),
             greenAmount = 127,
@@ -147,7 +148,8 @@ const blueGreenAxes = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, row, col } = pixel;
+        const { row, col } = pixel;
+        let { red, green, blue } = pixel;
 
         const redAmount = 127,
             greenAmount = Math.floor((col / width) * 255),
@@ -173,7 +175,8 @@ const greenRedAxes = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, row, col } = pixel;
+        const { row, col } = pixel;
+        let { red, green, blue } = pixel;
 
         const redAmount = Math.floor((col / width) * 255),
             greenAmount = Math.floor((row / height) * 255),
@@ -199,7 +202,8 @@ const distancesOne = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, distance } = pixel;
+        const distance = pixel.distance;
+        let { red, green, blue } = pixel;
 
         const redDistance = 100,
             greenDistance = 250,
@@ -225,7 +229,8 @@ const distancesTwo = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, distance } = pixel;
+        const distance = pixel.distance;
+        let { red, green, blue } = pixel;
 
         const redDistance = 440,
             greenDistance = 120,
@@ -251,7 +256,8 @@ const distancesThree = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, distance } = pixel;
+        const distance = pixel.distance;
+        let { red, green, blue } = pixel;
 
         const redDistance = 230,
             greenDistance = 380,
@@ -279,9 +285,9 @@ const yellowStripes = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, col } = pixel;
+        let { red, green, blue } = pixel;
 
-        const stripeVal = Math.floor(col / stripeWidth) * 50;
+        const stripeVal = Math.floor(pixel.col / stripeWidth) * 50;
 
         if (red > stripeVal) red--;
         else if (red < stripeVal) red++;
@@ -304,9 +310,9 @@ const cyanStripes = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, row } = pixel;
+        let { red, green, blue } = pixel;
 
-        const stripeVal = Math.floor(row / stripeHeight) * 50;
+        const stripeVal = Math.floor(pixel.row / stripeHeight) * 50;
 
         if (green > stripeVal) green--;
         else if (green < stripeVal) green++;
@@ -327,7 +333,8 @@ const fizzBang = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, row, col } = pixel;
+        const { row, col } = pixel;
+        let { red, green, blue } = pixel;
 
         if (row % 3 === 0) {
             red++;
@@ -359,7 +366,8 @@ const thinStripe = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, row, col } = pixel;
+        const { row, col } = pixel;
+        let { red, green, blue } = pixel;
 
         if (row % 3 === col % 3) {
             red++;
@@ -382,7 +390,8 @@ const thinStripeReverse = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, row, col } = pixel;
+        const { row, col } = pixel;
+        let { red, green, blue } = pixel;
 
         if ((width - row) % 3 === col % 3) {
             red++;
@@ -405,13 +414,18 @@ const circlesGradient = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, distance } = pixel;
+        let { red, green, blue } = pixel;
 
-        const d = (distance * 5) % 255;
+        const d = (pixel.distance * 5) % 255;
 
-        (red > d) ? red-- : red++;
-        (green > d) ? green-- : green++;
-        (blue > d) ? blue-- : blue++;
+        if (red > d) red--;
+        else red++;
+
+        if (green > d) green--;
+        else green++;
+
+        if (blue > d) blue--;
+        else blue++;
 
         pixel.red = red;
         pixel.green = green;
