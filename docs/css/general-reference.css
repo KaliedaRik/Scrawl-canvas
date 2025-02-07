@@ -1,0 +1,93 @@
+/**
+ * canvas8 demo pages styling
+ *
+ *
+ */
+
+:root {
+	font-size: 14px;
+
+	@media (min-width: 720px) {
+		font-size: 16px;
+	}
+	@media (min-width: 1200px) {
+		font-size: 18px;
+	}
+}
+
+body {
+	margin: 0 auto;
+	border: 0;
+	padding: 2rem;
+	width: calc(100% - 4rem);
+	max-width: 60rem;
+	line-height: 1.5;
+	font-family: Arial, sans-serif;
+	color: #505050;
+}
+
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+	background-color: #505050;
+	padding: 1rem;
+
+	& a {
+		color: #ffffff;
+	}
+	& a:hover {
+		color: #ffff00;
+	}
+}
+
+h1 {
+	font-size: 180%;
+	margin: 2rem 0 0.2rem;
+	border: 0;
+	border-bottom: 2px solid #808080;
+	padding-bottom: 0.2rem;
+}
+
+h2 {
+	font-size: 140%;
+	margin: 2rem 0 0.2rem;
+	border: 0;
+	border-bottom: 1px dashed #808080;
+	padding: 0;
+}
+
+h3 {
+	font-size: 120%;
+	margin: 2rem 0 0;
+	border: 0;
+	padding: 0;
+}
+
+h4 {
+	font-size: 100%;
+	margin: 2rem 0 0;
+	border: 0;
+	padding: 0;
+	font-weight: bold;
+}
+
+li {
+	margin-bottom: 0.2rem;
+}
+
+code {
+	font-size: 90%;
+	background-color: #f2f2f2;
+	padding: 0 0.5rem;
+}
+
+pre {
+	background-color: #f2f2f2;
+	padding: 0.5rem;
+
+	& code {
+		padding: 0;
+	}
+}
+

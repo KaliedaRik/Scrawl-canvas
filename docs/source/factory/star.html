@@ -633,8 +633,6 @@
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/vector.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/array-pool.js&#x27;</span>;
-
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;</pre></div></div>
             
@@ -651,7 +649,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _min, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -934,8 +932,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
     <span class="hljs-keyword">const</span> points = <span class="hljs-variable language_">this</span>.<span class="hljs-property">points</span>,
         twist = <span class="hljs-variable language_">this</span>.<span class="hljs-property">twist</span>,
-        turn = <span class="hljs-number">360</span> / points,
-        xPts = <span class="hljs-title function_">requestArray</span>();
+        turn = <span class="hljs-number">360</span> / points;
 
     <span class="hljs-keyword">let</span> radius1 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius1</span>,
         radius2 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius2</span>;
@@ -962,8 +959,6 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
     currentX = v1.<span class="hljs-property">x</span>;
     currentY = v1.<span class="hljs-property">y</span>;
 
-    xPts.<span class="hljs-title function_">push</span>(currentX);
-
     v2.<span class="hljs-title function_">rotate</span>(-turn/<span class="hljs-number">2</span>);
     v2.<span class="hljs-title function_">rotate</span>(twist);
 
@@ -973,7 +968,6 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
         x = <span class="hljs-built_in">parseFloat</span>((v2.<span class="hljs-property">x</span> - currentX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
         currentX += x;
-        xPts.<span class="hljs-title function_">push</span>(currentX);
 
         y = <span class="hljs-built_in">parseFloat</span>((v2.<span class="hljs-property">y</span> - currentY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
         currentY += y;
@@ -984,7 +978,6 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
         x = <span class="hljs-built_in">parseFloat</span>((v1.<span class="hljs-property">x</span> - currentX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
         currentX += x;
-        xPts.<span class="hljs-title function_">push</span>(currentX);
 
         y = <span class="hljs-built_in">parseFloat</span>((v1.<span class="hljs-property">y</span> - currentY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
         currentY += y;
@@ -995,15 +988,20 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
     <span class="hljs-title function_">releaseVector</span>(v1, v2);
 
-    <span class="hljs-keyword">const</span> myMin = <span class="hljs-title function_">_min</span>(...xPts),
-        myXoffset = <span class="hljs-title function_">_abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${ZERO_PATH}</span>l<span class="hljs-subst">${myPath}</span>z`</span>;
+};
 
-    myPath = <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0l<span class="hljs-subst">${myPath}</span>z`</span>;
+P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-title function_">releaseArray</span>(xPts);
+    <span class="hljs-keyword">let</span> scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">scale</span>;
 
-    <span class="hljs-keyword">return</span> myPath;
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (scale &lt; <span class="hljs-number">0.001</span>) scale = <span class="hljs-number">0.001</span>;
+
+    <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x / scale}</span>,<span class="hljs-subst">${-y / scale}</span>`</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1014,9 +1012,15 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <h4 id="factories">Factories</h4>
+              <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
+<ul>
+<li>We need to recalculate the local path to take into account the offset required to put the Rectangle entity’s start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLocalPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>, <span class="hljs-literal">true</span>);
+};</pre></div></div>
             
         </li>
         
@@ -1026,6 +1030,19 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
               
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <h4 id="factories">Factories</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h5 id="makestar">makeStar</h5>
 <p>Accepts argument with attributes:</p>
