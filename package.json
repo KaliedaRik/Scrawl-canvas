@@ -6,7 +6,10 @@
   "type": "module",
   "types": "./source/scrawl.d.ts",
   "scripts": {
-    "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
+    "build": "yarn build-min && yarn build-docco && yarn build-showdown",
+    "build-docco": "docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
+    "build-min": "rollup -c",
+    "build-showdown": "node ./scripts/build-reference-docs.mjs",
     "dev": "browser-sync -w",
     "lint": "npx eslint source/**/*.js demo/*.js demo/**/*.js",
     "knip": "knip",
@@ -44,12 +47,14 @@
     "@eslint/js": "^9.7.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^20.14.10",
+    "@types/showdown": "^2",
     "browser-sync": "^3.0.2",
     "docco": "^0.9.1",
     "eslint": "^9.7.0",
     "globals": "^15.8.0",
     "knip": "^5.41.1",
     "rollup": "^4.26.0",
+    "showdown": "^2.1.0",
     "typescript": "^5.5.3"
   },
   "packageManager": "yarn@4.0.1"

@@ -274,7 +274,7 @@ To understand ordering, consider the following code:
 ```
 const canvas = scrawl.findCanvas('my-canvas');
 
-canvas.addCell({
+canvas.buildCell({
     name: 'my-extra-cell',
 });
 
@@ -283,7 +283,7 @@ scrawl.makeGroup({
     host: 'my-extra-cell',
 });
 
-canvas.addCell({
+canvas.buildCell({
     name: 'my-hidden-cell',
     shown: false,
 });
@@ -371,7 +371,7 @@ To fix this, the user needs to give SC details about ordering, like this:
 const canvas = scrawl.findCanvas('my-canvas');
 
 // 'my-extra-cell' Cell needs to compile after 'my-hidden-cell'
-canvas.addCell({
+canvas.buildCell({
     name: 'my-extra-cell',
     compileOrder: 1,
 });
@@ -385,7 +385,7 @@ scrawl.makeGroup({
 });
 
 // 'my-hidden-cell' Cell needs to compile before 'my-extra-cell'
-canvas.addCell({
+canvas.buildCell({
     name: 'my-hidden-cell',
     shown: false,
     compileOrder: 0,

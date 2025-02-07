@@ -25,14 +25,9 @@ The Scrawl-canvas repo on GitHub is a complete package to maintain and develop t
 ### Top level documentation
 The essential files are as follows:
 
-**package.json**
-We release Scrawl-canvas as an NPM package. The file needs to be updated with version data for each new release.
-
-**README.md**
-This file displays in various places, thus needs to be updated for each release.
-
-**LICENSE.md**
-Scrawl-canvas uses the standard MIT license.
++ `package.json` - We release Scrawl-canvas as an NPM package. The file needs to be updated with version data for each new release.
++ `README.md` - This file displays in various places, thus needs to be updated for each release.
++ `LICENSE.md` - Scrawl-canvas uses the standard MIT license.
 
 ### Development toolchain
 All files relating to the dev toolchain reside in the root of the repository. These can be broken down as follows:
@@ -125,7 +120,7 @@ When creating a new demo test, remember to update these local site files (`demo/
 For ad-hoc or speculative development, we can create a new demo and prefix the files associated with it with `temp-` (eg `demo/temp-mytest-01.html`, `demo/temp-mytest-01.js`). Files in the `demo` and `docs` folders which start with `temp-` are git-ignored and won't be saved as part of the repository.
 
 ### Development and testing: source code
-See the [Scrawl-canvas source code structure](./source-code-structure.md) page for details.
+See the [Scrawl-canvas source code structure](source-code-structure.html) page for details.
 
 ## Releasing a new version of Scrawl-canvas
 Version release has not (yet) been automated, which means the all following steps need to be performed manually. Note that when we release a new version, the work spreads beyond this repository:
@@ -135,95 +130,95 @@ Version release has not (yet) been automated, which means the all following step
 
 ### Release steps
 
-**GitHub**
+#### GitHub
 
-1. All outstanding development branches that will be part of the release need to be merged into `v8-dev`.
+1: All outstanding development branches that will be part of the release need to be merged into `v8-dev`.
 
-2. Generate a PR from the `v8-dev` branch on GitHub - make a note of all the changes that will be included in the release in the PR description (use previous release notes for inspiration).
+2: Generate a PR from the `v8-dev` branch on GitHub - make a note of all the changes that will be included in the release in the PR description (use previous release notes for inspiration).
 
-**Local SC root**
+#### Local SC root
 
-3. Perform a complete testing sweep against `v8-dev` locally:
-   - Manual testing of all demos in Chrome, Firefox and Safari browsers - fix any non-working demos, pushing changes to the PR
-   - Run `yarn lint` to identify (and fix) any JS linting issues; push changes to the PR.
-   - Run `yarn knip` to remove unnecessary code; push changes to the PR.
-   - Run `yarn test` to fix any issues in the `d.ts` definitions file; push changes to the PR.
-   - Should the testing have generated a large number of fixes pushed to the PR, testing needs to be repeated.
+3: Perform a complete testing sweep against `v8-dev` locally:
++ Manual testing of all demos in Chrome, Firefox and Safari browsers - fix any non-working demos, pushing changes to the PR
++ Run `yarn lint` to identify (and fix) any JS linting issues; push changes to the PR.
++ Run `yarn knip` to remove unnecessary code; push changes to the PR.
++ Run `yarn test` to fix any issues in the `d.ts` definitions file; push changes to the PR.
++ Should the testing have generated a large number of fixes pushed to the PR, testing needs to be repeated.
 
-4. All (relevant) references to the previous release version (in the form `x.y.z` and also `x-y-z`) need to be updated across files; the release date also needs to be updated in a couple of files. Current affected files include:
-   - `demo/dom-001.html`
-   - `demo/index.html`
-   - `source/core/library.js`
-   - `source/scrawl.d.ts`
-   - `source/scrawl.js`
-   - `index.html`
-   - `package.json` (twice)
-   - `README.md` (several times)
+4: All (relevant) references to the previous release version (in the form `x.y.z` and also `x-y-z`) need to be updated across files; the release date also needs to be updated in a couple of files. Current affected files include:
++ `demo/dom-001.html`
++ `demo/index.html`
++ `source/core/library.js`
++ `source/scrawl.d.ts`
++ `source/scrawl.js`
++ `index.html`
++ `package.json` (twice)
++ `README.md` (several times)
 
-5. Run `yarn build` to update the documentation and create the minified file. Push these changes to the PR.
+5: Run `yarn build` to update the documentation and create the minified file. Push these changes to the PR.
 
-**Local SC parent folder**
+#### Local SC parent folder
 
-6. Create a zipped file of the minified code: `zip -r scrawl-canvas_x-y-z.zip ./Scrawl-canvas/min/`
+6: Create a zipped file of the minified code: `zip -r scrawl-canvas_x-y-z.zip ./Scrawl-canvas/min/`
 
-**Local scrawl-canvas-website**
+#### Local scrawl-canvas-website
 
-7. Dogfood the upcoming release by copying `scrawl-canvas/min/` and `scrawl-canvas/source` folders over to `scrawl-canvas-website/node_modules/scrawl-canvas`.
+7: Dogfood the upcoming release by copying `scrawl-canvas/min/` and `scrawl-canvas/source` folders over to `scrawl-canvas-website/node_modules/scrawl-canvas`.
 
-8. Smoke test the website by running `yarn dev` - dogfooding of the minified file happens on the "Tour" landing page. If the canvases break they will either need fixing to work with the new release, or there's an undiscovered bug in SC itself which needs to be investigated.
+8: Smoke test the website by running `yarn dev` - dogfooding of the minified file happens on the "Tour" landing page. If the canvases break they will either need fixing to work with the new release, or there's an undiscovered bug in SC itself which needs to be investigated.
 
-9. If all goes well, all (relevant) references to the previous release version (in the form `x.y.z` and also `x-y-z`) need to be updated across scrawl-canvas-website files; the release date also needs to be updated in a couple of files. Current affected files include:
-   - public/cookbook/add-using-cdn.html
-   - public/cookbook/display-cycle.html
-   - public/cookbook/scene-graph.html
-   - public/lessons/eighth-lesson.html
-   - public/lessons/eleventh-lesson.html
-   - public/lessons/first-lesson.html
-   - public/lessons/fourth-lesson.html
-   - public/lessons/second-lesson.html
-   - public/lessons/seventh-lesson.html
-   - public/lessons/third-lesson.html
-   - public/lessons/twelfth-lesson.html
-   - src/components/FooterLinks.svelte
+9: If all goes well, all (relevant) references to the previous release version (in the form `x.y.z` and also `x-y-z`) need to be updated across scrawl-canvas-website files; the release date also needs to be updated in a couple of files. Current affected files include:
++ `public/cookbook/add-using-cdn.html`
++ `public/cookbook/display-cycle.html`
++ `public/cookbook/scene-graph.html`
++ `public/lessons/eighth-lesson.html`
++ `public/lessons/eleventh-lesson.html`
++ `public/lessons/first-lesson.html`
++ `public/lessons/fourth-lesson.html`
++ `public/lessons/second-lesson.html`
++ `public/lessons/seventh-lesson.html`
++ `public/lessons/third-lesson.html`
++ `public/lessons/twelfth-lesson.html`
++ `src/components/FooterLinks.svelte`
 
-10. Copy the zip file created in step 6 into the `scrawl-canvas-website/public/downloads` folder.
+10: Copy the zip file created in step 6 into the `scrawl-canvas-website/public/downloads` folder.
 
-11. Copy the following folders from the Scrawl-canvas repository into the `scrawl-canvas-website/public/` folder:
-   - `demo/`
-   - `docs/`
-   - `min/`
-   - `source/`
+11: Copy the following folders from the Scrawl-canvas repository into the `scrawl-canvas-website/public/` folder:
++ `demo/`
++ `docs/`
++ `min/`
++ `source/`
 
-12. Rerun `yarn dev` and smoke check the entire scrawl-canvas-website site.
+12: Rerun `yarn dev` and smoke check the entire scrawl-canvas-website site.
 
-**GitHub**
+#### GitHub
 
-13. Merge the `v8-dev` PR into `v8`. If the `v8-dev` branch gets (accidentally) deleted during the process, we can recreate it from Local
+13: Merge the `v8-dev` PR into `v8`. If the `v8-dev` branch gets (accidentally) deleted during the process, we can recreate it from Local
 
-**Local SC root**
+#### Local SC root
 
-14. Checkout the `v8` branch and pull from remote
+14: Checkout the `v8` branch and pull from remote
 
-15. Run `npm publish` (requires permissions to publish to NPM registry)
+15: Run `npm publish` (requires permissions to publish to NPM registry)
 
-16. Checkout the `v8-dev` branch and merge `v8` into it. Push to remote.
+16: Checkout the `v8-dev` branch and merge `v8` into it. Push to remote.
 
-**GitHub**
+#### GitHub
 
-17. Create a new release.
+17: Create a new release.
 
-**Local scrawl-canvas-website**
+#### Local scrawl-canvas-website
 
-18. Run:
-   - `yarn remove scrawl-canvas`
-   - `yarn add scrawl-canvas`
+18: Run:
++ `yarn remove scrawl-canvas`
++ `yarn add scrawl-canvas`
 
-19. Check to make sure the new version was added to the repo - the previous command should report the version of SC that was added.
+19: Check to make sure the new version was added to the repo - the previous command should report the version of SC that was added.
 
-20. Run: `yarn build`. Smoke test the website.
+20: Run: `yarn build`. Smoke test the website.
 
-21. We are now in a position to push the updated website to production. Use FTP for this work. All files in the `public` folder need to be copied to the remote site.
+21: We are now in a position to push the updated website to production. Use FTP for this work. All files in the `public` folder need to be copied to the remote site.
 
-**CodePen**
+#### CodePen
 
-22. We can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.
+22: We can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.

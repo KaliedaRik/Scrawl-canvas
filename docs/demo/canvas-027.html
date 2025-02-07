@@ -320,6 +320,66 @@
                 </a>
               
                 
+                <a class="source" href="canvas-061.html">
+                  ./demo/canvas-061.js
+                </a>
+              
+                
+                <a class="source" href="canvas-062.html">
+                  ./demo/canvas-062.js
+                </a>
+              
+                
+                <a class="source" href="canvas-063.html">
+                  ./demo/canvas-063.js
+                </a>
+              
+                
+                <a class="source" href="canvas-064.html">
+                  ./demo/canvas-064.js
+                </a>
+              
+                
+                <a class="source" href="canvas-065.html">
+                  ./demo/canvas-065.js
+                </a>
+              
+                
+                <a class="source" href="canvas-066.html">
+                  ./demo/canvas-066.js
+                </a>
+              
+                
+                <a class="source" href="canvas-067.html">
+                  ./demo/canvas-067.js
+                </a>
+              
+                
+                <a class="source" href="canvas-068.html">
+                  ./demo/canvas-068.js
+                </a>
+              
+                
+                <a class="source" href="canvas-069.html">
+                  ./demo/canvas-069.js
+                </a>
+              
+                
+                <a class="source" href="canvas-070.html">
+                  ./demo/canvas-070.js
+                </a>
+              
+                
+                <a class="source" href="canvas-071.html">
+                  ./demo/canvas-071.js
+                </a>
+              
+                
+                <a class="source" href="canvas-072.html">
+                  ./demo/canvas-072.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -840,6 +900,11 @@
                 </a>
               
                 
+                <a class="source" href="particles-017.html">
+                  ./demo/particles-017.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -867,6 +932,11 @@
                 
                 <a class="source" href="snippets-006.html">
                   ./demo/snippets-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-shape-scale-investigation.html">
+                  ./demo/temp-shape-scale-investigation.js
                 </a>
               
                 
@@ -1052,23 +1122,23 @@
     <span class="hljs-attr">underlineOffset</span>: <span class="hljs-number">0.96</span>,
     <span class="hljs-attr">underlineGap</span>: <span class="hljs-number">0</span>,
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).LabelInstance</span>} */</span>
     <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> }
         });
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">includeUnderline</span>: <span class="hljs-literal">true</span> });
     },
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).LabelInstance</span>} */</span>
     <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }
         });
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">includeUnderline</span>: <span class="hljs-literal">false</span> });
     },</pre></div></div>
             
@@ -1182,9 +1252,9 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.1</span>,
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).PictureInstance</span>} */</span>
     <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.3</span> });
 
         canvas.<span class="hljs-title function_">set</span>({
@@ -1194,9 +1264,9 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         });
     },
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).PictureInstance</span>} */</span>
     <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.1</span> });
 
         canvas.<span class="hljs-title function_">set</span>({
@@ -1204,9 +1274,9 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         });
     },
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).PictureInstance</span>} */</span>
     <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
     },
 
@@ -1302,29 +1372,29 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).BlockInstance</span>} */</span>
     <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> }
         });
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span> });
     },
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).PictureInstance</span>} */</span>
     <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }
         });
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span> });
     },
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).PictureInstance</span>} */</span>
     <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
     },
 

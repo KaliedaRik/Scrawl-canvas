@@ -2923,6 +2923,242 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
               <div class="sswrap ">
                 <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
+              <p><code>splitShift</code> - split and shift functionality works only on cells that are not being cleared as part of the Display cycle. The single argument is an object containing the following attributes:</p>
+<ul>
+<li><strong>px</strong> (required) - Number or String value for the amount of pixels to be shifted. Can be positive (move pixels right/down) or negative (move pixels left/up)</li>
+<li><strong>vertical</strong> (optional) - Boolean flag (default: <code>false</code>); when set to <code>true</code> we move the pixels up/down, otherwise we move them left/right</li>
+<li><strong>cycle</strong> (optional) - Boolean flag (default: <code>false</code>; when set to <code>true</code>) we save the area of the screen about to be overwritten and reinsert it on the opposite side after the shift operation completes</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">splitShift</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">px</span>) {
+
+        <span class="hljs-keyword">const</span> {
+            px,
+            vertical = <span class="hljs-literal">false</span>,
+            cycle = <span class="hljs-literal">false</span>
+        } = item;
+
+        <span class="hljs-keyword">const</span> [width, height] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+
+        <span class="hljs-keyword">let</span> speed = <span class="hljs-number">0</span>,
+            edge = <span class="hljs-literal">null</span>;
+
+        <span class="hljs-keyword">if</span> (px.<span class="hljs-property">toFixed</span>) speed = <span class="hljs-title function_">_round</span>(px);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (px.<span class="hljs-property">substring</span>) {
+
+            <span class="hljs-keyword">if</span> (vertical) speed = <span class="hljs-title function_">_round</span>((<span class="hljs-built_in">parseFloat</span>(px) / <span class="hljs-number">100</span>) * height);
+            <span class="hljs-keyword">else</span> speed = <span class="hljs-title function_">_round</span>((<span class="hljs-built_in">parseFloat</span>(px) / <span class="hljs-number">100</span>) * width);
+        }
+
+        <span class="hljs-keyword">if</span> (speed) {
+
+            <span class="hljs-keyword">const</span> engine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>;
+
+            <span class="hljs-keyword">if</span> (vertical) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-82">&#x00a7;</a>
+              </div>
+              <p>Move up</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (speed &lt; <span class="hljs-number">0</span>) {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, -speed);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, -speed, width, height + speed), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, <span class="hljs-number">0</span>, height + speed);
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-83">&#x00a7;</a>
+              </div>
+              <p>Move down</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, height - speed, width, speed);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height - speed), <span class="hljs-number">0</span>, speed);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                }
+            }
+           <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-84">&#x00a7;</a>
+              </div>
+              <p>Move left</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (speed &lt; <span class="hljs-number">0</span>) {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, -speed, height);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(-speed, <span class="hljs-number">0</span>, width + speed, height), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, width + speed, <span class="hljs-number">0</span>);
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-85">&#x00a7;</a>
+              </div>
+              <p>Move right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(width - speed, <span class="hljs-number">0</span>, speed, height);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width - speed, height), speed, <span class="hljs-number">0</span>);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                }
+            }
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-86">&#x00a7;</a>
+              </div>
+              <p><strong>getCellData</strong>, <strong>paintCellData</strong> - get the Cell engine’s image data object; paint the image data object back to the Cell’s engine.</p>
+<ul>
+<li>Allows for direct pixel manipulation</li>
+<li>Works best on Cells that are not being cleared and compiled</li>
+<li>The <code>paintCellData</code> functionality will fail if the Cell resizes for any reason; when that happens, a new image data object needs to be obtained before it can be repainted back to the Cell</li>
+<li>An alternative approach is to use a RawAsset asset object, which comes with its own dedicated Canvas element</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getCellData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">opaque = <span class="hljs-literal">false</span></span>) {
+
+    <span class="hljs-keyword">const</span> [width, height] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
+        halfWidth = <span class="hljs-title function_">_floor</span>(width / <span class="hljs-number">2</span>),
+        halfHeight = <span class="hljs-title function_">_floor</span>(height / <span class="hljs-number">2</span>);
+
+    <span class="hljs-keyword">const</span> iData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height),
+        data = iData.<span class="hljs-property">data</span>;
+
+    <span class="hljs-keyword">const</span> pixelState = [];
+
+    <span class="hljs-keyword">const</span> coord = <span class="hljs-title function_">requestCoordinate</span>();
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row = <span class="hljs-number">0</span>; row &lt; height; row++) {
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col = <span class="hljs-number">0</span>; col &lt; width; col++) {
+
+            <span class="hljs-keyword">const</span> index = ((row * width) + col) * <span class="hljs-number">4</span>;
+
+            coord.<span class="hljs-title function_">setFromArray</span>([halfWidth, halfHeight]).<span class="hljs-title function_">subtract</span>([row, col]);
+
+            pixelState.<span class="hljs-title function_">push</span>({
+                <span class="hljs-attr">indexR</span>: index,
+                <span class="hljs-attr">indexG</span>: index + <span class="hljs-number">1</span>,
+                <span class="hljs-attr">indexB</span>: index + <span class="hljs-number">2</span>,
+                <span class="hljs-attr">indexA</span>: index + <span class="hljs-number">3</span>,
+                <span class="hljs-attr">red</span>: data[index + <span class="hljs-number">0</span>],
+                <span class="hljs-attr">green</span>: data[index + <span class="hljs-number">1</span>],
+                <span class="hljs-attr">blue</span>: data[index + <span class="hljs-number">2</span>],
+                <span class="hljs-attr">alpha</span>: (opaque) ? <span class="hljs-number">255</span> : data[index + <span class="hljs-number">3</span>],
+                row,
+                col,
+                <span class="hljs-attr">distance</span>: coord.<span class="hljs-title function_">getMagnitude</span>(),
+            });
+        }
+    }
+
+    <span class="hljs-title function_">releaseCoordinate</span>(coord);
+
+    <span class="hljs-keyword">return</span> {
+        iData,
+        pixelState,
+    }
+};
+
+P.<span class="hljs-property">paintCellData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
+
+    <span class="hljs-keyword">const</span> { iData, pixelState} = item;
+    <span class="hljs-keyword">const</span> { width, height, data} = iData;
+    <span class="hljs-keyword">const</span> [w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+
+    <span class="hljs-keyword">if</span> (width &amp;&amp; height &amp;&amp; data &amp;&amp; pixelState &amp;&amp; w === width &amp;&amp; h === height) {
+
+        pixelState.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+
+            <span class="hljs-keyword">const</span> {indexR, indexG, indexB, indexA} = p;
+            <span class="hljs-keyword">let</span> {red, green, blue, alpha} = p;
+
+            <span class="hljs-keyword">if</span> (red &lt; <span class="hljs-number">0</span>) red = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (red &gt; <span class="hljs-number">255</span>) red = <span class="hljs-number">255</span>;
+
+            <span class="hljs-keyword">if</span> (green &lt; <span class="hljs-number">0</span>) green = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (green &gt; <span class="hljs-number">255</span>) green = <span class="hljs-number">255</span>;
+
+            <span class="hljs-keyword">if</span> (blue &lt; <span class="hljs-number">0</span>) blue = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (blue &gt; <span class="hljs-number">255</span>) blue = <span class="hljs-number">255</span>;
+
+            <span class="hljs-keyword">if</span> (alpha &lt; <span class="hljs-number">0</span>) alpha = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (alpha &gt; <span class="hljs-number">255</span>) alpha = <span class="hljs-number">255</span>;
+
+            p.<span class="hljs-property">red</span> = red;
+            p.<span class="hljs-property">green</span> = green;
+            p.<span class="hljs-property">blue</span> = blue;
+            p.<span class="hljs-property">alpha</span> = alpha;
+
+            data[indexR] = red;
+            data[indexG] = green;
+            data[indexB] = blue;
+            data[indexA] = alpha;
+        });
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-title function_">putImageData</span>(iData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-87">&#x00a7;</a>
+              </div>
               <h4 id="factory">Factory</h4>
 
             </div>
@@ -2938,11 +3174,11 @@ constructors.<span class="hljs-property">Cell</span> = <span class="hljs-title c
         </li>
         
         
-        <li id="section-82">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p>Wide gamut colors helper</p>
 

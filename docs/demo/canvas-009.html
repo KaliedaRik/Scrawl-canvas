@@ -320,6 +320,66 @@
                 </a>
               
                 
+                <a class="source" href="canvas-061.html">
+                  ./demo/canvas-061.js
+                </a>
+              
+                
+                <a class="source" href="canvas-062.html">
+                  ./demo/canvas-062.js
+                </a>
+              
+                
+                <a class="source" href="canvas-063.html">
+                  ./demo/canvas-063.js
+                </a>
+              
+                
+                <a class="source" href="canvas-064.html">
+                  ./demo/canvas-064.js
+                </a>
+              
+                
+                <a class="source" href="canvas-065.html">
+                  ./demo/canvas-065.js
+                </a>
+              
+                
+                <a class="source" href="canvas-066.html">
+                  ./demo/canvas-066.js
+                </a>
+              
+                
+                <a class="source" href="canvas-067.html">
+                  ./demo/canvas-067.js
+                </a>
+              
+                
+                <a class="source" href="canvas-068.html">
+                  ./demo/canvas-068.js
+                </a>
+              
+                
+                <a class="source" href="canvas-069.html">
+                  ./demo/canvas-069.js
+                </a>
+              
+                
+                <a class="source" href="canvas-070.html">
+                  ./demo/canvas-070.js
+                </a>
+              
+                
+                <a class="source" href="canvas-071.html">
+                  ./demo/canvas-071.js
+                </a>
+              
+                
+                <a class="source" href="canvas-072.html">
+                  ./demo/canvas-072.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -840,6 +900,11 @@
                 </a>
               
                 
+                <a class="source" href="particles-017.html">
+                  ./demo/particles-017.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -867,6 +932,11 @@
                 
                 <a class="source" href="snippets-006.html">
                   ./demo/snippets-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-shape-scale-investigation.html">
+                  ./demo/temp-shape-scale-investigation.js
                 </a>
               
                 
@@ -1283,13 +1353,11 @@
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas&gt; element. Note that ‘this’ refers to the entity object, meaning the functions can be safely cloned into other entitys.</p>
-<ul>
-<li>Scrawl-canvas TypeScript definitions don’t (at this time) extend as far as identifying types within a function set up as part of an SC object instantiation; be prepared to include TS error suppression markup wherever justified (for instance, when using <code>this</code>).</li>
-</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).BlockInstance</span>} */</span>
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1304,8 +1372,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span>,
         });</pre></div></div>
             
@@ -1323,9 +1390,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">set</span>({
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.get(<span class="hljs-string">&#x27;name&#x27;</span>)}</span> tile`</span>,
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-attr">label</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
         });</pre></div></div>
             
@@ -1346,6 +1411,7 @@
         myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
     },
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).BlockInstance</span>} */</span>
     <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
@@ -1361,8 +1427,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span>,
         });</pre></div></div>
             
@@ -1417,7 +1482,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).BlockInstance</span>} */</span>
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1448,8 +1514,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
     },</pre></div></div>
             
         </li>
@@ -1685,19 +1750,18 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
     scrawl.<span class="hljs-title function_">findArtefact</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>)).<span class="hljs-title function_">set</span>({
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).BlockInstance</span>} */</span>
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span> });
             canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> tile`</span>,
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
                 <span class="hljs-attr">label</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
             });
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
         },
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).BlockInstance</span>} */</span>
         <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span> });
             canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;&#x27;</span>,
@@ -1706,10 +1770,10 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
         },
+<span class="hljs-comment">/** <span class="hljs-doctag">@this</span> {<span class="hljs-type">import(&#x27;../source/scrawl.js&#x27;).BlockInstance</span>} */</span>
         <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.anchor.href}</span>`</span>);
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
         },
         <span class="hljs-attr">onOtherInteraction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {

@@ -320,6 +320,66 @@
                 </a>
               
                 
+                <a class="source" href="canvas-061.html">
+                  ./demo/canvas-061.js
+                </a>
+              
+                
+                <a class="source" href="canvas-062.html">
+                  ./demo/canvas-062.js
+                </a>
+              
+                
+                <a class="source" href="canvas-063.html">
+                  ./demo/canvas-063.js
+                </a>
+              
+                
+                <a class="source" href="canvas-064.html">
+                  ./demo/canvas-064.js
+                </a>
+              
+                
+                <a class="source" href="canvas-065.html">
+                  ./demo/canvas-065.js
+                </a>
+              
+                
+                <a class="source" href="canvas-066.html">
+                  ./demo/canvas-066.js
+                </a>
+              
+                
+                <a class="source" href="canvas-067.html">
+                  ./demo/canvas-067.js
+                </a>
+              
+                
+                <a class="source" href="canvas-068.html">
+                  ./demo/canvas-068.js
+                </a>
+              
+                
+                <a class="source" href="canvas-069.html">
+                  ./demo/canvas-069.js
+                </a>
+              
+                
+                <a class="source" href="canvas-070.html">
+                  ./demo/canvas-070.js
+                </a>
+              
+                
+                <a class="source" href="canvas-071.html">
+                  ./demo/canvas-071.js
+                </a>
+              
+                
+                <a class="source" href="canvas-072.html">
+                  ./demo/canvas-072.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -840,6 +900,11 @@
                 </a>
               
                 
+                <a class="source" href="particles-017.html">
+                  ./demo/particles-017.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -867,6 +932,11 @@
                 
                 <a class="source" href="snippets-006.html">
                   ./demo/snippets-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-shape-scale-investigation.html">
+                  ./demo/temp-shape-scale-investigation.js
                 </a>
               
                 
@@ -900,7 +970,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-canvas-051">Demo Canvas 051</h1>
-<p>Line Spirals</p>
+<p>Interactions between filters, GCO and GlobalAlpha applied to an entity</p>
 
             </div>
             
@@ -913,13 +983,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><a href="../../demo/canvas-051.html">Run code</a></p>
+              <p><a href="../../demo/filters-051.html">Run code</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
-
-<span class="hljs-keyword">import</span> { reportSpeed, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -950,18 +1018,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
-
-
-<span class="hljs-keyword">const</span> mySpiral = scrawl.<span class="hljs-title function_">makeLineSpiral</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-spiral&#x27;</span>),
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-});</pre></div></div>
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -972,17 +1029,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Create the filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`
-    Radius - start: <span class="hljs-subst">${dom.startRadius.value}</span>, increment: <span class="hljs-subst">${dom.radiusIncrement.value}</span>, adjust: <span class="hljs-subst">${dom.radiusIncrementAdjust.value}</span>
-    Angle - start: <span class="hljs-subst">${dom.startAngle.value}</span>, increment: <span class="hljs-subst">${dom.angleIncrement.value}</span>, adjust: <span class="hljs-subst">${dom.angleIncrementAdjust.value}</span>
-    Limit: <span class="hljs-subst">${dom.stepLimit.value}</span>`</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> gray = scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gray&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -994,16 +1047,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Create the Display cycle animation</p>
+              <p>Create separate groups for each box (for clipping purposes)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeGroup</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tl&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tc&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tr&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ml&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mc&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mr&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bl&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bc&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> })
+.<span class="hljs-title function_">clone</span>({ <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;br&#x27;</span>), <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span> });</pre></div></div>
             
         </li>
         
@@ -1014,31 +1070,44 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
-<p>Setup form observer functionality</p>
+              <p>Top left</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeUpdater</span>({
-
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
-
-    <span class="hljs-attr">target</span>: mySpiral,
-
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">updates</span>: {
-
-        <span class="hljs-attr">startRadius</span>: [<span class="hljs-string">&#x27;startRadius&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">radiusIncrement</span>: [<span class="hljs-string">&#x27;radiusIncrement&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">radiusIncrementAdjust</span>: [<span class="hljs-string">&#x27;radiusIncrementAdjust&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">startAngle</span>: [<span class="hljs-string">&#x27;startAngle&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">angleIncrement</span>: [<span class="hljs-string">&#x27;angleIncrement&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">angleIncrementAdjust</span>: [<span class="hljs-string">&#x27;angleIncrementAdjust&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">stepLimit</span>: [<span class="hljs-string">&#x27;stepLimit&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-    },
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> clip = scrawl.<span class="hljs-title function_">makeBlock</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-tl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tl&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;17%&#x27;</span>, <span class="hljs-string">&#x27;17%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;33%&#x27;</span>, <span class="hljs-string">&#x27;33%&#x27;</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clip&#x27;</span>,
+});
+<span class="hljs-keyword">const</span> cover = scrawl.<span class="hljs-title function_">makeBlock</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-tl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tl&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;17%&#x27;</span>, <span class="hljs-string">&#x27;17%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;16%&#x27;</span>, <span class="hljs-string">&#x27;16%&#x27;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+});
+<span class="hljs-keyword">const</span> stencil = scrawl.<span class="hljs-title function_">makeBlock</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-tl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tl&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;17%&#x27;</span>, <span class="hljs-string">&#x27;17%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;32%&#x27;</span>, <span class="hljs-string">&#x27;32%&#x27;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-in&#x27;</span>,
+});
+<span class="hljs-keyword">const</span> background = scrawl.<span class="hljs-title function_">makeBlock</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-tl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tl&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;17%&#x27;</span>, <span class="hljs-string">&#x27;17%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;32%&#x27;</span>, <span class="hljs-string">&#x27;32%&#x27;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1050,19 +1119,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Set the DOM input values</p>
+              <p>Top middle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = <span class="hljs-title function_">initializeDomInputs</span>([
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;startRadius&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;radiusIncrement&#x27;</span>, <span class="hljs-string">&#x27;0.1&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;radiusIncrementAdjust&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;startAngle&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;angleIncrement&#x27;</span>, <span class="hljs-string">&#x27;5&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;angleIncrementAdjust&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;stepLimit&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
-]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-tc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tc&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-tc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tc&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1072,6 +1141,347 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Test setting filters attribute using the filter object (no array)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">filters</span>: gray,
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-tc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tc&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-tc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tc&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Top right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-tr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tr&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-tr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tr&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+    <span class="hljs-attr">filters</span>: gray,
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.8</span>,
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-tr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tr&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-tr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tr&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Middle left</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>( <span class="hljs-string">&#x27;clip-ml&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ml&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-ml&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ml&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-ml&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ml&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-in&#x27;</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-ml&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ml&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Middle center</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-mc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-mc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-mc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Test setting filters attribute using the filter object (in array)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">filters</span>: [gray],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-in&#x27;</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-mc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Middle right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-mr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mr&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-mr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mr&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-mr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mr&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Test setting filters attribute using the filter name string (no array)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">filters</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gray&#x27;</span>),
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-in&#x27;</span>,
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.8</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-mr&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mr&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Bottom left</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-bl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bl&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-bl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bl&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-bl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bl&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-bl&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bl&#x27;</span>),
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Bottom center</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-bc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-bc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-bc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Test setting filters attribute using the filter name string (in array)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gray&#x27;</span>)],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-bc&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bc&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Bottom right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clip.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clip-br&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;br&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],
+});
+stencil.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stencil-br&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;br&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+});
+cover.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cover-br&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;br&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gray&#x27;</span>)],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.8</span>,
+});
+background.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-br&#x27;</span>),
+    <span class="hljs-attr">group</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;br&#x27;</span>),
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;83%&#x27;</span>, <span class="hljs-string">&#x27;83%&#x27;</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <h4 id="scene-display">Scene display</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">render</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

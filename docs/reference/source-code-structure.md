@@ -229,7 +229,10 @@ import buttonMix from '../mixin/button.js';
 import filterMix from '../mixin/filter.js';
 
 // Import shared constants
-import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { 
+    _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, 
+    PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR 
+} from '../helper/shared-vars.js';
 
 // Define local constants and non-prototypal functions
 const NONZERO = 'nonzero';
@@ -272,7 +275,9 @@ export default function (P = Ωempty) {
 
 // Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
-    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp', 'onOtherInteraction']);
+    P.packetFunctions = pushUnique(P.packetFunctions, [
+        'onEnter', 'onLeave', 'onDown', 'onUp', 'onOtherInteraction'
+    ]);
     P.processEntityPacketOut = function (key, value, incs) {[...]};
     P.processFactoryPacketOut = function (key, value, incs) {[...]};
     P.finalizePacketOut = function (copy, items) {[...]};

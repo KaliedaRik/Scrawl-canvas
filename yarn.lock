@@ -395,6 +395,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/showdown@npm:^2":
+  version: 2.0.6
+  resolution: "@types/showdown@npm:2.0.6"
+  checksum: 7136e47a9f0b871e74d8f17afcd99bca3d356f9fd81ee4ddb5361beb41be11d6d5705b86cf8f44796b6ca61caa5c4ff408029b772e436f6a1f9021bb73f36f95
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -789,6 +796,13 @@ __metadata:
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
   checksum: 84a76c08fe6cc08c9c93f62ac573d2907d8e79138999312c92d4155bc2325d487d64d13f669b2000c9f8caf70493c1be2dac74fec3c51d5a04f8bc3ae1830bab
+  languageName: node
+  linkType: hard
+
+"commander@npm:^9.0.0":
+  version: 9.5.0
+  resolution: "commander@npm:9.5.0"
+  checksum: 5f7784fbda2aaec39e89eb46f06a999e00224b3763dc65976e05929ec486e174fe9aac2655f03ba6a5e83875bd173be5283dc19309b7c65954701c02025b3c1d
   languageName: node
   linkType: hard
 
@@ -2551,12 +2565,14 @@ __metadata:
     "@eslint/js": "npm:^9.7.0"
     "@rollup/plugin-terser": "npm:^0.4.4"
     "@types/node": "npm:^20.14.10"
+    "@types/showdown": "npm:^2"
     browser-sync: "npm:^3.0.2"
     docco: "npm:^0.9.1"
     eslint: "npm:^9.7.0"
     globals: "npm:^15.8.0"
     knip: "npm:^5.41.1"
     rollup: "npm:^4.26.0"
+    showdown: "npm:^2.1.0"
     typescript: "npm:^5.5.3"
   languageName: unknown
   linkType: soft
@@ -2661,6 +2677,17 @@ __metadata:
   version: 3.0.0
   resolution: "shebang-regex@npm:3.0.0"
   checksum: 1dbed0726dd0e1152a92696c76c7f06084eb32a90f0528d11acd764043aacf76994b2fb30aa1291a21bd019d6699164d048286309a278855ee7bec06cf6fb690
+  languageName: node
+  linkType: hard
+
+"showdown@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "showdown@npm:2.1.0"
+  dependencies:
+    commander: "npm:^9.0.0"
+  bin:
+    showdown: bin/showdown.js
+  checksum: 8508e060874c42338b9ebfe884763e8042d9575185d9dd3a12f7380736732893a4738f37140add97bde0c4c87d6bad66ed0761505f310df6044ee3385e2ae349
   languageName: node
   linkType: hard
 

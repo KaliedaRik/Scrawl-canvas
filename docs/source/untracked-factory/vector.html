@@ -1049,7 +1049,7 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">rotate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(angle)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - rotate() argument not a number: <span class="hljs-subst">${angle}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(angle)) angle = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">let</span> arg = <span class="hljs-title function_">_atan2</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>);
     arg += (angle * <span class="hljs-number">0.01745329251</span>);
