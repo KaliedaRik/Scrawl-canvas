@@ -21,7 +21,95 @@
     </nav>
     <main>
         <h1 id="scrawlcanvaspageloadinitialization">Scrawl-canvas page load initialization</h1>
-<p>A brief overview of what happens when the Scrawl-canvas code runs on page load</p>
+<p>Scrawl-canvas is a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">modular javascript</a> library, which needs to be <strong><em>included</em></strong> into other Typescript/Javascript code. For instance, if the library has been added via <code>npm install</code> or <code>yarn add</code> then we can include the library into code like this:</p>
+<pre><code>include * as scrawl from 'scrawl-canvas';
+</code></pre>
+<p>While this <code>include</code> statement may happen many times across different JS/TS files in a web page, <strong><em>the SC code itself will run just once, during page load</em></strong>, when the browser first encounters the <code>include</code> statement. For every subsequent encounter, the browser just returns the SC object (<code>scrawl</code>) that was generated on that first encounter. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.</p>
+<blockquote>
+  <p><strong>tl;dr: We strongly recommend that code using Scrawl-canvas only runs after the page's HTML download completes.</strong> This is because SC initialization code will interrogate the web page's DOM, looking for &lt;canvas&gt; and &lt;div&gt; stack elements that we want it to manage … but this only happens once per page load!</p>
+</blockquote>
+<h2 id="thescrawljsfile">The <code>scrawl.js</code> file</h2>
+<p>The <code>package.json</code> file has the following structure:</p>
+<pre><code>{
+  "name": "scrawl-canvas",
+  "version": [current version number],
+  "description": [current version number and release date],
+  "main": "./min/scrawl.js",
+  "type": "module",
+  "types": "./source/scrawl.d.ts",
+  "scripts": [ ... various script definitions ],
+  "keywords": [ ... various keywords ],
+  "repository": { ... repository details },
+  "license": "MIT",
+  "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
+  "devDependencies": { ... note: no direct or peer dependencies permitted! },
+  "packageManager": "yarn@4.0.1"
+}
+</code></pre>
+<p>This tells us that the library's entry point is the <code>min/scrawl.js</code> file (which includes all of the library's <code>source</code> folder's code). Note that the minified file has not been <a href="https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking">tree-shaken</a> - a known issue that has not yet been fixed.</p>
+<blockquote>
+  <p><strong>tl;dr: If tree shaking is essential</strong> then developers can edit the <code>scrawl.js</code> file, commenting out the functionality they do not need in their project. They will have to rebuild the library locally, and be aware that updating the library at any point will destroy their prior work with this file (unless they take action in their dev toolchain to somehow preserve the file between updates).</p>
+</blockquote>
+<p>The <code>source/scrawl.js</code> file looks like this:</p>
+<pre><code>// ## Initialize Scrawl-canvas
+import { init as _init } from './core/init.js';
+export const init = _init;
+
+if (typeof window !== 'undefined') _init();
+
+// ## Export Scrawl-canvas module functions
+export {
+    startCoreAnimationLoop,
+    stopCoreAnimationLoop,
+} from './core/animation-loop.js';
+export {
+    clear,
+    compile,
+    show,
+    render,
+} from './core/display-cycle.js';
+export { recalculateFonts } from './core/document.js';
+export {
+    addListener,
+    removeListener,
+    addNativeListener,
+    removeNativeListener,
+    makeAnimationObserver,
+} from './core/events.js';
+export * as library from './core/library.js';
+
+[ ... etc ]
+</code></pre>
+<p>When the browser's JS engine runs this code it will at the same time construct all of the factory and other objects used by the SC system.</p>
+<h2 id="thecoreinitjsfile">The <code>core/init.js</code> file</h2>
+<p>The init file is the first piece of code to run when importing the SC library. Note that <strong><em>the code will not run if it finds itself in an environment which doesn't include a global <code>window</code> object</em></strong>.</p>
+<pre><code>import { startCoreAnimationLoop } from './animation-loop.js';
+import { getCanvases } from '../factory/canvas.js';
+import { getStacks } from '../factory/stack.js';
+
+import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './user-interaction.js';
+
+export const init = function () {
+
+    // Discovery phase
+    getStacks();
+    getCanvases();
+
+    // Start the core animation loop
+    startCoreAnimationLoop();
+
+    // Start the core listeners on the window object
+    applyCoreResizeListener();
+    applyCoreScrollListener();
+    startCoreListeners();
+};
+</code></pre>
+<h3 id="discovery">Discovery</h3>
+<p>[TODO: write up]</p>
+<h3 id="thecoreanimationloop">The core animation loop</h3>
+<p>[TODO: write up]</p>
+<h3 id="coreeventlisteners">Core event listeners</h3>
+<p>[TODO: write up]</p>
     </main>
 </body>
 </html>

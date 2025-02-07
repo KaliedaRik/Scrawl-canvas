@@ -1,7 +1,7 @@
 # Scrawl-canvas source code structure
 A brief overview of the source code folder and file structure, alongside reasons for the decisions to structure the code in this way.
 
-Note that this page only covers the `source/*` folder structure. For details of other files held in the repository, see the [Repository structure, and release protocol](./repo-structure.md) page.
+Note that this page only covers the `source/*` folder structure. For details of other files held in the repository, see the [Repository structure, and release protocol](./repo-structure.html) page.
 
 ## Folder overview
 

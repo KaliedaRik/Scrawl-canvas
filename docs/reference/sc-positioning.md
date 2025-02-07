@@ -45,7 +45,7 @@ We **set** an entity's rotation-reflection point using its `start` attribute. Fo
 
 We can mix-and-match absolute and relative values in a coordinate: `[200, '40%']` is a legitimate coordinate, as is `['40%', 200]`.
 
-Setting an entity's `start` attribute will also set the entity's `dirtyStart` boolean flag to `true`. At the start of the next [Display cycle](https://sc-display-cycle.md) the SC system performs a check across all entitys and, for those marked dirty, will perform calculations to ***clean*** their `start` attribute, placing the result (measured in cell coordinate space pixels) into the private `currentStart` attribute.
+Setting an entity's `start` attribute will also set the entity's `dirtyStart` boolean flag to `true`. At the start of the next [Display cycle](sc-display-cycle.html) the SC system performs a check across all entitys and, for those marked dirty, will perform calculations to ***clean*** their `start` attribute, placing the result (measured in cell coordinate space pixels) into the private `currentStart` attribute.
 
 When we **get** an entity's `start` coordinate, the `currentStart` attribute will be returned. Note that any attempt to ***set*** the `currentStart` will have unexpected effects on the entity.
 
@@ -201,7 +201,7 @@ The following String values can be used in the `lockTo` attribute's Array:
 
 + `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Users can reference an artefact by setting the entity's `mimic` attribute to the artefact's name String, or the artefact itself, alongside setting its `useMimicStart` flag to `true`.
 
-+ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point. Users can reference a [path-based entity](sc-path-based-entitys.md) by setting our entity's `path` attribute to the referenced entity's name String, or the referenced entity itself. The position along the path is a float Number between `0` and `1` set on our entity's `pathPosition` attribute; note that this position can be affected by the value of the `constantSpeedAlongPath` boolean attribute - see [demo Canvas-030](../demo/canvas-030.html) for an example of this in action.
++ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point. Users can reference a [path-based entity](sc-path-based-entitys.html) by setting our entity's `path` attribute to the referenced entity's name String, or the referenced entity itself. The position along the path is a float Number between `0` and `1` set on our entity's `pathPosition` attribute; note that this position can be affected by the value of the `constantSpeedAlongPath` boolean attribute - see [demo Canvas-030](../demo/canvas-030.html) for an example of this in action.
 
 + `particle`: use the referenced particle's current position to calculate the rotation-reflection point.
 
@@ -246,20 +246,25 @@ Mimic functionality allows an entity to mimic a range of the referenced artefact
 
 + If the entity's `addPathHandle` boolean flag is set to `true`, the entity will add the referenced artifact's `currentHandle` value to its own handle value.
 
-### The SC signals system
+## The SC signals system
 (TODO - think of a good way to explain this)
 
-### Calculation order
-When the user adds `pivot`, `mimic`, and `path` references into their SC code, they also introduce artefact dependencies: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.
+## Calculation order
+When the user adds `pivot`, `mimic`, and `path` references into their SC code, they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.
 
-> tl;dr; - SC includes no functionality to internally construct and maintain a dependency graph describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the user to tell SC the order in which artefacts should calculate/update their state.
+> **tl;dr: - SC includes no functionality to internally construct and maintain a dependency graph** describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the developer to tell SC the order in which artefacts should calculate/update their state.
 
 The SC Display cycle comprises the following steps:
-1. Clear
-2. Compile
-   - Calculate
-   - Stamp
-3. Show
+
+```
+1: Clear
+
+2: Compile
+   2.1: Calculate
+   2.2: Stamp
+
+3: Show
+```
 
 A number of attributes are used across the code base to describer ordering; it's important not to confuse them:
 

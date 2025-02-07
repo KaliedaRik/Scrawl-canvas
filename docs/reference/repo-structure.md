@@ -50,13 +50,13 @@ The SC frontend (source) code gets built and bundled using [Rollup](https://roll
 
 Scrawl-canvas runs in browser environments only. There are no plans at this time to support functionality to get SC running in any non-browser environments (Node, Bun, Deno, etc).
 
-Running the `yarn build` command will bundle and minify the SC frontend (source) code. The `package.json` file points to the minified file as the main entry point for running the code in the front end.
+Running the `yarn build-min` command (also invoked when running `yarn build`) will bundle and minify the SC frontend (source) code. The `package.json` file points to the minified file as the main entry point for running the code in the front end.
 
 + `rollup.config.js`
 + `min/scrawl.js`
 
 #### Building: Docco
-We use [Docco](https://ashkenas.com/docco/) to auto-generate developer documentation from inline comments in both the SC frontend (source) and demo code. Running the `yarn build` command will generate the documentation files, which live in the `docs/demo` and `docs/source` folders.
+We use [Docco](https://ashkenas.com/docco/) to auto-generate developer documentation from inline comments in both the SC frontend (source) and demo code. Running the `yarn build-docco` command (also invoked when running `yarn build`) will generate the documentation files, which live in the `docs/demo` and `docs/source` folders.
 
 Additional documentation files were generated when Docco was first added to the repo, and can be updated by hand:
 
@@ -67,6 +67,15 @@ We provide the (handwritten) index file for easy browser navigation around the d
 
 + `docs/index.html`
 + `docs/docco.css`
+
+#### Building: Showdown
+A set of more general reference documentation pages lives in the `docs/reference` folder. These are written in (simple) `.md` markdown files. We use [Showdown](https://showdownjs.com/docs/) to convert these files into `.html` documents which live in the same folder. Running the `yarn build-showdown` command (also invoked when running `yarn build`) generates the `.html` files.
+
+Files specific to the general reference documentation toolchain:
+
++ `scripts/build-reference-docs.mjs`
++ `docs/reference/*`
++ `docs/css/*`
 
 #### Testing: Eslint
 We lint both the SC frontend (source) and demo code using [ESLint](https://eslint.org/) - command: `yarn lint`.

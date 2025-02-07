@@ -60,13 +60,13 @@
 <h4 id="buildingrollup">Building: Rollup</h4>
 <p>The SC frontend (source) code gets built and bundled using <a href="https://rollupjs.org/">Rollup</a> and its <a href="https://www.npmjs.com/package/@rollup/plugin-terser">terser</a> plugin. Only the <strong>ES modules</strong> output format is supported.</p>
 <p>Scrawl-canvas runs in browser environments only. There are no plans at this time to support functionality to get SC running in any non-browser environments (Node, Bun, Deno, etc).</p>
-<p>Running the <code>yarn build</code> command will bundle and minify the SC frontend (source) code. The <code>package.json</code> file points to the minified file as the main entry point for running the code in the front end.</p>
+<p>Running the <code>yarn build-min</code> command (also invoked when running <code>yarn build</code>) will bundle and minify the SC frontend (source) code. The <code>package.json</code> file points to the minified file as the main entry point for running the code in the front end.</p>
 <ul>
 <li><code>rollup.config.js</code></li>
 <li><code>min/scrawl.js</code></li>
 </ul>
 <h4 id="buildingdocco">Building: Docco</h4>
-<p>We use <a href="https://ashkenas.com/docco/">Docco</a> to auto-generate developer documentation from inline comments in both the SC frontend (source) and demo code. Running the <code>yarn build</code> command will generate the documentation files, which live in the <code>docs/demo</code> and <code>docs/source</code> folders.</p>
+<p>We use <a href="https://ashkenas.com/docco/">Docco</a> to auto-generate developer documentation from inline comments in both the SC frontend (source) and demo code. Running the <code>yarn build-docco</code> command (also invoked when running <code>yarn build</code>) will generate the documentation files, which live in the <code>docs/demo</code> and <code>docs/source</code> folders.</p>
 <p>Additional documentation files were generated when Docco was first added to the repo, and can be updated by hand:</p>
 <ul>
 <li><code>docs/public/fonts/*</code></li>
@@ -76,6 +76,14 @@
 <ul>
 <li><code>docs/index.html</code></li>
 <li><code>docs/docco.css</code></li>
+</ul>
+<h4 id="buildingshowdown">Building: Showdown</h4>
+<p>A set of more general reference documentation pages lives in the <code>docs/reference</code> folder. These are written in (simple) <code>.md</code> markdown files. We use <a href="https://showdownjs.com/docs/">Showdown</a> to convert these files into <code>.html</code> documents which live in the same folder. Running the <code>yarn build-showdown</code> command (also invoked when running <code>yarn build</code>) generates the <code>.html</code> files.</p>
+<p>Files specific to the general reference documentation toolchain:</p>
+<ul>
+<li><code>scripts/build-reference-docs.mjs</code></li>
+<li><code>docs/reference/*</code></li>
+<li><code>docs/css/*</code></li>
 </ul>
 <h4 id="testingeslint">Testing: Eslint</h4>
 <p>We lint both the SC frontend (source) and demo code using <a href="https://eslint.org/">ESLint</a> - command: <code>yarn lint</code>.</p>
