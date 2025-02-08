@@ -4,49 +4,37 @@ import showdown from 'showdown';
 const pages = [
     {
         id: 'repo-structure',
-        tabTitle: 'SC reference docs',
+        tabTitle: 'Runbook: structure',
         label: 'Repository structure, and release protocol',
         description: '',
         indexOrder: 0,
     },{
-        id: 'repo-testing-regime',
-        tabTitle: 'SC reference docs',
-        label: 'Repository testing regime',
-        description: '',
-        indexOrder: 2,
-    },{
         id: 'sc-display-cycle',
-        tabTitle: 'SC reference docs',
+        tabTitle: 'Runbook: display cycle',
         label: 'Scrawl-canvas Display cycle',
-        description: '',
-        indexOrder: 6,
-    },{
-        id: 'sc-initialization',
-        tabTitle: 'SC reference docs',
-        label: 'Scrawl-canvas page load initialization',
-        description: '',
-        indexOrder: 3,
-    },{
-        id: 'sc-objects-overview',
-        tabTitle: 'SC reference docs',
-        label: 'Scrawl-canvas objects overview',
-        description: '',
-        indexOrder: 4,
-    },{
-        id: 'sc-path-based-entitys',
-        tabTitle: 'SC reference docs',
-        label: 'Scrawl-canvas path-based entitys',
-        description: '',
-        indexOrder: 6,
-    },{
-        id: 'sc-positioning',
-        tabTitle: 'SC reference docs',
-        label: 'The Scrawl-canvas positioning system',
         description: '',
         indexOrder: 5,
     },{
+        id: 'sc-initialization',
+        tabTitle: 'Runbook: initialization',
+        label: 'Scrawl-canvas page load initialization',
+        description: '',
+        indexOrder: 2,
+    },{
+        id: 'sc-objects-overview',
+        tabTitle: 'Runbook: objects',
+        label: 'Scrawl-canvas objects overview',
+        description: '',
+        indexOrder: 3,
+    },{
+        id: 'sc-positioning',
+        tabTitle: 'Runbook: positioning',
+        label: 'The Scrawl-canvas positioning system',
+        description: '',
+        indexOrder: 4,
+    },{
         id: 'source-code-structure',
-        tabTitle: 'SC reference docs',
+        tabTitle: 'Runbook: source code',
         label: 'Scrawl-canvas source code structure',
         description: '',
         indexOrder: 1,
@@ -55,11 +43,11 @@ const pages = [
 
 const generateFile = async (data, index) => {
 
-    let previous = '../index.html',
-        next = '../index.html';
+    let previous = 'index.html',
+        next = 'index.html';
 
     if (index > 0) previous = `${pages[index - 1].id}.html`;
-    if (index < pages.length - 2) next = `${pages[index + 1].id}.html`;
+    if (index < pages.length - 1) next = `${pages[index + 1].id}.html`;
 
     const source = `./docs/reference/${data.id}.md`,
         destination = `./docs/reference/${data.id}.html`;
@@ -68,6 +56,14 @@ const generateFile = async (data, index) => {
 
         const mdText = await fs.readFile(source, { encoding: 'utf8' });
         const body = converter.makeHtml(mdText);
+
+        const nav = `
+    <nav>
+        <a href=${previous}>Previous</a>
+        <a href="index.html">Contents</a>
+        <a href=${next}>Next</a>
+    </nav>
+`;
 
         const htmlText = `<!DOCTYPE html>
 <html lang="en">
@@ -85,18 +81,16 @@ const generateFile = async (data, index) => {
     <meta name="description" content="${data.title} - ${data.description}">
 </head>
 <body>
-    <nav>
-        <a href=${previous}>Previous</a>
-        <a href="../index.html#general-reference">Index</a>
-        <a href=${next}>Next</a>
-    </nav>
+    ${nav}
     <main>
         ${body}
     </main>
+    ${nav}
 </body>
 </html>`;
 
         await fs.writeFile(destination, htmlText);
+        console.log(`Runbook file written: ${data.label} -> ${destination}`);
 
     } catch (err) {
 

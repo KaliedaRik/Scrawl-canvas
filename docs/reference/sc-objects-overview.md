@@ -1,52 +1,20 @@
 # Scrawl-canvas objects overview
 
-## Foundations
+## Object creation and the SC library
 
-### Objects and the SC library
+### Naming objects, namespacing advice
 
-### Creating objects (factories)
+### Locating objects in the SC library
 
-### Reading attributes (getters)
+## Updating objects
 
-### Writing attributes (setters, deltaSetters)
+## Object serialisation and cloning
 
-### Serializing objects (packets)
-
-### Clone an SC object (packets)
-
-### Delete an SC object
-
-## Tracked objects
-
-### Naming objects
-
-### Locating tracked object
-
-### Assets
-
-### Styles
-
-### Groups
-
-### Artefacts and Entitys
-
-### Stacks, Canvases, Cells
-
-### Anchors and Buttons
-
-### Animations and Tweens
-
-### Filters
-
-### Fonts
-
-### The particle physics engine
+## Object deletion, SC library hygeine
 
 ## Untracked objects
 
 ### Drag zones
 
 ### Keyboard zones
-
-### Arrays, Coordinates, Vectors, Quaternions
 

@@ -246,7 +246,7 @@ Mimic functionality allows an entity to mimic a range of the referenced artefact
 
 + If the entity's `addPathHandle` boolean flag is set to `true`, the entity will add the referenced artifact's `currentHandle` value to its own handle value.
 
-## The SC signals system
+## The Srawl-canvas signals system
 (TODO - think of a good way to explain this)
 
 ## Calculation order

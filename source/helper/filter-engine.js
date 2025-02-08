@@ -115,7 +115,7 @@ const FilterEngine = function () {
     // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
     this.cache = null;
 
-    // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
+    // __actions__ - the Array of action objects that the engine needs to process.
     this.actions = [];
 
     return this;

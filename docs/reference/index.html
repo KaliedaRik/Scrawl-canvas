@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Scrawl-canvas Runbook</title>
+    <link rel='icon' type='image/png' href='/favicon.png'>
+    <link href="../css/normalize.css" rel="stylesheet" />
+    <link href="../css/general-reference.css" rel="stylesheet" />
+
+    <!-- general page metadata -->
+    <meta name="author" content="Rik Roots">
+    <meta name="description" content="Scrawl-canvas developers Runbook - contents page">
+</head>
+<body>
+    
+    <nav>
+        <a href=../index.html>Inline Documentation index</a>
+        <a href=../../demo/index.html>Demo tests index</a>
+    </nav>
+
+    <main>
+        <h1>The Scrawl-canvas developer Runbook</h1>
+        <p>This Runbook explains the design, architecture, code and toolchains associated with the Scrawl-canvas repository.</p>
+
+        <h3><a href="repo-structure.html">Repository structure, and release protocol</a></h3>
+        <ul>
+            <li><a href="repo-structure.html#githubbranchpolicy">GitHub branch policy</a></li>
+            <ul>
+                <li>v8 branch</li>
+                <li>v8-dev branch</li>
+                <li>History</li>
+            </ul>
+            <li><a href="repo-structure.html#repositorystructure">Repository structure</a></li>
+            <ul>
+                <li>Top level documentation</li>
+                <li>Development toolchain</li>
+                <ul>
+                    <li>Git, GitHub, NPM</li>
+                    <li>Yarn</li>
+                    <li>Building: Rollup</li>
+                    <li>Building: Docco</li>
+                    <li>Building: Showdown</li>
+                    <li>Testing: Eslint</li>
+                    <li>Testing: Knip</li>
+                    <li>Testing: Typescript</li>
+                </ul>
+                <li>Development and testing: Browser-sync</li>
+                <li>Development and testing: source code</li>
+            </ul>
+            <li><a href="repo-structure.html#releasinganewversionofscrawlcanvas">Releasing a new version of Scrawl-canvas</a></li>
+        </ul>
+
+        <h3><a href="source-code-structure.html">Scrawl-canvas source code structure</a></h3>
+        <ul>
+            <li><a href="source-code-structure.html#folderoverview">Folder overview</a></li>
+            <li><a href="source-code-structure.html#corecodingguidelines">Core coding guidelines</a></li>
+            <li><a href="source-code-structure.html#commonfilestructures">Common file structures</a></li>
+            <ul>
+                <li>Factory files</li>
+                <li>Mixin files</li>
+                <li>Other files</li>
+            </ul>
+        </ul>
+
+        <h3><a href="sc-initialization.html">Scrawl-canvas page load initialization</a></h3>
+        <ul>
+            <li><a href="sc-initialization.html#thescrawljsfile">The scrawl.js file</a></li>
+            <li><a href="sc-initialization.html#thecoreinitjsfile">The core/init.js file</a></li>
+            <ul>
+                <li>Imports</li>
+                <li>Discovery activity</li>
+            </ul>
+            <li><a href="sc-initialization.html#thescrawlcanvasanimationloop">The Scrawl-canvas animation loop</a></li>
+            <li><a href="sc-initialization.html#coreconstantsflagsandeventlisteners">Core constants, flags and event listeners</a></li>
+            <ul>
+                <li>Shared constants</li>
+                <li>System flags</li>
+                <li>The <code>currentCorePosition</code> object</li>
+                <li>Browser mouse, scroll and resize events</li>
+                <li>User preferences media queries and events</li>
+            </ul>
+            <li><a href="sc-initialization.html#scrawlcanvaspools">Scrawl-canvas pools</a></li>
+            <li><a href="sc-initialization.html#scrawlcanvasfilterengine">Scrawl-canvas filter engine</a></li>
+            <li><a href="sc-initialization.html#scrawlcanvasworkstore">Scrawl canvas workstore</a></li>
+        </ul>
+
+        <h3><a href="sc-objects-overview.html">Scrawl-canvas objects overview</a></h3>
+        <ul>
+            <li><a href="sc-objects-overview.html#objectcreationandthesclibrary">Object creation and the SC library</a></li>
+            <ul>
+                <li>Naming objects, namespacing advice</li>
+                <li>Locating objects in the SC library</li>
+            </ul>
+            <li><a href="sc-objects-overview.html#updatingobjects">Updating objects</a></li>
+            <li><a href="sc-objects-overview.html#objectserialisationandcloning">Object serialisation and cloning</a></li>
+            <li><a href="sc-objects-overview.html#objectdeletionsclibraryhygeine">Object deletion, SC library hygeine</a></li>
+            <li><a href="sc-objects-overview.html#untrackedobjects">Untracked objects</a></li>
+            <ul>
+                <li>Drag zones</li>
+                <li>Keyboard zones</li>
+            </ul>
+        </ul>
+
+<!-- 
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+ -->
+
+        <h3><a href="sc-positioning.html">The Scrawl-canvas positioning system</a></h3>
+        <ul>
+            <li><a href="sc-positioning.html#background">Background</a></li>
+            <ul>
+                <li>The rotation-reflection point</li>
+            </ul>
+            <li><a href="sc-positioning.html#absoluteandrelativepositioning">Absolute and relative positioning</a></li>
+            <ul>
+                <li>The <code>start</code> entity attribute</li>
+                <li>The <code>offset</code> and <code>position</code> entity attributes</li>
+                <li>The <code>handle</code> entity attribute</li>
+            </ul>
+            <li><a href="sc-positioning.html#positioningbyreference">Positioning by reference</a></li>
+            <ul>
+                <li>The <code>lockTo</code> entity attribute</li>
+                <ul>
+                    <li>Pivot specifics</li>
+                    <li>Mimic specifics</li>
+                    <li>Path specifics</li>
+                </ul>
+            </ul>
+            <li><a href="sc-positioning.html#calculationorder">Calculation order</a></li>
+        </ul>
+
+        <h3><a href="sc-display-cycle.html">Scrawl-canvas Display cycle</a></h3>
+        <ul>
+            <li><a href="sc-display-cycle.html#">[TODO: write doc]</a></li>
+        </ul>
+    </main>
+    
+    <nav>
+        <a href=../index.html>Inline Documentation index</a>
+        <a href=../../demo/index.html>Demo tests index</a>
+    </nav>
+
+</body>
+</html>

@@ -464,7 +464,7 @@ constructors.Stack = Stack;
 
 
 // #### Stack discovery
-// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them.
+// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-scrawl-stack__ attribute; then create __Stack__ artefact wrappers for each of them.
 //
 // This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
 export const getStacks = function (query = $DATA_SCRAWL_STACK) {
