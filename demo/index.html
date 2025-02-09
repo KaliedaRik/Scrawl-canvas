@@ -26,16 +26,38 @@
       margin: 0 auto;
     }
 
-    h1 {
-      margin-bottom: 1rem;
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
       border-bottom: 1px solid #e9e9e9;
-      text-align: left;
+      margin-bottom: 1rem;
+
+      & ul {
+        text-align: right;
+        margin: 0 0 1rem;
+
+        & li {
+          list-style: none;
+          margin: 0;
+        }
+
+        & .links {
+          font-weight: bold;
+        }
+      }
+
+      & h1 {
+        text-align: left;
+        border: 0;
+
+        & span {
+          font-style: italic;
+          font-size: 80%;
+        }
+      }
     }
-    h1 span {
-      font-style: italic;
-      font-size: 80%;
-    }
-    
+
     h2 {
       margin: 2rem 0 0.5rem 0;
       text-align: left;
@@ -118,12 +140,22 @@
         grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr;
       }
     }
+
   </style>
 </head>
 
 <body>
   <main>
-    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.14.0)</span></h1>
+    <header>
+      <div>
+        <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.14.0)</span></h1>
+      </div>
+      <ul>
+        <li class="links">Documentation links</li>
+        <li><a href="../docs/reference/index.html">Developer Runbook</a> &laquo;</li>
+        <li><a href="../docs/index.html">Inline documentation</a> &laquo;</li>
+      </ul>
+    </header>
 
     <p>The Scrawl-canvas library makes it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 

@@ -158,6 +158,69 @@ The `init()` function, when it runs, invokes two discovery operations:
 
 Because this discovery activity happens as soon as the SC code loads, and only happens once per page load, it is imperative that the code does not run until the browser has downloaded the HTML file and constructed its Document Object Model from the file's content.
 
+Note that when SC wraps &lt;canvas> elements into Canvas artefacts, it will mutate the DOM element:
+
+```
+Before:                                         After:
+----------------------------------------        ----------------------------------------
+‹canvas                                         ‹canvas 
+  id="mycanvas"                                   id="mycanvas"
+  width="600"                                     width="600"
+  height="400"                                    height="400"
+  data-scrawl-canvas=""                           data-scrawl-canvas=""
+  data-base-background-color="aliceblue"          data-base-background-color="aliceblue"
+›‹/canvas›                                        data-scrawl-group="root"
+                                                  style="
+                                                    box-sizing: border-box;
+                                                    perspective-origin: 50% 50%;
+                                                    perspective: 0px;
+                                                    width: 600px;
+                                                    height: 400px;
+                                                    transform-origin: 0px 0px 0px;
+                                                    transform: translate(0px, 0px);
+                                                    display: block;
+                                                    -webkit-font-smoothing: auto;"
+                                                  aria-labelledby="mycanvas-ARIA-label"
+                                                  aria-describedby="mycanvas-ARIA-description"
+                                                  title=""
+                                                  role="img"
+                                                  class=""
+                                                ›
+                                                  ‹nav
+                                                    id="mycanvas-navigation"
+                                                    aria-live="polite"
+                                                    aria-busy="false"
+                                                  ›‹/nav›
+                                                  ‹div
+                                                    id="mycanvas-text-hold"
+                                                    aria-live="polite"
+                                                    aria-busy="false"
+                                                  ›‹/div›
+                                                  ‹div
+                                                    id="mycanvas-canvas-hold"
+                                                    aria-hidden="true"
+                                                    style="display: none;"
+                                                  ›
+                                                    ‹div
+                                                      id="mycanvas-fontSizeCalculator"
+                                                      aria-hidden="true"
+                                                    ›‹/div›
+                                                    ‹div
+                                                      id="mycanvas-styles"
+                                                      aria-hidden="true"
+                                                    ›‹/div›
+                                                  ‹/div›
+                                                  ‹div
+                                                    id="mycanvas-ARIA-label"
+                                                    aria-live="polite"
+                                                  ›mycanvas canvas element‹/div›
+                                                  ‹div
+                                                    id="mycanvas-ARIA-description"
+                                                    aria-live="polite"
+                                                  ›‹/div›
+                                                ‹/canvas›
+```
+
 It's also important to remember that this discovery activity will only find &lt;canvas> elements (and stacks) that already exist in (have been hard-coded into) the HTML file. Any &lt;canvas> element added to the DOM after page load - for instance through [framework client-side hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)) or an [Islands architecture](https://www.patterns.dev/vanilla/islands-architecture/) pattern - will not be found during the discovery phase and thus will not have been wrapped into the SC library.
 
 This has implications for when we want to retrieve the generated artefacts from the SC library for further use:
@@ -174,7 +237,9 @@ During initialization a number of system animations get created and added to the
 + `SC-core-tickers-animation` - defined in [factory/ticker.js](../source/factory/ticker.html)
 + `SC-core-workstore-hygeine` - defined in [helper/workstore.js](../source/helper/workstore.html)
 
-Note that by default, the animation loop is throttled to run at a maximum 60 frames-per-second. This rate can only be changed after initialization completes.
+Note that by default, the animation loop is throttled to run at a maximum 60 frames-per-second. This is because some devices, using modern displays that support it, can run at higher fps rates. Users can change this rate throttle in code after initialization completes. See [demo test Canvas-050](../demo/canvas-050.html) for an example of this functionality in action.
+
+Users can also stop and restart the animation loop after initialization completes by invoking the `scrawl.stopCoreAnimationLoop()` and `scrawl.startCoreAnimationLoop()` functions. See [demo test DOM-009](../demo/dom-009.html) for details.
 
 ## Core constants, flags and event listeners
 Two of the key drivers for SC is to make &lt;canvas> elements responsive to their environments, and offer high-level functionality for user interactions with those responsive elements. Much of the code that handles this functionality can be found in the [core/user-interaction.js](../source/core/user-interaction.html) file.
@@ -256,9 +321,42 @@ export const currentCorePosition = {
 
 SC checks for changes to system state using an animation object - `SC-core-listeners-tracker` - that runs once at the start of each animation loop. When changes are detected Canvas and Stack artefacts will be informed (via `dirty flags`). When they in turn run their Display cycle functionality they will cascade that information to their constituent objects who will, if necessary, update their state to reflect the changed environment. 
 
-### Browser mouse, scroll and resize events
+### Browser mouse/touch/pointer, scroll, and resize events
+During initialization SC will add a set of event listeners to the `window` object which react to various `mouse/touch/pointer` events. When such events occur the listeners will set the appropriate system flags to true (ie: something has changed) and store the cursor's current position data in the `currentCorePosition` object. Functionality to react to these changes is deferred until the next animation loop runs.
+
+Similarly, SC sets event listeners on the `window` object to listen for browser `resize` and `scroll` events.
+
+After initialization completes the user can stop and restart these core listeners by invoking the `scrawl.stopCoreListeners()` and `scrawl.startCoreListeners()` functions. See [demo test DOM-009](../demo/dom-009.html) for an example of this functionality in action.
 
 ### User preferences media queries and events
+SC uses evented media queries to listen out for changes in various system settings. For example:
+
+```
+const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMediaQuery.addEventListener(CHANGE, () => {
+
+    const res = colorSchemeMediaQuery.matches;
+
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
+
+        currentCorePosition.prefersDarkColorScheme = res;
+        setPrefersDarkColorSchemeChanged(true);
+    }
+});
+currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
+```
+
+SC tracks the following system settings:
++ `prefers-color-scheme`
++ `prefers-contrast`
++ `prefers-reduced-data`
++ `prefers-reduced-motion`
++ `prefers-reduced-transparency`
+
+SC, by default, doesn't react to changes in these settings. It's up to the developer to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the [Canvas page](canvas-artefact-overview.html) in the Runbook for further details. 
+
+SC also tracks the current `pixel-ratio` and `color-gamut: p3` settings for the device/screen on which the browser is displaying. This can change when, for instance, a user drags the browser window between screens. Such changes are handled by SC internally with no need for additional developer intervention.
 
 ## Scrawl-canvas pools
 SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.
@@ -283,12 +381,14 @@ The functionality to generate these filters and apply them to entitys, Groups an
 
 The filter engine module will also set up a permanent animation object - `SC-core-filters-cleanup-action` - to run once at the end of every animation loop iteration, to reset [filter object](../source/factory/filter.html) `dirtyFilterIdentifier` flags back to `false`.
 
+Finally, the filter engine will instantiate an internal [Color object](../source/factory/color.html) - `SC-core-color-engine` - during initialization.
+
 ## Scrawl-canvas workstore
 The SC workstore is an internal mechanism for caching various computationally-intensive objects; it is used in particular by the singleton filter engine but is available for use by other SC modules as required.
 
 Every object cached in the workstore includes a timestamp indicating the last time it was accessed; the workstore actively purges objects that haven't been recently accessed. This action is handled by an animation object - `SC-core-workstore-hygeine` - which gets instantiated at the same time as the workstore.
 
-More details about workstore functionality can be found in its [module file](../source/helper/workstore.html).
+More details about workstore functionality can be found in the [helper/workstore.js](../source/helper/workstore.html) file.
 
 
 

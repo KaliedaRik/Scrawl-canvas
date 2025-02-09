@@ -55,7 +55,7 @@ export const currentCorePosition = {
 
 // ### Accessibility preferences
 
-// __contrastMediaQuery__ - real-time check on the `prefers-reduced-motion` user preference, as set for the device or OS
+// __contrastMediaQuery__ - real-time check on the `prefers-contrast` user preference, as set for the device or OS
 const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
 
 contrastMediaQuery.addEventListener(CHANGE, () => {

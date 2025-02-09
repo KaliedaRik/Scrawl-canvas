@@ -40,25 +40,25 @@ SC allows us to position an entity's rotation-reflection point in several differ
 ## Absolute and relative positioning
 The most direct way to position an entity is to give it `start`, `offset` and `handle` values, from which it will calculate its position on the Cell. Each of these attributes are Coordinates with a default value of `[0,0]`. Each atteribute also comes with a set of pseudo-attributes which allow the user to set and get the x and y components of the Coordinate separately.
 
-### The `start` entity attribute
-We **set** an entity's rotation-reflection point using its `start` attribute. For convenience, we can also set each part of the point's coordinate using the `startX` and `startY` pseudo-attributes.
+### The `start` artefact attribute
+We **set** an artefact's rotation-reflection point using its `start` attribute. For convenience, we can also set each part of the point's coordinate using the `startX` and `startY` pseudo-attributes.
 
 We can mix-and-match absolute and relative values in a coordinate: `[200, '40%']` is a legitimate coordinate, as is `['40%', 200]`.
 
-Setting an entity's `start` attribute will also set the entity's `dirtyStart` boolean flag to `true`. At the start of the next [Display cycle](sc-display-cycle.html) the SC system performs a check across all entitys and, for those marked dirty, will perform calculations to ***clean*** their `start` attribute, placing the result (measured in cell coordinate space pixels) into the private `currentStart` attribute.
+Setting an artefact's `start` attribute will also set the artefact's `dirtyStart` boolean flag to `true`. At the start of the next [Display cycle](sc-display-cycle.html) the SC system performs a check across all entitys and, for those marked dirty, will perform calculations to ***clean*** their `start` attribute, placing the result (measured in cell coordinate space pixels) into the private `currentStart` attribute.
 
-When we **get** an entity's `start` coordinate, the `currentStart` attribute will be returned. Note that any attempt to ***set*** the `currentStart` will have unexpected effects on the entity.
+When we **get** an artefact's `start` coordinate, the `currentStart` attribute will be returned. Note that any attempt to ***set*** the `currentStart` will have unexpected effects on the artefact.
 
-Directly setting an entity's `start` or (worse!) `currentStart` value will lead to unexpected behaviours and bugs. Always use the `entity.set({ start: [x, y]})` or `entity.deltaSet({ start: [x, y]})` functionality!
+Directly setting an artefact's `start` or (worse!) `currentStart` value will lead to unexpected behaviours and bugs. Always use the `artefact.set({ start: [x, y]})` or `artefact.deltaSet({ start: [x, y]})` functionality!
 
-### The `offset` and `position` entity attributes
-An entity's `start` (and `currentStart`) value does not fully represent its rotation-reflection point. We are able to ***offset*** the rotation-reflection point from the start coordinate using the entity's `offset` attribute. See [Demo Canvas-002](../demo/canvas-002.html) for an example of this functionality.
+### The `offset` and `position` artefact attributes
+An artefact's `start` (and `currentStart`) value does not fully represent its rotation-reflection point. We are able to ***offset*** the rotation-reflection point from the start coordinate using the artefact's `offset` attribute. See [Demo Canvas-002](../demo/canvas-002.html) for an example of this functionality.
 
-These `offset` values, like `start` values, can be ***absolute*** (measured in pixels) or ***relative*** (as a percentage of the host Cell's current dimensions). When we **set** the entity's `offset` (`offsetX`, `offsetY`) value, we also set its `dirtyOffset` boolean flag to `true`. Similar to the `start` attribute, entitys will clean their dirty offsets and store the result in the private `currentOffset` attribute.
+These `offset` values, like `start` values, can be ***absolute*** (measured in pixels) or ***relative*** (as a percentage of the host Cell's current dimensions). When we **set** the artefact's `offset` (`offsetX`, `offsetY`) value, we also set its `dirtyOffset` boolean flag to `true`. Similar to the `start` attribute, entitys will clean their dirty offsets and store the result in the private `currentOffset` attribute.
 
-When we **get** an entity's `offset` coordinate, the `currentOffset` value will be returned. Note that any attempt to ***set*** the `currentOffset` will have unexpected effects on the entity.
+When we **get** an artefact's `offset` coordinate, the `currentOffset` value will be returned. Note that any attempt to ***set*** the `currentOffset` will have unexpected effects on the artefact.
 
-We can **get** an entity's current rotation-reflection coordinate at any time using the `position` pseudo-attribute; the `positionX` and `positionY` pseudo-attributes are also supported. Note that any attempt to ***set*** these pseudo-attributes will have no effect on the entity.
+We can **get** an artefact's current rotation-reflection coordinate at any time using the `position` pseudo-attribute; the `positionX` and `positionY` pseudo-attributes are also supported. Note that any attempt to ***set*** these pseudo-attributes will have no effect on the artefact.
 
 ```
 {0,0} host coordinate system
@@ -70,8 +70,8 @@ We can **get** an entity's current rotation-reflection coordinate at any time us
     |         @                                       | = currentStart + currentOffset
     |                                                 | = [10,5]       + [5,2]
     |              o---------+                        | = [15,7]
-    |              |         | entity width: 10       |
-    |              |         | entity height: 5       |
+    |              |         | artefact width: 10     |
+    |              |         | artefact height: 5     |
     -              |         | roll: 0                -
     |              |         | scale: 1               |
     |              +---------+                        |
@@ -95,8 +95,8 @@ We can **get** an entity's current rotation-reflection coordinate at any time us
     |         @                                       | = currentStart + currentOffset
     |                                                 | = [10,5]       + [5,2]
     |              o---------+                        | = [15,7]
-    |              |         | entity width: 10       |
-    |              |         | entity height: 5       |
+    |              |         | artefact width: 10     |
+    |              |         | artefact height: 5     |
     -              |         | roll: 0                -
     |              |         | scale: 1               |
     |              +---------+                        |
@@ -112,23 +112,23 @@ We can **get** an entity's current rotation-reflection coordinate at any time us
 
 ```
 
-### The `handle` entity attribute.
-In brief, SC ***paints*** an entity onto the canvas using the following protocol:
-1. If necessary, clean the entity's dirty attributes and recalculate its rotation-reflection point.
-2. If necessary, recalculate the entity's ***path2D object***, which will be used during the painting step to `fill` and/or `stroke` the entity onto the Cell.
-3. Position and rotate the host Cell's context engine using the Canvas API `setTransform()` function - it is at this moment that we move the Cell's engine's coordinate system origin point - `[0,0]` - to match the entity's rotation-reflection point.
-4. Update the Cell's engine state to match the entity's engine state.
-5. Stamp the entity onto the Cell's DOM &lt;canvas> element.
+### The `handle` artefact attribute.
+In brief, SC ***paints*** an artefact onto the canvas using the following protocol:
+1. If necessary, clean the artefact's dirty attributes and recalculate its rotation-reflection point.
+2. If necessary, recalculate the artefact's ***path2D object***, which will be used during the painting step to `fill` and/or `stroke` the artefact onto the Cell.
+3. Position and rotate the host Cell's context engine using the Canvas API `setTransform()` function - it is at this moment that we move the Cell's engine's coordinate system origin point - `[0,0]` - to match the artefact's rotation-reflection point.
+4. Update the Cell's engine state to match the artefact's engine state.
+5. Stamp the artefact onto the Cell's DOM &lt;canvas> element.
 
 The `start` and `offset` attributes discussed above both feed into the first step of the protocol.
 
-Every entity has a [path2D object](https://developer.mozilla.org/en-US/docs/Web/API/Path2D), which SC uses for stroke/fill painting operations as well as the entity's ***hit*** functionality (for example: hover, and drag-and-drop, operations).
+Every artefact has a [path2D object](https://developer.mozilla.org/en-US/docs/Web/API/Path2D), which SC uses for stroke/fill painting operations as well as the artefact's ***hit*** functionality (for example: hover, and drag-and-drop, operations).
 
-When building the entity's path2D object, SC takes into account the entity's ***dimensions*** and ***scale***. It also includes a (scaled) ***local displacement*** value which has the apparent effect of moving the rotation-reflection point away from the entity's top-left corner. Users can set this displacement value in the entity's `handle` attribute.
+When building the artefact's path2D object, SC takes into account the artefact's ***dimensions*** and ***scale***. It also includes a (scaled) ***local displacement*** value which has the apparent effect of moving the rotation-reflection point away from the artefact's top-left corner. Users can set this displacement value in the artefact's `handle` attribute.
 
-Similar to the `start` and `offset` values, `handle` values can be ***absolute*** (measured in pixels) or ***relative*** (as a percentage of the entity's current scaled dimensions). When we **set** the entity's `handle` (`handleX`, `handleY`) value, we also set its `dirtyHandle` boolean flag to `true`. After cleaning, the handle's calculated values get stored in the private `currentHandle` attribute.
+Similar to the `start` and `offset` values, `handle` values can be ***absolute*** (measured in pixels) or ***relative*** (as a percentage of the artefact's current scaled dimensions). When we **set** the artefact's `handle` (`handleX`, `handleY`) value, we also set its `dirtyHandle` boolean flag to `true`. After cleaning, the handle's calculated values get stored in the private `currentHandle` attribute.
 
-When we **get** an entity's `handle` coordinate, the `currentHandle` value will be returned. Note that any attempt to ***set*** the `currentHandle` will have unexpected effects on the entity.
+When we **get** an artefact's `handle` coordinate, the `currentHandle` value will be returned. Note that any attempt to ***set*** the `currentHandle` will have unexpected effects on the artefact.
 
 ```
 {0,0} host coordinate system
@@ -139,8 +139,8 @@ When we **get** an entity's `handle` coordinate, the `currentHandle` value will 
     |                                                 | o: rotation-reflection point
     |         @                                       | = currentStart + currentOffset
     |                  *---------+                    | = [10,5]       + [5,2]
-    |              o   |         | entity width: 10   | = [15,7]
-    |                  |         | entity height: 5   |
+    |              o   |         | artefact width: 10 | = [15,7]
+    |                  |         | artefact height: 5 |
     -                  |         | roll: 0            |
     |                  |         | scale: 1           -
     |                  +---------+                    |
@@ -164,8 +164,8 @@ When we **get** an entity's `handle` coordinate, the `currentHandle` value will 
     |                                                 | o: rotation-reflection point
     |         @                                       | = currentStart + currentOffset
     |                  *---------+                    | = [10,5]       + [5,2]
-    |              o   |         | entity width: 10   | = [15,7]
-    |                  |         | entity height: 5   |
+    |              o   |         | artefact width: 10 | = [15,7]
+    |                  |         | artefact height: 5 |
     -                  |         | roll: 0            |
     |                  |         | scale: 1           -
     |                  +---------+                    |
@@ -184,12 +184,12 @@ When we **get** an entity's `handle` coordinate, the `currentHandle` value will 
 ```
 
 ## Positioning by reference
-A foundational tenet of the SC positioning system is that any artefact (and thus entity) can position itself on the Cell by referencing any other artefact. 
+A foundational tenet of the SC positioning system is that any artefact can position itself on the Cell by referencing any other artefact. 
 
-In essence, this means that instead of using its own `currentStart` values when calculating the value of its rotation-reflection point, our entity will instead use the referenced artefact's `currentStart` values. SC manages this through a system of locks, alongside a (bespoke, and rudimentary) signals system.
+In essence, this means that instead of using its own `currentStart` values when calculating the value of its rotation-reflection point, our artefact will instead use the referenced artefact's `currentStart` values. SC manages this through a system of locks, alongside a (bespoke, and rudimentary) signals system.
 
-### The `lockTo` entity attribute
-The `lockTo` attribute is an Array containing two String values. Each value indicates how the entity wants to calculate its position along the Cell's `x` and `y` axes - `['x-axis-string', 'y-axis-string']`. The default value is `['start', 'start']`, indicating that the entity wishes both parts of its start coordinate to use absolute or relative positioning as described above.
+### The `lockTo` artefact attribute
+The `lockTo` attribute is an Array containing two String values. Each value indicates how the artefact wants to calculate its position along the Cell's `x` and `y` axes - `['x-axis-string', 'y-axis-string']`. The default value is `['start', 'start']`, indicating that the artefact wishes both parts of its start coordinate to use absolute or relative positioning as described above.
 
 Like the other coordinate-like attributes, `lockTo` comes with a set of pseudo-attributes - `lockXTo`, `lockYTo` - which users can use to set the individual elements of the attribute.
 
@@ -197,57 +197,54 @@ The following String values can be used in the `lockTo` attribute's Array:
 
 + `start` - (default): use absolute or relative positioning
 
-+ `pivot`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Users can reference an artefact by setting the entity's `pivot` attribute to the artefact's name String, or the artefact itself.
++ `pivot`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Users can reference an artefact by setting the artefact's `pivot` attribute to the artefact's name String, or the artefact itself.
 
-+ `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Users can reference an artefact by setting the entity's `mimic` attribute to the artefact's name String, or the artefact itself, alongside setting its `useMimicStart` flag to `true`.
++ `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Users can reference an artefact by setting the artefact's `mimic` attribute to the artefact's name String, or the artefact itself, alongside setting its `useMimicStart` flag to `true`.
 
-+ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point. Users can reference a [path-based entity](sc-path-based-entitys.html) by setting our entity's `path` attribute to the referenced entity's name String, or the referenced entity itself. The position along the path is a float Number between `0` and `1` set on our entity's `pathPosition` attribute; note that this position can be affected by the value of the `constantSpeedAlongPath` boolean attribute - see [demo Canvas-030](../demo/canvas-030.html) for an example of this in action.
++ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point. Users can reference a [path-based entity](sc-path-based-entitys.html) by setting our artefact's `path` attribute to the referenced entity's name String, or the referenced entity itself. The position along the path is a float Number between `0` and `1` set on our artefact's `pathPosition` attribute; note that this position can be affected by the value of the `constantSpeedAlongPath` boolean attribute - see [demo Canvas-030](../demo/canvas-030.html) for an example of this in action.
 
 + `particle`: use the referenced particle's current position to calculate the rotation-reflection point.
 
 + `mouse`: use the mouse cursor's calculated position relative to the Cell to calculate the rotation-reflection point
 
-Users are able to set an entity to reference multiple artefacts, one each for the `pivot`, `mimic`, `path` and `particle` attributes. These attributes can be updated at any time. It is the `lockTo` attribute which determines which reference will be used to position the entity.
+Users are able to set an artefact to reference multiple artefacts, one each for the `pivot`, `mimic`, `path` and `particle` attributes. These attributes can be updated at any time. It is the `lockTo` attribute which determines which reference will be used to position the artefact.
 
 #### Pivot specifics
-+ If the referenced artefact is an ***Element***, the entity is able to pivot to either the Element's start value, or to the position of any of the Element's current corner positions, depending on the value set on the entity's `pivotCorner` attribute.
++ If the referenced artefact is an ***Element*** artefact, the artefact is able to pivot to either the Element's start value, or to the position of any of the Element's current corner positions, depending on the value set on the artefact's `pivotCorner` attribute.
 
-+ If the referenced artefact is a ***Polyline***, the entity is able to pivot to any of the Polyline's pins, set on the entity's `pivotPin` attribute.
++ If the referenced artefact is a ***Polyline*** entity, the artefact is able to pivot to any of the Polyline's pins, set on the artefact's `pivotPin` attribute.
 
-+ If the referenced artefact is an ***EnhancedLabel***, the entity is able to pivot to the EnhancedLabel's template artefact's start value, or to the position of a given textUnit within the EnhancedLabel, depending on the value set on the entity's `pivotIndex` attribute.
++ If the referenced artefact is an ***EnhancedLabel*** entity, the artefact is able to pivot to the EnhancedLabel's template artefact's start value, or to the position of a given textUnit within the EnhancedLabel, depending on the value set on the artefact's `pivotIndex` attribute.
 
-+ If the entity's `addPivotRotation` boolean flag is set to `true`, the entity will add the referenced artifact's rotation value to its own rotation value.
++ If the artefact's `addPivotRotation` boolean flag is set to `true`, the artefact will add the referenced artifact's rotation value to its own rotation value.
 
-+ If the entity's `addPivotOffset` boolean flag is set to `true`, the entity will add the referenced artifact's `currentOffset` value to its own offset value.
++ If the artefact's `addPivotOffset` boolean flag is set to `true`, the artefact will add the referenced artifact's `currentOffset` value to its own offset value.
 
-+ If the entity's `addPivotHandle` boolean flag is set to `true`, the entity will add the referenced artifact's `currentHandle` value to its own handle value.
++ If the artefact's `addPivotHandle` boolean flag is set to `true`, the artefact will add the referenced artifact's `currentHandle` value to its own handle value.
 
 #### Mimic specifics
-Mimic functionality allows an entity to mimic a range of the referenced artefacts attributes, as follows:
+Mimic functionality allows an artefact to mimic a range of the referenced artefacts attributes, as follows:
 
-+ `start` - setting `useMimicStart` to `true` makes the entity use the referenced artefact's start attribute; setting `addOwnStartToMimic` will add together both the entity's and the referenced artefact's start values to generate the final result.
++ `start` - setting `useMimicStart` to `true` makes the artefact use the referenced artefact's start attribute; setting `addOwnStartToMimic` will add together both the artefact's and the referenced artefact's start values to generate the final result.
 
-+ `offset` - setting `useMimicOffset` to `true` makes the entity use the referenced artefact's offset attribute; setting `addOwnOffsetToMimic` will add together both the entity's and the referenced artefact's offset values to generate the final result.
++ `offset` - setting `useMimicOffset` to `true` makes the artefact use the referenced artefact's offset attribute; setting `addOwnOffsetToMimic` will add together both the artefact's and the referenced artefact's offset values to generate the final result.
 
-+ `handle` - setting `useMimicHandle` to `true` makes the entity use the referenced artefact's handle attribute; setting `addOwnHandleToMimic` will add together both the entity's and the referenced artefact's handle values to generate the final result.
++ `handle` - setting `useMimicHandle` to `true` makes the artefact use the referenced artefact's handle attribute; setting `addOwnHandleToMimic` will add together both the artefact's and the referenced artefact's handle values to generate the final result.
 
-+ `roll` - setting `useMimicRotation` to `true` makes the entity use the referenced artefact's roll attribute; setting `addOwnRotationToMimic` will add together both the entity's and the referenced artefact's roll values to generate the final result.
++ `roll` - setting `useMimicRotation` to `true` makes the artefact use the referenced artefact's roll attribute; setting `addOwnRotationToMimic` will add together both the artefact's and the referenced artefact's roll values to generate the final result.
 
-+ `dimensions` - setting `useMimicDimensions` to `true` makes the entity use the referenced artefact's dimensions attribute; setting `addOwnDimensionsToMimic` will add together both the entity's and the referenced artefact's dimensions values to generate the final result.
++ `dimensions` - setting `useMimicDimensions` to `true` makes the artefact use the referenced artefact's dimensions attribute; setting `addOwnDimensionsToMimic` will add together both the artefact's and the referenced artefact's dimensions values to generate the final result.
 
-+ `scale` - setting `useMimicScale` to `true` makes the entity use the referenced artefact's scale attribute; setting `addOwnScaleToMimic` will add together both the entity's and the referenced artefact's scale values to generate the final result.
++ `scale` - setting `useMimicScale` to `true` makes the artefact use the referenced artefact's scale attribute; setting `addOwnScaleToMimic` will add together both the artefact's and the referenced artefact's scale values to generate the final result.
 
-+ `flipReverse` and `flipUpend` - setting `useMimicFlip` to `true` makes the entity use the referenced artefact's flipReverse and flipUpend boolean flags as part of its calculations.
++ `flipReverse` and `flipUpend` - setting `useMimicFlip` to `true` makes the artefact use the referenced artefact's flipReverse and flipUpend boolean flags as part of its calculations.
 
 #### Path specifics
-+ If the entity's `addPathRotation` boolean flag is set to `true`, the entity will add the referenced artifact's rotation value to its own rotation value.
++ If the artefact's `addPathRotation` boolean flag is set to `true`, the artefact will add the referenced path-based entity's rotation value to its own rotation value.
 
-+ If the entity's `addPathOffset` boolean flag is set to `true`, the entity will add the referenced artifact's `currentOffset` value to its own offset value.
++ If the artefact's `addPathOffset` boolean flag is set to `true`, the artefact will add the referenced path-based entity's `currentOffset` value to its own offset value.
 
-+ If the entity's `addPathHandle` boolean flag is set to `true`, the entity will add the referenced artifact's `currentHandle` value to its own handle value.
-
-## The Srawl-canvas signals system
-(TODO - think of a good way to explain this)
++ If the artefact's `addPathHandle` boolean flag is set to `true`, the artefact will add the referenced path-based entity's `currentHandle` value to its own handle value.
 
 ## Calculation order
 When the user adds `pivot`, `mimic`, and `path` references into their SC code, they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.

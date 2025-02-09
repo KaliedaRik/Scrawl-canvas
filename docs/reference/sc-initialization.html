@@ -168,6 +168,66 @@ export const init = function () {
 <li><code>getCanvases()</code> - to find and wrap all &lt;canvas&gt; elements marked with a <code>data-scrawl-canvas</code> attribute into <a href="../source/factory/canvas.html">Canvas artefact objects</a></li>
 </ul>
 <p>Because this discovery activity happens as soon as the SC code loads, and only happens once per page load, it is imperative that the code does not run until the browser has downloaded the HTML file and constructed its Document Object Model from the file's content.</p>
+<p>Note that when SC wraps &lt;canvas&gt; elements into Canvas artefacts, it will mutate the DOM element:</p>
+<pre><code>Before:                                         After:
+----------------------------------------        ----------------------------------------
+‹canvas                                         ‹canvas 
+  id="mycanvas"                                   id="mycanvas"
+  width="600"                                     width="600"
+  height="400"                                    height="400"
+  data-scrawl-canvas=""                           data-scrawl-canvas=""
+  data-base-background-color="aliceblue"          data-base-background-color="aliceblue"
+›‹/canvas›                                        data-scrawl-group="root"
+                                                  style="
+                                                    box-sizing: border-box;
+                                                    perspective-origin: 50% 50%;
+                                                    perspective: 0px;
+                                                    width: 600px;
+                                                    height: 400px;
+                                                    transform-origin: 0px 0px 0px;
+                                                    transform: translate(0px, 0px);
+                                                    display: block;
+                                                    -webkit-font-smoothing: auto;"
+                                                  aria-labelledby="mycanvas-ARIA-label"
+                                                  aria-describedby="mycanvas-ARIA-description"
+                                                  title=""
+                                                  role="img"
+                                                  class=""
+                                                ›
+                                                  ‹nav
+                                                    id="mycanvas-navigation"
+                                                    aria-live="polite"
+                                                    aria-busy="false"
+                                                  ›‹/nav›
+                                                  ‹div
+                                                    id="mycanvas-text-hold"
+                                                    aria-live="polite"
+                                                    aria-busy="false"
+                                                  ›‹/div›
+                                                  ‹div
+                                                    id="mycanvas-canvas-hold"
+                                                    aria-hidden="true"
+                                                    style="display: none;"
+                                                  ›
+                                                    ‹div
+                                                      id="mycanvas-fontSizeCalculator"
+                                                      aria-hidden="true"
+                                                    ›‹/div›
+                                                    ‹div
+                                                      id="mycanvas-styles"
+                                                      aria-hidden="true"
+                                                    ›‹/div›
+                                                  ‹/div›
+                                                  ‹div
+                                                    id="mycanvas-ARIA-label"
+                                                    aria-live="polite"
+                                                  ›mycanvas canvas element‹/div›
+                                                  ‹div
+                                                    id="mycanvas-ARIA-description"
+                                                    aria-live="polite"
+                                                  ›‹/div›
+                                                ‹/canvas›
+</code></pre>
 <p>It's also important to remember that this discovery activity will only find &lt;canvas&gt; elements (and stacks) that already exist in (have been hard-coded into) the HTML file. Any &lt;canvas&gt; element added to the DOM after page load - for instance through <a href="https://en.wikipedia.org/wiki/Hydration_(web_development)">framework client-side hydration</a> or an <a href="https://www.patterns.dev/vanilla/islands-architecture/">Islands architecture</a> pattern - will not be found during the discovery phase and thus will not have been wrapped into the SC library.</p>
 <p>This has implications for when we want to retrieve the generated artefacts from the SC library for further use:</p>
 <ul>
@@ -184,7 +244,8 @@ export const init = function () {
 <li><code>SC-core-tickers-animation</code> - defined in <a href="../source/factory/ticker.html">factory/ticker.js</a></li>
 <li><code>SC-core-workstore-hygeine</code> - defined in <a href="../source/helper/workstore.html">helper/workstore.js</a></li>
 </ul>
-<p>Note that by default, the animation loop is throttled to run at a maximum 60 frames-per-second. This rate can only be changed after initialization completes.</p>
+<p>Note that by default, the animation loop is throttled to run at a maximum 60 frames-per-second. This is because some devices, using modern displays that support it, can run at higher fps rates. Users can change this rate throttle in code after initialization completes. See <a href="../demo/canvas-050.html">demo test Canvas-050</a> for an example of this functionality in action.</p>
+<p>Users can also stop and restart the animation loop after initialization completes by invoking the <code>scrawl.stopCoreAnimationLoop()</code> and <code>scrawl.startCoreAnimationLoop()</code> functions. See <a href="../demo/dom-009.html">demo test DOM-009</a> for details.</p>
 <h2 id="coreconstantsflagsandeventlisteners">Core constants, flags and event listeners</h2>
 <p>Two of the key drivers for SC is to make &lt;canvas&gt; elements responsive to their environments, and offer high-level functionality for user interactions with those responsive elements. Much of the code that handles this functionality can be found in the <a href="../source/core/user-interaction.html">core/user-interaction.js</a> file.</p>
 <p>The code in this file makes heavy use of shared constants and system flags. As a result, these also need to be instantiated as part of the initialization process.</p>
@@ -251,8 +312,36 @@ export const setPrefersContrastChanged = (val) =&gt; prefersContrastChanged = va
 };
 </code></pre>
 <p>SC checks for changes to system state using an animation object - <code>SC-core-listeners-tracker</code> - that runs once at the start of each animation loop. When changes are detected Canvas and Stack artefacts will be informed (via <code>dirty flags</code>). When they in turn run their Display cycle functionality they will cascade that information to their constituent objects who will, if necessary, update their state to reflect the changed environment. </p>
-<h3 id="browsermousescrollandresizeevents">Browser mouse, scroll and resize events</h3>
+<h3 id="browsermousetouchpointerscrollandresizeevents">Browser mouse/touch/pointer, scroll, and resize events</h3>
+<p>During initialization SC will add a set of event listeners to the <code>window</code> object which react to various <code>mouse/touch/pointer</code> events. When such events occur the listeners will set the appropriate system flags to true (ie: something has changed) and store the cursor's current position data in the <code>currentCorePosition</code> object. Functionality to react to these changes is deferred until the next animation loop runs.</p>
+<p>Similarly, SC sets event listeners on the <code>window</code> object to listen for browser <code>resize</code> and <code>scroll</code> events.</p>
+<p>After initialization completes the user can stop and restart these core listeners by invoking the <code>scrawl.stopCoreListeners()</code> and <code>scrawl.startCoreListeners()</code> functions. See <a href="../demo/dom-009.html">demo test DOM-009</a> for an example of this functionality in action.</p>
 <h3 id="userpreferencesmediaqueriesandevents">User preferences media queries and events</h3>
+<p>SC uses evented media queries to listen out for changes in various system settings. For example:</p>
+<pre><code>const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMediaQuery.addEventListener(CHANGE, () =&gt; {
+
+    const res = colorSchemeMediaQuery.matches;
+
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
+
+        currentCorePosition.prefersDarkColorScheme = res;
+        setPrefersDarkColorSchemeChanged(true);
+    }
+});
+currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
+</code></pre>
+<p>SC tracks the following system settings:</p>
+<ul>
+<li><code>prefers-color-scheme</code></li>
+<li><code>prefers-contrast</code></li>
+<li><code>prefers-reduced-data</code></li>
+<li><code>prefers-reduced-motion</code></li>
+<li><code>prefers-reduced-transparency</code></li>
+</ul>
+<p>SC, by default, doesn't react to changes in these settings. It's up to the developer to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the <a href="canvas-artefact-overview.html">Canvas page</a> in the Runbook for further details. </p>
+<p>SC also tracks the current <code>pixel-ratio</code> and <code>color-gamut: p3</code> settings for the device/screen on which the browser is displaying. This can change when, for instance, a user drags the browser window between screens. Such changes are handled by SC internally with no need for additional developer intervention.</p>
 <h2 id="scrawlcanvaspools">Scrawl-canvas pools</h2>
 <p>SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.</p>
 <p>Instead, SC code makes use of a set of pooled objects and arrays for much of its functionality. These pools get initialised when the browser first imports the relevant modules, and start as empty arrays. While some of these pools are made available to the user via scrawl functions, others are strictly internal.</p>
@@ -273,10 +362,11 @@ export const setPrefersContrastChanged = (val) =&gt; prefersContrastChanged = va
 <p>SC comes with a sophisticated set of filters which can be applied at the entity, Group or Cell level - see <a href="../demo/canvas-007.html">demo Canvas-007</a> for an example.</p>
 <p>The functionality to generate these filters and apply them to entitys, Groups and Cells is housed in a single filter engine object whose code can be found in the <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> file. This singleton object is instantiated as part of the SC initialization process as a by-product of both the Cell and Group modules importing it.</p>
 <p>The filter engine module will also set up a permanent animation object - <code>SC-core-filters-cleanup-action</code> - to run once at the end of every animation loop iteration, to reset <a href="../source/factory/filter.html">filter object</a> <code>dirtyFilterIdentifier</code> flags back to <code>false</code>.</p>
+<p>Finally, the filter engine will instantiate an internal <a href="../source/factory/color.html">Color object</a> - <code>SC-core-color-engine</code> - during initialization.</p>
 <h2 id="scrawlcanvasworkstore">Scrawl-canvas workstore</h2>
 <p>The SC workstore is an internal mechanism for caching various computationally-intensive objects; it is used in particular by the singleton filter engine but is available for use by other SC modules as required.</p>
 <p>Every object cached in the workstore includes a timestamp indicating the last time it was accessed; the workstore actively purges objects that haven't been recently accessed. This action is handled by an animation object - <code>SC-core-workstore-hygeine</code> - which gets instantiated at the same time as the workstore.</p>
-<p>More details about workstore functionality can be found in its <a href="../source/helper/workstore.html">module file</a>.</p>
+<p>More details about workstore functionality can be found in the <a href="../source/helper/workstore.html">helper/workstore.js</a> file.</p>
     </main>
     
     <nav>
