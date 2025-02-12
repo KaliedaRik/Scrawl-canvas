@@ -413,7 +413,7 @@ interface PathMixinInputs {
     addPathOffset?: boolean;
     addPathRotation?: boolean;
     constantSpeedAlongPath?: boolean;
-    path?: ShapeInstance | string;
+    path?: ShapeBasedInstance | string;
 }
 
 interface PathMixinFunctions {}
@@ -581,7 +581,7 @@ interface ShapeCurveMixinInputs extends ShapeBasicMixinInputs {
     addEndPivotOffset?: boolean;
     endLockTo?: LockToValues | [LockToValues, LockToValues];
     endParticle?: string;
-    endPath?: ShapeInstance | string;
+    endPath?: ShapeBasedInstance | string;
     endPivot?: ArtefactInstance | string;
     endPivotCorner?: PivotCornerValues;
     endPivotIndex?: number;
@@ -806,7 +806,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     addStartControlPivotOffset?: boolean;
     startControlLockTo?: LockToValues | [LockToValues, LockToValues];
     startControlParticle?: string;
-    startControlPath?: ShapeInstance | string;
+    startControlPath?: ShapeBasedInstance | string;
     startControlPivot?: ArtefactInstance | string;
     startControlPivotCorner?: PivotCornerValues;
     startControlPivotPin?: number;
@@ -818,7 +818,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     addEndControlPivotOffset?: boolean;
     endControlLockTo?: LockToValues | [LockToValues, LockToValues];
     endControlParticle?: string;
-    endControlPath?: ShapeInstance | string;
+    endControlPath?: ShapeBasedInstance | string;
     endControlPivot?: ArtefactInstance | string;
     endControlPivotCorner?: PivotCornerValues;
     endControlPivotPin?: number;
@@ -2198,7 +2198,7 @@ interface QuadraticFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs,
     addControlPivotOffset?: boolean;
     controlLockTo?: LockToValues | [LockToValues, LockToValues];
     controlParticle?: string;
-    controlPath?: ShapeInstance | string;
+    controlPath?: ShapeBasedInstance | string;
     controlPivot?: ArtefactInstance | string;
     controlPivotCorner?: PivotCornerValues;
     controlPivotPin?: number;

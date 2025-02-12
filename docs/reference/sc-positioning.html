@@ -22,7 +22,7 @@
     </nav>
 
     <main>
-        <h1 id="thescrawlcanvaspositioningsystem">The Scrawl-canvas positioning system</h1>
+        <h1 id="the-scrawl-canvas-positioning-system">The Scrawl-canvas positioning system</h1>
 <p>The key purpose of SC is to position graphical entitys onto a canvas element, in a given order, so that those entitys build some form of graphical representation, chart, imagery, infographic, artwork (etc) that can be displayed as part of a web page.</p>
 <h2 id="background">Background</h2>
 <p>As background knowledge, we need to understand that a DOM &lt;canvas&gt; element, and SC's representation of that element (as <code>Canvas</code> and <code>Cell</code> wrapper artefacts) are very different things.</p>
@@ -43,7 +43,7 @@
 </ul>
 <p>Furthermore, <strong>positioning</strong> refers to the <em>location</em> of an entity on the Cell, alongside that entity's <em>dimensions</em>, <em>scale</em> (relative to its default dimensions) and <em>rotation</em> (relative to the Cell's coordinate space axes).</p>
 <p>Also, while we concentrate on the positioning of graphical entitys in this document, SC extends the positioning system to include DOM elements within an SC "stack" element.</p>
-<h3 id="therotationreflectionpoint">The rotation-reflection point</h3>
+<h3 id="the-rotation-reflection-point">The rotation-reflection point</h3>
 <p>When we position an entity, we are in fact positioning that entity's <strong><em>rotation-reflection</em></strong> point, around which the entity will stamp itself onto the Cell.</p>
 <p>By default, the rotation-reflection point is located at the top-left corner of the entity, and represents the <code>[0, 0]</code> coordinate of that entity's local coordinate system.</p>
 <p>We position this rotation-reflection point in the Cell's host coordinate system, which starts at the Cell's top left corner and extends the width (x axis) and height (y axis) of its drawing space. </p>
@@ -53,15 +53,15 @@
 <li><p><strong><em>Relative positioning</em></strong> using percentage ratio coordinates (<code>['x%', 'y%']</code>) relative to the Cell's current width and height dimensions - for example <code>['50%', '50%']</code> represents a position at the centre of the Cell.</p></li>
 <li><p><strong><em>Positioning by reference</em></strong> where an entity can use the current position of another entity to calculate its own position on the Cell.</p></li>
 </ul>
-<h2 id="absoluteandrelativepositioning">Absolute and relative positioning</h2>
+<h2 id="absolute-and-relative-positioning">Absolute and relative positioning</h2>
 <p>The most direct way to position an entity is to give it <code>start</code>, <code>offset</code> and <code>handle</code> values, from which it will calculate its position on the Cell. Each of these attributes are Coordinates with a default value of <code>[0,0]</code>. Each atteribute also comes with a set of pseudo-attributes which allow the user to set and get the x and y components of the Coordinate separately.</p>
-<h3 id="thestartartefactattribute">The <code>start</code> artefact attribute</h3>
+<h3 id="the-start-artefact-attribute">The <code>start</code> artefact attribute</h3>
 <p>We <strong>set</strong> an artefact's rotation-reflection point using its <code>start</code> attribute. For convenience, we can also set each part of the point's coordinate using the <code>startX</code> and <code>startY</code> pseudo-attributes.</p>
 <p>We can mix-and-match absolute and relative values in a coordinate: <code>[200, '40%']</code> is a legitimate coordinate, as is <code>['40%', 200]</code>.</p>
 <p>Setting an artefact's <code>start</code> attribute will also set the artefact's <code>dirtyStart</code> boolean flag to <code>true</code>. At the start of the next <a href="sc-display-cycle.html">Display cycle</a> the SC system performs a check across all entitys and, for those marked dirty, will perform calculations to <strong><em>clean</em></strong> their <code>start</code> attribute, placing the result (measured in cell coordinate space pixels) into the private <code>currentStart</code> attribute.</p>
 <p>When we <strong>get</strong> an artefact's <code>start</code> coordinate, the <code>currentStart</code> attribute will be returned. Note that any attempt to <strong><em>set</em></strong> the <code>currentStart</code> will have unexpected effects on the artefact.</p>
 <p>Directly setting an artefact's <code>start</code> or (worse!) <code>currentStart</code> value will lead to unexpected behaviours and bugs. Always use the <code>artefact.set({ start: [x, y]})</code> or <code>artefact.deltaSet({ start: [x, y]})</code> functionality!</p>
-<h3 id="theoffsetandpositionartefactattributes">The <code>offset</code> and <code>position</code> artefact attributes</h3>
+<h3 id="the-offset-and-position-artefact-attributes">The <code>offset</code> and <code>position</code> artefact attributes</h3>
 <p>An artefact's <code>start</code> (and <code>currentStart</code>) value does not fully represent its rotation-reflection point. We are able to <strong><em>offset</em></strong> the rotation-reflection point from the start coordinate using the artefact's <code>offset</code> attribute. See <a href="../demo/canvas-002.html">Demo Canvas-002</a> for an example of this functionality.</p>
 <p>These <code>offset</code> values, like <code>start</code> values, can be <strong><em>absolute</em></strong> (measured in pixels) or <strong><em>relative</em></strong> (as a percentage of the host Cell's current dimensions). When we <strong>set</strong> the artefact's <code>offset</code> (<code>offsetX</code>, <code>offsetY</code>) value, we also set its <code>dirtyOffset</code> boolean flag to <code>true</code>. Similar to the <code>start</code> attribute, entitys will clean their dirty offsets and store the result in the private <code>currentOffset</code> attribute.</p>
 <p>When we <strong>get</strong> an artefact's <code>offset</code> coordinate, the <code>currentOffset</code> value will be returned. Note that any attempt to <strong><em>set</em></strong> the <code>currentOffset</code> will have unexpected effects on the artefact.</p>
@@ -113,9 +113,8 @@
     |                                                 |
     |                                                 |
     .---------|---------|---------|---------|---------.
-                                                      {50,20}
-</code></pre>
-<h3 id="thehandleartefactattribute">The <code>handle</code> artefact attribute.</h3>
+                                                      {50,20}</code></pre>
+<h3 id="the-handle-artefact-attribute">The <code>handle</code> artefact attribute.</h3>
 <p>In brief, SC <strong><em>paints</em></strong> an artefact onto the canvas using the following protocol:</p>
 <ol>
 <li>If necessary, clean the artefact's dirty attributes and recalculate its rotation-reflection point.</li>
@@ -176,12 +175,11 @@
     |                                                 |
     |                                                 |
     .---------|---------|---------|---------|---------.
-                                                      {50,20}
-</code></pre>
-<h2 id="positioningbyreference">Positioning by reference</h2>
+                                                      {50,20}</code></pre>
+<h2 id="positioning-by-reference">Positioning by reference</h2>
 <p>A foundational tenet of the SC positioning system is that any artefact can position itself on the Cell by referencing any other artefact. </p>
 <p>In essence, this means that instead of using its own <code>currentStart</code> values when calculating the value of its rotation-reflection point, our artefact will instead use the referenced artefact's <code>currentStart</code> values. SC manages this through a system of locks, alongside a (bespoke, and rudimentary) signals system.</p>
-<h3 id="thelocktoartefactattribute">The <code>lockTo</code> artefact attribute</h3>
+<h3 id="the-lockto-artefact-attribute">The <code>lockTo</code> artefact attribute</h3>
 <p>The <code>lockTo</code> attribute is an Array containing two String values. Each value indicates how the artefact wants to calculate its position along the Cell's <code>x</code> and <code>y</code> axes - <code>['x-axis-string', 'y-axis-string']</code>. The default value is <code>['start', 'start']</code>, indicating that the artefact wishes both parts of its start coordinate to use absolute or relative positioning as described above.</p>
 <p>Like the other coordinate-like attributes, <code>lockTo</code> comes with a set of pseudo-attributes - <code>lockXTo</code>, <code>lockYTo</code> - which users can use to set the individual elements of the attribute.</p>
 <p>The following String values can be used in the <code>lockTo</code> attribute's Array:</p>
@@ -194,7 +192,7 @@
 <li><p><code>mouse</code>: use the mouse cursor's calculated position relative to the Cell to calculate the rotation-reflection point</p></li>
 </ul>
 <p>Users are able to set an artefact to reference multiple artefacts, one each for the <code>pivot</code>, <code>mimic</code>, <code>path</code> and <code>particle</code> attributes. These attributes can be updated at any time. It is the <code>lockTo</code> attribute which determines which reference will be used to position the artefact.</p>
-<h4 id="pivotspecifics">Pivot specifics</h4>
+<h4 id="pivot-specifics">Pivot specifics</h4>
 <ul>
 <li><p>If the referenced artefact is an <strong><em>Element</em></strong> artefact, the artefact is able to pivot to either the Element's start value, or to the position of any of the Element's current corner positions, depending on the value set on the artefact's <code>pivotCorner</code> attribute.</p></li>
 <li><p>If the referenced artefact is a <strong><em>Polyline</em></strong> entity, the artefact is able to pivot to any of the Polyline's pins, set on the artefact's <code>pivotPin</code> attribute.</p></li>
@@ -203,7 +201,7 @@
 <li><p>If the artefact's <code>addPivotOffset</code> boolean flag is set to <code>true</code>, the artefact will add the referenced artifact's <code>currentOffset</code> value to its own offset value.</p></li>
 <li><p>If the artefact's <code>addPivotHandle</code> boolean flag is set to <code>true</code>, the artefact will add the referenced artifact's <code>currentHandle</code> value to its own handle value.</p></li>
 </ul>
-<h4 id="mimicspecifics">Mimic specifics</h4>
+<h4 id="mimic-specifics">Mimic specifics</h4>
 <p>Mimic functionality allows an artefact to mimic a range of the referenced artefacts attributes, as follows:</p>
 <ul>
 <li><p><code>start</code> - setting <code>useMimicStart</code> to <code>true</code> makes the artefact use the referenced artefact's start attribute; setting <code>addOwnStartToMimic</code> will add together both the artefact's and the referenced artefact's start values to generate the final result.</p></li>
@@ -214,13 +212,13 @@
 <li><p><code>scale</code> - setting <code>useMimicScale</code> to <code>true</code> makes the artefact use the referenced artefact's scale attribute; setting <code>addOwnScaleToMimic</code> will add together both the artefact's and the referenced artefact's scale values to generate the final result.</p></li>
 <li><p><code>flipReverse</code> and <code>flipUpend</code> - setting <code>useMimicFlip</code> to <code>true</code> makes the artefact use the referenced artefact's flipReverse and flipUpend boolean flags as part of its calculations.</p></li>
 </ul>
-<h4 id="pathspecifics">Path specifics</h4>
+<h4 id="path-specifics">Path specifics</h4>
 <ul>
 <li><p>If the artefact's <code>addPathRotation</code> boolean flag is set to <code>true</code>, the artefact will add the referenced path-based entity's rotation value to its own rotation value.</p></li>
 <li><p>If the artefact's <code>addPathOffset</code> boolean flag is set to <code>true</code>, the artefact will add the referenced path-based entity's <code>currentOffset</code> value to its own offset value.</p></li>
 <li><p>If the artefact's <code>addPathHandle</code> boolean flag is set to <code>true</code>, the artefact will add the referenced path-based entity's <code>currentHandle</code> value to its own handle value.</p></li>
 </ul>
-<h2 id="calculationorder">Calculation order</h2>
+<h2 id="calculation-order">Calculation order</h2>
 <p>When the user adds <code>pivot</code>, <code>mimic</code>, and <code>path</code> references into their SC code, they also introduce <strong>artefact dependencies</strong>: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.</p>
 <blockquote>
   <p><strong>tl;dr: - SC includes no functionality to internally construct and maintain a dependency graph</strong> describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the developer to tell SC the order in which artefacts should calculate/update their state.</p>
@@ -232,8 +230,7 @@
    2.1: Calculate
    2.2: Stamp
 
-3: Show
-</code></pre>
+3: Show</code></pre>
 <p>A number of attributes are used across the code base to describer ordering; it's important not to confuse them:</p>
 <ul>
 <li><p>SC <strong><em>Cell</em></strong> artefacts use their <code>compileOrder</code> and <code>showOrder</code> attributes to determine in which order they will perform the Display cycle compile and show steps.</p></li>
@@ -288,8 +285,7 @@ scrawl.makeBlock({
     name: 'green-block',
     group: 'my-extra-cell',
     fillStyle: 'my-hidden-cell',
-});
-</code></pre>
+});</code></pre>
 <p>The SC Display cycle will process the above code in the following order:</p>
 <pre><code>Canvas {name: 'my-canvas'}
 
@@ -311,8 +307,7 @@ scrawl.makeBlock({
 
         Group {name: 'my-canvas_base'}
             Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 0}
-            Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
-</code></pre>
+            Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}</code></pre>
 <p>Which will lead to an incorrect canvas output:</p>
 <p><strong>my-extra-cell</strong></p>
 <ol>
@@ -386,8 +381,7 @@ scrawl.makeBlock({
     name: 'green-block',
     group: 'my-extra-cell',
     fillStyle: 'my-hidden-cell',
-});
-</code></pre>
+});</code></pre>
 <p>Now the SC Display cycle processes the code like this:</p>
 <pre><code>Canvas {name: 'my-canvas'}
 
@@ -409,8 +403,7 @@ scrawl.makeBlock({
 
         Group {name: 'my-canvas_base'}
             Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
-            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 1}
-</code></pre>
+            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 1}</code></pre>
 <p>Which will lead to the expected outcome:</p>
 <p><strong>my-hidden-cell</strong></p>
 <ol>

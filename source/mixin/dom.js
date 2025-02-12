@@ -32,7 +32,7 @@ import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
 // Question: do DOM elements really need additional anchors and buttons?
-import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
+import hiddenElementsMix from './hidden-dom-elements.js';
 import anchorMix from './anchor.js';
 import buttonMix from './button.js';
 

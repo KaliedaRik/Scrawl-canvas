@@ -69,9 +69,9 @@ We provide the (handwritten) index file for easy browser navigation around the d
 + `docs/docco.css`
 
 #### Building: Showdown
-A set of more general reference documentation pages lives in the `docs/reference` folder. These are written in (simple) `.md` markdown files. We use [Showdown](https://showdownjs.com/docs/) to convert these files into `.html` documents which live in the same folder. Running the `yarn build-showdown` command (also invoked when running `yarn build`) generates the `.html` files.
+The Developer Runbook page files live in the `docs/reference` folder. These are written in (simple) `.md` markdown files. We use [Showdown](https://showdownjs.com/docs/) to convert these files into `.html` documents which live in the same folder. Running the `yarn build-showdown` command (also invoked when running `yarn build`) generates the `.html` files.
 
-Files specific to the general reference documentation toolchain:
+Files specific to the Developer Runbook toolchain:
 
 + `scripts/build-reference-docs.mjs`
 + `docs/reference/*`
@@ -114,12 +114,14 @@ All demo tests will also import additional testing and convenience code from the
 
 To perform development work on the source code, or test the demos, run the command `yarn dev`.
 
-We use the [browser-sync](https://browsersync.io/) server to handle browser testing as it allows us to test each demo on multiple browsers (generally Chrome, Firefox and Safari) at the same time. Local site files can be found as follows:
+We use the [browser-sync](https://browsersync.io/) server to handle browser testing as it allows us to test each demo on multiple browsers (generally Chrome, Firefox and Safari) at the same time. Additional local site files can be found as follows:
 
 + `index.html`
 + `favicon.png`
 + `docs/index.html`
 + `docs/docco.css`
++ `docs/reference/index.html`
++ `docs/css/*.css`
 + `demo/index.html`
 + `demo/css/*.css`
 + `demo/thumbs/*.webp`
@@ -157,6 +159,8 @@ Version release has not (yet) been automated, which means the all following step
 4: All (relevant) references to the previous release version (in the form `x.y.z` and also `x-y-z`) need to be updated across files; the release date also needs to be updated in a couple of files. Current affected files include:
 + `demo/dom-001.html`
 + `demo/index.html`
++ `docs/index.html`
++ `docs/reference/index.html`
 + `source/core/library.js`
 + `source/scrawl.d.ts`
 + `source/scrawl.js`
@@ -231,3 +235,8 @@ Version release has not (yet) been automated, which means the all following step
 #### CodePen
 
 22: We can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.
+
+#### tsdocs.dev website
+
+23: Remember to visit the [tsdocs.dev](https://tsdocs.dev/) website and search for `scrawl-canvas`. This should (fingers crossed) be sufficient for the site to pick up the latest version of the library and auto-generate reference pages for it from the `scrawl.d.ts` file.
+

@@ -243,7 +243,10 @@ const generateFile = async (data, index) => {
     }
 };
 
-const converter = new showdown.Converter({});
+const converter = new showdown.Converter({
+    table: true,
+});
+converter.setFlavor('github');
 
 pages.sort((a, b) => {
 

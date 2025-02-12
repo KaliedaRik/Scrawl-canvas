@@ -146,6 +146,7 @@ const killArtefact = (scrawl, canvas, name, time, finishResurrection = () => {})
         removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
             packet = L.artefact[name].saveAsPacket();
+            console.log(packet);
 
             L.artefact[name].kill();
 
@@ -197,6 +198,7 @@ const killStyle = (scrawl, canvas, name, time, finishResurrection = () => {}) =>
         removed from stylesnames: ${(L.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
 
             packet = L.styles[name].saveAsPacket();
+            console.log(packet);
 
             L.styles[name].kill();
 
@@ -250,6 +252,7 @@ const killArtefactAndAnchor = (scrawl, canvas, name, anchorname, time, finishRes
     anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
         packet = L.artefact[name].saveAsPacket();
+        console.log(packet);
 
         L.artefact[name].kill();
 
@@ -319,6 +322,7 @@ const killPolylineArtefact = (scrawl, canvas, name, time, myline, restore = () =
     removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
         packet = L.artefact[name].saveAsPacket();
+        console.log(packet);
 
         L.artefact[name].kill();
 
@@ -367,6 +371,7 @@ const killTicker = (scrawl, stack, name, time) => {
     removed from tickers: ${(L.animationtickers[name]) ? 'no' : 'yes'}`);
 
         packet = L.animationtickers[name].saveAsPacket();
+        console.log(packet);
 
         L.animationtickers[name].kill();
 

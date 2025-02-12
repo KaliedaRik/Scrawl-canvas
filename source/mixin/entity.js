@@ -20,15 +20,15 @@ import { filterEngine } from '../helper/filter-engine.js';
 import { importDomImage } from '../asset-management/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
 
-import positionMix from '../mixin/position.js';
-import deltaMix from '../mixin/delta.js';
-import pivotMix from '../mixin/pivot.js';
-import mimicMix from '../mixin/mimic.js';
-import pathMix from '../mixin/path.js';
-import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
-import anchorMix from '../mixin/anchor.js';
-import buttonMix from '../mixin/button.js';
-import filterMix from '../mixin/filter.js';
+import positionMix from './position.js';
+import deltaMix from './delta.js';
+import pivotMix from './pivot.js';
+import mimicMix from './mimic.js';
+import pathMix from './path.js';
+import hiddenElementsMix from './hidden-dom-elements.js';
+import anchorMix from './anchor.js';
+import buttonMix from './button.js';
+import filterMix from './filter.js';
 
 // Shared constants
 import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';

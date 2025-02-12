@@ -5,7 +5,7 @@ Scrawl-canvas is a [modular javascript](https://developer.mozilla.org/en-US/docs
 include * as scrawl from 'scrawl-canvas';
 ```
 
-While this `include` statement may happen many times across different JS/TS files in a web page, ***the SC code itself will run just once, during page load***, when the browser first encounters the `include` statement. For every subsequent encounter, the browser just returns the SC object (`scrawl`) that was generated on that first encounter. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.
+While such `include` statements may happen many times across different JS/TS files in a web page, ***the SC code itself will run only once, during page load***, when the browser first encounters the `include` statement. For every subsequent encounter, the browser just returns the SC object (`scrawl`) that was generated on that first encounter. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.
 
 > **tl;dr: We strongly recommend that code using Scrawl-canvas only runs after the page's HTML download completes.** This is because SC initialization code will interrogate the web page's DOM, looking for &lt;canvas> and &lt;div> stack elements that we want it to manage ... but this only happens once per page load!
 
