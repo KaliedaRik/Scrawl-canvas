@@ -18,7 +18,7 @@
     <nav>
         <a href=sc-initialization.html>Previous</a>
         <a href="index.html">Contents</a>
-        <a href=sc-canvas-artefact.html>Next</a>
+        <a href=sc-dom-artefacts.html>Next</a>
     </nav>
 
     <main>
@@ -270,7 +270,7 @@ const myRedBlock = scrawl.findEntity(name('red-block'));</code></pre>
 <blockquote>
   <p><strong>tl;dr:</strong> SC does <strong><em>not</em></strong> encourage the use of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors">Javascript property accessors</a> (dot-notation or bracket-notation syntax) for getting or setting values on factory-generated object instances in product code. Use the <code>.get('attribute')</code>, <code>.set({key: value, ...})</code> and <code>.setDelta({key: value, ...})</code> functions instead.</p>
 </blockquote>
-<p>The SC property accessor functionality is initially defined in the <a href="../source/mixin/base.html">base mixin file</a>. However each factory function generates differently shaped instance objects so some mixin files and factory functions will overwrite the accessor functions to make sure they meet the needs of the instance. For example, the <code>get()</code> function gets overwritten in the following files:</p>
+<p>The SC property accessor functionality is initially defined in the <a href="../source/mixin/base.html">base mixin file</a>. However each factory function generates differently shaped instance objects so some mixin files and factory functions will overwrite the accessor functions to make sure they meet the needs of the instance. For example, the <code>.get()</code> function gets overwritten in the following files:</p>
 <ul>
 <li><a href="../source/mixin/entity.html">mixin/entity.js</a> - to include context engine state attributes</li>
 <li><a href="../source/factory/loom.html">factory/loom.js</a> - a complex entity that uses other entitys for its functionality</li>
@@ -381,7 +381,7 @@ Blur":2,"shadowColor":"black"}]</code></pre>
     <nav>
         <a href=sc-initialization.html>Previous</a>
         <a href="index.html">Contents</a>
-        <a href=sc-canvas-artefact.html>Next</a>
+        <a href=sc-dom-artefacts.html>Next</a>
     </nav>
 
 </body>

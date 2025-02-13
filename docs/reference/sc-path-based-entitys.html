@@ -24,22 +24,35 @@
     <main>
         <h1 id="path-based-entitys">Path-based entitys</h1>
 <p>A brief overview of path-based entity functionality</p>
+<p>Path-based entitys that use SVG <code>d</code> strings</p>
 <ul>
-<li><p><code>Shape</code></p></li>
-<li><p><code>Line</code></p></li>
-<li><p><code>Quadratic</code></p></li>
-<li><p><code>Bezier</code></p></li>
-<li><p><code>Cog</code></p></li>
-<li><p><code>LineSpiral</code></p></li>
-<li><p><code>Oval</code></p></li>
-<li><p><code>Polygon</code></p></li>
-<li><p><code>Polyline</code></p></li>
-<li><p><code>Rectangle</code></p></li>
-<li><p><code>Spiral</code></p></li>
-<li><p><code>Star</code></p></li>
-<li><p><code>Tetragon</code></p></li>
-<li><p><code>Loom</code> - see <a href="">Image-based entitys</a></p></li>
+<li><code>Shape</code></li>
 </ul>
+<p>Path-based entitys mapping to Canvas API primitive paths</p>
+<ul>
+<li><code>Line</code></li>
+<li><code>Quadratic</code></li>
+<li><code>Bezier</code></li>
+<li>Using reference positioning for control points</li>
+</ul>
+<p>SC pre-defined path-based entitys</p>
+<ul>
+<li><code>Cog</code></li>
+<li><code>LineSpiral</code></li>
+<li><code>Oval</code></li>
+<li><code>Polygon</code></li>
+<li><code>Rectangle</code></li>
+<li><code>Spiral</code></li>
+<li><code>Star</code></li>
+<li><code>Tetragon</code></li>
+</ul>
+<p>Other things</p>
+<ul>
+<li><code>Polyline</code> - generating a path-based entity from sets of coordinates (which can be references to other artifacts, and even particles)</li>
+<li><code>Loom</code> - a compound entity that uses path-based entitys to define its display shape</li>
+<li><code>EnhancedLabel</code> - can use path-based entitys for "text along a path" effects</li>
+</ul>
+<p>Maybe include some thoughts on why SC doesn't support importing SVGs into the system, and will never support exporting canvas displays as SVGs.</p>
     </main>
     
     <nav>
