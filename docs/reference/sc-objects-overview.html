@@ -23,7 +23,7 @@
 
     <main>
         <h1 id="scrawl-canvas-objects-overview">Scrawl-canvas objects overview</h1>
-<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas">&lt;canvas> element</a>, alongside the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> used to program it, is an <strong><a href="https://learn.microsoft.com/en-us/windows/win32/learnwin32/retained-mode-versus-immediate-mode">immediate mode</a> graphics system</strong>. What this means in practical terms is that all Canvas API drawing instructions have to be set out in a Javascript file, or written directly in a &lt;script&gt; element, and run in their entirety to generate the canvas display. For animation, this needs to be repeated for every frame of the animation.</p>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas"><code>&lt;canvas&gt;</code> element</a>, alongside the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> used to program it, is an <strong><a href="https://learn.microsoft.com/en-us/windows/win32/learnwin32/retained-mode-versus-immediate-mode">immediate mode</a> graphics system</strong>. What this means in practical terms is that all Canvas API drawing instructions have to be set out in a Javascript file, or written directly in a <code>&lt;script&gt;</code> element, and run in their entirety to generate the canvas display. For animation, this needs to be repeated for every frame of the animation.</p>
 <p>Most canvas libraries - including Scrawl-canvas - act as a buffer between the developer and the Canvas API by introducing a stateful <a href="https://en.wikipedia.org/wiki/Scene_graph">scene graph</a> composed of objects, and groups of objects, which define a set of entities to be drawn onto the canvas. The scene graph gets <strong>rendered</strong> onto the canvas once, then re-rendered only when changes to its state require it. Some canvas libraries are sophisticated enough to only re-render those parts of their scene graph that change, thus minimising the work the browser needs to do. They are, effectively, <strong>retained mode graphics systems</strong>.</p>
 <h2 id="object-creation-and-the-sc-library">Object creation and the SC library</h2>
 <p>When a user develops an SC canvas display they start by defining the set of artefacts and entitys they will use in the display, using <a href="https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)">factory functions</a> supplied by SC for that purpose. These factory functions are easy to identify because they are all named along the lines of <code>makeSomething</code>:</p>
@@ -83,7 +83,7 @@ const redBlock = scrawl.makeBlock({
 <p>Every tracked SC object needs a name - if the user fails to provide the factory function with a <code>name</code> attribute SC will assign the object a random (and very ugly) name.</p>
 <p>Object names need to be (mostly) unique because SC uses the <code>name</code> attribute as the object's key in the SC library. The user should always be able to locate an object in the library, and retrieve it, if they know its name.</p>
 <blockquote>
-  <p><strong>tl;dr: namespacing objects in the SC library is highly recommended!</strong> Because the SC library can quickly fill with objects, keeping the library tidy becomes a priority - particularly when objects are no longer required for the &lt;canvas&gt; display.</p>
+  <p><strong>tl;dr: namespacing objects in the SC library is highly recommended!</strong> Because the SC library can quickly fill with objects, keeping the library tidy becomes a priority - particularly when objects are no longer required for the <code>&lt;canvas&gt;</code> display.</p>
 </blockquote>
 <p>A simple way for the user to namespace objects is to use a small piece of boilerplate code in their project files, along the lines of: </p>
 <pre><code>const namespace = `${canvas.name}-somenamespacestring`;
@@ -264,7 +264,7 @@ const myRedBlock = scrawl.findEntity(name('red-block'));</code></pre>
 <p>While the SC (bespoke) property accessor functionality may seem over-complicated on first glance, the system has been built in this way for reasons that have evolved over the course of the library's history:</p>
 <ul>
 <li>Every factory function constructs its object instances in the same way, assigning all the attributes that the object instance will ever hold with default values before populating those attributes with values supplied to it in the function's argument object. This is done to establish the <a href="https://mathiasbynens.be/notes/shapes-ics">object instance's shape</a> in a way that promotes Javascript engine speed.</li>
-<li>The object instance's setter (<code>set()</code>, <code>setDelta()</code>) functions do the necessary work to maintain the instance's shape: if the user tries to add a new attribute to the instance, it will be ignored. These functions also manage part of the SC signals system, which tells objects that they need to update (some of) their attribute values as a result of updates in other parts of the ecosystem.</li>
+<li>The object instance's setter (<code>.set()</code>, <code>.setDelta()</code>) functions do the necessary work to maintain the instance's shape: if the user tries to add a new attribute to the instance, it will be ignored. These functions also manage part of the <a href="sc-events-signals.html">SC signals system</a>, which tells objects that they need to update (some of) their attribute values as a result of updates in other parts of the ecosystem.</li>
 <li>The object instances that a factory function generates can be complicated, with nested arrays, functions and objects assigned to attributes. SC property accessors try to simplify the getting and setting of instance attributes so that developers don't need to remember the instance's shape to get work done (thus, a better developer experience).</li>
 </ul>
 <blockquote>
@@ -288,18 +288,18 @@ const myRedBlock = scrawl.findEntity(name('red-block'));</code></pre>
 <p>Javascript does not tell a good story when it comes to serializing functions. By necessity, SC has to use the Javascript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function"><code>Function() constructor</code></a> as part of the deserialization process. Some people may consider this to be a security risk but, compared to using <code>eval()</code> to deserialize the function, the risk is minimal (but not eliminated).</p>
 <p>Because of the issues surrounding Javascript object serialization, SC implemenets its own serialization functionality called <strong>packet management</strong>. Much of this functionality gets defined in the <a href="../source/mixin/base.html">base mixin file</a> using the following prototype attributes and functions:</p>
 <ul>
-<li>[internal] <code>packetExclusions</code> - string[]</li>
-<li>[internal] <code>packetExclusionsByRegex</code> - string[]</li>
-<li>[internal] <code>packetCoordinates</code> - string[]</li>
-<li>[internal] <code>packetObjects</code> - string[]</li>
-<li>[internal] <code>packetFunctions</code> - string[]</li>
-<li>[public] <code>saveAsPacket</code> - function(items: object)</li>
-<li>[internal] <code>stringifyFunction</code> - function (val: string)</li>
-<li>[internal] <code>processPacketOut</code> - function (key, value, incl)</li>
-<li>[internal] <code>finalizePacketOut</code> - function (copy: object)</li>
-<li>[public] <code>importPacket</code> - function (items: URLstring | URLstring[])</li>
-<li>[public] <code>actionPacket</code> - function (packet: string)</li>
-<li>[internal] <code>actionPacketFunctions</code> - function(obj: object, item: string)</li>
+<li>[internal] <code>packetExclusions - string[]</code></li>
+<li>[internal] <code>packetExclusionsByRegex - string[]</code></li>
+<li>[internal] <code>packetCoordinates - string[]</code></li>
+<li>[internal] <code>packetObjects - string[]</code></li>
+<li>[internal] <code>packetFunctions - string[]</code></li>
+<li><strong>[public] <code>saveAsPacket - function(items: object)</code></strong></li>
+<li>[internal] <code>stringifyFunction - function (val: string)</code></li>
+<li>[internal] <code>processPacketOut - function (key, value, incl)</code></li>
+<li>[internal] <code>finalizePacketOut - function (copy: object)</code></li>
+<li><strong>[public] <code>importPacket - function (items: URLstring | URLstring[])</code></strong></li>
+<li><strong>[public] <code>actionPacket - function (packet: string)</code></strong></li>
+<li>[internal] <code>actionPacketFunctions - function(obj: object, item: string)</code></li>
 </ul>
 <p>Much of the complexity in the packet management system arises from the shapes of the object instances produced by the factory functions, and the need to (as far as possible) minimize the string lengths of the packets produced by the system. For this reason mixin files and factory functions will add data to the base mixin's attributes and, on occasion, overwrite functions - in particular <code>finalizePacketOut()</code>.</p>
 <blockquote>
@@ -348,34 +348,50 @@ Blur":2,"shadowColor":"black"}]</code></pre>
 <p>The SC cloning functionality is tied closely to the packet functionality. To create a clone of an object SC will first serialize the object, and then deserialize the resulting string to create a new object, which can in turn action the updates described in the <code>.clone()</code> function's argument object.</p>
 <p>Most SC clone functionality is coded into the <a href="../source/mixin/base.html">base mixin file</a> <code>.clone({key: value, ...})</code> function. Various mixin and factory functions will finesse that functionality to better match their instance object shape requirements by overwriting the base mixin's <code>postCloneAction()</code> function.</p>
 <h2 id="exceptions-to-the-outlined-processes">Exceptions to the outlined processes</h2>
-<p>The ecosystem of mixin and factory functions which make up the SC stateful scene graph is necessarily complex, partly to meet the requirements of a (hopefully) fast and memory-efficient code base, but also to make the creation of &lt;canvas&gt; displays with SC as simple as possible for developers (good UX).</p>
+<p>The ecosystem of mixin and factory functions which make up the SC stateful scene graph is necessarily complex, partly to meet the requirements of a (hopefully) fast and memory-efficient code base, but also to make the creation of <code>&lt;canvas&gt;</code> displays with SC as simple as possible for developers (good UX).</p>
 <p>Most factory function and mixin files follow the above outlined processes; a few do not. Brief details of these divergent files are given below.</p>
 <h3 id="canvas-and-stack-factory-functions">Canvas and Stack factory functions</h3>
-<p>The Canvas and Stack factory functions do not contribute (for the most part) to the SC scene graph. Instead they are the mechanisms by which the scene graph deploys to the web page. Because of this intimate connection the web page's <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model">Document Object Model</a>, these functions do not export a <code>makeCanvas</code> or <code>makeStack</code> function.</p>
-<p>There's three ways a user can add an SC-controlled &lt;canvas&gt; or &lt;div&gt; stack to a web page:</p>
+<p>The <a href="../source/factory/canvas.html">Canvas</a> and <a href="../source/factory/stack.html">Stack</a> factory functions do not contribute (for the most part) to the SC scene graph. Instead they are the mechanisms by which the scene graph deploys to the web page. Because of this intimate connection to the web page's <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model">Document Object Model</a>, these functions do not export a <code>makeCanvas</code> or <code>makeStack</code> function.</p>
+<p>There's three ways a user can add an SC-controlled <code>&lt;canvas&gt;</code> or <code>&lt;div&gt;</code> stack to a web page:</p>
 <ul>
 <li>Hard-code the elements into the web page, so that SC can discover and wrap the elements into the SC ecosystem as part of <a href="sc-initialization.html">initialization discovery</a>. Most of the test demos rely on this approach.</li>
-<li>Use the SC functions <code>scrawl.addCanvas()</code> and <code>scrawl.addStack()</code> to insert and wrap new &lt;canvas&gt; and &lt;div&gt; stack elements into the DOM after page load completes. See demos <a href="../../demo/dom-010.html">DOM-010</a> (for Stacks) and <a href="../../demo/dom-012.html">DOM-012</a> (for Canvases) for examples of using this approach.</li>
+<li>Use the SC functions <code>scrawl.addCanvas()</code> and <code>scrawl.addStack()</code> to insert and wrap new <code>&lt;canvas&gt;</code> and <code>&lt;div&gt;</code> stack elements into the DOM after page load completes. See demos <a href="../../demo/dom-010.html">DOM-010</a> (for Stacks) and <a href="../../demo/dom-012.html">DOM-012</a> (for Canvases) for examples of using this approach.</li>
 <li>Rely on a 3rd party framework - such as React, Angular, Vue, Svelte, etc - to create and add the canvas or stack elements to the DOM as part of their normal component functionality, and then wrap those elements into the SC ecosystem using the <code>scrawl.getCanvas()</code> and <code>scrawl.getStack()</code> functions. See demo <a href="../../demo/dom-017.html">DOM-017</a> for an example of using this approach.</li>
 </ul>
-<p>For the moment, <strong>SC does not support package management and cloning functionality for Canvas and Stack instances</strong>. This may change in the future.</p>
-<p>The <code>myStack.kill()</code> and <code>myCanvas.kill()</code> functions will not only remove the Canvas and Stack object instances from the SC ecosystem, but also kill any SC objects associated with the Canvas and Stack instances. Additionally, the kill functions will delete the &lt;canvas&gt; and &lt;div&gt; stack elements from the DOM.</p>
-<h3 id="cell-factory-functions">Cell factory functions</h3>
-<h3 id="loom-and-mesh-entity-factory-functions">Loom and Mesh entity factory functions</h3>
+<p>For the moment, SC does not support packet management and cloning functionality for Canvas and Stack instances. This may change in the future.</p>
+<p>The <code>myStack.kill()</code> and <code>myCanvas.kill()</code> functions will not only remove the Canvas and Stack object instances from the SC ecosystem, but also kill any SC objects associated with the Canvas and Stack instances. Additionally, the kill functions will delete the <code>&lt;canvas&gt;</code> and <code>&lt;div&gt;</code> stack elements from the DOM.</p>
+<h3 id="cell-factory-function">Cell factory function</h3>
+<p>The <a href="../source/factory/cell.html">Cell factory function</a> does export a <code>makeCell()</code> function, but this is only used internally by other modules in the repo code.</p>
+<p>Instead, Cells have to be created against the Canvas wrapper object which will host the Cell object: <code>myCanvas.buildCell({name: string, key: value, ...})</code>.</p>
+<p>For the moment, SC does not support packet management and cloning functionality for Cell instances. This may change in the future.</p>
+<p>The <code>myCell.kill()</code> function does work, removing both the Cell instance and its associated Group instance but not any artefacts or entitys associated with that Group.</p>
 <h3 id="animation-and-renderanimation-factory-functions">Animation and RenderAnimation factory functions</h3>
+<p>The <a href="../source/factory/animation.html">Animation</a> and <a href="../source/factory/render-animation.html">RenderAnimation</a> factory functions export <code>scrawl.makeAnimation()</code> and <code>scrawl.makeRender()</code> functions for instance creation.</p>
+<p>For the moment, SC does not support packet management and cloning functionality for Animation or RenderAnimation instances. This may change in the future.</p>
+<p>Animation instances include an <code>.onKill</code> attribute which accepts a function as its value. When the <code>myAnimation.kill()</code> function is invoked this additional kill function will run immediately prior to the instance's removal from the SC system.</p>
+<h3 id="loom-and-mesh-entity-factory-functions">Loom and Mesh entity factory functions</h3>
+<p>The <a href="../source/factory/loom.html">Loom</a> and <a href="../source/factory/mesh.html">Mesh</a> entity factory functions differ from other entity factories in that they do not use the <a href="../source/mixin/entity.html">mixin/entity.js</a> mixin. This is because they rely on other entitys to define their positions in a canvas display.</p>
+<p>Packet management support has been coded for these entitys, but tests have not yet been written for the functionality. Cloning functionality has, for the time being, been disabled. Kill functionality has been enabled but, again, not properly tested. </p>
 <h3 id="image-based-asset-management-factory-functions">Image-based asset management factory functions</h3>
+<p>Image-based asset code does not include factory functions to create instances of the assets. This is because image-based assets are often closely tied to image files which need to be fetched across the network, or to <code>&lt;img&gt;</code> and <code>&lt;video&gt;</code> elements in the DOM.</p>
+<p>To fetch and wrap an image or video file, users can set the file URL in a <code>.source</code> attribute when creating <a href="../source/factory/picture.html">Picture</a> entity or <a href="../source/factory/pattern.html">Pattern</a> style instances.</p>
+<p>Alternatively, users can invoke <code>scrawl.importImage('url-string')</code>, <code>scrawl.importSprite('url-string')</code> and <code>scrawl.importVideo('url-string')</code> to load these assets from remote files.</p>
+<p>However the best approach for managing visual assets is to define them in the DOM and then import them using the <code>scrawl.importDomImage('css-query-string')</code> and <code>scrawl.importDomVideo('css-query-string')</code> functions. This allows the user to define these assets in a responsive manner, and to import multiple assets in a single invocation. The associated SC files include functionality to manage responsive image and video elements (TODO code up similar functionality for sprite assets):</p>
 <ul>
-<li><a href="../source/asset-management/image-asset.html">asset-management/image-asset.js</a></li>
-<li><a href="../source/asset-management/sprite-asset.html">asset-management/sprite-asset.js</a></li>
-<li><a href="../source/asset-management/video-asset.html">asset-management/video-asset.js</a></li>
+<li><a href="../source/asset-management/image-asset.html">ImageAsset</a></li>
+<li><a href="../source/asset-management/sprite-asset.html">SpriteAsset</a></li>
+<li><a href="../source/asset-management/video-asset.html">VideoAsset</a></li>
 </ul>
-<h3 id="other-asset-management-factory-functions">Other asset management factory functions</h3>
-<ul>
-<li><a href="../source/asset-management/noise-asset.html">asset-management/noise-asset.js</a></li>
-<li><a href="../source/asset-management/raw-asset.html">asset-management/raw-asset.js</a></li>
-<li><a href="../source/asset-management/reaction-diffusion-asset.html">asset-management/reaction-diffusion-asset.js</a></li>
-</ul>
+<p>Users can, in a similar way, import browser <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaStream">media streams</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API">screen capture streams</a> for use in canvas displays by invoking the <code>scrawl.importMediaStream()</code> and <code>scrawl.importScreenCapture()</code> functions. Note that browsers will impose an <a href="https://developer.mozilla.org/en-US/docs/Web/Privacy#opt-in_for_powerful_features">end user consent check</a> before the asset can be imported into the SC environment.</p>
+<p>SC does not support packet management and cloning functionality for any asset instances (including <a href="../source/asset-management/noise-asset.html">NoiseAsset</a>, <a href="../source/asset-management/raw-asset.html">RawAsset</a> and <a href="../source/asset-management/reaction-diffusion-asset.html">ReactionDiffusionAsset</a>). Kill functionality works as expected.</p>
 <h3 id="pool-based-factory-functions">Pool-based factory functions</h3>
+<p>Users can request the following pool-based objects. <strong>It is imperative that if the user requests an object, they must release it when done with it</strong> - failure to do so may lead to slow memory leaks and degraded performance over time:</p>
+<ul>
+<li><a href="../source/untracked-factory/coordinate.html">Coordinate</a> - <code>requestCoordinate()</code>, <code>releaseCoordinate()</code></li>
+<li><a href="../source/untracked-factory/quaternion.html">Quaternion</a> - <code>requestQuaternion()</code>, <code>releaseQuaternion()</code></li>
+<li><a href="../source/untracked-factory/vector.html">Vector</a> - <code>requestVector()</code>, <code>releaseVector()</code></li>
+</ul>
+<p>Note that these pooled objects are not tracked in the SC library.</p>
     </main>
     
     <nav>

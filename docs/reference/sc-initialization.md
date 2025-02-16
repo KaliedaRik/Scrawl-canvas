@@ -5,9 +5,9 @@ Scrawl-canvas is a [modular javascript](https://developer.mozilla.org/en-US/docs
 include * as scrawl from 'scrawl-canvas';
 ```
 
-While such `include` statements may happen many times across different JS/TS files in a web page, ***the SC code itself will run only once, during page load***, when the browser first encounters the `include` statement. For every subsequent encounter, the browser just returns the SC object (`scrawl`) that was generated on that first encounter. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.
+While such `include` statements may be encountered many times across different JS/TS files in a web page, ***the SC code itself will run only once, during page load***, when the browser first finds the `include` statement. For every subsequent encounter, the browser just returns the SC object (`scrawl`) that was generated on that first meeting. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.
 
-> **tl;dr: We strongly recommend that code using Scrawl-canvas only runs after the page's HTML download completes.** This is because SC initialization code will interrogate the web page's DOM, looking for &lt;canvas> and &lt;div> stack elements that we want it to manage ... but this only happens once per page load!
+> **tl;dr: We strongly recommend that code using Scrawl-canvas only runs after the page's HTML download completes.** This is because SC initialization code will interrogate the web page's DOM, looking for `<canvas>` and `<div>` stack elements that we want it to manage ... but this only happens once per page load!
 
 ## The `scrawl.js` file
 The `package.json` file has the following structure:
@@ -154,11 +154,11 @@ All other SC modules are loaded as a consequence of being included as exports fr
 ### Discovery activity
 The `init()` function, when it runs, invokes two discovery operations:
 + `getStacks()` - to find and wrap all DOM elements marked with a `data-scrawl-stack` attribute into [Stack artefact objects](../source/factory/stack.html). Additionally, all direct child elements of the stack element will be wrapped in [Element artefact objects](../source/factory/element.html)
-+ `getCanvases()` - to find and wrap all &lt;canvas> elements marked with a `data-scrawl-canvas` attribute into [Canvas artefact objects](../source/factory/canvas.html)
++ `getCanvases()` - to find and wrap all `<canvas>` elements marked with a `data-scrawl-canvas` attribute into [Canvas artefact objects](../source/factory/canvas.html)
 
 Because this discovery activity happens as soon as the SC code loads, and only happens once per page load, it is imperative that the code does not run until the browser has downloaded the HTML file and constructed its Document Object Model from the file's content.
 
-Note that when SC wraps &lt;canvas> elements into Canvas artefacts, it will mutate the DOM element:
+Note that when SC wraps `<canvas>` elements into Canvas artefacts, it will mutate the DOM element:
 
 ```
 Before:                                         After:
@@ -221,7 +221,7 @@ Before:                                         After:
                                                 ‹/canvas›
 ```
 
-It's also important to remember that this discovery activity will only find &lt;canvas> elements (and stacks) that already exist in (have been hard-coded into) the HTML file. Any &lt;canvas> element added to the DOM after page load - for instance through [framework client-side hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)) or an [Islands architecture](https://www.patterns.dev/vanilla/islands-architecture/) pattern - will not be found during the discovery phase and thus will not have been wrapped into the SC library.
+It's also important to remember that this discovery activity will only find `<canvas>` elements (and stacks) that already exist in (have been hard-coded into) the HTML file. Any `<canvas>` element added to the DOM after page load - for instance through [framework client-side hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)) or an [Islands architecture](https://www.patterns.dev/vanilla/islands-architecture/) pattern - will not be found during the discovery phase and thus will not have been wrapped into the SC library.
 
 This has implications for when we want to retrieve the generated artefacts from the SC library for further use:
 + If the artefact was created as part of the discovery process, we can use the `scrawl.findArtefact('element-id')`, `scrawl.findCanvas('element-id')` or `scrawl.findStack('element-id')` functions to retrieve them. Most of the [SC demo tests](../../demo/index.html) include this functionality
@@ -242,7 +242,7 @@ Note that by default, the animation loop is throttled to run at a maximum 60 fra
 Users can also stop and restart the animation loop after initialization completes by invoking the `scrawl.stopCoreAnimationLoop()` and `scrawl.startCoreAnimationLoop()` functions. See [demo test DOM-009](../demo/dom-009.html) for details.
 
 ## Core constants, flags and event listeners
-Two of the key drivers for SC is to make &lt;canvas> elements responsive to their environments, and offer high-level functionality for user interactions with those responsive elements. Much of the code that handles this functionality can be found in the [core/user-interaction.js](../source/core/user-interaction.html) file.
+Two of the key drivers for SC is to make `<canvas>` elements responsive to their environments, and offer high-level functionality for user interactions with those responsive elements. Much of the code that handles this functionality can be found in the [core/user-interaction.js](../source/core/user-interaction.html) file.
 
 The code in this file makes heavy use of shared constants and system flags. As a result, these also need to be instantiated as part of the initialization process.
 
@@ -354,9 +354,9 @@ SC tracks the following system settings:
 + `prefers-reduced-motion`
 + `prefers-reduced-transparency`
 
-SC, by default, doesn't react to changes in these settings. It's up to the developer to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the [Canvas page](canvas-artefact-overview.html) in the Runbook for further details. 
+SC, by default, doesn't react to changes in these settings. It's up to the developer to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the [Objects overview page](sc-objects-overview.html) in the Runbook for further details. 
 
-SC also tracks the current `pixel-ratio` and `color-gamut: p3` settings for the device/screen on which the browser is displaying. This can change when, for instance, a user drags the browser window between screens. Such changes are handled by SC internally with no need for additional developer intervention.
+SC also tracks the current `pixel-ratio` and `color-gamut: p3` settings for the device/screen on which the browser is displaying. This can change when, for instance, a user drags the browser window between screens. Such changes are handled by SC internally with little need for additional developer intervention.
 
 ## Scrawl-canvas pools
 SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.
@@ -365,7 +365,7 @@ Instead, SC code makes use of a set of pooled objects and arrays for much of its
 
 Pooled objects/arrays include:
 + [internal only] Generic **zero-length arrays**, from [helper/array-pool.js](../source/helper/array-pool.html); note that the pool will be periodically culled - `requestArray()`, `releaseArray()`
-+ [internal only] SC basic **Cell objects** from [untracked-factory/cell-fragment.js](../source/untracked-factory/cell-fragment.html), wrapping unattached &lt;canvas> elements and their associated 2D context engines - `requestCell()`, `releaseCell()`
++ [internal only] SC basic **Cell objects** from [untracked-factory/cell-fragment.js](../source/untracked-factory/cell-fragment.html), wrapping unattached `<canvas>` elements and their associated 2D context engines - `requestCell()`, `releaseCell()`
 + [exported] SC **coordinate arrays**, from [untracked-factory/coordinate.js](../source/untracked-factory/coordinate.html) - `requestCoordinate()`, `releaseCoordinate()`
 + [internal only] SC **particle objects** from [factory/particle.js](../source/factory/particle.html); note that the pool will be periodically culled - `requestParticle()`, `releaseParticle()`
 + [internal only] SC **particle history arrays** from [untracked-factory/particle-history.js](../source/untracked-factory/particle-history.html); note that the pool will be periodically culled - `requestParticleHistory()`, `releaseParticleHistory()`

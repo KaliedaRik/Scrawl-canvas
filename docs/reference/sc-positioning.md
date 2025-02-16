@@ -1,16 +1,18 @@
 # The Scrawl-canvas positioning system
 The key purpose of SC is to position graphical entitys onto a canvas element, in a given order, so that those entitys build some form of graphical representation, chart, imagery, infographic, artwork (etc) that can be displayed as part of a web page.
 
+Most of the code associated with the SC positioning system can be found in the [mixin/position.js](../source/mixin/position.html) mixin file.
+
 ## Background
-As background knowledge, we need to understand that a DOM &lt;canvas> element, and SC's representation of that element (as `Canvas` and `Cell` wrapper artefacts) are very different things.
+As background knowledge, we need to understand that a DOM `<canvas>` element, and SC's representation of that element (as `Canvas` and `Cell` wrapper artefacts) are very different things.
 
-+ **DOM &lt;canvas> elements** are part of the HTML5 specification. The element includes attributes - `height=`, `width=` - used to define a ***coordinate space*** (measured in CSS pixels) within which drawing operations can take place. The visual representation of the canvas element in the web page can be styled using CSS; note that when the element's CSS styling dimensions diverge from its coordinate space dimensions, browsers will scale the coordinate space (ignoring aspect ratio) to fit into the styled dimensions. Drawing operations are, for 2D graphics, defined by the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API); these operations are managed by a [context interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D). 
++ **DOM `<canvas>` elements** are part of the HTML5 specification. The element includes attributes - `height=`, `width=` - used to define a ***coordinate space*** (measured in CSS pixels) within which drawing operations can take place. The visual representation of the canvas element in the web page can be styled using CSS; note that when the element's CSS styling dimensions diverge from its coordinate space dimensions, browsers will scale the coordinate space (ignoring aspect ratio) to fit into the styled dimensions. Drawing operations are, for 2D graphics, defined by the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API); these operations are managed by a [context interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D). 
 
-+ **SC Canvas artefacts** wrap DOM &lt;canvas> elements and bring them into the SC ecosystem. They include handles to the DOM element itself and its context interface, though users should generally avoid directly interacting with them. Instead, graphical operations are handled by Cell artefacts, of which each Canvas wrapper will have at least one - the ***base Cell***. Users can control how the base cell will display in the DOM &lt;canvas> element, allowing us to build real-time responsive graphical displays.
++ **SC Canvas artefacts** wrap DOM `<canvas>` elements and bring them into the SC ecosystem. They include handles to the DOM element itself and its context interface, though users should generally avoid directly interacting with them. Instead, graphical operations are handled by Cell artefacts, of which each Canvas wrapper will have at least one - the ***base Cell***. Users can control how the base cell will display in the DOM `<canvas>` element, allowing us to build real-time responsive graphical displays.
 
-+ **SC Cell artefacts** wrap regular (auto-generated) &lt;canvas> elements that are **not** added to the web page's DOM. Every Canvas wrapper includes, at a minimum, a ***base Cell***, and can include additional Cell artefacts as necessary. Note that these additional &lt;canvas> elements are nothing special: SC does not make use of the [OffscreenCanvas interface](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) or, indeed, Web Workers.
++ **SC Cell artefacts** wrap regular (auto-generated) `<canvas>` elements that are **not** added to the web page's DOM. Every Canvas wrapper includes, at a minimum, a ***base Cell***, and can include additional Cell artefacts as necessary. Note that these additional `<canvas>` elements are nothing special: SC does not make use of the [OffscreenCanvas interface](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) or, indeed, Web Workers.
 
-> **tl;dr: We only need to care about Cell artefact dimensions.** All SC graphical operations happen in Cell artefacts and end up in the Canvas artefact's base Cell. Every Cell we create will have its own dimensions - a ***cell coordinate space*** - which can diverge from the associated DOM &lt;canvas> element's dimensions. Canvas artefacts handle the transfer of graphical data from their base Cell to their DOM &lt;canvas> element automatically.
+> **tl;dr: We only need to care about Cell artefact dimensions.** All SC graphical operations happen in Cell artefacts and end up in the Canvas artefact's base Cell. Every Cell we create will have its own dimensions - a ***cell coordinate space*** - which can diverge from the associated DOM `<canvas>` element's dimensions. Canvas artefacts handle the transfer of graphical data from their base Cell to their DOM `<canvas>` element automatically.
 
 From this point on:
 + When we refer to `Cell` we (generally) mean an SC Canvas artefact's base Cell artefact.
@@ -118,7 +120,7 @@ In brief, SC ***paints*** an artefact onto the canvas using the following protoc
 2. If necessary, recalculate the artefact's ***path2D object***, which will be used during the painting step to `fill` and/or `stroke` the artefact onto the Cell.
 3. Position and rotate the host Cell's context engine using the Canvas API `setTransform()` function - it is at this moment that we move the Cell's engine's coordinate system origin point - `[0,0]` - to match the artefact's rotation-reflection point.
 4. Update the Cell's engine state to match the artefact's engine state.
-5. Stamp the artefact onto the Cell's DOM &lt;canvas> element.
+5. Stamp the artefact onto the Cell's DOM `<canvas>` element.
 
 The `start` and `offset` attributes discussed above both feed into the first step of the protocol.
 
