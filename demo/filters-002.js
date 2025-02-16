@@ -1,5 +1,5 @@
 // # Demo Filters 002
-// Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert
+// Filters - cache entity output to improve render speeds
 
 // [Run code](../../demo/filters-002.html)
 import * as scrawl from '../source/scrawl.js';
@@ -8,6 +8,7 @@ import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utiliti
 
 
 // #### Scene setup
+// Create some convenience shortcut variables to various sections of the Scrawl-canvas library
 const canvas = scrawl.findCanvas('mycanvas');
 
 
@@ -43,6 +44,11 @@ const pictureGroup = scrawl.makeGroup({
     host: canvas.getBase(),
 });
 
+const cacheGroup = pictureGroup.clone({
+
+    name: name('cached'),
+});
+
 pictureGroup.clone({
 
     name: name('labels'),
@@ -76,6 +82,20 @@ filterMethods.forEach((n, index) => {
         filters: [name(`${n}-filter`)],
     });
 
+    scrawl.makePicture({
+
+        name: name(`${n}-cached`),
+        group: name('cached'),
+
+        // The assets we will create from the previous picture entitys have `-image` attached to the picture's name
+        asset: name(`${n}-output-image`),
+
+        start: positions[index],
+        dimensions: [120, 120],
+
+        copyDimensions: ['100%', '100%'],
+    });
+
     scrawl.makeLabel({
 
         name: name(`${n}-label`),
@@ -90,11 +110,40 @@ filterMethods.forEach((n, index) => {
 
         method: 'drawThenFill',
 
-        pivot: name(`${n}-output`),
+        pivot: name(`${n}-cached`),
         lockTo: 'pivot',
         offset: [5, 5],
     });
 });
+
+
+// The cache function
+let cachingInProgress = false;
+const cacheAction = () => {
+
+    if (!cachingInProgress) {
+
+        cachingInProgress = true;
+
+        pictureGroup.set({ visibility: true });
+        cacheGroup.set({ visibility: false });
+
+        pictureGroup.getArtefactNames().forEach(n => scrawl.createImageFromEntity(n, true));
+
+        setTimeout(() => {
+
+            cachingInProgress = false;
+
+            pictureGroup.set({ visibility: false });
+            cacheGroup.set({ visibility: true });
+
+        }, 50);
+    }
+};
+
+
+// Run the initial caching action
+cacheAction();
 
 
 // #### Scene animation
@@ -119,26 +168,7 @@ scrawl.makeRender({
 // Setup form
 const dom = initializeDomInputs([
     ['input', 'opacity', '1'],
-    ['select', 'memoizeFilterOutput', 0],
 ]);
-
-
-// Updating the Picture entitys for memoizeFilterOutput
-scrawl.makeUpdater({
-
-    event: ['input', 'change'],
-    origin: dom.memoizeFilterOutput,
-
-    target: pictureGroup,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        memoizeFilterOutput: ['memoizeFilterOutput', 'boolean'],
-    },
-});
 
 
 // Updating the Filter objects for opacity
@@ -147,11 +177,13 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     const val = parseFloat(e.target.value);
     filters.forEach(f => f.set({ opacity: val }));
 
+    cacheAction();
+
 }, dom.opacity);
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, pictureGroup);
+addImageDragAndDrop(scrawl, canvas, `#${namespace} .assets`, pictureGroup, cacheAction);
 
 
 // #### Development and testing

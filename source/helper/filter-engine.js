@@ -3366,6 +3366,8 @@ P.theBigActionsObject = {
         const {
             opacity = 1,
             radius = 1,
+            includeAlpha = true,
+            excludeTransparentPixels = false,
             lineOut,
         } = requirements;
 
@@ -3381,7 +3383,48 @@ P.theBigActionsObject = {
         convolveRGBA(src32, out, tmp_line, coeff, width, height, radius);
         convolveRGBA(out, src32, tmp_line, coeff, height, width, radius);
 
-        oData.set(hold);
+        let r, g, b, a, i, iz;
+
+        if (!excludeTransparentPixels) {
+
+            for (i = 0, iz = iData.length; i < iz; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                oData[r] = hold[r];
+                oData[g] = hold[g];
+                oData[b] = hold[b];
+                oData[a] = (includeAlpha) ? hold[a] : iData[a];
+            }
+        }
+        else {
+
+            for (i = 0, iz = iData.length; i < iz; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                if (iData[a]) {
+
+                    oData[r] = hold[r];
+                    oData[g] = hold[g];
+                    oData[b] = hold[b];
+                    oData[a] = (includeAlpha) ? hold[a] : iData[a];
+                }
+                else {
+
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = iData[a];
+                }
+            }
+        }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);

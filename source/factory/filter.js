@@ -937,6 +937,8 @@ const setActionsArray = {
             action: GAUSSIAN_BLUR,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
             radius: (f.radius != null) ? f.radius : 1,
         }];
