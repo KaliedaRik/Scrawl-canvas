@@ -2084,7 +2084,7 @@ P.theBigActionsObject = {
 // Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
     [BLUR]: function (requirements) {
 
-        const getUncheckedValue = function (flag, gridStore, pos, data, offset) {
+        const getUncheckedValue = function (flag, gridStore, pos, data, offset, step) {
 
             if (flag) {
 
@@ -2111,7 +2111,7 @@ P.theBigActionsObject = {
             return data[(pos * 4) + offset];
         };
 
-        const getCheckedValue = function (flag, gridStore, pos, data, offset) {
+        const getCheckedValue = function (flag, gridStore, pos, data, offset, step) {
 
             if (flag) {
 
@@ -2153,16 +2153,19 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            radius = 0,
-            passes = 1,
             processVertical = true,
+            radiusVertical = 0,
+            passesVertical = 1,
+            stepVertical = 1,
             processHorizontal = true,
+            radiusHorizontal = 0,
+            passesHorizontal = 1,
+            stepHorizontal = 1,
             includeRed = true,
             includeGreen = true,
             includeBlue = true,
             includeAlpha = false,
             excludeTransparentPixels = false,
-            step = 1,
             lineOut,
         } = requirements;
 
@@ -2172,9 +2175,9 @@ P.theBigActionsObject = {
 
             const grid = this.buildImageGrid(input);
 
-            if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radius);
+            if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radiusHorizontal);
 
-            if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radius);
+            if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radiusVertical);
         }
 
         oData.set(iData);
@@ -2185,9 +2188,9 @@ P.theBigActionsObject = {
 
         let counter, r, g, b, a, pass;
 
-        for (pass = 0; pass < passes; pass++) {
+        if (processHorizontal) {
 
-            if (processHorizontal) {
+            for (pass = 0; pass < passesHorizontal; pass++) {
 
                 for (counter = 0; counter < pixelLen; counter++) {
 
@@ -2198,17 +2201,20 @@ P.theBigActionsObject = {
 
                     if (includeAlpha || hold[a]) {
 
-                        oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0);
-                        oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1);
-                        oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2);
-                        oData[a] = getUncheckedValue(includeAlpha, horizontalBlurGrid, counter, hold, 3);
+                        oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0, stepHorizontal);
+                        oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1, stepHorizontal);
+                        oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2, stepHorizontal);
+                        oData[a] = getUncheckedValue(includeAlpha, horizontalBlurGrid, counter, hold, 3, stepHorizontal);
                     }
                 }
 
-                if (processVertical || pass < passes - 1) hold.set(oData);
+                if (processVertical || pass < passesHorizontal - 1) hold.set(oData);
             }
+        }
 
-            if (processVertical) {
+        if (processVertical) {
+
+            for (pass = 0; pass < passesVertical; pass++) {
 
                 for (counter = 0; counter < pixelLen; counter++) {
 
@@ -2219,13 +2225,13 @@ P.theBigActionsObject = {
 
                     if (includeAlpha || hold[a]) {
 
-                        oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0);
-                        oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1);
-                        oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2);
-                        oData[a] = getUncheckedValue(includeAlpha, verticalBlurGrid, counter, hold, 3);
+                        oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0, stepVertical);
+                        oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1, stepVertical);
+                        oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2, stepVertical);
+                        oData[a] = getUncheckedValue(includeAlpha, verticalBlurGrid, counter, hold, 3, stepVertical);
                     }
                 }
-                if (pass < passes - 1) hold.set(oData);
+                if (pass < passesVertical - 1) hold.set(oData);
             }
         }
 

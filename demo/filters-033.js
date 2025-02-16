@@ -55,9 +55,9 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Radius: ${dom.radius.value}
-    Step: ${dom.step.value}
-    Passes: ${dom.passes.value}
+    Horizontal - Radius: ${dom.radiusHorizontal.value}, Step: ${dom.stepHorizontal.value}, Passes: ${dom.passesHorizontal.value}
+    Vertical   - Radius: ${dom.radiusVertical.value}, Step: ${dom.stepVertical.value}, Passes: ${dom.passesVertical.value}
+
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -74,9 +74,12 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = initializeDomInputs([
-    ['input', 'radius', '10'],
-    ['input', 'passes', '1'],
-    ['input', 'step', '1'],
+    ['input', 'radiusHorizontal', '10'],
+    ['input', 'passesHorizontal', '1'],
+    ['input', 'stepHorizontal', '1'],
+    ['input', 'radiusVertical', '10'],
+    ['input', 'passesVertical', '1'],
+    ['input', 'stepVertical', '1'],
     ['input', 'opacity', '1'],
     ['select', 'includeRed', 1],
     ['select', 'includeGreen', 1],
@@ -101,19 +104,23 @@ scrawl.makeUpdater({
 
     updates: {
 
-        passes: ['passes', 'round'],
-        step: ['step', 'round'],
+        processHorizontal: ['processHorizontal', 'boolean'],
+        radiusHorizontal: ['radiusHorizontal', 'float'],
+        passesHorizontal: ['passesHorizontal', 'round'],
+        stepHorizontal: ['stepHorizontal', 'round'],
+
+        processVertical: ['processVertical', 'boolean'],
+        radiusVertical: ['radiusVertical', 'float'],
+        passesVertical: ['passesVertical', 'round'],
+        stepVertical: ['stepVertical', 'round'],
 
         includeRed: ['includeRed', 'boolean'],
         includeGreen: ['includeGreen', 'boolean'],
         includeBlue: ['includeBlue', 'boolean'],
         includeAlpha: ['includeAlpha', 'boolean'],
 
-        processHorizontal: ['processHorizontal', 'boolean'],
-        processVertical: ['processVertical', 'boolean'],
         excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
 
-        radius: ['radius', 'float'],
         opacity: ['opacity', 'float'],
     },
 });
