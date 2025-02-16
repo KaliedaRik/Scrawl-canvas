@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Filters 032</title>
+  <title>Demo Filters 034</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
@@ -54,29 +54,66 @@
 
 <body>
   <div id="test-navigation">
-    <a href="filters-031.html">&larr; Previous</a>
-    <a href="filters-033.html">Next &rarr;</a>
+    <a href="filters-033.html">&larr; Previous</a>
+    <a href="filters-101.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 032</h1>
-  <h2>Parameters for: modulateOk filter</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 034</h1>
+  <h2>Parameters for: gaussianblur filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
 
-    <div class="green label">Channel A (green-red)</div>
-    <div class="green"><input class="controlItem" id="channelA" type="range" value="0" min="0" max="3" step="0.01" /></div>
+    <div class="yellow label">Horizontal radius</div>
+    <div class="yellow"><input class="controlItem" id="radiusHorizontal" type="range" value="10" min="0" max="60" step="1" /></div>
 
-    <div class="green label">Channel B (blue-yellow)</div>
-    <div class="green"><input class="controlItem" id="channelB" type="range" value="1" min="0" max="3" step="0.01" /></div>
+    <div class="yellow label">Vertical radius</div>
+    <div class="yellow"><input class="controlItem" id="radiusVertical" type="range" value="10" min="0" max="60" step="1" /></div>
 
-    <div class="blue label">Channel L (luminance)</div>
-    <div class="blue"><input class="controlItem" id="channelL" type="range" value="1" min="0" max="3" step="0.01" /></div>
+    <div class="pink label">Include red</div>
+    <div class="pink">
+      <select class="controlItem" id="includeRed">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
-    <div class="lavender label">Opacity</div>
-    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    <div class="green label">Include green</div>
+    <div class="green">
+      <select class="controlItem" id="includeGreen">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
-    <div class="yellow label">Memoize filter</div>
-    <div class="yellow">
+    <div class="blue label">Include blue</div>
+    <div class="blue">
+      <select class="controlItem" id="includeBlue">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Include alpha</div>
+    <div class="lavender">
+      <select class="controlItem" id="includeAlpha">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Exclude transparent pixels</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="excludeTransparentPixels">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Opacity</div>
+    <div class="bluegreen"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="bluegreen label">Memoize filter</div>
+    <div class="bluegreen">
       <select class="controlItem" id="memoizeFilterOutput">
         <option value="0">false</option>
         <option value="1">true</option>
@@ -94,7 +131,7 @@
     >
       <div class="placeholder">
         <img
-          src="thumbs/filters-032.webp"
+          src="thumbs/filters-034.webp"
           alt="Screen capture image of the demo canvas"
         />    
       </div>
@@ -116,16 +153,16 @@
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a modulateOk filter and apply it to the test entity</li>
+      <li>Create a gaussianblur filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>
 
-    <p><a href="../docs/demo/filters-032.html">Annotated code</a></p>
+    <p><a href="../docs/demo/filters-034.html">Annotated code</a></p>
   </div>
 
-  <script src="filters-032.js" type="module"></script>
+  <script src="filters-034.js" type="module"></script>
 
 </body>
 
