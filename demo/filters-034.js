@@ -35,11 +35,14 @@ const piccy = scrawl.makePicture({
     name: name('image'),
     asset: 'iris',
 
-    width: '100%',
-    height: '100%',
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    dimensions: ['80%', '80%'],
+    copyDimensions: ['100%', '100%'],
 
-    copyWidth: '100%',
-    copyHeight: '100%',
+    delta: {
+        roll: 0.4,
+    },
 
     method: 'fill',
 
@@ -52,7 +55,7 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Radius: ${dom.radius.value}
+    Radius - Horizontal: ${dom.radiusHorizontal.value}, Vertical: ${dom.radiusVertical.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -69,8 +72,14 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = initializeDomInputs([
-    ['input', 'radius', '10'],
+    ['input', 'radiusHorizontal', '10'],
+    ['input', 'radiusVertical', '10'],
     ['input', 'opacity', '1'],
+    ['select', 'includeRed', 1],
+    ['select', 'includeGreen', 1],
+    ['select', 'includeBlue', 1],
+    ['select', 'includeAlpha', 1],
+    ['select', 'excludeTransparentPixels', 0],
     ['select', 'memoizeFilterOutput', 0],
 ]);
 
@@ -87,7 +96,15 @@ scrawl.makeUpdater({
 
     updates: {
 
-        radius: ['radius', 'round'],
+        radiusHorizontal: ['radiusHorizontal', 'round'],
+        radiusVertical: ['radiusVertical', 'round'],
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+        excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
+
         opacity: ['opacity', 'float'],
     },
 });

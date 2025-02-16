@@ -961,14 +961,26 @@ const setActionsArray = {
 
 // __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
     gaussianBlur: function (f) {
+        if (f.radius != null) {
+            f.radiusHorizontal = f.radius;
+            f.radiusVertical = f.radius;
+            delete f.radius;
+        }
+
         f.actions = [{
             action: GAUSSIAN_BLUR,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
             excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
-            radius: (f.radius != null) ? f.radius : 1,
+            // processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            // processVertical: (f.processVertical != null) ? f.processVertical : true,
+            radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
+            radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
         }];
     },
 

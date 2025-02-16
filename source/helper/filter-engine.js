@@ -3371,7 +3371,11 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            radius = 1,
+            radiusHorizontal = 1,
+            radiusVertical = 1,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
             includeAlpha = true,
             excludeTransparentPixels = false,
             lineOut,
@@ -3384,10 +3388,11 @@ P.theBigActionsObject = {
         const out = new Uint32Array(src32.length),
             tmp_line = new Float32Array(_max(width, height) * 4);
 
-        const coeff = gaussCoef(radius);
+        const horizontalCoeff = gaussCoef(radiusHorizontal),
+            verticalCoeff = gaussCoef(radiusVertical);
 
-        convolveRGBA(src32, out, tmp_line, coeff, width, height, radius);
-        convolveRGBA(out, src32, tmp_line, coeff, height, width, radius);
+        convolveRGBA(src32, out, tmp_line, horizontalCoeff, width, height, radiusHorizontal);
+        convolveRGBA(out, src32, tmp_line, verticalCoeff, height, width, radiusVertical);
 
         let r, g, b, a, i, iz;
 
@@ -3400,9 +3405,9 @@ P.theBigActionsObject = {
                 b = g + 1;
                 a = b + 1;
 
-                oData[r] = hold[r];
-                oData[g] = hold[g];
-                oData[b] = hold[b];
+                oData[r] = (includeRed) ? hold[r] : iData[r];
+                oData[g] = (includeGreen) ? hold[g] : iData[g];
+                oData[b] = (includeBlue) ? hold[b] : iData[b];
                 oData[a] = (includeAlpha) ? hold[a] : iData[a];
             }
         }
@@ -3417,9 +3422,9 @@ P.theBigActionsObject = {
 
                 if (iData[a]) {
 
-                    oData[r] = hold[r];
-                    oData[g] = hold[g];
-                    oData[b] = hold[b];
+                    oData[r] = (includeRed) ? hold[r] : iData[r];
+                    oData[g] = (includeGreen) ? hold[g] : iData[g];
+                    oData[b] = (includeBlue) ? hold[b] : iData[b];
                     oData[a] = (includeAlpha) ? hold[a] : iData[a];
                 }
                 else {
