@@ -14,7 +14,7 @@
 //
 // `blend` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations). The blending method is determined by the String value supplied in the `blend` argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: `action, lineIn, lineOut, lineMix, opacity, blend, offsetX, offsetY`.
 //
-// `blur` - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects. Object attributes: `action, lineIn, lineOut, opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, step`.
+// `blur` - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects. Object attributes: `action, lineIn, lineOut, opacity, processHorizontal, radiusHorizontal, passesHorizontal, stepHorizontal, processVertical, radiusVertical, passesVertical, stepVertical, (pseudo-attributes: radius, passes, step), includeRed, includeGreen, includeBlue, includeAlpha`.
 //
 // `channels-to-alpha` - Calculates an average value from each pixel's included channels and applies that value to the alpha channel. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue`.
 //
@@ -278,11 +278,15 @@ const defaultAttributes = {
     outerRadius: PC30,
     palette: BLACK_WHITE,
     passes: 1,
+    passesHorizontal: 1,
+    passesVertical: 1,
     points: null,
     postProcessResults: true,
     processHorizontal: true,
     processVertical: true,
     radius: 1,
+    radiusHorizontal: 1,
+    radiusVertical: 1,
     ranges: null,
     red: 0,
     redInBlue: 0,
@@ -297,6 +301,8 @@ const defaultAttributes = {
     startX: PC50,
     startY: PC50,
     step: 1,
+    stepHorizontal: 1,
+    stepVertical: 1,
     strength: 1,
     staticSwirls: null,
     tileHeight: 1,
@@ -527,6 +533,25 @@ const setActionsArray = {
 // A bespoke blur function. Creates visual artefacts with various settings that might be useful. Strongly advise to memoize the results from this filter as it is resource-intensive.
 // + Use the gaussian blur filter for a smoother result.
     blur: function (f) {
+
+        if (f.radius != null) {
+            f.radiusHorizontal = f.radius;
+            f.radiusVertical = f.radius;
+            delete f.radius;
+        }
+
+        if (f.step != null) {
+            f.stepHorizontal = f.step;
+            f.stepVertical = f.step;
+            delete f.step;
+        }
+
+        if (f.passes != null) {
+            f.passesHorizontal = f.passes;
+            f.passesVertical = f.passes;
+            delete f.passes;
+        }
+
         f.actions = [{
             action: BLUR,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
@@ -538,10 +563,13 @@ const setActionsArray = {
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
+            stepHorizontal: (f.stepHorizontal != null) ? f.stepHorizontal : 1,
+            passesHorizontal: (f.passesHorizontal != null) ? f.passesHorizontal : 1,
             processVertical: (f.processVertical != null) ? f.processVertical : true,
-            radius: (f.radius != null) ? f.radius : 1,
-            passes: (f.passes != null) ? f.passes : 1,
-            step: (f.step != null) ? f.step : 1,
+            radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
+            stepVertical: (f.stepVertical != null) ? f.stepVertical : 1,
+            passesVertical: (f.passesVertical != null) ? f.passesVertical : 1,
         }];
     },
 
@@ -933,12 +961,26 @@ const setActionsArray = {
 
 // __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
     gaussianBlur: function (f) {
+        if (f.radius != null) {
+            f.radiusHorizontal = f.radius;
+            f.radiusVertical = f.radius;
+            delete f.radius;
+        }
+
         f.actions = [{
             action: GAUSSIAN_BLUR,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
-            radius: (f.radius != null) ? f.radius : 1,
+            // processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            // processVertical: (f.processVertical != null) ? f.processVertical : true,
+            radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
+            radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
         }];
     },
 
