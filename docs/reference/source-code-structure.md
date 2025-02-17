@@ -1,13 +1,13 @@
 # Scrawl-canvas source code structure
 A brief overview of the source code folder and file structure, alongside reasons for the decisions to structure the code in this way.
 
-Note that this page only covers the `source/*` folder structure. For details of other files held in the repository, see the [Repository structure, and release protocol](./repo-structure.html) page.
+Note that this page only covers the `source/*` folder structure. For details of other files held in the repo, see the [Repository structure, and release protocol](./repo-structure.html) page.
 
 ## Folder overview
 
 ```
 | - scrawl.js                       Entry file
-| - scrawl.d.ts                     TS types definitions for the user API
+| - scrawl.d.ts                     TS types definitions for the dev-user API
 |
 | - asset-management
 |   | - [asset management files]
@@ -63,11 +63,11 @@ The following guidelines (which is not a complete list) underpin the decisions m
 
 3. [Circular dependencies](https://en.wikipedia.org/wiki/Circular_dependency) between files should be avoided at all costs.
 
-4. (We maintain a Typescript definitions file purely to support code completion functionality in the user's preferred development environment.)
+4. (Repo-devs maintain a Typescript definitions file purely to support code completion functionality in the dev-user's preferred development environment.)
 
 5. Javascript is a [prototypal language](https://en.wikipedia.org/wiki/Prototype-based_programming). Javascript classes are expressly forbidden from the code base!
 
-6. We use mixin files to implement inheritance.
+6. SC uses mixin files to implement inheritance.
 
 7. Minimise lookups: mixin files should add attributes and functions to an object's prototype directly. Say no to hierarchies!
 
@@ -87,15 +87,15 @@ The following guidelines (which is not a complete list) underpin the decisions m
 
 15. An object should only update its state once per Display cycle. Signal state changes (including between objects) using dirty flags.
 
-Also, we enforce additional coding preferences via linting rules, invoked by running the command `yarn lint`. 
+Also, SC enforces additional coding preferences via linting rules, invoked by running the command `yarn lint`. 
 
 ## Common file structures
-We make every effort to keep files tidy, in particular by maintaining a similar file structure for similar types of files. This is an attempt to minimise cognitive overload.
+Repo-devs make every effort to keep files tidy, in particular by maintaining a similar file structure for similar types of files. This is an attempt to minimise cognitive overload.
 
-Note that we encourage inline comments. The repository includes tool chaining to extract these comments into document files as part of the `yarn build` functionality. Use `// [... comment]` single-line comments - the tooling doesn't (yet) recognise (JS-style) `/* ... multi-line comments */`.
+Note that repo-devs encourage inline comments. The repo includes tool chaining to extract these comments into document files as part of the `yarn build` functionality. Use `// [... comment]` single-line comments - the tooling doesn't (yet) recognise (JS-style) `/* ... multi-line comments */`.
 
 ### Factory files
-SC uses [factory pattern](https://www.patterns.dev/vanilla/factory-pattern) files to define objects that a user can create. Much of the functionality in factory files is shared between them, so as part of the factory file we invoke **mixin functions** to add that functionality. Additional functionality specific to that object is then defined.
+SC uses [factory pattern](https://www.patterns.dev/vanilla/factory-pattern) files to define objects that a dev-user can create. Much of the functionality in factory files is shared between them, so as part of the factory file SC invokes **mixin functions** to add that functionality. Additional functionality specific to that object is then defined.
 
 As far as possible, all factory files use the following code structure - for instance `factory/wheel.js`:
 

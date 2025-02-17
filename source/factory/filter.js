@@ -977,8 +977,6 @@ const setActionsArray = {
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
             excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
-            // processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
-            // processVertical: (f.processVertical != null) ? f.processVertical : true,
             radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
             radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
         }];

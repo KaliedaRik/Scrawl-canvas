@@ -23,16 +23,213 @@
 
     <main>
         <h1 id="scrawl-canvas-artefacts-and-the-dom">Scrawl-canvas artefacts and the DOM</h1>
+<p><a href="https://html.spec.whatwg.org/multipage/canvas.html#the-canvas-element">The <code>&lt;canvas&gt;</code> element</a> has been part of HTML since the introduction of HTML5. It provides scripts with a resolution-dependent bitmap canvas, which can be used for rendering graphs, game graphics, art, or other visual images on the fly.</p>
+<p>Canvas scripts are written in Javascript using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a>, and added to the HTML markup in <code>&lt;script&gt;</code> elements. It's fair to say that the Canvas API is generally low-level and not dev-user-friendly - its purpose is to render <a href="https://learn.microsoft.com/en-us/windows/win32/learnwin32/retained-mode-versus-immediate-mode">immediate-mode graphics</a> into the bitmap supplied by the <code>&lt;canvas&gt;</code> element.</p>
+<p>The Scrawl-canvas library stands between the <code>&lt;canvas&gt;</code> element and the Canvas API. The library introduces a <a href="https://en.wikipedia.org/wiki/Scene_graph">scene graph</a> which dev-users can use to build a <strong>retained-mode graphics</strong> canvas display.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> Scrawl-canvas has been designed to work <strong>WITH</strong> the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">web page</a> (HTML, CSS) and its <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model">Document Object Model</a> (DOM). <strong><em>It has not been designed to replace it!</em></strong></p>
+</blockquote>
+<p>Given the above, there are some things we need to keep in mind when devloping and maintaining SC:</p>
+<ul>
+<li>A web page may include many <code>&lt;canvas&gt;</code> elements, but it is not the job of SC to manage them all. SC only manages those canvases that it has been asked to manage - either by including the <code>data-scrawl-canvas</code> attribute in the <code>&lt;canvas&gt;</code> element's markup, or when instructed to do so using the <code>scrawl.addCanvas()</code> or <code>scrawl.getCanvas()</code> functions. See the test demos <a href="../demo/dom-012.html">DOM-012</a>, <a href="../../demo/dom-014.html">DOM-014</a> and <a href="../demo/dom-017.html">DOM-017</a> for examples.</li>
+<li>When instructed to do so, SC will wrap a <code>&lt;canvas&gt;</code> element in an SC Canvas artefact object. Part of the wrapping process involves mutating the <code>&lt;canvas&gt;</code> element's markup and contents so that SC can better manage it. <strong>All SC-mediated DOM mutations to the <code>&lt;canvas&gt;</code> element must happen only to that element and should not spread beyond it!</strong></li>
+<li>It is a fact of life that CSS markup and the <code>&lt;canvas&gt;</code> element don't play nicely together. Also the <code>&lt;canvas&gt;</code> element is barely <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design">responsive</a>, and hostile to <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility">accessibility</a>. It is up to SC to manage these difficult relationships to ease the dev-user's burden as much as possible - though there are actions the dev-user can take when building a canvas display to make things even easier.</li>
+<li>Wherever possible, SC should leverage CSS and the DOM to Get Things Done. This includes such things as: using <code>&lt;canvas&gt;</code> element <code>data-</code> attributes for passing information into the SC system; using DOM markup (<code>&lt;img&gt;</code>, <code>&lt;video&gt;</code> elements) to define properly responsive assets for use by Picture entitys and Pattern styles; leveraging CSS for styling EnhancedLabel text layout and styling functionality; updating the wrapped <code>&lt;canvas&gt;</code> element's inline CSS style attribute for positioning withing an SC stack; etc.</li>
+<li>SC needs to support <code>&lt;canvas&gt;</code> elements which appear in less expected parts of the web page - for instance the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API">Fullscreen API</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">Popover API</a>.</li>
+<li><strong>Accessibility is paramount!</strong> SC needs to support accessibility-related settings that an end-user sets on their device, and at the same time make it as easy as possible for the dev-user to code the functionality to respect those settings, and respond appropriately to any changes the end-user may make to them while the canvas display is running on the page.</li>
+<li><strong>Responsiveness is hard!</strong> SC has a responsibility to the dev-user to make coding responsive canvas displays as easy as possible. This means, in practice, giving the SC canvas wrapper object state to: understand the capabilities of the device on which the browser is displaying; know where the <code>&lt;canvas&gt;</code> element sits in relation to the browser's viewport; keep track of its current shape and size; and sufficient functionality to react to changes in this environmental state.</li>
+</ul>
+<h2 id="wrapping-dom-elements-into-sc-artefact-objects">Wrapping DOM elements into SC artefact objects</h2>
+<p>SC directly manipulates and manages certain types of DOM element on the web page. To do this, it has to wrap the affected DOM elements into <strong>artefact objects</strong>. This happens when:</p>
+<ul>
+<li>Any <code>&lt;canvas&gt;</code> element with a <code>data-scrawl-canvas</code> attribute is found in the DOM during page initialization; that element will be wrapped in an SC <code>Canvas</code> object.</li>
+<li>Any element with a <code>display: block;</code> CSS property which has a <code>data-scrawl-stack</code> attribute is found in the DOM, again during page initialization; such elements will be wrapped in an SC <code>Stack</code> object.</li>
+<li>The dev-user adds a new canvas to the web page using the <code>scrawl.addCanvas()</code> function.</li>
+<li>The dev-user adds a new stack to the web page using the <code>scrawl.addStack()</code> function.</li>
+<li>The canvas or stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getCanvas('canvas-id-string')</code> and/or  <code>scrawl.getStack('stack-id-string')</code> as part of the component's mount functionality.</li>
+</ul>
+<p>Note that all direct child elements of a wrapped <code>Stack</code> object will be wrapped in SC <code>Element</code> objects - except for <code>&lt;canvas&gt;</code> elements (see above) - at the same time as the stack element gets wrapped.</p>
+<h3 id="changes-made-to-the-canvas-dom-element-as-sc-wraps-it">Changes made to the <code>&lt;canvas&gt;</code> DOM element as SC wraps it</h3>
+<p>SC makes extensive changes to the <code>&lt;canvas&gt;</code> DOM element as part of its wrapping functionality. <strong>These changes are essential as they give SC the power to make the <code>&lt;canvas&gt;</code> element both responsive, and more accessible.</strong></p>
+<pre><code>Before:                                         After:
+----------------------------------------        ----------------------------------------
+‹canvas                                         ‹canvas 
+  id="mycanvas"                                   id="mycanvas"
+  width="600"                                     width="600"
+  height="400"                                    height="400"
+  data-scrawl-canvas=""                           data-scrawl-canvas=""
+  data-base-background-color="aliceblue"          data-base-background-color="aliceblue"
+›‹/canvas›                                        data-scrawl-group="root"
+                                                  style="
+                                                    box-sizing: border-box;
+                                                    perspective-origin: 50% 50%;
+                                                    perspective: 0px;
+                                                    width: 600px;
+                                                    height: 400px;
+                                                    transform-origin: 0px 0px 0px;
+                                                    transform: translate(0px, 0px);
+                                                    display: block;
+                                                    -webkit-font-smoothing: auto;"
+                                                  aria-labelledby="mycanvas-ARIA-label"
+                                                  aria-describedby="mycanvas-ARIA-description"
+                                                  title=""
+                                                  role="img"
+                                                  class=""
+                                                ›
+                                                  ‹nav
+                                                    id="mycanvas-navigation"
+                                                    aria-live="polite"
+                                                    aria-busy="false"
+                                                  ›‹/nav›
+                                                  ‹div
+                                                    id="mycanvas-text-hold"
+                                                    aria-live="polite"
+                                                    aria-busy="false"
+                                                  ›‹/div›
+                                                  ‹div
+                                                    id="mycanvas-canvas-hold"
+                                                    aria-hidden="true"
+                                                    style="display: none;"
+                                                  ›
+                                                    ‹div
+                                                      id="mycanvas-fontSizeCalculator"
+                                                      aria-hidden="true"
+                                                    ›‹/div›
+                                                    ‹div
+                                                      id="mycanvas-styles"
+                                                      aria-hidden="true"
+                                                    ›‹/div›
+                                                  ‹/div›
+                                                  ‹div
+                                                    id="mycanvas-ARIA-label"
+                                                    aria-live="polite"
+                                                  ›mycanvas canvas element‹/div›
+                                                  ‹div
+                                                    id="mycanvas-ARIA-description"
+                                                    aria-live="polite"
+                                                  ›‹/div›
+                                                ‹/canvas›</code></pre>
+<h3 id="changes-made-to-a-typical-dom-stack-element-as-sc-wraps-it">Changes made to a typical DOM stack element as SC wraps it</h3>
+<p>SC makes extensive changes to stack DOM elements as it wraps them. The purpose of this is to make it easier to position and animate the (absolutely positioned) direct child elements included in the Stack - which is achieved using standard inline CSS styling.</p>
+<p>SC also adds <strong>corner divs</strong> inside the DOM element, which can then be used across the SC ecosystem for reference positioning other artefacts and entitys:</p>
+<pre><code>Before:                                         After:
+----------------------------------------        ----------------------------------------
+&lt;div                                            &lt;div 
+  id="mystack"                                    id="mystack"
+  data-scrawl-stack=""                            data-scrawl-stack=""
+&gt;                                                 data-scrawl-group="root"
+  [... direct child elements ...]                 style="
+&lt;/div&gt;                                              box-sizing: border-box;
+                                                    perspective-origin: 50% 50%;
+                                                    perspective: 1200px;
+                                                    position: relative;
+                                                    width: 500px;
+                                                    height: 500px;
+                                                    transform-origin: 0px 0px 0px;
+                                                    transform: translate(0px, 0px);
+                                                    display: block;
+                                                    -webkit-font-smoothing: auto;"
+                                                  class=""
+                                                &gt;
+                                                  [... direct child elements ...]
+
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 0%; left: 0%;"
+                                                  &gt;&lt;/div&gt;
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 0%; left: 100%;"
+                                                  &gt;&lt;/div&gt;
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 100%; left: 100%;"
+                                                  &gt;&lt;/div&gt;
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 100%; left: 0%;"
+                                                  &gt;&lt;/div&gt;
+                                                &lt;/div&gt;</code></pre>
+<h3 id="changes-made-to-a-dom-direct-child-element-discovered-in-a-stack-element">Changes made to a DOM direct child element discovered in a stack element</h3>
+<p>When SC wraps a stack element, it will also wrap all of the direct child elements of that stack element. As part of this process, each child element will become <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">absolutely positioned</a> within the (relatively positioned) stack element. SC will make its best effort to replicate the element's position within the stack before wrapping commenced - but this cannot be guaranteed.</p>
+<p>Other than positioning considerations, the mutations made to the direct child elements of a stack element are similar to the changes made to the stack element itself as it is wrapped - including the addition of <strong>corner divs</strong>:</p>
+<pre><code>Before:                                         After:
+----------------------------------------        ----------------------------------------
+&lt;p id="myelement"&gt;                              &lt;p
+  This element can be positioned                  id="myelement"
+  within the stack element                        class=""
+  using Scrawl-canvas positioning;                style="
+                                                    box-sizing: border-box;
+  [... unwrapped child elements ...]                position: absolute;
+&lt;/p&gt;                                                width: 250px;
+                                                    height: 250px;
+                                                    transform-origin: 125px 125px 0px;
+                                                    transform: 
+                                                      translate(125px, 125px)
+                                                      rotate3d(0.189308, 0.268536, 0.0381346, 0.674221rad);
+                                                    display: block;
+                                                    -webkit-font-smoothing: auto;"
+                                                &gt;
+                                                  This element can be positioned 
+                                                  within the stack element
+                                                  using Scrawl-canvas positioning
+
+                                                  [... unwrapped child elements ...]
+
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 0%; left: 0%;"
+                                                  &gt;&lt;/div&gt;
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 0%; left: 100%;
+                                                  "&gt;&lt;/div&gt;
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 100%; left: 100%;"
+                                                  &gt;&lt;/div&gt;
+                                                  &lt;div
+                                                    data-scrawl-corner-div="sc"
+                                                    aria-hidden="true"
+                                                    style="
+                                                      width: 0px; height: 0px; position: absolute;
+                                                      margin: 0px; border: 0px; padding: 0px;
+                                                      top: 100%; left: 0%;
+                                                  "&gt;&lt;/div&gt;
+                                                &lt;/p&gt;</code></pre>
 <p>Artefacts are SC objects that wrap DOM elements</p>
 <ul>
 <li>Canvas artefact</li>
 <li>Stack artefact</li>
 <li>Element artefact</li>
-</ul>
-<p>Manipulating the DOM during SC initialization</p>
-<ul>
-<li>Stack - element and canvas positioning</li>
-<li>Canvas - making the canvas accessible</li>
 </ul>
 <p>Interplay between CSS and SC</p>
 <ul>

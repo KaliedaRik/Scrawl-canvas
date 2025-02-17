@@ -2,22 +2,22 @@
 A brief overview of the Scrawl-canvas repo's folders and files, together with instructions on the steps to take when releasing a new version of the repo to NPM.
 
 ## GitHub branch policy
-The Scrawl-canvas repository includes two branches - `v8` and `v8-dev` - alongside any number of development and investigation branches.
+The Scrawl-canvas repo includes two branches - `v8` and `v8-dev` - alongside any number of development and investigation branches.
 
 ### v8 branch
 
-`v8` is the default branch against which all NPM releases take place. The only branch that should merge into it is `v8-dev`, and this should only happen as part of a new version release.
+`v8` is the default branch against which all [NPM releases](https://www.npmjs.com/package/scrawl-canvas) take place. The only branch that should merge into it is `v8-dev`, and this should only happen as part of a new version release.
 
 ### v8-dev branch
 
 `v8-dev` is the current release candidate branch. For any new development or maintenance work, a new branch should be checked out from it and, when work completes satisfactorily, merged back into it.
 
-Final testing prior to a new release should take place on the `v8-dev` branch as part of a PR to merge into `v8`. Once the merge completes we can either retain the current `v8-dev` branch for the next release candidate, or delete it and create a new `v8-dev` branch from the `v8` branch.
+Final testing prior to a new release should take place on the `v8-dev` branch as part of a PR to merge into `v8`. Once the merge completes repo-devs can either retain the current `v8-dev` branch for the next release candidate, or delete it and create a new `v8-dev` branch from the `v8` branch.
 
-Development or maintenance branches merge into `v8-dev` via a PR, so we can keep track of the work they contain.
+Development or maintenance branches merge into `v8-dev` via a PR, so repo-devs can keep track of the work they contain.
 
 ### History
-The repository used to contain `v6` and `v7` branches, but they were deleted once the decision was made not to maintain them. At some point in the future a `v9` branch may be created, should the code ever require a substantial rewrite - for example if we ever move code over to WASM, or reintroduce Web Workers, or convert the entire codebase over to Typescript.
+The repo used to contain `v6` and `v7` branches, but they were deleted once the decision was made not to maintain them. At some point in the future a `v9` branch may be created, should the code ever require a substantial rewrite - for example if repo-devs ever move code over to WASM, or reintroduce Web Workers, or convert the entire codebase over to Typescript.
 
 ## Repository structure
 The Scrawl-canvas repo on GitHub is a complete package to maintain and develop the SC frontend code which gets imported into a web page. As such, the repo includes documentation and testing (demo) code, alongside the source code and configuration files for the developer toolchain.
@@ -25,12 +25,12 @@ The Scrawl-canvas repo on GitHub is a complete package to maintain and develop t
 ### Top level documentation
 The essential files are as follows:
 
-+ `package.json` - We release Scrawl-canvas as an NPM package. The file needs to be updated with version data for each new release.
++ `package.json` - SC gets released as an [NPM package](https://www.npmjs.com/). The file needs to be updated with version data for each new release.
 + `README.md` - This file displays in various places, thus needs to be updated for each release.
-+ `LICENSE.md` - Scrawl-canvas uses the standard MIT license.
++ `LICENSE.md` - Scrawl-canvas uses the standard [MIT license](https://opensource.org/license/mit).
 
 ### Development toolchain
-All files relating to the dev toolchain reside in the root of the repository. These can be broken down as follows:
+Most files relating to the dev toolchain reside in the root of the repo. These can be broken down as follows:
 
 #### Git, GitHub, NPM
 + `.github/*`
@@ -39,7 +39,7 @@ All files relating to the dev toolchain reside in the root of the repository. Th
 + `.npmignore`
 
 #### Yarn
-We use [Yarn v4](https://yarnpkg.com/) as the basis for the dev toolchain, as recorded in the `package.json` file. The following folders and files are present in the remote git; other yarn-associated files are git-ignored:
+SC uses [Yarn v4](https://yarnpkg.com/) as the basis for the dev toolchain, as recorded in the `package.json` file. The following folders and files are present in the remote git; other yarn-associated files are git-ignored:
 
 + `.yarn/releases/*.cjs`
 + `.yarnrc.yml`
@@ -56,20 +56,20 @@ Running the `yarn build-min` command (also invoked when running `yarn build`) wi
 + `min/scrawl.js`
 
 #### Building: Docco
-We use [Docco](https://ashkenas.com/docco/) to auto-generate developer documentation from inline comments in both the SC frontend (source) and demo code. Running the `yarn build-docco` command (also invoked when running `yarn build`) will generate the documentation files, which live in the `docs/demo` and `docs/source` folders.
+SC uses [Docco](https://ashkenas.com/docco/) to auto-generate dev-user documentation from inline comments in both the SC frontend (source) and demo code. Running the `yarn build-docco` command (also invoked when running `yarn build`) will generate the documentation files, which live in the `docs/demo` and `docs/source` folders.
 
 Additional documentation files were generated when Docco was first added to the repo, and can be updated by hand:
 
 + `docs/public/fonts/*`
 + `docs/public/stylesheets/*`
 
-We provide the (handwritten) index file for easy browser navigation around the documents as part of the development experience:
+SC provides the (handwritten) index file for easy browser navigation around the documents as part of the development experience:
 
 + `docs/index.html`
 + `docs/docco.css`
 
 #### Building: Showdown
-The Developer Runbook page files live in the `docs/reference` folder. These are written in (simple) `.md` markdown files. We use [Showdown](https://showdownjs.com/docs/) to convert these files into `.html` documents which live in the same folder. Running the `yarn build-showdown` command (also invoked when running `yarn build`) generates the `.html` files.
+The Developer Runbook page files live in the `docs/reference` folder. These are written in (simple) `.md` markdown files. Repo-devs use [Showdown](https://showdownjs.com/docs/) to convert these files into `.html` documents which live in the same folder. Running the `yarn build-showdown` command (also invoked when running `yarn build`) generates the `.html` files.
 
 Files specific to the Developer Runbook toolchain:
 
@@ -78,19 +78,19 @@ Files specific to the Developer Runbook toolchain:
 + `docs/css/*`
 
 #### Testing: Eslint
-We lint both the SC frontend (source) and demo code using [ESLint](https://eslint.org/) - command: `yarn lint`.
+Repo-devs lint both the SC frontend (source) and demo code using [ESLint](https://eslint.org/) - command: `yarn lint`.
 
 + `eslint.config.mjs`
 
 #### Testing: Knip
-We use [Knip](https://knip.dev/) to find and fix unused files, exports and dependencies in the SC frontend (source) code - command: `yarn knip`.
+Repo-devs use [Knip](https://knip.dev/) to find and fix unused files, exports and dependencies in the SC frontend (source) code - command: `yarn knip`.
 
 + `knip.json`
 
 #### Testing: Typescript
-The Scrawl-canvas source code is written in Javascript. We have no plans to convert the codebase over to [Typescript](https://www.typescriptlang.org/) at any point in the near-mid future.
+The Scrawl-canvas source code is written in Javascript. There are no plans to convert the codebase over to [Typescript](https://www.typescriptlang.org/) at any point in the near-mid future.
 
-We do use the TS parser for testing both the SC frontend (source) and demo code against the repository's TS definitions (`.d.ts`) file - this is mainly to identify errors in that file - command: `yarn test`.
+Repo-devs use the TS parser for testing both the SC frontend (source) and demo code against the repo's TS definitions (`.d.ts`) file - this is mainly to identify errors in that file - command: `yarn test`.
 
 The `.d.ts` file is ***not*** autogenerated, but rather hand-written, relying mainly on interfaces to define the SC public API used in frontend code. 
 
@@ -114,7 +114,7 @@ All demo tests will also import additional testing and convenience code from the
 
 To perform development work on the source code, or test the demos, run the command `yarn dev`.
 
-We use the [browser-sync](https://browsersync.io/) server to handle browser testing as it allows us to test each demo on multiple browsers (generally Chrome, Firefox and Safari) at the same time. Additional local site files can be found as follows:
+SC uses the [browser-sync](https://browsersync.io/) server to handle browser testing as it allows repo-devs to test each demo on multiple browsers (generally Chrome, Firefox and Safari) at the same time. Additional local site files can be found as follows:
 
 + `index.html`
 + `favicon.png`
@@ -126,15 +126,15 @@ We use the [browser-sync](https://browsersync.io/) server to handle browser test
 + `demo/css/*.css`
 + `demo/thumbs/*.webp`
 
-When creating a new demo test, remember to update these local site files (`demo/index.html`, `docs/index.html`) appropriately with links to the demo. The demos on each side of the new test will also need their `.html` files updated to align to the new testing navigation experience.
+When creating a new demo test, remember to update these local site files (`demo/index.html`, `docs/index.html`) appropriately with links to the demo. The demos on each side of the new test will also need their `.html` files updated to align to the new test navigation experience.
 
-For ad-hoc or speculative development, we can create a new demo and prefix the files associated with it with `temp-` (eg `demo/temp-mytest-01.html`, `demo/temp-mytest-01.js`). Files in the `demo` and `docs` folders which start with `temp-` are git-ignored and won't be saved as part of the repository.
+For ad-hoc or speculative development, repo-devs and dev-users can create a new demo and prefix the files associated with it with `temp-` (eg `demo/temp-mytest-01.html`, `demo/temp-mytest-01.js`). Files in the `demo` and `docs` folders which start with `temp-` are git-ignored and won't be saved as part of the repo.
 
 ### Development and testing: source code
 See the [Scrawl-canvas source code structure](source-code-structure.html) page for details.
 
 ## Releasing a new version of Scrawl-canvas
-Version release has not (yet) been automated, which means the all following steps need to be performed manually. Note that when we release a new version, the work spreads beyond this repository:
+Version release has not (yet) been automated, which means the following steps need to be performed manually. Note that when repo-devs release a new version, the work spreads beyond this repo:
 
 + Updates need to be made to the [scrawl-canvas-website](https://github.com/KaliedaRik/scrawl-canvas-website) repo, in particular updating all mentions of the previous version to the new version, and copying over some folders to the website repo.
 + All the Pens held in the [Scrawl-canvas CodePens collection](https://codepen.io/collection/RzzMjw) need to be updated to use the latest release.
@@ -196,7 +196,7 @@ Version release has not (yet) been automated, which means the all following step
 
 10: Copy the zip file created in step 6 into the `scrawl-canvas-website/public/downloads` folder.
 
-11: Copy the following folders from the Scrawl-canvas repository into the `scrawl-canvas-website/public/` folder:
+11: Copy the following folders from the Scrawl-canvas repo into the `scrawl-canvas-website/public/` folder:
 + `demo/`
 + `docs/`
 + `min/`
@@ -206,7 +206,7 @@ Version release has not (yet) been automated, which means the all following step
 
 #### GitHub
 
-13: Merge the `v8-dev` PR into `v8`. If the `v8-dev` branch gets (accidentally) deleted during the process, we can recreate it from Local
+13: Merge the `v8-dev` PR into `v8`. If the `v8-dev` branch gets (accidentally) deleted during the process, repo-devs can recreate it from Local
 
 #### Local SC root
 
@@ -230,11 +230,11 @@ Version release has not (yet) been automated, which means the all following step
 
 20: Run: `yarn build`. Smoke test the website.
 
-21: We are now in a position to push the updated website to production. Use FTP for this work. All files in the `public` folder need to be copied to the remote site.
+21: Repo-devs are now in a position to push the updated website to production. Use FTP for this work. All files in the `public` folder need to be copied to the remote site.
 
 #### CodePen
 
-22: We can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.
+22: Repo-devs can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.
 
 #### tsdocs.dev website
 
