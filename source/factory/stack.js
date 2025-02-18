@@ -379,6 +379,7 @@ P.show = function () {
 // `render`
 P.render = function () {
 
+    this.clear();
     this.compile();
     this.show();
 };

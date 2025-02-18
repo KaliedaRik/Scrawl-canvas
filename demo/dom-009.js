@@ -14,6 +14,9 @@ const artefact = scrawl.library.artefact,
 stack.set({
     width: 600,
     height: 600,
+    css: {
+        overflow: 'hidden',
+    },
 });
 
 
