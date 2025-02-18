@@ -1,5 +1,5 @@
 # The Scrawl-canvas positioning system
-The key purpose of SC is to position graphical entitys onto a canvas element, in a given order, so that those entitys build some form of graphical representation, chart, imagery, infographic, artwork (etc) that can be displayed as part of a web page.
+The key purpose of SC is to position graphical entitys onto a `<canvas>` element, in a given order, so that those entitys build some form of graphical representation, chart, imagery, infographic, artwork (etc) that can be displayed as part of a web page.
 
 Most of the code associated with the SC positioning system can be found in the [mixin/position.js](../source/mixin/position.html) mixin file.
 
