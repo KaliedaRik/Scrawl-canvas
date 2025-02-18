@@ -25,7 +25,10 @@ const hitGroup = scrawl.makeGroup({
 
 // TODO: we need perspectiveZ (CSS perspective) to be picked up from CSS setting in html file. The code where this is handled is in mixin/dom.js lines 355 onwards. Currently is a known issue (low priority)
 stack.set({
-    perspectiveZ: 1200
+    perspectiveZ: 1200,
+    css: {
+        overflow: 'hidden',
+    },
 });
 
 // Generate new (DOM) element artefacts and add them to the stack via our new group

@@ -32,6 +32,8 @@ canvas.set({
     handle: ['center', 'center'],
     trackHere: 'local',
     offsetZ: 150,
+    pitch: 10,
+    yaw: 15,
 });
 
 
@@ -164,8 +166,8 @@ initializeDomInputs([
     ['input', 'offset_xAbsolute', '0'],
     ['input', 'offset_yAbsolute', '0'],
     ['input', 'roll', '0'],
-    ['input', 'pitch', '0'],
-    ['input', 'yaw', '0'],
+    ['input', 'pitch', '10'],
+    ['input', 'yaw', '15'],
     ['input', 'scale', '1'],
 ]);
 

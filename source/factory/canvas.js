@@ -46,6 +46,9 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
+import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 
 // Shared constants
 import { _2D, _computed, ABSOLUTE, ARIA_HIDDEN, ARIA_LIVE, CANVAS, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, IMG, LEAVE, MOVE, NAME, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
@@ -84,6 +87,7 @@ const Canvas = function (items = Ωempty) {
     this.dirtyPerspective = true;
 
     this.initializeDomLayout(items);
+    this.modifyConstructorInputForAnchorButton(items);
 
     this.set(this.defs);
 
@@ -268,6 +272,9 @@ P.isAsset = false;
 baseMix(P);
 domMix(P);
 displayMix(P);
+hiddenElementsMix(P);
+anchorMix(P);
+buttonMix(P);
 
 
 // #### Canvas attributes
@@ -643,6 +650,12 @@ P.cleanDimensionsAdditionalActions = function () {
     this.dirtyDomDimensions = true;
     this.dirtyDisplayShape = true;
     this.dirtyDisplayArea = true;
+};
+
+// `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
+P.prepareStampAdditionalActions = function () {
+
+    this.prepareStampTabsHelper();
 };
 
 // `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
