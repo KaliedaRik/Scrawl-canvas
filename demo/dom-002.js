@@ -18,7 +18,10 @@ const name = (n) => `${namespace}-${n}`;
 
 // Give the stack element some depth
 stack.set({
-    perspectiveZ: 1200
+    perspectiveZ: 1200,
+    css: {
+        overflow: 'hidden',
+    },
 });
 
 
@@ -65,6 +68,7 @@ mimic.set({
     addOwnHandleToMimic: false,
     addOwnOffsetToMimic: true,
     addOwnRotationToMimic: false,
+    order: 1,
 });
 
 
@@ -73,6 +77,7 @@ const pivot = scrawl.findElement('mypivot');
 pivot.set({
     pivot: 'myelement',
     lockTo: 'pivot',
+    order: 1,
 });
 
 
