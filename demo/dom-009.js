@@ -135,8 +135,8 @@ artefact.stop_listeners.set({
     },
 });
 
-// The `apply` function triggers the artefact to render itself outside of the Scrawl-canvas display cycle - this will then trigger artefacts (in this case the 50 circles) to recalculate their positions so they can correctly place themselves within the Stack
-stack.apply();
+// The `reset` function triggers the stack to recalculate its current values outside of the Scrawl-canvas display cycle - this will then trigger artefacts (in this case the 50 circles) to recalculate themselves so they can correctly place and style themselves within the Stack
+stack.reset();
 
 
 // Variable holds a value shared betwen two different functions
@@ -147,28 +147,17 @@ let targetsLength = 0;
 // Clean up circles before the start of next display cycle
 const reviewCircleClasses = function () {
 
-    let firstRun = true;
+    // updating the scene step 1 - clear out all instances of the 'make_opaque' CSS class from circles
+    circleGroup.removeArtefactClasses('make_opaque');
 
-    return function () {
+    // updating the scene step 2 - check for hits on every iteration of the animation
+    const targets = circleGroup.getAllArtefactsAt(stack.here);
 
-        // we need the animation cycle to run once before we disable it
-        if(firstRun){
-            firstRun = false;
-            scrawl.stopCoreAnimationLoop();
-        }
-
-        // updating the scene step 1 - clear out all instances of the 'make_opaque' CSS class from circles
-        circleGroup.removeArtefactClasses('make_opaque');
-
-        // updating the scene step 2 - check for hits on every iteration of the animation
-        const targets = circleGroup.getAllArtefactsAt(stack.here);
-
-        // updating the scene step 3 - add the 'make_opaque' CSS class to circles under the current cursor position
+    // updating the scene step 3 - add the 'make_opaque' CSS class to circles under the current cursor position
 /** @ts-expect-error */
-        targets.forEach(target => target.artefact.addClasses('make_opaque'));
-        targetsLength = targets.length;
-    };
-}();
+    targets.forEach(target => target.artefact.addClasses('make_opaque'));
+    targetsLength = targets.length;
+};
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -184,6 +173,9 @@ scrawl.makeRender({
     target: stack,
     commence: reviewCircleClasses,
     afterShow: report,
+
+    // We need the animation cycle to run once before we disable it
+    afterCreated: () => scrawl.stopCoreAnimationLoop(),
 });
 
 

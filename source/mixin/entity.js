@@ -123,7 +123,7 @@ export default function (P = Ωempty) {
 // __onUp__ - define tasks to be performed for `up` events
         onUp: null,
 
-// __onOtherInteraction__ - define tasks to be performed for `up` events
+// __onOtherInteraction__ - define tasks to be performed for `other interaction` events
         onOtherInteraction: null,
 
 // ##### State object attributes
@@ -219,27 +219,9 @@ export default function (P = Ωempty) {
 // #### Clone management
     P.postCloneAction = function(clone, items) {
 
-        if (this.onEnter) clone.onEnter = this.onEnter;
-        if (this.onLeave) clone.onLeave = this.onLeave;
-        if (this.onDown) clone.onDown = this.onDown;
-        if (this.onUp) clone.onUp = this.onUp;
-        if (this.onOtherInteraction) clone.onOtherInteraction = this.onOtherInteraction;
-
         // Shared state
         if (items.sharedState) clone.state = this.state;
 
-        // Cloned anchors
-        if (items.anchor) {
-
-            items.anchor.host = clone;
-
-            if (!xt(items.anchor.focusAction)) items.anchor.focusAction = this.anchor.focusAction;
-            if (!xt(items.anchor.blurAction)) items.anchor.blurAction = this.anchor.blurAction;
-
-            clone.buildAnchor(items.anchor);
-
-            if (!items.anchor.clickAction) clone.anchor.clickAction = this.anchor.clickAction;
-        }
         return clone;
     };
 

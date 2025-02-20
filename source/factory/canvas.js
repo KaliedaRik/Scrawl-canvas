@@ -251,7 +251,6 @@ const Canvas = function (items = Ωempty) {
     }
 
     this.dirtyCells = true;
-    this.apply();
 
     this.dirtyDomDimensions = true;
     if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
@@ -571,6 +570,12 @@ P.getBase = function () {
 P.getBaseHere = function () {
 
     return this.base.here;
+};
+
+P.reset = function () {
+
+    this.dirtyDimensions = true;
+    domShow(this.name);
 };
 
 // Internal function - passes the Canvas wrapper's current __here__ object and __fit__ attribute to the base Cell for further processing

@@ -83,8 +83,6 @@ const Element = function (items = Ωempty) {
 
     if (myEl) myEl.id = this.name;
 
-    this.apply();
-
     return this;
 };
 
@@ -115,11 +113,11 @@ domMix(P);
 
 
 // #### Kill management
-P.factoryKill = function () {
+P.factoryKill = function (removeElement = true) {
 
     removeItem(uiSubscribedElements, this.name);
 
-    this.domElement.remove();
+    if (removeElement) this.domElement.remove();
 };
 
 

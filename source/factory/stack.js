@@ -270,6 +270,12 @@ P.updateArtefacts = function (items = Ωempty) {
     });
 };
 
+P.reset = function () {
+
+    this.dirtyDimensions = true;
+    domShow(this.name);
+};
+
 // `cleanDimensionsAdditionalActions` - overwrites mixin/position function. Promulgates Stack dimension changes through to all Element and Canvas wrappers associated with the Stack wrapper's Group object.
 P.cleanDimensionsAdditionalActions = function () {
 
@@ -420,6 +426,7 @@ P.addExistingDomElements = function (search) {
 // + If position and dimension values are not included in the argument, the element will be given default values of [0,0] for start, offset and handle; and dimensions of 100px width and height.
 // + The new element will also default to a CSS box-sizing style value of 'border-box', unless the argument's __boxSizing__ attribute has been set to 'content-box' - this will override any 'borderBox' attribute value in the argument's __.css__ object (if one has been included)
 P.addNewElement = function (items) {
+
 
     if (items && items.tag) {
 

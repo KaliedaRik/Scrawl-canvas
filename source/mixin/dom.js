@@ -18,7 +18,7 @@ import { setMouseChanged } from '../helper/system-flags.js';
 
 import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
+import { addLocalMouseMoveListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 
@@ -91,12 +91,6 @@ export default function (P = Ωempty) {
 // + root Stack and Canvas wrappers have a position value of `relative` - this is to make sure their DOM elements remain in the document flow, thus attempting to minimize Scrawl-canvas's impact on the wider environment
 // + other possible values - except `static` - will be respected if they are explicitly set on the DOM elements prior to Scrawl-canvas initialization.
         position: ABSOLUTE,
-
-// __smoothFont__ - a Boolean to handle the non-standards `font-smooth`, `-webkit-font-smoothing` and `-moz-osx-font-smoothing` CSS properties.
-// + by default all Scrawl-canvas Stack, Canvas and Element wrapper DOM will automatically smooth fonts
-// + setting this value to false will get Scrawl-canvas to attempt to switch off font smoothing
-// + ___This CSS property is non-standards-compliant___ and thus likely to break in interesting and unexpected ways!
-        smoothFont: true,
 
 // __checkForResize__ - Boolean - automatically update stuff when the element changes its dimensions
 // + triggers as part of the [userInteraction](../core/userInteraction.html) `updateUiSubscribedElement` functionality
@@ -174,16 +168,7 @@ export default function (P = Ωempty) {
 
 
 // #### Clone management
-// `postCloneAction` - internal helper function
-    P.postCloneAction = function(clone) {
-
-        if (this.onEnter) clone.onEnter = this.onEnter;
-        if (this.onLeave) clone.onLeave = this.onLeave;
-        if (this.onDown) clone.onDown = this.onDown;
-        if (this.onUp) clone.onUp = this.onUp;
-
-        return clone;
-    };
+// No additional clone functionality required
 
 
 // #### Kill management
@@ -218,13 +203,6 @@ export default function (P = Ωempty) {
 
         this.position = item;
         this.dirtyPosition = true;
-    };
-
-// `smoothFont`
-    S.smoothFont = function (item) {
-
-        this.smoothFont = item;
-        this.dirtySmoothFont = true;
     };
 
 // `visibility`
@@ -828,7 +806,7 @@ export default function (P = Ωempty) {
 // + `position` (relative vs absolute, not position within a Stack)
 // + `width` and `height` - for dimensions
 // + `transformOrigin` - relating to wrapper `handle` values
-// + `transform` - for positioning and rotation within a Stack element
+// + `transform` - for positioning, rotation and scale within a Stack element
 // + `display` - for visibility
     P.stamp = function () {
 
@@ -873,7 +851,7 @@ export default function (P = Ωempty) {
         }
 
         // determine whether there is a need to trigger a redraw of the DOM element
-        if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtySmoothFont || this.dirtyCss || this.dirtyClasses || this.domShowRequired) {
+        if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtyCss || this.dirtyClasses || this.domShowRequired) {
 
             this.domShowRequired = false;
             addDomShowElement(this.name);
@@ -1069,21 +1047,5 @@ export default function (P = Ωempty) {
         this.colorSchemeActions();
         this.reducedTransparencyActions();
         this.reducedDataActions();
-    };
-
-
-// `apply`
-// + I really don't like this functionality - see if we can purge it from the code base?
-    P.apply = function() {
-
-        applyCoreResizeListener();
-
-        this.prepareStamp();
-        this.stamp()
-
-        domShow(this.name);
-
-        this.dirtyPathObject = true;
-        this.cleanPathObject();
     };
 }
