@@ -34,20 +34,27 @@
 <li>A web page may include many <code>&lt;canvas&gt;</code> elements, but it is not the job of SC to manage them all. SC only manages those canvases that it has been asked to manage - either by including the <code>data-scrawl-canvas</code> attribute in the <code>&lt;canvas&gt;</code> element's markup, or when instructed to do so using the <code>scrawl.addCanvas()</code> or <code>scrawl.getCanvas()</code> functions. See the test demos <a href="../demo/dom-012.html">DOM-012</a>, <a href="../../demo/dom-014.html">DOM-014</a> and <a href="../demo/dom-017.html">DOM-017</a> for examples.</li>
 <li>When instructed to do so, SC will wrap (multiple) <code>&lt;canvas&gt;</code> elements in SC Canvas artefact objects. Part of the wrapping process involves mutating the <code>&lt;canvas&gt;</code> element's markup and contents so that SC can better manage it. <strong>All SC-mediated DOM mutations must happen only to the elements that SC has wrapped, and should not spread beyond those elements!</strong></li>
 <li>It is a fact of life that CSS markup and the <code>&lt;canvas&gt;</code> element don't play nicely together. Also the <code>&lt;canvas&gt;</code> element is barely <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design">responsive</a>, and hostile to <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility">accessibility</a>. It is up to SC to manage these difficult relationships to ease the dev-user's burden as much as possible - though there are actions the dev-user can take when building a canvas display to make things even easier.</li>
-<li>Wherever possible, SC should leverage CSS and the DOM to Get Things Done. This includes such things as: using <code>&lt;canvas&gt;</code> element <code>data-</code> attributes for passing information into the SC system; using DOM markup (<code>&lt;img&gt;</code>, <code>&lt;video&gt;</code> elements) to define properly responsive assets for use by Picture entitys and Pattern styles; leveraging CSS for styling EnhancedLabel text layout and styling functionality; updating the wrapped <code>&lt;canvas&gt;</code> element's inline CSS style attribute for positioning withing an SC stack; etc.</li>
+<li>Wherever possible, SC should leverage CSS and the DOM to Get Things Done. This includes such things like: <ul>
+<li>using <code>&lt;canvas&gt;</code> element <code>data-</code> attributes for passing information into the SC system;</li>
+<li>using DOM markup (<code>&lt;img&gt;</code>, <code>&lt;video&gt;</code> elements) to define properly responsive assets for use by Picture entitys and Pattern styles;</li>
+<li>leveraging CSS for styling EnhancedLabel text layout and styling functionality;</li>
+<li>updating the wrapped <code>&lt;canvas&gt;</code> element's inline CSS style attribute for positioning withing an SC stack;</li>
+<li>etc.</li></ul></li>
 <li>SC needs to support <code>&lt;canvas&gt;</code> elements which appear in less expected parts of the web page - for instance the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API">Fullscreen API</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">Popover API</a>.</li>
 <li><strong>Accessibility is paramount!</strong> SC needs to support accessibility-related settings that an end-user sets on their device, and at the same time make it as easy as possible for the dev-user to code the functionality to respect those settings, and respond appropriately to any changes the end-user may make to them while the canvas display is running on the page.</li>
-<li><strong>Responsiveness is hard!</strong> SC has a responsibility to the dev-user to make coding responsive canvas displays as easy as possible. This means, in practice, giving the SC canvas wrapper object state to: understand the capabilities of the device on which the browser is displaying; know where the <code>&lt;canvas&gt;</code> element sits in relation to the browser's viewport; keep track of its current shape and size; and sufficient functionality to react to changes in this environmental state.</li>
+<li><strong>Responsiveness is hard!</strong> SC has a responsibility to the dev-user to make coding responsive canvas displays as easy as possible. This means, in practice, giving the SC canvas wrapper object state to:<ul>
+<li>understand the capabilities of the device on which the browser is displaying; </li>
+<li>know where the <code>&lt;canvas&gt;</code> element sits in relation to the browser's viewport; </li>
+<li>keep track of its current shape and size; and </li>
+<li>sufficient functionality to react to changes in this environmental state.</li></ul></li>
 </ul>
-<p>Much of the code that handles DOM-related interactions and manipulations can be found in various mixins - in particular:</p>
+<p>Much of the code that handles DOM-related interactions and manipulations can be found in various core files and mixins - in particular:</p>
 <ul>
-<li><a href="../source/mixin/cascade.html">mixin/cascade.js</a> - for managing groups</li>
+<li><a href="../source/core/document.html">core/document.js</a> - for updating the DOM</li>
+<li><a href="../source/core/events.html">core/events.js</a> - for tracking elements across the browser viewport</li>
 <li><a href="../source/mixin/display-shape.html">mixin/display-shape.js</a> - for handling element shape and size state, and changes to that state</li>
-<li><a href="../source/mixin/dom.html">mixin/dom.js</a> - interacting with, and responding to changes in, the DOM environment</li>
-<li><a href="../source/mixin/mimic.html">mixin/mimic.js</a> - to manage positioning by reference functionality</li>
-<li><a href="../source/mixin/path.html">mixin/path.js</a> - to manage positioning along a path functionality</li>
-<li><a href="../source/mixin/pivot.html">mixin/pivot.js</a> - to manage positioning by reference functionality</li>
-<li><a href="../source/mixin/position.html">mixin/position.js</a> - to manage relative and absolute positioning  functionality</li>
+<li><a href="../source/mixin/dom.html">mixin/dom.js</a> - shared artefact object functionality</li>
+<li><a href="../source/mixin/position.html">mixin/position.js</a> - for managing position  functionality</li>
 </ul>
 <h2 id="scrawl-canvas-stacks">Scrawl-canvas stacks</h2>
 <p>The key purpose of SC is to position graphical entitys onto a <code>&lt;canvas&gt;</code> element, in a given order, so that those entitys build some form of graphical representation, chart, imagery, infographic, artwork (etc) that can be displayed as part of a web page. More information can be found in the <a href="sc-positioning.html">positioning system page</a> in the Runbook.</p>
@@ -58,17 +65,14 @@
 <p>From that initial idea, it was only a short conceptual step to get SC to manage child element positions in the same way as it already managed graphical entity positioning in the canvas display - using absolute and relative start coordinates, positioning by reference to other artifacts, etc.</p>
 <p>SC Stacks also offered repo-devs an easy way to introduce functionality to the canvas display which the Canvas API did not (and still doesn't) offer: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/perspective">perspective</a>. Rather than engage in complex mathematics to mimic the appearance of perspective in a canvas scene, dev-users could instead rotate the <code>&lt;canvas&gt;</code> element in 3d space to quickly achieve the same effect. See test demos <a href="../../demo/dom-013.html">DOM-013</a> and <a href="../../demo/dom-015.html">DOM-015</a> for examples of this functionality in action.</p>
 <p>Today SC Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the <a href="sc-animation-systems.html">SC Display cycle</a> and use the same functionality to add <a href="sc-events-signals.html">SC event listeners</a> to their DOM elements. And an SC Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.</p>
-<h2 id="wrapping-dom-elements-into-sc-artefact-objects">Wrapping DOM elements into SC artefact objects</h2>
-<p>SC directly manipulates and manages certain types of DOM element on the web page. To do this, it has to wrap the affected DOM elements into <strong>artefact objects</strong>. This happens when:</p>
-<ul>
-<li>Any <code>&lt;canvas&gt;</code> element with a <code>data-scrawl-canvas</code> attribute is found in the DOM during page initialization; that element will be wrapped in an SC <code>Canvas</code> object.</li>
-<li>Any element with a <code>display: block;</code> CSS property which has a <code>data-scrawl-stack</code> attribute is found in the DOM, again during page initialization; such elements will be wrapped in an SC <code>Stack</code> object.</li>
-<li>The dev-user adds a new canvas to the web page using the <code>scrawl.addCanvas()</code> function.</li>
-<li>The dev-user adds a new stack to the web page using the <code>scrawl.addStack()</code> function.</li>
-<li>The canvas or stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getCanvas('canvas-id-string')</code> and/or  <code>scrawl.getStack('stack-id-string')</code> as part of the component's mount functionality.</li>
-</ul>
-<p>Note that all direct child elements of a wrapped <code>Stack</code> object will be wrapped in SC <code>Element</code> objects - except for <code>&lt;canvas&gt;</code> elements (see above) - at the same time as the stack element gets wrapped.</p>
-<h2 id="canvas-and-stack-shared-functionality">Canvas and Stack shared functionality</h2>
+<h2 id="sc-artefact-object-functionality-defined-in-the-mixindomjssourcemixindomhtml-file">SC artefact object functionality defined in the <a href="../source/mixin/dom.html">mixin/dom.js</a> file</h2>
+<p>SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object position, rotation and scale within an SC stack and managing their dimensions relative to the stack. This functionality is coded in the <a href="../source/mixin/position.html">mixin/position.js</a> file.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> SC artefacts are an integral part of the web page's DOM, thus subject to most browser HTML, CSS and JS functionality surrounding the management and manipulation of the DOM.</p>
+</blockquote>
+<h3 id="tracking-css-styling-values">Tracking CSS styling values</h3>
+<p>SC uses inline CSS style markup to handle the positioning, rotation, scale and visibility of its artefact objects' DOM elements </p>
+<p>SC manages <code>&lt;canvas&gt;</code> and other direct child element positioning within the stack, alongside rotation, scale, and visibility, using inline CSS style markup added to the element. </p>
 <p>Need to talk about (in no particular order:</p>
 <ul>
 <li>CSS and dimensions</li>
@@ -83,6 +87,12 @@
 <li>Groups and the cascade as part of the Display cycle</li>
 </ul>
 <h2 id="additional-canvas-artefact-notes">Additional Canvas artefact notes</h2>
+<p>SC will wrap <code>&lt;canvas&gt;</code> elements into <strong>Canvas artefact objects</strong> under the following conditions:</p>
+<ul>
+<li>Any <code>&lt;canvas&gt;</code> element with a <code>data-scrawl-canvas</code> attribute discovered in the DOM during page initialization.</li>
+<li>The dev-user adds a new <code>&lt;canvas&gt;</code> element to the web page using the <code>scrawl.addCanvas()</code> function.</li>
+<li>The <code>&lt;canvas&gt;</code> element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getCanvas('canvas-id-string')</code> as part of the component's mount functionality.</li>
+</ul>
 <h3 id="changes-made-to-the-canvas-dom-element-as-sc-wraps-it">Changes made to the <code>&lt;canvas&gt;</code> DOM element as SC wraps it</h3>
 <p>SC makes extensive changes to the <code>&lt;canvas&gt;</code> DOM element as part of its wrapping functionality. <strong>These changes are essential as they give SC the power to make the <code>&lt;canvas&gt;</code> element both responsive, and more accessible.</strong></p>
 <pre><code>Before:                                         After:
@@ -144,6 +154,12 @@
                                                   ›‹/div›
                                                 ‹/canvas›</code></pre>
 <h2 id="additional-stack-artefact-notes">Additional Stack artefact notes</h2>
+<p>SC will wrap DOM elements into <strong>Stack artefact objects</strong> under the following conditions:</p>
+<ul>
+<li>Any element with a <code>display: block;</code> CSS property which has a <code>data-scrawl-stack</code> attribute discovered in the DOM during page initialization.</li>
+<li>The dev-user adds a new stack to the web page using the <code>scrawl.addStack()</code> function.</li>
+<li>The stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getStack('stack-id-string')</code> as part of the component's mount functionality.</li>
+</ul>
 <h3 id="changes-made-to-a-typical-dom-stack-element-as-sc-wraps-it">Changes made to a typical DOM stack element as SC wraps it</h3>
 <p>SC makes extensive changes to DOM stack elements as it wraps them. The purpose of this is to make it easier to position and animate the (absolutely positioned) direct child elements included in the stack - which is achieved using standard inline CSS styling.</p>
 <p>SC also adds <strong>corner divs</strong> inside the DOM element, which can then be used across the SC ecosystem for reference positioning other artefacts and entitys:</p>
@@ -202,8 +218,15 @@
                                                   &gt;&lt;/div&gt;
                                                 &lt;/div&gt;</code></pre>
 <h2 id="element-artefact-notes">Element artefact notes</h2>
+<p>SC will wrap DOM elements into <strong>Element artefact objects</strong> under the following conditions:</p>
+<ul>
+<li>The element is a direct child of a stack element, discovered during page initialization.</li>
+<li>The dev-user adds a new stack containing direct child elements to the web page using the <code>scrawl.addStack()</code> function.</li>
+<li>The element is a direct child of a stack element defined in a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getStack('stack-id-string')</code> as part of the component's mount functionality.</li>
+<li>The dev-user invokes the <code>scrawl.makeElement()</code> factory function in their code.</li>
+</ul>
 <h3 id="changes-made-to-a-dom-direct-child-element-discovered-in-a-stack-element">Changes made to a DOM direct child element discovered in a stack element</h3>
-<p>When SC wraps a stack element, it will also wrap all of the direct child elements of that stack element. As part of this process, each child element will become <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">absolutely positioned</a> within the (relatively positioned) stack element. SC will make its best effort to replicate the element's position within the SC Stack before wrapping commenced - but this cannot be guaranteed.</p>
+<p>As part of this wrapping process, elements will become <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">absolutely positioned</a> within their (relatively positioned) stack element. SC will make its best effort to replicate the element's position within the SC Stack before wrapping commenced - but this cannot be guaranteed.</p>
 <p>Other than positioning considerations, the mutations made to the direct child elements of a stack element are similar to the changes made to the stack element itself as it is wrapped - including the addition of <strong>corner divs</strong>:</p>
 <pre><code>Before:                                         After:
 ----------------------------------------        ----------------------------------------
