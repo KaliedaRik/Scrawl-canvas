@@ -34,7 +34,7 @@ import pathMix from './path.js';
 
 
 // Shared constants
-import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_CANVAS, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
+import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PERMITTED_TRACKED_ELEMENTS, PIVOT, SPACE, T_CANVAS, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // Local constants
@@ -44,7 +44,6 @@ const BOTTOMLEFT = 'bottomLeft',
     CORNER_ATTR = 'data-scrawl-corner-div',
     CORNER_ATTR_VAL = 'sc',
     LOCAL = 'local',
-    NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'],
     TABINDEX = 'tabindex',
     TOPLEFT = 'topLeft',
     TOPRIGHT = 'topRight';
@@ -463,7 +462,7 @@ export default function (P = Ωempty) {
 
         const el = this.domElement;
 
-        if (el && !this.noUserInteraction && !NO_CORNER_ELEMENTS.includes(el.tagName)) {
+        if (el && !this.noUserInteraction && PERMITTED_TRACKED_ELEMENTS.includes(el.tagName)) {
 
             const pointMaker = function () {
 
