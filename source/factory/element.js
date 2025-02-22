@@ -75,6 +75,7 @@ const Element = function (items = Ωempty) {
         this.pivot = null;
         this.dirtyContent = true;
         this.dirtyCss = true;
+        this.dirtyStampOrder = true;
         this.localMouseListener = null;
         this.canvas = null;
         this.elementComputedStyles = null;

@@ -20,7 +20,7 @@ import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, push
 
 import { addLocalMouseMoveListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
 
-import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
+import { addDomShowElement, setDomShowRequired } from '../core/document.js';
 
 import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../untracked-factory/quaternion.js';
 
@@ -34,7 +34,7 @@ import pathMix from './path.js';
 
 
 // Shared constants
-import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PERMITTED_TRACKED_ELEMENTS, PIVOT, SPACE, T_CANVAS, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
+import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PERMITTED_TRACKED_ELEMENTS, PIVOT, SPACE, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // Local constants
@@ -272,6 +272,13 @@ export default function (P = Ωempty) {
 
         this.classes = item;
         this.dirtyClasses = true;
+    };
+
+// `classes`
+    S.stampOrder = function (item) {
+
+        this.stampOrder = item;
+        this.dirtyStampOrder = true;
     };
 
 // `domAttributes` - see `updateDomAttributes` below
@@ -850,7 +857,7 @@ export default function (P = Ωempty) {
         }
 
         // determine whether there is a need to trigger a redraw of the DOM element
-        if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtyCss || this.dirtyClasses || this.domShowRequired) {
+        if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtyCss || this.dirtyClasses || this.dirtyStampOrder || this.domShowRequired) {
 
             this.domShowRequired = false;
             addDomShowElement(this.name);

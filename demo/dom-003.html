@@ -337,10 +337,13 @@
       <li>Check that elements can be created with CSS attributes</li>
       <li>Check that elements can be created with HTML class values</li>
       <li>Check that elements can be dragged and dropped around the stack environment, taking into account their current rotation values</li>
+      <li>Check that, when being dragged, the dragged element appears above all other elements</li>
     </ul>
     <ul>
       <li>Import SVG elements into a Scrawl-canvas stack, by including the SVG 'inline' within the HTML markup</li>
-      <li>Check that the SVG elements can be dragged and dropped, like other elements</li>
+      <li>Check that we can manipulate an SVG element into a newly created SC Element</li>
+      <li>Check that we can pivot an SVG element to an SC Element</li>
+      <li>Check that SVG elements can be dragged and dropped</li>
     </ul>
 
     <p><b>Known issue:</b> When Scrawl-canvas initializes, it checks for stack elements and attempts to replicate their CSS attributes. Reading the perspective attribute fails and leads to some interesting outcomes. Current workaround is to always set SC perspectiveZ value in Javascript code.</p>

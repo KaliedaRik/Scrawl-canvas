@@ -169,10 +169,10 @@ scrawl.addNativeListener('toggle', (e) => {
             buttonAutofocus: true,
         });
 
-        // The canvas gets resized by the browser but in the popover context this doesn't get picked up. 
+        // The canvas gets resized by the browser but in the popover context this doesn't get picked up.
         // + The `reset` function triggers the canvas to recalculate its current values outside of the Scrawl-canvas display cycle
         // + This will then trigger associated Cells and entitys to recalculate themselves appropriately
-        canvas.reset();   
+        canvas.reset();
     }
 
     else {

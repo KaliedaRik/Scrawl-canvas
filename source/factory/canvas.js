@@ -101,6 +101,7 @@ const Canvas = function (items = Ωempty) {
 
     this.currentActiveEntityNames = null;
     this.dirtyCss = true;
+    this.dirtyStampOrder = true;
     this.localMouseListener = null;
     this.mimic = null;
     this.pivot = null;

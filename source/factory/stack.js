@@ -104,6 +104,7 @@ const Stack = function (items = Ωempty) {
         this.dirtyTransformOrigin = true;
         this.domShowRequired = true;
         this.dirtyCss = true;
+        this.dirtyStampOrder = true;
         this.localMouseListener = null;
 
         this.set(items);

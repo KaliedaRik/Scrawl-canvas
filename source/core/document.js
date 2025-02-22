@@ -14,7 +14,7 @@ import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { _keys, AUTO, BLOCK, FONT_USERS, NEVER, NONE, T_CANVAS, ZERO_STR } from '../helper/shared-vars.js';
+import { _keys, AUTO, BLOCK, FONT_USERS, NONE, T_CANVAS, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const ignoredCssProperties = ['bottom', 'boxSizing', 'display', 'height', 'left', 'perspective', 'perspectiveOrigin', 'position', 'right', 'top', 'transform', 'transformOrigin', 'width', 'zIndex'];
@@ -62,7 +62,7 @@ export const domShow = function (singleArtefact = ZERO_STR) {
 
         let i, iz, art, el, style,
             p, dims, w, h,
-            j, jz, items, keys, key, keyName, value;
+            j, jz, items, keys, key, value;
 
         const ignoreDpr = getIgnorePixelRatio();
         const dpr = getPixelRatio();
@@ -179,6 +179,13 @@ export const domShow = function (singleArtefact = ZERO_STR) {
 
                             art.dirtyVisibility = false;
                             style.display = (art.visibility) ? BLOCK : NONE;
+                        }
+
+                        // update stampOrder
+                        if (art.dirtyStampOrder) {
+
+                            art.dirtyStampOrder = false;
+                            style.zIndex = art.stampOrder;
                         }
                     }
                 }
