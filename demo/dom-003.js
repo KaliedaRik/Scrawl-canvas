@@ -45,6 +45,7 @@ stack.addNewElement({
         padding: '1em',
         textAlign: 'center',
         cursor: 'grab',
+// Test to make sure that SC ignores attempts to set CSS values for `top`, `right`, `bottom`, `left`
         bottom: '0',
     },
 
