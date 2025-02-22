@@ -146,8 +146,7 @@ scrawl.makeRender({
     afterShow: report,
 
     // We need to finalize the stack's display after the first Display cycle completes
-    // + Tweaking the stack's `height` attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack's dimensions).
-    afterCreated: () => stack.set({height: 400}),
+    afterCreated: () => stack.reset(),
 });
 
 

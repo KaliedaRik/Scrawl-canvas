@@ -45,6 +45,8 @@ stack.addNewElement({
         padding: '1em',
         textAlign: 'center',
         cursor: 'grab',
+// Test to make sure that SC ignores attempts to set CSS values for `top`, `right`, `bottom`, `left`
+        bottom: '0',
     },
 
 }).clone({
@@ -61,6 +63,7 @@ stack.addNewElement({
 
     css: {
         font: '12px monospace',
+        left: '0',
     },
 });
 
@@ -92,6 +95,7 @@ stack.addNewElement({
         margin: '0',
         border: '1px solid red',
         cursor: 'grab',
+        top: '0',
     },
 
 }).clone({
@@ -105,6 +109,7 @@ stack.addNewElement({
 
     css: {
         border: 0,
+        right: '0',
     },
 });
 
@@ -126,6 +131,7 @@ stack.addNewElement({
 
     css: {
         backgroundColor: 'blue',
+        bottom: '0',
     },
 
 }).clone({
@@ -145,9 +151,13 @@ stack.addNewElement({
 });
 
 
-// Handle the pre-existing SVG elements that have been automatically imported into the stack
+// Handle the pre-existing SVG DOM elements that have been automatically imported into the stack
+// + SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt __drag-and-drop__ functionality.
+// + We can get around this issue in two ways
 //
-// SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt __drag-and-drop__ functionality. We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
+// Option 1 (simple yet disappointing)
+// + Add a new Element to the Stack
+// + Set the SVG Element artefact to pivot to the new Element
 stack.addNewElement({
 
     name: name('weather-icon-dragger'),
@@ -169,13 +179,6 @@ stack.addNewElement({
         border: '5px solid gold',
         backgroundColor: 'darkgray',
     },
-
-}).clone({
-
-    name: name('simple-svg-dragger'),
-    startX: 60,
-    startY: 220,
-
 });
 
 scrawl.findElement('weathericon').set({
@@ -185,15 +188,36 @@ scrawl.findElement('weathericon').set({
     order: 1,
 });
 
-scrawl.findElement('simple-svg').set({
+// Option 2 (more complex yet more pleasing)
+// + Add a new &lt;div> Element to the Stack to act as the &lt;svg> DOM element's parent element
+// + Set the SVG Element wrapper's `start` attribute to the new Element's top-left corner
+// + Append the &lt;svg> DOM element to the parent DOM element
+// + After the first Display cycle has completed, we can remove the SVG Element wrapper from SC
+const simpleSvg = scrawl.findElement('simple-svg'),
+    simpleSvgElement = simpleSvg.domElement;
 
-    pivot: name('simple-svg-dragger'),
-    lockTo: 'pivot',
-    order: 1,
+const svgContainer = stack.addNewElement({
+
+    name: name('simple-svg-container'),
+    tag: 'div',
+
+    width: parseInt(simpleSvgElement.getAttribute('width'), 10),
+    height: parseInt(simpleSvgElement.getAttribute('height'), 10),
+
+    start: [120, 300],
+    handle: ['center', 'center'],
+
+    group: hitGroup,
 
     pitch: 30,
     yaw: 50,
+
+    css: { cursor: 'grab' },
 });
+
+simpleSvg.set({ start: [0, 0] });
+
+svgContainer.domElement.appendChild(simpleSvgElement);
 
 
 // #### User interaction
@@ -219,8 +243,15 @@ scrawl.makeRender({
     target: stack,
     afterShow: report,
 
-    // The elements in the stack don't know their positions, and thus their hit zones (for drag-and-drop), until after the first render. This one-time-run function is enough to get the elements to perform the necessary recalculations.
-    afterCreated: () => stack.set({ width: stack.get('width')}),
+    afterCreated: () => {
+
+        // The Elements in the Stack don't know their corner positions, and thus their hit zones (for drag-and-drop), until after the first render. This one-time-run function is enough to get the Elements to perform the necessary recalculations.
+        stack.reset();
+
+        // We can also remove the unwanted SVG artefact object from SC at this point.
+        // + Passing the `kill` function a `false` boolean stops SC trying to remove the SVG markup from the DOM
+        simpleSvg.kill(false);
+    },
 });
 
 

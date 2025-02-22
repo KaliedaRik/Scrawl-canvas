@@ -178,8 +178,8 @@ scrawl.makeRender({
     target: stack,
     afterShow: report,
 
-    // Fixes element misplacement issue on scene creation - see Demo [DOM-007](./dom-007.html) for more details of the fix
-    afterCreated: () => stack.set({ height: 400 }),
+    // Fixes element misplacement issue on scene creation
+    afterCreated: () => stack.reset(),
 });
 
 // We can have more than one Display cycle animation on a web page

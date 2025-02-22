@@ -1717,6 +1717,8 @@ export default function (P = Ωempty) {
             if (bringToFrontOnDrag) {
 
                 this.stampOrder += 9999;
+                if (xt(this.dirtyStampOrder)) this.dirtyStampOrder = true;
+
                 group.batchResort = true;
             }
 
@@ -1766,10 +1768,10 @@ export default function (P = Ωempty) {
             this.stampOrder -= 9999;
 
             if (this.stampOrder < 0) this.stampOrder = 0;
+            if (xt(this.dirtyStampOrder)) this.dirtyStampOrder = true;
 
             group.batchResort = true;
         }
-
 
         if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
 
