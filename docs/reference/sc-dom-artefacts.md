@@ -28,6 +28,7 @@ Given the above, there are some things repo-devs need to keep in mind when devlo
 Much of the code that handles DOM-related interactions and manipulations can be found in various core files and mixins - in particular:
 + [core/document.js](../source/core/document.html) - for updating the DOM
 + [core/events.js](../source/core/events.html) - for tracking elements across the browser viewport
++ [helper/document-root-element.js](../source/helper/document-root-element.html) - for updating the DOM
 + [mixin/display-shape.js](../source/mixin/display-shape.html) - for handling element shape and size state, and changes to that state
 + [mixin/dom.js](../source/mixin/dom.html) - shared artefact object functionality
 + [mixin/position.js](../source/mixin/position.html) - for managing position  functionality
@@ -35,46 +36,66 @@ Much of the code that handles DOM-related interactions and manipulations can be 
 ## Scrawl-canvas stacks
 The key purpose of SC is to position graphical entitys onto a `<canvas>` element, in a given order, so that those entitys build some form of graphical representation, chart, imagery, infographic, artwork (etc) that can be displayed as part of a web page. More information can be found in the [positioning system page](sc-positioning.html) in the Runbook.
 
-**SC extends this positioning system to the DOM.** Any element that displays as a [block-level box](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_display/Block_and_inline_layout_in_normal_flow) (CSS: `display: block`) can be included in the SC ecosystem to act as a space in the web page where that element's direct child elements can be positioned, manipulated and animated using SC functionality.
+**SC extends this positioning system to the DOM.** An HTML element can be included in the SC ecosystem to act as a space in the web page where that element's direct child elements can be positioned, manipulated and animated using SC functionality.
 
-### A brief history of SC Stacks
-SC Stacks started as a concept to position DOM elements - in particular elements that could be used to control canvas displays and animations - directly over a `<canvas>` element. 
+### A brief history of SC stacks
+SC stacks started as a concept to position HTML elements - in particular elements that could be used to control canvas displays and animations - directly over a `<canvas>` element. 
 
-This was necessary because the normal way of positioning such elements over a parent element (that is: mark the parent as `position: relative` and the child as `position: absolute`) does not work with `<canvas>` elements. Instead, dev-users would have to place the `<canvas>` element in a containing element (usually a `<div>` element) and mark that container as relatively positioned, with the canvas and any other direct child elements becoming absolutely positioned.
+This was necessary because the normal way of positioning such elements over a parent element (for instance: mark the parent as `position: relative` and the child as `position: absolute`) does not work with `<canvas>` elements. Instead, dev-users would have to place the `<canvas>` element in a containing element (usually a `<div>` element) and mark that container as relatively positioned, with the canvas and any other direct child elements becoming absolutely positioned.
 
 From that initial idea, it was only a short conceptual step to get SC to manage child element positions in the same way as it already managed graphical entity positioning in the canvas display - using absolute and relative start coordinates, positioning by reference to other artifacts, etc.
 
-SC Stacks also offered repo-devs an easy way to introduce functionality to the canvas display which the Canvas API did not (and still doesn't) offer: [perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective). Rather than engage in complex mathematics to mimic the appearance of perspective in a canvas scene, dev-users could instead rotate the `<canvas>` element in 3d space to quickly achieve the same effect. See test demos [DOM-013](../../demo/dom-013.html) and [DOM-015](../../demo/dom-015.html) for examples of this functionality in action.
+SC stacks also offered repo-devs an easy way to introduce functionality to the canvas display which the Canvas API did not (and still doesn't) offer. For example: [perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective) - rather than engage in complex mathematics to mimic the appearance of perspective in a canvas scene, dev-users could instead rotate the `<canvas>` element in 3d space to quickly achieve the same effect. See test demos [DOM-013](../../demo/dom-013.html) and [DOM-015](../../demo/dom-015.html) for examples of this functionality in action.
 
-Today SC Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the [SC Display cycle](sc-animation-systems.html) and use the same functionality to add [SC event listeners](sc-events-signals.html) to their DOM elements. And an SC Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.
+Today SC stacks are tightly integrated into the SC ecosystem. SC stacks, like Canvas wrappers, take part in the [SC Display cycle](sc-animation-systems.html) and use the same functionality to add [SC event listeners](sc-events-signals.html) to their DOM elements. And an SC stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.
 
-## SC artefact object functionality defined in the [mixin/dom.js](../source/mixin/dom.html) file
-SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object position, rotation and scale within an SC stack and managing their dimensions relative to the stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file.
+### HTML elements that can become Stack or Element artefacts
+Messing with the web page DOM can become, well, messy. SC makes a best effort towards minimising this messiness - in part - by limiting the types of HTML elements which can be wrapped in SC artefact objects. These limitations get defined in the [helper/shared-vars.js](../source/helper/shared-vars.html) file.
++ **HTML elements that can be wrapped as Stack artefacts:** `<article>`, `<aside>`, `<div>`, `<footer>`, `<header>`, `<main>`, `<nav>`, `<section>`.
++ **HTML elements that can be wrapped as Element artefacts:** `<a>`, `<address>`, `<article>`, `<aside>`, `<audio>`, `<blockquote>`, `<button>`, `<details>`, `<div>`, `<dl>`, `<embed>`, `<fencedframe>`, `<figure>`, `<footer>`, `<form>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<header>`, `<hgroup>`, `<iframe>`, `<img>`, `<input>`, `<main>`, `<math>`, `<menu>`, `<meter>`, `<nav>`, `<object>`, `<ol>`, `<output>`, `<p>`, `<picture>`, `<pre>`, `<progress>`, `<search>`, `<section>`, `<select>`, `<svg>`, `<table>`, `<textarea>`, `<ul>`, `<video>`.
 
-> **tl;dr:** SC artefacts are an integral part of the web page's DOM, thus subject to most browser HTML, CSS and JS functionality surrounding the management and manipulation of the DOM.
+`<canvas>` elements can also be part of an SC stack, with the same positioning functionality as afforded to Element objects. They cannot be their own SC stack.
 
-### Tracking CSS styling values
-SC uses inline CSS style markup to handle the positioning, rotation, scale and visibility of its artefact objects' DOM elements 
+SC stacks can also (in theory) include other SC stacks - nested stacks - though repo-devs don't currently test such functionality.
 
+### CSS considerations
+The functionality that handles the transfer of artefact object state (position, rotation, etc) into the page DOM can be found in the [mixin/dom.js](../source/mixin/dom.html) file. This work happens as part of the [SC Display cycle](sc-animation-systems.html), and is achieved through [inline CSS updates](https://www.freecodecamp.org/news/inline-style-in-html/). Note that this may occasionally come into conflict with other JS libraries that use inline styling as part of their functionality; it's up to dev-users to manage and mitigate any such conflicts that arise.
 
+The CSS properties that SC uses are:
++ `boxSizing` - all SC artefact DOM elements need to have this style property set to `border-box` to make calculations easier.
++ `position` - SC needs the DOM elements under its control to have either `relative` or `absolute` positioning.
++ `perspective`, `perspectiveOrigin` - specific to SC stacks, to set the parameters for the stack's 3d space. 
++ `display` - handles DOM element visibility.
++ `height`, `width` - for handling DOM element dimensions.
++ `transformOrigin` - for the artefact object's `handle` attribute (effectively the DOM element's position with respect to its rotation-reflection point)
++ `transform` - SC controls the DOM element's position in the SC stack, alongside its 3d rotation and scale, using this property; for this reason SC also does what it can to restrict use of the `bottom`, `left`, `right` and `top` CSS properties.
++ `z-index` - to handle the SC artefact's `stampOrder` attribute.
 
-SC manages `<canvas>` and other direct child element positioning within the stack, alongside rotation, scale, and visibility, using inline CSS style markup added to the element. 
+### CSS classes
+Beyond the above, SC expects dev-users to style their web pages in the normal way, for instance by applying [HTML classes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class) to DOM elements.
 
+SC includes functionality - `artefact.set({ classes: string })`, alongside `.addClasses(string)` and `removeClasses(string)` - which gives dev-users the ability to add and remove classes via the SC artefact object. An example of this in action can be seen in the test demo [DOM-007](../../demo/dom-007.html).
 
+## SC artefact object functionality
+SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within an SC stack, and managing their **dimensions** relative to the SC stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. More details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
 
-Need to talk about (in no particular order:
-+ CSS and dimensions
-+ Responding to changes in dimension and size
-+ Perspective
-+ 3d rotation - `pitch`, `yaw`, `roll`
-+ Tracking mouse/touch/pointer events - and the `here` object
-+ Accessibility - responding to user preferences settings and updates
+### Accessibility
++ User preferences settings and updates
 + Keyboard/tab navigation 
-+ Events
-+ Other CSS and classes
-+ Groups and the cascade as part of the Display cycle
 
-## Additional Canvas artefact notes
+### Responsiveness
+[TODO - write up.]
+
+### Perspective and 3d rotation
+[TODO - write up.]
+
+### User interaction and the `here` object
+[TODO - write up.]
+
+### Setting and managing events
+[TODO - write up.]
+
+## Canvas artefact notes
 SC will wrap `<canvas>` elements into **Canvas artefact objects** under the following conditions:
 + Any `<canvas>` element with a `data-scrawl-canvas` attribute discovered in the DOM during page initialization.
 + The dev-user adds a new `<canvas>` element to the web page using the `scrawl.addCanvas()` function.
@@ -101,7 +122,7 @@ Before:                                         After:
                                                     transform-origin: 0px 0px 0px;
                                                     transform: translate(0px, 0px);
                                                     display: block;
-                                                    -webkit-font-smoothing: auto;"
+                                                    z-index: 0;"
                                                   aria-labelledby="mycanvas-ARIA-label"
                                                   aria-describedby="mycanvas-ARIA-description"
                                                   title=""
@@ -143,7 +164,7 @@ Before:                                         After:
                                                 ‹/canvas›
 ```
 
-## Additional Stack artefact notes
+## Stack artefact notes
 SC will wrap DOM elements into **Stack artefact objects** under the following conditions:
 + Any element with a `display: block;` CSS property which has a `data-scrawl-stack` attribute discovered in the DOM during page initialization.
 + The dev-user adds a new stack to the web page using the `scrawl.addStack()` function.
@@ -170,7 +191,7 @@ Before:                                         After:
                                                     transform-origin: 0px 0px 0px;
                                                     transform: translate(0px, 0px);
                                                     display: block;
-                                                    -webkit-font-smoothing: auto;"
+                                                    z-index: 0;"
                                                   class=""
                                                 >
                                                   [... direct child elements ...]
@@ -237,7 +258,7 @@ Before:                                         After:
                                                       translate(125px, 125px)
                                                       rotate3d(0.189308, 0.268536, 0.0381346, 0.674221rad);
                                                     display: block;
-                                                    -webkit-font-smoothing: auto;"
+                                                    z-index: 0;"
                                                 >
                                                   This element can be positioned 
                                                   within the stack element
