@@ -80,8 +80,27 @@ SC includes functionality - `artefact.set({ classes: string })`, alongside `.add
 SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within an SC stack, and managing their **dimensions** relative to the SC stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. More details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
 
 ### Accessibility
-+ User preferences settings and updates
-+ Keyboard/tab navigation 
+The responsibility for [making web pages accessible](https://www.w3.org/WAI/fundamentals/accessibility-intro/) lies with the dev-user, working closely with the page designer and product manager. If the page design calls for the use of `<canvas>` elements, then SC can help deliver a more accessible solution for those canvases.
+
+We can break down the accessibility issues that need to be addressed as follows:
++ Respect, and adapt to, [user preference media features](https://www.smashingmagazine.com/2023/08/css-accessibility-inclusion-user-choice/)
+  - prefers-contrast
+  - prefers-reduced-motion
+  - prefers-color-scheme
+  - prefers-reduced-transparency
+  - prefers-reduced-data
+  - forced-colors (not yet handled by SC)
+  - inverted-colors (not yet handled by SC)
++ Include readable markup and details about the canvas scene - `role`, `aria-label`, `aria-description`, etc
++ Add accessible (tab-able) controls to start/stop stack and canvas display animations
++ Include controls in canvas displays for accessible (tab-able) navigation links and other user interactions with the canvas
++ Expose canvas-based graphical text to the DOM - in a sensible and meaningful way - that doesn't annoy the end-users who have to consume that information
++ Allow less common patterns for user interactions with graphical links (as far as possible) such as right-clicking on them or dragging them to the browser address bar to open the new page
+
+More details about how SC helps dev-users address these accessibility issues can be found in the [accessibility page](sc-accessibility.html) of this Runbook.
+
+### Progressive enhancement
+[TODO - write up.]
 
 ### Responsiveness
 [TODO - write up.]

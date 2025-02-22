@@ -93,10 +93,26 @@
 <h2 id="sc-artefact-object-functionality">SC artefact object functionality</h2>
 <p>SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object <strong>position, rotation, scale and order</strong> within an SC stack, and managing their <strong>dimensions</strong> relative to the SC stack. This functionality is coded in the <a href="../source/mixin/position.html">mixin/position.js</a> file, as amended by the various DOM-related mixin and factory files. More details can be found in the <a href="sc-positioning.html">SC positioning system</a> page of the Runbook.</p>
 <h3 id="accessibility">Accessibility</h3>
+<p>The responsibility for <a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/">making web pages accessible</a> lies with the dev-user, working closely with the page designer and product manager. If the page design calls for the use of <code>&lt;canvas&gt;</code> elements, then SC can help deliver a more accessible solution for those canvases.</p>
+<p>We can break down the accessibility issues that need to be addressed as follows:</p>
 <ul>
-<li>User preferences settings and updates</li>
-<li>Keyboard/tab navigation </li>
+<li>Respect, and adapt to, <a href="https://www.smashingmagazine.com/2023/08/css-accessibility-inclusion-user-choice/">user preference media features</a><ul>
+<li>prefers-contrast</li>
+<li>prefers-reduced-motion</li>
+<li>prefers-color-scheme</li>
+<li>prefers-reduced-transparency</li>
+<li>prefers-reduced-data</li>
+<li>forced-colors (not yet handled by SC)</li>
+<li>inverted-colors (not yet handled by SC)</li></ul></li>
+<li>Include readable markup and details about the canvas scene - <code>role</code>, <code>aria-label</code>, <code>aria-description</code>, etc</li>
+<li>Add accessible (tab-able) controls to start/stop stack and canvas display animations</li>
+<li>Include controls in canvas displays for accessible (tab-able) navigation links and other user interactions with the canvas</li>
+<li>Expose canvas-based graphical text to the DOM - in a sensible and meaningful way - that doesn't annoy the end-users who have to consume that information</li>
+<li>Allow less common patterns for user interactions with graphical links (as far as possible) such as right-clicking on them or dragging them to the browser address bar to open the new page</li>
 </ul>
+<p>More details about how SC helps dev-users address these accessibility issues can be found in the <a href="sc-accessibility.html">accessibility page</a> of this Runbook.</p>
+<h3 id="progressive-enhancement">Progressive enhancement</h3>
+<p>[TODO - write up.]</p>
 <h3 id="responsiveness">Responsiveness</h3>
 <p>[TODO - write up.]</p>
 <h3 id="perspective-and-3d-rotation">Perspective and 3d rotation</h3>
