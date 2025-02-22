@@ -46,7 +46,9 @@ const Element = function (items = Ωempty) {
 
     const el = items.domElement;
 
-    if (el && !FORBIDDEN_ELEMENTS.includes(el.tagName)) {
+    // Restrict what can become an Element
+    // + The last check is to exclude Web Components
+    if (el && !FORBIDDEN_ELEMENTS.includes(el.tagName) && !el.tagName.includes('-')) {
 
         this.makeName(items.name);
         this.register();
