@@ -14,12 +14,10 @@ import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { _keys, AUTO, BLOCK, GRAYSCALE, FONT_USERS, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from '../helper/shared-vars.js';
+import { _keys, AUTO, BLOCK, FONT_USERS, NONE, T_CANVAS, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const _css = ['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'imageResolution', 'imeMode', 'inherit', 'inlineSize', 'isolation', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBlockStart', 'marginBlockEnd', 'marginInlineStart', 'marginInlineEnd', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'maxWidth', 'maxHeight', 'maxBlockSize', 'maxInlineSize', 'maxZoom', 'minWidth', 'minHeight', 'minBlockSize', 'minInlineSize', 'minZoom', 'mixBlendMode', 'objectFit', 'objectPosition', 'offsetBlockStart', 'offsetBlockEnd', 'offsetInlineStart', 'offsetInlineEnd', 'orphans', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'pad', 'padding', 'paddingBlockStart', 'paddingBlockEnd', 'paddingInlineStart', 'paddingInlineEnd', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'prefix', 'quotes', 'rubyAlign', 'rubyMerge', 'rubyPosition', 'scrollBehavior', 'scrollSnapCoordinate', 'scrollSnapDestination', 'scrollSnapPointsX', 'scrollSnapPointsY', 'scrollSnapType', 'scrollSnapTypeX', 'scrollSnapTypeY', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'textAlign', 'textDecoration', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'unicodeRange', 'unset', 'verticalAlign', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'zIndex'];
-
-const _xcss = ['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'hyphens', 'imageRendering', 'imageOrientation', 'initial', 'justifyContent', 'linearGradient', 'opacity', 'order', 'orientation', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'resize', 'tabSize', 'textAlignLast', 'textCombineUpright', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'touchAction', 'transformStyle', 'transition', 'transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction', 'unicodeBidi', 'whiteSpace', 'writingMode'];
+const ignoredCssProperties = ['bottom', 'boxSizing', 'display', 'height', 'left', 'perspective', 'perspectiveOrigin', 'position', 'right', 'top', 'transform', 'transformOrigin', 'width', 'zIndex'];
 
 
 // #### DOM element updates
@@ -64,7 +62,7 @@ export const domShow = function (singleArtefact = ZERO_STR) {
 
         let i, iz, art, el, style,
             p, dims, w, h,
-            j, jz, items, keys, key, keyName, value;
+            j, jz, items, keys, key, value;
 
         const ignoreDpr = getIgnorePixelRatio();
         const dpr = getPixelRatio();
@@ -79,9 +77,34 @@ export const domShow = function (singleArtefact = ZERO_STR) {
 
                 if (el) {
 
+                    // update element classes
+                    if (art.dirtyClasses) {
+
+                        art.dirtyClasses = false;
+                        if (el.className.substring) el.className = art.classes;
+                    }
+
                     style = el.style;
 
                     if (style) {
+
+                        // update non-controlled CSS changes
+                        if (art.dirtyCss) {
+
+                            art.dirtyCss = false;
+
+                            items = art.css || Ωempty;
+                            keys = _keys(items);
+
+                            for (j = 0, jz = keys.length; j < jz; j++) {
+
+                                key = keys[j];
+                                value = items[key];
+
+                                // SC no longer cares about browser-specific prefixes
+                                if (!ignoredCssProperties.includes(key)) style[key] = value;
+                            }
+                        }
 
                         // update perspective
                         if (art.dirtyPerspective) {
@@ -158,55 +181,11 @@ export const domShow = function (singleArtefact = ZERO_STR) {
                             style.display = (art.visibility) ? BLOCK : NONE;
                         }
 
-                        // update visibility
-                        if (art.dirtySmoothFont) {
+                        // update stampOrder
+                        if (art.dirtyStampOrder) {
 
-                            art.dirtySmoothFont = false;
-
-                            if (art.smoothFont) {
-                                style[WEBKIT_FONT_SMOOTHING] = AUTO;
-                                style[MOZOSX_FONT_SMOOTHING] = AUTO;
-                                style[SMOOTH_FONT] = AUTO;
-                            }
-                            else {
-                                style[WEBKIT_FONT_SMOOTHING] = NONE;
-                                style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
-                                style[SMOOTH_FONT] = NEVER;
-                            }
-                        }
-
-                        // update other CSS changes
-                        if (art.dirtyCss) {
-
-                            art.dirtyCss = false;
-
-                            items = art.css || Ωempty;
-                            keys = _keys(items);
-
-                            for (j = 0, jz = keys.length; j < jz; j++) {
-
-                                key = keys[j];
-                                value = items[key];
-
-                                if (_xcss.includes(key)) {
-
-                                    keyName = `${key[0].toUpperCase}${key.substr(1)}`;
-
-                                    style[`webkit${keyName}`] = value;
-                                    style[`moz${keyName}`] = value;
-                                    style[`ms${keyName}`] = value;
-                                    style[`o${keyName}`] = value;
-                                    style[key] = value;
-                                }
-                                else if (_css.includes(key)) style[key] = value;
-                            }
-                        }
-
-                        // update element classes
-                        if (art.dirtyClasses) {
-
-                            art.dirtyClasses = false;
-                            if (el.className.substring) el.className = art.classes;
+                            art.dirtyStampOrder = false;
+                            style.zIndex = art.stampOrder;
                         }
                     }
                 }

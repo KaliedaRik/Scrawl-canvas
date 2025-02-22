@@ -947,6 +947,7 @@ interface CanvasFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions, 
     killCell: (item: CellInstance | string) => CanvasInstance;
     removeCell: (item: CellInstance | string) => CanvasInstance;
     render: () => void;
+    reset: () => void;
     saveAsPacket: (item?: CanvasSaveInputs | boolean) => string;
     set: (item?: CanvasFactoryInputs) => CanvasInstance;
     setAsCurrentCanvas: () => CanvasInstance;
@@ -2537,10 +2538,15 @@ interface StackNewElementInputs extends ElementFactoryInputs {
 }
 
 interface StackFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions {
+    clear: () => void;
     clone: (item?: StackFactoryInputs) => StackInstance;
+    compile: () => void;
+    render: () => void;
+    reset: () => void;
     saveAsPacket: (item?: StackSaveInputs | boolean) => string;
     set: (item?: StackFactoryInputs) => StackInstance;
     setDelta: (item?: StackFactoryDeltaInputs) => StackInstance;
+    show: () => void;
     addNewElement: (item?: StackNewElementInputs) => ElementInstance;
     addExistingDomElements: (item?: string) => StackInstance;
 }

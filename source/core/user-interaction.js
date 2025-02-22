@@ -331,8 +331,6 @@ const updateUiSubscribedElement = function (art) {
 
     if (dom) {
 
-        if (!dom.here) dom.here = {};
-
         const { here, domElement:el } = dom;
 
         // Accessibility

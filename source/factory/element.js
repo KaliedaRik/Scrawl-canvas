@@ -35,7 +35,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
 // Shared constants
-import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC } from '../helper/shared-vars.js';
+import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, FORBIDDEN_ELEMENTS, MIMIC } from '../helper/shared-vars.js';
 
 // Local constants
 const T_ELEMENT = 'Element';
@@ -46,46 +46,51 @@ const Element = function (items = Ωempty) {
 
     const el = items.domElement;
 
-    this.makeName(items.name);
-    this.register();
+    // Restrict what can become an Element
+    // + The last check is to exclude Web Components
+    if (el && !FORBIDDEN_ELEMENTS.includes(el.tagName) && !el.tagName.includes('-')) {
 
-    if (el) {
+        this.makeName(items.name);
+        this.register();
 
-        // Scrawl-canvas does not retain an Element's textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes `text` (for textContent, which automatically escapes all HTML-related tags and entities) and `content` (which should respect HTML tags and entities)
-        if (items.text) el.textContent = items.text;
-        else if (items.content) el.innerHTML = items.content;
+        if (el) {
+
+            // Scrawl-canvas does not retain an Element's textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes `text` (for textContent, which automatically escapes all HTML-related tags and entities) and `content` (which should respect HTML tags and entities)
+            if (items.text) el.textContent = items.text;
+            else if (items.content) el.innerHTML = items.content;
+        }
+
+        this.initializePositions();
+        this.dimensions[0] = this.dimensions[1] = 100;
+
+        this.pathCorners = [];
+        this.css = {};
+        this.here = {};
+
+        this.initializeDomLayout(items);
+
+        this.set(this.defs);
+
+        this.initializeAccessibility();
+
+        this.mimic = null;
+        this.pivot = null;
+        this.dirtyContent = true;
+        this.dirtyCss = true;
+        this.dirtyStampOrder = true;
+        this.localMouseListener = null;
+        this.canvas = null;
+        this.elementComputedStyles = null;
+
+        this.set(items);
+
+        const myEl = this.domElement;
+
+        if (myEl) myEl.id = this.name;
+
+        return this;
     }
-
-    this.initializePositions();
-    this.dimensions[0] = this.dimensions[1] = 100;
-
-    this.pathCorners = [];
-    this.css = {};
-    this.here = {};
-
-    this.initializeDomLayout(items);
-
-    this.set(this.defs);
-
-    this.initializeAccessibility();
-
-    this.mimic = null;
-    this.pivot = null;
-    this.dirtyContent = true;
-    this.dirtyCss = true;
-    this.localMouseListener = null;
-    this.canvas = null;
-    this.elementComputedStyles = null;
-
-    this.set(items);
-
-    const myEl = this.domElement;
-
-    if (myEl) myEl.id = this.name;
-
-    this.apply();
-
-    return this;
+    return null;
 };
 
 
@@ -115,11 +120,11 @@ domMix(P);
 
 
 // #### Kill management
-P.factoryKill = function () {
+P.factoryKill = function (removeElement = true) {
 
     removeItem(uiSubscribedElements, this.name);
 
-    this.domElement.remove();
+    if (removeElement) this.domElement.remove();
 };
 
 

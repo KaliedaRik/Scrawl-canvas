@@ -56,7 +56,8 @@ element.set({
         borderRadius: '50%',
         textAlign: 'center',
         padding: '12px 0 0 0',
-    }
+    },
+
 }).clone({
 
     name: name('mysecondelement'),

@@ -47,7 +47,7 @@ import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
 // Shared constants
-import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, PERMITTED_STACK_ELEMENTS, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
@@ -59,64 +59,69 @@ const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
 // #### Stack constructor
 const Stack = function (items = Ωempty) {
 
-    this.makeName(items.name);
-    this.register();
-    this.initializePositions();
-    this.initializeCascade();
+    if (items.domElement && PERMITTED_STACK_ELEMENTS.includes(items.domElement.tagName)) {
 
-    this.dimensions[0] = 300;
-    this.dimensions[1] = 150;
+        this.makeName(items.name);
+        this.register();
+        this.initializePositions();
+        this.initializeCascade();
 
-    this.pathCorners = [];
-    this.css = {};
-    this.here = {};
-    this.perspective = {
+        this.dimensions[0] = 300;
+        this.dimensions[1] = 150;
 
-        x: PC50,
-        y: PC50,
-        z: 0
-    };
-    this.dirtyPerspective = true;
+        this.pathCorners = [];
+        this.css = {};
+        this.here = {};
+        this.perspective = {
 
-    this.initializeDomLayout(items);
+            x: PC50,
+            y: PC50,
+            z: 0
+        };
+        this.dirtyPerspective = true;
 
-    const g = makeGroup({
-        name: this.name,
-        host: this.name
-    });
-    this.addGroups(g.name);
+        this.initializeDomLayout(items);
 
-    this.set(this.defs);
+        const g = makeGroup({
+            name: this.name,
+            host: this.name
+        });
+        this.addGroups(g.name);
 
-    this.initializeDisplayShapeActions();
+        this.set(this.defs);
 
-    this.initializeAccessibility();
+        this.initializeDisplayShapeActions();
 
-    this.dirtyDomDimensions = true;
-    this.dirtyPath = true;
-    this.rotation = null;
-    this.currentCornersData = null;
-    this.currentTransformString = '';
-    this.dirtyTransform = true;
-    this.currentTransformOriginString = '';
-    this.dirtyTransformOrigin = true;
-    this.domShowRequired = true;
-    this.dirtyCss = true;
-    this.localMouseListener = null;
+        this.initializeAccessibility();
 
-    this.set(items);
+        this.dirtyDomDimensions = true;
+        this.dirtyPath = true;
+        this.rotation = null;
+        this.currentCornersData = null;
+        this.currentTransformString = '';
+        this.dirtyTransform = true;
+        this.currentTransformOriginString = '';
+        this.dirtyTransformOrigin = true;
+        this.domShowRequired = true;
+        this.dirtyCss = true;
+        this.dirtyStampOrder = true;
+        this.localMouseListener = null;
 
-    const el = this.domElement;
+        this.set(items);
 
-    if (el) {
+        const el = this.domElement;
 
-        const ds = el.dataset;
+        if (el) {
 
-        if (ds.isResponsive) this.isResponsive = true;
+            const ds = el.dataset;
 
-        if (el.getAttribute(DATA_SCRAWL_GROUP) === ROOT) rootElementsAdd(this.name);
+            if (ds.isResponsive) this.isResponsive = true;
+
+            if (el.getAttribute(DATA_SCRAWL_GROUP) === ROOT) rootElementsAdd(this.name);
+        }
+        return this;
     }
-    return this;
+    return null;
 };
 
 
@@ -268,6 +273,12 @@ P.updateArtefacts = function (items = Ωempty) {
             if (items.dirtyPathObject) art.dirtyPathObject = true;
         })
     });
+};
+
+P.reset = function () {
+
+    this.dirtyDimensions = true;
+    domShow(this.name);
 };
 
 // `cleanDimensionsAdditionalActions` - overwrites mixin/position function. Promulgates Stack dimension changes through to all Element and Canvas wrappers associated with the Stack wrapper's Group object.
