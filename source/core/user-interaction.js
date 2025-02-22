@@ -319,7 +319,6 @@ export const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
 // Functions to update uiSubscribedElements attached to specified DOM elements. Each stack or canvas element tracked by Scrawl-canvas will include a local __here__ object which includes details of the element's current dimensions, relative position, and the position of the mouse cursor in relation to its top-left corner. These all need to be updated whenever there's a resize, scroll or cursor movement.
 const updateUiSubscribedElements = function () {
 
-    // console.log(uiSubscribedElements);
     for (let i = 0, iz = uiSubscribedElements.length; i < iz; i++) {
 
         updateUiSubscribedElement(uiSubscribedElements[i]);
@@ -331,11 +330,6 @@ const updateUiSubscribedElement = function (art) {
     const dom = library.artefact[art];
 
     if (dom) {
-
-        if (!dom.here) {
-console.log('created here for', dom.name)
-            dom.here = {};
-        }
 
         const { here, domElement:el } = dom;
 
