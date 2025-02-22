@@ -432,7 +432,6 @@ P.addExistingDomElements = function (search) {
 // + The new element will also default to a CSS box-sizing style value of 'border-box', unless the argument's __boxSizing__ attribute has been set to 'content-box' - this will override any 'borderBox' attribute value in the argument's __.css__ object (if one has been included)
 P.addNewElement = function (items) {
 
-
     if (items && items.tag) {
 
         items.domElement = document.createElement(items.tag);
