@@ -1202,7 +1202,7 @@ export const addCanvas = function (items = Ωempty) {
         host = items.host,
         temphost;
 
-    if (host.substring) {
+    if (host && host.substring) {
 
         temphost = artefact[host];
 
