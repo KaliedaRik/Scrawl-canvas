@@ -33,30 +33,30 @@ Much of the code that handles DOM-related interactions and manipulations can be 
 + [mixin/dom.js](../source/mixin/dom.html) - shared artefact object functionality
 + [mixin/position.js](../source/mixin/position.html) - for managing position  functionality
 
-## Scrawl-canvas stacks
+## Scrawl-canvas Stacks
 The key purpose of SC is to position graphical entitys onto a `<canvas>` element, in a given order, so that those entitys build some form of graphical representation, chart, imagery, infographic, artwork (etc) that can be displayed as part of a web page. More information can be found in the [positioning system page](sc-positioning.html) in the Runbook.
 
 **SC extends this positioning system to the DOM.** An HTML element can be included in the SC ecosystem to act as a space in the web page where that element's direct child elements can be positioned, manipulated and animated using SC functionality.
 
-### A brief history of SC stacks
-SC stacks started as a concept to position HTML elements - in particular elements that could be used to control canvas displays and animations - directly over a `<canvas>` element. 
+### A brief history of SC Stacks
+Stacks started as a concept to position HTML elements - in particular elements that could be used to control canvas displays and animations - directly over a `<canvas>` element. 
 
 This was necessary because the normal way of positioning such elements over a parent element (for instance: mark the parent as `position: relative` and the child as `position: absolute`) does not work with `<canvas>` elements. Instead, dev-users would have to place the `<canvas>` element in a containing element (usually a `<div>` element) and mark that container as relatively positioned, with the canvas and any other direct child elements becoming absolutely positioned.
 
 From that initial idea, it was only a short conceptual step to get SC to manage child element positions in the same way as it already managed graphical entity positioning in the canvas display - using absolute and relative start coordinates, positioning by reference to other artifacts, etc.
 
-SC stacks also offered repo-devs an easy way to introduce functionality to the canvas display which the Canvas API did not (and still doesn't) offer. For example: [perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective) - rather than engage in complex mathematics to mimic the appearance of perspective in a canvas scene, dev-users could instead rotate the `<canvas>` element in 3d space to quickly achieve the same effect. See test demos [DOM-013](../../demo/dom-013.html) and [DOM-015](../../demo/dom-015.html) for examples of this functionality in action.
+Stacks also offered repo-devs an easy way to introduce functionality to the canvas display which the Canvas API did not (and still doesn't) offer. For example: [perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective) - rather than engage in complex mathematics to mimic the appearance of perspective in a canvas scene, dev-users could instead rotate the `<canvas>` element in 3d space to quickly achieve the same effect. See test demos [DOM-013](../../demo/dom-013.html) and [DOM-015](../../demo/dom-015.html) for examples of this functionality in action.
 
-Today SC stacks are tightly integrated into the SC ecosystem. SC stacks, like Canvas wrappers, take part in the [SC Display cycle](sc-animation-systems.html) and use the same functionality to add [SC event listeners](sc-events-signals.html) to their DOM elements. And an SC stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.
+Today Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the [SC Display cycle](sc-animation-systems.html) and use the same functionality to add [SC event listeners](sc-events-signals.html) to their DOM elements. And an Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.
 
 ### HTML elements that can become Stack or Element artefacts
 Messing with the web page DOM can become, well, messy. SC makes a best effort towards minimising this messiness - in part - by limiting the types of HTML elements which can be wrapped in SC artefact objects. These limitations get defined in the [helper/shared-vars.js](../source/helper/shared-vars.html) file.
 + **HTML elements that can be wrapped as Stack artefacts:** `<article>`, `<aside>`, `<div>`, `<footer>`, `<header>`, `<main>`, `<nav>`, `<section>`.
 + **HTML elements that can be wrapped as Element artefacts:** `<a>`, `<address>`, `<article>`, `<aside>`, `<audio>`, `<blockquote>`, `<button>`, `<details>`, `<div>`, `<dl>`, `<embed>`, `<fencedframe>`, `<figure>`, `<footer>`, `<form>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<header>`, `<hgroup>`, `<iframe>`, `<img>`, `<input>`, `<main>`, `<math>`, `<menu>`, `<meter>`, `<nav>`, `<object>`, `<ol>`, `<output>`, `<p>`, `<picture>`, `<pre>`, `<progress>`, `<search>`, `<section>`, `<select>`, `<svg>`, `<table>`, `<textarea>`, `<ul>`, `<video>`.
 
-`<canvas>` elements can also be part of an SC stack, with the same positioning functionality as afforded to Element objects. They cannot be their own SC stack.
+`<canvas>` elements can also be part of an Stack, with the same positioning functionality as afforded to Element objects. They cannot be their own Stack.
 
-SC stacks can also (in theory) include other SC stacks - nested stacks - though repo-devs don't currently test such functionality.
+SC stacks can also (in theory) include other Stacks - nested stacks - though repo-devs don't currently test such functionality.
 
 ### CSS considerations
 The functionality that handles the transfer of artefact object state (position, rotation, etc) into the page DOM can be found in the [mixin/dom.js](../source/mixin/dom.html) file. This work happens as part of the [SC Display cycle](sc-animation-systems.html), and is achieved through [inline CSS updates](https://www.freecodecamp.org/news/inline-style-in-html/). Note that this may occasionally come into conflict with other JS libraries that use inline styling as part of their functionality; it's up to dev-users to manage and mitigate any such conflicts that arise.
@@ -64,11 +64,11 @@ The functionality that handles the transfer of artefact object state (position, 
 The CSS properties that SC uses are:
 + `boxSizing` - all SC artefact DOM elements need to have this style property set to `border-box` to make calculations easier.
 + `position` - SC needs the DOM elements under its control to have either `relative` or `absolute` positioning.
-+ `perspective`, `perspectiveOrigin` - specific to SC stacks, to set the parameters for the stack's 3d space. 
++ `perspective`, `perspectiveOrigin` - specific to Stacks, to set the parameters for the Stack's 3d space. 
 + `display` - handles DOM element visibility.
 + `height`, `width` - for handling DOM element dimensions.
 + `transformOrigin` - for the artefact object's `handle` attribute (effectively the DOM element's position with respect to its rotation-reflection point)
-+ `transform` - SC controls the DOM element's position in the SC stack, alongside its 3d rotation and scale, using this property; for this reason SC also does what it can to restrict use of the `bottom`, `left`, `right` and `top` CSS properties.
++ `transform` - SC controls the DOM element's position in the Stack, alongside its 3d rotation and scale, using this property; for this reason SC also does what it can to restrict use of the `bottom`, `left`, `right` and `top` CSS properties.
 + `z-index` - to handle the SC artefact's `stampOrder` attribute.
 
 ### CSS classes
@@ -77,33 +77,76 @@ Beyond the above, SC expects dev-users to style their web pages in the normal wa
 SC includes functionality - `artefact.set({ classes: string })`, alongside `.addClasses(string)` and `removeClasses(string)` - which gives dev-users the ability to add and remove classes via the SC artefact object. An example of this in action can be seen in the test demo [DOM-007](../../demo/dom-007.html).
 
 ## SC artefact object functionality
-SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within an SC stack, and managing their **dimensions** relative to the SC stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. More details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
+SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within an Stack, and managing their **dimensions** relative to the Stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. More details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
 
 ### Accessibility
-The responsibility for [making web pages accessible](https://www.w3.org/WAI/fundamentals/accessibility-intro/) lies with the dev-user, working closely with the page designer and product manager. If the page design calls for the use of `<canvas>` elements, then SC can help deliver a more accessible solution for those canvases.
+More details about how SC helps dev-users address a range of accessibility issues for `<canvas>` elements can be found in the [accessibility page](sc-accessibility.html) of this Runbook.
 
-We can break down the accessibility issues that need to be addressed as follows:
-+ Respect, and adapt to, [user preference media features](https://www.smashingmagazine.com/2023/08/css-accessibility-inclusion-user-choice/)
-  - prefers-contrast
-  - prefers-reduced-motion
-  - prefers-color-scheme
-  - prefers-reduced-transparency
-  - prefers-reduced-data
-  - forced-colors (not yet handled by SC)
-  - inverted-colors (not yet handled by SC)
-+ Include readable markup and details about the canvas scene - `role`, `aria-label`, `aria-description`, etc
-+ Add accessible (tab-able) controls to start/stop stack and canvas display animations
-+ Include controls in canvas displays for accessible (tab-able) navigation links and other user interactions with the canvas
-+ Expose canvas-based graphical text to the DOM - in a sensible and meaningful way - that doesn't annoy the end-users who have to consume that information
-+ Allow less common patterns for user interactions with graphical links (as far as possible) such as right-clicking on them or dragging them to the browser address bar to open the new page
+For Stacks and Elements, the [accessibility considerations](https://www.w3.org/WAI/fundamentals/accessibility-intro/) are the same as for any other DOM element in the web page, and the responsibility for making these elements more accessible sit with the dev-user, not SC. Stack and Element animations can be controlled in the same way as Canvas animations - as described in the accessibility page of this Runbook.
 
-More details about how SC helps dev-users address these accessibility issues can be found in the [accessibility page](sc-accessibility.html) of this Runbook.
+SC does provide an easy way for the dev-user to detect the various [preference media features](https://www.smashingmagazine.com/2023/08/css-accessibility-inclusion-user-choice/) that the end-user may have set on their current device, which can be accessed through any SC artefact object as follows:
++ ***prefers-contrast:*** `artefact.here.prefersContrast` - the end-user can choose between four color contrast settings - 'no-preference', 'less', 'more', 'custom'; SC treats the choice as a binary between 'more' (`true`) and the others (`false`).
++ ***prefers-reduced-motion:*** `artefact.here.prefersReducedMotion` - when `true` ('reduce'), the end-user wants to see minimal animation on the web page - long-running animations should complete within 5 seconds.
++ ***prefers-color-scheme:*** `artefact.here.prefersDarkColorScheme` - when `true` ('dark'), the end-user expects the web page to present using lighter text on a darker background.
++ ***prefers-reduced-transparency:*** `artefact.here.prefersReduceTransparency` - when `true` ('reduce'), the end-user expects the web page to present with a minimal amount of transparency.
++ ***prefers-reduced-data:*** `artefact.here.prefersReduceData` - when `true` ('reduce'), the end-user is asking for less data to be sent to their device.
++ ***forced-colors:*** `artefact.here.prefersForcedColors` - when `true` ('active'), the end user has their own color scheme which, if possible, they want the web page to use. Or, alternatively, use the device's [system colors](https://developer.mozilla.org/en-US/docs/Web/CSS/system-color).
++ ***inverted-colors:*** `artefact.here.prefersInvertedColors` - when `true` ('inverted'), the end-user expects web page colors to present as their diametrically opposite color.
+
+SC sets the values of these `here` attributes during page load, and then listens for changes in them when, for instance, the user changes the settings in their device's operating system while the page is open. This functionality can be found in the [helper/system-flags.js](../source/helper/system-flags.html) and [core/user-interaction.js](../source/core/user-interaction.html) files.
+
+Beyond that, it is up to the dev-user to code up functions to handle the initial states of, and subsequent changes to, these user preferences. They do this by setting their functions on artefact object hook attributes (defined in the [mixin/dom.js](../source/mixin/dom.html) file):
++ ***prefersContrast:*** - `moreContrastAction` and `otherContrastAction`
++ ***prefersReducedMotion:***  `reduceMotionAction` and `noPreferenceMotionAction`
++ ***prefersDarkColorScheme:*** `colorSchemeDarkAction` and `colorSchemeLightAction`
++ ***prefersReduceTransparency:*** `reduceTransparencyAction` and `noPreferenceTransparencyAction`
++ ***prefersReduceData:*** `reduceDataAction` and `noPreferenceDataAction`
++ ***prefersForcedColors:*** `activeForcedColorsAction` and `noForcedColorsAction`
++ ***prefersInvertedColors:*** `invertedColorsAction` and `normalColorsAction`
 
 ### Progressive enhancement
-[TODO - write up.]
+To quote Wikipedia: "[Progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement) is a strategy in web design that puts emphasis on web content first, allowing everyone to access the basic content and functionality of a web page, while users with additional browser features or faster Internet access receive the enhanced version instead."
+
+This matters for SC because `<canvas>` elements require Javascript to work. In *JS-disabled environments*, the browser will treat the `<canvas>` tags like a `<div>` element and display the HTML between the tags (the **fallback content**, sometimes also called the [canvas shadow DOM](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/hh968259(v=vs.85)) - at least by Microsoft) instead.
+
+It also matters for Accessibility because some devices which have a *JS-enabled environment* - such as screen readers - will similarly ignore the `<canvas>` tags and instead process (read out) the fallback content.
+
+For the most part, building and supporting a web page that respects progressive enhancement is a task for dev-users. Even so, SC includes some guidelines and functionalities to make the work a little easier for dev-users:
++ Because SC is a JS library, it won't run in *JS-disabled environments*. Dev-users can include fallback content between the `<canvas>` tags and style it appropriately using their preferred method - for instance by using some `<noscript><style>...</style></noscript>` markup copy. Such content could include an `<img>` or `<figure>` element to display a static screenshot of the canvas scene.
++ When importing a `<canvas>` element into the SC system, SC will mutate that element (and only that element) to include some accessibility-friendly features. This mutation will not touch any fallback content the dev-user has already placed between the `<canvas>` tags.
++ Repo-devs need to make their best effort to ensure SC repo code does not error when running. Thus:
+  - Avoid generating and throwing [error objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error); instead bypass that functionality (for instance, don't stamp a Picture entity if its `<img>` asset has not completed loading), or fail in a graceful manner so other Javascript code can continue to run.
+  - But don't fail by means of [try-catch statements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch): such code (at least in the past) kills web page performance!
+
+Several of the SC test demos have been coded up in a way that respects progressive enhancement - for example test demo [Filters-004](../../demo/filters-004.html) has been written with fallback content between the `<canvas>` tags to include a placeholder image of the canvas scene, alongside an appropriately hidden `<div>` to contain the `<img>` assets which are used by the the canvas but should never appear elsewhere in the web page.
+
+#### Advanced canvas-related functionality
+Over the past few years browser developers have made excellent progress towards bringing their `<canvas>` element functionality, and support for the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), into closer alignment with the (ever evolving) [Canvas standards](https://html.spec.whatwg.org/multipage/canvas.html). 
+
+SC, as a philosophy, tries to support (and simplify) as much of the Canvas API as it can. Making sure that SC-supported canvases run in lesser-know parts of the web page is also of legitimate interest - with the following caveats:
++ SC actively avoids the Canvas API's [OffscreenCanvas interface](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) - SC does not work in web workers, nor are there any plans to make it work in them.
++ SC has no interest in supporting [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)- or [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API)-driven canvas displays either externally, or internally within the repo code base. It can consume WebGL/WebGPU `<canvas>-based` output supplied by 3rd party code.
++ SC supports `<canvas>` elements using the [display-p3 color space](https://en.wikipedia.org/wiki/DCI-P3) when instructed to do so.
++ SC prefers to work with [SVG d path definitions](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) where possible, as they can be directly consumed by [Path2D interface objects](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) which, in turn, can be fed into the CanvasRenderingContext2D [engine.fill()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fill), [engine.stroke()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke) and [engine.isPointInPath()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/isPointInPath) instance methods.
++ Newer CanvasRenderingContext2D functionality is preferred, once repo-devs have confidence that the functionality has support across the latest versions of browsers - except where that functionality would degrade current SC functionality:
+  - `engine.setTransform(1, 0, 0, 1, 0, 0)` is (slowly) being replaced by [engine.resetTransform()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/resetTransform) through the repo code base and test demos.
+  - Recent improvements to the [TextMetrics](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics) interface have been incorporated into SC even though there remain some (annoying) differences in how browsers measure and present those values (because: text layout is hard!).
+  - SC does not use the [drawFocusIfNeeded()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawFocusIfNeeded) instance method as it handles accessible graphical controls and links in a different way.
+  - Recent browser work to support a wider range of [CSS color formats](https://www.w3.org/TR/css-color-4/) has actually helped to simplify the code in the SC Color factory - see the [factory/color.js](../source/factory/color.html) file.
+  - The CanvasRenderingContext2D [engine.ellipse()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/ellipse) and [engine.roundRect()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect) instance methods are not supported, as SC already includes functionality to create these shapes (in a more versatile and useful way) - see the [factory/oval.js](../source/factory/oval.html) and [factory/rectangle.js](../source/factory/rectangle.html) factory files.
+  - The CanvasRenderingContext2D [engine.filter](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) property is supported, but with no great love. SC comes with its own (much better!) [filters functionality](sc-filter-engine.html).
++ SC not only supports the various CanvasAPI [CanvasGradient interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) methods (linear, radial, conic), it actively works to extend gradient functionality in interesting ways - for instance animating gradients, and easing linear gradients.
++ Investigate how to use an SC-managed `<canvas>` element as part of a [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API) or [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) presentation - see test demos [DOM-018](../../demo/dom-018.html) and [DOM-021](../../demo/dom-021.html) respectively.
++ Investigate how to (easily) display a [Screen Capture API](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API) media stream in an SC `<canvas>` - see test demo [DOM-019](../../demo/dom-019.html).
++ SC includes ***experimental functionality*** which attempts to emulate the functionality of the (relatively new and poorly supported) [CSS Houdini](https://developer.mozilla.org/en-US/docs/Web/API/Houdini_APIs) [Painting API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API) - see the [Snippets page](sc-snippets.html) in this Runbook for details.
+
+#### How to test progressive enhancement locally
+
 
 ### Responsiveness
 [TODO - write up.]
+
+[Resize Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API)
 
 ### Perspective and 3d rotation
 [TODO - write up.]
@@ -186,11 +229,11 @@ Before:                                         After:
 ## Stack artefact notes
 SC will wrap DOM elements into **Stack artefact objects** under the following conditions:
 + Any element with a `display: block;` CSS property which has a `data-scrawl-stack` attribute discovered in the DOM during page initialization.
-+ The dev-user adds a new stack to the web page using the `scrawl.addStack()` function.
-+ The stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getStack('stack-id-string')` as part of the component's mount functionality.
++ The dev-user adds a new Stack to the web page using the `scrawl.addStack()` function.
++ The Stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getStack('stack-id-string')` as part of the component's mount functionality.
 
-### Changes made to a typical DOM stack element as SC wraps it
-SC makes extensive changes to DOM stack elements as it wraps them. The purpose of this is to make it easier to position and animate the (absolutely positioned) direct child elements included in the stack - which is achieved using standard inline CSS styling.
+### Changes made to a typical DOM Stack element as SC wraps it
+SC makes extensive changes to DOM Stack elements as it wraps them. The purpose of this is to make it easier to position and animate the (absolutely positioned) direct child elements included in the Stack - which is achieved using standard inline CSS styling.
 
 SC also adds **corner divs** inside the DOM element, which can then be used across the SC ecosystem for reference positioning other artefacts and entitys:
 ```
@@ -252,15 +295,15 @@ Before:                                         After:
 
 ## Element artefact notes
 SC will wrap DOM elements into **Element artefact objects** under the following conditions:
-+ The element is a direct child of a stack element, discovered during page initialization.
-+ The dev-user adds a new stack containing direct child elements to the web page using the `scrawl.addStack()` function.
-+ The element is a direct child of a stack element defined in a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getStack('stack-id-string')` as part of the component's mount functionality.
++ The element is a direct child of a Stack element, discovered during page initialization.
++ The dev-user adds a new Stack containing direct child elements to the web page using the `scrawl.addStack()` function.
++ The element is a direct child of a Stack element defined in a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getStack('stack-id-string')` as part of the component's mount functionality.
 + The dev-user invokes the `scrawl.makeElement()` factory function in their code.
 
-### Changes made to a DOM direct child element discovered in a stack element
-As part of this wrapping process, elements will become [absolutely positioned](https://developer.mozilla.org/en-US/docs/Web/CSS/position) within their (relatively positioned) stack element. SC will make its best effort to replicate the element's position within the SC Stack before wrapping commenced - but this cannot be guaranteed.
+### Changes made to a DOM direct child element discovered in a Stack element
+As part of this wrapping process, elements will become [absolutely positioned](https://developer.mozilla.org/en-US/docs/Web/CSS/position) within their (relatively positioned) Stack element. SC will make its best effort to replicate the element's position within the Stack before wrapping commenced - but this cannot be guaranteed.
 
-Other than positioning considerations, the mutations made to the direct child elements of a stack element are similar to the changes made to the stack element itself as it is wrapped - including the addition of **corner divs**:
+Other than positioning considerations, the mutations made to the direct child elements of a Stack element are similar to the changes made to the Stack element itself as it is wrapped - including the addition of **corner divs**:
 ```
 Before:                                         After:
 ----------------------------------------        ----------------------------------------

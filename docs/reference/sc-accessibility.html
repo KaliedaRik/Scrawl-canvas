@@ -23,9 +23,22 @@
 
     <main>
         <h1 id="scrawl-canvas-accessibility">Scrawl-canvas accessibility</h1>
-<p>Discuss how SC handles canvas accessibility</p>
+<p>The responsibility for <a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/">making web pages accessible</a> lies with the dev-user, working closely with the page designer and product manager. If the page design calls for the use of <code>&lt;canvas&gt;</code> elements, then SC can help deliver a more accessible solution for those canvases.</p>
+<p>We can break down the accessibility issues that need to be addressed as follows:</p>
 <ul>
-<li>See Lesson 11 on the website for inspiration</li>
+<li>Respect, and adapt to, <a href="https://www.smashingmagazine.com/2023/08/css-accessibility-inclusion-user-choice/">user preference media features</a><ul>
+<li>prefers-contrast</li>
+<li>prefers-reduced-motion</li>
+<li>prefers-color-scheme</li>
+<li>prefers-reduced-transparency</li>
+<li>prefers-reduced-data</li>
+<li>forced-colors (not yet handled by SC)</li>
+<li>inverted-colors (not yet handled by SC)</li></ul></li>
+<li>Include readable markup and details about the canvas scene - <code>role</code>, <code>aria-label</code>, <code>aria-description</code>, etc</li>
+<li>Add clearly visible accessible (tab-able) controls to start/stop stack and canvas display animations</li>
+<li>Include controls in canvas displays for accessible (tab-able) navigation links and other user interactions with the canvas</li>
+<li>Expose canvas-based graphical text to the DOM - in a sensible and meaningful way - that doesn't annoy the end-users who have to consume that information</li>
+<li>Allow less common patterns for user interactions with graphical links (as far as possible) such as right-clicking on them or dragging them to the browser address bar to open the new page</li>
 </ul>
     </main>
     
