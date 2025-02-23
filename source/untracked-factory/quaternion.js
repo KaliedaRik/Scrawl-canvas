@@ -83,16 +83,16 @@ P.set = function (obj = Ωempty) {
 
 P.setFromQuaternion = function (item) {
 
-    if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - setFromQuaternion() bad argument: ${item}`);
+    if (isa_quaternion(item)) {
 
-    const tv = this.v,
-        iv = item.v;
+        const tv = this.v,
+            iv = item.v;
 
-    this.n = item.n;
-    tv.x = iv.x;
-    tv.y = iv.y;
-    tv.z = iv.z;
-
+        this.n = item.n;
+        tv.x = iv.x;
+        tv.y = iv.y;
+        tv.z = iv.z;
+    }
     return this;
 };
 
@@ -151,40 +151,40 @@ P.normalize = function () {
     const mag = this.getMagnitude(),
         v = this.v;
 
-    if (!mag) throw new Error(`${this.name} Quaternion error - normalize() division by zero: ${mag}`);
+    if (mag) {
 
-    this.n = correctForZero(this.n / mag);
-    v.x = correctForZero(v.x / mag);
-    v.y = correctForZero(v.y / mag);
-    v.z = correctForZero(v.z / mag);
-
+        this.n = correctForZero(this.n / mag);
+        v.x = correctForZero(v.x / mag);
+        v.y = correctForZero(v.y / mag);
+        v.z = correctForZero(v.z / mag);
+    }
     return this;
 };
 
 // Multiply the Quaternion by another Quaternion
 P.quaternionMultiply = function (item) {
 
-    if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - quaternionMultiply() bad argument: ${item}`);
+    if (isa_quaternion(item)) {
 
-    const tv = this.v,
-        iv = item.v,
+        const tv = this.v,
+            iv = item.v,
 
-        n1 = this.n,
-        x1 = tv.x,
-        y1 = tv.y,
-        z1 = tv.z,
+            n1 = this.n,
+            x1 = tv.x,
+            y1 = tv.y,
+            z1 = tv.z,
 
-        n2 = item.n,
-        x2 = iv.x,
-        y2 = iv.y,
-        z2 = iv.z;
+            n2 = item.n,
+            x2 = iv.x,
+            y2 = iv.y,
+            z2 = iv.z;
 
-    this.n = (n1 * n2) - (x1 * x2) - (y1 * y2) - (z1 * z2);
+        this.n = (n1 * n2) - (x1 * x2) - (y1 * y2) - (z1 * z2);
 
-    tv.x = (n1 * x2) + (x1 * n2) + (y1 * z2) - (z1 * y2);
-    tv.y = (n1 * y2) + (y1 * n2) + (z1 * x2) - (x1 * z2);
-    tv.z = (n1 * z2) + (z1 * n2) + (x1 * y2) - (y1 * x2);
-
+        tv.x = (n1 * x2) + (x1 * n2) + (y1 * z2) - (z1 * y2);
+        tv.y = (n1 * y2) + (y1 * n2) + (z1 * x2) - (x1 * z2);
+        tv.z = (n1 * z2) + (z1 * n2) + (x1 * y2) - (y1 * x2);
+    }
     return this;
 };
 
@@ -201,22 +201,21 @@ P.getAngle = function (degree) {
 
         result *= (1 / _radian);
     }
-
     return correctForZero(result);
 };
 
 // Rotate the Quaternion using another Quaternion's values
 P.quaternionRotate = function (item) {
 
-    if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - quaternionRotate() bad argument: ${item}`);
+    if (isa_quaternion(item)) {
 
-    const q4 = requestQuaternion(item),
-        q5 = requestQuaternion(this);
+        const q4 = requestQuaternion(item),
+            q5 = requestQuaternion(this);
 
-    this.setFromQuaternion(q4.quaternionMultiply(q5));
+        this.setFromQuaternion(q4.quaternionMultiply(q5));
 
-    releaseQuaternion(q4, q5);
-
+        releaseQuaternion(q4, q5);
+    }
     return this
 };
 
