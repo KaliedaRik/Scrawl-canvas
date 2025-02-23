@@ -371,7 +371,7 @@ const updateUiSubscribedElement = function (art) {
             here.inViewportBase = ivpb;
             here.inViewportCenter = ivpc;
 
-            // DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions.
+            // Default mouse tracking behaviour
             if (!dom.localMouseListener) {
 
                 here.localListener = false;
@@ -387,7 +387,9 @@ const updateUiSubscribedElement = function (art) {
 
                 if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
             }
-            // Default mouse tracking behaviour
+            // DOM-based artefacts have the option of creating a local mouse move event listener
+            // + The listener better tracks mouse movements across the artefact when its element has been rotated in three dimensions.
+            // + The listener will update the local here.x and here.y values
             else {
 
                 here.localListener = true;
@@ -433,7 +435,6 @@ const updateUiSubscribedElement = function (art) {
                     // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
                     // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
                     // + Solved by subtracting padding/border values from the `getBoundingClientRect` dimension values before performing the test.
-                    // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
 
                     const s = dom.computedStyles,
                         hw = _floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),

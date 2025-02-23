@@ -55,37 +55,32 @@ P.getXYZCoordinate = function () {
 // Vector attributes can be set directly - `myvector.x = 0`, etc. The following convenience setters are defined on the Vector prototype
 P.setX = function (x) {
 
-    if (!xt(x)) throw new Error(`${this.name} Vector error - setX() arguments error: ${x}`);
-
-    this.x = x;
+    if (xt(x) && isa_number(x)) this.x = x;
 
     return this;
 };
 
 P.setY = function (y) {
 
-    if (!xt(y)) throw new Error(`${this.name} Vector error - setY() arguments error: ${y}`);
-
-    this.y = y;
+    if (xt(y) && isa_number(y)) this.y = y;
 
     return this;
 };
 
 P.setZ = function (z) {
 
-    if (!xt(z)) throw new Error(`${this.name} Vector error - setZ() arguments error: ${z}`);
-
-    this.z = z;
+    if (xt(z) && isa_number(z)) this.z = z;
 
     return this;
 };
 
 P.setXY = function (x, y) {
 
-    if (!xta(x, y)) throw new Error(`${this.name} Vector error - setXY() arguments error: ${x}, ${y}`);
+    if (xta(x, y) && isa_number(x) && isa_number(y)) {
 
-    this.x = x;
-    this.y = y;
+        this.x = x;
+        this.y = y;
+    }
 
     return this;
 };
@@ -108,26 +103,28 @@ P.set = function (x, y, z) {
 
 P.setFromArray = function (args) {
 
-    if (!_isArray(args)) throw new Error(`${this.name} Vector error - setFromArray() arguments error: ${args}`);
+    if (_isArray(args)) {
 
-    const [x, y, z] = args;
+        const [x, y, z] = args;
 
-    if (isa_number(x)) this.x = x;
-    if (isa_number(y)) this.y = y;
-    if (isa_number(z)) this.z = z;
+        if (isa_number(x)) this.x = x;
+        if (isa_number(y)) this.y = y;
+        if (isa_number(z)) this.z = z;
+    }
 
     return this;
 };
 
 P.setFromVector = function (item) {
 
-    if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${JSON.stringify(item)}`);
+    if (isa_obj(item)) {
 
-    const {x, y, z} = item;
+        const {x, y, z} = item;
 
-    if (isa_number(x)) this.x = x;
-    if (isa_number(y)) this.y = y;
-    if (isa_number(z)) this.z = z;
+        if (isa_number(x)) this.x = x;
+        if (isa_number(y)) this.y = y;
+        if (isa_number(z)) this.z = z;
+    }
 
     return this;
 };
@@ -234,12 +231,12 @@ P.vectorMultiplyArray = function (item) {
 // Divide all Vector attributes by the argument Number
 P.scalarDivide = function (item) {
 
-    if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarDivide() argument not a number: ${item}`);
-    if (!item) throw new Error(`${this.name} Vector error - scalarDivide() division by zero: ${item}`);
+    if (isa_number(item) && item) {
 
-    this.x /= item;
-    this.y /= item;
-    this.z /= item;
+        this.x /= item;
+        this.y /= item;
+        this.z /= item;
+    }
 
     return this;
 };
