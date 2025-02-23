@@ -47,7 +47,7 @@ From that initial idea, it was only a short conceptual step to get SC to manage 
 
 Stacks also offered repo-devs an easy way to introduce functionality to the canvas display which the Canvas API did not (and still doesn't) offer. For example: [perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective) - rather than engage in complex mathematics to mimic the appearance of perspective in a canvas scene, dev-users could instead rotate the `<canvas>` element in 3d space to quickly achieve the same effect. See test demos [DOM-013](../../demo/dom-013.html) and [DOM-015](../../demo/dom-015.html) for examples of this functionality in action.
 
-Today Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the [SC Display cycle](sc-animation-systems.html) and use the same functionality to add [SC event listeners](sc-events-signals.html) to their DOM elements. And an Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.
+Today Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the [SC Display cycle](sc-animation-systems.html) and use the same functionality to add [SC event listeners](sc-events-signals.html) to their DOM elements. And a Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.
 
 ### HTML elements that can become Stack or Element artefacts
 Messing with the web page DOM can become, well, messy. SC makes a best effort towards minimising this messiness - in part - by limiting the types of HTML elements which can be wrapped in SC artefact objects. These limitations get defined in the [helper/shared-vars.js](../source/helper/shared-vars.html) file.
@@ -74,10 +74,10 @@ The CSS properties that SC uses are:
 ### CSS classes
 Beyond the above, SC expects dev-users to style their web pages in the normal way, for instance by applying [HTML classes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class) to DOM elements.
 
-SC includes functionality - `artefact.set({ classes: string })`, alongside `.addClasses(string)` and `removeClasses(string)` - which gives dev-users the ability to add and remove classes via the SC artefact object. An example of this in action can be seen in the test demo [DOM-007](../../demo/dom-007.html).
+SC includes functionality - `artefact.set({ classes: string })`, alongside `artefact.addClasses(string)` and `artefact.removeClasses(string)` - which gives dev-users the ability to add and remove classes via the SC artefact object. An example of this in action can be seen in the test demo [DOM-007](../../demo/dom-007.html).
 
 ## SC artefact object functionality
-SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within an Stack, and managing their **dimensions** relative to the Stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. More details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
+SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within an Stack, and managing their **dimensions** relative to the Stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. Further details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
 
 ### Accessibility
 More details about how SC helps dev-users address a range of accessibility issues for `<canvas>` elements can be found in the [accessibility page](sc-accessibility.html) of this Runbook.
@@ -141,11 +141,24 @@ SC, as a philosophy, tries to support (and simplify) as much of the Canvas API a
 + SC includes ***experimental functionality*** which attempts to emulate the functionality of the (relatively new and poorly supported) [CSS Houdini](https://developer.mozilla.org/en-US/docs/Web/API/Houdini_APIs) [Painting API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API) - see the [Snippets page](sc-snippets.html) in this Runbook for details.
 
 #### How to test progressive enhancement locally
-
-
-### Responsiveness
 [TODO - write up.]
 
+### Responsiveness
+SC includes functionality to help manage three aspects of [responsive web design](https://www.smashingmagazine.com/2011/01/guidelines-for-responsive-web-design/) - in particular as it applies to the (notoriously unresponsive) `<canvas>` element:
++ **Responsive assets:** SC makes use of responsive [images](https://developer.mozilla.org/en-US/docs/Web/HTML/Responsive_images) and [videos](https://scottjehl.com/posts/using-responsive-video/) as assets for the Picture entity and Pattern style objects.
++ **Canvas fit:** SC emulates the [CSS object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) property for `<canvas>` elements controlled by a Canvas artefact.
++ **Canvas shape and size:** SC includes functionality to keep track of a Canvas or Stack artefact's current shape and size within its web page environment - this is similar to the concept of [CSS containers](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries) though implemented in a different way.
+
+#### Responsive assets
+[TODO - write up.]
+
+#### Canvas fit
+[TODO - write up.]
+
+#### Tracking Canvas shape and size
+[TODO - write up.]
+
+Object fit - [replaced elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element)
 [Resize Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API)
 
 ### Perspective and 3d rotation

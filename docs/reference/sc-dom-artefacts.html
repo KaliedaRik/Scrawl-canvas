@@ -65,7 +65,7 @@
 <p>This was necessary because the normal way of positioning such elements over a parent element (for instance: mark the parent as <code>position: relative</code> and the child as <code>position: absolute</code>) does not work with <code>&lt;canvas&gt;</code> elements. Instead, dev-users would have to place the <code>&lt;canvas&gt;</code> element in a containing element (usually a <code>&lt;div&gt;</code> element) and mark that container as relatively positioned, with the canvas and any other direct child elements becoming absolutely positioned.</p>
 <p>From that initial idea, it was only a short conceptual step to get SC to manage child element positions in the same way as it already managed graphical entity positioning in the canvas display - using absolute and relative start coordinates, positioning by reference to other artifacts, etc.</p>
 <p>Stacks also offered repo-devs an easy way to introduce functionality to the canvas display which the Canvas API did not (and still doesn't) offer. For example: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/perspective">perspective</a> - rather than engage in complex mathematics to mimic the appearance of perspective in a canvas scene, dev-users could instead rotate the <code>&lt;canvas&gt;</code> element in 3d space to quickly achieve the same effect. See test demos <a href="../../demo/dom-013.html">DOM-013</a> and <a href="../../demo/dom-015.html">DOM-015</a> for examples of this functionality in action.</p>
-<p>Today Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the <a href="sc-animation-systems.html">SC Display cycle</a> and use the same functionality to add <a href="sc-events-signals.html">SC event listeners</a> to their DOM elements. And an Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.</p>
+<p>Today Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the <a href="sc-animation-systems.html">SC Display cycle</a> and use the same functionality to add <a href="sc-events-signals.html">SC event listeners</a> to their DOM elements. And a Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.</p>
 <h3 id="html-elements-that-can-become-stack-or-element-artefacts">HTML elements that can become Stack or Element artefacts</h3>
 <p>Messing with the web page DOM can become, well, messy. SC makes a best effort towards minimising this messiness - in part - by limiting the types of HTML elements which can be wrapped in SC artefact objects. These limitations get defined in the <a href="../source/helper/shared-vars.html">helper/shared-vars.js</a> file.</p>
 <ul>
@@ -89,9 +89,9 @@
 </ul>
 <h3 id="css-classes">CSS classes</h3>
 <p>Beyond the above, SC expects dev-users to style their web pages in the normal way, for instance by applying <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class">HTML classes</a> to DOM elements.</p>
-<p>SC includes functionality - <code>artefact.set({ classes: string })</code>, alongside <code>.addClasses(string)</code> and <code>removeClasses(string)</code> - which gives dev-users the ability to add and remove classes via the SC artefact object. An example of this in action can be seen in the test demo <a href="../../demo/dom-007.html">DOM-007</a>.</p>
+<p>SC includes functionality - <code>artefact.set({ classes: string })</code>, alongside <code>artefact.addClasses(string)</code> and <code>artefact.removeClasses(string)</code> - which gives dev-users the ability to add and remove classes via the SC artefact object. An example of this in action can be seen in the test demo <a href="../../demo/dom-007.html">DOM-007</a>.</p>
 <h2 id="sc-artefact-object-functionality">SC artefact object functionality</h2>
-<p>SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object <strong>position, rotation, scale and order</strong> within an Stack, and managing their <strong>dimensions</strong> relative to the Stack. This functionality is coded in the <a href="../source/mixin/position.html">mixin/position.js</a> file, as amended by the various DOM-related mixin and factory files. More details can be found in the <a href="sc-positioning.html">SC positioning system</a> page of the Runbook.</p>
+<p>SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object <strong>position, rotation, scale and order</strong> within an Stack, and managing their <strong>dimensions</strong> relative to the Stack. This functionality is coded in the <a href="../source/mixin/position.html">mixin/position.js</a> file, as amended by the various DOM-related mixin and factory files. Further details can be found in the <a href="sc-positioning.html">SC positioning system</a> page of the Runbook.</p>
 <h3 id="accessibility">Accessibility</h3>
 <p>More details about how SC helps dev-users address a range of accessibility issues for <code>&lt;canvas&gt;</code> elements can be found in the <a href="sc-accessibility.html">accessibility page</a> of this Runbook.</p>
 <p>For Stacks and Elements, the <a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/">accessibility considerations</a> are the same as for any other DOM element in the web page, and the responsibility for making these elements more accessible sit with the dev-user, not SC. Stack and Element animations can be controlled in the same way as Canvas animations - as described in the accessibility page of this Runbook.</p>
@@ -150,9 +150,22 @@
 <li>SC includes <strong><em>experimental functionality</em></strong> which attempts to emulate the functionality of the (relatively new and poorly supported) <a href="https://developer.mozilla.org/en-US/docs/Web/API/Houdini_APIs">CSS Houdini</a> <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API">Painting API</a> - see the <a href="sc-snippets.html">Snippets page</a> in this Runbook for details.</li>
 </ul>
 <h4 id="how-to-test-progressive-enhancement-locally">How to test progressive enhancement locally</h4>
-<h3 id="responsiveness">Responsiveness</h3>
 <p>[TODO - write up.]</p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API">Resize Observer API</a></p>
+<h3 id="responsiveness">Responsiveness</h3>
+<p>SC includes functionality to help manage three aspects of <a href="https://www.smashingmagazine.com/2011/01/guidelines-for-responsive-web-design/">responsive web design</a> - in particular as it applies to the (notoriously unresponsive) <code>&lt;canvas&gt;</code> element:</p>
+<ul>
+<li><strong>Responsive assets:</strong> SC makes use of responsive <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Responsive_images">images</a> and <a href="https://scottjehl.com/posts/using-responsive-video/">videos</a> as assets for the Picture entity and Pattern style objects.</li>
+<li><strong>Canvas fit:</strong> SC emulates the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">CSS object-fit</a> property for <code>&lt;canvas&gt;</code> elements controlled by a Canvas artefact.</li>
+<li><strong>Canvas shape and size:</strong> SC includes functionality to keep track of a Canvas or Stack artefact's current shape and size within its web page environment - this is similar to the concept of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries">CSS containers</a> though implemented in a different way.</li>
+</ul>
+<h4 id="responsive-assets">Responsive assets</h4>
+<p>[TODO - write up.]</p>
+<h4 id="canvas-fit">Canvas fit</h4>
+<p>[TODO - write up.]</p>
+<h4 id="tracking-canvas-shape-and-size">Tracking Canvas shape and size</h4>
+<p>[TODO - write up.]</p>
+<p>Object fit - <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element">replaced elements</a><br />
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API">Resize Observer API</a></p>
 <h3 id="perspective-and-3d-rotation">Perspective and 3d rotation</h3>
 <p>[TODO - write up.]</p>
 <h3 id="user-interaction-and-the-here-object">User interaction and the <code>here</code> object</h3>
