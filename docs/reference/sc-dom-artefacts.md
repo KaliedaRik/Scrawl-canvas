@@ -150,7 +150,7 @@ SC includes functionality to help manage three aspects of [responsive web design
 + **Canvas shape and size:** SC includes functionality to keep track of a Canvas or Stack artefact's current shape and size within its web page environment - this is similar to the concept of [CSS containers](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries) though implemented in a different way.
 
 #### Responsive assets
-[TODO - write up.]
+See the [SC asset management and use](sc-assets.html) page in the Runbook for more information on how SC handles responsive assets.
 
 #### Canvas fit
 [TODO - write up.]
