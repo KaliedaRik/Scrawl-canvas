@@ -366,7 +366,7 @@ export default function (P = Ωempty) {
 
                     host = items.host;
 
-                    if (host.substring && artefact[host]) host = artefact[host];
+                    if (host && host.substring && artefact[host]) host = artefact[host];
                 }
 
                 if (host && host.domElement) {

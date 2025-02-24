@@ -121,7 +121,7 @@ P.postCloneAction = function(clone, items) {
 
     let host;
 
-    if (items.host) {
+    if (items && items.host) {
 
         if (items.host.substring) host = artefact[items.host];
         else if (items.host.type && ACCEPTED_OWNERS.includes(items.host.type)) host = items.host;
