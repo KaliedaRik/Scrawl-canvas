@@ -131,7 +131,7 @@
 <p>Several of the SC test demos have been coded up in a way that respects progressive enhancement - for example test demo <a href="../../demo/filters-004.html">Filters-004</a> has been written with fallback content between the <code>&lt;canvas&gt;</code> tags to include a placeholder image of the canvas scene, alongside an appropriately hidden <code>&lt;div&gt;</code> to contain the <code>&lt;img&gt;</code> assets which are used by the the canvas but should never appear elsewhere in the web page.</p>
 <h4 id="advanced-canvas-related-functionality">Advanced canvas-related functionality</h4>
 <p>Over the past few years browser developers have made excellent progress towards bringing their <code>&lt;canvas&gt;</code> element functionality, and support for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a>, into closer alignment with the (ever evolving) <a href="https://html.spec.whatwg.org/multipage/canvas.html">Canvas standards</a>. </p>
-<p>SC, as a philosophy, tries to support (and simplify) as much of the Canvas API as it can. Making sure that SC-supported canvases run in lesser-know parts of the web page is also of legitimate interest - with the following caveats:</p>
+<p>SC, as a philosophy, tries to support (and simplify) as much of the Canvas API as it can. Making sure that SC-supported canvases can run in lesser-know parts of the web page is also of legitimate interest - with the following caveats:</p>
 <ul>
 <li>SC actively avoids the Canvas API's <a href="https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas">OffscreenCanvas interface</a> - SC does not work in web workers, nor are there any plans to make it work in them.</li>
 <li>SC has no interest in supporting <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API">WebGL</a>- or <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API">WebGPU</a>-driven canvas displays either externally, or internally within the repo code base. It can consume WebGL/WebGPU <code>&lt;canvas&gt;-based</code> output supplied by 3rd party code.</li>
@@ -161,15 +161,76 @@
 <h4 id="responsive-assets">Responsive assets</h4>
 <p>See the <a href="sc-assets.html">SC asset management and use</a> page in the Runbook for more information on how SC handles responsive assets.</p>
 <h4 id="canvas-fit">Canvas fit</h4>
-<p>[TODO - write up.]</p>
+<p>In the <a href="https://drafts.csswg.org/css-images/#the-object-fit">CSS Images Module Level 3</a> specification, the <code>object-fit</code> property <em>" specifies how the contents of a replaced element should be fitted to the box established by its used height and width."</em> The <code>&lt;canvas&gt;</code> element (according to MDN) can be treated as a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element">replaced element</a>, but only in <em>"specific cases"</em>. Thus it is up to each browser to decide whether the <code>object-fit</code> property can be applied to <code>&lt;canvas&gt;</code> elements.</p>
+<p>As a result of the above, and because of the way SC works under-the-hood, SC (very loosely) emulates the CSS <code>object-fit</code> property for the <code>&lt;canvas&gt;</code> elements it manages. Dev-users can mark up their HTML to tell SC to fit a canvas into its parent element in a given way:</p>
+<pre><code>&lt;div class="canvas-container"&gt;
+  &lt;canvas 
+    id="mycanvas" 
+    data-scrawl-canvas
+    data-is-responsive="true" 
+    data-base-width="1000" 
+    data-base-height="1000" 
+    data-fit="cover"
+  &gt;&lt;/canvas&gt;
+&lt;/div&gt;</code></pre>
+<p>The code for managing this emulation can be found in the <a href="../source/factory/cell.html">factory/cell.js</a> file - specifically the <code>cell.show()</code> function. Additional details can be found in the <a href="sc-animation-systems.html">Animation and the Display cycle</a> page of this Runbook.</p>
 <h4 id="tracking-canvas-shape-and-size">Tracking Canvas shape and size</h4>
-<p>[TODO - write up.]</p>
-<p>Object fit - <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element">replaced elements</a><br />
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API">Resize Observer API</a></p>
+<p>SC implements functionality to continually observe the dimensions of Stack and Canvas artefact elements, and gives dev-users a set of function hooks where they can implement changes to the canvas/stack display when various trigger measurements are crossed. This functionality is defined in the <a href="../source/mixin/display-shape.html">mixin/display-shape.js</a> file. </p>
+<p>The SC implementation monitors not only for changes in size - <code>smallest, smaller, regular, larger, largest</code> - but also for changes in shape: <code>banner, landscape, rectangle, portrait, skyscraper</code>. The break points between each of these can be set by the dev-user. Test demo examples of the functionality in action include:</p>
+<ul>
+<li><a href="../../demo/canvas-034.html">Canvas-034</a> - for Canvas artefacts</li>
+<li><a href="../../demo/dom-016.html">DOM-016</a> - for Stack artefacts</li>
+<li><a href="../../demo/modules-006.html">Modules-006</a> - a more complex use case (responsive scrollytelling)</li>
+</ul>
+<p><strong>To note:</strong> the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API">Resize Observer API</a> became widely supported across browsers in mid-2020. SC currently doesn't use resize observers for this work, but probably should. TODO: investigate and (hopefully) implement.</p>
 <h3 id="perspective-and-3d-rotation">Perspective and 3d rotation</h3>
-<p>[TODO - write up.]</p>
+<p>While any DOM block-like element can be given a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/perspective">3d perspective</a> in which its child elements can be rotated, from an SC point of view perspective only applies to Stack artefact elements. </p>
+<p>Linked to perspective is the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/perspective-origin">perspective-origin</a> attribute, which sets the position of the parent element's <a href="https://en.wikipedia.org/wiki/Vanishing_point">vanishing point</a> relative to its position on the web page.</p>
+<p>Note that SC doesn't use, or care about, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/perspective">transform perspective</a> in any of its calculations. If a dev-user tries to give an Element or Canvas artefact within a Stack a transform perspective it will be ignored as SC will overwrite the transform string to meet its own needs.</p>
+<h4 id="euler-rotation">Euler rotation</h4>
+<p>SC measures an Element or Canvas artefact's 3d rotation relative to its Stack using <a href="https://en.wikipedia.org/wiki/Euler_angles">Euler angles</a> (measured in degrees, not radians). Note that SC uses the <a href="https://simple.wikipedia.org/wiki/Pitch,_yaw,_and_roll">pitch-yaw-roll</a> metaphor for describing rotations, where:</p>
+<ul>
+<li>The <code>pitch</code> attribute describes a rotation around the display screen's horizontal (X) axis</li>
+<li>The <code>yaw</code> attribute indicates a rotation around the display screen's vertical (Y) axis</li>
+<li>The <code>roll</code> attribute (also used in 2d entity objects) measures rotation perpendicular to the display screen (the Z axis)</li>
+</ul>
+<p>Under the hood, SC uses <a href="https://en.wikipedia.org/wiki/Quaternion">quaternions</a> to store and manage artefact rotation - quaternion code can be found in the <a href="../source/untracked-factory/quaternion.html">untracked-factory/quaternion.js</a> file, while the associated vector code is kept in the <a href="../source/untracked-factory/vector.html">untracked-factory/vector.js</a> file.</p>
+<h4 id="artefact-offset">Artefact offset</h4>
+<p>SC <code>offset</code> values (which are not the same as <code>handle</code> values) indicate a translation distance from an artefact or entity's <strong><em>rotation-reflection point</em></strong> - more details of which can be found in the <a href="sc-positioning.html">SC positioning system</a> page of this Runbook.</p>
+<p>All SC artefact and entity objects include an offset for the X and Y axes. Artefacts also include an <code>offsetZ</code> attribute to cover the Z axis offset. Note that unlike other offsets, the <code>offsetZ</code> value can only be an absolute Number value, not a relative String% value.</p>
 <h3 id="user-interaction-and-the-here-object">User interaction and the <code>here</code> object</h3>
-<p>[TODO - write up.]</p>
+<p>As part of artefact initialization, every Stack and Canvas object will receive a <code>here</code> object, containing the following real-time data:</p>
+<pre><code>active                    // Boolean - is the cursor over the DOM element?
+baseActive                // Boolean - is cursor over Canvas's base Cell? (Canvas artefact only)
+devicePixelRatio          // Number
+h                         // Number - DOM element height
+inViewportBase            // Number - DOM element position relative to viewport (0 - 1)
+inViewportCenter          // Number - DOM element position relative to viewport (0 - 1)
+inViewportTop             // Number - DOM element position relative to viewport (0 - 1)
+localListener:            // Boolean - is artefact using a local listener?
+normX                     // Number: x / w
+normY                     // Number: y / h
+offsetX                   // Number: element.left + window.pageXOffset
+offsetY                   // Number: element.top + window.pageYOffset
+originalHeight            // Number - height of unrotated artefact DOM element (local here only)
+originalWidth             // Number - width of unrotated artefact DOM element (local here only)
+prefersContrast           // Boolean - user preferences setting
+prefersDarkColorScheme    // Boolean - user preferences setting
+prefersForcedColors       // Boolean - user preferences setting
+prefersInvertedColors     // Boolean - user preferences setting
+prefersReduceData         // Boolean - user preferences setting
+prefersReduceTransparency // Boolean - user preferences setting
+prefersReducedMotion      // Boolean - user preferences setting
+touches                   // [Array of touch x/y positions relative to DOM element top-left corner]
+type                      // String - 'mouse', 'pointer', 'touch'
+w                         // Number - DOM element width
+x                         // Number - cursor x position relative to DOM element top-left corner
+y                         // Number - cursor y position relative to DOM element top-left corner</code></pre>
+<h4 id="subscribing-to-here-updates-using-trackhere">Subscribing to <code>here</code> updates using <code>trackHere</code></h4>
+<p>Artefact objects have to subscribe to get <code>here</code> updates; this happens internally as part of artefact instantiation. The functionality for handling the subscription process, and managing updates, happens in the <a href="../source/core/user-interaction.html">core/user-interaction.js</a> file.</p>
+<p>Whenever a Stack or Canvas artefact is instantiated, SC will automatically subscribe it to receive <code>here</code> updates.</p>
+<p>By default SC Element artefacts do not take part in the <code>here</code> object functionality. If a dev-user ever wants an Element artefact to subscribe to <code>here</code> updates they can do so by setting the <code>artefact.trackHere</code> attribute to <code>'subscribe'</code>. Similarly to unregister any artifact, set the attribute to <code>''</code> or false.</p>
+<p>A special case arises for tracking 3d-rotated artifact elements. The normal <code>here</code> object will update <code>here</code> values on the assumption that the artefact's DOM element has not been 3d-rotated. However, those values will be inaccurate for tracking movements over rotated elements. To solve this problem, an artefact can set their <code>artefact.trackHere</code> attribute to <code>'local'</code>. Examples of this functionality can be seen in the test demos <a href="../../demo/dom-008.html">DOM-008</a> and <a href="../../demo/dom-013.html">DOM-013</a>.</p>
 <h3 id="setting-and-managing-events">Setting and managing events</h3>
 <p>[TODO - write up.]</p>
 <h2 id="canvas-artefact-notes">Canvas artefact notes</h2>

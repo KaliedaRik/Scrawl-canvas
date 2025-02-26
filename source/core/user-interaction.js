@@ -441,9 +441,9 @@ const updateUiSubscribedElement = function (art) {
 
             const touches = currentCorePosition.rawTouches;
 
-            if (touches.length) {
+            if (!here.touches) here.touches = [];
 
-                if (!here.touches) here.touches = [];
+            if (touches.length) {
 
                 here.touches.length = 0;
 

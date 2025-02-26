@@ -123,7 +123,7 @@ Several of the SC test demos have been coded up in a way that respects progressi
 #### Advanced canvas-related functionality
 Over the past few years browser developers have made excellent progress towards bringing their `<canvas>` element functionality, and support for the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), into closer alignment with the (ever evolving) [Canvas standards](https://html.spec.whatwg.org/multipage/canvas.html). 
 
-SC, as a philosophy, tries to support (and simplify) as much of the Canvas API as it can. Making sure that SC-supported canvases run in lesser-know parts of the web page is also of legitimate interest - with the following caveats:
+SC, as a philosophy, tries to support (and simplify) as much of the Canvas API as it can. Making sure that SC-supported canvases can run in lesser-know parts of the web page is also of legitimate interest - with the following caveats:
 + SC actively avoids the Canvas API's [OffscreenCanvas interface](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) - SC does not work in web workers, nor are there any plans to make it work in them.
 + SC has no interest in supporting [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)- or [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API)-driven canvas displays either externally, or internally within the repo code base. It can consume WebGL/WebGPU `<canvas>-based` output supplied by 3rd party code.
 + SC supports `<canvas>` elements using the [display-p3 color space](https://en.wikipedia.org/wiki/DCI-P3) when instructed to do so.
@@ -153,19 +153,94 @@ SC includes functionality to help manage three aspects of [responsive web design
 See the [SC asset management and use](sc-assets.html) page in the Runbook for more information on how SC handles responsive assets.
 
 #### Canvas fit
-[TODO - write up.]
+In the [CSS Images Module Level 3](https://drafts.csswg.org/css-images/#the-object-fit) specification, the `object-fit` property *" specifies how the contents of a replaced element should be fitted to the box established by its used height and width."* The `<canvas>` element (according to MDN) can be treated as a [replaced element](https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element), but only in *"specific cases"*. Thus it is up to each browser to decide whether the `object-fit` property can be applied to `<canvas>` elements.
+
+As a result of the above, and because of the way SC works under-the-hood, SC (very loosely) emulates the CSS `object-fit` property for the `<canvas>` elements it manages. Dev-users can mark up their HTML to tell SC to fit a canvas into its parent element in a given way:
+
+```
+<div class="canvas-container">
+  <canvas 
+    id="mycanvas" 
+    data-scrawl-canvas
+    data-is-responsive="true" 
+    data-base-width="1000" 
+    data-base-height="1000" 
+    data-fit="cover"
+  ></canvas>
+</div>
+```
+
+The code for managing this emulation can be found in the [factory/cell.js](../source/factory/cell.html) file - specifically the `cell.show()` function. Additional details can be found in the [Animation and the Display cycle](sc-animation-systems.html) page of this Runbook.
 
 #### Tracking Canvas shape and size
-[TODO - write up.]
+SC implements functionality to continually observe the dimensions of Stack and Canvas artefact elements, and gives dev-users a set of function hooks where they can implement changes to the canvas/stack display when various trigger measurements are crossed. This functionality is defined in the [mixin/display-shape.js](../source/mixin/display-shape.html) file. 
 
-Object fit - [replaced elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element)
-[Resize Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API)
+The SC implementation monitors not only for changes in size - `smallest, smaller, regular, larger, largest` - but also for changes in shape: `banner, landscape, rectangle, portrait, skyscraper`. The break points between each of these can be set by the dev-user. Test demo examples of the functionality in action include:
++ [Canvas-034](../../demo/canvas-034.html) - for Canvas artefacts
++ [DOM-016](../../demo/dom-016.html) - for Stack artefacts
++ [Modules-006](../../demo/modules-006.html) - a more complex use case (responsive scrollytelling)
+
+**To note:** the [Resize Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API) became widely supported across browsers in mid-2020. SC currently doesn't use resize observers for this work, but probably should. TODO: investigate and (hopefully) implement.
 
 ### Perspective and 3d rotation
-[TODO - write up.]
+While any DOM block-like element can be given a [3d perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective) in which its child elements can be rotated, from an SC point of view perspective only applies to Stack artefact elements. 
+
+Linked to perspective is the [perspective-origin](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective-origin) attribute, which sets the position of the parent element's [vanishing point](https://en.wikipedia.org/wiki/Vanishing_point) relative to its position on the web page.
+
+Note that SC doesn't use, or care about, [transform perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/perspective) in any of its calculations. If a dev-user tries to give an Element or Canvas artefact within a Stack a transform perspective it will be ignored as SC will overwrite the transform string to meet its own needs.
+
+#### Euler rotation
+SC measures an Element or Canvas artefact's 3d rotation relative to its Stack using [Euler angles](https://en.wikipedia.org/wiki/Euler_angles) (measured in degrees, not radians). Note that SC uses the [pitch-yaw-roll](https://simple.wikipedia.org/wiki/Pitch,_yaw,_and_roll) metaphor for describing rotations, where:
++ The `pitch` attribute describes a rotation around the display screen's horizontal (X) axis
++ The `yaw` attribute indicates a rotation around the display screen's vertical (Y) axis
++ The `roll` attribute (also used in 2d entity objects) measures rotation perpendicular to the display screen (the Z axis)
+
+Under the hood, SC uses [quaternions](https://en.wikipedia.org/wiki/Quaternion) to store and manage artefact rotation - quaternion code can be found in the [untracked-factory/quaternion.js](../source/untracked-factory/quaternion.html) file, while the associated vector code is kept in the [untracked-factory/vector.js](../source/untracked-factory/vector.html) file.
+
+#### Artefact offset
+SC `offset` values (which are not the same as `handle` values) indicate a translation distance from an artefact or entity's ***rotation-reflection point*** - more details of which can be found in the [SC positioning system](sc-positioning.html) page of this Runbook.
+
+All SC artefact and entity objects include an offset for the X and Y axes. Artefacts also include an `offsetZ` attribute to cover the Z axis offset. Note that unlike other offsets, the `offsetZ` value can only be an absolute Number value, not a relative String% value.
 
 ### User interaction and the `here` object
-[TODO - write up.]
+As part of artefact initialization, every Stack and Canvas object will receive a `here` object, containing the following real-time data:
+```
+active                    // Boolean - is the cursor over the DOM element?
+baseActive                // Boolean - is cursor over Canvas's base Cell? (Canvas artefact only)
+devicePixelRatio          // Number
+h                         // Number - DOM element height
+inViewportBase            // Number - DOM element position relative to viewport (0 - 1)
+inViewportCenter          // Number - DOM element position relative to viewport (0 - 1)
+inViewportTop             // Number - DOM element position relative to viewport (0 - 1)
+localListener:            // Boolean - is artefact using a local listener?
+normX                     // Number: x / w
+normY                     // Number: y / h
+offsetX                   // Number: element.left + window.pageXOffset
+offsetY                   // Number: element.top + window.pageYOffset
+originalHeight            // Number - height of unrotated artefact DOM element (local here only)
+originalWidth             // Number - width of unrotated artefact DOM element (local here only)
+prefersContrast           // Boolean - user preferences setting
+prefersDarkColorScheme    // Boolean - user preferences setting
+prefersForcedColors       // Boolean - user preferences setting
+prefersInvertedColors     // Boolean - user preferences setting
+prefersReduceData         // Boolean - user preferences setting
+prefersReduceTransparency // Boolean - user preferences setting
+prefersReducedMotion      // Boolean - user preferences setting
+touches                   // [Array of touch x/y positions relative to DOM element top-left corner]
+type                      // String - 'mouse', 'pointer', 'touch'
+w                         // Number - DOM element width
+x                         // Number - cursor x position relative to DOM element top-left corner
+y                         // Number - cursor y position relative to DOM element top-left corner
+```
+
+#### Subscribing to `here` updates using `trackHere`
+Artefact objects have to subscribe to get `here` updates; this happens internally as part of artefact instantiation. The functionality for handling the subscription process, and managing updates, happens in the [core/user-interaction.js](../source/core/user-interaction.html) file.
+
+Whenever a Stack or Canvas artefact is instantiated, SC will automatically subscribe it to receive `here` updates.
+
+By default SC Element artefacts do not take part in the `here` object functionality. If a dev-user ever wants an Element artefact to subscribe to `here` updates they can do so by setting the `artefact.trackHere` attribute to `'subscribe'`. Similarly to unregister any artifact, set the attribute to `''` or false.
+
+A special case arises for tracking 3d-rotated artifact elements. The normal `here` object will update `here` values on the assumption that the artefact's DOM element has not been 3d-rotated. However, those values will be inaccurate for tracking movements over rotated elements. To solve this problem, an artefact can set their `artefact.trackHere` attribute to `'local'`. Examples of this functionality can be seen in the test demos [DOM-008](../../demo/dom-008.html) and [DOM-013](../../demo/dom-013.html).
 
 ### Setting and managing events
 [TODO - write up.]

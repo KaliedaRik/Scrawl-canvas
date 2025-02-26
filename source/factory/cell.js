@@ -793,8 +793,6 @@ P.updateBaseHere = function (controllerHere, fit) {
 
     if (this.isBase) {
 
-        if (!this.here) this.here = {};
-
         const here = this.here,
             dims = this.currentDimensions;
 
@@ -1305,8 +1303,6 @@ P.updateHere = function () {
     const host = this.currentHost;
 
     if (host) {
-
-        if (!this.here) this.here = {};
 
         const localHere = this.here;
 
