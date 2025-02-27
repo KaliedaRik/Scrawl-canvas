@@ -243,16 +243,36 @@ By default SC Element artefacts do not take part in the `here` object functional
 A special case arises for tracking 3d-rotated artifact elements. The normal `here` object will update `here` values on the assumption that the artefact's DOM element has not been 3d-rotated. However, those values will be inaccurate for tracking movements over rotated elements. To solve this problem, an artefact can set their `artefact.trackHere` attribute to `'local'`. Examples of this functionality can be seen in the test demos [DOM-008](../../demo/dom-008.html) and [DOM-013](../../demo/dom-013.html).
 
 ### Setting and managing events
-[TODO - write up.]
+SC relies on regular [Javascript events](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events) to communicate user interactions. For convenience, SC bundles a number of closely-related mouse/touch/pointer events together to handle enter-move-down-up-leave type events across SC artefact DOM elements.
+
+SC does not use [custom events](https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events) in the code base - except for one instance in the [factory/ticker.js](../source/factory/ticker.html) file (TODO: has been deprecated and needs to be removed). Instead, SC provides dev-users with a diffuse system of function hooks which will be invoked at given points of, for example, the Display cycle.
+
+SC also provides convenience functions for creating and removing Stack and Canvas DOM element Events. Further details can be found in the [Scrawl-canvas events and signals](sc-events-signals.html) page of this Runbook.
+
+Examples of using events with Canvas and Stack artefacts can be found throughout the SC test demo suite. For instance, the test demos [Canvas-009](../../demo/canvas-009.html) and [DOM-006](../../demo/dom-006.html) include examples of using [Google Analytics](https://developers.google.com/analytics) to track user interactions with SC artefacts.
 
 ## Canvas artefact notes
-SC will wrap `<canvas>` elements into **Canvas artefact objects** under the following conditions:
+SC will wrap `<canvas>` elements into Canvas artefact objects under the following conditions:
 + Any `<canvas>` element with a `data-scrawl-canvas` attribute discovered in the DOM during page initialization.
 + The dev-user adds a new `<canvas>` element to the web page using the `scrawl.addCanvas()` function.
 + The `<canvas>` element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getCanvas('canvas-id-string')` as part of the component's mount functionality.
 
+TODO: need to mention
++ `<canvas>` data attributes
+
+### Canvases internals: SC Cell and Group objects
+TODO: need to mention
++ Base cells
++ Groups
++ Additional cells
+
+### Canvas elements and the wider page environment
++ Fit (mentioned above)
++ Scaling, and device pixel ratio
++ Wide-gamut color support
+
 ### Changes made to the `<canvas>` DOM element as SC wraps it
-SC makes extensive changes to the `<canvas>` DOM element as part of its wrapping functionality. **These changes are essential as they give SC the power to make the `<canvas>` element both responsive, and more accessible.**
+SC makes extensive changes to the `<canvas>` DOM element as part of its wrapping functionality. ***These changes are essential as they give SC the power to make the `<canvas>` element both responsive, and more accessible.***
 ```
 Before:                                         After:
 ----------------------------------------        ----------------------------------------
@@ -315,7 +335,7 @@ Before:                                         After:
 ```
 
 ## Stack artefact notes
-SC will wrap DOM elements into **Stack artefact objects** under the following conditions:
+SC will wrap DOM elements into Stack artefact objects under the following conditions:
 + Any element with a `display: block;` CSS property which has a `data-scrawl-stack` attribute discovered in the DOM during page initialization.
 + The dev-user adds a new Stack to the web page using the `scrawl.addStack()` function.
 + The Stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getStack('stack-id-string')` as part of the component's mount functionality.
@@ -382,7 +402,7 @@ Before:                                         After:
 ```
 
 ## Element artefact notes
-SC will wrap DOM elements into **Element artefact objects** under the following conditions:
+SC will wrap DOM elements into Element artefact objects under the following conditions:
 + The element is a direct child of a Stack element, discovered during page initialization.
 + The dev-user adds a new Stack containing direct child elements to the web page using the `scrawl.addStack()` function.
 + The element is a direct child of a Stack element defined in a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getStack('stack-id-string')` as part of the component's mount functionality.

@@ -232,16 +232,36 @@ y                         // Number - cursor y position relative to DOM element 
 <p>By default SC Element artefacts do not take part in the <code>here</code> object functionality. If a dev-user ever wants an Element artefact to subscribe to <code>here</code> updates they can do so by setting the <code>artefact.trackHere</code> attribute to <code>'subscribe'</code>. Similarly to unregister any artifact, set the attribute to <code>''</code> or false.</p>
 <p>A special case arises for tracking 3d-rotated artifact elements. The normal <code>here</code> object will update <code>here</code> values on the assumption that the artefact's DOM element has not been 3d-rotated. However, those values will be inaccurate for tracking movements over rotated elements. To solve this problem, an artefact can set their <code>artefact.trackHere</code> attribute to <code>'local'</code>. Examples of this functionality can be seen in the test demos <a href="../../demo/dom-008.html">DOM-008</a> and <a href="../../demo/dom-013.html">DOM-013</a>.</p>
 <h3 id="setting-and-managing-events">Setting and managing events</h3>
-<p>[TODO - write up.]</p>
+<p>SC relies on regular <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events">Javascript events</a> to communicate user interactions. For convenience, SC bundles a number of closely-related mouse/touch/pointer events together to handle enter-move-down-up-leave type events across SC artefact DOM elements.</p>
+<p>SC does not use <a href="https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events">custom events</a> in the code base - except for one instance in the <a href="../source/factory/ticker.html">factory/ticker.js</a> file (TODO: has been deprecated and needs to be removed). Instead, SC provides dev-users with a diffuse system of function hooks which will be invoked at given points of, for example, the Display cycle.</p>
+<p>SC also provides convenience functions for creating and removing Stack and Canvas DOM element Events. Further details can be found in the <a href="sc-events-signals.html">Scrawl-canvas events and signals</a> page of this Runbook.</p>
+<p>Examples of using events with Canvas and Stack artefacts can be found throughout the SC test demo suite. For instance, the test demos <a href="../../demo/canvas-009.html">Canvas-009</a> and <a href="../../demo/dom-006.html">DOM-006</a> include examples of using <a href="https://developers.google.com/analytics">Google Analytics</a> to track user interactions with SC artefacts.</p>
 <h2 id="canvas-artefact-notes">Canvas artefact notes</h2>
-<p>SC will wrap <code>&lt;canvas&gt;</code> elements into <strong>Canvas artefact objects</strong> under the following conditions:</p>
+<p>SC will wrap <code>&lt;canvas&gt;</code> elements into Canvas artefact objects under the following conditions:</p>
 <ul>
 <li>Any <code>&lt;canvas&gt;</code> element with a <code>data-scrawl-canvas</code> attribute discovered in the DOM during page initialization.</li>
 <li>The dev-user adds a new <code>&lt;canvas&gt;</code> element to the web page using the <code>scrawl.addCanvas()</code> function.</li>
 <li>The <code>&lt;canvas&gt;</code> element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getCanvas('canvas-id-string')</code> as part of the component's mount functionality.</li>
 </ul>
+<p>TODO: need to mention</p>
+<ul>
+<li><code>&lt;canvas&gt;</code> data attributes</li>
+</ul>
+<h3 id="canvases-internals-sc-cell-and-group-objects">Canvases internals: SC Cell and Group objects</h3>
+<p>TODO: need to mention</p>
+<ul>
+<li>Base cells</li>
+<li>Groups</li>
+<li>Additional cells</li>
+</ul>
+<h3 id="canvas-elements-and-the-wider-page-environment">Canvas elements and the wider page environment</h3>
+<ul>
+<li>Fit (mentioned above)</li>
+<li>Scaling, and device pixel ratio</li>
+<li>Wide-gamut color support</li>
+</ul>
 <h3 id="changes-made-to-the-canvas-dom-element-as-sc-wraps-it">Changes made to the <code>&lt;canvas&gt;</code> DOM element as SC wraps it</h3>
-<p>SC makes extensive changes to the <code>&lt;canvas&gt;</code> DOM element as part of its wrapping functionality. <strong>These changes are essential as they give SC the power to make the <code>&lt;canvas&gt;</code> element both responsive, and more accessible.</strong></p>
+<p>SC makes extensive changes to the <code>&lt;canvas&gt;</code> DOM element as part of its wrapping functionality. <strong><em>These changes are essential as they give SC the power to make the <code>&lt;canvas&gt;</code> element both responsive, and more accessible.</em></strong></p>
 <pre><code>Before:                                         After:
 ----------------------------------------        ----------------------------------------
 ‹canvas                                         ‹canvas 
@@ -301,7 +321,7 @@ y                         // Number - cursor y position relative to DOM element 
                                                   ›‹/div›
                                                 ‹/canvas›</code></pre>
 <h2 id="stack-artefact-notes">Stack artefact notes</h2>
-<p>SC will wrap DOM elements into <strong>Stack artefact objects</strong> under the following conditions:</p>
+<p>SC will wrap DOM elements into Stack artefact objects under the following conditions:</p>
 <ul>
 <li>Any element with a <code>display: block;</code> CSS property which has a <code>data-scrawl-stack</code> attribute discovered in the DOM during page initialization.</li>
 <li>The dev-user adds a new Stack to the web page using the <code>scrawl.addStack()</code> function.</li>
@@ -365,7 +385,7 @@ y                         // Number - cursor y position relative to DOM element 
                                                   &gt;&lt;/div&gt;
                                                 &lt;/div&gt;</code></pre>
 <h2 id="element-artefact-notes">Element artefact notes</h2>
-<p>SC will wrap DOM elements into <strong>Element artefact objects</strong> under the following conditions:</p>
+<p>SC will wrap DOM elements into Element artefact objects under the following conditions:</p>
 <ul>
 <li>The element is a direct child of a Stack element, discovered during page initialization.</li>
 <li>The dev-user adds a new Stack containing direct child elements to the web page using the <code>scrawl.addStack()</code> function.</li>

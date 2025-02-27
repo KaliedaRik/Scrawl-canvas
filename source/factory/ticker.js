@@ -424,6 +424,7 @@ P.changeSubscriberDirection = function () {
 // #### Events
 
 // `makeTickerUpdateEvent` - internal function - generates a new CustomEvent object.
+// + WARNING: Given that this is the only place in the SC codebase that dispatches custom events, and the general SC philosophy to prefer function hooks over custom events, alongside the existence of timeline actions, this functionality is DEPRECATED and will be removed in a future update.
 P.makeTickerUpdateEvent = function() {
 
     return new CustomEvent(TICKERUPDATE, {
@@ -609,6 +610,7 @@ P.fn = function (reverseOrder) {
             }
 
             // Dispatch the Ticker Event, if required.
+            // + WARNING: Given that this is the only place in the SC codebase that dispatches custom events, and the general SC philosophy to prefer function hooks over custom events, alongside the existence of timeline actions, this functionality is DEPRECATED and will be removed in a future update.
             if (eventChoke) {
 
                 eTime = this.lastEvent + eventChoke;
