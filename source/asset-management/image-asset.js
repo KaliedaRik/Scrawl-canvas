@@ -11,7 +11,7 @@
 // #### Imports
 import { artefact, canvas, cell, constructors, group } from '../core/library.js';
 
-import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_obj, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -75,7 +75,7 @@ P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

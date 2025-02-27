@@ -3,7 +3,7 @@
 
 
 // #### Imports
-import { doCreate, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from './state.js';
 
@@ -61,7 +61,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality

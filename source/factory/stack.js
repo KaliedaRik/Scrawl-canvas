@@ -30,7 +30,7 @@
 // #### Imports
 import { artefact, constructors, group, purge, stack } from '../core/library.js';
 
-import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { domShow } from '../core/document.js';
 
@@ -166,7 +166,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality

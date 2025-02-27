@@ -34,7 +34,7 @@ import { domShow } from '../core/document.js';
 
 import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-elements.js";
 
-import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { uiSubscribedElements } from '../core/user-interaction.js';
 
@@ -345,7 +345,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality

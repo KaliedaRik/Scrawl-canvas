@@ -9,7 +9,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, xt, λcloneError, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -113,7 +113,7 @@ P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

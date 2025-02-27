@@ -34,7 +34,7 @@
 // #### Imports
 import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { getIgnorePixelRatio, getPixelRatio, currentCorePosition } from '../core/user-interaction.js';
 
@@ -244,7 +244,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality

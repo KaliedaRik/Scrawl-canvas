@@ -18,7 +18,7 @@
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
@@ -291,7 +291,7 @@ P.handlePacketAnchor = function (copy, items) {
 
 // #### Clone management
 // TODO - this functionality is currently disabled, need to enable it and make it work properly
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

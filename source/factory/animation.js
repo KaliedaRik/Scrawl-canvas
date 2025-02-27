@@ -17,7 +17,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { forceUpdate } from '../helper/system-flags.js';
 
@@ -106,7 +106,7 @@ P.saveAsPacket = function () {
 
 // #### Clone management
 // This functionality is disabled for Animation objects
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

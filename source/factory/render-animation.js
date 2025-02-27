@@ -25,7 +25,7 @@ import { clear, compile, show } from '../core/display-cycle.js';
 
 import { makeAnimationObserver } from '../core/events.js';
 
-import { doCreate, isa_boolean, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_boolean, mergeOver, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { animateAdd, animateIncludes, animateRemove } from '../core/animation-loop.js';
 
@@ -226,7 +226,7 @@ P.saveAsPacket = function () {
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management
