@@ -217,6 +217,18 @@ export const ZERO_STR = '';
 
 Note that repo-devs don't have any proof that this helps cut down on unnecessary work. It's just part of the SC ethos to only define constants once, and to define/export a constant from this file if they find themselves using it in different modules.
 
+### Shared functions
+Similar to shared constants, SC defines a set of exported shared variables in the [helper/utilities.js](../source/helper/utilities.html) file. These include:
++ Array manipulation functions - `pushUnique()`, `removeItem()`
++ Correction functions - `correctAngle()`, `correctForZero()`, `constrain()`, `interpolate()`
++ Default functions (differentiated by what they return) - `λnull()`, `λfirstArg()`, `λcloneError()`
++ Easing functions, which are all gathered in a single object - `easeEngines.out()`, `easeEngines.in()`
++ Existence check functions - exists `xt()`, all exist `xta()`, one exists `xto()`, return the first existing `xtGet()`
++ Generation functions - `generateUuid()`, `generateUniqueString()`
++ Manipulation functions - `addStrings()`, `convertTime()`
++ Object manipulation functions - `mergeOver()`, `mergeDiscard()`
++ Type checking functions, which all begin with `isa_` - `isa_boolean()`, `isa_fn()`, `isa_canvas()`
+
 ### System flags
 SC uses flags - commonly Boolean - for much of its internal signalling and communications work. Many of the flags related to system state get defined in the [helper/system-flags.js](../source/helper/system-flags.html) file. For example:
 

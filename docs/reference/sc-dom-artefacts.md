@@ -145,34 +145,11 @@ SC, as a philosophy, tries to support (and simplify) as much of the Canvas API a
 
 ### Responsiveness
 SC includes functionality to help manage three aspects of [responsive web design](https://www.smashingmagazine.com/2011/01/guidelines-for-responsive-web-design/) - in particular as it applies to the (notoriously unresponsive) `<canvas>` element:
-+ **Responsive assets:** SC makes use of responsive [images](https://developer.mozilla.org/en-US/docs/Web/HTML/Responsive_images) and [videos](https://scottjehl.com/posts/using-responsive-video/) as assets for the Picture entity and Pattern style objects.
-+ **Canvas fit:** SC emulates the [CSS object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) property for `<canvas>` elements controlled by a Canvas artefact.
-+ **Canvas shape and size:** SC includes functionality to keep track of a Canvas or Stack artefact's current shape and size within its web page environment - this is similar to the concept of [CSS containers](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries) though implemented in a different way.
++ **Responsive assets:** SC makes use of responsive [images](https://developer.mozilla.org/en-US/docs/Web/HTML/Responsive_images) and [videos](https://scottjehl.com/posts/using-responsive-video/) as assets for the Picture entity and Pattern style objects. See the [SC asset management and use](sc-assets.html) page in the Runbook for more information on how SC handles responsive assets.
++ **Canvas fit:** SC emulates the [CSS object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) property for `<canvas>` elements controlled by a Canvas artefact. See below for more details about Canvas fit.
++ **Artifact element shape and size:** SC includes functionality to keep track of a Canvas or Stack artefact's current shape and size within its web page environment - this is similar to the concept of [CSS containers](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries) though implemented in a different way.
 
-#### Responsive assets
-See the [SC asset management and use](sc-assets.html) page in the Runbook for more information on how SC handles responsive assets.
-
-#### Canvas fit
-In the [CSS Images Module Level 3](https://drafts.csswg.org/css-images/#the-object-fit) specification, the `object-fit` property *" specifies how the contents of a replaced element should be fitted to the box established by its used height and width."* The `<canvas>` element (according to MDN) can be treated as a [replaced element](https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element), but only in *"specific cases"*. Thus it is up to each browser to decide whether the `object-fit` property can be applied to `<canvas>` elements.
-
-As a result of the above, and because of the way SC works under-the-hood, SC (very loosely) emulates the CSS `object-fit` property for the `<canvas>` elements it manages. Dev-users can mark up their HTML to tell SC to fit a canvas into its parent element in a given way:
-
-```
-<div class="canvas-container">
-  <canvas 
-    id="mycanvas" 
-    data-scrawl-canvas
-    data-is-responsive="true" 
-    data-base-width="1000" 
-    data-base-height="1000" 
-    data-fit="cover"
-  ></canvas>
-</div>
-```
-
-The code for managing this emulation can be found in the [factory/cell.js](../source/factory/cell.html) file - specifically the `cell.show()` function. Additional details can be found in the [Animation and the Display cycle](sc-animation-systems.html) page of this Runbook.
-
-#### Tracking Canvas shape and size
+#### Tracking Artefact element shape and size
 SC implements functionality to continually observe the dimensions of Stack and Canvas artefact elements, and gives dev-users a set of function hooks where they can implement changes to the canvas/stack display when various trigger measurements are crossed. This functionality is defined in the [mixin/display-shape.js](../source/mixin/display-shape.html) file. 
 
 The SC implementation monitors not only for changes in size - `smallest, smaller, regular, larger, largest` - but also for changes in shape: `banner, landscape, rectangle, portrait, skyscraper`. The break points between each of these can be set by the dev-user. Test demo examples of the functionality in action include:
@@ -245,7 +222,7 @@ A special case arises for tracking 3d-rotated artifact elements. The normal `her
 ### Setting and managing events
 SC relies on regular [Javascript events](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events) to communicate user interactions. For convenience, SC bundles a number of closely-related mouse/touch/pointer events together to handle enter-move-down-up-leave type events across SC artefact DOM elements.
 
-SC does not use [custom events](https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events) in the code base - except for one instance in the [factory/ticker.js](../source/factory/ticker.html) file (TODO: has been deprecated and needs to be removed). Instead, SC provides dev-users with a diffuse system of function hooks which will be invoked at given points of, for example, the Display cycle.
+SC does not use [custom events](https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events) in the code base. Instead, SC provides dev-users with a diffuse system of function hooks which will be invoked at given points of, for example, the Display cycle.
 
 SC also provides convenience functions for creating and removing Stack and Canvas DOM element Events. Further details can be found in the [Scrawl-canvas events and signals](sc-events-signals.html) page of this Runbook.
 
@@ -257,19 +234,47 @@ SC will wrap `<canvas>` elements into Canvas artefact objects under the followin
 + The dev-user adds a new `<canvas>` element to the web page using the `scrawl.addCanvas()` function.
 + The `<canvas>` element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getCanvas('canvas-id-string')` as part of the component's mount functionality.
 
-TODO: need to mention
-+ `<canvas>` data attributes
+As SC wraps a `<canvas>` element into its artefact object, it will read and action the element's `data-` attributes:
 
-### Canvases internals: SC Cell and Group objects
-TODO: need to mention
-+ Base cells
-+ Groups
-+ Additional cells
+```
+<canvas> data- attribute      JS-constructor equivalent     Values
+----------------------------  ----------------------------  ----------------------------
+data-base-background-color    backgroundColor               Any CSS color string
+data-base-clear-alpha         clearAlpha                    'number'
+data-base-height              baseHeight                    'number'
+data-base-width               baseWidth                     'number'
+data-canvas-color-space       canvasColorSpace              '' or 'display-p3'
+data-description              description                   ARIA description
+data-fit                      fit                           'cover', 'contain', 'fill', 'none'
+data-is-responsive            isResponsive                  'boolean'
+data-label                    label                         ARIA label
+height                        height                        'number'
+width                         width                         'number'
+```
 
-### Canvas elements and the wider page environment
-+ Fit (mentioned above)
-+ Scaling, and device pixel ratio
-+ Wide-gamut color support
+#### Accessibility
+SC offers an easy way for dev-users to start making their canvases more accessible. The `label` and `description` attributes get written into `<div>` elements between the `<canvas>` element's tags, which the element then refers to through its `aria-labelledby` and `aria-describedby` attributes.
+
+#### Responsiveness
+SC will only do the work to make a `<canvas>` element responsive when the dev-user tells it to. This happens through the `isResponsive` attribute. Note that when this attribute is `true` SC will override any `width` and `height` values set on the Canvas.
+
+Separately, every Canvas artefact, when created, generates its own `base` Cell object - a `<canvas>` element which is hidden, not added to the DOM (see below). Dev-users can set the dimensions of this `base` Cell independently of the `<canvas>` element's dimensions using the `baseWidth` and `baseHeight` attributes.
+
+Almost all of the painting work that SC does happens on `base` Cell objects, whose data only gets copied over to their display `<canvas>` once, at the end of each [Display cycle](sc-animation-systems.html). It is at this point that SC will attempt to fit the `base` Cell into the display `<canvas>`, emulating the CSS `object-fit` property (see below). Dev-users can set how they want the base to fit into the display using the `fit` attribute.
+
+#### Color
+To set a background color for the `base` Cell, dev-users can use the `backgroundColor` attribute. The attribute accepts any valid color string as defined in the [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/) specification. 
+
+> **tl;dr:** SC does not support [Level 5](https://www.w3.org/TR/css-color-5) relative colors, CMYK, or the CSS `color-mix()` and `contrast-color()` functions, nor are there any plans to do so at this time. Repo-devs need to keep these new and evolving specifications under review, and consider adding support for them in SC as-and-when they become better supported by browsers.
+
+See below for how SC handles the wide-gamut `display-p3` color space.
+
+#### Ghosting effect
+SC includes functionality to display a [ghosting effect](https://brush.ninja/glossary/animation/ghosting/) in a canvas animation. The effect applies to everything moving in the animation - see test demo [Canvas-002](../../demo/canvas-002.html) for an example of the effect in action.
+
+Dev-users can create a ghosting effect by setting the `clearAlpha` attribute - values above `0.95` usually generate a noticable effect - though the strength of the effect can vary between browsers and device screens.
+
+Note that the effect will not work in situations where the `base` Cell also has a background color.
 
 ### Changes made to the `<canvas>` DOM element as SC wraps it
 SC makes extensive changes to the `<canvas>` DOM element as part of its wrapping functionality. ***These changes are essential as they give SC the power to make the `<canvas>` element both responsive, and more accessible.***
@@ -333,6 +338,36 @@ Before:                                         After:
                                                   ›‹/div›
                                                 ‹/canvas›
 ```
+
+### Canvases internals: SC Cell and Group objects
+TODO: need to mention
++ Base cells
++ Groups
++ Additional cells
+
+### Canvas elements and the wider page environment
++ Scaling, and device pixel ratio
++ Wide-gamut color support
+
+#### Canvas fit
+In the [CSS Images Module Level 3](https://drafts.csswg.org/css-images/#the-object-fit) specification, the `object-fit` property *" specifies how the contents of a replaced element should be fitted to the box established by its used height and width."* The `<canvas>` element (according to MDN) can be treated as a [replaced element](https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element), but only in *"specific cases"*. Thus it is up to each browser to decide whether the `object-fit` property can be applied to `<canvas>` elements.
+
+As a result of the above, and because of the way SC works under-the-hood, SC (very loosely) emulates the CSS `object-fit` property for the `<canvas>` elements it manages. Dev-users can mark up their HTML to tell SC to fit a canvas into its parent element in a given way:
+
+```
+<div class="canvas-container">
+  <canvas 
+    id="mycanvas" 
+    data-scrawl-canvas
+    data-is-responsive="true" 
+    data-base-width="1000" 
+    data-base-height="1000" 
+    data-fit="cover"
+  ></canvas>
+</div>
+```
+
+The code for managing this emulation can be found in the [factory/cell.js](../source/factory/cell.html) file - specifically the `cell.show()` function. Additional details can be found in the [Animation and the Display cycle](sc-animation-systems.html) page of this Runbook.
 
 ## Stack artefact notes
 SC will wrap DOM elements into Stack artefact objects under the following conditions:

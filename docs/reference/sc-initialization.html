@@ -212,6 +212,19 @@ export const WIDTH = 'width';
 export const ZERO_PATH = 'M0,0';
 export const ZERO_STR = '';</code></pre>
 <p>Note that repo-devs don't have any proof that this helps cut down on unnecessary work. It's just part of the SC ethos to only define constants once, and to define/export a constant from this file if they find themselves using it in different modules.</p>
+<h3 id="shared-functions">Shared functions</h3>
+<p>Similar to shared constants, SC defines a set of exported shared variables in the <a href="../source/helper/utilities.html">helper/utilities.js</a> file. These include:</p>
+<ul>
+<li>Array manipulation functions - <code>pushUnique()</code>, <code>removeItem()</code></li>
+<li>Correction functions - <code>correctAngle()</code>, <code>correctForZero()</code>, <code>constrain()</code>, <code>interpolate()</code></li>
+<li>Default functions (differentiated by what they return) - <code>λnull()</code>, <code>λfirstArg()</code>, <code>λcloneError()</code></li>
+<li>Easing functions, which are all gathered in a single object - <code>easeEngines.out()</code>, <code>easeEngines.in()</code></li>
+<li>Existence check functions - exists <code>xt()</code>, all exist <code>xta()</code>, one exists <code>xto()</code>, return the first existing <code>xtGet()</code></li>
+<li>Generation functions - <code>generateUuid()</code>, <code>generateUniqueString()</code></li>
+<li>Manipulation functions - <code>addStrings()</code>, <code>convertTime()</code></li>
+<li>Object manipulation functions - <code>mergeOver()</code>, <code>mergeDiscard()</code></li>
+<li>Type checking functions, which all begin with <code>isa_</code> - <code>isa_boolean()</code>, <code>isa_fn()</code>, <code>isa_canvas()</code></li>
+</ul>
 <h3 id="system-flags">System flags</h3>
 <p>SC uses flags - commonly Boolean - for much of its internal signalling and communications work. Many of the flags related to system state get defined in the <a href="../source/helper/system-flags.html">helper/system-flags.js</a> file. For example:</p>
 <pre><code>let mouseChanged = false;

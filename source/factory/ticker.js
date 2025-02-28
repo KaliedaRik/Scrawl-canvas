@@ -20,11 +20,6 @@
 // Tickers can be controlled through a set of trigger functions: __run, halt, reverse, resume, seekTo, seekFor, complete, reset__.
 // + We can add ___Ticker hook functions___ to each of these trigger functions.
 //
-// A Ticker can be made to dispatch a [DOM Custom Event](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent) at regular intervals as it runs, by setting its `eventChoke` attribute to a Number value (representing milliseconds) greater than `0`.
-// + The Custom Event is named `tickerupdate`.
-// + Its `detail` object includes the following attributes: __name__ (Ticker name-String); __type__ (`Ticker`); __tick__ (milliseconds since Ticker started running); __reverseTick__ (milliseconds remaining until Ticker completes its current cycle).
-// + The Event bubbles, and is cancelable.
-//
 // Tickers are very closely associated with Tweens.
 // + Each Ticker can have more than one Tween (and 0 or more Actions) subscribed to it.
 // + Tweens and Actions can be told to subscribe to a Ticker when they are created; they can change their Ticker subscription at any time.
@@ -78,7 +73,6 @@ const Ticker = function (items = Ωempty) {
     this.startTime = 0;
     this.currentTime = 0;
     this.tick = 0;
-    this.lastEvent = 0;
 
     if (items.subscribers) this.subscribe(items.subscribers);
 
@@ -123,9 +117,6 @@ const defaultAttributes = {
 // + A value of `0` indicates that the Ticker should repeat itself forever, until its `halt`, `seekTo`, `seekFor`, `complete` or `reset` functions are triggered.
 // + Note that Tween and Action animation direction is determined by those objects (via their `reverseOnCycleEnd` and `reversed` flags). Tickers always repeat in a forwards direction - they loop back to their start; they never reverse time.
     cycles: 1,
-
-// __eventChoke__ - positive Number representing the time to elapse before the Ticker creates and emits another event. A value of `0` stops the Ticker emitting events as it runs.
-    eventChoke: 0,
 
 // __observer__ - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object
     observer: null,
@@ -421,24 +412,6 @@ P.changeSubscriberDirection = function () {
     return this;
 };
 
-// #### Events
-
-// `makeTickerUpdateEvent` - internal function - generates a new CustomEvent object.
-// + WARNING: Given that this is the only place in the SC codebase that dispatches custom events, and the general SC philosophy to prefer function hooks over custom events, alongside the existence of timeline actions, this functionality is DEPRECATED and will be removed in a future update.
-P.makeTickerUpdateEvent = function() {
-
-    return new CustomEvent(TICKERUPDATE, {
-        detail: {
-            name: this.name,
-            type: T_TICKER,
-            tick: this.tick,
-            reverseTick: this.effectiveDuration - this.tick
-        },
-        bubbles: true,
-        cancelable: true
-    });
-};
-
 
 // #### Animation
 
@@ -526,8 +499,7 @@ P.fn = function (reverseOrder) {
 
     const startTime = this.startTime,
         cycles = this.cycles,
-        effectiveDuration = this.effectiveDuration,
-        eventChoke = this.eventChoke;
+        effectiveDuration = this.effectiveDuration;
 
     let i, iz, subs, eTime, now, e,
         currentTime, tick,
@@ -606,21 +578,6 @@ P.fn = function (reverseOrder) {
                 for (i = 0, iz = subs.length; i < iz; i++) {
 
                     subs[i].update(result);
-                }
-            }
-
-            // Dispatch the Ticker Event, if required.
-            // + WARNING: Given that this is the only place in the SC codebase that dispatches custom events, and the general SC philosophy to prefer function hooks over custom events, alongside the existence of timeline actions, this functionality is DEPRECATED and will be removed in a future update.
-            if (eventChoke) {
-
-                eTime = this.lastEvent + eventChoke;
-                now = _now();
-
-                if (eTime < now) {
-
-                    e = this.makeTickerUpdateEvent();
-                    window.dispatchEvent(e);
-                    this.lastEvent = now;
                 }
             }
 
