@@ -18,7 +18,7 @@
     <nav>
         <a href=sc-objects-overview.html>Previous</a>
         <a href="index.html">Contents</a>
-        <a href=sc-animation-systems.html>Next</a>
+        <a href=sc-groups-cells.html>Next</a>
     </nav>
 
     <main>
@@ -74,6 +74,9 @@
 </ul>
 <p><code>&lt;canvas&gt;</code> elements can also be part of an Stack, with the same positioning functionality as afforded to Element objects. They cannot be their own Stack.</p>
 <p>SC stacks can also (in theory) include other Stacks - nested stacks - though repo-devs don't currently test such functionality.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> Manipulating the DOM - particularly during SC initialization as the web page completes loading - may sometimes lead to page <a href="https://developer.mozilla.org/en-US/docs/Glossary/CLS">layout shifts</a> around SC artefact DOM elements. It is up to the dev-user to accommodate any such issues in their projects.</p>
+</blockquote>
 <h3 id="css-considerations">CSS considerations</h3>
 <p>The functionality that handles the transfer of artefact object state (position, rotation, etc) into the page DOM can be found in the <a href="../source/mixin/dom.html">mixin/dom.js</a> file. This work happens as part of the <a href="sc-animation-systems.html">SC Display cycle</a>, and is achieved through <a href="https://www.freecodecamp.org/news/inline-style-in-html/">inline CSS updates</a>. Note that this may occasionally come into conflict with other JS libraries that use inline styling as part of their functionality; it's up to dev-users to manage and mitigate any such conflicts that arise.</p>
 <p>The CSS properties that SC uses are:</p>
@@ -97,25 +100,26 @@
 <p>For Stacks and Elements, the <a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/">accessibility considerations</a> are the same as for any other DOM element in the web page, and the responsibility for making these elements more accessible sit with the dev-user, not SC. Stack and Element animations can be controlled in the same way as Canvas animations - as described in the accessibility page of this Runbook.</p>
 <p>SC does provide an easy way for the dev-user to detect the various <a href="https://www.smashingmagazine.com/2023/08/css-accessibility-inclusion-user-choice/">preference media features</a> that the end-user may have set on their current device, which can be accessed through any SC artefact object as follows:</p>
 <ul>
-<li><strong><em>prefers-contrast:</em></strong> <code>artefact.here.prefersContrast</code> - the end-user can choose between four color contrast settings - 'no-preference', 'less', 'more', 'custom'; SC treats the choice as a binary between 'more' (<code>true</code>) and the others (<code>false</code>).</li>
-<li><strong><em>prefers-reduced-motion:</em></strong> <code>artefact.here.prefersReducedMotion</code> - when <code>true</code> ('reduce'), the end-user wants to see minimal animation on the web page - long-running animations should complete within 5 seconds.</li>
-<li><strong><em>prefers-color-scheme:</em></strong> <code>artefact.here.prefersDarkColorScheme</code> - when <code>true</code> ('dark'), the end-user expects the web page to present using lighter text on a darker background.</li>
-<li><strong><em>prefers-reduced-transparency:</em></strong> <code>artefact.here.prefersReduceTransparency</code> - when <code>true</code> ('reduce'), the end-user expects the web page to present with a minimal amount of transparency.</li>
-<li><strong><em>prefers-reduced-data:</em></strong> <code>artefact.here.prefersReduceData</code> - when <code>true</code> ('reduce'), the end-user is asking for less data to be sent to their device.</li>
-<li><strong><em>forced-colors:</em></strong> <code>artefact.here.prefersForcedColors</code> - when <code>true</code> ('active'), the end user has their own color scheme which, if possible, they want the web page to use. Or, alternatively, use the device's <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/system-color">system colors</a>.</li>
-<li><strong><em>inverted-colors:</em></strong> <code>artefact.here.prefersInvertedColors</code> - when <code>true</code> ('inverted'), the end-user expects web page colors to present as their diametrically opposite color.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors">forced-colors</a>: <code>artefact.here.prefersForcedColors</code> - when <code>true</code> ('active'), the end user has their own color scheme which, if possible, they want the web page to use. Or, alternatively, use the device's <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/system-color">system colors</a>.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/inverted-colors">inverted-colors</a>: <code>artefact.here.prefersInvertedColors</code> - when <code>true</code> ('inverted'), the end-user expects web page colors to present as their diametrically opposite color.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme">prefers-color-scheme</a>: <code>artefact.here.prefersDarkColorScheme</code> - when <code>true</code> ('dark'), the end-user expects the web page to present using lighter text on a darker background.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast">prefers-contrast</a>: <code>artefact.here.prefersContrast</code> - the end-user can choose between four color contrast settings - 'no-preference', 'less', 'more', 'custom'; SC treats the choice as a binary between 'more' (<code>true</code>) and the others (<code>false</code>).</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-data">prefers-reduced-data</a>: <code>artefact.here.prefersReduceData</code> - when <code>true</code> ('reduce'), the end-user is asking for less data to be sent to their device.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion">prefers-reduced-motion</a>: <code>artefact.here.prefersReducedMotion</code> - when <code>true</code> ('reduce'), the end-user wants to see minimal animation on the web page - long-running animations should complete within 5 seconds.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency">prefers-reduced-transparency</a>: <code>artefact.here.prefersReduceTransparency</code> - when <code>true</code> ('reduce'), the end-user expects the web page to present with a minimal amount of transparency.</li>
 </ul>
 <p>SC sets the values of these <code>here</code> attributes during page load, and then listens for changes in them when, for instance, the user changes the settings in their device's operating system while the page is open. This functionality can be found in the <a href="../source/helper/system-flags.html">helper/system-flags.js</a> and <a href="../source/core/user-interaction.html">core/user-interaction.js</a> files.</p>
 <p>Beyond that, it is up to the dev-user to code up functions to handle the initial states of, and subsequent changes to, these user preferences. They do this by setting their functions on artefact object hook attributes (defined in the <a href="../source/mixin/dom.html">mixin/dom.js</a> file):</p>
 <ul>
 <li><strong><em>prefersContrast:</em></strong> - <code>moreContrastAction</code> and <code>otherContrastAction</code></li>
-<li><strong><em>prefersReducedMotion:</em></strong>  <code>reduceMotionAction</code> and <code>noPreferenceMotionAction</code></li>
 <li><strong><em>prefersDarkColorScheme:</em></strong> <code>colorSchemeDarkAction</code> and <code>colorSchemeLightAction</code></li>
-<li><strong><em>prefersReduceTransparency:</em></strong> <code>reduceTransparencyAction</code> and <code>noPreferenceTransparencyAction</code></li>
-<li><strong><em>prefersReduceData:</em></strong> <code>reduceDataAction</code> and <code>noPreferenceDataAction</code></li>
 <li><strong><em>prefersForcedColors:</em></strong> <code>activeForcedColorsAction</code> and <code>noForcedColorsAction</code></li>
 <li><strong><em>prefersInvertedColors:</em></strong> <code>invertedColorsAction</code> and <code>normalColorsAction</code></li>
+<li><strong><em>prefersReduceData:</em></strong> <code>reduceDataAction</code> and <code>noPreferenceDataAction</code></li>
+<li><strong><em>prefersReducedMotion:</em></strong>  <code>reduceMotionAction</code> and <code>noPreferenceMotionAction</code></li>
+<li><strong><em>prefersReduceTransparency:</em></strong> <code>reduceTransparencyAction</code> and <code>noPreferenceTransparencyAction</code></li>
 </ul>
+<p>(With apologies for the slight inconsistency in the naming of the reduce-related preferences.)</p>
 <h3 id="progressive-enhancement">Progressive enhancement</h3>
 <p>To quote Wikipedia: "<a href="https://en.wikipedia.org/wiki/Progressive_enhancement">Progressive enhancement</a> is a strategy in web design that puts emphasis on web content first, allowing everyone to access the basic content and functionality of a web page, while users with additional browser features or faster Internet access receive the enhanced version instead."</p>
 <p>This matters for SC because <code>&lt;canvas&gt;</code> elements require Javascript to work. In <em>JS-disabled environments</em>, the browser will treat the <code>&lt;canvas&gt;</code> tags like a <code>&lt;div&gt;</code> element and display the HTML between the tags (the <strong>fallback content</strong>, sometimes also called the <a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/hh968259(v=vs.85)">canvas shadow DOM</a> - at least by Microsoft) instead.</p>
@@ -126,7 +130,8 @@
 <li>When importing a <code>&lt;canvas&gt;</code> element into the SC system, SC will mutate that element (and only that element) to include some accessibility-friendly features. This mutation will not touch any fallback content the dev-user has already placed between the <code>&lt;canvas&gt;</code> tags.</li>
 <li>Repo-devs need to make their best effort to ensure SC repo code does not error when running. Thus:<ul>
 <li>Avoid generating and throwing <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error">error objects</a>; instead bypass that functionality (for instance, don't stamp a Picture entity if its <code>&lt;img&gt;</code> asset has not completed loading), or fail in a graceful manner so other Javascript code can continue to run.</li>
-<li>But don't fail by means of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try…catch">try-catch statements</a>: such code (at least in the past) kills web page performance!</li></ul></li>
+<li>But don't fail by means of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try…catch">try-catch statements</a>: such code (at least in the past) kills web page performance!</li>
+<li>(Rare exceptions to these "suggestions" can be found in the <a href="../source/mixin/base.html">mixin/base.js</a> and <a href="../source/core/user-interaction.html">core/user-interaction.js</a> files.)</li></ul></li>
 </ul>
 <p>Several of the SC test demos have been coded up in a way that respects progressive enhancement - for example test demo <a href="../../demo/filters-004.html">Filters-004</a> has been written with fallback content between the <code>&lt;canvas&gt;</code> tags to include a placeholder image of the canvas scene, alongside an appropriately hidden <code>&lt;div&gt;</code> to contain the <code>&lt;img&gt;</code> assets which are used by the the canvas but should never appear elsewhere in the web page.</p>
 <h4 id="advanced-canvas-related-functionality">Advanced canvas-related functionality</h4>
@@ -317,19 +322,34 @@ width                         width                         'number'</code></pre
                                                     aria-live="polite"
                                                   ›‹/div›
                                                 ‹/canvas›</code></pre>
-<h3 id="canvases-internals-sc-cell-and-group-objects">Canvases internals: SC Cell and Group objects</h3>
-<p>TODO: need to mention</p>
-<ul>
-<li>Base cells</li>
-<li>Groups</li>
-<li>Additional cells</li>
-</ul>
 <h3 id="canvas-elements-and-the-wider-page-environment">Canvas elements and the wider page environment</h3>
+<p>Repo-devs have a responsibility to make sure that SC-managed <code>&lt;canvas&gt;</code> elements, as far as possible, behave "nicely" with the rest of the web page:</p>
 <ul>
-<li>Scaling, and device pixel ratio</li>
-<li>Wide-gamut color support</li>
+<li>For some cases, this means building in functionality for handling particular user choices - for instance accommodating the capabilities of the operating system, browser and device screen the user has chosen.</li>
+<li>In other cases (such as users choosing to zoom the page, or drag the browser window between screens with different capabilities) repo-devs need to make sure they check these edge cases as they work through the test demo suite.</li>
 </ul>
-<h4 id="canvas-fit">Canvas fit</h4>
+<h4 id="page-scaling">Page scaling</h4>
+<p>Current accessibility guidelines suggest that when an end-user scales (zooms) a web page by up to 200%, the content of the web page should remain legible. Note that some end-users may want to scale the web page beyond 200%.</p>
+<p>Note also that the end-user doesn't need to be disabled to want this! For instance, a web page that includes <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API">Fullscreen API</a> functionality, where the content to be displayed fullscreen includes an SC-managed <code>&lt;canvas&gt;</code> element, will also zoom the canvas.</p>
+<p>Repo-devs need to test page scaling to make sure that SC-managed <code>&lt;canvas&gt;</code> elements, when set up correctly, do not break the page as it scales up and down - test demo <a href="../../demo/modules-006.html">Modules-006</a> is a good place to check this.</p>
+<p>TODO: similar to checking an SC Canvas artefact for changes in its dimensions and shape, it may also be useful to add checks and function hooks to the repo code base to allow dev-users to add functionality to their project which responds to changes in page scale/zoom levels. Considerations:</p>
+<ul>
+<li>Scale data can be retrieved from the <code>window.visualViewport.scale</code> read-only attribute.</li>
+<li>There's no media query in current (<a href="https://www.w3.org/TR/mediaqueries-4/">Media Queries Level 4</a>) or future (Level 5) specifications that target the device viewport's scale/zoom level. Maybe check and update the current scale/zoom value as part an existing SC system animation's functionality?</li>
+<li>There will be an interplay between canvas size and shape, and the browser's scale/zoom value - how would such combinations be presented to dev-users? Should they be combined internally to simplify the API for dev-users or presented as-is so dev-users can make their own choices?</li>
+</ul>
+<h4 id="screen-device-pixel-ratio">Screen device-pixel-ratio</h4>
+<h4 id="wide-gamut-color-support---display-p3">Wide-gamut color support - <code>display-p3</code></h4>
+<p>By default <code>&lt;canvas&gt;</code> element 2d contenxt engines use the <a href="https://en.wikipedia.org/wiki/SRGB"><code>sRGB</code> color space</a> to create and manipulate their canvas display. However modern device screens are often capable of displaying more colors than can be contained in the <code>sRGB</code> space.</p>
+<p><a href="https://github.com/WICG/canvas-color-space/blob/main/CanvasColorSpaceProposal.md">Recent work by browser-devs</a> in this area has led to the introduction of a new <a href="https://en.wikipedia.org/wiki/DCI-P3"><code>display-p3</code> color space</a>. Some browsers now ship with support for the new color space in <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext">canvas context engines</a>, including related imageData objects.</p>
+<p>Dev-users can create SC-managed <code>&lt;canvas&gt;</code> elements that will support <code>display-p3</code> by:</p>
+<ul>
+<li>Adding the <code>data-canvas-color-space="display-p3"</code> attribute to <code>&lt;canvas&gt;</code> elements in their HTML markup</li>
+<li>Including the <code>canvasColorSpace: 'display-p3'</code> attribute in the object argument of the <code>scrawl.addCanvas()</code> factory function.</li>
+</ul>
+<p>Note that setting the canvas color space can only be done once, when SC first wraps the <code>&lt;canvas&gt;</code> element into an artefact object; the setting cannot be changed after the artefact has been created. Also, if the color space has been set to <code>display-p3</code> but the end-user navigates to a page containing the <code>&lt;canvas&gt;</code> element using any browser (currently: Firefox) on any device screen (currently: older screens) that don't support the color space, SC will set up the canvas context engine to use the default <code>sRGB</code> color space.</p>
+<p>Detecting <code>display-p3</code> color space support takes place in the <a href="../source/core/user-interaction.html">core/user-interaction.js</a> file. See test demos <a href="../../demo/canvas-055.html">Canvas-055</a>, <a href="../../demo/canvas-015.html">Canvas-015</a> and <a href="../../demo/canvas-016.html">Canvas-016</a> (on supporting browsers/device screens) to see the color space in action.</p>
+<h4 id="emulating-css-object-fit">Emulating CSS <code>object-fit</code></h4>
 <p>In the <a href="https://drafts.csswg.org/css-images/#the-object-fit">CSS Images Module Level 3</a> specification, the <code>object-fit</code> property <em>" specifies how the contents of a replaced element should be fitted to the box established by its used height and width."</em> The <code>&lt;canvas&gt;</code> element (according to MDN) can be treated as a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element">replaced element</a>, but only in <em>"specific cases"</em>. Thus it is up to each browser to decide whether the <code>object-fit</code> property can be applied to <code>&lt;canvas&gt;</code> elements.</p>
 <p>As a result of the above, and because of the way SC works under-the-hood, SC (very loosely) emulates the CSS <code>object-fit</code> property for the <code>&lt;canvas&gt;</code> elements it manages. Dev-users can mark up their HTML to tell SC to fit a canvas into its parent element in a given way:</p>
 <pre><code>&lt;div class="canvas-container"&gt;
@@ -413,10 +433,12 @@ width                         width                         'number'</code></pre
 <li>The element is a direct child of a Stack element, discovered during page initialization.</li>
 <li>The dev-user adds a new Stack containing direct child elements to the web page using the <code>scrawl.addStack()</code> function.</li>
 <li>The element is a direct child of a Stack element defined in a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getStack('stack-id-string')</code> as part of the component's mount functionality.</li>
-<li>The dev-user invokes the <code>scrawl.makeElement()</code> factory function in their code.</li>
+<li>The dev-user invokes the <code>stack.addExistingDomElements('CSS-search-string')</code> function in their code. This moves existing DOM elements into the Stack, wrapping them in Element artefact objects. Note that these DOM elements will initially be positioned in the top-left corner of the Stack; it is up to the dev-user to find (using <code>scrawl.findElement('element-id-string')</code>) and set (using <code>element.set({key: value, ...})</code>) them as needed after the import completes.</li>
+<li>The dev-user invokes the <code>stack.addNewElement({key: value, ...})</code> function to create a new element in the Stack. See test demo <a href="../../demo/dom-003.html">DOM-003</a> for an example of this functionality in action.</li>
 </ul>
+<p>Note that Element artefact objects can be cloned using the <code>element.clone({key: value, ...})</code> function. This cloning functionality will also create a clone of the object's DOM element. See test demo <a href="../../demo/dom-004.html">DOM-004</a>. The cloning functionality is defined in the <a href="../source/mixin/base.html">mixin/base.js</a> file.</p>
 <h3 id="changes-made-to-a-dom-direct-child-element-discovered-in-a-stack-element">Changes made to a DOM direct child element discovered in a Stack element</h3>
-<p>As part of this wrapping process, elements will become <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">absolutely positioned</a> within their (relatively positioned) Stack element. SC will make its best effort to replicate the element's position within the Stack before wrapping commenced - but this cannot be guaranteed.</p>
+<p>As part of this wrapping process, elements will become <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">absolutely positioned</a> within their (relatively positioned) Stack element. During initialization SC will make its best effort to replicate the element's position within the Stack before wrapping commenced - but this cannot be guaranteed.</p>
 <p>Other than positioning considerations, the mutations made to the direct child elements of a Stack element are similar to the changes made to the Stack element itself as it is wrapped - including the addition of <strong>corner divs</strong>:</p>
 <pre><code>Before:                                         After:
 ----------------------------------------        ----------------------------------------
@@ -479,7 +501,7 @@ width                         width                         'number'</code></pre
     <nav>
         <a href=sc-objects-overview.html>Previous</a>
         <a href="index.html">Contents</a>
-        <a href=sc-animation-systems.html>Next</a>
+        <a href=sc-groups-cells.html>Next</a>
     </nav>
 
 </body>
