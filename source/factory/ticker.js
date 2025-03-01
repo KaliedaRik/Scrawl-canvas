@@ -51,8 +51,7 @@ import { _floor, _isArray, _now, FUNCTION, PC, T_RENDER_ANIMATION, T_TWEEN } fro
 
 // Local constants
 const ANIMATIONTICKERS = 'animationtickers',
-    T_TICKER = 'Ticker',
-    TICKERUPDATE = 'tickerupdate';
+    T_TICKER = 'Ticker';
 
 
 // #### Ticker constructor
@@ -501,7 +500,7 @@ P.fn = function (reverseOrder) {
         cycles = this.cycles,
         effectiveDuration = this.effectiveDuration;
 
-    let i, iz, subs, eTime, now, e,
+    let i, iz, subs,
         currentTime, tick,
         active = this.active,
         cycleCount = this.cycleCount;

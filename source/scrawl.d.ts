@@ -82,7 +82,6 @@ interface AssetAdvancedFunctionalityMixinInputs {
     colors?: StyleColorsArray[];
     colorSpace?: ColorSpacesValues;
     cyclePalette?: boolean;
-    // delta?: AssetAdvancedFunctionalityMixinDeltaInputs;
     easing?: string | DefaultInputFunction;
     precision?: number;
     returnColorAs?: ReturnColorValues;
@@ -2724,7 +2723,6 @@ interface TickerFactoryDeltaInputs extends BaseMixinDeltaInputs {
 
 interface TickerFactoryInputs extends BaseMixinInputs, TickerFactoryDeltaInputs {
     delta?: TickerFactoryDeltaInputs;
-    eventChoke?: number;
     killOnComplete?: boolean;
     observer?: string | RenderInstance;
     onComplete?: DefaultInputFunction;
@@ -2813,7 +2811,6 @@ interface TweenFactoryInputs extends BaseMixinInputs, TweenMixinInputs, TweenFac
     cycles?: number;
     delta?: TweenFactoryDeltaInputs;
     definitions?: TweenDefinitionsObject[];
-    eventChoke?: number;
     killOnComplete?: boolean;
     observer?: string | RenderInstance;
     onHalt?: DefaultInputFunction;
