@@ -225,6 +225,16 @@ y                         // Number - cursor y position relative to DOM element 
 <p>SC does not use <a href="https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events">custom events</a> in the code base. Instead, SC provides dev-users with a diffuse system of function hooks which will be invoked at given points of, for example, the Display cycle.</p>
 <p>SC also provides convenience functions for creating and removing Stack and Canvas DOM element Events. Further details can be found in the <a href="sc-events-signals.html">Scrawl-canvas events and signals</a> page of this Runbook.</p>
 <p>Examples of using events with Canvas and Stack artefacts can be found throughout the SC test demo suite. For instance, the test demos <a href="../../demo/canvas-009.html">Canvas-009</a> and <a href="../../demo/dom-006.html">DOM-006</a> include examples of using <a href="https://developers.google.com/analytics">Google Analytics</a> to track user interactions with SC artefacts.</p>
+<h4 id="sc-zone-events-drag-zones-keyboard-zones">SC zone events (drag zones, keyboard zones)</h4>
+<p>SC includes functionality to apply two specific use-case scenarios to artefact object DOM elements.</p>
+<p>First, the <a href="https://en.wikipedia.org/wiki/Drag_and_drop">drag and drop</a> user interface has been a central feature of graphical UIs since the introduction of the <em>windows/icons/menus/pointers</em> (WIMP) paradigm in the early 1980s. SC implements a version of this drag-and-drop functionality through its <code>scrawl.makeDragZone()</code> factory function, defined in the <a href="../source/untracked-factory/drag-zone.html">untracked-factory/drag-zone.js</a> file.</p>
+<p>However, drag-and-drop UIs can introduce <a href="https://blog.logrocket.com/ux-design/drag-drop-ux-best-practices/">significant accessibility issues</a>. Thus SC also supplies <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent">keyboard event</a> support for (Stack and) Canvas DOM elements through its <code>scrawl.makeKeyboardZone()</code> factory function, defined in the <a href="../source/untracked-factory/keyboard-zone.html">untracked-factory/keyboard-zone.js</a> file.</p>
+<p>Using these two zone event systems together dev-users, working with designers and UX experts, should be able to build their own bespoke Canvas-based user interfaces. For instance, see the proof-of-concept "studio editor" test demo <a href="../../demo/modules-005.html">Modules-005</a> for one possible approach to developing such a solution.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> A number of Javascript 2D canvas libraries come with their own built-in drag-and-drop-based user interfaces where the user can click on a graphical entity to reveal an editing box with draggable handles around the entity. </p>
+  <p><strong><em>SC deliberately does not include such a built-in solution</em></strong>, on the grounds that the solutions chosen by those libraries are inherently inaccessible to people who do not use mouse/touch/pointer input mechanisms, or who interact with the canvas in a non-visual way. </p>
+  <p>Instead, SC includes the tools to create a canvas-based UI, but it is up to dev-users to build out the UI's functionality (in an accessible way!) to meet the specific needs of their own projects.</p>
+</blockquote>
 <h2 id="canvas-artefact-notes">Canvas artefact notes</h2>
 <p>SC will wrap <code>&lt;canvas&gt;</code> elements into Canvas artefact objects under the following conditions:</p>
 <ul>
@@ -232,37 +242,7 @@ y                         // Number - cursor y position relative to DOM element 
 <li>The dev-user adds a new <code>&lt;canvas&gt;</code> element to the web page using the <code>scrawl.addCanvas()</code> function.</li>
 <li>The <code>&lt;canvas&gt;</code> element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getCanvas('canvas-id-string')</code> as part of the component's mount functionality.</li>
 </ul>
-<p>As SC wraps a <code>&lt;canvas&gt;</code> element into its artefact object, it will read and action the element's <code>data-</code> attributes:</p>
-<pre><code>&lt;canvas&gt; data- attribute      JS-constructor equivalent     Values
-----------------------------  ----------------------------  ----------------------------
-data-base-background-color    backgroundColor               Any CSS color string
-data-base-clear-alpha         clearAlpha                    'number'
-data-base-height              baseHeight                    'number'
-data-base-width               baseWidth                     'number'
-data-canvas-color-space       canvasColorSpace              '' or 'display-p3'
-data-description              description                   ARIA description
-data-fit                      fit                           'cover', 'contain', 'fill', 'none'
-data-is-responsive            isResponsive                  'boolean'
-data-label                    label                         ARIA label
-height                        height                        'number'
-width                         width                         'number'</code></pre>
-<h4 id="accessibility-1">Accessibility</h4>
-<p>SC offers an easy way for dev-users to start making their canvases more accessible. The <code>label</code> and <code>description</code> attributes get written into <code>&lt;div&gt;</code> elements between the <code>&lt;canvas&gt;</code> element's tags, which the element then refers to through its <code>aria-labelledby</code> and <code>aria-describedby</code> attributes.</p>
-<h4 id="responsiveness-1">Responsiveness</h4>
-<p>SC will only do the work to make a <code>&lt;canvas&gt;</code> element responsive when the dev-user tells it to. This happens through the <code>isResponsive</code> attribute. Note that when this attribute is <code>true</code> SC will override any <code>width</code> and <code>height</code> values set on the Canvas.</p>
-<p>Separately, every Canvas artefact, when created, generates its own <code>base</code> Cell object - a <code>&lt;canvas&gt;</code> element which is hidden, not added to the DOM (see below). Dev-users can set the dimensions of this <code>base</code> Cell independently of the <code>&lt;canvas&gt;</code> element's dimensions using the <code>baseWidth</code> and <code>baseHeight</code> attributes.</p>
-<p>Almost all of the painting work that SC does happens on <code>base</code> Cell objects, whose data only gets copied over to their display <code>&lt;canvas&gt;</code> once, at the end of each <a href="sc-animation-systems.html">Display cycle</a>. It is at this point that SC will attempt to fit the <code>base</code> Cell into the display <code>&lt;canvas&gt;</code>, emulating the CSS <code>object-fit</code> property (see below). Dev-users can set how they want the base to fit into the display using the <code>fit</code> attribute.</p>
-<h4 id="color">Color</h4>
-<p>To set a background color for the <code>base</code> Cell, dev-users can use the <code>backgroundColor</code> attribute. The attribute accepts any valid color string as defined in the <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a> specification. </p>
-<blockquote>
-  <p><strong>tl;dr:</strong> SC does not support <a href="https://www.w3.org/TR/css-color-5">Level 5</a> relative colors, CMYK, or the CSS <code>color-mix()</code> and <code>contrast-color()</code> functions, nor are there any plans to do so at this time. Repo-devs need to keep these new and evolving specifications under review, and consider adding support for them in SC as-and-when they become better supported by browsers.</p>
-</blockquote>
-<p>See below for how SC handles the wide-gamut <code>display-p3</code> color space.</p>
-<h4 id="ghosting-effect">Ghosting effect</h4>
-<p>SC includes functionality to display a <a href="https://brush.ninja/glossary/animation/ghosting/">ghosting effect</a> in a canvas animation. The effect applies to everything moving in the animation - see test demo <a href="../../demo/canvas-002.html">Canvas-002</a> for an example of the effect in action.</p>
-<p>Dev-users can create a ghosting effect by setting the <code>clearAlpha</code> attribute - values above <code>0.95</code> usually generate a noticable effect - though the strength of the effect can vary between browsers and device screens.</p>
-<p>Note that the effect will not work in situations where the <code>base</code> Cell also has a background color.</p>
-<h3 id="changes-made-to-the-canvas-dom-element-as-sc-wraps-it">Changes made to the <code>&lt;canvas&gt;</code> DOM element as SC wraps it</h3>
+<h3 id="wrapping-the-canvas-dom-element">Wrapping the <code>&lt;canvas&gt;</code> DOM element</h3>
 <p>SC makes extensive changes to the <code>&lt;canvas&gt;</code> DOM element as part of its wrapping functionality. <strong><em>These changes are essential as they give SC the power to make the <code>&lt;canvas&gt;</code> element both responsive, and more accessible.</em></strong></p>
 <pre><code>Before:                                         After:
 ----------------------------------------        ----------------------------------------
@@ -322,7 +302,37 @@ width                         width                         'number'</code></pre
                                                     aria-live="polite"
                                                   ›‹/div›
                                                 ‹/canvas›</code></pre>
-<h3 id="canvas-elements-and-the-wider-page-environment">Canvas elements and the wider page environment</h3>
+<p>As SC wraps a <code>&lt;canvas&gt;</code> element into its artefact object, it will read and action the element's <code>data-</code> attributes:</p>
+<pre><code>&lt;canvas&gt; data- attribute      JS-constructor equivalent     Values
+----------------------------  ----------------------------  ----------------------------
+data-base-background-color    backgroundColor               Any CSS color string
+data-base-clear-alpha         clearAlpha                    'number'
+data-base-height              baseHeight                    'number'
+data-base-width               baseWidth                     'number'
+data-canvas-color-space       canvasColorSpace              '' or 'display-p3'
+data-description              description                   ARIA description
+data-fit                      fit                           'cover', 'contain', 'fill', 'none'
+data-is-responsive            isResponsive                  'boolean'
+data-label                    label                         ARIA label
+height                        height                        'number'
+width                         width                         'number'</code></pre>
+<h4 id="accessibility-1">Accessibility</h4>
+<p>SC offers an easy way for dev-users to start making their canvases more accessible. The <code>label</code> and <code>description</code> attributes get written into <code>&lt;div&gt;</code> elements between the <code>&lt;canvas&gt;</code> element's tags, which the element then refers to through its <code>aria-labelledby</code> and <code>aria-describedby</code> attributes.</p>
+<h4 id="responsiveness-1">Responsiveness</h4>
+<p>SC will only do the work to make a <code>&lt;canvas&gt;</code> element responsive when the dev-user tells it to. This happens through the <code>isResponsive</code> attribute. Note that when this attribute is <code>true</code> SC will override any <code>width</code> and <code>height</code> values set on the Canvas.</p>
+<p>Separately, every Canvas artefact, when created, generates its own <code>base</code> Cell object - a <code>&lt;canvas&gt;</code> element which is hidden, not added to the DOM (see the <a href="sc-groups-cells.html">Groups and Cells</a> page of this Runbooks for details). Dev-users can set the dimensions of this <code>base</code> Cell independently of the <code>&lt;canvas&gt;</code> element's dimensions using the <code>baseWidth</code> and <code>baseHeight</code> attributes.</p>
+<p>Almost all of the painting work that SC does happens on <code>base</code> Cell objects, whose data only gets copied over to their display <code>&lt;canvas&gt;</code> once, at the end of each <a href="sc-animation-systems.html">Display cycle</a>. It is at this point that SC will attempt to fit the <code>base</code> Cell into the display <code>&lt;canvas&gt;</code>, emulating the CSS <code>object-fit</code> property (see below). Dev-users can set how they want the base to fit into the display using the <code>fit</code> attribute.</p>
+<h4 id="color">Color</h4>
+<p>To set a background color for the <code>base</code> Cell, dev-users can use the <code>backgroundColor</code> attribute. The attribute accepts any valid color string as defined in the <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a> specification. </p>
+<blockquote>
+  <p><strong>tl;dr:</strong> SC does not support <a href="https://www.w3.org/TR/css-color-5">Level 5</a> relative colors, CMYK, or the CSS <code>color-mix()</code> and <code>contrast-color()</code> functions, nor are there any plans to do so at this time. Repo-devs need to keep these new and evolving specifications under review, and consider adding support for them in SC as-and-when they become better supported by browsers.</p>
+</blockquote>
+<p>See below for how SC handles the wide-gamut <code>display-p3</code> color space.</p>
+<h4 id="ghosting-effect">Ghosting effect</h4>
+<p>SC includes functionality to display a <a href="https://brush.ninja/glossary/animation/ghosting/">ghosting effect</a> in a canvas animation. The effect applies to everything moving in the animation - see test demo <a href="../../demo/canvas-002.html">Canvas-002</a> for an example of the effect in action.</p>
+<p>Dev-users can create a ghosting effect by setting the <code>clearAlpha</code> attribute - values above <code>0.95</code> usually generate a noticable effect - though the strength of the effect can vary between browsers and device screens.</p>
+<p>Note that the effect will not work in situations where the <code>base</code> Cell also has a background color.</p>
+<h3 id="canvas-dom-elements-and-the-wider-page-environment"><code>&lt;canvas&gt;</code> DOM elements and the wider page environment</h3>
 <p>Repo-devs have a responsibility to make sure that SC-managed <code>&lt;canvas&gt;</code> elements, as far as possible, behave "nicely" with the rest of the web page:</p>
 <ul>
 <li>For some cases, this means building in functionality for handling particular user choices - for instance accommodating the capabilities of the operating system, browser and device screen the user has chosen.</li>
@@ -332,13 +342,23 @@ width                         width                         'number'</code></pre
 <p>Current accessibility guidelines suggest that when an end-user scales (zooms) a web page by up to 200%, the content of the web page should remain legible. Note that some end-users may want to scale the web page beyond 200%.</p>
 <p>Note also that the end-user doesn't need to be disabled to want this! For instance, a web page that includes <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API">Fullscreen API</a> functionality, where the content to be displayed fullscreen includes an SC-managed <code>&lt;canvas&gt;</code> element, will also zoom the canvas.</p>
 <p>Repo-devs need to test page scaling to make sure that SC-managed <code>&lt;canvas&gt;</code> elements, when set up correctly, do not break the page as it scales up and down - test demo <a href="../../demo/modules-006.html">Modules-006</a> is a good place to check this.</p>
-<p>TODO: similar to checking an SC Canvas artefact for changes in its dimensions and shape, it may also be useful to add checks and function hooks to the repo code base to allow dev-users to add functionality to their project which responds to changes in page scale/zoom levels. Considerations:</p>
-<ul>
-<li>Scale data can be retrieved from the <code>window.visualViewport.scale</code> read-only attribute.</li>
-<li>There's no media query in current (<a href="https://www.w3.org/TR/mediaqueries-4/">Media Queries Level 4</a>) or future (Level 5) specifications that target the device viewport's scale/zoom level. Maybe check and update the current scale/zoom value as part an existing SC system animation's functionality?</li>
-<li>There will be an interplay between canvas size and shape, and the browser's scale/zoom value - how would such combinations be presented to dev-users? Should they be combined internally to simplify the API for dev-users or presented as-is so dev-users can make their own choices?</li>
-</ul>
 <h4 id="screen-device-pixel-ratio">Screen device-pixel-ratio</h4>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio">devicePixelRatio attribute</a> (DPR) represents the resolution in physical pixels to the resolution in CSS pixels for the current display device. Browsers use the ratio internally to display crisp web pages on a range of different screens. Note that page scaling (see above) can affect the value of this attribute, though implementation details across browsers may vary.</p>
+<p>SC includes functionality to monitor DPR, including changes to the attribute's value when, for instance, the end-user scales a browser window or drags the browser between screens with different pixel densities. This functionality is defined in the <a href="../source/core/user-interaction.html">core/user-interaction.js</a> file. SC exports some funtions from that file to allow dev-users some control over how they want to manage DPR in their canvas scenes:</p>
+<ul>
+<li><code>scrawl.getPixelRatio()</code></li>
+<li><code>scrawl.setPixelRatioChangeAction()</code></li>
+<li><code>scrawl.getIgnorePixelRatio()</code></li>
+<li><code>scrawl.setIgnorePixelRatio()</code></li>
+</ul>
+<p>Beyond that, SC mostly ignores DPR, so repo-devs shouldn't need to worry about it too much. Changes in DPR will trigger SC signalling for the Canvas artefact's associated Cell objects (via the <code>dirtyDimensions</code> flag), which in turn cascades down to graphical entitys who can then update their states to account for the new dimensions as part of the next Display cycle. </p>
+<p>Additional files with DPR-related functionality include:</p>
+<ul>
+<li><a href="../source/core/document.html">core/document.js</a> - specifically the <code>domShow()</code> function</li>
+<li><a href="../source/factory/cell.html">factory/cell.js</a> - only the <code>show()</code> function, and then only used in <code>fit: none</code> calculations</li>
+<li><a href="../source/factory/group.html">factory/group.js</a> - as part of the Group object's <code>filter</code> functionality</li>
+<li><a href="../source/mixin/text.html">mixin/text.js</a> - SC disables <code>engine.imageSmoothingEnabled</code> when it stamps text onto a Cell destined to be output on a device screen with a DPR value of <code>2</code> or above.</li>
+</ul>
 <h4 id="wide-gamut-color-support---display-p3">Wide-gamut color support - <code>display-p3</code></h4>
 <p>By default <code>&lt;canvas&gt;</code> element 2d contenxt engines use the <a href="https://en.wikipedia.org/wiki/SRGB"><code>sRGB</code> color space</a> to create and manipulate their canvas display. However modern device screens are often capable of displaying more colors than can be contained in the <code>sRGB</code> space.</p>
 <p><a href="https://github.com/WICG/canvas-color-space/blob/main/CanvasColorSpaceProposal.md">Recent work by browser-devs</a> in this area has led to the introduction of a new <a href="https://en.wikipedia.org/wiki/DCI-P3"><code>display-p3</code> color space</a>. Some browsers now ship with support for the new color space in <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext">canvas context engines</a>, including related imageData objects.</p>
@@ -370,9 +390,8 @@ width                         width                         'number'</code></pre
 <li>The dev-user adds a new Stack to the web page using the <code>scrawl.addStack()</code> function.</li>
 <li>The Stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to <code>scrawl.getStack('stack-id-string')</code> as part of the component's mount functionality.</li>
 </ul>
-<h3 id="changes-made-to-a-typical-dom-stack-element-as-sc-wraps-it">Changes made to a typical DOM Stack element as SC wraps it</h3>
+<h3 id="wrapping-the-stack-artefacts-dom-element">Wrapping the Stack artefact's DOM element</h3>
 <p>SC makes extensive changes to DOM Stack elements as it wraps them. The purpose of this is to make it easier to position and animate the (absolutely positioned) direct child elements included in the Stack - which is achieved using standard inline CSS styling.</p>
-<p>SC also adds <strong>corner divs</strong> inside the DOM element, which can then be used across the SC ecosystem for reference positioning other artefacts and entitys:</p>
 <pre><code>Before:                                         After:
 ----------------------------------------        ----------------------------------------
 &lt;div                                            &lt;div 
@@ -427,6 +446,10 @@ width                         width                         'number'</code></pre
                                                       top: 100%; left: 0%;"
                                                   &gt;&lt;/div&gt;
                                                 &lt;/div&gt;</code></pre>
+<h3 id="stack-and-element-corners">Stack and Element corners</h3>
+<p>SC adds a set of four zero-dimension <code>&lt;div&gt;</code> elements to every Stack and Element artefact's DOM element. This was originally done so that SC could keep track of the absolute coordinates for each artefact's corners, from which a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface object</a> can be constructed and then used as part of the SC hit detection functionality. Using this approach means that SC does not need to add event listeners to every DOM element it controls to handle, for instance, DOM element drag-and-drop interactions.</p>
+<p>Later on, SC added functionality to allow these corner <code>&lt;div&gt;</code> elements to act as additional pivot points for other artefacts and entitys to use as part of their positioning functionality. Test demo <a href="../../demo/dom-015.html">DOM-015</a> shows this functionality in action with a 3d-rotated Element artefact.</p>
+<p>The functionality for corners management can be found in the <a href="../source/mixin/dom.html">mixin/dom.js</a> file. Note that Canvas artefacts are unable to use this functionality.</p>
 <h2 id="element-artefact-notes">Element artefact notes</h2>
 <p>SC will wrap DOM elements into Element artefact objects under the following conditions:</p>
 <ul>
@@ -437,7 +460,7 @@ width                         width                         'number'</code></pre
 <li>The dev-user invokes the <code>stack.addNewElement({key: value, ...})</code> function to create a new element in the Stack. See test demo <a href="../../demo/dom-003.html">DOM-003</a> for an example of this functionality in action.</li>
 </ul>
 <p>Note that Element artefact objects can be cloned using the <code>element.clone({key: value, ...})</code> function. This cloning functionality will also create a clone of the object's DOM element. See test demo <a href="../../demo/dom-004.html">DOM-004</a>. The cloning functionality is defined in the <a href="../source/mixin/base.html">mixin/base.js</a> file.</p>
-<h3 id="changes-made-to-a-dom-direct-child-element-discovered-in-a-stack-element">Changes made to a DOM direct child element discovered in a Stack element</h3>
+<h3 id="wrapping-the-element-artefacts-dom-element">Wrapping the Element artefact's DOM element</h3>
 <p>As part of this wrapping process, elements will become <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">absolutely positioned</a> within their (relatively positioned) Stack element. During initialization SC will make its best effort to replicate the element's position within the Stack before wrapping commenced - but this cannot be guaranteed.</p>
 <p>Other than positioning considerations, the mutations made to the direct child elements of a Stack element are similar to the changes made to the Stack element itself as it is wrapped - including the addition of <strong>corner divs</strong>:</p>
 <pre><code>Before:                                         After:
