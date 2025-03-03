@@ -383,6 +383,19 @@ width                         width                         'number'</code></pre
   &gt;&lt;/canvas&gt;
 &lt;/div&gt;</code></pre>
 <p>The code for managing this emulation can be found in the <a href="../source/factory/cell.html">factory/cell.js</a> file - specifically the <code>cell.show()</code> function. Additional details can be found in the <a href="sc-animation-systems.html">Animation and the Display cycle</a> page of this Runbook.</p>
+<h3 id="canvas-base-cell-pass-through-functions">Canvas <code>base</code> Cell pass-through functions</h3>
+<p>While the SC Canvas artefact wraps a <code>&lt;canvas&gt;</code> DOM element, hardly any graphical work happens in that canvas element. Instead, every Canvas artefact includes a Cell object - found at the <code>canvas.base</code> attribute - wrapping its own hidden <code>&lt;canvas&gt;</code> element which never gets added to the DOM. </p>
+<p>Performing (almost) all of the graphical work on this hidden canvas has significant speed advantages compared to doing that work in the visible canvas element: browsers can manage that work as they see fit rather than directly hit the DOM for every canvas manipulation update.</p>
+<p>The Canvas artefact object affords a number of <em>convenience functions</em> to dev-users - essentially pass-through functions which take the function arguments and pass them through to the most appropriate <code>base</code> Cell object function. They also supply convenience functions for retrieving the <code>base</code> Cell object and its associated <em>namespace</em> Group object:</p>
+<ul>
+<li><code>canvas.get('baseName')</code> - retrieve the <code>base</code> Cell object's <code>name</code>, which is also the name used by that Cell object's <em>namesake</em> Group object (the same as <code>canvas?.base?.name</code>).</li>
+<li><code>canvas.get('baseGroup')</code> - retrieve the <code>base</code> Cell's Group object (equivalent to <code>canvas?.base?.group</code>).</li>
+<li><code>canvas.get('base')</code> and <code>canvas.getBase()</code> return the <code>base</code> Cell object (as does <code>canvas?.base</code>).</li>
+<li><code>canvas.getBaseHere()</code> returns the <code>base</code> Cell object's <code>here</code> object (as does <code>canvas?.base?.here</code>).</li>
+<li><code>canvas.set({backgroundColor: 'css-color-string'})</code> and <code>canvas.setBase({backgroundColor: 'css-color-string'})</code> both set the <code>base</code> Cell's background color.</li>
+<li>More broadly, <code>canvas?.base?.set({key: value, ...})</code> and <code>canvas.setBase({key: value, ...})</code> are different ways of doing the same thing.</li>
+<li>Similarly <code>canvas?.base?.setDelta({key: value, ...})</code> and <code>canvas.deltaSetBase({key: value, ...})</code> are equivalent.</li>
+</ul>
 <h2 id="stack-artefact-notes">Stack artefact notes</h2>
 <p>SC will wrap DOM elements into Stack artefact objects under the following conditions:</p>
 <ul>

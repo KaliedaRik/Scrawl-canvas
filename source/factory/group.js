@@ -142,17 +142,14 @@ P.postCloneAction = function(clone, items) {
         if (!clone.host) clone.host = host.name;
     }
 
-    if (this.onEntityHover) clone.onEntityHover = this.onEntityHover;
-    if (this.onEntityNoHover) clone.onEntityNoHover = this.onEntityNoHover;
-
     return clone;
 };
 
 
 // #### Kill management
-P.kill = function (killArtefacts = false) {
+P.kill = function (killArtefacts = false, killDomElement = false) {
 
-    if (killArtefacts) this.artefactCalculateBuckets.forEach(item => item.kill());
+    if (killArtefacts) this.artefactCalculateBuckets.forEach(item => item.kill(killDomElement));
 
     const myname = this.name;
 
@@ -179,9 +176,9 @@ P.kill = function (killArtefacts = false) {
     return this.deregister();
 }
 
-P.killArtefacts = function () {
+P.killArtefacts = function (killDomElement = false) {
 
-    this.artefactCalculateBuckets.forEach(item => item.kill());
+    this.artefactCalculateBuckets.forEach(item => item.kill(killDomElement));
 
     return this;
 }

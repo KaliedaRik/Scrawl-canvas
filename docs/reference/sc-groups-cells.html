@@ -210,9 +210,354 @@
 <li>A final not shown here … Entitys can change their positioning and/or styling dependencies at any time.</li>
 </ul>
 <h2 id="sc-group-objects">SC Group objects</h2>
-<p>[describe]</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> Group objects represent a collection of SC artefact (including entity) objects - <em>and that is all they are!</em></p>
+</blockquote>
+<p>SC uses Group objects for a range of functionalities across the repo code base:</p>
+<ul>
+<li>Every SC Stack artefact and Cell object is given a <strong>namesake Group</strong> when they are created, to which can be added other Artefact objects (for Stacks) or entity objects (for Cells) which need to be displayed in them.</li>
+<li>(Note that SC Canvas artefacts do not have their own <em>namesake Group</em> as they only have one Cell object to worry about - their <code>base</code> Cell).</li>
+<li>Dev users can create new Group objects at any time using the <code>scrawl.makeGroup({ key: value, ...})</code> factory function.</li>
+<li><strong><em>Stack artefacts and Cell objects can include more than one Group object</em></strong> - dev-users can add/remove their user-created Group objects to Stacks and Cells at any time. Any Element/entity objects included in the Group object will become part of the Stack/Cell output display.</li>
+<li>For convenience, Element/entity objects belonging to a Group object can have their attributes modified at any time via Group object functions.</li>
+<li>Group objects can be used to define the set of Element/entity objects which can be dragged-and-dropped as part of a <code>dragZone</code> object. See test demo <a href="../demo/canvas-026.html">Canvas-026</a> for an example.</li>
+<li>Group objects can be used to define a set of entity objects to which a <a href="sc-filter-engine.html">filter effect</a> can be applied.</li>
+</ul>
+<p>Most of the code relating to Group object functionality can be found in the following files:</p>
+<ul>
+<li><a href="../source/factory/group.html">factory/group.js</a> - for the Group object's factory function.</li>
+<li><a href="../source/mixin/cascade.html">mixin/cascade.js</a> - used by Stack and Cell objects to help manage their Group objects.</li>
+</ul>
+<h3 id="create-serialize-clone-and-kill-group-objects">Create, serialize, clone and kill Group objects</h3>
+<p>For the most part, Group objects act like regular SC objects, with a few quirks …</p>
+<h4 id="create">Create</h4>
+<p>A new Group object can be created using the <code>scrawl.makeGroup({key: value, ...})</code> factory function:</p>
+<ul>
+<li>While Group objects can share a <code>name</code> attribute with a Stack artefact or Cell object, dev-users should try to keep Group names unique - just to be on the safe side.</li>
+<li>Group objects do not need to be associated with a Stack artefact or Cell object <code>host</code>, but when they are being created specifically to be part of such objects then include the <code>host</code> attribute in the argument object, setting its value to either the host object itself, or the object's <code>name</code> string.</li>
+<li>Element artefacts and entity objects can be added to the Group during its creation by setting the argument object's <code>artefacts</code> attribute to an array of Element/entity <code>name</code> strings; alternatively, populate the Group with Element/entity objects after Group creation completes - <code>scrawl.makeGroup({...}).addArtefacts(item, item, ...)</code>.</li>
+</ul>
+<h4 id="serialize">Serialize</h4>
+<p>Group objects can be serialized using the <code>group.saveAsPacket()</code> function. The serialized packet will include all the currently associated artefact/entity object <code>name</code> strings in the <code>artefacts</code> attribute, but will not clone the artefacts themselves.</p>
+<p>(TODO: Repo-devs need to review how Group serialization should work with respect to associated artefacts and entitys - should there be a mechanism in the functionality to tell the <code>group.saveAsPacket()</code> invocation to serialize associated objects at the same time as it serializes the Group object?)</p>
+<h4 id="clone">Clone</h4>
+<p>Group objects can be created from another Group by cloning: <code>group.clone({key: value, ...})</code>. </p>
+<p>The cloned Group object will include the currently associated artefact/entity object <code>name</code> strings in the <code>artefacts</code> attribute, but will not clone those objects themselves. </p>
+<p>This may lead to issues if the Group is involved in the Display cycle as those objects will get stamped twice: once through association with the original Group, and again through association with the clone Group.</p>
+<h4 id="kill">Kill</h4>
+<p>Use the <code>group.kill()</code> function. Unlike (most) other SC objects, the Group <code>kill</code> function can take 1-2 boolean arguments which, when set to <code>true</code>, will also kill all the artefact/entity objects currently associated with the group:</p>
+<ul>
+<li><code>group.kill()</code>, <code>group.kill(false)</code> - remove the Group object from the SC ecosystem, leaving the associated artefact/entity objects untouched.</li>
+<li><code>group.kill(true)</code>, <code>group.kill(true, false)</code> - kill the Group object's associated artefact/entity objects before removing the Group object from the SC ecosystem. Any artefact elements will remain in the DOM.</li>
+<li><code>group.kill(true, true)</code> - the same as <code>group.kill(true)</code>, except this time artefact elements will also be deleted from the DOM.</li>
+</ul>
+<p>Group objects also include functionality to kill all their currently associated artifact/entity objects while keeping the Group object itself intact:</p>
+<ul>
+<li><code>group.killArtefacts()</code>, <code>group.killArtefacts(false)</code> - any artefact elements will remain in the DOM</li>
+<li><code>group.killArtefacts(true)</code> - any artefact elements will be deleted from the DOM</li>
+</ul>
+<h3 id="group-discovery-in-the-sc-library-and-beyond">Group discovery in the SC library, and beyond</h3>
+<p>[copy required]</p>
+<h3 id="add-group-objects-to-stackcell-objects-and-remove-them">Add Group objects to Stack/Cell objects, and remove them</h3>
+<p>[copy required]</p>
+<h4 id="group-visibility">Group visibility</h4>
+<p>[copy required]</p>
+<h4 id="group-order-and-sorting">Group order and sorting</h4>
+<p>[copy required]</p>
+<h3 id="add-element-and-entity-objects-to-group-objects-and-remove-them">Add Element and entity objects to Group objects, and remove them</h3>
+<p>[copy required]</p>
+<h4 id="artefact-sorting">Artefact sorting</h4>
+<p>[copy required]</p>
+<h3 id="update-element-and-entity-object-attributes-using-group-object-functions">Update Element and entity object attributes using Group object functions</h3>
+<p>[copy required]</p>
+<h3 id="apply-visual-filters-to-groups-containing-entity-objects">Apply visual filters to Groups containing entity objects</h3>
+<p>[copy required]</p>
 <h2 id="sc-cell-objects">SC Cell objects</h2>
 <p>[describe]</p>
+<h2 id="object-processing-order-within-the-scene-graph">Object processing order within the scene graph</h2>
+<p>When the dev-user adds <code>pivot</code>, <code>mimic</code>, and <code>path</code> references into their SC code (see the <a href="sc-positioning.html">positioning system</a> page for details), they also introduce <strong>artefact dependencies</strong>: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.</p>
+<blockquote>
+  <p><strong>tl;dr: - SC includes no functionality to internally construct and maintain a <a href="https://en.wikipedia.org/wiki/Dependency_graph">dependency graph</a></strong> describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the dev-user to tell SC the order in which artefacts should calculate/update their state.</p>
+</blockquote>
+<p>The <a href="sc-animation-systems.html">SC Display cycle</a> comprises the following steps:</p>
+<pre><code>1: Clear
+
+2: Compile
+   2.1: Calculate
+   2.2: Stamp
+
+3: Show</code></pre>
+<p>A number of attributes are used across the code base to describer ordering; it's important not to confuse them:</p>
+<ul>
+<li><p>SC <strong><em>Cell</em></strong> artefacts use their <code>compileOrder</code> and <code>showOrder</code> attributes to determine in which order they will perform the Display cycle compile and show steps.</p></li>
+<li><p>SC <strong><em>Group</em></strong> objects have an <code>order</code> attribute which comes into play when two or more Groups contribute entitys to a Cell's display.</p></li>
+<li><p>SC <strong><em>Artefacts</em></strong> have <code>calculateOrder</code> and <code>stampOrder</code> attributes (which can both be set to the same value using the <code>order</code> pseudo-attribute).</p></li>
+</ul>
+<p>To understand ordering, consider the code presented in the scene graph section above. But this time the factory functions have been rearranged in the file as shown:</p>
+<pre><code>canvas.buildCell({
+  name: name('my-extra-cell'),
+  backgroundColor: 'aliceblue',
+  ...
+});
+
+scrawl.makeGroup({
+  name: name('my-additional-group'),
+  host: name('my-extra-cell'),
+});
+
+canvas.buildCell({
+  name: name('my-hidden-cell'),
+  shown: false,
+  backgroundColor: 'lightgray',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('yellow-block'),
+  group: name('my-hidden-cell'),
+  fillStyle: 'yellow',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('brown-block'),
+  pivot: name('orange-block'),
+  fillStyle: 'brown',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('orange-block'),
+  fillStyle: 'orange',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('blue-block'),
+  group: name('my-additional-group'),
+  fillStyle: 'blue',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('red-block'),
+  group: name('my-extra-cell'),
+  pivot: name('blue-block'),
+  fillStyle: 'red',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('last-block'),
+  group: name('my-extra-cell'),
+  fillStyle: name('my-hidden-cell'),
+  ...
+});</code></pre>
+<p>The SC Display cycle will process the above code in the following order:</p>
+<pre><code>Canvas {name: 'my-canvas'}
+
+  Cell {name: 'my-extra-cell', compileOrder: 0, shown: true}
+
+    Group {name: 'my-extra-cell', order: 0}
+
+      Block {
+        name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+      Block {
+        name: 'last-block', lockTo: 'start', fillStyle: 'my-hidden-cell', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+    Group {name: 'my-additional-group', order: 0}
+
+      Block {
+        name: 'blue-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+  Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
+
+    Group {name: 'my-hidden-cell', order: 0}
+
+      Block {
+        name: 'yellow-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+  Cell {name: 'my-canvas_base', compileOrder: 9999}
+
+    Group {name: 'my-canvas_base'}
+
+      Block {
+        name: 'brown-block', lockTo: 'pivot', pivot: 'orange-block', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+      Block {
+        name: 'orange-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }</code></pre>
+<p><strong>my-extra-cell</strong></p>
+<ol>
+<li><code>red-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
+<li><code>last-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
+<li><code>blue-block</code> - has no dependencies</li>
+</ol>
+<p><strong>my-hidden-cell</strong></p>
+<ol start="4">
+<li><code>yellow-block</code> - has no dependencies</li>
+</ol>
+<p><strong>my-canvas_base</strong></p>
+<ol start="5">
+<li><code>brown-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
+<li><code>orange-block</code> - has no dependencies</li>
+</ol>
+<p>… Which will lead to an incorrect canvas output:</p>
+<table>
+<thead>
+<tr>
+<th id="original_code_output">Original code output</th>
+<th id="rearranged_code_output">Rearranged code output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="sc-groups-cells-asset-001.webp" alt="Original code output" /></td>
+<td><img src="sc-groups-cells-asset-002.webp" alt="Rearranged code output" /></td>
+</tr>
+</tbody>
+</table>
+<p>To fix this, the dev-user can either: </p>
+<ul>
+<li>Rearrange the factory functions to get SC to process them in the desired order (because: when SC objects have the same order values, SC will process them in the order they were declared in the code)</li>
+<li>Tell SC the order in which the Cell, Group and Block objects should be processed by setting their <code>compileOrder</code> / <code>order</code> values, as follows:</li>
+</ul>
+<pre><code>// The 'my-extra-cell' Cell needs to compile after 'my-hidden-cell'
+canvas.buildCell({
+  name: name('my-extra-cell'),
+  ...
+  compileOrder: 1,
+});
+
+// The 'my-extra-cell' namesake Group needs to compile after 'my-additional-group'
+scrawl.findGroup('my-extra-cell').set({ order: 1 });
+
+scrawl.makeGroup({
+  name: name('my-additional-group'),
+  host: name('my-extra-cell'),
+});
+
+canvas.buildCell({
+  name: name('my-hidden-cell'),
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('yellow-block'),
+  group: name('my-hidden-cell'),
+  fillStyle: 'yellow',
+  ...
+});
+
+// This block needs to calculate and stamp after its pivot
+scrawl.makeBlock({
+  name: name('brown-block'),
+  pivot: name('orange-block'),
+  ...
+  order: 1,
+});
+
+scrawl.makeBlock({
+  name: name('orange-block'),
+  fillStyle: 'orange',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('blue-block'),
+  group: name('my-additional-group'),
+  fillStyle: 'blue',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('red-block'),
+  group: name('my-extra-cell'),
+  pivot: name('blue-block'),
+  fillStyle: 'red',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('last-block'),
+  group: name('my-extra-cell'),
+  fillStyle: name('my-hidden-cell'),
+  ...
+});</code></pre>
+<p>Now the SC Display cycle processes the code like this:</p>
+<pre><code>Canvas {name: 'my-canvas'}
+
+  Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
+
+    Group {name: 'my-hidden-cell', order: 0}
+
+      Block {
+        name: 'yellow-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+  Cell {name: 'my-extra-cell', compileOrder: 1, shown: true}
+
+    Group {name: 'my-additional-group', order: 0}
+
+      Block {
+        name: 'blue-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+    Group {name: 'my-extra-cell', order: 1}
+
+      Block {
+        name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+      Block {
+        name: 'last-block', lockTo: 'start', fillStyle: 'my-hidden-cell', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+  Cell {name: 'my-canvas_base', compileOrder: 9999}
+
+    Group {name: 'my-canvas_base'}
+
+      Block {
+        name: 'orange-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+      Block {
+        name: 'brown-block', lockTo: 'pivot', pivot: 'orange-block', 
+        calculateOrder: 1, stampOrder: 1
+      }</code></pre>
+<p>Which will lead to the expected outcome:</p>
+<p><strong>my-hidden-cell</strong></p>
+<ol>
+<li><code>yellow-block</code> - has no dependencies</li>
+</ol>
+<p><strong>my-extra-cell</strong></p>
+<ol start="2">
+<li><code>blue-block</code> - has no dependencies</li>
+<li><code>red-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
+<li><code>last-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
+</ol>
+<p><strong>my-canvas_base</strong></p>
+<ol start="5">
+<li><code>orange-block</code> - has no dependencies</li>
+<li><code>brown-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
+</ol>
     </main>
     
     <nav>

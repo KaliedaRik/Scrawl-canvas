@@ -178,6 +178,7 @@
             <li>Wide-gamut color support - <code>display-p3</code></li>
             <li>Emulating CSS <code>object-fit</code></li>
           </ul>
+          <li>Canvas <code>base</code> Cell pass-through functions</li>
         </ul>
         <li><a href="sc-dom-artefacts.html#stack-artefact-notes">Stack artefact notes</a></li>
         <ul>
@@ -206,7 +207,25 @@
 
       <h3><a href="sc-groups-cells.html">Scrawl-canvas Groups and Cells</a></h3>
       <ul>
-        <li><a href="sc-groups-cells.html#">[TODO: write doc]</a></li>
+        <li><a href="sc-groups-cells.html#the-sc-scene-graph">The SC scene graph</a></li>
+        <li><a href="sc-groups-cells.html#sc-group-objects">SC Group objects</a></li>
+        <ul>
+          <li>Create, serialize, clone and kill Group objects</li>
+          <li>Group discovery in the SC library, and beyond</li>
+          <li>Add Group objects to Stack/Cell objects, and remove them</li>
+          <ul>
+            <li>Group visibility</li>
+            <li>Group order and sorting</li>
+          </ul>
+          <li>Add Element and entity objects to Group objects, and remove them</li>
+          <ul>
+            <li>Artefact sorting</li>
+          </ul>
+          <li>Update Element and entity object attributes using Group object functions</li>
+          <li>Apply visual filters to Groups containing entity objects</li>
+        </ul>
+        <li><a href="sc-groups-cells.html#sc-cell-objects">SC Cell objects</a></li>
+        <li><a href="sc-groups-cells.html#object-processing-order-within-the-scene-graph">Object processing order within the scene graph</a></li>
       </ul>
 
       <h3><a href="sc-animation-systems.html">Animation and the Display cycle</a></h3>
@@ -255,7 +274,6 @@
             <li>Path specifics</li>
           </ul>
         </ul>
-        <li><a href="sc-positioning.html#calculation-order">Calculation order</a></li>
       </ul>
 
       <h3><a href="sc-filter-engine.html">The Scrawl-canvas filter engine</a></h3>

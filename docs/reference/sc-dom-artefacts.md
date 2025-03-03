@@ -422,6 +422,20 @@ As a result of the above, and because of the way SC works under-the-hood, SC (ve
 
 The code for managing this emulation can be found in the [factory/cell.js](../source/factory/cell.html) file - specifically the `cell.show()` function. Additional details can be found in the [Animation and the Display cycle](sc-animation-systems.html) page of this Runbook.
 
+### Canvas `base` Cell pass-through functions
+While the SC Canvas artefact wraps a `<canvas>` DOM element, hardly any graphical work happens in that canvas element. Instead, every Canvas artefact includes a Cell object - found at the `canvas.base` attribute - wrapping its own hidden `<canvas>` element which never gets added to the DOM. 
+
+Performing (almost) all of the graphical work on this hidden canvas has significant speed advantages compared to doing that work in the visible canvas element: browsers can manage that work as they see fit rather than directly hit the DOM for every canvas manipulation update.
+
+The Canvas artefact object affords a number of *convenience functions* to dev-users - essentially pass-through functions which take the function arguments and pass them through to the most appropriate `base` Cell object function. They also supply convenience functions for retrieving the `base` Cell object and its associated *namespace* Group object:
++ `canvas.get('baseName')` - retrieve the `base` Cell object's `name`, which is also the name used by that Cell object's *namesake* Group object (the same as `canvas?.base?.name`).
++ `canvas.get('baseGroup')` - retrieve the `base` Cell's Group object (equivalent to `canvas?.base?.group`).
++ `canvas.get('base')` and `canvas.getBase()` return the `base` Cell object (as does `canvas?.base`).
++ `canvas.getBaseHere()` returns the `base` Cell object's `here` object (as does `canvas?.base?.here`).
++ `canvas.set({backgroundColor: 'css-color-string'})` and `canvas.setBase({backgroundColor: 'css-color-string'})` both set the `base` Cell's background color.
++ More broadly, `canvas?.base?.set({key: value, ...})` and `canvas.setBase({key: value, ...})` are different ways of doing the same thing.
++ Similarly `canvas?.base?.setDelta({key: value, ...})` and `canvas.deltaSetBase({key: value, ...})` are equivalent.
+
 ## Stack artefact notes
 SC will wrap DOM elements into Stack artefact objects under the following conditions:
 + Any element with a `display: block;` CSS property which has a `data-scrawl-stack` attribute discovered in the DOM during page initialization.
