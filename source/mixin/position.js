@@ -1379,9 +1379,6 @@ export default function (P = Ωempty) {
                 ignoreDragForY,
                 isBeingDragged,
                 lockTo,
-                mimic,
-                path,
-                pivot,
                 pivotCorner,
                 pivotPin,
                 pivotIndex,
@@ -1389,8 +1386,31 @@ export default function (P = Ωempty) {
                 useMimicStart,
             } = this;
 
+            let { mimic, path, pivot } = this;
+
             let physParticle = this.particle,
                 textIndex;
+
+            // To help fix the bug where user has pivoted to an artefact which they have not yet defined
+            if (pivot && pivot.substring) {
+
+                this.set({ pivot });
+                pivot = this.pivot;
+            }
+
+            // To help fix the bug where user has mimicked to an artefact which they have not yet defined
+            if (mimic && mimic.substring) {
+
+                this.set({ mimic });
+                mimic = this.mimic;
+            }
+
+            // To help fix the bug where user has pathed to an artefact which they have not yet defined
+            if (path && path.substring) {
+
+                this.set({ path });
+                path = this.path;
+            }
 
             const confirmLock = function (lock) {
 

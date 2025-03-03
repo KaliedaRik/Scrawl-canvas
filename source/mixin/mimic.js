@@ -103,6 +103,9 @@ export default function (P = Ωempty) {
                 if (this.useMimicOffset) this.dirtyOffset = true;
                 if (this.useMimicRotation) this.dirtyRotation = true;
             }
+
+            // To help fix the bug where user has mimicked to an artefact which they have not yet defined
+            else if (newMimic == null) this.mimic = item;
         }
     };
 

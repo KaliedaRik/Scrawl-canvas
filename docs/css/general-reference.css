@@ -109,3 +109,11 @@ blockquote {
   padding: 4px;
   padding-left: 1rem;
 }
+
+table {
+	width: 100%;
+
+	& img {
+		width: 100%;
+	}
+}

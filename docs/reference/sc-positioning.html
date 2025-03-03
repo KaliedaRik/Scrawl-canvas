@@ -238,82 +238,116 @@
 <li><p>SC <strong><em>Group</em></strong> objects have an <code>order</code> attribute which comes into play when two or more Groups contribute entitys to a Cell's display.</p></li>
 <li><p>SC <strong><em>Artefacts</em></strong> have <code>calculateOrder</code> and <code>stampOrder</code> attributes (which can both be set to the same value using the <code>order</code> pseudo-attribute).</p></li>
 </ul>
-<p>To understand ordering, consider the following code:</p>
-<pre><code>const canvas = scrawl.findCanvas('my-canvas');
-
-canvas.buildCell({
-    name: 'my-extra-cell',
+<p>To understand ordering, consider the code presented in the <a href="sc-groups-cells.html">Scrawl-canvas Groups and Cells</a> page. But this time the factory functions have been rearranged in the file as shown:</p>
+<pre><code>canvas.buildCell({
+  name: name('my-extra-cell'),
+  backgroundColor: 'aliceblue',
+  ...
 });
 
 scrawl.makeGroup({
-    name: 'my-additional-group',
-    host: 'my-extra-cell',
+  name: name('my-additional-group'),
+  host: name('my-extra-cell'),
 });
 
 canvas.buildCell({
-    name: 'my-hidden-cell',
-    shown: false,
+  name: name('my-hidden-cell'),
+  shown: false,
+  backgroundColor: 'lightgray',
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'yellow-block',
-    group: 'my-hidden-cell',
+  name: name('yellow-block'),
+  group: name('my-hidden-cell'),
+  fillStyle: 'yellow',
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'black-block',
-    pivot: 'white-block',
-    lockTo: 'pivot'
+  name: name('brown-block'),
+  pivot: name('orange-block'),
+  fillStyle: 'brown',
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'white-block',
+  name: name('orange-block'),
+  fillStyle: 'orange',
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'blue-block',
-    group: 'my-additional-group',
+  name: name('blue-block'),
+  group: name('my-additional-group'),
+  fillStyle: 'blue',
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'red-block',
-    group: 'my-extra-cell',
-    pivot: 'blue-block',
-    lockTo: 'pivot',
+  name: name('red-block'),
+  group: name('my-extra-cell'),
+  pivot: name('blue-block'),
+  fillStyle: 'red',
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'green-block',
-    group: 'my-extra-cell',
-    fillStyle: 'my-hidden-cell',
+  name: name('last-block'),
+  group: name('my-extra-cell'),
+  fillStyle: name('my-hidden-cell'),
+  ...
 });</code></pre>
 <p>The SC Display cycle will process the above code in the following order:</p>
 <pre><code>Canvas {name: 'my-canvas'}
 
-    Cell {name: 'my-extra-cell', compileOrder: 0, shown: true}
+  Cell {name: 'my-extra-cell', compileOrder: 0, shown: true}
 
-        Group {name: 'my-extra-cell', order: 0}
-            Block {name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', calculateOrder: 0}
-            Block {name: 'green-block', lockTo: 'start', fillStyle: 'my-hidden-cell', calculateOrder: 0}
+    Group {name: 'my-extra-cell', order: 0}
 
-        Group {name: 'my-additional-group', order: 0}
-            Block {name: 'blue-block', lockTo: 'start', calculateOrder: 0}
+      Block {
+        name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', 
+        calculateOrder: 0, stampOrder: 0,
+      }
 
-    Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
+      Block {
+        name: 'last-block', lockTo: 'start', fillStyle: 'my-hidden-cell', 
+        calculateOrder: 0, stampOrder: 0,
+      }
 
-        Group {name: 'my-hidden-cell', order: 0}
-            Block {name: 'yellow-block', lockTo: 'start', calculateOrder: 0}
+    Group {name: 'my-additional-group', order: 0}
 
-    Cell {name: 'my-canvas_base', compileOrder: 9999}
+      Block {
+        name: 'blue-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
 
-        Group {name: 'my-canvas_base'}
-            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 0}
-            Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}</code></pre>
-<p>Which will lead to an incorrect canvas output:</p>
+  Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
+
+    Group {name: 'my-hidden-cell', order: 0}
+
+      Block {
+        name: 'yellow-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+  Cell {name: 'my-canvas_base', compileOrder: 9999}
+
+    Group {name: 'my-canvas_base'}
+
+      Block {
+        name: 'brown-block', lockTo: 'pivot', pivot: 'orange-block', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+      Block {
+        name: 'orange-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }</code></pre>
 <p><strong>my-extra-cell</strong></p>
 <ol>
 <li><code>red-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
-<li><code>green-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
+<li><code>last-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
 <li><code>blue-block</code> - has no dependencies</li>
 </ol>
 <p><strong>my-hidden-cell</strong></p>
@@ -322,89 +356,137 @@ scrawl.makeBlock({
 </ol>
 <p><strong>my-canvas_base</strong></p>
 <ol start="5">
-<li><code>black-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>white-block</code></li>
-<li><code>white-block</code> - has no dependencies</li>
+<li><code>brown-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
+<li><code>orange-block</code> - has no dependencies</li>
 </ol>
-<p>To fix this, the dev-user needs to give SC details about ordering, like this:</p>
-<pre><code>const canvas = scrawl.findCanvas('my-canvas');
-
-// 'my-extra-cell' Cell needs to compile after 'my-hidden-cell'
+<p>… Which will lead to an incorrect canvas output:</p>
+<table>
+<thead>
+<tr>
+<th id="original_code_output">Original code output</th>
+<th id="rearranged_code_output">Rearranged code output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="sc-groups-cells-asset-001.webp" alt="Original code output" /></td>
+<td><img src="sc-positioning-asset-001.webp" alt="Rearranged code output" /></td>
+</tr>
+</tbody>
+</table>
+<p>To fix this, the dev-user can either: </p>
+<ul>
+<li>Rearrange the factory functions to get SC to process them in the desired order (because: when SC objects have the same order values, SC will process them in the order they were declared in the code)</li>
+<li>Tell SC the order in which the Cell, Group and Block objects should be processed by setting their <code>compileOrder</code> / <code>order</code> values, as follows:</li>
+</ul>
+<pre><code>// The 'my-extra-cell' Cell needs to compile after 'my-hidden-cell'
 canvas.buildCell({
-    name: 'my-extra-cell',
-    compileOrder: 1,
+  name: name('my-extra-cell'),
+  ...
+  compileOrder: 1,
 });
 
-// 'my-extra-cell' Group needs to compile after 'my-additional-group'
+// The 'my-extra-cell' namesake Group needs to compile after 'my-additional-group'
 scrawl.findGroup('my-extra-cell').set({ order: 1 });
 
 scrawl.makeGroup({
-    name: 'my-additional-group',
-    host: my-extra-cell,
+  name: name('my-additional-group'),
+  host: name('my-extra-cell'),
 });
 
-// 'my-hidden-cell' Cell needs to compile before 'my-extra-cell'
 canvas.buildCell({
-    name: 'my-hidden-cell',
-    shown: false,
-    compileOrder: 0,
+  name: name('my-hidden-cell'),
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'yellow-block',
-    group: 'my-hidden-cell',
+  name: name('yellow-block'),
+  group: name('my-hidden-cell'),
+  fillStyle: 'yellow',
+  ...
 });
 
-// This block needs to calculate after its pivot
+// This block needs to calculate and stamp after its pivot
 scrawl.makeBlock({
-    name: 'black-block',
-    pivot: 'white-block',
-    lockTo: 'pivot',
-    calculateOrder: 1,
-});
-
-scrawl.makeBlock({
-    name: 'white-block',
-});
-
-scrawl.makeBlock({
-    name: 'blue-block',
-    group: 'my-additional-group',
+  name: name('brown-block'),
+  pivot: name('orange-block'),
+  ...
+  order: 1,
 });
 
 scrawl.makeBlock({
-    name: 'red-block',
-    group: 'my-extra-cell',
-    pivot: 'blue-block',
-    lockTo: 'pivot',
+  name: name('orange-block'),
+  fillStyle: 'orange',
+  ...
 });
 
 scrawl.makeBlock({
-    name: 'green-block',
-    group: 'my-extra-cell',
-    fillStyle: 'my-hidden-cell',
+  name: name('blue-block'),
+  group: name('my-additional-group'),
+  fillStyle: 'blue',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('red-block'),
+  group: name('my-extra-cell'),
+  pivot: name('blue-block'),
+  fillStyle: 'red',
+  ...
+});
+
+scrawl.makeBlock({
+  name: name('last-block'),
+  group: name('my-extra-cell'),
+  fillStyle: name('my-hidden-cell'),
+  ...
 });</code></pre>
 <p>Now the SC Display cycle processes the code like this:</p>
 <pre><code>Canvas {name: 'my-canvas'}
 
-    Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
+  Cell {name: 'my-hidden-cell', compileOrder: 0, shown: false}
 
-        Group {name: 'my-hidden-cell', order: 0}
-            Block {name: 'yellow-block', lockTo: 'start', calculateOrder: 0}
+    Group {name: 'my-hidden-cell', order: 0}
 
-    Cell {name: 'my-extra-cell', compileOrder: 1, shown: true}
+      Block {
+        name: 'yellow-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
 
-        Group {name: 'my-additional-group', order: 0}
-            Block {name: 'blue-block', lockTo: 'start', calculateOrder: 0}
+  Cell {name: 'my-extra-cell', compileOrder: 1, shown: true}
 
-        Group {name: 'my-extra-cell', order: 1}
-            Block {name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', calculateOrder: 0}
-            Block {name: 'green-block', lockTo: 'start', fillStyle: 'my-hidden-cell', calculateOrder: 0}
+    Group {name: 'my-additional-group', order: 0}
 
-    Cell {name: 'my-canvas_base', compileOrder: 9999}
+      Block {
+        name: 'blue-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
 
-        Group {name: 'my-canvas_base'}
-            Block {name: 'white-block', lockTo: 'start', calculateOrder: 0}
-            Block {name: 'black-block', lockTo: 'pivot', pivot: 'white-block', calculateOrder: 1}</code></pre>
+    Group {name: 'my-extra-cell', order: 1}
+
+      Block {
+        name: 'red-block', lockTo: 'pivot', pivot: 'blue-block', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+      Block {
+        name: 'last-block', lockTo: 'start', fillStyle: 'my-hidden-cell', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+  Cell {name: 'my-canvas_base', compileOrder: 9999}
+
+    Group {name: 'my-canvas_base'}
+
+      Block {
+        name: 'orange-block', lockTo: 'start', 
+        calculateOrder: 0, stampOrder: 0,
+      }
+
+      Block {
+        name: 'brown-block', lockTo: 'pivot', pivot: 'orange-block', 
+        calculateOrder: 1, stampOrder: 1
+      }</code></pre>
 <p>Which will lead to the expected outcome:</p>
 <p><strong>my-hidden-cell</strong></p>
 <ol>
@@ -414,12 +496,12 @@ scrawl.makeBlock({
 <ol start="2">
 <li><code>blue-block</code> - has no dependencies</li>
 <li><code>red-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
-<li><code>green-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
+<li><code>last-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
 </ol>
 <p><strong>my-canvas_base</strong></p>
 <ol start="5">
-<li><code>white-block</code> - has no dependencies</li>
-<li><code>black-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>white-block</code></li>
+<li><code>orange-block</code> - has no dependencies</li>
+<li><code>brown-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
 </ol>
     </main>
     

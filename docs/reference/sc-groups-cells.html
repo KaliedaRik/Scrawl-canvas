@@ -23,10 +23,196 @@
 
     <main>
         <h1 id="scrawl-canvas-groups-and-cells">Scrawl-canvas Groups and Cells</h1>
+<p>Scrawl-canvas works by generating a <strong>retained mode</strong> description - an object model of graphical primatives (called entitys) - for a scene which displays in a <code>&lt;canvas&gt;</code> element. SC builds this <a href="https://en.wikipedia.org/wiki/Scene_graph">scene graph</a> using Group and Cell objects, alongside entity objects which get gathered into the Group objects that have been created for the scene.</p>
+<blockquote>
+  <p><strong>tl;dr: <em>SC is not a game engine!</strong></em> The SC scene graph does not use the classic <a href="https://en.wikipedia.org/wiki/Tree_(abstract_data_type)">tree structure</a> approach to build out a top-down hierarchy of layers and nodes to describe the scene. Rather, SC uses a more bottom-up approach to creating the scene graph where entity objects control how, where and when they will appear in the canvas display. Using a tree structure for the scene graph may have been a more efficient design choice, but <em>SC is not a game engine!</em></p>
+  <p>Dev-users should be aware that this - <em>somewhat different</em> - approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.</p>
+</blockquote>
+<h2 id="the-sc-scene-graph">The SC scene graph</h2>
+<p>The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene-graph, for demonstration purposes; none of the test demos generate scene graphs as complex as this one:</p>
+<p><img src="sc-groups-cells-asset-001.webp" alt="Code output" /></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta http-equiv="x-ua-compatible" content="ie=edge"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;style&gt;
+      canvas { margin: 1em auto; }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;canvas 
+      id="my-canvas"
+      width="600"
+      height="400"
+      data-scrawl-canvas
+      data-base-background-color="slategray"
+    &gt;&lt;/canvas&gt;
+
+    &lt;script type="module"&gt;
+      // Import SC
+      import * as scrawl from 'scrawl-canvas';
+
+      // Get a handle to the Canvas artefact
+      const canvas = scrawl.findCanvas('my-canvas');
+
+      // Namespacing boilerplate
+      const namespace = `${canvas.name}-placehold`;
+      const name = (n) =&gt; `${namespace}-${n}`;
+
+      // The Canvas artefact includes a hidden Cell, used as a Pattern style by an entity
+      canvas.buildCell({
+          name: name('my-hidden-cell'),
+          shown: false,
+          dimensions: [80, 80],
+          backgroundColor: 'lightgray',
+      });
+
+      // A yellow Block in the hidden Cell
+      scrawl.makeBlock({
+          name: name('yellow-block'),
+          group: name('my-hidden-cell'),
+          dimensions: ['50%', '50%'],
+          start: ['center', 'center'],
+          handle: ['center', 'center'],
+          roll: 30,
+          fillStyle: 'yellow',
+          lineWidth: 2,
+          method: 'fillThenDraw',
+      });
+
+      // An extra Cell that will appear towards the bottom-right of the canvas display
+      canvas.buildCell({
+          name: name('my-extra-cell'),
+          dimensions: ['50%', '50%'],
+          start: ['70%', '70%'],
+          handle: ['50%', '50%'],
+          roll: 45,
+          backgroundColor: 'aliceblue',
+      });
+
+      // The extra Cell has an additional Group as well as its namesake Group
+      scrawl.makeGroup({
+          name: name('my-additional-group'),
+          host: name('my-extra-cell'),
+      });
+
+      // Part of the additional Group
+      scrawl.makeBlock({
+          name: name('blue-block'),
+          group: name('my-additional-group'),
+          dimensions: ['100%', '60%'],
+          offsetY: 20,
+          fillStyle: 'blue',
+          lineWidth: 2,
+          method: 'fillThenDraw',
+      });
+
+      // For this scene, the extra Cell's namesake Group
+      // needs to compile after its additional Group
+      scrawl.findGroup(name('my-extra-cell')).set({ order: 1 });
+
+      // Part of the extra Cell's namesake Group
+      scrawl.makeBlock({
+          name: name('red-block'),
+          group: name('my-extra-cell'),
+          pivot: name('blue-block'),
+          lockTo: 'pivot',
+          dimensions: ['40%', '40%'],
+          fillStyle: 'red',
+          lineWidth: 2,
+          method: 'fillThenDraw',
+      });
+
+      // Part of the extra Cell's namesake Group
+      // - using the hidden Cell as its fillStyle value
+      scrawl.makeBlock({
+          name: name('last-block'),
+          group: name('my-extra-cell'),
+          fillStyle: name('my-hidden-cell'),
+          dimensions: ['75%', '75%'],
+          start: ['25%', '25%'],
+          lineWidth: 2,
+          method: 'fillThenDraw',
+      });
+
+      // Part of the Canvas artefact's base Cell's namesake Group
+      scrawl.makeBlock({
+          name: name('orange-block'),
+          dimensions: ['40%', '40%'],
+          start: ['30%', '30%'],
+          handle: ['center', 'center'],
+          fillStyle: 'orange',
+          lineWidth: 2,
+          method: 'fillThenDraw',
+      });
+
+      // Part of the Canvas artefact's base Cell's namesake Group
+      scrawl.makeBlock({
+          name: name('black-block'),
+          dimensions: ['30%', '30%'],
+          pivot: name('orange-block'),
+          lockTo: 'pivot',
+          handle: ['center', 'center'],
+          fillStyle: 'black',
+          lineWidth: 2,
+          method: 'fillThenDraw',
+      });
+
+      canvas.render();
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>The scene graph for the above code looks like this:</p>
+<pre><code>- Canvas artefact 'my-canvas'
+  |
+  |- base Cell object 'my-canvas_base'
+  |  |
+  |  |- namesake Group object 'my-canvas_base'
+  |     |
+  |     |- Block entity 'orange-block'
+  |     |- Block entity 'brown-block' (position dependency on 'orange-block')
+  |
+  |- hidden Cell object 'my-hidden-cell'
+  |  |
+  |  |- namesake Group object 'my-hidden-cell'
+  |     |
+  |     |- Block entity 'yellow-block'
+  |
+  |- extra Cell object 'my-extra-cell'
+     |
+     |- additional Group object 'my-additional-group'
+     |  |
+     |  |- Block entity 'blue-block'
+     |
+     |- namesake Group object 'my-extra-cell'
+        |
+        |- Block entity 'red-block' (position dependency on 'blue-block')
+        |- Block entity 'last-block' (style dependency on 'my-hidden-cell')</code></pre>
+<p>The scene graph described above demonstrates these properties:</p>
 <ul>
-<li>A brief overview of the Group object, its relationship to SC Cell wrappers and how that plays with SC's concept of a <a href="https://en.wikipedia.org/wiki/Scene_graph">scene graph</a></li>
-<li>Details of the SC Cell object</li>
+<li>The scene graph hierarchy is exactly four levels deep …<ul>
+<li>Level 1 - Artefact objects,</li>
+<li>Level 2 - Cell objects (relevant only for Canvas artefacts),</li>
+<li>Level 3 - Group objects,</li>
+<li>Level 4 - Entity objects.</li></ul></li>
+<li>Every Cell object has a namesake Group object.</li>
+<li>Cells cannot be nested; Groups cannot be nested, etc.</li>
+<li>Though only shown here for one Cell, every Cell, Group and Entity object can control its own visibility in the Canvas display.</li>
+<li>Entitys are assigned to Groups (and Groups to Cells, Cells to the Canvas artifact) as they are created - the object lower down the hierarchy maintains details of the object it has assigned itself to.</li>
+<li>Though not shown here … Cell, Group and Entity objects can reassign themsleves to a different Canvas, Cell or Group object (respectively) at any time.</li>
+<li>Again not shown here … entitys can belong to more than one Group object at any time.</li>
+<li>Furthermore not shown here … Group objects can exist independently of Cell objects - they're just collections of entity objects.</li>
+<li>Cell objects can position themselves in the Canvas display; Entity objects can position themselves in their Cell's display.</li>
+<li>Group objects play no role in positioning - there is no "cascade of matrix multiplications" between Cells, Groups and entitys.</li>
+<li>Some of the entitys have direct dependencies on other entitys for their positioning data, and one entity has a direcet dependency on a Cell to supply its fill style.</li>
+<li>A final not shown here … Entitys can change their positioning and/or styling dependencies at any time.</li>
 </ul>
+<h2 id="sc-group-objects">SC Group objects</h2>
+<p>[describe]</p>
+<h2 id="sc-cell-objects">SC Cell objects</h2>
+<p>[describe]</p>
     </main>
     
     <nav>
