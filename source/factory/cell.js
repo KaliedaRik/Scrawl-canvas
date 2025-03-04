@@ -563,6 +563,10 @@ G.group = function () {
 
     return group[this.name];
 };
+P.getGroup = function () {
+    
+    return group[this.name];
+};
 
 
 // #### Prototype functions

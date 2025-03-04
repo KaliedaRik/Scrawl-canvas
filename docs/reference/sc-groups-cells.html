@@ -257,18 +257,63 @@
 <li><code>group.killArtefacts(true)</code> - any artefact elements will be deleted from the DOM</li>
 </ul>
 <h3 id="group-discovery-in-the-sc-library-and-beyond">Group discovery in the SC library, and beyond</h3>
-<p>[copy required]</p>
+<p>Group objects are tracked in the SC library, in the <code>library.group</code> section. If the dev-user needs to retrieve a handle to a Group object, and they know the object's name attribute, they can do this using <code>scrawl.findGroup('name-string')</code>.</p>
+<p>SC also includes functionality for the dev-user to retrieve Group objects via their Stack/Canvas artefact host object, and from Cell objects:</p>
+<ul>
+<li><code>stack.getGroup()</code> - retrieve the Stack artefact's <em>namesake</em> Group object.</li>
+<li><code>stack.get('groups')</code> - get an Array of Group name strings currently associated with the Stack artefact.</li>
+<li><code>canvas.get('baseGroup')</code> - retrieve the Canvas artefact's <code>base</code> Cell object's Group object.</li>
+<li><code>cell.getGroup()</code> - retrieve the Cell object's <em>namesake</em> Group object.</li>
+<li><code>cell.get('groups')</code> - get an Array of Group name strings currently associated with the Cell object.</li>
+</ul>
 <h3 id="add-group-objects-to-stackcell-objects-and-remove-them">Add Group objects to Stack/Cell objects, and remove them</h3>
-<p>[copy required]</p>
-<h4 id="group-visibility">Group visibility</h4>
-<p>[copy required]</p>
-<h4 id="group-order-and-sorting">Group order and sorting</h4>
-<p>[copy required]</p>
-<h3 id="add-element-and-entity-objects-to-group-objects-and-remove-them">Add Element and entity objects to Group objects, and remove them</h3>
-<p>[copy required]</p>
+<p>There's three approaches to associating a Group object with a Stack artefact or Cell object. The simplest method is during Group instantiation, by including a <code>host</code> attribute in the <code>scrawl.makeGroup()</code> factory function's argument object.</p>
+<p>Dev-users can also use the <code>stack.addGroup(...items)</code> and <code>cell.addGroup(...items)</code> functions, where either the <code>name</code> attribute strings of the Group objects, or the Group objects themselves, are used as the function's arguments. Similarly, remove Group objects using the <code>stack.removeGroup(...items)</code> and <code>cell.removeGroup(...items)</code> functions.</p>
+<p>SC recommends that dev-users avoid the <code>stack.set({ group })</code>, <code>cell.set({ group })</code> options because: only one group can be handled using this approach; and the operation will clear out all other associated Groups (including the <em>namesake</em> Group) before associating the new Group object.</p>
+<h3 id="group-visibility-order-and-sorting">Group visibility, order and sorting</h3>
+<p><em>The following only applies to Group objects associated with Cell objects that are part of the Display cycle.</em></p>
+<p>Group objects include a <code>visibility</code> attribute which, when set to <code>false</code>, will cause the Display cycle to skip over processing all of the artefacts/entitys associated with that Group - they will not recalculate their state, and they will not be stamped into the final Canvas display.</p>
+<p>Group objects also include an <code>order</code> attribute, which should be set to a positive integer value (default: <code>0</code>). Entitys associated with a Group will all be processed on a per-group basis, with the artefacts in a Group with a lower <code>order</code> value completing their processing before the next group of entitys start their processing.</p>
+<p>Cell objects store the <code>name</code> strings of the Group objects associated with them in an Array keyed to their <code>cell.groups</code> attribute. As part of any sorting operation, the Cell object will retrieve the Group objects from the SC library, sort these objects in ascending <code>order</code> values and then store references to the now sorted Group objects in an internal <code>cell.groupBucket</code> Array. The <code>groups</code> Array should never itself be sorted as this represents the order in which Groups get associated with the Cell - which is itself determined in the the code written by dev-users.</p>
+<p>Cell objects only re-sort their Group objects when they have to:</p>
+<ul>
+<li>During the first Display cycle</li>
+<li>When a new Group object is added to the Cell object's <code>groups</code> Array</li>
+<li>When a Group object is removed from the Cell object's <code>groups</code> Array</li>
+<li>When a Group object updates its <code>order</code> attribute's value</li>
+</ul>
+<p>Whenever any of these things happen, the Cell object's <code>batchResort</code> flag will be set to <code>true</code>, thus triggering a re-sort on the next Display cycle. SC uses a simple <a href="https://en.wikipedia.org/wiki/Bucket_sort">bucket sort algorithm</a> for the sorting operation. Much of this functionality gets defined in the <a href="../source/mixin/cascade.html">mixin/cascade.js</a> file.</p>
+<p>(Repo-dev note: current functionality is that when a Group object's <code>order</code> value changes - via a <code>group.set({order: newValue})</code> invocation - the Group will only signal the change to its current host Cell object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)</p>
+<p>(Repo-dev note: Group object visibility for Stack Element artefacts has not been investigated or tested, even though the functionality is - in theory - present. Needs review.)</p>
+<h3 id="add-artefactentity-objects-to-group-objects-and-remove-them">Add artefact/entity objects to Group objects, and remove them</h3>
+<p>Artefact/entity objects can be added to, and removed from, a Group object after it has been created by using the following functions:</p>
+<ul>
+<li><code>group.addArtefacts(item, item, ...)</code> - where each item may be the Artefact/entity object's <code>name</code> attribute value, or the Artefact/entity object itself.</li>
+<li><code>group.removeArtefacts(item, item, ...)</code> - arguments as described above.</li>
+</ul>
+<p>These operations have to be invoked on the Group object itself; SC does not supply convenience functions for the Stack artefact or Cell object to feed through arguments to their <em>namesake</em> Group objects.</p>
+<p>Dev-users can retrieve a specified artefact/entity object from a Group object using the <code>group.getArtefact('name-string')</code> function.</p>
 <h4 id="artefact-sorting">Artefact sorting</h4>
-<p>[copy required]</p>
-<h3 id="update-element-and-entity-object-attributes-using-group-object-functions">Update Element and entity object attributes using Group object functions</h3>
+<p>The functionality previously described for Group ordering and sorting within Cell objects also applies to sorting artefact/entity sorting within Group objects:</p>
+<ul>
+<li>Group objects store the <code>name</code> strings of the artefact/entity objects associated with them in an Array keyed to their <code>group.artefacts</code> attribute. This Array is never sorted as it represents the order in which artefacts/entitys get associated with the Group.</li>
+<li>Artefact/entity objects have two sort-related attributes (equivalent to the <code>group.order</code> attribute):<ul>
+<li><code>entity.calculateOrder</code> - representing the artefact/entity's processing position during the <code>preStamp</code> (state recalculation) phase of the Display cycle's <code>compile</code> operation.</li>
+<li><code>entity.stampOrder</code> - representing the artefact/entity's processing position during the <code>stamp</code> phase of the Display cycle's <code>compile</code> operation.</li></ul></li>
+<li>Which means that when a Group object re-sorts its associated artefact/entity objects, it will perform two sorts:<ul>
+<li>the results of the <code>calculateOrder</code> sort are stored in the internal <code>group.artefactCalculateBuckets</code> Array.</li>
+<li>the results of the <code>stampOrder</code> sort get stored in the <code>group.artefactStampBuckets</code> Array.</li></ul></li>
+</ul>
+<p>Group objects only sort their artefact/entity objects when they have to, signalled through the <code>group.batchResort</code> flag. This flag gets set to <code>true</code> when:</p>
+<ul>
+<li>The Group object is first created</li>
+<li>When a new artefact/entity object is added to the Group object's <code>artefacts</code> Array</li>
+<li>When a artefact/entity object is removed from the Group object's <code>artefacts</code> Array</li>
+<li>When an associated artefact/entity object updates its <code>calculateOrder</code> or <code>stampOrder</code> attribute's value (both of which can be set to the same value using the <code>order</code> pseudo-attribute)</li>
+</ul>
+<p>SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are handled in a single internal function - <code>group.sortArtefacts()</code> - defined in the <a href="../source/factory/group.html">factory/group.js</a> file.</p>
+<p>(Repo-dev note: current functionality is that when an artefact/entity object's <code>calculateOrder</code> or <code>stampOrder</code> value changes, the artefact/entity will only signal the change to its current host Group object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)</p>
+<h3 id="update-artefactentity-object-attributes-using-group-object-functions">Update artefact/entity object attributes using Group object functions</h3>
 <p>[copy required]</p>
 <h3 id="apply-visual-filters-to-groups-containing-entity-objects">Apply visual filters to Groups containing entity objects</h3>
 <p>[copy required]</p>
