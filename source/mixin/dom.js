@@ -423,6 +423,7 @@ export default function (P = Ωempty) {
 // ##### DOM element class attribute management
 
 // `addClasses`
+// + Argument should be a single String of space-separated classes
     P.addClasses = function (item) {
 
         if (item.substring) {
@@ -439,11 +440,12 @@ export default function (P = Ωempty) {
     };
 
 // `removeClasses`
+// + Argument should be a single string of space-separated classes
     P.removeClasses = function (item) {
 
         if (item.substring) {
 
-            const targets = item.split();
+            const targets = item.split(' ');
 
             let classes = this.classes,
                 search;

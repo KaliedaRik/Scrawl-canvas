@@ -281,8 +281,10 @@ Whenever any of these things happen, the Cell object's `batchResort` flag will b
 
 ### Add artefact/entity objects to Group objects, and remove them
 Artefact/entity objects can be added to, and removed from, a Group object after it has been created by using the following functions:
-+ `group.addArtefacts(item, item, ...)` - where each item may be the Artefact/entity object's `name` attribute value, or the Artefact/entity object itself.
-+ `group.removeArtefacts(item, item, ...)` - arguments as described above.
++ `group.addArtefacts(item, item, ...)` - associate the artefact/entity object with the Group object, where each item may be the Artefact/entity object's `name` attribute value, or the Artefact/entity object itself.
++ `group.moveArtefactsIntoGroup(item, item, ...)` - similar to `addArtefacts`, except the artefact/entity objects being associated with the Group object will at the same time disassociate from any Group object they currently associate with.
++ `group.removeArtefacts(item, item, ...)` - the opposite of `addArtefacts`; here each artefact/entity object will disassociate itself from the Group object.
++ `group.clearArtefacts()` - the Group object instructs all of its associated artefact/entity objects to disassociate from it.
 
 These operations have to be invoked on the Group object itself; SC does not supply convenience functions for the Stack artefact or Cell object to feed through arguments to their *namesake* Group objects.
 
@@ -309,7 +311,36 @@ SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are
 (Repo-dev note: current functionality is that when an artefact/entity object's `calculateOrder` or `stampOrder` value changes, the artefact/entity will only signal the change to its current host Group object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)
 
 ### Update artefact/entity object attributes using Group object functions
-[copy required]
+Any SC *tracked object* (an object that inherits functionality from the `mixin/base.js` file) can have its attributes updated at any time using its `.set({key: value, ...})` and `.setDelta({key: value, ...})` functions. 
+
+SC Group objects include functions that allow such updates to be applied to all of their artefact/entity objects in a single invocation:
++ `group.setArtefacts({key: value, ...})` - the Group object will, for each of its associated artefact/entity objects, invoke their `set()` function with the same argument that it received. 
++ `group.updateArtefacts({key: value, ...})` - the Group object will, for each of its associated artefact/entity objects, invoke their `setDelta()` function with the same argument that it received.
+
+> **tl;dr:** The difference between `set` and `setDelta` is:
+> + `set({key: value}, ...)` - **replaces** each keyed attribute with the new value.
+> + `setDelta({key: value}, ...)` - for each keyed attribute, **adds** the new value to the existing value.
+
+#### Delta manipulations
+SC `delta` animation is explained in the [Animation and Display cycle](sc-animation-systems.html) page of this Runbook. Group objects can be used to trigger delta updates across all of their associated artefact/entity objects using the following functions - even when delta animation for that artefact/entity object has been disabled:
++ `group.updateByDelta()` - **add** the keyed attribute values in the artefact/entity object's `delta` attribute object to its existing attribute values.
++ `group.reverseByDelta()` - **subtract** the keyed attribute values in the artefact/entity object's `delta` attribute object to its existing attribute values.
+
+#### Artefact class manipulations
+Specifically for associated artefact objects, dev-users can add or remove CSS class labels to/from those objects' DOM elements using the following Group object functions - note that the function argument is a String of space-separated classNames:
++ `group.addArtefactClasses('css-classname-1 css-classname-2 ...')` - adds the supplied CSS classname strings to the end of the existing `artefact.classes` attribute.
++ `group.removeArtefactClasses('css-classname-1 css-classname-2 ...')` -removes each of the CSS classname strings from the existing `artefact.classes` attribute.
+
+The actual update to the DOM elements doesn't happen straight away. Instead a `dirtyClasses` flag is set to `true`, which then gets actioned during the `show` phase of the Display cycle.
+
+#### Stack artefact and Cell object equivalent functionality
+The [mixin/cascade.js](../source/mixin/cascade.html) file, consumed by the Stack and Cell factory files, provides an equivalent set of manipulation functions which the dev-user can invoke on Stack artefact and Cell object instances. The functions pass their argument through to all of the Group objects currently associated with that Stack or Cell:
++ `cell.setArtefacts({key: value, ...})`
++ `cell.updateArtefacts({key: value, ...})`
++ `cell.updateByDelta()`
++ `cell.reverseByDelta()`
++ `cell.addArtefactClasses('css-classname-1 css-classname-2 ...')`
++ `cell.removeArtefactClasses('css-classname-1 css-classname-2 ...')`
 
 ### Apply visual filters to Groups containing entity objects
 [copy required]

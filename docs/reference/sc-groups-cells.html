@@ -288,8 +288,10 @@
 <h3 id="add-artefactentity-objects-to-group-objects-and-remove-them">Add artefact/entity objects to Group objects, and remove them</h3>
 <p>Artefact/entity objects can be added to, and removed from, a Group object after it has been created by using the following functions:</p>
 <ul>
-<li><code>group.addArtefacts(item, item, ...)</code> - where each item may be the Artefact/entity object's <code>name</code> attribute value, or the Artefact/entity object itself.</li>
-<li><code>group.removeArtefacts(item, item, ...)</code> - arguments as described above.</li>
+<li><code>group.addArtefacts(item, item, ...)</code> - associate the artefact/entity object with the Group object, where each item may be the Artefact/entity object's <code>name</code> attribute value, or the Artefact/entity object itself.</li>
+<li><code>group.moveArtefactsIntoGroup(item, item, ...)</code> - similar to <code>addArtefacts</code>, except the artefact/entity objects being associated with the Group object will at the same time disassociate from any Group object they currently associate with.</li>
+<li><code>group.removeArtefacts(item, item, ...)</code> - the opposite of <code>addArtefacts</code>; here each artefact/entity object will disassociate itself from the Group object.</li>
+<li><code>group.clearArtefacts()</code> - the Group object instructs all of its associated artefact/entity objects to disassociate from it.</li>
 </ul>
 <p>These operations have to be invoked on the Group object itself; SC does not supply convenience functions for the Stack artefact or Cell object to feed through arguments to their <em>namesake</em> Group objects.</p>
 <p>Dev-users can retrieve a specified artefact/entity object from a Group object using the <code>group.getArtefact('name-string')</code> function.</p>
@@ -314,7 +316,42 @@
 <p>SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are handled in a single internal function - <code>group.sortArtefacts()</code> - defined in the <a href="../source/factory/group.html">factory/group.js</a> file.</p>
 <p>(Repo-dev note: current functionality is that when an artefact/entity object's <code>calculateOrder</code> or <code>stampOrder</code> value changes, the artefact/entity will only signal the change to its current host Group object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)</p>
 <h3 id="update-artefactentity-object-attributes-using-group-object-functions">Update artefact/entity object attributes using Group object functions</h3>
-<p>[copy required]</p>
+<p>Any SC <em>tracked object</em> (an object that inherits functionality from the <code>mixin/base.js</code> file) can have its attributes updated at any time using its <code>.set({key: value, ...})</code> and <code>.setDelta({key: value, ...})</code> functions. </p>
+<p>SC Group objects include functions that allow such updates to be applied to all of their artefact/entity objects in a single invocation:</p>
+<ul>
+<li><code>group.setArtefacts({key: value, ...})</code> - the Group object will, for each of its associated artefact/entity objects, invoke their <code>set()</code> function with the same argument that it received. </li>
+<li><code>group.updateArtefacts({key: value, ...})</code> - the Group object will, for each of its associated artefact/entity objects, invoke their <code>setDelta()</code> function with the same argument that it received.</li>
+</ul>
+<blockquote>
+  <p><strong>tl;dr:</strong> The difference between <code>set</code> and <code>setDelta</code> is:</p>
+  <ul>
+  <li><code>set({key: value}, ...)</code> - <strong>replaces</strong> each keyed attribute with the new value.</li>
+  <li><code>setDelta({key: value}, ...)</code> - for each keyed attribute, <strong>adds</strong> the new value to the existing value.</li>
+  </ul>
+</blockquote>
+<h4 id="delta-manipulations">Delta manipulations</h4>
+<p>SC <code>delta</code> animation is explained in the <a href="sc-animation-systems.html">Animation and Display cycle</a> page of this Runbook. Group objects can be used to trigger delta updates across all of their associated artefact/entity objects using the following functions - even when delta animation for that artefact/entity object has been disabled:</p>
+<ul>
+<li><code>group.updateByDelta()</code> - <strong>add</strong> the keyed attribute values in the artefact/entity object's <code>delta</code> attribute object to its existing attribute values.</li>
+<li><code>group.reverseByDelta()</code> - <strong>subtract</strong> the keyed attribute values in the artefact/entity object's <code>delta</code> attribute object to its existing attribute values.</li>
+</ul>
+<h4 id="artefact-class-manipulations">Artefact class manipulations</h4>
+<p>Specifically for associated artefact objects, dev-users can add or remove CSS class labels to/from those objects' DOM elements using the following Group object functions - note that the function argument is a String of space-separated classNames:</p>
+<ul>
+<li><code>group.addArtefactClasses('css-classname-1 css-classname-2 ...')</code> - adds the supplied CSS classname strings to the end of the existing <code>artefact.classes</code> attribute.</li>
+<li><code>group.removeArtefactClasses('css-classname-1 css-classname-2 ...')</code> -removes each of the CSS classname strings from the existing <code>artefact.classes</code> attribute.</li>
+</ul>
+<p>The actual update to the DOM elements doesn't happen straight away. Instead a <code>dirtyClasses</code> flag is set to <code>true</code>, which then gets actioned during the <code>show</code> phase of the Display cycle.</p>
+<h4 id="stack-artefact-and-cell-object-equivalent-functionality">Stack artefact and Cell object equivalent functionality</h4>
+<p>The <a href="../source/mixin/cascade.html">mixin/cascade.js</a> file, consumed by the Stack and Cell factory files, provides an equivalent set of manipulation functions which the dev-user can invoke on Stack artefact and Cell object instances. The functions pass their argument through to all of the Group objects currently associated with that Stack or Cell:</p>
+<ul>
+<li><code>cell.setArtefacts({key: value, ...})</code></li>
+<li><code>cell.updateArtefacts({key: value, ...})</code></li>
+<li><code>cell.updateByDelta()</code></li>
+<li><code>cell.reverseByDelta()</code></li>
+<li><code>cell.addArtefactClasses('css-classname-1 css-classname-2 ...')</code></li>
+<li><code>cell.removeArtefactClasses('css-classname-1 css-classname-2 ...')</code></li>
+</ul>
 <h3 id="apply-visual-filters-to-groups-containing-entity-objects">Apply visual filters to Groups containing entity objects</h3>
 <p>[copy required]</p>
 <h2 id="sc-cell-objects">SC Cell objects</h2>

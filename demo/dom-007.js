@@ -119,11 +119,11 @@ const checkForFlowerClassUpdates = function () {
     if (current && !currentClass) {
 
         currentClass = (current.name === 'leftbox') ? 'make_blue' : 'make_red';
-        flower.addClasses(currentClass);
+        flower.addClasses(`${currentClass} test_class`);
     }
     else if (!current && currentClass) {
 
-        flower.removeClasses(currentClass);
+        flower.removeClasses(`${currentClass} test_class rogue_class`);
         currentClass = '';
     }
 };
