@@ -304,19 +304,19 @@ y                         // Number - cursor y position relative to DOM element 
                                                 ‹/canvas›</code></pre>
 <p>As SC wraps a <code>&lt;canvas&gt;</code> element into its artefact object, it will read and action the element's <code>data-</code> attributes:</p>
 <pre><code>&lt;canvas&gt; data- attribute      JS-constructor equivalent     Values
-----------------------------  ----------------------------  ----------------------------
+----------------------------  ----------------------------  ---------------------------------
 data-base-background-color    backgroundColor               Any CSS color string
-data-base-clear-alpha         clearAlpha                    'number'
-data-base-height              baseHeight                    'number'
-data-base-width               baseWidth                     'number'
+data-base-clear-alpha         clearAlpha                    'number'                 | number
+data-base-height              baseHeight                    'number'                 | number
+data-base-width               baseWidth                     'number'                 | number
 data-canvas-color-space       canvasColorSpace              '' or 'display-p3'
 data-description              description                   ARIA description
 data-fit                      fit                           'cover', 'contain', 'fill', 'none'
-data-is-responsive            isResponsive                  'boolean'
+data-is-responsive            isResponsive                  'boolean'                | boolean
 data-label                    label                         ARIA label
-data-will-read-frequently     (none)                        'boolean'
-height                        height                        'number'
-width                         width                         'number'</code></pre>
+data-will-read-frequently     willReadFrequently            'boolean'                | boolean
+height                        height                        'number'                 | number
+width                         width                         'number'                 | number</code></pre>
 <h4 id="accessibility-1">Accessibility</h4>
 <p>SC offers an easy way for dev-users to start making their canvases more accessible. The <code>label</code> and <code>description</code> attributes get written into <code>&lt;div&gt;</code> elements between the <code>&lt;canvas&gt;</code> element's tags, which the element then refers to through its <code>aria-labelledby</code> and <code>aria-describedby</code> attributes.</p>
 <h4 id="responsiveness-1">Responsiveness</h4>

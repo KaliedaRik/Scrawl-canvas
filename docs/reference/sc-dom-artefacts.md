@@ -322,19 +322,19 @@ As SC wraps a `<canvas>` element into its artefact object, it will read and acti
 
 ```
 <canvas> data- attribute      JS-constructor equivalent     Values
-----------------------------  ----------------------------  ----------------------------
+----------------------------  ----------------------------  ---------------------------------
 data-base-background-color    backgroundColor               Any CSS color string
-data-base-clear-alpha         clearAlpha                    'number'
-data-base-height              baseHeight                    'number'
-data-base-width               baseWidth                     'number'
+data-base-clear-alpha         clearAlpha                    'number'                 | number
+data-base-height              baseHeight                    'number'                 | number
+data-base-width               baseWidth                     'number'                 | number
 data-canvas-color-space       canvasColorSpace              '' or 'display-p3'
 data-description              description                   ARIA description
 data-fit                      fit                           'cover', 'contain', 'fill', 'none'
-data-is-responsive            isResponsive                  'boolean'
+data-is-responsive            isResponsive                  'boolean'                | boolean
 data-label                    label                         ARIA label
-data-will-read-frequently     (none)                        'boolean'
-height                        height                        'number'
-width                         width                         'number'
+data-will-read-frequently     willReadFrequently            'boolean'                | boolean
+height                        height                        'number'                 | number
+width                         width                         'number'                 | number
 ```
 
 #### Accessibility

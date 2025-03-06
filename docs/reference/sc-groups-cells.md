@@ -432,16 +432,62 @@ Dev-users can add a new `layer` Cell to a canvas at any time using the `canvas.b
 + Use the `layer` Cell directly as a style value for the `entity.fillStyle` and `entity.strokeStyle` attributes.
 
 ### Create, serialize, clone and kill Cell objects
-[write up]
+SC handles the creation of `base` and `pool` Cells internally, as required.
+
+Dev-users can **create** new `layer` Cell objects using the `canvas.buildCell({key: value, ...})` function. While `layer` Cells can, in theory, be moved between Canvas artefacts, Repo-devs currently work on the assumtion that layers will be created for a specific canvas display and will not be transferred or shared between displays.
+
+Cell objects cannot, at this time, be **serialized** or **cloned**. Repo-devs need to address serialization work at some point.
+
+For the **kill** functionality, Cell objects will check Canvas artefact objects to break any associations, and also check through all entity objects to make sure any `fillStyle` and `strokeStyle` references to the Cell get set back to default values. The Cell's *namesake* Group's `kill` function is then invoked with no arguments: terminating the Cell object will not terminate any entitys associated-by-proxy with that Cell.
 
 ### The Cell engine
-[write up]
+When the Cell object wraps a `<canvas>` element, it will register handles to both the DOM element, and the element's [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) Interface:
++ `cell.element` - handle to `<canvas>` DOM element
++ `cell.engine` - handle to the element's CanvasRenderingContext2D object, retrieved via the `cell.element.getContext()` function.
+
+> **tl;dr:** Note that while the [canvas specification](https://html.spec.whatwg.org/multipage/canvas.html#2dcontext) refers to the CanvasRenderingContext2D object as `context`, many articles and explainers across the internet (including the MDN reference pages) will call it `ctx`. ***In the SC repo code base, this object is always referred to as: `engine`***.
+
+Much of the functionality of SC revolves around translating the SC scene graph into [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) instructions which then get invoked on the Cell element using the Cell engine's functions.
 
 #### Cell dimensions
-[write up]
+Cell dimensions are set on the `cell.element` DOM element, using that element's `width` and `height` attributes. Dev-users should never need to set these attributes directly!
+
+Internally, Cell objects keep dimension details in the `cell.dimensions` attribute, whose value is an Array comprising of `[width, height]` data. These values can be either absolute Number values, or relative 'string%' values, where the value is a percentage of either the host Canvas artefact's dimensions, or (for `layer` Cells) the `base` Cell object's dimensions. 
+
+Cell objects have enforced minimum dimensions of `[1, 1]` - the Canvas API's functionality will generally throw errors whenever it encounters a `<canvas>` element whose width or height is less than `1px`.
+
+These values will be recalculated into pixel values each time the dimensions change, with the results stored in the `cell.currentDimensions` attribute - another Array. Recalculation gets triggered whenever the SC signals system sets the Cell object's `cell.dirtyDimensions` flag to true.
+
+For `base` and `pool` Cell objects, all of this functionality is automated by SC.
++ All `pool` Cells have default dimensions `[1, 1]`. Repo code that requests a `pool` Cell will generally set the Cell's dimensions directly on the `cell.element`
++ `Base` Cell dimensions will generally be set in the DOM `<canvas>` element's markup using the `data-base-width` and `data-base-height` attributes. When not included, the `base` Cell dimensions will match the `canvas` element's display `width`  and `height` dimensions (taking into account the device screen's `device-pixel-ratio`). Beyond these settings, dev-users are advised to not interfere with `base` Cell dimensions - see the [Canvas artefact notes](http://localhost:3000/docs/reference/sc-dom-artefacts.html#canvas-artefact-notes) section of the Artefacts page of this Runbook for more information.
+
+`Layer` Cells get created by dev-users, thus setting their dimensions is a dev-user responsibility. For the most part `layer` Cells act like Element artefacts or Block entitys with respect to dimensions management. Cell `dimensions` values - which can also be set individually using the `width` and `height` pseudo-attributes - can be:
++ Absolute number values, measured in CSS pixels
++ Relative 'string%' values (for example, `10%`, `60%`, etc), where the relationship is:
+  - by default, to the dimensions of the Canvas artefact object's ***display canvas***; or
+  - if the Cell object's `setRelativeDimensionsUsingBase` flag is true, to the dimensions of the Canvas artefact object's `base` Cell's dimensions.
+
+These dimensions values can be changed at any time using the `cell.set({...})` or `cell.setDelta({...})` functions: 
++ Test demo [Canvas-039](../../demo/canvas-039.html) shows the effect of changing Cell dimensions dynamically.
++ Test demo [DOM-011](../../demo/dom-011.html) demonstrates the effect of updating the `cell.setRelativeDimensionsUsingBase` flag.
 
 #### Cell backgrounds
-[write up]
+For the ***display canvas***, the `<canvas>` [element background](https://developer.mozilla.org/en-US/docs/Web/CSS/background) can be set in the same way as for any other DOM element, using normal CSS styling. SC does not control, nor does it care about, this setting.
+
+SC `pool` Cells play no direct part in the Display cycle, thus don't need to concern themselves with backgrounds.
+
+For `layer` and `base` Cells, the Cell background is set as part of the Display cycle `clear` operation. Depending on the values of the Cell object attributes, it will be set as follows:
++ If the `cell.backgroundColor` attribute is set to anything other than a zero-length string (`''`), then SC will assume the value is a Level 4 [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) and attempt to flood the cell with it.
+  - If the string is not a valid CSS color value, then the background will be flooded with `rgb(0 0 0 / 1)` opaque black.
++ Failing the above, if the `cell.clearAlpha` attribute is set to anything other than `0`, the Cell will copy its current contents, clear itself, set its globalAlpha to this value, copy back its contents (now faded), and then restore its globalAlpha value - this is known as the [ghosting effect](https://brush.ninja/glossary/animation/ghosting/).
++ Finally, if both the `backgroundColor` and `clearAlpha` attributes match their default values (`''` and `0` respectively) then the Cell background will be set to `rgb(0 0 0 / 0)` transparent black.
+
+See test demo [Canvas-002](../../demo/canvas-002.html) for an example of this functionality.
+
+The `backgroundColor` and `clearAlpha` attributes can be set for `base` and `layer` Cells in the normal way, using the `cell.set({...})` function.
+
+Dev-users can also set the `base` background color via HTML by adding the `data-base-background-color="color-value"` and `data-base-clear-alpha="number"` attributes to the `<canvas>` markup.
 
 #### Cell display manipulation - the `splitShift()` function
 [write up]
