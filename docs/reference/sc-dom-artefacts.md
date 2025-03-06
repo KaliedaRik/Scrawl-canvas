@@ -332,6 +332,7 @@ data-description              description                   ARIA description
 data-fit                      fit                           'cover', 'contain', 'fill', 'none'
 data-is-responsive            isResponsive                  'boolean'
 data-label                    label                         ARIA label
+data-will-read-frequently     (none)                        'boolean'
 height                        height                        'number'
 width                         width                         'number'
 ```
@@ -359,6 +360,11 @@ SC includes functionality to display a [ghosting effect](https://brush.ninja/glo
 Dev-users can create a ghosting effect by setting the `clearAlpha` attribute - values above `0.95` usually generate a noticable effect - though the strength of the effect can vary between browsers and device screens.
 
 Note that the effect will not work in situations where the `base` Cell also has a background color.
+
+#### Canvas performance
+In rare and specific circumstances, canvas performance may badly degrade in one particular browser compared to other browsers - see test demo [Canvas-009](../../demo/canvas-009.html) for a (fixed) example of this.
+
+The issue (in Chrome) emerges from the interplay between small assets, entity shadows and the 2d canvas context engine's `willReadFrequently` setting. By default SC extracts all engines from `<canvas>` elements with `willReadFrequently: true`. This functionality for a given `<canvas>` element can be disabled by including the `data-will-read-frequently="false"` attribute in the element's markup. Dev-users are advised to test this solution across all browsers before committing the fix to production!
 
 ### `<canvas>` DOM elements and the wider page environment
 Repo-devs have a responsibility to make sure that SC-managed `<canvas>` elements, as far as possible, behave "nicely" with the rest of the web page:

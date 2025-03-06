@@ -306,7 +306,6 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
     reduceDataAction?: DefaultInputFunction;
     reduceMotionAction?: DefaultInputFunction;
     reduceTransparencyAction?: DefaultInputFunction;
-    smoothFont?: boolean;
     trackHere?: string;
 }
 
@@ -990,7 +989,6 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     setRelativeDimensionsUsingBase?: boolean;
     shown?: boolean;
     showOrder?: number;
-    smoothFont?: boolean;
     stashHeight?: StringOrNumberInput;
     stashWidth?: StringOrNumberInput;
     stashX?: StringOrNumberInput;

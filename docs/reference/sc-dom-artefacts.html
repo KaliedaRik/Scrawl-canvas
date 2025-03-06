@@ -314,6 +314,7 @@ data-description              description                   ARIA description
 data-fit                      fit                           'cover', 'contain', 'fill', 'none'
 data-is-responsive            isResponsive                  'boolean'
 data-label                    label                         ARIA label
+data-will-read-frequently     (none)                        'boolean'
 height                        height                        'number'
 width                         width                         'number'</code></pre>
 <h4 id="accessibility-1">Accessibility</h4>
@@ -332,6 +333,9 @@ width                         width                         'number'</code></pre
 <p>SC includes functionality to display a <a href="https://brush.ninja/glossary/animation/ghosting/">ghosting effect</a> in a canvas animation. The effect applies to everything moving in the animation - see test demo <a href="../../demo/canvas-002.html">Canvas-002</a> for an example of the effect in action.</p>
 <p>Dev-users can create a ghosting effect by setting the <code>clearAlpha</code> attribute - values above <code>0.95</code> usually generate a noticable effect - though the strength of the effect can vary between browsers and device screens.</p>
 <p>Note that the effect will not work in situations where the <code>base</code> Cell also has a background color.</p>
+<h4 id="canvas-performance">Canvas performance</h4>
+<p>In rare and specific circumstances, canvas performance may badly degrade in one particular browser compared to other browsers - see test demo <a href="../../demo/canvas-009.html">Canvas-009</a> for a (fixed) example of this.</p>
+<p>The issue (in Chrome) emerges from the interplay between small assets, entity shadows and the 2d canvas context engine's <code>willReadFrequently</code> setting. By default SC extracts all engines from <code>&lt;canvas&gt;</code> elements with <code>willReadFrequently: true</code>. This functionality for a given <code>&lt;canvas&gt;</code> element can be disabled by including the <code>data-will-read-frequently="false"</code> attribute in the element's markup. Dev-users are advised to test this solution across all browsers before committing the fix to production!</p>
 <h3 id="canvas-dom-elements-and-the-wider-page-environment"><code>&lt;canvas&gt;</code> DOM elements and the wider page environment</h3>
 <p>Repo-devs have a responsibility to make sure that SC-managed <code>&lt;canvas&gt;</code> elements, as far as possible, behave "nicely" with the rest of the web page:</p>
 <ul>

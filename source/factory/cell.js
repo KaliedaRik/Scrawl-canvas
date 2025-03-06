@@ -65,7 +65,7 @@ import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
 // Shared constants
-import { _isFinite, _floor, _round, _values, _2D, AUTO, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _floor, _round, _values, _2D, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const CELL = 'cell',
@@ -512,31 +512,6 @@ D.clearAlpha = function (val) {
     }
 };
 
-// `smoothFont` - handle this directly; don't save the attribute state
-// S.smoothFont = function (item) {
-
-//     const { element } = this;
-
-//     if (element) {
-
-//         const { style } = element;
-
-//         if (style) {
-
-//             if (item) {
-//                 style[WEBKIT_FONT_SMOOTHING] = AUTO;
-//                 style[MOZOSX_FONT_SMOOTHING] = AUTO;
-//                 style[SMOOTH_FONT] = AUTO;
-//             }
-//             else {
-//                 style[WEBKIT_FONT_SMOOTHING] = NONE;
-//                 style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
-//                 style[SMOOTH_FONT] = NEVER;
-//             }
-//         }
-//     }
-// };
-
 // `checkForEntityHover`, `onEntityHover`, `onEntityNoHover` - these are group-specific attributes which we can set on the Cell's named group via the Cell's wrapper
 S.checkForEntityHover = function (item) {
 
@@ -564,7 +539,7 @@ G.group = function () {
     return group[this.name];
 };
 P.getGroup = function () {
-    
+
     return group[this.name];
 };
 
