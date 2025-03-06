@@ -109,21 +109,21 @@ flower.set({
 // #### Scene animation
 
 // Updating the flower's DOM element's class attribute
+// + Using this as a test to make sure `.addClasses` can add more than one class
+// + Also testing to make sure `.removeClasses` removes all the classes in the string, whatever the order of the classes presented for removal
 const checkForFlowerClassUpdates = function () {
 
 /** @ts-expect-error */
     const current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
 
-    // console.log(flower.get('start'), current)
-
     if (current && !currentClass) {
 
         currentClass = (current.name === 'leftbox') ? 'make_blue' : 'make_red';
-        flower.addClasses(`${currentClass} test_class`);
+        flower.addClasses(`test_class ${currentClass}`);
     }
     else if (!current && currentClass) {
 
-        flower.removeClasses(`${currentClass} test_class rogue_class`);
+        flower.removeClasses(`rogue_class ${currentClass} test_class`);
         currentClass = '';
     }
 };

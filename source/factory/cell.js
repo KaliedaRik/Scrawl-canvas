@@ -513,29 +513,29 @@ D.clearAlpha = function (val) {
 };
 
 // `smoothFont` - handle this directly; don't save the attribute state
-S.smoothFont = function (item) {
+// S.smoothFont = function (item) {
 
-    const { element } = this;
+//     const { element } = this;
 
-    if (element) {
+//     if (element) {
 
-        const { style } = element;
+//         const { style } = element;
 
-        if (style) {
+//         if (style) {
 
-            if (item) {
-                style[WEBKIT_FONT_SMOOTHING] = AUTO;
-                style[MOZOSX_FONT_SMOOTHING] = AUTO;
-                style[SMOOTH_FONT] = AUTO;
-            }
-            else {
-                style[WEBKIT_FONT_SMOOTHING] = NONE;
-                style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
-                style[SMOOTH_FONT] = NEVER;
-            }
-        }
-    }
-};
+//             if (item) {
+//                 style[WEBKIT_FONT_SMOOTHING] = AUTO;
+//                 style[MOZOSX_FONT_SMOOTHING] = AUTO;
+//                 style[SMOOTH_FONT] = AUTO;
+//             }
+//             else {
+//                 style[WEBKIT_FONT_SMOOTHING] = NONE;
+//                 style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
+//                 style[SMOOTH_FONT] = NEVER;
+//             }
+//         }
+//     }
+// };
 
 // `checkForEntityHover`, `onEntityHover`, `onEntityNoHover` - these are group-specific attributes which we can set on the Cell's named group via the Cell's wrapper
 S.checkForEntityHover = function (item) {

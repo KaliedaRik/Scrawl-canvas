@@ -1,6 +1,11 @@
 # Animation and the Display cycle
 A brief overview of how the animation loop works
 + The Display cycle
+  - `clear` operation
+  - `compile` operation
+  - -> `calculate` phase
+  - -> `stamp` phase
+  - `show` operation
 + Animation and RenderAnimation objects
 + Ticker/tween animations
 + Artefact/entity delta animations

@@ -291,7 +291,7 @@ These operations have to be invoked on the Group object itself; SC does not supp
 Dev-users can retrieve a specified artefact/entity object from a Group object using the `group.getArtefact('name-string')` function.
 
 #### Artefact sorting
-The functionality previously described for Group ordering and sorting within Cell objects also applies to sorting artefact/entity sorting within Group objects:
+The functionality previously described for Group ordering and sorting within Cell objects also applies to sorting artefact/entity objects within Group objects:
 + Group objects store the `name` strings of the artefact/entity objects associated with them in an Array keyed to their `group.artefacts` attribute. This Array is never sorted as it represents the order in which artefacts/entitys get associated with the Group.
 + Artefact/entity objects have two sort-related attributes (equivalent to the `group.order` attribute):
   - `entity.calculateOrder` - representing the artefact/entity's processing position during the `preStamp` (state recalculation) phase of the Display cycle's `compile` operation.
@@ -310,7 +310,7 @@ SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are
 
 (Repo-dev note: current functionality is that when an artefact/entity object's `calculateOrder` or `stampOrder` value changes, the artefact/entity will only signal the change to its current host Group object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)
 
-### Update artefact/entity object attributes using Group object functions
+### Batch update artefact/entity object attributes using Group object functions
 Any SC *tracked object* (an object that inherits functionality from the `mixin/base.js` file) can have its attributes updated at any time using its `.set({key: value, ...})` and `.setDelta({key: value, ...})` functions. 
 
 SC Group objects include functions that allow such updates to be applied to all of their artefact/entity objects in a single invocation:
@@ -329,9 +329,9 @@ SC `delta` animation is explained in the [Animation and Display cycle](sc-animat
 #### Artefact class manipulations
 Specifically for associated artefact objects, dev-users can add or remove CSS class labels to/from those objects' DOM elements using the following Group object functions - note that the function argument is a String of space-separated classNames:
 + `group.addArtefactClasses('css-classname-1 css-classname-2 ...')` - adds the supplied CSS classname strings to the end of the existing `artefact.classes` attribute.
-+ `group.removeArtefactClasses('css-classname-1 css-classname-2 ...')` -removes each of the CSS classname strings from the existing `artefact.classes` attribute.
++ `group.removeArtefactClasses('css-classname-1 css-classname-2 ...')` - removes each of the CSS classname strings from the existing `artefact.classes` attribute.
 
-The actual update to the DOM elements doesn't happen straight away. Instead a `dirtyClasses` flag is set to `true`, which then gets actioned during the `show` phase of the Display cycle.
+The actual update to the DOM elements doesn't happen straight away. Instead a `dirtyClasses` flag is set to `true`, which then gets actioned during the `show` operation of the Display cycle.
 
 #### Stack artefact and Cell object equivalent functionality
 The [mixin/cascade.js](../source/mixin/cascade.html) file, consumed by the Stack and Cell factory files, provides an equivalent set of manipulation functions which the dev-user can invoke on Stack artefact and Cell object instances. The functions pass their argument through to all of the Group objects currently associated with that Stack or Cell:
@@ -343,10 +343,142 @@ The [mixin/cascade.js](../source/mixin/cascade.html) file, consumed by the Stack
 + `cell.removeArtefactClasses('css-classname-1 css-classname-2 ...')`
 
 ### Apply visual filters to Groups containing entity objects
-[copy required]
+SC filters can be applied to entity objects at the Cell, Group and entity object level of the Display cycle. See test demo [Canvas-007](../../demo/canvas-007.html) for an example of this functionality in action. Details about filter operations can be found in the [SC filter engine](sc-filter-engine.html) page of this Runbook.
+
+If the same set of filters need to be applied to several entity objects at the same time, those objects can be gathered together into their own Group object for processing. However dev-users should be aware of the limitations surrounding this approach:
++ The Group object must be associated with the Cell object where the entitys will be stamped.
++ The entitys will be stamped onto the Cell together, in a single operation - this means that if some of the entitys need to appear behind a non-filtered entity, while other entitys in the same Group need to appear in front of that entity, the operation will fail:
+  - Either the dev-user will have to separate the entitys into two separate Group objects, with the unfiltered entity in additional Group object whose `order` value lies between that of the two filtered Groups;
+  - Or the filters will need to be applied to each entity separately, at the entity level.
+
+Note that while the Group object filtering functionality is very similar to Cell object and entity object functionality, it differs from them in several small-yet-key areas. Repo-devs need to be aware that changes in filter functionality in one of these three areas of the code base may need to be reflected in the other two areas.
 
 ## SC Cell objects
-[describe]
+SC **Cell objects** wrap HTML `<canvas>` elements, and add functionality for managing and manipulating that canvas display. SC **Canvas artefact objects** also wrap HTML `<canvas>` elements, with added functionality. 
+
+To understand the SC ecosystem, developers need to understand the differences between the SC Canvas and Cell objects:
+
+```
+                                             Canvas artefact        Cell object
+--------------------------------------------------------------------------------------------
+<canvas> element is part of the DOM?         Yes                    No
+<canvas> element can be styled with CSS?     Yes                    No
+Events can be added to <canvas> element?     Yes                    No
+Responsible for accessibility behaviour?     Yes                    No
+Responsible for responsiveness behaviour?    No                     Yes
+Involvement in the SC Display cycle?         Final output only      Everything else
+Display can be directly manipulated?         No                     Yes
+Display can be filtered?                     CSS/SVG filters        CSS/SVG and SC filters
+```
+
+> **tl;dr:** When SC is instructed to manage a `<canvas>` element, it will generate the following:
+> + A **display canvas**, which is the original `<canvas>` element wrapped into a *Canvas artefact object*
+> + A **base Cell**, which is a new `<canvas>` element that SC creates and wraps into a *Cell object*
+
+Most SC functionality revolves around the *base Cell*, with the *display canvas* limited to acting as the final destination for the base Cell's graphical output. By taking most canvas manipulation functionality away from the DOM `<canvas>` element, SC is able to achieve significant improvements in canvas-related performance, while minimising the impact of canvas-based displays and animations on [web page performance](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Performance/What_is_web_performance).
+
+Note that the ***hidden `<canvas>` elements*** that SC generates as part of its work are just normal `<canvas>` elements, created using the browser's `document.createElement('canvas')` function. It is because of this reliance on access to the `document` object (alongside a number of other things such as the SC event system requiring access to the web page DOM) that SC is limited, *by design*, to work only in the frontend browser.
++ SC has not been designed to run in [web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API), and makes no use of web worker code in any part of its code base. The same goes for [WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly).
++ SC deliberately avoids the [OffscreenCanvas API](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) as testing over the years has failed to demonstrate any significant speed/efficiency improvements for SC's specific requirements.
++ SC does not include any code to help it run successfully on the server side, or in native apps. Honestly, if dev-users want a graphics generator to run on the server, their best bet is to look at something like [Skia](https://skia.org/) (which has bindings for the [Rust](https://crates.io/crates/skia-safe), [Java](https://github.com/JetBrains/skija), [Scala](https://github.com/nornagon/scanvas), [Python](https://pypi.org/project/skia-python/), etc languages), or alternatively [Cairo](https://www.cairographics.org/), to create graphical output for downloading or streaming to the front end.
+
+### Types of Cell objects
+SC uses hidden `<canvas>` elements for a variety of different purposes, and codes them up in different ways:
+
+#### Base Cells
+`Base` Cell objects acts in concert with their display canvas; SC creates a base Cell every time it wraps a `<canvas>` element into a Canvas artefact wrapper and assigns the Cell object to the `canvas.base` attribute. The `base` Cell is the default painting area for the display canvas and, at the end of each Display cycle, copies itself into the display canvas.
+
+Base Cells share a lot of functionality with layer Cells, with code defined in the [factory/cell.js](../source/factory/cell.html) and [mixin/cell-key-functions.js](../source/mixin/cell-key-functions.html) files.
+
+Dev-users are strongly advised to not interfere with base Cell objects, unless they enjoy frustration!
+
+#### Pool Cells
+SC maintains a pool of hidden `<canvas>` elements, wrapped in **CellFragment** objects, for various internal purposes. These `pool` Cells are not tracked in the SC library, and are not available for dev-user use. 
+
+CellFragment objects contain only the minimum functionality required so the Cells can perform their various jobs around the code base. The code for CellFragment objects, alongside the pool infrastructure, can be found in the [untracked-factory/cell-fragment.js](../source/untracked-factory/cell-fragment.html) file, with additional, shared functionality defined in the [mixin/cell-key-functions.js](../source/mixin/cell-key-functions.html) file.
+
+SC uses `pool` Cell objects extensively through the code base. Repo-devs retrieve a Cell from the pool using the `requestCell()` function, and return it using the `releaseCell(object)` function. When returned to the pool, the CellFragment objects and their `<canvas>` elements will be cleaned back into a default state. **Note that failing to return a pool Cell will lead to memory leaks**:
++ [asset-management/reaction-diffusion-asset.js](../source/asset-management/reaction-diffusion-asset.html) - used to help create the initail conditions for an RD-asset, where the asset will build around an entity outline.
++ [factory/cell.js](../source/factory/cell.html) - used to help create a [ghosting effect](https://brush.ninja/glossary/animation/ghosting/) in a canvas animation. Also used to help calculate a layer Cell's `localHere` object's values, and to help stash a Cell object's `<canvas>` output as part of the `scrawl.createImageFromCell(cell, flag)` function.
++ [factory/crescent.js](../source/factory/crescent.html) - used to help calculate the intersection points of the two circles that make up the crescent shape.
++ [factory/emitter.js](../source/factory/emitter.html) - used for calculating if a proposed particle is within an entity area.
++ [factory/enhanced-label.js](../source/factory/enhanced-label.html) - used extensively throughout the file, which needs a number of `pool` Cells to help it create the entity's output.
++ [factory/grid.js](../source/factory/grid.html) - used to help build the Grid entity's display output.
++ [factory/group.js](../source/factory/group.html) - used as part of the Group graphical filter functionality.
++ [factory/label.js](../source/factory/label.html) - used to help draw Label underlines.
++ [factory/loom.js](../source/factory/loom.html) - used to help build the Loom entity's display output.
++ [factory/mesh.js](../source/factory/mesh.html) - used to help build the Mesh entity's display output.
++ [helper/filter-engine.js](../source/helper/filter-engine.html) - the SC filter engine uses pool Cells to help calculate gradient effects. 
++ [mixin/dom.js](../source/mixin/dom.html) - SC Stack and Element artefacts use a pool Cell for their `checkHit(...)` functionality.
++ [mixin/entity.js](../source/mixin/entity.html) - SC entity objects use the Cell to help add graphical filter effects to entity outputs.
++ [mixin/filters.js](../source/mixin/filters.html) - used to help import assets into the filter engine.
++ [mixin/position.js](../source/mixin/position.html) - SC uses pool Cells for entity `checkHit(...)` functionality.
++ [mixin/text.js](../source/mixin/text.html) - used to help calculate font metadata.
+
+#### Layer Cells
+A canvas scene can include multiple Cell objects alongside the `base` Cell. Each of these `layer` Cell objects will include a *namesake* Group object with which entity objects can associate themselves, to be included in the `layer's` output which will be stamped onto the `base` Cell as part of the `show` operation of the Display cycle.
+
+Dev-users can add a new `layer` Cell to a canvas at any time using the `canvas.buildCell({key: value, ...})` function. Be aware that the `base` Cell will stamp its own entitys into its display before stamping the `layer` Cell output on top.
+
+`Layer` Cells are highly versatile containers. Dev-users can:
++ Define which parts of the Display cycle each `layer` will participate in, by setting the Cell's `cleared`, `compiled` and `shown` flags.
++ Determine the order in which `layer` Cells are processed during a Display cycle, using the Cell's `compileOrder` and `showOrder` attributes.
++ Use the Canvas artefact, or `base` Cell, object dimensions to set their dimensions (with help from the `setRelativeDimensionsUsingBase` flag).
++ Position them in the `base` Cell in the same way as entity objects can be positioned, using absolute and relative coordinates. They also have their own rotation-reflection points around which they can be rotated, scaled and flipped. See the [SC positioning system](sc-positioning.html) page in this Runbook for more details.
++ Position them by reference to other artefact/entity objects using pivot, mimic and path `lockTo` functionality - see test demo [Canvas-036](../../demo/canvas-036.html) for an example of this functionality in action.
++ Modify how they stamp into the `base` Cell's display through the `globalAlpha` (for opacity) and `globalCompositeOperation` (for composition) values.
++ Add filter effects to the `layer` Cell's output.
++ Use the `layer` Cell output as an image asset for SC Pattern styles and the Picture entity.
++ Use the `layer` Cell directly as a style value for the `entity.fillStyle` and `entity.strokeStyle` attributes.
+
+### Create, serialize, clone and kill Cell objects
+[write up]
+
+### The Cell engine
+[write up]
+
+#### Cell dimensions
+[write up]
+
+#### Cell backgrounds
+[write up]
+
+#### Cell display manipulation - the `splitShift()` function
+[write up]
+
+#### Cell data manipulation - the `getCellData()` and `paintCellData()` functions
+[write up]
+
+### Display cycle considerations
+Write up:
++ clear functionality
++ compile functionality
++ show functionality
++ cleared, compiled and shown flags 
++ compileOrder, showOrder
+
+### Cell state
+[write up]
+
+### Cell interactions
+Write up:
++ Local here
++ Entity hover detection
+
+### Layer cell considerations
+Write up:
++ Cell positioning
+  - dimensions, setRelativeDimensionsUsingBase
+  - absolute and relative positioning
+  - position by reference considerations
+  - lockTo
+  - Rotations and flips
++ Cell opacity
++ Cell composition
++ Applying filters to Cells
+
+### Using Cells as Pattern assets
+[write up]
 
 ## Object processing order within the scene graph
 When the dev-user adds `pivot`, `mimic`, and `path` references into their SC code (see the [positioning system](sc-positioning.html) page for details), they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.
@@ -356,13 +488,13 @@ When the dev-user adds `pivot`, `mimic`, and `path` references into their SC cod
 The [SC Display cycle](sc-animation-systems.html) comprises the following steps:
 
 ```
-1: Clear
+1: Clear operation
 
-2: Compile
-   2.1: Calculate
-   2.2: Stamp
+2: Compile operation
+   2.1: Calculate phase
+   2.2: Stamp phase
 
-3: Show
+3: Show operation
 ```
 
 A number of attributes are used across the code base to describer ordering; it's important not to confuse them:
