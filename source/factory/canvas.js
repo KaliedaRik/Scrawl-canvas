@@ -170,6 +170,7 @@ const Canvas = function (items = Ωempty) {
             controller: this,
             order: 10,
             canvasColorSpace: this.canvasColorSpace,
+            willReadFrequently: (ds.willReadFrequently === 'false') ? false : true,
         };
 
         if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);
