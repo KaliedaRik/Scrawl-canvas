@@ -1019,6 +1019,7 @@ interface CellPixelStateObject {
     row: number;
     col: number;
     distance: number;
+    angle: number;
 }
 
 interface CellImageDataObject {

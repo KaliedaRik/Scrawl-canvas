@@ -156,6 +156,14 @@ const Canvas = function (items = Ωempty) {
 
         this.cleanDimensions();
 
+        let willReadFrequently = ds.willReadFrequently;
+
+        if (willReadFrequently === "false") willReadFrequently = false;
+        else willReadFrequently = items.willReadFrequently;
+
+        if (willReadFrequently == null) willReadFrequently = true;
+        else willReadFrequently = !!willReadFrequently;
+
         // setup base cell
         const cellArgs = {
             name: `${this.name}_base`,
@@ -170,7 +178,7 @@ const Canvas = function (items = Ωempty) {
             controller: this,
             order: 10,
             canvasColorSpace: this.canvasColorSpace,
-            willReadFrequently: (ds.willReadFrequently === 'false') ? false : true,
+            willReadFrequently,
         };
 
         if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);

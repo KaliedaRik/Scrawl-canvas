@@ -65,7 +65,7 @@ import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
 // Shared constants
-import { _isFinite, _floor, _round, _values, _2D, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _isFinite, _floor, _piDouble, _round, _values, _2D, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const CELL = 'cell',
@@ -1448,6 +1448,10 @@ P.getCellData = function (opaque = false) {
 
             coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
 
+            let angle = 1 - ((_atan2(coord[1], coord[0]) / _piDouble) + 0.5);
+            if (angle > 0.5) angle -= 0.5;
+            else angle += 0.5;
+
             pixelState.push({
                 indexR: index,
                 indexG: index + 1,
@@ -1460,6 +1464,7 @@ P.getCellData = function (opaque = false) {
                 row,
                 col,
                 distance: coord.getMagnitude(),
+                angle,
             });
         }
     }
