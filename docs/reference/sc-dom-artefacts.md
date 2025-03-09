@@ -343,7 +343,7 @@ SC offers an easy way for dev-users to start making their canvases more accessib
 #### Responsiveness
 SC will only do the work to make a `<canvas>` element responsive when the dev-user tells it to. This happens through the `isResponsive` attribute. Note that when this attribute is `true` SC will override any `width` and `height` values set on the Canvas.
 
-Separately, every Canvas artefact, when created, generates its own `base` Cell object - a `<canvas>` element which is hidden, not added to the DOM (see the [Groups and Cells](sc-groups-cells.html) page of this Runbooks for details). Dev-users can set the dimensions of this `base` Cell independently of the `<canvas>` element's dimensions using the `baseWidth` and `baseHeight` attributes.
+Separately, every Canvas artefact, when created, generates its own `base` Cell object - a `<canvas>` element which is hidden, not added to the DOM (see the [SC scene graph](sc-groups-cells.html) page of this Runbooks for details). Dev-users can set the dimensions of this `base` Cell independently of the `<canvas>` element's dimensions using the `baseWidth` and `baseHeight` attributes.
 
 Almost all of the painting work that SC does happens on `base` Cell objects, whose data only gets copied over to their display `<canvas>` once, at the end of each [Display cycle](sc-animation-systems.html). It is at this point that SC will attempt to fit the `base` Cell into the display `<canvas>`, emulating the CSS `object-fit` property (see below). Dev-users can set how they want the base to fit into the display using the `fit` attribute.
 

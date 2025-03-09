@@ -1,11 +1,11 @@
-# Scrawl-canvas Groups and Cells
+# The Scrawl-canvas scene graph
 Scrawl-canvas works by generating a **retained mode** description - an object model of graphical primatives (called entitys) - for a scene which displays in a `<canvas>` element. SC builds this [scene graph](https://en.wikipedia.org/wiki/Scene_graph) using Group and Cell objects, alongside entity objects which get gathered into the Group objects that have been created for the scene.
 
 > **tl;dr: *SC is not a game engine!*** The SC scene graph does not use the classic [tree structure](https://en.wikipedia.org/wiki/Tree_(abstract_data_type)) approach to build out a top-down hierarchy of layers and nodes to describe the scene. Rather, SC uses a more bottom-up approach to creating the scene graph where entity objects control how, where and when they will appear in the canvas display. Using a tree structure for the scene graph may have been a more efficient design choice, but *SC is not a game engine!*
 > 
 > Dev-users should be aware that this - *somewhat different* - approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.
 
-## The SC scene graph
+## SC scene graph hierarchy
 The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene-graph, for demonstration purposes; none of the test demos generate scene graphs as complex as this one:
 
 ![Code output](sc-groups-cells-asset-001.webp)
@@ -195,8 +195,6 @@ The scene graph described above demonstrates these properties:
 + A final not shown here ... Entitys can change their positioning and/or styling dependencies at any time.
 
 ## SC Group objects
-> **tl;dr:** Group objects represent a collection of SC artefact (including entity) objects - *and that is all they are!*
-
 SC uses Group objects for a range of functionalities across the repo code base:
 + Every SC Stack artefact and Cell object is given a **namesake Group** when they are created, to which can be added other Artefact objects (for Stacks) or entity objects (for Cells) which need to be displayed in them.
 + (Note that SC Canvas artefacts do not have their own *namesake Group* as they only have one Cell object to worry about - their `base` Cell).
@@ -205,6 +203,8 @@ SC uses Group objects for a range of functionalities across the repo code base:
 + For convenience, Element/entity objects belonging to a Group object can have their attributes modified at any time via Group object functions.
 + Group objects can be used to define the set of Element/entity objects which can be dragged-and-dropped as part of a `dragZone` object. See test demo [Canvas-026](../demo/canvas-026.html) for an example.
 + Group objects can be used to define a set of entity objects to which a [filter effect](sc-filter-engine.html) can be applied.
+
+> **tl;dr:** Group objects represent a collection of SC artefact (including entity) objects - *and that is all they are!*
 
 Most of the code relating to Group object functionality can be found in the following files:
 + [factory/group.js](../source/factory/group.html) - for the Group object's factory function.
@@ -263,7 +263,7 @@ SC recommends that dev-users avoid the `stack.set({ group })`, `cell.set({ group
 
 Group objects include a `visibility` attribute which, when set to `false`, will cause the Display cycle to skip over processing all of the artefacts/entitys associated with that Group - they will not recalculate their state, and they will not be stamped into the final Canvas display.
 
-Group objects also include an `order` attribute, which should be set to a positive integer value (default: `0`). Entitys associated with a Group will all be processed on a per-group basis, with the artefacts in a Group with a lower `order` value completing their processing before the next group of entitys start their processing.
+Group objects also include an `order` attribute, which should be set to a positive integer value (default: `0`). Entitys associated with a Group will all be **batch processed** on a per-group basis, with the artefacts in a Group with a lower `order` value completing their processing before the next group of entitys start their processing.
 
 Cell objects store the `name` strings of the Group objects associated with them in an Array keyed to their `cell.groups` attribute. As part of any sorting operation, the Cell object will retrieve the Group objects from the SC library, sort these objects in ascending `order` values and then store references to the now sorted Group objects in an internal `cell.groupBucket` Array. The `groups` Array should never itself be sorted as this represents the order in which Groups get associated with the Cell - which is itself determined in the the code written by dev-users.
 
@@ -303,7 +303,7 @@ The functionality previously described for Group ordering and sorting within Cel
 Group objects only sort their artefact/entity objects when they have to, signalled through the `group.batchResort` flag. This flag gets set to `true` when:
 + The Group object is first created
 + When a new artefact/entity object is added to the Group object's `artefacts` Array
-+ When a artefact/entity object is removed from the Group object's `artefacts` Array
++ When an artefact/entity object is removed from the Group object's `artefacts` Array
 + When an associated artefact/entity object updates its `calculateOrder` or `stampOrder` attribute's value (both of which can be set to the same value using the `order` pseudo-attribute)
 
 SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are handled in a single internal function - `group.sortArtefacts()` - defined in the [factory/group.js](../source/factory/group.html) file.
@@ -348,7 +348,7 @@ SC filters can be applied to entity objects at the Cell, Group and entity object
 If the same set of filters need to be applied to several entity objects at the same time, those objects can be gathered together into their own Group object for processing. However dev-users should be aware of the limitations surrounding this approach:
 + The Group object must be associated with the Cell object where the entitys will be stamped.
 + The entitys will be stamped onto the Cell together, in a single operation - this means that if some of the entitys need to appear behind a non-filtered entity, while other entitys in the same Group need to appear in front of that entity, the operation will fail:
-  - Either the dev-user will have to separate the entitys into two separate Group objects, with the unfiltered entity in additional Group object whose `order` value lies between that of the two filtered Groups;
+  - Either the dev-user will have to separate the entitys into two separate Group objects, with the unfiltered entity in an additional Group object whose `order` value lies between that of the two filtered Groups;
   - Or the filters will need to be applied to each entity separately, at the entity level.
 
 Note that while the Group object filtering functionality is very similar to Cell object and entity object functionality, it differs from them in several small-yet-key areas. Repo-devs need to be aware that changes in filter functionality in one of these three areas of the code base may need to be reflected in the other two areas.
@@ -398,7 +398,7 @@ SC maintains a pool of hidden `<canvas>` elements, wrapped in **CellFragment** o
 CellFragment objects contain only the minimum functionality required so the Cells can perform their various jobs around the code base. The code for CellFragment objects, alongside the pool infrastructure, can be found in the [untracked-factory/cell-fragment.js](../source/untracked-factory/cell-fragment.html) file, with additional, shared functionality defined in the [mixin/cell-key-functions.js](../source/mixin/cell-key-functions.html) file.
 
 SC uses `pool` Cell objects extensively through the code base. Repo-devs retrieve a Cell from the pool using the `requestCell()` function, and return it using the `releaseCell(object)` function. When returned to the pool, the CellFragment objects and their `<canvas>` elements will be cleaned back into a default state. **Note that failing to return a pool Cell will lead to memory leaks**:
-+ [asset-management/reaction-diffusion-asset.js](../source/asset-management/reaction-diffusion-asset.html) - used to help create the initail conditions for an RD-asset, where the asset will build around an entity outline.
++ [asset-management/reaction-diffusion-asset.js](../source/asset-management/reaction-diffusion-asset.html) - used to help create the initial conditions for an RD-asset, where the asset will build around an entity outline.
 + [factory/cell.js](../source/factory/cell.html) - used to help create a [ghosting effect](https://brush.ninja/glossary/animation/ghosting/) in a canvas animation. Also used to help calculate a layer Cell's `localHere` object's values, and to help stash a Cell object's `<canvas>` output as part of the `scrawl.createImageFromCell(cell, flag)` function.
 + [factory/crescent.js](../source/factory/crescent.html) - used to help calculate the intersection points of the two circles that make up the crescent shape.
 + [factory/emitter.js](../source/factory/emitter.html) - used for calculating if a proposed particle is within an entity area.
@@ -424,8 +424,8 @@ Dev-users can add a new `layer` Cell to a canvas at any time using the `canvas.b
 + Define which parts of the Display cycle each `layer` will participate in, by setting the Cell's `cleared`, `compiled` and `shown` flags.
 + Determine the order in which `layer` Cells are processed during a Display cycle, using the Cell's `compileOrder` and `showOrder` attributes.
 + Use the Canvas artefact, or `base` Cell, object dimensions to set their dimensions (with help from the `setRelativeDimensionsUsingBase` flag).
-+ Position them in the `base` Cell in the same way as entity objects can be positioned, using absolute and relative coordinates. They also have their own rotation-reflection points around which they can be rotated, scaled and flipped. See the [SC positioning system](sc-positioning.html) page in this Runbook for more details.
-+ Position them by reference to other artefact/entity objects using pivot, mimic and path `lockTo` functionality - see test demo [Canvas-036](../../demo/canvas-036.html) for an example of this functionality in action.
++ Position themselves in the `base` Cell in the same way as entity objects can be positioned, using absolute and relative coordinates. They also have their own rotation-reflection points around which they can be rotated, scaled and flipped. See the [SC positioning system](sc-positioning.html) page in this Runbook for more details.
++ Position themselves by reference to other artefact/entity objects using pivot, mimic and path `lockTo` functionality - see test demo [Canvas-036](../../demo/canvas-036.html) for an example of this functionality in action.
 + Modify how they stamp into the `base` Cell's display through the `globalAlpha` (for opacity) and `globalCompositeOperation` (for composition) values.
 + Add filter effects to the `layer` Cell's output.
 + Use the `layer` Cell output as an image asset for SC Pattern styles and the Picture entity.
@@ -439,6 +439,17 @@ Dev-users can **create** new `layer` Cell objects using the `canvas.buildCell({k
 Cell objects cannot, at this time, be **serialized** or **cloned**. Repo-devs need to address serialization work at some point.
 
 For the **kill** functionality, Cell objects will check Canvas artefact objects to break any associations, and also check through all entity objects to make sure any `fillStyle` and `strokeStyle` references to the Cell get set back to default values. The Cell's *namesake* Group's `kill` function is then invoked with no arguments: terminating the Cell object will not terminate any entitys associated-by-proxy with that Cell.
+
+### Cell discovery in the SC library, and beyond
+`Base` and `layer` Cell objects are *tracked objects* in the SC library. They have their own section - `library.cell` - but also get included in the `library.asset` section. For this reason, Cell object and Asset/Gradient/Pattern object names should never clash.
+
+Dev users can retrieve Cell objects from the library (as long as they know the object's name) using the `scrawl.findCell('name-string')` function, and also through the `scrawl.findAsset('name-string')` function.
+
+`Base` Cell objects can also be retrieved using the Canvas artefact object `canvas.getBase()` function. If only the `base` Cell object's name is required, use `canvas.get('baseName')`.
+
+For dev-user convenience, `base` Cell object attributes can be updated using the `canvas.setBase({key: value, ...})` and `canvas.deltaSetBase({key: value, ...})` function (with apologies for the function naming discrepency here).
+
+`Pool` Cell objects are *untracked objects* - repo-devs can get a `pool` Cell using the `requestCell()` function and return it to the pool using the `releaseCell(object)` function.
 
 ### The Cell engine
 When the Cell object wraps a `<canvas>` element, it will register handles to both the DOM element, and the element's [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) Interface:
@@ -490,18 +501,86 @@ The `backgroundColor` and `clearAlpha` attributes can be set for `base` and `lay
 Dev-users can also set the `base` background color via HTML by adding the `data-base-background-color="color-value"` and `data-base-clear-alpha="number"` attributes to the `<canvas>` markup.
 
 #### Cell display manipulation - the `splitShift()` function
-[write up]
+SC offers a function - `cell.splitShift()` which gives direct access to a Cell object's engine to perform an animation effect where a given number of rows/columns on one side of the display get copied over to the other side of the display, with the remaining part of the display shifted to take up the vacated space. Code for this function can be found in the [factory/cell.js](../source/factory/cell.html) file.
+
+Dev-users wanting to use this functionality should be aware that it works best on `layer` Cell objects whose `cleared` and `compiled` flags have been set to `false`. Example test demos include [Canvas-069](../../demo/canvas-069.html) and [Canvas-070](../../demo/canvas-070.html).
 
 #### Cell data manipulation - the `getCellData()` and `paintCellData()` functions
-[write up]
+SC includes two Cell functions - `cell.getCellData()` and `cell.paintCellData()` - which give dev-users direct access to a Cell object's pixel data.
+
+The `getCellData()` function returns an object with two attributes:
++ `obj.iData` - a copy of the Cell object's current display's [imageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData).
++ `obj.pixelState` - a complementary Array which supplies details of each pixel's metadata and state. Each array member includes the following metadata:
+
+```
+{
+  // Index pointers into the iData.data array 
+  // + for each of the pixel's channels
+  indexR
+  indexG
+  indexB
+  indexA
+
+  // Pixel color channel values 
+  // + integer numbers between 0 and 255
+  red
+  green
+  blue
+  alpha
+
+  // The pixel's cardinal coordinates, measured in pixels
+  // + from the display's top-left corner
+  row
+  col
+
+  // The pixel's polar coordinates from the display's center
+  // + distance measured in pixels; angle measured in turns (0.0 - 1.0)
+  // + with angle 0 directly above the center (clock 12, or due north)
+  distance
+  angle
+}
+``` 
+
+Dev users can then manipulate the pixelState object - for instance, run functions across the pixelState data to change their color channel values - and then apply them to the Cell display using the `paintCellData()` function.
+
+Code for this function can be found in the [factory/cell.js](../source/factory/cell.html) file. Dev-users wanting to use this functionality should be aware that it works best on `layer` Cell objects whose `cleared` and `compiled` flags have been set to `false`. Example test demos include [Canvas-071](../../demo/canvas-071.html) and [Canvas-072](../../demo/canvas-072.html).
 
 ### Display cycle considerations
-Write up:
-+ clear functionality
-+ compile functionality
-+ show functionality
-+ cleared, compiled and shown flags 
-+ compileOrder, showOrder
+Cell objects are central to the SC Display cycle, which is covered in detail in the [Animation and Display cycle](sc-animation-systems.html) page of this Runbook.
+
+Cell objects react to the Display cycle in different ways:
++ `Pool` Cells play no part in the Display cycle, except where they are used as helper assets for entity objects as they construct their output for stamping.
++ `Base` and `layer` Cells share the same functionality when it comes to the Display cycle `clear` and `compile` operations, but differ significantly during the `show` operation.
+
+All code for Cell Display cycle functionality can be found in the [factory/cell.js](../source/factory/cell.html) file.
+
+#### Cell clear functionality
+Cell objects will clear their display using different functions, dependant on the settings of their `backgroundColor` and `clearAlpha` attribute values. SC imposes a hierarchy on which clear method gets used as follows:
++ If the `backgroundColor` attribute has a value (a valid CSS color string, described above), then the Cell will clear itself using the `engine.fillRect()` Canvas API function.
++ If the `backgroundColor` attribute is unset, but the `clearAlpha` attribute value is &gt; 0, then the Cell will copy its current display, clear itself, and paste the copy back into its display using a mix of `engine.drawImage()` and `engine.clearRect()` Canvas API functions.
++ The fallback default action is for the Cell to clear itself using `engine.clearRect()`.
+
+Dev-users can stop a Cell object clearing itself by setting the Cell's `cleared` flag to `false`.
+
+#### Cell compile functionality
+The role of Cell objects during the `compile` operation is to instruct its associated Group objects to tell their associated entity objects to stamp themselves into the Cell. Dev-users can stop a Cell object compiling itself by setting the Cell's `compiled` flag to `false`.
+
+The order in which a Cell object compiles can become important for the final display `<canvas>` output. Canvas artefacts sort Cell objects in ascending order according to their `compileOrder` attributes. By default:
++ `layer` Cells have a `compileOrder` value of `0`
++ `base` Cells have a `compileOrder` value of `10`
+
+#### `Layer` Cell show functionality
+`Layer` Cell functionality includes the ability to stamp themselves onto `base` Cell displays during the Display cycle `show` operation. The order in which `layer` Cells stamp themselves is determined by their `showOrder` attribute. By default `layer` Cells will display; dev-users can prevent this by setting the Cell's `shown` attribute to `false`.
+
+Each `layer` Cell can be positioned in, and animated across, their `base` Cell just like artefact objects in Stacks and entity objects in Cells - see the [positioning system](sc-positioning.html) page in this Runbook for details, and test demo [Canvas-036](../../demo/canvas-036.html) for a working example.
+
+Note that `layer` Cells cannot be dragged-and-dropped like entity objects. Instead they need to be pivoted to an entity object which can be dragged. Repo-devs are welcome to investigate this issue further and - perhaps - come up with a better solution.
+
+#### `Base` Cell show functionality
+SC includes a (rough) emulation of [CSS object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) functionality, which gets actioned when the `base` Cell stamps itself into its display `<canvas>` as the last step in the Display cycle. The `base` Cell reads the Canvas artefact object's `fit` attribute and positions itself into the display accordingly. This functionality is defined in the [factory/cell.js](../source/factory/cell.html) file - specifically the `show()` function.
+
+#### Cell opacity, composition and filters
+When a `layer` Cell object stamps itself into the `base` Cell, and the `base` Cell stamps itself into the display `<canvas>`, they will take into account their `globalAlpha`, `globalCompositeOperation`, `filter` and `filters`
 
 ### Cell state
 [write up]
@@ -510,18 +589,6 @@ Write up:
 Write up:
 + Local here
 + Entity hover detection
-
-### Layer cell considerations
-Write up:
-+ Cell positioning
-  - dimensions, setRelativeDimensionsUsingBase
-  - absolute and relative positioning
-  - position by reference considerations
-  - lockTo
-  - Rotations and flips
-+ Cell opacity
-+ Cell composition
-+ Applying filters to Cells
 
 ### Using Cells as Pattern assets
 [write up]

@@ -476,8 +476,6 @@ const report = reportSpeed('#reportmessage');
 const easelData = easel.getCellData(true),
     pixelState = easelData.pixelState;
 
-console.log(pixelState);
-
 const update = () => easel.paintCellData(easelData);
 
 update();

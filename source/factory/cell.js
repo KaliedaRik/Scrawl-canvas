@@ -414,6 +414,13 @@ S.showOrder = function (item) {
     this.updateControllerCells();
 };
 
+S.order = function (item) {
+
+    this.compileOrder = item;
+    this.showOrder = item;
+    this.updateControllerCells();
+};
+
 S.setRelativeDimensionsUsingBase = function (item) {
 
     this.setRelativeDimensionsUsingBase = !!item;
