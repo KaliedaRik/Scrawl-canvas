@@ -362,6 +362,29 @@
 <li>Or the filters will need to be applied to each entity separately, at the entity level.</li></ul></li>
 </ul>
 <p>Note that while the Group object filtering functionality is very similar to Cell object and entity object functionality, it differs from them in several small-yet-key areas. Repo-devs need to be aware that changes in filter functionality in one of these three areas of the code base may need to be reflected in the other two areas.</p>
+<h3 id="cell-entity-and-stack-artefact-end-user-interactions">Cell entity, and Stack artefact, end-user interactions</h3>
+<p>Group objects come with a set of attributes and functions which, for end-users interacting with a Stack or Canvas element in a desktop (screen + mouse) environment, can quickly detect when they end-user's cursor is hovering over an Element artefact or entity object and take actions accordingly to change the Stack/Canvas display. Note that once these attributes are set, SC will handle the associated functionality automatically for the dev-user:</p>
+<ul>
+<li><code>group.checkForEntityHover</code> - Boolean (default: <code>false</code>)</li>
+<li><code>group.onEntityHover</code> - Function (default: no action taken)</li>
+<li><code>group.onEntityNoHover</code> - Function (default: no action taken)</li>
+</ul>
+<p>For dev-user convenience, these attributes can also be set via the Canvas artefact and Cell objects:</p>
+<ul>
+<li>Canvas artefact objects will pipe the attribute values through to their <code>base</code> Cell's <em>namesake</em> Group object - see test demo <a href="../../demo/canvas-001.html">Canvas-001</a> for an example:<ul>
+<li><code>canvas.checkForEntityHover</code></li>
+<li><code>canvas.onEntityHover</code></li>
+<li><code>canvas.onEntityNoHover</code></li></ul></li>
+<li>Cell objects pipe the attribute values directly to their <em>namesake</em> Group object - see test demo <a href="../../demo/canvas-039.html">Canvas-039</a>:<ul>
+<li><code>cell.checkForEntityHover</code></li>
+<li><code>cell.onEntityHover</code></li>
+<li><code>cell.onEntityNoHover</code></li></ul></li>
+</ul>
+<p>Beyond hovering, dev-users can obtain a list of entitys currently under the cursor's location by invoking the following functions. The function argument will generally be an appropriate <code>here</code> object (see below for details on <code>here</code> objects):</p>
+<ul>
+<li><code>group.getArtefactAt(here)</code> - see test demos <a href="../../demo/canvas-026.html">Canvas-026</a>, <a href="../../demo/canvas-037.html">Canvas-037</a>, <a href="../../demo/canvas-058.html">Canvas-058</a>, <a href="../../demo/dom-007.html">DOM-007</a>.</li>
+<li><code>group.getAllArtefactsAt(here)</code> see test demo <a href="../../demo/dom-009.html">DOM-009</a>.</li>
+</ul>
 <h2 id="sc-cell-objects">SC Cell objects</h2>
 <p>SC <strong>Cell objects</strong> wrap HTML <code>&lt;canvas&gt;</code> elements, and add functionality for managing and manipulating that canvas display. SC <strong>Canvas artefact objects</strong> also wrap HTML <code>&lt;canvas&gt;</code> elements, with added functionality. </p>
 <p>To understand the SC ecosystem, developers need to understand the differences between the SC Canvas and Cell objects:</p>
@@ -557,16 +580,303 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <p>SC includes a (rough) emulation of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">CSS object-fit</a> functionality, which gets actioned when the <code>base</code> Cell stamps itself into its display <code>&lt;canvas&gt;</code> as the last step in the Display cycle. The <code>base</code> Cell reads the Canvas artefact object's <code>fit</code> attribute and positions itself into the display accordingly. This functionality is defined in the <a href="../source/factory/cell.html">factory/cell.js</a> file - specifically the <code>show()</code> function.</p>
 <h4 id="cell-opacity-composition-and-filters">Cell opacity, composition and filters</h4>
 <p>When a <code>layer</code> Cell object stamps itself into the <code>base</code> Cell, and the <code>base</code> Cell stamps itself into the display <code>&lt;canvas&gt;</code>, they will take into account their <code>globalAlpha</code>, <code>globalCompositeOperation</code>, <code>filter</code> and <code>filters</code></p>
-<h3 id="cell-state">Cell state</h3>
-<p>[write up]</p>
 <h3 id="cell-interactions">Cell interactions</h3>
-<p>Write up:</p>
+<p>Scrawl artefact objects can include a <code>here</code> object, which includes real-time-updated details of the environment in which the artefact's DOM element lives. Further details of the <code>here</code> object can be found in the <a href="sc-dom-artefacts.html#user-interaction-and-the-here-object">User interaction and the here object</a> section of the "Artefacts and the DOM" page in this Runbook.</p>
+<p>Cell objects have a similar object - <code>cell.here</code> - which, when populated with data, will include a much smaller set of attributes:</p>
+<pre><code>{
+// Current Cell dimensions
+  w: Number - Cell element width (px)
+  h: Number - Cell element height (px)
+
+// Current cursor position relative to Cell element top-left corner
+  x: Number - cursor x position 
+  y: Number - cursor y position 
+
+  active: Boolean - is the cursor over the Cell element?
+}</code></pre>
+<p>For <code>base</code> Cells, the <code>here</code> object will be automatically updated at the start of every Display cycle by the Cell object's host Canvas artefact. The code for this update can be found in the Cell factory file's <code>cell.updateBaseHere()</code> function.</p>
+<p>For <code>layer</code> Cells, the update process is manual - dev-users will need to include a call to the Cell object's <code>cell.updateHere()</code> function whenever they need up-to-date data. Examples of this can be found in the test demos <a href="../../demo/canvas-039.html">Canvas-039</a> and <a href="../../demo/canvas-059.html">Canvas-059</a>.</p>
+<p><code>Pool</code> Cells never get shown in <code>&lt;canvas&gt;</code> displays, thus never need to have their <code>cell.here</code> objects updated.</p>
+<h2 id="cell-and-entity-state">Cell, and entity, state</h2>
+<p>The Cell engine (which is the <code>&lt;canvas&gt;</code> element's <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D object</a>) consists of a set of properties (attributes) that describe the engine's current state, and a group of methods (functions) for manipulating that state as well as performing painting operations on the element's drawing surface.</p>
+<p>The engine is an <em>immediate mode</em> object. Setting an engine property value - for instance: <code>engine.strokeStyle = 'red'</code> - will be actioned immediately; every change requires some time to complete. While a single update is insignificant in itself, many such changes during a Display cycle have the potential to impact canvas rendering speed resulting in a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas">sub-optimal performance</a>.</p>
+<p>To help manage this issue, SC supplies every Cell object with a virtual <strong>State object</strong> which keeps track of the engine object's properties. Entity objects also have a state object containing the values the entity requires the engine to have when it stamps itself onto the Cell. Rather than apply those values directly to the engine, SC will perform a bespoke <a href="https://ably.com/blog/practical-guide-to-diff-algorithms">diff operation</a> before every entity stamp and only update those engine properties that need to be updated.</p>
+<h3 id="create-serialize-clone-and-kill-state-objects">Create, serialize, clone and kill State objects</h3>
+<p>State objects are <em>untracked</em>, thus not referenced in the SC library. They get created at the same time as their Cell or entity object instantiates, and they will be serialized, cloned and killed alongside their host objects. This functionality is all handled internally by SC.</p>
+<p>The State object's factory code can be found in the <a href="../source/untracked-factory/state.html">untracked-factory/state.js</a> file. Note that the diff function lives on the State object - <code>state.getChanges()</code>. The code to apply diff changes to the Cell object's engine can be found in the <a href="../source/mixin/cell-key-functions.html">mixin/cell-key-functions.js</a> file, in the <code>cell.setEngine(entity)</code> function.</p>
+<h3 id="state-object-attributes">State object attributes</h3>
+<p>State objects track the following engine properties:</p>
+<table>
+<thead>
+<tr>
+<th id="***property***" style="text-align:left;"><strong><em>Property</em></strong></th>
+<th id="***type***" style="text-align:left;"><strong><em>Type</em></strong></th>
+<th id="***default***" style="text-align:left;"><strong><em>Default</em></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Fills and Strokes</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle">fillStyle</a></td>
+<td style="text-align:left;">(various)</td>
+<td style="text-align:left;"><code>'rgb(0 0 0 / 1)'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle">strokeStyle</a></td>
+<td style="text-align:left;">(various)</td>
+<td style="text-align:left;"><code>'rgb(0 0 0 / 1)'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Composition</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha">globalAlpha</a></td>
+<td style="text-align:left;">Number</td>
+<td style="text-align:left;"><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation">globalCompositeOperation</a></td>
+<td style="text-align:left;">CSS GCO String</td>
+<td style="text-align:left;"><code>'source-over'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Line styling</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth">lineWidth</a></td>
+<td style="text-align:left;">Number</td>
+<td style="text-align:left;"><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap">lineCap</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'butt'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin">lineJoin</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'miter'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash">lineDash</a></td>
+<td style="text-align:left;">Number Array</td>
+<td style="text-align:left;"><code>[]</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset">lineDashOffset</a></td>
+<td style="text-align:left;">Number</td>
+<td style="text-align:left;"><code>0</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/miterLimit">miterLimit</a></td>
+<td style="text-align:left;">Number</td>
+<td style="text-align:left;"><code>10</code></td>
+</tr>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Shadows</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowOffsetX">shadowOffsetX</a></td>
+<td style="text-align:left;">Number</td>
+<td style="text-align:left;"><code>0</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowOffsetY">shadowOffsetY</a></td>
+<td style="text-align:left;">Number</td>
+<td style="text-align:left;"><code>0</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowBlur">shadowBlur</a></td>
+<td style="text-align:left;">Number</td>
+<td style="text-align:left;"><code>0</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowColor">shadowColor</a></td>
+<td style="text-align:left;">CSS color String</td>
+<td style="text-align:left;"><code>'rgb(0 0 0 / 1)'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Text styling</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font">font</a></td>
+<td style="text-align:left;">CSS font String</td>
+<td style="text-align:left;"><code>'12px sans-serif'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/direction">direction</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'ltr'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontKerning">fontKerning</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'normal'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textRendering">textRendering</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'auto'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/letterSpacing">letterSpacing</a></td>
+<td style="text-align:left;">CSS length String</td>
+<td style="text-align:left;"><code>'0px'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/wordSpacing">wordSpacing</a></td>
+<td style="text-align:left;">CSS length String</td>
+<td style="text-align:left;"><code>'0px'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontStretch">fontStretch</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'normal'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontVariantCaps">fontVariantCaps</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'normal'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Unactioned text styling</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign">textAlign</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'left'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline">textBaseline</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'top'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>CSS/SVG filters</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">filter</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'none'</code></td>
+</tr>
+<tr>
+<td style="text-align:left;">------------------------------------------------------------</td>
+<td style="text-align:left;">-------------------------</td>
+<td style="text-align:left;">-----------------------------</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Image smoothing</code></td>
+<td style="text-align:left;"></td>
+<td style="text-align:left;"></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled">imageSmoothingEnabled</a></td>
+<td style="text-align:left;">Boolean</td>
+<td style="text-align:left;"><code>true</code></td>
+</tr>
+<tr>
+<td style="text-align:left;"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingQuality">imageSmoothingQuality</a></td>
+<td style="text-align:left;">String</td>
+<td style="text-align:left;"><code>'high'</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="updating-state-object-attributes">Updating State object attributes</h4>
+<p>The functionality for updating State object attributes is tightly linked to entity object update code. This code is defined in the <a href="../source/mixin/entity.html">mixin/entity.js</a> file, but a number of factory functions overwrite those <code>get()</code>, <code>set()</code> and <code>setDelta()</code> functions to extend them in various ways.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> Dev-users should never update State objects attributes directly. Instead they can be updated via their entity object's <code>entity.set({ key: value, ... })</code> and <code>entity.setDelta({ key: value, ... })</code> functions.</p>
+</blockquote>
+<h4 id="fill-and-stroke-details">Fill and stroke details</h4>
+<p>The State object's <code>fillStyle</code> and <code>strokeStyle</code> attributes can be set to the following:</p>
 <ul>
-<li>Local here</li>
-<li>Entity hover detection</li>
+<li>Any legitimate <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a> color string. This includes:<ul>
+<li>Named and system color strings - <code>red</code>, <code>ButtonText</code>, <code>transparent</code></li>
+<li>Legitimate RGB hexadecimal notation strings - <code>#f00</code>, <code>#f008</code>, <code>#ff0000</code>, <code>#ff000088</code></li>
+<li>sRGB function strings - <code>rgb(255 0 0 / 0.5)</code>, <code>rgb(255, 0, 0)</code>, <code>rgba(255, 0, 0, 0.5)</code></li>
+<li>HSL and HWB function strings - <code>hsla(0, 100%, 50%, 0.5)</code>, <code>hwb(0 0% 0%)</code>, etc</li>
+<li>LAB, LCH, OKLAB, OKLCH function strings - <code>lab(52.2% 40.1 59.9 / 0.5)</code>, <code>oklch(59.6% 0.1 49.7)</code>, etc</li>
+<li>Predefined color space strings - <code>color(rec2020 0.42 0.97 0.01)</code>, <code>color(display-p3 -0.61 1.01 -0.22)</code>, etc</li></ul></li>
+<li>A Gradient, RadialGradient or ConicGradient object, or the <code>name</code> attribute string of the object</li>
+<li>A Pattern object, or the <code>name</code> attribute string of the object</li>
+<li>A Cell object, or the <code>name</code> attribute string of the object</li>
 </ul>
-<h3 id="using-cells-as-pattern-assets">Using Cells as Pattern assets</h3>
-<p>[write up]</p>
+<h4 id="line-styling-details">Line styling details</h4>
+<p>The State object's <code>lineWidth</code> attribute represents the width of the line when the entity <code>scale</code> attribute is set to <code>1</code>. By default, the line width will scale relative to the entity object's current scale.</p>
+<p>Dev-users who want a constant line width regardless of entity scale can set the entity object's <code>scaleOutline</code> flag to <code>false</code>.</p>
+<h4 id="shadow-styling-details">Shadow styling details</h4>
+<p>The State object's <code>shadowOffsetX</code>, <code>shadowOffsetY</code> and <code>shadowBlur</code> attributes are, by default, constant - regardless of the entity object's <code>scale</code> attribute's value. The values applied when <code>scale === 1</code> are the same as when <code>scale === 2</code>.</p>
+<p>Dev-users can make the shadow scale with the entity by setting the entity object's <code>scaleShadow</code> flag to <code>true</code>.</p>
+<h4 id="text-styling-details">Text styling details</h4>
+<p>The State object's (many) text styling attributes are relevant only to Label and EnhancedLabel entitys - details of how each attribute affects the displayed text is covered in more detail in the <a href="sc-text-based-entitys.html">text-based entitys</a> page of this Runbook.</p>
+<h4 id="csssvg-filter-details">CSS/SVG filter details</h4>
+<p>SC supports the application of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">CSS/SVG filters</a> at both the entity and the Cell level (but not the Group level), where the filter(s) will be applied:</p>
+<ul>
+<li>at the point of the entity stamping itself onto a <code>layer</code> or <code>base</code> Cell element; or</li>
+<li>when the <code>layer</code> Cell object stamps itself onto the <code>base</code> Cell element; or</li>
+<li>when the <code>base</code> Cell stamps itself onto the Canvas artefact object's domElement.</li>
+</ul>
+<blockquote>
+  <p><strong>tl;dr:</strong> do not confuse the <code>filter</code> and <code>filters</code> attributes!</p>
+  <ul>
+  <li>The <strong><code>filter</code></strong> (singular) attribute is part of the State object, used to apply <strong><em>CSS/SVG filters</em></strong> to an entity or <code>layer</code> Cell object's output</li>
+  <li>The <strong><code>filters</code></strong> (plural) attribute is part of the Cell, Group and/or entity object, used to apply <strong><em>SC filters</em></strong> to those objects' output.</li>
+  </ul>
+</blockquote>
+<p>Note that any SC filters will be applied to the stamped output first then, if present, the CSS/SVG filters will be applied afterwards.</p>
+<h3 id="using-cells-as-pattern-styles">Using Cells as Pattern styles</h3>
+<p>Cell objects can act as State object <code>fillStyle</code> and <code>strokeStyle</code> attribute patterns because they include the functionality defined in the <a href="../source/mixin/pattern.html">mixin/pattern.js</a> file.</p>
+<p>Further details about Pattern styles objects can be found in the <a href="sc-styles.html">Styles management and use</a> page of this Runbook.</p>
 <h2 id="object-processing-order-within-the-scene-graph">Object processing order within the scene graph</h2>
 <p>When the dev-user adds <code>pivot</code>, <code>mimic</code>, and <code>path</code> references into their SC code (see the <a href="sc-positioning.html">positioning system</a> page for details), they also introduce <strong>artefact dependencies</strong>: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.</p>
 <blockquote>
@@ -582,7 +892,7 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 3: Show operation</code></pre>
 <p>A number of attributes are used across the code base to describer ordering; it's important not to confuse them:</p>
 <ul>
-<li><p>SC <strong><em>Cell</em></strong> artefacts use their <code>compileOrder</code> and <code>showOrder</code> attributes to determine in which order they will perform the Display cycle compile and show steps.</p></li>
+<li><p>SC <strong><em>Cell</em></strong> artefacts use their <code>compileOrder</code> and <code>showOrder</code> attributes to determine in which order they will perform the Display cycle compile and show operations.</p></li>
 <li><p>SC <strong><em>Group</em></strong> objects have an <code>order</code> attribute which comes into play when two or more Groups contribute entitys to a Cell's display.</p></li>
 <li><p>SC <strong><em>Artefacts</em></strong> have <code>calculateOrder</code> and <code>stampOrder</code> attributes (which can both be set to the same value using the <code>order</code> pseudo-attribute).</p></li>
 </ul>

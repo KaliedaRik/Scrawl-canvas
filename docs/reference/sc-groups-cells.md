@@ -353,6 +353,26 @@ If the same set of filters need to be applied to several entity objects at the s
 
 Note that while the Group object filtering functionality is very similar to Cell object and entity object functionality, it differs from them in several small-yet-key areas. Repo-devs need to be aware that changes in filter functionality in one of these three areas of the code base may need to be reflected in the other two areas.
 
+### Cell entity, and Stack artefact, end-user interactions
+Group objects come with a set of attributes and functions which, for end-users interacting with a Stack or Canvas element in a desktop (screen + mouse) environment, can quickly detect when they end-user's cursor is hovering over an Element artefact or entity object and take actions accordingly to change the Stack/Canvas display. Note that once these attributes are set, SC will handle the associated functionality automatically for the dev-user:
++ `group.checkForEntityHover` - Boolean (default: `false`)
++ `group.onEntityHover` - Function (default: no action taken)
++ `group.onEntityNoHover` - Function (default: no action taken)
+
+For dev-user convenience, these attributes can also be set via the Canvas artefact and Cell objects:
++ Canvas artefact objects will pipe the attribute values through to their `base` Cell's *namesake* Group object - see test demo [Canvas-001](../../demo/canvas-001.html) for an example:
+  - `canvas.checkForEntityHover`
+  - `canvas.onEntityHover`
+  - `canvas.onEntityNoHover`
++ Cell objects pipe the attribute values directly to their *namesake* Group object - see test demo [Canvas-039](../../demo/canvas-039.html):
+  - `cell.checkForEntityHover`
+  - `cell.onEntityHover`
+  - `cell.onEntityNoHover`
+
+Beyond hovering, dev-users can obtain a list of entitys currently under the cursor's location by invoking the following functions. The function argument will generally be an appropriate `here` object (see below for details on `here` objects):
++ `group.getArtefactAt(here)` - see test demos [Canvas-026](../../demo/canvas-026.html), [Canvas-037](../../demo/canvas-037.html), [Canvas-058](../../demo/canvas-058.html), [DOM-007](../../demo/dom-007.html).
++ `group.getAllArtefactsAt(here)` see test demo [DOM-009](../../demo/dom-009.html).
+
 ## SC Cell objects
 SC **Cell objects** wrap HTML `<canvas>` elements, and add functionality for managing and manipulating that canvas display. SC **Canvas artefact objects** also wrap HTML `<canvas>` elements, with added functionality. 
 
@@ -582,16 +602,139 @@ SC includes a (rough) emulation of [CSS object-fit](https://developer.mozilla.or
 #### Cell opacity, composition and filters
 When a `layer` Cell object stamps itself into the `base` Cell, and the `base` Cell stamps itself into the display `<canvas>`, they will take into account their `globalAlpha`, `globalCompositeOperation`, `filter` and `filters`
 
-### Cell state
-[write up]
-
 ### Cell interactions
-Write up:
-+ Local here
-+ Entity hover detection
+Scrawl artefact objects can include a `here` object, which includes real-time-updated details of the environment in which the artefact's DOM element lives. Further details of the `here` object can be found in the [User interaction and the here object](sc-dom-artefacts.html#user-interaction-and-the-here-object) section of the "Artefacts and the DOM" page in this Runbook.
 
-### Using Cells as Pattern assets
-[write up]
+Cell objects have a similar object - `cell.here` - which, when populated with data, will include a much smaller set of attributes:
+
+```
+{
+// Current Cell dimensions
+  w: Number - Cell element width (px)
+  h: Number - Cell element height (px)
+
+// Current cursor position relative to Cell element top-left corner
+  x: Number - cursor x position 
+  y: Number - cursor y position 
+
+  active: Boolean - is the cursor over the Cell element?
+}
+```
+
+For `base` Cells, the `here` object will be automatically updated at the start of every Display cycle by the Cell object's host Canvas artefact. The code for this update can be found in the Cell factory file's `cell.updateBaseHere()` function.
+
+For `layer` Cells, the update process is manual - dev-users will need to include a call to the Cell object's `cell.updateHere()` function whenever they need up-to-date data. Examples of this can be found in the test demos [Canvas-039](../../demo/canvas-039.html) and [Canvas-059](../../demo/canvas-059.html).
+
+`Pool` Cells never get shown in `<canvas>` displays, thus never need to have their `cell.here` objects updated.
+
+## Cell, and entity, state
+The Cell engine (which is the `<canvas>` element's [CanvasRenderingContext2D object](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)) consists of a set of properties (attributes) that describe the engine's current state, and a group of methods (functions) for manipulating that state as well as performing painting operations on the element's drawing surface.
+
+The engine is an *immediate mode* object. Setting an engine property value - for instance: `engine.strokeStyle = 'red'` - will be actioned immediately; every change requires some time to complete. While a single update is insignificant in itself, many such changes during a Display cycle have the potential to impact canvas rendering speed resulting in a [sub-optimal performance](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas).
+
+To help manage this issue, SC supplies every Cell object with a virtual **State object** which keeps track of the engine object's properties. Entity objects also have a state object containing the values the entity requires the engine to have when it stamps itself onto the Cell. Rather than apply those values directly to the engine, SC will perform a bespoke [diff operation](https://ably.com/blog/practical-guide-to-diff-algorithms) before every entity stamp and only update those engine properties that need to be updated.
+
+### Create, serialize, clone and kill State objects
+State objects are *untracked*, thus not referenced in the SC library. They get created at the same time as their Cell or entity object instantiates, and they will be serialized, cloned and killed alongside their host objects. This functionality is all handled internally by SC.
+
+The State object's factory code can be found in the [untracked-factory/state.js](../source/untracked-factory/state.html) file. Note that the diff function lives on the State object - `state.getChanges()`. The code to apply diff changes to the Cell object's engine can be found in the [mixin/cell-key-functions.js](../source/mixin/cell-key-functions.html) file, in the `cell.setEngine(entity)` function.
+
+### State object attributes
+State objects track the following engine properties:
+
+| ***Property*** | ***Type*** | ***Default*** |
+|:---|:---|:---|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`Fills and Strokes`| | |
+|[fillStyle](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle)|(various)|`'rgb(0 0 0 / 1)'`|
+|[strokeStyle](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle)|(various)|`'rgb(0 0 0 / 1)'`|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`Composition`| | |
+|[globalAlpha](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha)|Number|`1`|
+|[globalCompositeOperation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)|CSS GCO String|`'source-over'`|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`Line styling`| | |
+|[lineWidth](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth)|Number|`1`|
+|[lineCap](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap)|String|`'butt'`|
+|[lineJoin](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin)|String|`'miter'`|
+|[lineDash](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash)|Number Array|`[]`|
+|[lineDashOffset](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset)|Number|`0`|
+|[miterLimit](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/miterLimit)|Number|`10`|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`Shadows`| | |
+|[shadowOffsetX](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowOffsetX)|Number|`0`|
+|[shadowOffsetY](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowOffsetY)|Number|`0`|
+|[shadowBlur](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowBlur)|Number|`0`|
+|[shadowColor](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowColor)|CSS color String|`'rgb(0 0 0 / 1)'`|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`Text styling`| | |
+|[font](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font)|CSS font String|`'12px sans-serif'`|
+|[direction](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/direction)|String|`'ltr'`|
+|[fontKerning](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontKerning)|String|`'normal'`|
+|[textRendering](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textRendering)|String|`'auto'`|
+|[letterSpacing](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/letterSpacing)|CSS length String|`'0px'`|
+|[wordSpacing](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/wordSpacing)|CSS length String|`'0px'`|
+|[fontStretch](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontStretch)|String|`'normal'`|
+|[fontVariantCaps](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontVariantCaps)|String|`'normal'`|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`Unactioned text styling`| | |
+|[textAlign](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign)|String|`'left'`|
+|[textBaseline](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline)|String|`'top'`|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`CSS/SVG filters`| | |
+|[filter](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter)|String|`'none'`|
+|------------------------------------------------------------|-------------------------|-----------------------------|
+|`Image smoothing`| | |
+|[imageSmoothingEnabled](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled)|Boolean|`true`|
+|[imageSmoothingQuality](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingQuality)|String|`'high'`|
+
+#### Updating State object attributes
+The functionality for updating State object attributes is tightly linked to entity object update code. This code is defined in the [mixin/entity.js](../source/mixin/entity.html) file, but a number of factory functions overwrite those `get()`, `set()` and `setDelta()` functions to extend them in various ways.
+
+> **tl;dr:** Dev-users should never update State objects attributes directly. Instead they can be updated via their entity object's `entity.set({ key: value, ... })` and `entity.setDelta({ key: value, ... })` functions.
+
+#### Fill and stroke details
+The State object's `fillStyle` and `strokeStyle` attributes can be set to the following:
++ Any legitimate [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/) color string. This includes:
+  - Named and system color strings - `red`, `ButtonText`, `transparent`
+  - Legitimate RGB hexadecimal notation strings - `#f00`, `#f008`, `#ff0000`, `#ff000088`
+  - sRGB function strings - `rgb(255 0 0 / 0.5)`, `rgb(255, 0, 0)`, `rgba(255, 0, 0, 0.5)`
+  - HSL and HWB function strings - `hsla(0, 100%, 50%, 0.5)`, `hwb(0 0% 0%)`, etc
+  - LAB, LCH, OKLAB, OKLCH function strings - `lab(52.2% 40.1 59.9 / 0.5)`, `oklch(59.6% 0.1 49.7)`, etc
+  - Predefined color space strings - `color(rec2020 0.42 0.97 0.01)`, `color(display-p3 -0.61 1.01 -0.22)`, etc
++ A Gradient, RadialGradient or ConicGradient object, or the `name` attribute string of the object
++ A Pattern object, or the `name` attribute string of the object
++ A Cell object, or the `name` attribute string of the object
+
+#### Line styling details
+The State object's `lineWidth` attribute represents the width of the line when the entity `scale` attribute is set to `1`. By default, the line width will scale relative to the entity object's current scale.
+
+Dev-users who want a constant line width regardless of entity scale can set the entity object's `scaleOutline` flag to `false`.
+
+#### Shadow styling details
+The State object's `shadowOffsetX`, `shadowOffsetY` and `shadowBlur` attributes are, by default, constant - regardless of the entity object's `scale` attribute's value. The values applied when `scale === 1` are the same as when `scale === 2`.
+
+Dev-users can make the shadow scale with the entity by setting the entity object's `scaleShadow` flag to `true`.
+
+#### Text styling details
+The State object's (many) text styling attributes are relevant only to Label and EnhancedLabel entitys - details of how each attribute affects the displayed text is covered in more detail in the [text-based entitys](sc-text-based-entitys.html) page of this Runbook.
+
+#### CSS/SVG filter details
+SC supports the application of [CSS/SVG filters](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) at both the entity and the Cell level (but not the Group level), where the filter(s) will be applied:
++ at the point of the entity stamping itself onto a `layer` or `base` Cell element; or
++ when the `layer` Cell object stamps itself onto the `base` Cell element; or
++ when the `base` Cell stamps itself onto the Canvas artefact object's domElement.
+
+> **tl;dr:** do not confuse the `filter` and `filters` attributes!
+> + The **`filter`** (singular) attribute is part of the State object, used to apply ***CSS/SVG filters*** to an entity or `layer` Cell object's output
+> + The **`filters`** (plural) attribute is part of the Cell, Group and/or entity object, used to apply ***SC filters*** to those objects' output.
+
+Note that any SC filters will be applied to the stamped output first then, if present, the CSS/SVG filters will be applied afterwards.
+
+### Using Cells as Pattern styles
+Cell objects can act as State object `fillStyle` and `strokeStyle` attribute patterns because they include the functionality defined in the [mixin/pattern.js](../source/mixin/pattern.html) file.
+
+Further details about Pattern styles objects can be found in the [Styles management and use](sc-styles.html) page of this Runbook.
 
 ## Object processing order within the scene graph
 When the dev-user adds `pivot`, `mimic`, and `path` references into their SC code (see the [positioning system](sc-positioning.html) page for details), they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.
@@ -612,7 +755,7 @@ The [SC Display cycle](sc-animation-systems.html) comprises the following steps:
 
 A number of attributes are used across the code base to describer ordering; it's important not to confuse them:
 
-+ SC ***Cell*** artefacts use their `compileOrder` and `showOrder` attributes to determine in which order they will perform the Display cycle compile and show steps.
++ SC ***Cell*** artefacts use their `compileOrder` and `showOrder` attributes to determine in which order they will perform the Display cycle compile and show operations.
 
 + SC ***Group*** objects have an `order` attribute which comes into play when two or more Groups contribute entitys to a Cell's display.
 
