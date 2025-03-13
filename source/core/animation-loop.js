@@ -111,10 +111,11 @@ const animationLoop = () => {
 
     for (let i = 0, iz = animate_sorted.length; i < iz; i++) {
 
-        const a = animate_sorted[i],
-            now = _now();
+        const a = animate_sorted[i];
 
         if (a.chokedAnimation) {
+
+            const now = _now();
 
             // Warning: magic number! `825` seems to allow the frame rate to reach the max frame rate; setting it to anything higher means the frame rate never reaches the max frame rate.
             if (a.lastRun + (825 / a.maxFrameRate) < now) {

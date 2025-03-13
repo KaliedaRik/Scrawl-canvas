@@ -169,16 +169,7 @@ Note that when SC wraps `<canvas>`, `<div>` stacks and stack elements into SC ar
 ## The Scrawl-canvas animation loop
 The SC system runs a single [RequestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) animation loop, which gets started as part of the initialization work. More details about the animation loop can be found in the [core.animation-loop.js](../source/core/animation-loop.html) file.
 
-During initialization a number of system animations get created and added to the animation loop:
-+ `SC-core-filters-cleanup-action` - defined in [helper/filter-engine.js](../source/helper/filter-engine.html)
-+ `SC-core-gradient-delta-animation` - defined in [mixin/styles.js](../source/mixin/styles.html)
-+ `SC-core-listeners-tracker` - defined in [core/user-interaction.js](../source/core/user-interaction.html)
-+ `SC-core-tickers-animation` - defined in [factory/ticker.js](../source/factory/ticker.html)
-+ `SC-core-workstore-hygeine` - defined in [helper/workstore.js](../source/helper/workstore.html)
-
-Note that by default, the animation loop is throttled to run at a maximum 60 frames-per-second. This is because some devices, using modern displays that support it, can run at higher fps rates. Dev-users can change this rate throttle in code after initialization completes. See [demo test Canvas-050](../demo/canvas-050.html) for an example of this functionality in action.
-
-Dev-users can also stop and restart the animation loop after initialization completes by invoking the `scrawl.stopCoreAnimationLoop()` and `scrawl.startCoreAnimationLoop()` functions. See [demo test DOM-009](../demo/dom-009.html) for details.
+More information can be found in the [Animation and Display cycle](sc-animation-systems.html) page of this Runbook.
 
 ## Core constants, flags and event listeners
 Two of the key drivers for SC is to make `<canvas>` elements responsive to their environments, and offer high-level functionality for end-user interactions with those responsive elements. Much of the code that handles this functionality can be found in the [core/user-interaction.js](../source/core/user-interaction.html) file.

@@ -23,7 +23,129 @@
 
     <main>
         <h1 id="animation-and-the-display-cycle">Animation and the Display cycle</h1>
-<p>A brief overview of how the animation loop works</p>
+<p>All SC animation runs off a single <strong><em>core animation loop</em></strong> whose functionality is defined in the <a href="../source/core/animation-loop.html">core/animation-loop.js</a> file. This loop is instantiated during <a href="sc-initialization.html">SC initialization</a> and continues to run until the dev-user instructs it to halt, or the end-user navigates away from the web page.</p>
+<p>End-user browsers, devices and screens can all have an effect on the speed at which the core animation loop runs - some combinations will allow the loop to run at 120 frames-per-second (fps), or more. SC makes no attempt to control the loop speed; instead, the individual functions that run during each loop can be choked down to run at 60fps, or less.</p>
+<p>The core animation loop itself doesn't include any functionality beyond running and invoking various <strong><em>Animation objects</em></strong> which either SC, or the dev-user, define. These functions get added to an <code>animation</code> Array. At the start of each loop the array will be sorted (if sorting is required), then the loop will check each Animation object to see if its <strong><em>animation function</em></strong> can be run and, if yes, invoke it.</p>
+<p>SC exports the following functions which the dev-user can use to control the core animation loop. Note that halting the loop halts <strong>all</strong> animations across the entire SC system (for all Canvas and Stack artefacts). See <a href="../../demo/dom-009.html">demo test DOM-009</a> for an example:</p>
+<ul>
+<li><code>scrawl.startCoreAnimationLoop()</code></li>
+<li><code>scrawl.stopCoreAnimationLoop()</code></li>
+</ul>
+<h2 id="animation-objects">Animation objects</h2>
+<p>SC defines three types of Animation object, each of which can be created using SC factory functions. The objects returned from these factories are <em>tracked objects</em> which get referenced in the SC library:</p>
+<table>
+<thead>
+<tr>
+<th id="factory" style="text-align:left;">Factory</th>
+<th id="type" style="text-align:left;">Type</th>
+<th id="library_section" style="text-align:left;">Library section</th>
+<th id="file" style="text-align:left;">File</th>
+<th id="purpose">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;"><code>scrawl.makeAnimation()</code></td>
+<td style="text-align:left;">generic</td>
+<td style="text-align:left;">animation</td>
+<td style="text-align:left;"><a href="../source/factory/animation.html">factory/animation.js</a></td>
+<td>Functions that run once per loop</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>scrawl.makeRender()</code></td>
+<td style="text-align:left;">display</td>
+<td style="text-align:left;">animation</td>
+<td style="text-align:left;"><a href="../source/factory/render-animation.html">factory/render-animation.js</a></td>
+<td>Display cycle animations</td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>scrawl.makeTicker()</code></td>
+<td style="text-align:left;">keyframe</td>
+<td style="text-align:left;">tickeranimation</td>
+<td style="text-align:left;"><a href="../source/factory/ticker.html">factory/ticker.js</a></td>
+<td><a href="https://en.wikipedia.org/wiki/Inbetweening">Tween animations</a></td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>scrawl.makeTween()</code></td>
+<td style="text-align:left;">keyframe</td>
+<td style="text-align:left;">tickeranimation</td>
+<td style="text-align:left;"><a href="../source/factory/tween.html">factory/tween.js</a></td>
+<td>Tween animations</td>
+</tr>
+</tbody>
+</table>
+<p>Every Animation object will include two common attributes:</p>
+<ul>
+<li><code>animation.name</code> - String - defaults to a unique computer-generated value</li>
+<li><code>animation.order</code> - Number - defaults to <code>1</code></li>
+</ul>
+<p>All Animation objects also include the following core functions:</p>
+<ul>
+<li><code>animation.run()</code> - start the animation</li>
+<li><code>animation.isRunning()</code> - check to see if the animation is currently running</li>
+<li><code>animation.halt()</code> - stop the animation</li>
+<li><code>animation.kill()</code> - remove the animation object from the SC system</li>
+</ul>
+<h3 id="animation-object-serialization-and-cloning">Animation object serialization and cloning</h3>
+<p>Serialization - and thus cloning - functionality has not yet been implemented for Animation objects.</p>
+<h3 id="accessibility-considerations-around-animation">Accessibility considerations around animation</h3>
+<p>[write up]</p>
+<h2 id="generic-animations">Generic animations</h2>
+<p>Generic animation objects are the simplest of the three animation types supported by SC. The object created by the <code>scrawl.makeAnimation({key: value, ...})</code> factory function has the following attributes:</p>
+<ul>
+<li><code>name</code> - String, name identifier (default: computer generated String)</li>
+<li><code>order</code> - Number, order value (default: <code>1</code>)</li>
+<li><code>fn</code> - Function, invoked during every core animation loop iteration (if permitted)</li>
+<li><code>onRun</code> - hook Function</li>
+<li><code>onHalt</code> - hook Function</li>
+<li><code>onKill</code> - hook Function</li>
+<li><code>maxFrameRate</code> - Number, animation choke functionality (default: <code>60</code>)</li>
+<li><code>lastRun</code> - Number (internal only), animation choke functionality</li>
+<li><code>chokedAnimation</code> - Boolean, animation choke functionality (default: <code>true</code>)</li>
+</ul>
+<p>The object also includes the following methods (functions):</p>
+<ul>
+<li><code>run()</code> - invokes the <code>onStart</code> hook function, then adds the object to the core animation loop's <code>animation</code> Array.</li>
+<li><code>halt()</code> - invokes the <code>onHalt</code> hook function, then removes the object from the core animation loop's <code>animation</code> Array.</li>
+<li><code>kill()</code> - invokes the <code>onKill</code> hook function, then removes the object from the SC system.</li>
+<li><code>isRunning()</code> - returns a Boolean: <code>true</code> if the object is currently included in the core animation loop's <code>animation</code> Array.</li>
+</ul>
+<h3 id="the-fn-function">The <code>fn</code> function</h3>
+<p>When the Animation object is added to the core animation loop, the loop will invoke the objects <code>fn</code> function - choke permitting - as part of each iteration of the loop. By default, the <code>fn</code> does nothing (in SC repo terms, it defaults to the <code>λnull</code> lambda function defined in the <a href="../source/helper/utilities.html">helper/utilities.js</a> file).</p>
+<p>Dev-users can set the Animation object's <code>fn</code> attribute to perform any task either within the SC ecosystem, or beyond. This includes building a bespoke Display cycle animation - see <a href="../../demo/canvas-041.html">demo test Canvas-041</a> for an example.</p>
+<h3 id="the-hook-functions">The hook functions</h3>
+<p>Similar to the <code>fn</code> function, the hook functions - <code>onRun</code>, <code>onHalt</code>, <code>onKill</code> - default to <code>λnull</code> lambda functions. Dev-users can use these hooks to perform setup and cleanup actions each time the animation run or halts.</p>
+<h3 id="animation-choke-functionality">Animation choke functionality</h3>
+<p>By default, generic Animation objects are choked to run at a maximum of 60 frames-per-second. Testing to see if sufficient time has passed since the <code>fn</code> function's last invocation, to allow a new invocation, happens in the core animation loop's <code>animationLoop()</code> function.</p>
+<p>If dev-users want their Animation object's <code>fn</code> function to be invoked on every loop iteration, they can set the object's <code>chokedAnimation</code> attribute to <code>false</code>. </p>
+<p>Note that the choking functionality is not precise: if a web page is slow (for any reason), then the core animation loop will be similarly slow. While dev-users could define an Animation object to run, say, every 2 seconds (by setting the object's <code>maxFrameRate</code> attribute to <code>0.5</code>), SC cannot guarantee that the function <em>will</em> run precisely every 2 seconds.</p>
+<h3 id="system-instantiated-animations">System-instantiated animations</h3>
+<p>During the <a href="sc-initialization.html">SC initialization process</a> a number of system Animation objects get created and added to the core animation loop:</p>
+<ul>
+<li><code>SC-core-filters-cleanup-action</code> - defined in <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a></li>
+<li><code>SC-core-gradient-delta-animation</code> - defined in <a href="../source/mixin/styles.html">mixin/styles.js</a></li>
+<li><code>SC-core-listeners-tracker</code> - defined in <a href="../source/core/user-interaction.html">core/user-interaction.js</a></li>
+<li><code>SC-core-tickers-animation</code> - defined in <a href="../source/factory/ticker.html">factory/ticker.js</a></li>
+<li><code>SC-core-workstore-hygeine</code> - defined in <a href="../source/helper/workstore.html">helper/workstore.js</a></li>
+</ul>
+<h2 id="keyframe-animations---linear-interpolation-with-tweens">Keyframe animations - linear interpolation with tweens</h2>
+<p>[write up]</p>
+<h3 id="easing-functions">Easing functions</h3>
+<p>[write up]</p>
+<h4 id="what-can-be-eased">What can be eased?</h4>
+<ul>
+<li>Tween animations</li>
+<li>Color ranges</li>
+<li>Gradients</li>
+<li>??? other things ???</li>
+</ul>
+<h3 id="timeline-objects">Timeline objects</h3>
+<p>[write up]</p>
+<h3 id="tween-objects">Tween objects</h3>
+<p>[write up]</p>
+<h3 id="action-objects">Action objects</h3>
+<p>[write up]</p>
+<h2 id="display-animations-and-the-display-cycle">Display animations and the Display cycle</h2>
 <ul>
 <li>The Display cycle<ul>
 <li><code>clear</code> operation</li>
@@ -31,12 +153,13 @@
 <li>-&gt; <code>calculate</code> phase</li>
 <li>-&gt; <code>stamp</code> phase</li>
 <li><code>show</code> operation</li></ul></li>
-<li>Animation and RenderAnimation objects</li>
-<li>Ticker/tween animations</li>
-<li>Artefact/entity delta animations</li>
-<li>User-driven animation</li>
-<li>Considerations around <code>prefers-reduced-motion</code></li>
 </ul>
+<h3 id="artefact-and-entity-object-delta-animation">Artefact and entity object delta animation</h3>
+<p>[write up]</p>
+<h3 id="animating-gradients">Animating gradients</h3>
+<p>[write up]</p>
+<h3 id="animating-filters">Animating filters</h3>
+<p>[write up]</p>
     </main>
     
     <nav>

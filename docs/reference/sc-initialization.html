@@ -173,16 +173,7 @@ export const init = function () {
 <p>Note that when SC wraps <code>&lt;canvas&gt;</code>, <code>&lt;div&gt;</code> stacks and stack elements into SC artefact objects, it will mutate those DOM elements. Further details about this can be found in the <a href="sc-dom-artefacts.html">SC artefacts and the DOM</a> page in the Runbook.</p>
 <h2 id="the-scrawl-canvas-animation-loop">The Scrawl-canvas animation loop</h2>
 <p>The SC system runs a single <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame">RequestAnimationFrame</a> animation loop, which gets started as part of the initialization work. More details about the animation loop can be found in the <a href="../source/core/animation-loop.html">core.animation-loop.js</a> file.</p>
-<p>During initialization a number of system animations get created and added to the animation loop:</p>
-<ul>
-<li><code>SC-core-filters-cleanup-action</code> - defined in <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a></li>
-<li><code>SC-core-gradient-delta-animation</code> - defined in <a href="../source/mixin/styles.html">mixin/styles.js</a></li>
-<li><code>SC-core-listeners-tracker</code> - defined in <a href="../source/core/user-interaction.html">core/user-interaction.js</a></li>
-<li><code>SC-core-tickers-animation</code> - defined in <a href="../source/factory/ticker.html">factory/ticker.js</a></li>
-<li><code>SC-core-workstore-hygeine</code> - defined in <a href="../source/helper/workstore.html">helper/workstore.js</a></li>
-</ul>
-<p>Note that by default, the animation loop is throttled to run at a maximum 60 frames-per-second. This is because some devices, using modern displays that support it, can run at higher fps rates. Dev-users can change this rate throttle in code after initialization completes. See <a href="../demo/canvas-050.html">demo test Canvas-050</a> for an example of this functionality in action.</p>
-<p>Dev-users can also stop and restart the animation loop after initialization completes by invoking the <code>scrawl.stopCoreAnimationLoop()</code> and <code>scrawl.startCoreAnimationLoop()</code> functions. See <a href="../demo/dom-009.html">demo test DOM-009</a> for details.</p>
+<p>More information can be found in the <a href="sc-animation-systems.html">Animation and Display cycle</a> page of this Runbook.</p>
 <h2 id="core-constants-flags-and-event-listeners">Core constants, flags and event listeners</h2>
 <p>Two of the key drivers for SC is to make <code>&lt;canvas&gt;</code> elements responsive to their environments, and offer high-level functionality for end-user interactions with those responsive elements. Much of the code that handles this functionality can be found in the <a href="../source/core/user-interaction.html">core/user-interaction.js</a> file.</p>
 <p>The code in this file makes heavy use of shared constants and system flags. As a result, these also need to be instantiated as part of the initialization process.</p>
