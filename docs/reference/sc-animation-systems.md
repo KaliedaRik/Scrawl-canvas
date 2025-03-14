@@ -16,8 +16,8 @@ SC defines three types of Animation object, each of which can be created using S
 |:---|:---|:---|:---|
 | `scrawl.makeAnimation()` | generic | animation | [factory/animation.js](../source/factory/animation.html) | Functions that run once per loop |
 | `scrawl.makeRender()` | display | animation | [factory/render-animation.js](../source/factory/render-animation.html) | Display cycle animations |
-| `scrawl.makeTicker()` | keyframe | tickeranimation | [factory/ticker.js](../source/factory/ticker.html) | [Tween animations](https://en.wikipedia.org/wiki/Inbetweening) |
-| `scrawl.makeTween()` | keyframe | tickeranimation | [factory/tween.js](../source/factory/tween.html) | Tween animations |
+| `scrawl.makeTicker()` | time-based | tickeranimation | [factory/ticker.js](../source/factory/ticker.html) | [Tween animations](https://en.wikipedia.org/wiki/Inbetweening) |
+| `scrawl.makeTween()` | time-based | tickeranimation | [factory/tween.js](../source/factory/tween.html) | Tween animations |
 
 Every Animation object will include two common attributes:
 + `animation.name` - String - defaults to a unique computer-generated value
@@ -69,29 +69,47 @@ If dev-users want their Animation object's `fn` function to be invoked on every 
 Note that the choking functionality is not precise: if a web page is slow (for any reason), then the core animation loop will be similarly slow. While dev-users could define an Animation object to run, say, every 2 seconds (by setting the object's `maxFrameRate` attribute to `0.5`), SC cannot guarantee that the function *will* run precisely every 2 seconds.
 
 ### System-instantiated animations
-During the [SC initialization process](sc-initialization.html) a number of system Animation objects get created and added to the core animation loop:
-+ `SC-core-filters-cleanup-action` - defined in [helper/filter-engine.js](../source/helper/filter-engine.html)
-+ `SC-core-gradient-delta-animation` - defined in [mixin/styles.js](../source/mixin/styles.html)
-+ `SC-core-listeners-tracker` - defined in [core/user-interaction.js](../source/core/user-interaction.html)
-+ `SC-core-tickers-animation` - defined in [factory/ticker.js](../source/factory/ticker.html)
-+ `SC-core-workstore-hygeine` - defined in [helper/workstore.js](../source/helper/workstore.html)
+During the [SC initialization process](sc-initialization.html) a number of system Animation objects get created and added to the core animation loop. During each iteration of the loop they will run in the following order:
++ `SC-core-listeners-tracker` - defined in [core/user-interaction.js](../source/core/user-interaction.html); order value: `0`. At the start of each Display cycle this function interrogates each of the attributes tracked in the `currentCorePosition` object and, when changes are detected, alerts affected artefact and entity objects by setting various `dirty` flags on them.
++ `SC-core-tickers-animation` - defined in [factory/ticker.js](../source/factory/ticker.html); order value: `0`. Ticker objects have their own animation subsystem within the core animation loop; tweens update affected artefact and entity objects (via `dirty` flags) prior to the main Display cycle iteration starting.
++ `SC-core-gradient-delta-animation` - defined in [mixin/styles.js](../source/mixin/styles.html); order value `1`. Used to delta-animate gradient-related Styles objects.
++ `SC-core-workstore-hygeine` - defined in [helper/workstore.js](../source/helper/workstore.html); order value: `1`. The `workstore` object has its contents purged on a regular basis, controlled by this function. Note that the function implements its own choke functionality; by default the function only runs every 200 milliseconds (or just over).
++ *(Dev-user defined Animation objects)*
++ `SC-core-filters-cleanup-action` - defined in [helper/filter-engine.js](../source/helper/filter-engine.html); order value `999`. At the end of each core animation loop iteration this function checks every Filter object and resets its `dirtyFilterIdentifier` flag to `false`.
 
-## Keyframe animations - linear interpolation with tweens
-[write up]
+Dev-user defined `generic` and `display` Animation object functions will (by default) run before the `SC-core-filters-cleanup-action` function, but after the other system-defined functions complete. `Time-based` animations defined by dev-users will run when the `SC-core-tickers-animation` function runs.
 
-### Easing functions
-[write up]
+## Time-based animations
+SC comes with its own bespoke [inbetweening](https://en.wikipedia.org/wiki/Inbetweening) system that dev-users can use to create animation effects.
 
-#### What can be eased?
-+ Tween animations
-+ Color ranges
-+ Gradients
-+ ??? other things ???
+The basic premise of an SC time-based animation is as follows:
++ Create a **Ticker object** with a given timeline duration.
++ Add **Tween objects** to the Ticker object, each with a start time (relative to the ticker's duration) and their own duration. Within the tween, define a set of attributes to be animated and a set of SC objects to be targeted; each attribute definition requires a start and end value, alongside an (optional) **easing engine** function. 
++ Add **Action objects** to the ticker, which define a (reversible) function to be run at a given moment along the ticker's timeline.
++ Start the Ticker object running using the `ticker.run()` function. Control the ticker's progress using `ticker.halt()`, `ticker.resume()`, `ticker.seekTo()`, etc.
 
-### Timeline objects
+For a better dev-user experience, simple time-based animations can also be created using just a Tween object, in which case SC will automatically create an associated Ticker object with the same duration as the tween. These animations can be controlled by invoking `tween.run()`,  `tween.halt()`, `tween.resume()`, `tween.seekTo()`, etc.
+
+The code for SC time-based animations can be found in the following files:
++ [factory/action.js](../source/factory/action.html) - defines the `scrawl.makeAction()` factory function.
++ [factory/ticker.js](../source/factory/ticker.html) - defines the `scrawl.makeTicker()` factory function.
++ [factory/tween.js](../source/factory/tween.html) - defines the `scrawl.makeTween()` factory function.
++ [mixin/tween.js](../source/mixin/tween.html) - shared functionality imported into the `action.js` and `tween.js` factory files.
++ [helper/utilities.js](../source/helper/utilities.html) - includes a set of pre-defined easing engine functions.
+
+### Ticker objects
 [write up]
 
 ### Tween objects
+[write up]
+
+#### Tween targets
+[write up]
+
+#### Definitions objects
+[write up]
+
+#### Easing functions
 [write up]
 
 ### Action objects

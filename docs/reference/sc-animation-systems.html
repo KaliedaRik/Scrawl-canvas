@@ -60,14 +60,14 @@
 </tr>
 <tr>
 <td style="text-align:left;"><code>scrawl.makeTicker()</code></td>
-<td style="text-align:left;">keyframe</td>
+<td style="text-align:left;">time-based</td>
 <td style="text-align:left;">tickeranimation</td>
 <td style="text-align:left;"><a href="../source/factory/ticker.html">factory/ticker.js</a></td>
 <td><a href="https://en.wikipedia.org/wiki/Inbetweening">Tween animations</a></td>
 </tr>
 <tr>
 <td style="text-align:left;"><code>scrawl.makeTween()</code></td>
-<td style="text-align:left;">keyframe</td>
+<td style="text-align:left;">time-based</td>
 <td style="text-align:left;">tickeranimation</td>
 <td style="text-align:left;"><a href="../source/factory/tween.html">factory/tween.js</a></td>
 <td>Tween animations</td>
@@ -120,28 +120,43 @@
 <p>If dev-users want their Animation object's <code>fn</code> function to be invoked on every loop iteration, they can set the object's <code>chokedAnimation</code> attribute to <code>false</code>. </p>
 <p>Note that the choking functionality is not precise: if a web page is slow (for any reason), then the core animation loop will be similarly slow. While dev-users could define an Animation object to run, say, every 2 seconds (by setting the object's <code>maxFrameRate</code> attribute to <code>0.5</code>), SC cannot guarantee that the function <em>will</em> run precisely every 2 seconds.</p>
 <h3 id="system-instantiated-animations">System-instantiated animations</h3>
-<p>During the <a href="sc-initialization.html">SC initialization process</a> a number of system Animation objects get created and added to the core animation loop:</p>
+<p>During the <a href="sc-initialization.html">SC initialization process</a> a number of system Animation objects get created and added to the core animation loop. During each iteration of the loop they will run in the following order:</p>
 <ul>
-<li><code>SC-core-filters-cleanup-action</code> - defined in <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a></li>
-<li><code>SC-core-gradient-delta-animation</code> - defined in <a href="../source/mixin/styles.html">mixin/styles.js</a></li>
-<li><code>SC-core-listeners-tracker</code> - defined in <a href="../source/core/user-interaction.html">core/user-interaction.js</a></li>
-<li><code>SC-core-tickers-animation</code> - defined in <a href="../source/factory/ticker.html">factory/ticker.js</a></li>
-<li><code>SC-core-workstore-hygeine</code> - defined in <a href="../source/helper/workstore.html">helper/workstore.js</a></li>
+<li><code>SC-core-listeners-tracker</code> - defined in <a href="../source/core/user-interaction.html">core/user-interaction.js</a>; order value: <code>0</code>. At the start of each Display cycle this function interrogates each of the attributes tracked in the <code>currentCorePosition</code> object and, when changes are detected, alerts affected artefact and entity objects by setting various <code>dirty</code> flags on them.</li>
+<li><code>SC-core-tickers-animation</code> - defined in <a href="../source/factory/ticker.html">factory/ticker.js</a>; order value: <code>0</code>. Ticker objects have their own animation subsystem within the core animation loop; tweens update affected artefact and entity objects (via <code>dirty</code> flags) prior to the main Display cycle iteration starting.</li>
+<li><code>SC-core-gradient-delta-animation</code> - defined in <a href="../source/mixin/styles.html">mixin/styles.js</a>; order value <code>1</code>. Used to delta-animate gradient-related Styles objects.</li>
+<li><code>SC-core-workstore-hygeine</code> - defined in <a href="../source/helper/workstore.html">helper/workstore.js</a>; order value: <code>1</code>. The <code>workstore</code> object has its contents purged on a regular basis, controlled by this function. Note that the function implements its own choke functionality; by default the function only runs every 200 milliseconds (or just over).</li>
+<li><em>(Dev-user defined Animation objects)</em></li>
+<li><code>SC-core-filters-cleanup-action</code> - defined in <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a>; order value <code>999</code>. At the end of each core animation loop iteration this function checks every Filter object and resets its <code>dirtyFilterIdentifier</code> flag to <code>false</code>.</li>
 </ul>
-<h2 id="keyframe-animations---linear-interpolation-with-tweens">Keyframe animations - linear interpolation with tweens</h2>
-<p>[write up]</p>
-<h3 id="easing-functions">Easing functions</h3>
-<p>[write up]</p>
-<h4 id="what-can-be-eased">What can be eased?</h4>
+<p>Dev-user defined <code>generic</code> and <code>display</code> Animation object functions will (by default) run before the <code>SC-core-filters-cleanup-action</code> function, but after the other system-defined functions complete. <code>Time-based</code> animations defined by dev-users will run when the <code>SC-core-tickers-animation</code> function runs.</p>
+<h2 id="time-based-animations">Time-based animations</h2>
+<p>SC comes with its own bespoke <a href="https://en.wikipedia.org/wiki/Inbetweening">inbetweening</a> system that dev-users can use to create animation effects.</p>
+<p>The basic premise of an SC time-based animation is as follows:</p>
 <ul>
-<li>Tween animations</li>
-<li>Color ranges</li>
-<li>Gradients</li>
-<li>??? other things ???</li>
+<li>Create a <strong>Ticker object</strong> with a given timeline duration.</li>
+<li>Add <strong>Tween objects</strong> to the Ticker object, each with a start time (relative to the ticker's duration) and their own duration. Within the tween, define a set of attributes to be animated and a set of SC objects to be targeted; each attribute definition requires a start and end value, alongside an (optional) <strong>easing engine</strong> function. </li>
+<li>Add <strong>Action objects</strong> to the ticker, which define a (reversible) function to be run at a given moment along the ticker's timeline.</li>
+<li>Start the Ticker object running using the <code>ticker.run()</code> function. Control the ticker's progress using <code>ticker.halt()</code>, <code>ticker.resume()</code>, <code>ticker.seekTo()</code>, etc.</li>
 </ul>
-<h3 id="timeline-objects">Timeline objects</h3>
+<p>For a better dev-user experience, simple time-based animations can also be created using just a Tween object, in which case SC will automatically create an associated Ticker object with the same duration as the tween. These animations can be controlled by invoking <code>tween.run()</code>,  <code>tween.halt()</code>, <code>tween.resume()</code>, <code>tween.seekTo()</code>, etc.</p>
+<p>The code for SC time-based animations can be found in the following files:</p>
+<ul>
+<li><a href="../source/factory/action.html">factory/action.js</a> - defines the <code>scrawl.makeAction()</code> factory function.</li>
+<li><a href="../source/factory/ticker.html">factory/ticker.js</a> - defines the <code>scrawl.makeTicker()</code> factory function.</li>
+<li><a href="../source/factory/tween.html">factory/tween.js</a> - defines the <code>scrawl.makeTween()</code> factory function.</li>
+<li><a href="../source/mixin/tween.html">mixin/tween.js</a> - shared functionality imported into the <code>action.js</code> and <code>tween.js</code> factory files.</li>
+<li><a href="../source/helper/utilities.html">helper/utilities.js</a> - includes a set of pre-defined easing engine functions.</li>
+</ul>
+<h3 id="ticker-objects">Ticker objects</h3>
 <p>[write up]</p>
 <h3 id="tween-objects">Tween objects</h3>
+<p>[write up]</p>
+<h4 id="tween-targets">Tween targets</h4>
+<p>[write up]</p>
+<h4 id="definitions-objects">Definitions objects</h4>
+<p>[write up]</p>
+<h4 id="easing-functions">Easing functions</h4>
 <p>[write up]</p>
 <h3 id="action-objects">Action objects</h3>
 <p>[write up]</p>
