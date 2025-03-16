@@ -16,10 +16,10 @@ import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
 // Shared constants
-import { _isArray, _keys, FUNCTION, NAME, TWEEN, UNDEF } from '../helper/shared-vars.js';
+import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../helper/shared-vars.js';
 
 // Local constants
-const T_ACTION = 'Action';
+// + No additional constants required
 
 
 // #### Action constructor

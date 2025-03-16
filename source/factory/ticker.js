@@ -47,7 +47,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _floor, _isArray, _now, FUNCTION, PC, T_RENDER_ANIMATION, T_TWEEN } from '../helper/shared-vars.js';
+import { _floor, _isArray, _now, FUNCTION, PC, T_ACTION, T_RENDER_ANIMATION, T_TWEEN } from '../helper/shared-vars.js';
 
 // Local constants
 const ANIMATIONTICKERS = 'animationtickers',
@@ -152,38 +152,43 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onReverse
 
 // #### Kill management
 // `kill` - remove Ticker from Scrawl-canvas system.
-P.kill = function () {
+P.kill = function (killTweens = true, autokill = true) {
 
-    if (this.active) this.halt();
+    if (killTweens) {
 
-    removeItem(tickerAnimations, this.name);
-    tickerAnimationsFlag = true;
+        const subs = [...this.subscribers];
 
-    this.deregister();
+        for (i = 0, iz = subs.length; i < iz; i++) {
 
-    return true;
+            const sub = tween[subs[i]];
+
+            if (sub) {
+
+                sub.completeAction();
+                sub.kill();
+            }
+        }
+    }
+
+    if (autokill) {
+
+        if (this.active) this.halt();
+
+        removeItem(tickerAnimations, this.name);
+        tickerAnimationsFlag = true;
+
+        this.deregister();
+
+        return true;
+    }
+    return this;
 };
 
 // `killTweens` - remove a Ticker's subscribed Tweens from Scrawl-canvas system.
 // + If the function is invoked with a truthy argument, the Ticker will also be removed from the system.
 P.killTweens = function(autokill = false) {
 
-    let i, iz, sub;
-
-    for (i = 0, iz = this.subscribers.length; i < iz; i++) {
-
-        sub = tween[this.subscribers[i]];
-        sub.completeAction();
-        sub.kill();
-    }
-
-    if (autokill) {
-
-        this.kill();
-        return true;
-    }
-
-    return this;
+    return this.kill(true, autokill);
 };
 
 
@@ -249,62 +254,69 @@ S.duration = function (item) {
 
 // #### Subscription management
 
-// `subscribe` - accepts a Tween or Action name-String, or an Array of such Strings.
-P.subscribe = function (items) {
+// `subscribe` - can accept one or more arguments, each of which can be:
+// + a Tween or Action name-String, or the Tween or Action objects themselves
+// + an Array of such name-Strings or objects
+P.subscribe = function (...args) {
 
-    const myItems = requestArray();
-    if (_isArray(items)) myItems.push(...items);
-    else myItems.push(items);
+    const items = requestArray();
 
-    let i, iz, item, name;
+    args.forEach(item => {
 
-    for (i = 0, iz = myItems.length; i < iz; i++) {
+        if (_isArray(item)) items.push(...item);
+        else items.push(item);
+    });
 
-        item = myItems[i];
+    if (items.length) {
 
-        if(item != null){
+        items.forEach(item => {
 
-            if (item.substring) name = item;
-            else name = (isa_obj(item) && item.name) ? item.name : false;
+            let obj;
 
-            if (name) pushUnique(this.subscribers, name);
-        }
-    }
+            if (item.substring) obj = tween[item];
+            else if (isa_obj(item) && (item.type === T_ACTION || item.type === T_TWEEN)) obj = item;
 
-    if (myItems.length) {
+            if (obj) pushUnique(this.subscribers, obj.name);
+        });
 
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
-    releaseArray(myItems);
+
+    releaseArray(items);
     return this;
 };
 
-// `unsubscribe` - accepts a Tween or Action name-String, or an Array of such Strings.
-P.unsubscribe = function (items) {
+// `unsubscribe` - can accept one or more arguments, each of which can be:
+// + a Tween or Action name-String, or the Tween or Action objects themselves
+// + an Array of such name-Strings or objects
+P.unsubscribe = function (...args) {
 
-    const myItems = requestArray();
-    if (_isArray(items)) myItems.push(...items);
-    else myItems.push(items);
+    const items = requestArray();
 
-    let i, iz, item, name;
+    args.forEach(item => {
 
-    for (i = 0, iz = myItems.length; i < iz; i++) {
+        if (_isArray(item)) items.push(...item);
+        else items.push(item);
+    });
 
-        item = items[i];
+    if (items.length) {
 
-        if (item.substring) name = item;
-        else name = (isa_obj(item) && item.name) ? item.name : false;
+        items.forEach(item => {
 
-        if (name) removeItem(this.subscribers, name);
-    }
+            let obj;
 
-    if (myItems.length) {
+            if (item.substring) obj = tween[item];
+            else if (isa_obj(item) && (item.type === T_ACTION || item.type === T_TWEEN)) obj = item;
+
+            if (obj) removeItem(this.subscribers, obj.name);
+        });
 
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
-    releaseArray(myItems);
+
+    releaseArray(items);
     return this;
 };
 

@@ -208,6 +208,7 @@ export const STEP_CHANNELS = 'step-channels';
 export const STYLES = 'styles';
 export const SUBSCRIBE = 'subscribe';
 export const SWIRL = 'swirl';
+export const T_ACTION = 'Action';
 export const T_BEZIER = 'Bezier';
 export const T_CANVAS = 'Canvas';
 export const T_CELL = 'Cell';
