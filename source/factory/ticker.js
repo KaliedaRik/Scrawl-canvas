@@ -47,7 +47,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _floor, _isArray, _now, FUNCTION, PC, T_ACTION, T_RENDER_ANIMATION, T_TWEEN } from '../helper/shared-vars.js';
+import { _floor, _isArray, _now, FUNCTION, PC, T_ACTION, T_RENDER_ANIMATION, T_TWEEN, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const ANIMATIONTICKERS = 'animationtickers',
@@ -205,7 +205,6 @@ G.subscribers = function () {
 };
 S.subscribers = function (item) {
 
-    this.subscribers = [];
     this.subscribe(item);
 };
 
@@ -276,13 +275,17 @@ P.subscribe = function (...args) {
             if (item.substring) obj = tween[item];
             else if (isa_obj(item) && (item.type === T_ACTION || item.type === T_TWEEN)) obj = item;
 
-            if (obj) pushUnique(this.subscribers, obj.name);
+            if (obj) {
+
+                pushUnique(this.subscribers, obj.name);
+                obj.ticker = this.name;
+                obj.calculateEffectiveTime();
+            }
         });
 
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
-
     releaseArray(items);
     return this;
 };
@@ -309,7 +312,11 @@ P.unsubscribe = function (...args) {
             if (item.substring) obj = tween[item];
             else if (isa_obj(item) && (item.type === T_ACTION || item.type === T_TWEEN)) obj = item;
 
-            if (obj) removeItem(this.subscribers, obj.name);
+            if (obj) {
+
+                removeItem(this.subscribers, obj.name);
+                obj.ticker = ZERO_STR;
+            }
         });
 
         this.sortSubscribers();

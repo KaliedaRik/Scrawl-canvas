@@ -2733,6 +2733,7 @@ interface TickerFactoryInputs extends BaseMixinInputs, TickerFactoryDeltaInputs 
     onSeekFor?: DefaultInputFunction;
     onSeekTo?: DefaultInputFunction;
     order?: number;
+    subscribers?: (string | TweenInstance | ActionInstance)[]
 }
 
 interface TickerSaveInputs extends TickerFactoryInputs, SaveInputs {}
@@ -2751,6 +2752,8 @@ interface TickerFactoryFunctions extends BaseMixinFunctions {
     seekTo: (milliseconds: number, resume?: boolean) => TickerInstance;
     set: (item?: TickerFactoryInputs) => TickerInstance;
     setDelta: (item?: TickerFactoryDeltaInputs) => TickerInstance;
+    subscribe: (...args: (string | TweenInstance | ActionInstance | (string | TweenInstance | ActionInstance)[])[]) => TickerInstance;
+    unsubscribe: (...args: (string | TweenInstance | ActionInstance | (string | TweenInstance | ActionInstance)[])[]) => TickerInstance;
 }
 
 export interface TickerInstance extends TickerFactoryInputs, TickerFactoryFunctions {}

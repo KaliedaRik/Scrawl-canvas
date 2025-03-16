@@ -150,7 +150,7 @@ const red = { css: { backgroundColor: 'red' }},
 scrawl.makeAction({
 
     name: name('red'),
-    ticker: name('myTicker'),
+    // ticker: name('myTicker'),
     targets: element,
     time: '6.25%',
     action: function () { element.set(red) },
@@ -212,6 +212,30 @@ scrawl.makeAction({
     action: function () { element.set(purple) },
     revert: function () { element.set(purple) },
 });
+
+// Test ticker.set({subscribers: [...]}) functionality
+ticker.set({
+    subscribers: [
+        name('red'),
+        scrawl.findTween(name('brown')),
+    ],
+});
+
+// Test ticker.subscribe(arg, ...) functionality
+ticker.subscribe(
+    name('orange'),
+    scrawl.findTween(name('yellow')),
+    [
+        name('gray'),
+        name('green'),
+    ],
+    scrawl.findTween(name('blue')),
+    [
+        scrawl.findTween(name('purple_1')),
+        name('purple_2'),
+    ],
+)
+
 
 // Add some Google Analytics progress actions to one of the tickers
 //
@@ -312,7 +336,6 @@ scrawl.addNativeListener('click', changeDirection, stack.domElement);
 console.log(scrawl.library);
 
 // Test Tween object packet
-// console.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())
 console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket())
 //     RESULT:
 

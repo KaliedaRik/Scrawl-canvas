@@ -167,12 +167,13 @@ When a dev-user creates a Ticker object, they can assign existing Tween/Action o
 After instantiation, the best way to add or remove Tween/Action objects to the Ticker object is by using the `ticker.subscribe(arg, ...)` and `ticker.unsubscribe(arg, ...)` functions:
 + Both functions can accept one or more arguments.
 + Each argument can be a Tween/Action object, or the String `name` attribute of the object.
-+ The argument can also be an array of such strings and objects.
++ The argument can also be an array of such strings and objects. See [demo test DOM-006](../../demo/dom-006.html) for an example.
 
 Note that Tween and Action objects can also add or remove themselves from a Ticker object using their `tween.addToTicker()` and `tween.removeFromTicker()` functions.
 
 #### Running and halting tickers
 
++ [demo test Canvas-027](../../demo/canvas-027.html) - using `ticker.seekTo()` instead of `ticker.run()`
 
 ### Tween objects
 [write up]
@@ -185,6 +186,17 @@ Note that Tween and Action objects can also add or remove themselves from a Tick
 
 #### Easing functions
 [write up]
+
+Bespoke easing functions
++ [demo test Canvas-005](../../demo/canvas-005.html) - animating a gradient over 3 loops
++ [demo test Canvas-017](../../demo/canvas-017.html) - bespoke easings for gradients
+
+Other Tween tests
++ [demo test Canvas-006](../../demo/canvas-006.html) - canvas tween stress test
++ [demo test Canvas-040](../../demo/canvas-040.html) - tween `entity.lineDashOffset` attribute
++ [demo test Canvas-045](../../demo/canvas-045.html) - tween `entity.roll` attribute
++ [demo test Canvas-047](../../demo/canvas-047.html) - tween `color.range`
++ [demo test DOM-009](../../demo/dom-009.html) - DOM element tween stress test
 
 ### Action objects
 [write up]
