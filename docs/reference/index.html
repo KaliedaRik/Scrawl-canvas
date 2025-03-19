@@ -34,7 +34,7 @@
 
       <p>The Runbook is not, in a strict sense, a technical document because it doesn't set out in fine-grain detail how contributing developers (<b>repo-devs</b>) should structure their contributions to the library, or how developers using the library for their own products/projects (<b>dev-users</b>) should approach their work.</p>
 
-      <p>Rather, the Runbook is more of a brain-dump which gives information on the design patterns and architectual choices repo-devs made while developing SC, alongside pointers to where in the repo particular functionality lives and how it works. It also offers advice to dev-users on best practices when using SC which may, hopefully, save them a bit of time.</p>
+      <p>Rather, the Runbook is more of a brain-dump which gives information on the design patterns and architectual choices repo-devs made while developing SC, alongside pointers to where in the repo particular functionality lives and how it works. It also offers advice to dev-users on some best practices when using SC which may, hopefully, save them a bit of time.</p>
 
       <h2>Contents</h2>
 
@@ -288,6 +288,17 @@
         <li><a href="sc-animation-systems.html#time-based-animations">Time-based animations</a></li>
         <ul>
           <li>Ticker objects</li>
+          <ul>
+            <li>Create, serialize, clone and kill Ticker objects</li>
+            <li>Ticker attributes</li>
+            <li>Ticker duration</li>
+            <li>Ticker cycles</li>
+            <li>Ticker subscribers</li>
+            <li>Running and halting tickers</li>
+            <li>Ticker progress</li>
+            <li>Temporal direction</li>
+            <li>Subscriber communication</li>
+          </ul>
           <li>Tween objects</li>
           <ul>
             <li>Tween targets</li>

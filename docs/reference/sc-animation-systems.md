@@ -5,7 +5,7 @@ End-user browsers, devices and screens can all have an effect on the speed at wh
 
 The core animation loop itself doesn't include any functionality beyond running and invoking various ***Animation objects*** which either SC, or the dev-user, define. These functions get added to an `animation` Array. At the start of each loop the array will be sorted (if sorting is required), then the loop will check each Animation object to see if its ***animation function*** can be run and, if yes, invoke it.
 
-SC exports the following functions which the dev-user can use to control the core animation loop. Note that halting the loop halts **all** animations across the entire SC system (for all Canvas and Stack artefacts). See [demo test DOM-009](../../demo/dom-009.html) for an example:
+SC exports the following functions which the dev-user can use to control the core animation loop. Note that halting the loop halts **all** animations across the entire SC system (for all Canvas and Stack artefacts). See [test demo DOM-009](../../demo/dom-009.html) for an example:
 + `scrawl.startCoreAnimationLoop()`
 + `scrawl.stopCoreAnimationLoop()`
 
@@ -36,7 +36,7 @@ Serialization - and thus cloning - functionality has not yet been implemented fo
 [write up]
 
 ## Generic animations
-Generic animation objects are the simplest of the three animation types supported by SC. The object created by the `scrawl.makeAnimation({key: value, ...})` factory function has the following attributes:
+Generic Animation objects are the simplest of the three animation types supported by SC. The object created by the `scrawl.makeAnimation({key: value, ...})` factory function has the following attributes:
 + `name` - String, name identifier (default: computer generated String)
 + `order` - Number, order value (default: `1`)
 + `fn` - Function, invoked during every core animation loop iteration (if permitted)
@@ -53,10 +53,12 @@ The object also includes the following methods (functions):
 + `kill()` - invokes the `onKill` hook function, then removes the object from the SC system.
 + `isRunning()` - returns a Boolean: `true` if the object is currently included in the core animation loop's `animation` Array.
 
+The default behaviour of a generic Animation object, when created, is to run immediately. Dev-users can prevent this by adding a `delay: true` attribute to the factory function's argument object.
+
 ### The `fn` function
 When the Animation object is added to the core animation loop, the loop will invoke the objects `fn` function - choke permitting - as part of each iteration of the loop. By default, the `fn` does nothing (in SC repo terms, it defaults to the `λnull` lambda function defined in the [helper/utilities.js](../source/helper/utilities.html) file).
 
-Dev-users can set the Animation object's `fn` attribute to perform any task either within the SC ecosystem, or beyond. This includes building a bespoke Display cycle animation - see [demo test Canvas-041](../../demo/canvas-041.html) for an example.
+Dev-users can set the Animation object's `fn` attribute to perform any task either within the SC ecosystem, or beyond. This includes building a bespoke Display cycle animation - see test demo [Canvas-041](../../demo/canvas-041.html) for an example.
 
 ### The hook functions
 Similar to the `fn` function, the hook functions - `onRun`, `onHalt`, `onKill` - default to `λnull` lambda functions. Dev-users can use these hooks to perform setup and cleanup actions each time the animation run or halts.
@@ -108,6 +110,8 @@ The purpose of the `SC-core-tickers-animation` Animation object is to invoke eac
 + Check whether the Ticker objects need to be sorted. 
 + Interrogate each of the Ticker objects to see if it is currently running and, if yes, invoke its `fn` function.
 
+Note that in the repo code, a single iteration of the Animation object is referred to as a **tick**.
+
 Ticker object sorting is required whenever a Ticker object is added to, or removed from, the `tickerAnimations` Array, and also when the dev-user updates a Ticker object's `order` attribute. Any of these actions will result in the `tickerAnimationsFlag` signal boolean being set to `true`, which in turns triggers the sorting functionality. As for other SC order functionality, sorting is performed by means of a bucket sort algorithm.
 
 #### Create, serialize, clone and kill Ticker objects
@@ -152,7 +156,7 @@ The `duration` attribute can be either a Number or a String value:
 + **Number** values represent a duration measured in milliseconds.
 + **String** values can be used to mark the duration as being measured in either milliseconds (`'2000ms'`) or seconds (`'2s'`).
 
-> **tl;dr:** Dev-users need to remember that their Ticker object's effective duration may be longer than the value they set in the `duration` attribute. This happens, for instance, when they set a Tween object to run at or near the end of the Ticker object's duration; in such cases SC will automatically extend the Ticker object's `effectiveDuration` to include the Tween object's duration.
+> **tl;dr:** Dev-users need to remember that their Ticker object's effective duration may be longer than the value they set in the `duration` attribute. This happens when, for instance, they set a Tween object to run at or near the end of the Ticker object's duration; in such cases SC will automatically extend the Ticker object's `effectiveDuration` to include the Tween object's duration.
 
 #### Ticker cycles
 By default a Ticker object will, once started, run once and then halt. Dev-users can set the ticker to loop multiple times by setting the object's `cycles` attribute to an integer number value greater than `1`.
@@ -167,13 +171,72 @@ When a dev-user creates a Ticker object, they can assign existing Tween/Action o
 After instantiation, the best way to add or remove Tween/Action objects to the Ticker object is by using the `ticker.subscribe(arg, ...)` and `ticker.unsubscribe(arg, ...)` functions:
 + Both functions can accept one or more arguments.
 + Each argument can be a Tween/Action object, or the String `name` attribute of the object.
-+ The argument can also be an array of such strings and objects. See [demo test DOM-006](../../demo/dom-006.html) for an example.
++ The argument can also be an array of such strings and objects. See test demo [DOM-006](../../demo/dom-006.html) for an example.
 
 Note that Tween and Action objects can also add or remove themselves from a Ticker object using their `tween.addToTicker()` and `tween.removeFromTicker()` functions.
 
 #### Running and halting tickers
+Unlike generic and display animations, Ticker Animation objects do not start running as soon as they are created. Instead the dev-user needs to invoke the object's `ticker.run()` function as-and-when they want the animation to commence.
 
-+ [demo test Canvas-027](../../demo/canvas-027.html) - using `ticker.seekTo()` instead of `ticker.run()`
+For immediate invocation on creation, use `scrawl.makeTicker({key: value, ...}).run()`.
+
+Ticker objects have a rich selection of control functions: 
++ `ticker.complete()` - set the ticker's elapsed time to its maximum value and let it run to completion.
++ `ticker.halt()` - halt the ticker without changing its elapsed time.
++ `ticker.isRunning()` - returns a boolean value - `true` if the Ticker object is currently running.
++ `ticker.reset()` - halt the ticker and reset its elapsed time `0`.
++ `ticker.resume()` - run the ticker from its current elapsed time.
++ `ticker.reverse(resume: Boolean = false)` - change the ticker's temporal direction; this action will halt the ticker unless the `resume` argument is `true`.
++ `ticker.run()` - run the ticker from elapsed time `0`.
++ `ticker.seekFor(milliseconds: Number = 0, resume: Boolean = false)` - update the elapsed time by adding the `milliseconds` argument to it; this action will halt the ticker (if it is currently running) unless the `resume` argument is `true`.
++ `ticker.seekTo(milliseconds: Number = 0, resume: Boolean = false)` - set the elapsed time to the `milliseconds` argument; this action will halt the ticker (if it is currently running) unless the `resume` argument is `true`.
+
+Just as for generic Animation objects, Ticker objects come with a series of hook functions (defaulting to `λnull` functions) which will trigger as part of each control function invocation. Dev-users can use these hooks for any functionality they require, for instance tracking the progress of the ticker animation.
+
+Ticker objects do not need to be running to animate. When the dev-user invokes the `seekTo` or `seekFor()` functions the ticker will update its elapsed time and then invoke its `fn` function to inform all of its subscribed Tween/Action objects of the change. 
++ Tween objects will in turn apply the required updates to their target objects.
++ Action objects will check to see if the change triggers their functionality and, if yes, fire their `action` or `revert` functions as appropriate.
+
+Examples of using non-running tickers:
++ Test demo [Canvas-027](../../demo/canvas-027.html) - using `ticker.seekTo()` instead of `ticker.run()` to tie the animation to a video playback.
++ Test demo [Modules-006](../../demo/modules-006.html) - a number of examples of tying `ticker.seekTo()` to end-user page scroll events.
+
+#### Ticker progress
+The Ticker object includes several internal (private) attributes which it uses to keep track of its progress:
++ `cycleCount`: how many cycles have been completed in the current run
++ `active`: whether the ticker is currently running
++ `effectiveDuration`: total duration (in milliseconds) of a ticker cycle
++ `startTime`: epoch timestamp of when the current ticker run was invoked
++ `currentTime`: current epoch timestamp
++ `tick`: elapsed time since the start of the current ticker run (currentTime - startTime)
+
+Note that these attribute values will be affected not only by the ongoing passage of time, but also by operations such as halting, resuming, or seeking along the ticker timeline. Code for these adjustments can be found in the relevant hook functions.
+
+#### Temporal direction
+SC Ticker objects can run both forwards and backwards. Dev-users can change the *temporal direction* of the ticker by invoking the `ticker.reverse()` function when required. This function acts like a switch: if the ticker was running forwards, it will immediately start running backwards; if it was running backwards it will now run forwards.
+
+Internally, SC doesn't actually reverse time; rather it updates the ticker's currently associated subscriber Tween/Action objects with the new temporal direction of travel (using the `changeSubscriberDirection()` function). It is up to Tween and Action objects to interpret the data that their Ticker object sends to them on each tick
+
+#### Subscriber communication
+During each iteration of the Ticker object's run, the overarching ticker Animstion object will, if relevant, invoke the Ticker object's `ticker.fn(reverse: Boolean)` function. Here, the ticker calculates relevant timing data which it passes onto each of its Tween/Action object subscribers' `tween.update()` function.
+
+This data is passed to subscribers in the following shape:
+```
+{
+  tick: Number - elapsed time (currentTime - startTime)
+  reverseTick: Number - time remaining (effectiveDuration - tick)
+  willLoop: Boolean - will the ticker loop?
+  next: Boolean - will there be another ticker iteration?
+}
+```
+
+Ticker result objects are pooled in the local `resultObjectPool` Array. Repo-devs can retrieve a result object using the `requestResultObject()` function, and return it using `releaseResultObject()`. 
+
+To note: in practice there will only ever be one result object, shared between all ticker objects. The pool was created as part of an experiment to see if time-based animations could be run in a web worker, and retained after that experiment failed because the `releaseResultObject()` function sets the object's attributes back to default values after every use.
+
+The `ticker.fn()` function takes a single argument - a boolean to indicate whether the ticker is currently running in *reversed mode*:
++ When operating in *forward mode* the ticker will communicate with its current subscriber Tween/Action objects in line with their order, from lowest to highest.
++ When operating in *reversed mode* it is important that the ticker communicates with its subscribers in the opposite order (highest to lowest); this ensures that Action object functions get invoked in the correct order.
 
 ### Tween objects
 [write up]
@@ -188,15 +251,16 @@ Note that Tween and Action objects can also add or remove themselves from a Tick
 [write up]
 
 Bespoke easing functions
-+ [demo test Canvas-005](../../demo/canvas-005.html) - animating a gradient over 3 loops
-+ [demo test Canvas-017](../../demo/canvas-017.html) - bespoke easings for gradients
++ Test demo [Canvas-005](../../demo/canvas-005.html) - animating a gradient over 3 loops
++ Test demo [Canvas-017](../../demo/canvas-017.html) - bespoke easings for gradients
 
 Other Tween tests
-+ [demo test Canvas-006](../../demo/canvas-006.html) - canvas tween stress test
-+ [demo test Canvas-040](../../demo/canvas-040.html) - tween `entity.lineDashOffset` attribute
-+ [demo test Canvas-045](../../demo/canvas-045.html) - tween `entity.roll` attribute
-+ [demo test Canvas-047](../../demo/canvas-047.html) - tween `color.range`
-+ [demo test DOM-009](../../demo/dom-009.html) - DOM element tween stress test
++ Test demo [Canvas-006](../../demo/canvas-006.html) - canvas tween stress test
++ Test demo [Canvas-040](../../demo/canvas-040.html) - tween `entity.lineDashOffset` attribute
++ Test demo [Canvas-045](../../demo/canvas-045.html) - tween `entity.roll` attribute
++ Test demo [Canvas-047](../../demo/canvas-047.html) - tween `color.range`
++ Test demo [DOM-009](../../demo/dom-009.html) - DOM element tween stress test
++ Test demo [Modules-003](../../demo/modules-003.html) - tween gradient `paletteStart` and `paletteEnd` attributes
 
 ### Action objects
 [write up]

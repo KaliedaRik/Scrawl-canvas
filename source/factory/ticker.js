@@ -703,11 +703,7 @@ P.complete = function () {
 // + Directionality is determined by Tween/Action object attribute settings, not the Ticker.
 P.reverse = function (resume = false) {
 
-    resume = xtGet(resume, false);
-
-    if (this.active) {
-        this.halt();
-    }
+    if (this.active) this.halt();
 
     const timePlayed = this.currentTime - this.startTime;
     this.startTime = this.currentTime - (this.effectiveDuration - timePlayed);
@@ -769,11 +765,9 @@ P.resume = function () {
 // + Update the Ticker's `currentTime`, `startTime` attributes
 // + Trigger the object's `onSeekTo` function.
 // + Resume the Ticker - if required.
-P.seekTo = function (milliseconds, resume = false) {
+P.seekTo = function (milliseconds = 0, resume = false) {
 
     let backwards = false;
-
-    milliseconds = xtGet(milliseconds, 0);
 
     if (this.active) this.halt();
 
@@ -802,11 +796,9 @@ P.seekTo = function (milliseconds, resume = false) {
 // + Update the Ticker's `currentTime`, `startTime` attributes
 // + Trigger the object's `onSeekFor` function.
 // + Resume the Ticker - if required.
-P.seekFor = function (milliseconds, resume = false) {
+P.seekFor = function (milliseconds = 0, resume = false) {
 
     let backwards = false;
-
-    milliseconds = xtGet(milliseconds, 0);
 
     if (this.active) this.halt();
 
