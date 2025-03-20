@@ -1,10 +1,5 @@
 // # Pattern factory
 // Scrawl-canvas Pattern objects implement the Canvas API's [createPattern](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createPattern) method. The resulting [CanvasPattern](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
-// + Most pattern-related functionality has been coded up in the [styles mixin](../mixin/styles.html), and is documented there.
-// + Functionality associated with __assets__, which Patterns use as their source, has been coded up in the [assetConsumer mixin](../mixin/assetConsumer.html).
-// + Patterns fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.
-// + Patterns cannot be animated as such, but a Cell wrapper that is used as the Pattern's source can be animated in any of the normal ways.
-// + Scrawl-canvas does not support the Canvas API `CanvasPattern.setTransform()` method - it appears to be based on the SVGMatrix interface, which was deprecated in the SVG2 standard.
 
 
 // #### Imports

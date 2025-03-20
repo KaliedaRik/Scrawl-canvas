@@ -1,15 +1,5 @@
 // # Grid factory
 // The Grid entity is a graphical representation of __a grid with equal width columns and equal height rows__, separated by gutters. Each tile within the grid can be filled with a different color, or a different gradient, or a different Picture entity output.
-// + Each grid requires a mimimum of one column and one row; columns will divide into the Grid width evenly, rows divide evenly into the Grid height.
-// + The __tiles__ can display as many different colors, or gradients, or Pictures, as are required for the display.
-// + The __gutters__ between columns, and between rows, can be different values; gutter fills can also be colors, gradients or Picture entity output.
-// + The display for each tile, and the gutters, can be easily updated.
-// + Grid entity __hit reports__ include an extra attribute - an array of tiles that report being hit.
-// + Grids will accept __Filter__ objects - filters are applied to the entire Grid, not to individual tiles.
-// + They can use __Anchor__ objects for user navigation.
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
-// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
-// + Grids can be cloned, and killed.
 
 
 // #### Imports

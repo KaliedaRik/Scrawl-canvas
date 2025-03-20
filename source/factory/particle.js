@@ -1,26 +1,5 @@
 // # Particle factory
-// The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:
-// + [Particle objects](./particle.html), which represent a 3-dimensional coordinate - based on a Scrawl-canvas [Vector object](../untracked-factory/vector.html) - and include a history of recent positions which we can use to determine how to display that particle on screen.
-// + [History arrays](../untracked-factory/particleHistory.html) which can be pooled (reused) to cut down on Array creation and distruction during the animation.
-// + [Force objects](./particleForce.html) which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a __gravity__ force object is pre-defined by Scrawl-canvas.
-// + [Spring objects](./particleSpring.html) used to define a constraint (connection) between two particles in a system.
-// + [World objects](./particleWorld.html) where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.
-//
-// We do not have to handle particle generation and manipulation ourselves. Instead, Scrawl-canvas gives us three dedicated __entitys__ which we use to add particle animation effects to the canvas scene. These entitys are:
-// + [Tracer](./tracer.html) - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.
-// + [Emitter](./emitter.html) - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.
-// + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
-//
-// #### Particle physics
-// The Scrawl-canvas particle physics engine system is based on a fairly classical understanding of particle ___kinetics___ (applying forces and constraints to a small, spherical object in 3D space) and ___kinematics___ (the movement of the small object in response to the forces and constraints applied to it).
-//
-// __Particles__ are represented in the system by a simple Scrawl-canvas object which wraps a set of Scrawl-canvas Vector objects describing the particle's position, velocity and load. The object also includes a history array detailing the recent particle's most recent movements, an array of Force objects, a mass attribute (for gravity calculations), and an engine attribute - particles can use different engines to calculate their movements, depending on the needs of the animation; more precise engines are slower, but more stable.
-// + Note that all Particles are positioned using ___absolute__ (pixel-based) coordinates; they cannot be positioned relatively (using String% values), or by reference to an artefact or another Particle.
-// + Entitys that use Particles for their display - Emitter, Net, Tracer - can, however, use all the normal entity positioning strategies.
-// + All artefacts (including all entitys) can position themselves by reference to a named (non-recycled) Particle.
-//
-// #### The particle pool
-// As part of a particle animation many thousands of Particle objects may need to be generated, used and then discarded. Scrawl-canvas attempts to make this more efficient by pooling particle objects so that they can be reused as the animation progresses.
+// Particle objects represent a 3-dimensional coordinate and include a history of recent positions which we can use to determine how to display that particle on screen.
 
 
 // #### Imports

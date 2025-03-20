@@ -3,8 +3,6 @@
 //
 // Scrawl-canvas uses the [Button mixin](../mixin/button.html) to add button functionality to artefacts - in particular canvas entitys. This (alongside Anchor objects) gives us a interactive canvas containing dynamic, clickable regions.
 //
-// We use buttons to trigger a desired action. This can be achieved by setting the button object's __clickAction__ attribute to a function.
-//
 // NOTE - generating a button will have an impact on the DOM document code, as an (off-viewport) &lt;button> element will be added to it.
 //
 // The __makeButton__ function is not exposed to the 'scrawl' object, thus objects can only be created indirectly. Buttons can be saved, cloned and killed as part of wider save/kill/clone functionality.

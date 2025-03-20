@@ -1,11 +1,6 @@
 // # Position mixin
-// This mixin defines the key attributes and functionality of Scrawl-canvas __artefact objects__.
-//
-// We define an artefact as something that can be displayed in a Scrawl-canvas [Canvas](../factory/stack.html) or [Stack](../factory/stack.html) wrapper - both of which wrap DOM elements in the web page document - &lt;canvas>, and other DOM elements (most commonly a &lt;div> element), respectively.
-// + We call canvas based artefacts __entity objects__ - these objects represent a shape, path or image drawn in the canvas.
-// + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Label](../factory/label.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; [Wheel](../factory/wheel.html), etc.
-// + __Other artefacts__ live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and [Element](../factory/element.html) wrappers for other direct child elements.
-//
+// This mixin defines the key attributes and functionality of Scrawl-canvas __artefact__ and __entity__ objects.
+
 // ##### Positioning
 // Artefacts break away from the normal flow mechanisms of the HTML document; instead they are explicitly positioned within their containers in a variety of ways:
 // + __absolute__ positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (`[0, 0]`, `[347, 26.4]`, etc).

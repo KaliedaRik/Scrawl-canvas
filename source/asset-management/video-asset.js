@@ -1,9 +1,7 @@
 // # VideoAsset factory
 // The factory generates wrapper Objects around &lt;video> elements which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.
 //
-// Scrawl-canvas can also create VideoAssets from the Web API [MediaStream](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream) interface - ___this is an experimental feature___.
-//
-// VideoAssets are used by [Picture](./picture.html) and [Grid](./grid.html) entitys, and [Pattern](./pattern.html) styles (though not recommended).
+// Scrawl-canvas can also create VideoAssets from the Web API [MediaStream](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream) and [Screen Capture](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API) interfaces.
 
 
 // #### Imports

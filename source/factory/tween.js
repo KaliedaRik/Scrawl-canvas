@@ -1,30 +1,5 @@
 // # Tween factory
 // A ___tween___ - _inbetween animation_ - is a small, targeted, time-limited animation where we define the start and end points (_key frames_) of the animation, and a method for calculating the intermediate values between the two (_interpolation_, using an _easing_ function).
-//
-// Scrawl-canvas includes a full range of functionality to implement tweening. Any Scrawl-canvas object that includes a `set` function, which accepts a `{key:value}` object as its single argument, can be tweened.
-// + Tween animations are defined by creating a Tween object using the `makeTween` factory function.
-// + Each Tween object includes a `targets` Array - one Tween may animate many objects.
-// + Each Tween also includes a `definitions` Array which sets out the details of the animation to be performed.
-// + The `definitions` Array can include multiple objects, each defining a change to a specific attribute that needs to be applied to the target objects.
-// + __Any number-type attribute can be animated using a Tween__ - this includes integer and float Numbers, percentage Strings (`12.5%`) and measurement Strings (`20px`).
-// + We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running).
-// + We can dynamically halt, resume, restart and terminate Tweens in response to user interactions.
-// + Tweens include `packet` functionality: they can be saved, and cloned.
-//
-// Scrawl-canvas separates the timing aspects of its Tweens from their definitions.
-// + Tweens run against a ___timeline___ object called a [Ticker](./ticker.html).
-// + When we define a Tween, we can either assign it to an existing Ticker, or get the Tween factory to create a new Ticker for it.
-// + Tickers can also have [Action](./action.html) objects assigned to them, allowing us to trigger functions at specific points along the timeline.
-
-// ##### Using other tween factories
-// We don't recommend using other tween factories - such as [Greensock](https://greensock.com/) - with Scrawl-canvas objects at this time.
-// + The reason is simple. All updates to Scrawl-canvas objects should be made through their dedicated `set`, `setDelta` and related functions, which take a single Javascript object as their argument.
-// + When attributes are updated in this way, Scrawl-canvas makes sure various `dirty` flags get set (among other work), so the object can update itself appropriately at the most convenient time for itself.
-// + Libraries like GSAP works by directly updating object attributes, which misses out the necessary work of setting the appropriate `dirty` flags - thus the object will not know that it needs to do work.
-// + ___This does not mean you can't use other tween libraries in your web page___ - just be aware of the limitations of trying to use them with Scrawl-canvas objects!
-
-
-// TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
 
 
 // #### Imports

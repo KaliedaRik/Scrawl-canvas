@@ -1,12 +1,5 @@
 // # Gradient factory
 // Scrawl-canvas Gradient objects implement the Canvas API's [createLinearGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) method. The resulting [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
-// + Most gradient-related functionality has been coded up in the [styles mixin](../mixin/styles.html), and is documented there.
-// + Gradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.
-// + Gradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.
-//
-// Gradients can be applied to an entity in two different ways, depending on the entity's `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags:
-// + __Cell-locked__ Gradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient
-// + __Entity-locked__ Gradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
 // #### Imports

@@ -4,15 +4,6 @@
 // Loom entitys are ___composite entitys___ - an entity that relies on other entitys for its basic functionality.
 // + Every Loom object requires two (or one) path-enabled [Shape](./shape.html) entitys to act as its left and right tracks.
 // + A Loom entity also requires a [Picture](./picture.html) entity to act as its image source.
-// + Looms can use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
-// + They can use __Anchor__ objects for user navigation.
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
-// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
-// + Looms can be cloned, and killed.
-//
-// ___Note that this is experimental technology!___
-// + Current code does not use [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins, meaning much of the code here has been copied over from those mixins (DRY issue).
-// + TODO: clone functionality not yet tested. A possible use case is to clome a Loom so they share the same Shape struts, but have different Picture sources and `from/toPathStart/End` cursor values - multiple images tracked and animated.
 
 
 // #### Imports

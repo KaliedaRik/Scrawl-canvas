@@ -1,16 +1,10 @@
 // # Group factory
-// Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Label, Picture, Shape, Stack, Wheel, etc) for common functions.
-//
 // Groups connect artefacts with controller objects - Stack, Cell - through which the Display cycle can cascade. Each controller object can have more than one Group associated with it. Only Groups whose __visibility__ flag has been set to true will propagate the Display cycle cascade to their member artefacts. The order in which each controller object invokes its Group objects is determined by each Group object's __order__ value.
 //
 // Groups can also be used for purposes beyond the Display cycle:
 // + They are closely involved in collision detection functionality.
 // + They can be used to propagate updates to their constituent artefacts - for instance animating them in a coordinated manner.
 // + Filters can be applied to entity objects at the Group level
-//
-// Additional functionality to help control and interact with Groups is defined in the __cascade__ mixin. Groups also use the __base__ mixin, thus they come equipped with packet functionality, alongside clone and kill functions.
-//
-// NOTE: __Groups are NOT used to position a set of artefacts in the display__ - they have no positioning functionality, which is instead handled by the artefact objects themselves. To position and move a collection of artefacts around the display, choose one of them to act as a a reference, and then __pivot__ or __mimic__ other artefacts to that reference. When you position or animate the reference artefact, all the other artefacts will position/move with it. See Demo [Canvas-002](../../demo/canvas-002.html) for an example.
 
 
 // #### Imports

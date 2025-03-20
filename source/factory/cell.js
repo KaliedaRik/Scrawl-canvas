@@ -9,26 +9,6 @@
 // + __layers__ to be applied to the base cell, allowing us to break a canvas display into more manageable portions
 // + the source for image-based objects such as __Picture entitys__ and __Pattern styles__.
 // + __artefacts__ - a Cell wrapper can act just like any artefact: it can be positioned, dimensioned, scaled and rotated ; it can act as a `pivot` or `mimic` source for other artefacts, or use them for its position and dimensions data. (Be aware, though, that Cell wrappers are NOT stored in the scrawl library's `artefact` section).
-//
-// Cell wrappers include a number of Boolean flags and other attributes to control how they are stamped onto other Cells.
-// + We can set flags to determine whether to include the Cell in each step of the Display cycle (`cleared`, `compiled`, `shown`) - this allows us to set up, for example, 'static' Cells that only need to be compiled once and can then be used as backgrounds for other Cells and entitys to be animated over.
-// + We can vary the order in which Cell wrappers get processed during the Display cycle (`compileOrder`, `showOrder`).
-// + Each Cell can have its own `backgroundColor`.
-// + Each Cell can be made translucent (`alpha`).
-// + Each Cell can be stamped onto other Cell canvases using a different composition method (`composite`).
-// + Each Cell can be given its own dimensions, different to those of its Canvas wrapper, with updates cascading down to entitys that use the Cell to determine their own (relative) dimensions and start coordinates.
-// + We can `scale`, `roll` and `flip` a Cell.
-// + We can control which parts of the Cell display will be copied over to its destination (`copy attributes`).
-// + We can add one or more `filters` to the Cell's outputted display.
-//
-// Every Cell wrapper will include a [Group object](./group.html) which shares the same name as the Cell. To include an entity object in a Cell wrapper's canvas display we add it to this group.
-// + Additional Group objects can be added to the Cell wrapper as-and-when required.
-// + Groups are processed in the order specified in their `order` attributes.
-// + Groups whose `visibility` flag is set to false will be skipped during the Display cycle cascade.
-//
-// Scrawl-canvas uses the `makeCell` factory function internally; it is not exported to the scrawl object. Instead, ___new Cell wrappers can be created from a Canvas wrapper___ using its `addCell` function.
-//
-// Scrawl-canvas (partially) disables Cell wrapper `packet` functionality. ___Cell wrappers cannot be cloned.___ They can be killed, either using their `kill` function or by invoking their Canvas wrapper controller's `killCell` function.
 
 
 // #### Imports

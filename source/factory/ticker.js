@@ -1,38 +1,5 @@
 // # Ticker factory
 // Ticker objects represent a timeline against which [Tween](./tween.html) and [Action](./action.html) objects will run.
-// + ___A Ticker is an animation___ (but not a Scrawl-canvas [Animation](./animation.html)) object; it defines a `fn` function internally which will check through all Tween and Action objects subscribing to it and, where appropriate, trigger their `update` functions.
-// + This module defines and launches a `coreTickersAnimation` Animation object; all Ticker objects get added to this object when their `run` or `resume` functions are triggered.
-// + The `coreTickersAnimation` object runs in the Scrawl-canvas `animationLoop` which is tied to the browser/device's requestAnimationFrame (RAF) functionality.
-// + `coreTickersAnimation` runs before other Animation objects, thus ___Tween/Action updates happen before any Display cycle functionality___.
-// + Unlike Animation objects, ___Ticker objects do not run automatically___ as soon as they have been created.
-// + To trigger a Ticker object, invoke its `run` or `resume` functions.
-//
-// Ticker objects have an ___effective duration___ - a set number of milliseconds for which they will run.
-// + We can set this value directly, using the `duration` attribute.
-// + We can also ask the Ticker to calculate its own effective duration, taking into accout the start times and duration of its currently subscribed Tweens and Actions
-// + By default a Ticker will run once, then terminate (remove itself from the `coreTickersAnimation` function). This counts as 1 cycle.
-// + We can get the Ticker to run multiple times before terminating, by setting its `cycles` attribute to a positive integer Number value.
-// + Setting the `cycles` attribute to `0` causes the Ticker to run continuously once started, until told to stop.
-// + Note that Tickers always run forwards, never backwards. Tweens and Actions can be reversed by setting the appropriate flags on them.
-//
-// Tickers (unlike Animations) take part in Scrawl-canvas packet functionality; they can be saved, restored and cloned.
-//
-// Tickers can be controlled through a set of trigger functions: __run, halt, reverse, resume, seekTo, seekFor, complete, reset__.
-// + We can add ___Ticker hook functions___ to each of these trigger functions.
-//
-// Tickers are very closely associated with Tweens.
-// + Each Ticker can have more than one Tween (and 0 or more Actions) subscribed to it.
-// + Tweens and Actions can be told to subscribe to a Ticker when they are created; they can change their Ticker subscription at any time.
-// + ___A Tween can make its own Ticker when it is created.___
-
-
-// TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further:
-// + If we kill a Ticker but leave associated Tweens untouched, will running those Tweens crash the script?
-// + Can we successfully clone a Tween whose Ticker has been killed?
-// + A Ticker can have more than one subscribed Tween/Action; can (should?) Tweens/Actions be able to subscribe to more than one Ticker? _Initial thoughts: no - if such functionality required, clone the Tween/Action_
-// + Can Tickers be nested? How could we use nested Tickers? _Initial thoughts: yes to nesting, possibly use an Action on one ticker to run/halt a second Ticker; one use case may be to break up a complex animation into smaller, more discrete parts? But this all begs the question: if we halt a nested Ticker (via user interaction), how would we cascade that through to parent/sibling Tickers?_
-// + Possible additional demo - tie a more complex Ticker/Tween/Action sequence to a graphical timeline - see blog post [Adding some canvas love to Hexo](https://blog.rikworks.co.uk/2018/05/26/Adding-some-canvas-love-to-Hexo/).
-// + Would be a Big Win if we can tether Ticker/Tween/Actions to progress while a video plays - opens up the world of ___interactive video___.
 
 
 // #### Imports
