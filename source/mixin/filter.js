@@ -106,6 +106,7 @@ export default function (P = Ωempty) {
 
 // #### Prototype functions
 // `cleanFilters` - Internal housekeeping
+// + Filter objects do not have an `order` attribute. They will be processed in the order in which they appear in the `filters` Array.
     P.cleanFilters = function () {
 
         this.dirtyFilters = false;
@@ -113,41 +114,18 @@ export default function (P = Ωempty) {
 
         const {filters, currentFilters} = this;
 
-        if (filters.length) {
+        currentFilters.length = 0;
 
-            const buckets = requestArray();
+        filters.forEach(f => {
 
-            let i, iz, obj, name, order, arr;
+            if (f.substring) {
 
-            for (i = 0, iz = filters.length; i < iz; i++) {
+                const obj = filter[f];
 
-                name = filters[i];
-                obj = filter[name];
-
-                if (obj) {
-
-                    order = _floor(obj.order) || 0;
-
-                    if (!buckets[order]) buckets[order] = requestArray();
-
-                    buckets[order].push(obj);
-                }
+                if (obj) currentFilters.push(obj);
             }
-            currentFilters.length = 0;
-
-            for (i = 0, iz = buckets.length; i < iz; i++) {
-
-                arr = buckets[i];
-
-                if (arr) {
-
-                    currentFilters.push(...arr);
-                    releaseArray(arr);
-                }
-            }
-            releaseArray(buckets);
-        }
-        else currentFilters.length = 0;
+            else if (f && f.type && f.type === T_FILTER) currentFilters.push(f);
+        });
     };
 
 

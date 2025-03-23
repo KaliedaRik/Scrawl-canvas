@@ -22,8 +22,1258 @@
     </nav>
 
     <main>
-        <h1 id="the-scrawl-canvas-filter-engine">The Scrawl-canvas filter engine</h1>
-<p>A brief overview of the filter engine</p>
+        <h1 id="scrawl-canvas-filters">Scrawl-canvas filters</h1>
+<p>The purpose of a computer graphics filter is to take an input graphic, apply a set of manipulations to each pixel in the graphic, and output the modified result. For web pages, filter algorithms are generally applied to elements - including <code>&lt;canvas&gt;</code> elements - using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">CSS filter property</a>.</p>
+<p>CSS filters are a set of functions which the dev-user can use to quickly apply a range of effects - <code>blur()</code>, <code>saturate()</code>, <code>drop-shadow()</code>, etc - either to a DOM element or to the background behind that element. While these filters can be stacked (eg: sepia + blur), for more advanced effects CSS offers a <code>url()</code> filter, which allows the dev-user to apply an <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter">SVG-defined filter effect</a> to the element.</p>
+<p>Note that SVG filters are complex and powerful. In addition to the MDN page linked above, the following resources may be of interest to the inquisitive:</p>
+<ul>
+<li>(Webplatform, 2015) - <a href="https://webplatform.github.io/docs/svg/tutorials/smarter_svg_filters/">A summary of the various SVG filter primatives</a></li>
+<li>(Codrops, 2019) - <a href="https://tympanus.net/codrops/2019/01/15/svg-filters-101/">A series of articles around SVG filters</a></li>
+<li>(yoksel.github.io) - <a href="https://yoksel.github.io/svg-filters/#/">An interactive SVG filters playground</a></li>
+</ul>
+<blockquote>
+  <p><strong>tl;dr:</strong> Filter effects - however they are used in a web page - are often computationally expensive and risk slowing down page speed and responsiveness. Use filters wisely!</p>
+</blockquote>
+<p>Browsers extend the use of these filters to Javascript-driven paint operations in the <code>&lt;canvas&gt;</code> element. The canvas context engine includes a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">filter property</a> (note: the key is singular), which dev-users can use to apply CSS filters to specific fill and stroke invocations. SC implements this functionality via regular <code>set</code> function calls: <code>cell.set({filter: string})</code> for the entire Cell object's display, and <code>entity.set({filter: string})</code> for individual entity objects within the display. See test demo <a href="../../demo/filters-501.html">Filters-501</a> to see this functionality in action.</p>
+<h2 id="the-sc-filter-engine">The SC filter engine</h2>
+<p>While browsers have (for the most part) supported general CSS filter functionality since 2013, extending that support to the canvas context engine <code>engine.filter</code> property has lagged and (as of March 2025, with respect to Safari browsers) remains incomplete.</p>
+<p>Given how useful filter functionality can be for creating various <code>&lt;canvas&gt;</code>-based displays and products, repo-devs built a bespoke filter engine into SC. Much of the functionality for the filter engine is defined in the <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> file. This filter engine - which is an entirely novel filter system, separate from CSS filters - acts as a singleton object, created during SC initialization, and handles all SC-specific filter effect processing across all <code>&lt;canvas&gt;</code> elements present on the web page.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> The SC filter engine has been inspired by (the better parts of) the <a href="https://drafts.fxtf.org/filter-effects/">Filter Effects Module Level 1</a> specification (which itself is based on the <a href="https://www.w3.org/TR/SVG11/filters.html">SVG 1.1 (Second Edition) Filter Effects</a> specification). <em>It is</em> <strong><em>NOT an emulation</em></strong> <em>of that specification</em>.</p>
+</blockquote>
+<h3 id="the-scrawlmakefilter-factory-function">The <code>scrawl.makeFilter()</code> factory function</h3>
+<p>SC filters have been built to operate seamlessly with the wider SC environment. Dev-users can create a Filter object using the <code>scrawl.makeFilter()</code> factory function. Once created, the filter can be applied multiple times to Cell, Group and entity objects by adding it to their <code>filters</code> (note: the key is plural!) Array:</p>
+<ul>
+<li>Filter objects can be applied to entity, Group and Cell objects during their instantiation using the <code>filters: ['name-string', Filter-object, ...]</code> attribute. This attribute expects to receive an Array of Filter objects and/or those objects' <code>name</code> strings.</li>
+<li>Following instantiation, any entity, Group or Cell object can have its <code>filters</code> Array updated using the <code>object.addFilters('name-string', Filter-object, ...)</code>, <code>object.removeFilters('name-string', Filter-object, ...)</code> and <code>object.clearFilters()</code> functions.</li>
+</ul>
+<p>The code associated with assigning and managing Filter objects on Cell, Group and entity objects can be found in the <a href="../source/mixin/filter.html">mixin/filter.js</a> file. The factory function code itself is defined in the <a href="../source/factory/filter.html">factory/filter.js</a> file.</p>
+<h4 id="create-filter-objects">Create Filter objects</h4>
+<p>Dev users can instantiate a Filter object at any time using the <code>scrawl.makeFilter({key: value, ...})</code> factory function. The factory takes a single object for its argument, all of whose attributes are optional:</p>
+<pre><code>Attribute   Type             Default               Comments
+----------  ---------------  --------------------  ---------------------------------------------------
+name        String           computer-generated    Must be unique
+actions     ActionObject[]   []                    Action objects define filter actions
+method      String           ''                    Convenience alternative to generate ActionObjects
+lineIn      String           ''                    ID string of chained filter input
+lineMix     String           ''                    ID string of chained filter input
+lineOut     String           ''                    ID string for this filter's output
+opacity     Number           1                     Float number between 0 and 1
+...                                                (Additional ActionObject-specific attributes)</code></pre>
+<p>The Filter objects generated by the <code>scrawl.makeFilter()</code> factory function are <em>tracked objects</em>, thus each object requires its own unique <code>name</code> attribute when being instantiated. Once created, they can be retrieved from the SC library using the <code>scrawl.findFilter('name-string')</code> function.</p>
+<p>There are actually two ways to use the factory function, both of which are equally valid:</p>
+<ul>
+<li>For the <em>modern</em> approach, dev-users can define an Array of <strong>action objects</strong> keyed to the <code>actions</code> attribute. These action objects outline a set of <strong>filter primative functions</strong>, alongside the values to be fed into those functions, which together create the desired filter effect.</li>
+<li>The <em>legacy</em> approach uses the <code>method</code> attribute, alongside the required attributes for the method. SC will automatically create the appropriate action objects for the stipulated method as part of the Filter object's instantiation.</li>
+</ul>
+<p>While the modern approach offers more versatility when it comes to chaining filter primitive functions together to create complex effects, the legacy approach is often more convenient for creating simpler effects. Compare the different approaches to creating a simple pixellation filter:</p>
+<pre><code>Legacy approach                           Modern approach
+--------------------------------------    -----------------------------------
+const pixels = scrawl.makeFilter({        const pixels = scrawl.makeFilter({
+  name: 'my-pixellated-filter',             name: 'my-pixellated-filter',
+  method: 'pixelate',                       actions: [{
+  tileWidth: 20,                              action: 'pixelate',
+  tileHeight: 20,                             offsetX: 8,
+  offsetX: 8,                                 offsetY: 8,
+  offsetY: 8,                                 tileHeight: 20,
+});                                           tileWidth: 20,
+                                            }],
+                                          });</code></pre>
+<p>More complex filters - such as this comic-effect filter, as seen in test demo <a href="../../demo/filters-103.html">Filters-103</a> - are easier to build and edit using the modern approach:</p>
+<pre><code>const comicFilter = scrawl.makeFilter({
+  name: 'my-comic-effect-filter',
+  actions: [{
+    action: 'gaussian-blur',
+    radius: 1,
+    lineOut: 'outline1',
+  }, {
+    action: 'matrix',
+    lineIn: 'outline1',
+    lineOut: 'outline2',
+    width: 3,
+    height: 3,
+    offsetX: 1,
+    offsetY: 1,
+    weights: [0,1,0,1,-4,1,0,1,0],
+  }, {
+    action: 'threshold',
+    lineIn: 'outline2',
+    lineOut: 'outline3',
+    level: 6,
+    high: [0, 0, 0, 255],
+    low: [0, 0, 0, 0],
+    includeAlpha: true,
+  }, {
+    action: 'gaussian-blur',
+    radius: 1,
+    lineIn: 'outline3',
+    lineOut: 'outline4',
+  }, {
+    action: 'step-channels',
+    clamp: 'round',
+    lineOut: 'color1',
+    red: 16,
+    green: 16,
+    blue: 16,
+  }, {
+    action: 'gaussian-blur',
+    radius: 4,
+    lineIn: 'color1',
+    lineOut: 'color2',
+  }, {
+    action: 'compose',
+    compose: 'destination-over',
+    lineIn: 'color2',
+    lineMix: 'outline4',
+  }],
+});</code></pre>
+<h4 id="serialize-clone-and-kill-filter-objects">Serialize, clone and kill Filter objects</h4>
+<p>Filter objects can be serialized using the <code>filter.saveAsPacket()</code> function. To deserialize a Filter packet string use either <code>object.importPacket('url-string' | ['url-string', ...])</code> or <code>object.actionPacket('packet-string')</code> functions where <code>object</code> is any existing SC <em>tracked object</em>.</p>
+<p>To clone a Filter object, use the <code>filter.clone({key: value, ...})</code> function. Data included in the function's argument object will overwrite the existing Filter object's values.</p>
+<p>The <code>filter.kill()</code> function will remove the Filter object entirely from the SC environment. This includes removing the filter from any Cell, Group or entity object that may be using it.</p>
+<h4 id="filter-stacking">Filter stacking</h4>
+<p>CSS filters can be combined:</p>
+<pre><code>&lt;div class="filtered-div"&gt;
+  &lt;p&gt;This is a div element with a CSS filter effect applied to it&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .filtered-div {
+    filter: hue-rotate(90deg) drop-shadow(6px 6px 2px black);
+  }
+&lt;/style&gt;</code></pre>
+<p>In the above example, the browser will first apply the <code>hue-rotate</code> filter to the <code>&lt;div&gt;</code> element, then pass the result of that pixel manipulation to the <code>drop-shadow</code> filter for further processing before delivering the final output to the browser's display.</p>
+<p>The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect the output from the previous filter becomes the input for the next filter. The end user only sees the final result of the entire operation.</p>
+<p>The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primative functions, in turn, to the entity display. Only once the last primative function completes does the filter engine return the results to the SC system for stamping onto the host Cell.</p>
+<p>This means that the order in which Filter objects appear in the <code>entity.filters</code> Array becomes very important:</p>
+<pre><code>scrawl.makeFilter({
+  name: 'my-gray-filter',
+  method: 'gray',
+}).clone({
+  name: 'my-red-filter',
+  method: 'red',
+});
+
+// This first image will have all of its blue/green channel colors set to 0
+// before the cross-channel-averaging gray effect is applied 
+// - it will display as (a dark) monochrome white
+scrawl.makePicture({
+  name: 'gray-image',
+  asset: 'iris',
+  dimensions: ['100%', '100%'],
+  copyDimensions: ['100%', '100%'],
+  filters: ['my-red-filter', 'my-gray-filter'],
+
+// This cloned image has the filters defined in reverse order
+// - it will display as monochrome red
+}).clone({
+  name: 'red-image',
+  filters: ['my-gray-filter', 'my-red-filter'],
+});</code></pre>
+<table>
+<thead>
+<tr>
+<th id="input_>_red_>_gray_>_output">input &gt; red &gt; gray &gt; output</th>
+<th id="input_>_gray_>_red_>_output">input &gt; gray &gt; red &gt; output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="sc-filter-engine-asset-001.webp" alt="Red before grayscale" /></td>
+<td><img src="sc-filter-engine-asset-002.webp" alt="Grayscale before red" /></td>
+</tr>
+</tbody>
+</table>
+<h4 id="filter-chaining">Filter chaining</h4>
+<p>SVG filters include a way to define the inputs for an SVG filter primitive, and label the primitive's output so that it can be used as an input for a subsequent primitive operation. This method of <strong>filter chaining</strong> is what gives SVG filters their unique power to break away from the linear stacking approach to filter composition.</p>
+<p>SC follows in SVG's footsteps. Every SC filter primative function includes <code>lineIn</code> and <code>lineOut</code> argument attributes to define the primitive's input data and output label; some functions also require a <code>lineMix</code> attribute </p>
+<p>[todo]</p>
+<h3 id="stencil-filters">Stencil filters</h3>
+<p>[todo]</p>
+<h3 id="filter-output-memoization">Filter output memoization</h3>
+<p>[todo]</p>
+<h3 id="one-time-filter-output-stashing-operations">One-time filter output stashing operations</h3>
+<p>[todo]</p>
+<h2 id="sc-filter-primative-functions">SC filter primative functions</h2>
+<p>[todo]</p>
+<h2 id="sc-predefined-filter-effects">SC predefined filter effects</h2>
+<p>[todo intro]</p>
+<h3 id="method-alphatochannels">Method: <code>alphaToChannels</code></h3>
+<p>Copies an input's alpha channel value over to each selected channel's value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. </p>
+<p>Setting the appropriate <code>includeChannel</code> flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate <code>excludeChannel</code> flag will set that channel's value to zero.</p>
+<p>Creates an ActionObject for the <code>alpha-to-channels</code> primitive function.</p>
+<p>No test demo available for this method.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+excludeBlue                 yes         true
+excludeGreen                yes         true
+excludeRed                  yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true</code></pre>
+<h3 id="method-areaalpha">Method: <code>areaAlpha</code></h3>
+<p>Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to the appropriate value specified in the <code>areaAlphaLevels</code> attribute. Can be used to create horizontal or vertical bars, or chequerboard effects:</p>
+<ul>
+<li>Top left quadrant dimensions: <code>tileWidth</code>, <code>tileHeight</code></li>
+<li>Top right quadrant dimensions: <code>gutterWidth</code>, <code>tileHeight</code></li>
+<li>Bottom left quadrant dimensions: <code>tileWidth</code>, <code>gutterHeight</code></li>
+<li>Bottom right quadrant dimensions: <code>gutterWidth</code>, <code>gutterHeight</code></li>
+</ul>
+<p>The <code>offset</code> values represent an offset from the top-left corner of the display. Partial tiles will be displayed as appropriate along the top and left edges of the display.</p>
+<p>Specify the new alpha channel values in the <code>areaAlphaLevels</code> attribute Array as follows:</p>
+<ul>
+<li>[top-left quadrant, top-right quadrant, bottom-left quadrant, bottom-right quadrant]</li>
+</ul>
+<p>Creates an ActionObject for the <code>area-alpha</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-014.html">Filters-014</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+areaAlphaLevels             yes         [255, 0, 0, 0]
+gutterHeight                yes         1
+gutterWidth                 yes         1
+offsetX                     yes         0
+offsetY                     yes         0
+tileHeight                  yes         1
+tileWidth                   yes         1</code></pre>
+<h3 id="method-blend">Method: <code>blend</code></h3>
+<p>Performs a blend operation on two inputs - see <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a> for more details.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes.</p>
+<p>Creates an ActionObject for the <code>blend</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-102.html">Filters-102</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineMix                     yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+blend                       yes         'normal'
+offsetX                     yes         0
+offsetY                     yes         0
+
+The blend attribute permitted values are:
+  'color'           'color-burn'        'color-dodge'       'darken'
+  'difference'      'exclusion'         'hard-light'        'hue'
+  'lighten'         'lighter'           'luminosity'        'multiply'
+  'normal'          'overlay'           'saturation'        'screen'
+  'soft-light'</code></pre>
+<h3 id="method-blue">Method: <code>blue</code></h3>
+<p>Sets the input's red and green channel values to zero.</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-blur">Method: <code>blur</code></h3>
+<p>A bespoke <a href="https://en.wikipedia.org/wiki/Box_blur">box blur</a> function. Creates visual artefacts with various settings that might be useful. </p>
+<p>Dev-users are strongly advised to memoize the results from this filter as it is very resource-intensive. Use the gaussian blur filter for a smoother result.</p>
+<p>By default the visible chanels are included in the calculation while the <code>alpha</code> channel is excluded. Transparent pixels (which tend to be transparent black) can also be excluded from the calculation.</p>
+<p>The functionality defines separate <code>radius</code> (box width and height) values for the vertical and horizontal passes. The number of <code>passes</code> performed can also be increased.</p>
+<p>The <code>step</code> values are used to determined which pixels within the box should be included in the calculation; a greater <code>step</code> value will lead to more (potentially useful) visual artefacts in the result.</p>
+<p>Creates an ActionObject for the <code>blur</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-033.html">Filters-033</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+excludeTransparentPixels    yes         false
+includeAlpha                yes         false
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+passes                      no          (pseudo-attribute)
+passesHorizontal            yes         1
+passesVertical              yes         1
+processHorizontal           yes         true
+processVertical             yes         true
+radius                      no          (pseudo-attribute)
+radiusHorizontal            yes         1
+radiusVertical              yes         1
+step                        no          (pseudo-attribute)
+stepHorizontal              yes         1
+stepVertical                yes         1</code></pre>
+<h3 id="method-brightness">Method: <code>brightness</code></h3>
+<p>Adjusts the brightness of the input.</p>
+<p>Creates an ActionObject for the <code>modulate-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-003.html">Filters-003</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+level                       yes         1</code></pre>
+<h3 id="method-channellevels">Method: <code>channelLevels</code></h3>
+<p>Produces a <a href="https://en.wikipedia.org/wiki/Posterization">posterization effect</a> on the input. </p>
+<p>Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). </p>
+<p>The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value</p>
+<p>Creates an ActionObject for the <code>lock-channels-to-levels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-006.html">Filters-006</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+alpha                       yes         [0]
+blue                        yes         [0]
+green                       yes         [0]
+red                         yes         [0]</code></pre>
+<h3 id="method-channels">Method: <code>channels</code></h3>
+<p>Adjusts the value of each input channel by a specified multiplier.</p>
+<p>Creates an ActionObject for the <code>modulate-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-007.html">Filters-007</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+alpha                       yes         1
+blue                        yes         1
+green                       yes         1
+red                         yes         1</code></pre>
+<h3 id="method-channelstep">Method: <code>channelstep</code></h3>
+<p>Restricts the number of color values that each channel can set by imposing regular bands on each channel. This produces a <a href="https://en.wikipedia.org/wiki/Posterization">posterization effect</a> on the input.</p>
+<p>The <code>clamp</code> attribute determines where in the band the color reference value should fall.</p>
+<p>Creates an ActionObject for the <code>step-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-005.html">Filters-005</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+clamp                       yes         'down'
+
+blue                        yes         1
+green                       yes         1
+red                         yes         1
+
+The clamp attribute permitted values are:
+  'down',           'round',            'up'</code></pre>
+<h3 id="method-channelstoalpha">Method: <code>channelsToAlpha</code></h3>
+<p>Calculates an average value from each pixel's included channels and applies that value to the pixel's alpha channel.</p>
+<p>Creates an ActionObject for the <code>channels-to-alpha</code> primitive function.</p>
+<p>No test demo available for this method.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true</code></pre>
+<h3 id="method-chroma">Method: <code>chroma</code></h3>
+<p>Produces a <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effect</a> across the input.</p>
+<p>Using an array of <code>range</code> arrays, determines whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. </p>
+<p>Each <code>range</code> array comprises six integer Numbers (between <code>0</code> and <code>255</code>) representing the following channel values: </p>
+<ul>
+<li><code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code></li>
+</ul>
+<p>Dev-users can also define <code>range</code> Arrays as </p>
+<ul>
+<li><code>[minimum-CSS-color-string, maximum-CSS-color-string]</code></li>
+</ul>
+<p>Creates an ActionObject for the <code>chroma</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-010.html">Filters-010</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+ranges                      yes         []</code></pre>
+<h3 id="method-chromakey">Method: <code>chromakey</code></h3>
+<p>Produces a <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effect</a> across the input.</p>
+<p>Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. These attributes' values should be integer Numbers (between <code>0</code> and <code>255</code>).</p>
+<p>Dev-users can also supply the reference color as a CSS-color-string, in a <code>reference</code> attribute.</p>
+<p>The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> attribute values, both of which lie in the range <code>0-1</code>.</p>
+<p>Creates an ActionObject for the <code>colors-to-alpha</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-011.html">Filters-011</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+reference                   no          (pseudo-attribute)
+blue                        yes         0
+green                       yes         255
+red                         yes         0
+
+transparentAt               yes         0
+opaqueAt                    yes         1</code></pre>
+<h3 id="method-clampchannels">Method: <code>clampChannels</code></h3>
+<p>Clamp each color channel to a range determined by a set of <code>low</code> and <code>high</code> channel values. These attributes' values should be integer Numbers (between <code>0</code> and <code>255</code>). </p>
+<p>Dev-users can also supply the reference colors as CSS-color-strings, in <code>lowColor</code> and <code>highColor</code> attributes.</p>
+<p>Creates an ActionObject for the <code>clamp-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-020.html">Filters-020</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+highColor                   no          (pseudo-attribute)
+highBlue                    yes         255
+highGreen                   yes         255
+highRed                     yes         255
+
+lowColor                    no          (pseudo-attribute)
+lowBlue                     yes         0
+lowGreen                    yes         0
+lowRed                      yes         0</code></pre>
+<h3 id="method-compose">Method: <code>compose</code></h3>
+<p>Perform a Porter-Duff compositing operation on two inputs - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a> for details.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes.</p>
+<p>Creates an ActionObject for the <code>compose</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-101.html">Filters-101</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineMix                     yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+compose                     yes         'normal'
+offsetX                     yes         0
+offsetY                     yes         0
+
+The compose attribute permitted values are:
+  'destination-only'      'source-only'           'clear'
+  'destination-over'      'source-over'           'xor'
+  'destination-in'        'source-in'             'normal'
+  'destination-out'       'source-out'
+  'destination-atop'      'source-atop'</code></pre>
+<h3 id="method-corrode">Method: <code>corrode</code></h3>
+<p>Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG (<code>&lt;feMorphology&gt;</code>)[<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology">https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology</a>] filter primative.</p>
+<p>The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel's position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments.</p>
+<p>The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>operation</code> attribute.</p>
+<p>Channels can be selected for inclusion in the calculation by setting the <code>includeRed</code>, <code>includeGreen</code>, <code>includeBlue</code> (all false by default) and <code>includeAlpha</code> (default: true) flags.</p>
+<p>Dev-users should note that this filter is expensive, thus much slower to complete compared to other filter effects. Memoization is strongly advised!</p>
+<p>Creates an ActionObject for the <code>corrode</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-021.html">Filters-021</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         true
+includeBlue                 yes         false
+includeGreen                yes         false
+includeRed                  yes         false
+
+height                      yes         3
+offsetX                     yes         1
+offsetY                     yes         1
+width                       yes         3
+
+operation                   yes         'mean'
+
+The operation attribute permitted values are:
+  'lowest'    'highest'   'mean'      'median'</code></pre>
+<h3 id="method-curveweights">Method: <code>curveWeights</code></h3>
+<p>Applies an array of weights values to the input's pixel data. This represents a (vague) form of <a href="https://en.wikipedia.org/wiki/Tone_mapping">tone mapping</a>.</p>
+<p>The <code>weights</code> Array needs to be exactly (256 * 4 = 1024) elements long. For each color level, we supply four weights: <code>redweight, greenweight, blueweight, allweight</code></p>
+<ul>
+<li>The default weighting for all elements is <code>0</code>. Weights are added to a pixel channel's value, thus weighting values need to be integer Numbers, either positive or negative</li>
+<li>The <code>useMixedChannel</code> flag uses a different calculation, where a pixel's channel values are combined to give their grayscale value, then that weighting (stored as the <code>allweight</code> weighting value) is added to each channel value, pro-rata in line with the grayscale channel weightings. (Note: this produces a different result compared to tools supplied in various other graphic manipulation software).</li>
+</ul>
+<p>Creates an ActionObject for the <code>vary-channels-by-weights</code> primitive function.</p>
+<p>Dev-users are advised to find some way to generate the array data programmatically. See test demo <a href="../../demo/filters-024.html">Filters-024</a> for inspiration.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+weights                     yes         false (valid values must be Array.length 1024)
+useMixedChannel             yes         true</code></pre>
+<h3 id="method-cyan">Method: <code>cyan</code></h3>
+<p>Sets the input's red channel values to zero, and averages the remaining channel colors for each pixel</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-displace">Method: <code>displace</code></h3>
+<p>Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap"><code>&lt;feDisplacementMap&gt;</code></a> filter primative.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller - hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate</p>
+<p>As for the SVG filter primative, translations in the <code>x</code> and <code>y</code> axes are tied to the pixel values in a given color channel. These pixel values can be scaled.</p>
+<p>When a pixel moves it can leave a copy of itself behind in case another pixel doesn't replace itself. If this behaviour is not wanted it can be switched off using the <code>transparentEdges</code> flag.</p>
+<p>Creates an ActionObject for the <code>displace</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-017.html">Filters-017</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineMix                     yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+channelX                    yes         'red'
+channelY                    yes         'green'
+offsetX                     yes         0
+offsetY                     yes         0
+scaleX                      yes         1
+scaleY                      yes         1
+transparentEdges            yes         false
+
+The channelX and channelY attribute permitted values are:
+  'red'       'green'     'blue'      'alpha'</code></pre>
+<h3 id="method-edgedetect">Method: <code>edgeDetect</code></h3>
+<p>Applies a preset 3x3 edge-detect matrix to the input</p>
+<p>Creates an ActionObject for the <code>matrix</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-019.html">Filters-019</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<p>// <strong>emboss</strong> (new in v8.4.0) - outputs a black-gray-red emboss effect<br />
+    emboss: function (f) {<br />
+        const actions = [];<br />
+        if (f.useNaturalGrayscale) {<br />
+            actions.push({<br />
+                action: GRAYSCALE,<br />
+                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+                lineOut: EMBOSS_WORK,<br />
+            });<br />
+        }<br />
+        else {<br />
+            actions.push({<br />
+                action: AVERAGE_CHANNELS,<br />
+                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+                lineOut: EMBOSS_WORK,<br />
+                includeRed: true,<br />
+                includeGreen: true,<br />
+                includeBlue: true,<br />
+            });<br />
+        }<br />
+        if (f.clamp) {<br />
+            actions.push({<br />
+                action: CLAMP_CHANNELS,<br />
+                lineIn: EMBOSS_WORK,<br />
+                lineOut: EMBOSS_WORK,<br />
+                lowRed: 0 + f.clamp,<br />
+                lowGreen: 0 + f.clamp,<br />
+                lowBlue: 0 + f.clamp,<br />
+                highRed: 255 - f.clamp,<br />
+                highGreen: 255 - f.clamp,<br />
+                highBlue: 255 - f.clamp,<br />
+            });<br />
+        }<br />
+        if (f.smoothing) {<br />
+            actions.push({<br />
+                action: GAUSSIAN_BLUR,<br />
+                lineIn: EMBOSS_WORK,<br />
+                lineOut: EMBOSS_WORK,<br />
+                radius: f.smoothing,<br />
+            });<br />
+        }<br />
+        actions.push({<br />
+            action: EMBOSS,<br />
+            lineIn: EMBOSS_WORK,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            angle: (f.angle != null) ? f.angle : 0,<br />
+            strength: (f.strength != null) ? f.strength : 1,<br />
+            tolerance: (f.tolerance != null) ? f.tolerance : 0,<br />
+            keepOnlyChangedAreas: (f.keepOnlyChangedAreas != null) ? f.keepOnlyChangedAreas : false,<br />
+            postProcessResults: (f.postProcessResults != null) ? f.postProcessResults : true,<br />
+        });<br />
+        f.actions = actions;<br />
+    },</p>
+<p>// <strong>flood</strong> (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions<br />
+// + Note that the <code>alpha</code> value is given in the range <code>0-255</code> (like the color channels), not <code>0-1</code> or <code>0%-100%</code> (as is expected in various CSS color String definitions)<br />
+// + Since v8.7.0, this filter also accepts a <code>reference</code> color string in place of the <code>red, green, blue, alpha</code> values<br />
+    flood: function (f) {</p>
+<pre><code>    let red = (f.red != null) ? f.red : 0,
+        green = (f.green != null) ? f.green : 0,
+        blue = (f.blue != null) ? f.blue : 0,
+        alpha = (f.alpha != null) ? f.alpha : 255;
+
+    const excludeAlpha = (f.excludeAlpha != null) ? f.excludeAlpha : false;
+
+    if (f.reference != null) {
+
+        [red, green, blue, alpha] = colorEngine.extractRGBfromColor(f.reference);
+
+        alpha = _round(alpha * 255);
+
+        f.red = red;
+        f.green = green;
+        f.blue = blue;
+        f.alpha = alpha;
+
+        delete f.reference;
+    }
+
+    f.actions = [{
+        action: FLOOD,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        red,
+        green,
+        blue,
+        alpha,
+        excludeAlpha,
+    }];
+},</code></pre>
+<p>// <strong>gaussianBlur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)<br />
+    gaussianBlur: function (f) {<br />
+        if (f.radius != null) {<br />
+            f.radiusHorizontal = f.radius;<br />
+            f.radiusVertical = f.radius;<br />
+            delete f.radius;<br />
+        }</p>
+<pre><code>    f.actions = [{
+        action: GAUSSIAN_BLUR,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        includeRed: (f.includeRed != null) ? f.includeRed : true,
+        includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+        includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+        includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+        excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
+        radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
+    }];
+},</code></pre>
+<p>// <strong>glitch</strong> - semi-randomly shift rows left/right<br />
+    glitch: function (f) {<br />
+        f.actions = [{<br />
+            action: GLITCH,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,<br />
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,<br />
+            step: (f.step != null) ? f.step : 1,<br />
+            offsetMin: (f.offsetMin != null) ? f.offsetMin : 0,<br />
+            offsetMax: (f.offsetMax != null) ? f.offsetMax : 0,<br />
+            offsetRedMin: (f.offsetRedMin != null) ? f.offsetRedMin : 0,<br />
+            offsetRedMax: (f.offsetRedMax != null) ? f.offsetRedMax : 0,<br />
+            offsetGreenMin: (f.offsetGreenMin != null) ? f.offsetGreenMin : 0,<br />
+            offsetGreenMax: (f.offsetGreenMax != null) ? f.offsetGreenMax : 0,<br />
+            offsetBlueMin: (f.offsetBlueMin != null) ? f.offsetBlueMin : 0,<br />
+            offsetBlueMax: (f.offsetBlueMax != null) ? f.offsetBlueMax : 0,<br />
+            offsetAlphaMin: (f.offsetAlphaMin != null) ? f.offsetAlphaMin : 0,<br />
+            offsetAlphaMax: (f.offsetAlphaMax != null) ? f.offsetAlphaMax : 0,<br />
+            transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,<br />
+            level: (f.level != null) ? f.level : 0,<br />
+        }];<br />
+    },</p>
+<h3 id="method-gray">Method: <code>gray</code></h3>
+<p>Averages the input's color channel values for each pixel.</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<p>// <strong>grayscale</strong> - produces a more realistic black-and-white photograph effect<br />
+    grayscale: function (f) {<br />
+        f.actions = [{<br />
+            action: GRAYSCALE,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+        }];<br />
+    },</p>
+<h3 id="method-green">Method: <code>green</code></h3>
+<p>Sets the input's red and blue channel values to zero.</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<p>// <strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image<br />
+    image: function (f) {</p>
+<pre><code>    f.actions = [{
+        action: PROCESS_IMAGE,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        asset: (f.asset != null) ? f.asset : ZERO_STR,
+        width: (f.width != null) ? f.width : 1,
+        height: (f.height != null) ? f.height : 1,
+        copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
+        copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
+        copyX: (f.copyX != null) ? f.copyX : 0,
+        copyY: (f.copyY != null) ? f.copyY : 0,
+    }];
+},</code></pre>
+<p>// <strong>invert</strong> - inverts the colors in the image, producing an effect similar to a photograph negative<br />
+    invert: function (f) {<br />
+        f.actions = [{<br />
+            action: INVERT_CHANNELS,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            includeRed: true,<br />
+            includeGreen: true,<br />
+            includeBlue: true,<br />
+        }];<br />
+    },</p>
+<h3 id="method-magenta">Method: <code>magenta</code></h3>
+<p>Sets the input's green channel values to zero, and averages the remaining channel colors for each pixel</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<p>// <strong>mapToGradient</strong> - produces a more realistic black-and-white photograph effect<br />
+    mapToGradient: function (f) {</p>
+<pre><code>    if (f.gradient &amp;&amp; f.gradient.substring) f.gradient = styles[f.gradient];
+
+    f.actions = [{
+        action: MAP_TO_GRADIENT,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        useNaturalGrayscale: (f.useNaturalGrayscale != null) ? f.useNaturalGrayscale : false,
+        gradient: f.gradient || makeGradient(),
+    }];
+},</code></pre>
+<p>// <strong>matrix</strong> - applies a 3x3 convolution matrix, kernel or mask operation to the image<br />
+    matrix: function (f) {<br />
+        f.actions = [{<br />
+            action: MATRIX,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            width: 3,<br />
+            height: 3,<br />
+            offsetX: 1,<br />
+            offsetY: 1,<br />
+            includeRed: (f.includeRed != null) ? f.includeRed : true,<br />
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,<br />
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,<br />
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,<br />
+            weights: (f.weights != null) ? f.weights : [0,0,0,0,1,0,0,0,0],<br />
+        }];<br />
+    },</p>
+<p>// <strong>matrix5</strong> - applies a 5x5 convolution matrix, kernel or mask operation to the image<br />
+    matrix5: function (f) {<br />
+        f.actions = [{<br />
+            action: MATRIX,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            width: 5,<br />
+            height: 5,<br />
+            offsetX: 2,<br />
+            offsetY: 2,<br />
+            includeRed: (f.includeRed != null) ? f.includeRed : true,<br />
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,<br />
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,<br />
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,<br />
+            weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],<br />
+        }];<br />
+    },</p>
+<p>// <strong>modifyOk</strong> - (new in v8.14.0) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB<br />
+    modifyOk: function (f) {<br />
+        f.actions = [{<br />
+            action: MODIFY_OK_CHANNELS,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            channelL: (f.channelL != null) ? f.channelL : 0,<br />
+            channelA: (f.channelA != null) ? f.channelA : 0,<br />
+            channelB: (f.channelB != null) ? f.channelB : 0,<br />
+        }];<br />
+    },</p>
+<p>// <strong>modulateOk</strong> - (new in v8.14.0) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB<br />
+    modulateOk: function (f) {<br />
+        f.actions = [{<br />
+            action: MODULATE_OK_CHANNELS,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            channelL: (f.channelL != null) ? f.channelL : 1,<br />
+            channelA: (f.channelA != null) ? f.channelA : 1,<br />
+            channelB: (f.channelB != null) ? f.channelB : 1,<br />
+        }];<br />
+    },</p>
+<p>// <strong>negative</strong> - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB<br />
+    negative: function (f) {<br />
+        f.actions = [{<br />
+            action: NEGATIVE,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+        }];<br />
+    },</p>
+<p>// <strong>newsprint</strong> - Attempts to simulate a black-white dither effect similar to newsprint<br />
+    newsprint: function (f) {<br />
+        f.actions = [{<br />
+            action: NEWSPRINT,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            width: (f.width != null) ? f.width : 1,<br />
+        }];<br />
+    },</p>
+<h3 id="method-notblue">Method: <code>notblue</code></h3>
+<p>Sets the input's blue channel values to zero.</p>
+<p>Creates an ActionObject for the <code>set-channel-to-level</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-notgreen">Method: <code>notgreen</code></h3>
+<p>Sets the input's green channel values to zero.</p>
+<p>Creates an ActionObject for the <code>set-channel-to-level</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-notred">Method: <code>notred</code></h3>
+<p>Sets the input's red channel values to zero.</p>
+<p>Creates an ActionObject for the <code>set-channel-to-level</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<p>// <strong>offset</strong> (new in v8.4.0) - moves the image in its entirety by the given offset<br />
+    offset: function (f) {<br />
+        f.actions = [{<br />
+            action: OFFSET,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            offsetRedX: (f.offsetX != null) ? f.offsetX : 0,<br />
+            offsetRedY: (f.offsetY != null) ? f.offsetY : 0,<br />
+            offsetGreenX: (f.offsetX != null) ? f.offsetX : 0,<br />
+            offsetGreenY: (f.offsetY != null) ? f.offsetY : 0,<br />
+            offsetBlueX: (f.offsetX != null) ? f.offsetX : 0,<br />
+            offsetBlueY: (f.offsetY != null) ? f.offsetY : 0,<br />
+            offsetAlphaX: (f.offsetX != null) ? f.offsetX : 0,<br />
+            offsetAlphaY: (f.offsetY != null) ? f.offsetY : 0,<br />
+        }];<br />
+    },</p>
+<p>// <strong>offsetChannels</strong> (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output<br />
+    offsetChannels: function (f) {<br />
+        f.actions = [{<br />
+            action: OFFSET,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            offsetRedX: (f.offsetRedX != null) ? f.offsetRedX : 0,<br />
+            offsetRedY: (f.offsetRedY != null) ? f.offsetRedY : 0,<br />
+            offsetGreenX: (f.offsetGreenX != null) ? f.offsetGreenX : 0,<br />
+            offsetGreenY: (f.offsetGreenY != null) ? f.offsetGreenY : 0,<br />
+            offsetBlueX: (f.offsetBlueX != null) ? f.offsetBlueX : 0,<br />
+            offsetBlueY: (f.offsetBlueY != null) ? f.offsetBlueY : 0,<br />
+            offsetAlphaX: (f.offsetAlphaX != null) ? f.offsetAlphaX : 0,<br />
+            offsetAlphaY: (f.offsetAlphaY != null) ? f.offsetAlphaY : 0,<br />
+        }];<br />
+    },</p>
+<p>// <strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles. This is a simplified version of the <code>tiles</code> filter<br />
+    pixelate: function (f) {<br />
+        f.actions = [{<br />
+            action: PIXELATE,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,<br />
+            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,<br />
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,<br />
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,<br />
+            includeRed: (f.includeRed != null) ? f.includeRed : true,<br />
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,<br />
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,<br />
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,<br />
+        }];<br />
+    },</p>
+<p>// <strong>randomNoise</strong> (new in v8.6.0) - creates a stippling effect across the image<br />
+    randomNoise: function (f) {</p>
+<pre><code>    const noiseType = (NOISE_VALUES.includes(f.noiseType)) ? f.noiseType : RANDOM;
+
+    f.actions = [{
+        action: RANDOM_NOISE,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        width: (f.width != null) ? f.width : 1,
+        height: (f.height != null) ? f.height : 1,
+        seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
+        noiseType,
+        level: (f.level != null) ? f.level : 0,
+        noWrap: (f.noWrap != null) ? f.noWrap : false,
+        includeRed: (f.includeRed != null) ? f.includeRed : true,
+        includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+        includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+        includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+        excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : true,
+    }];
+},</code></pre>
+<h3 id="method-red">Method: <code>red</code></h3>
+<p>Sets the input's blue and green channel values to zero</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<p>// <strong>reducePalette</strong> - reduce the number of colors in its palette<br />
+    reducePalette: function (f) {</p>
+<pre><code>    let palette = (f.palette != null) ? f.palette : BLACK_WHITE;
+
+    f.actions = [];
+
+    if (palette.substring) {
+
+        if (palette.includes(ARG_SPLITTER)) {
+
+            palette = palette.split(ARG_SPLITTER);
+            palette.forEach(p =&gt; p.trim());
+        }
+    }
+
+    // `useBluenoise` is deprecated
+    // + use `noiseType: 'bluenoise'` instead
+    let noiseType = (f.useBluenoise) ? BLUENOISE : f.noiseType || RANDOM;
+    if (!NOISE_VALUES.includes(noiseType)) noiseType = RANDOM;
+
+    f.actions.push({
+        action: REDUCE_PALETTE,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
+        minimumColorDistance: (f.minimumColorDistance != null) ? f.minimumColorDistance : 1000,
+        palette,
+        noiseType,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+    });
+},</code></pre>
+<p>// <strong>rotateHue</strong> - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value by given angle; convert back to RGB<br />
+    rotateHue: function (f) {<br />
+        f.actions = [{<br />
+            action: ROTATE_HUE,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            angle: (f.angle != null) ? f.angle : 0,<br />
+        }];<br />
+    },</p>
+<p>// <strong>saturation</strong> - alters the saturation level of the image<br />
+    saturation: function (f) {<br />
+        const level = (f.level != null) ? f.level : 1;</p>
+<pre><code>    f.actions = [{
+        action: MODULATE_CHANNELS,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        red: level,
+        green: level,
+        blue: level,
+        saturation: true,
+    }];
+},</code></pre>
+<p>// <strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more 'antique' version of the image<br />
+    sepia: function (f) {<br />
+        f.actions = [{<br />
+            action: TINT_CHANNELS,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            redInRed: 0.393,<br />
+            redInGreen: 0.349,<br />
+            redInBlue: 0.272,<br />
+            greenInRed: 0.769,<br />
+            greenInGreen: 0.686,<br />
+            greenInBlue: 0.534,<br />
+            blueInRed: 0.189,<br />
+            blueInGreen: 0.168,<br />
+            blueInBlue: 0.131,<br />
+        }];<br />
+    },</p>
+<h3 id="method-sharpen">Method: <code>sharpen</code></h3>
+<p>Applies a preset 3x3 sharpen matrix to the input.</p>
+<p>Creates an ActionObject for the <code>matrix</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-019.html">Filters-019</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<p>// <strong>swirl</strong> - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.<br />
+// + This filter can handle multiple swirls in a single pass<br />
+    swirl: function (f) {<br />
+        const startX = (f.startX != null) ? f.startX : PC50,<br />
+            startY = (f.startY != null) ? f.startY : PC50,<br />
+            innerRadius = (f.innerRadius != null) ? f.innerRadius : 0,<br />
+            outerRadius = (f.outerRadius != null) ? f.outerRadius : PC30,<br />
+            angle = (f.angle != null) ? f.angle : 0,<br />
+            easing = (f.easing != null) ? f.easing : LINEAR,<br />
+            staticSwirls = (f.staticSwirls != null) ? f.staticSwirls : [];</p>
+<pre><code>    const swirls = [...staticSwirls];
+    swirls.push([startX, startY, innerRadius, outerRadius, angle, easing]);
+
+    f.actions = [{
+        action: SWIRL,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        swirls,
+    }];
+},</code></pre>
+<p>// <strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color.<br />
+// + Since v8.7.0, this filter also accepts <code>lowColor</code> and <code>highColor</code> CSS color Strings in place of the <code>lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</code> values<br />
+    threshold: function (f) {<br />
+        let lowRed = (f.lowRed != null) ? f.lowRed : 0,<br />
+            lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,<br />
+            lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,<br />
+            lowAlpha = (f.lowAlpha != null) ? f.lowAlpha : 255,<br />
+            highRed = (f.highRed != null) ? f.highRed : 255,<br />
+            highGreen = (f.highGreen != null) ? f.highGreen : 255,<br />
+            highBlue = (f.highBlue != null) ? f.highBlue : 255,<br />
+            highAlpha = (f.highAlpha != null) ? f.highAlpha : 255;</p>
+<pre><code>    if (f.lowColor != null) {
+
+        [lowRed, lowGreen, lowBlue, lowAlpha] = colorEngine.extractRGBfromColor(f.lowColor);
+
+        lowAlpha = _round(lowAlpha * 255);
+
+        f.lowRed = lowRed;
+        f.lowGreen = lowGreen;
+        f.lowBlue = lowBlue;
+        f.lowAlpha = lowAlpha;
+
+        f.low = [lowRed, lowGreen, lowBlue, lowAlpha];
+
+        delete f.lowColor;
+    }
+
+    if (f.highColor != null) {
+
+        [highRed, highGreen, highBlue, highAlpha] = colorEngine.extractRGBfromColor(f.highColor);
+
+        highAlpha = _round(highAlpha * 255);
+
+        f.highRed = highRed;
+        f.highGreen = highGreen;
+        f.highBlue = highBlue;
+        f.highAlpha = highAlpha;
+
+        f.high = [highRed, highGreen, highBlue, highAlpha];
+
+        delete f.highColor;
+    }
+
+    const low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
+        high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
+
+    f.actions = [{
+        action: THRESHOLD,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        level: (f.level != null) ? f.level : 128,
+        red: (f.red != null) ? f.red : 128,
+        green: (f.green != null) ? f.green : 128,
+        blue: (f.blue != null) ? f.blue : 128,
+        alpha: (f.alpha != null) ? f.alpha : 128,
+        low,
+        high,
+        includeRed: (f.includeRed != null) ? f.includeRed : true,
+        includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+        includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+        includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+        useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
+    }];
+},</code></pre>
+<p>// <strong>tiles</strong> - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the <code>pixelate</code> filter<br />
+    tiles: function (f) {<br />
+        f.actions = [{<br />
+            action: TILES,<br />
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
+            opacity: (f.opacity != null) ? f.opacity : 1,<br />
+            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,<br />
+            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,<br />
+            tileRadius: (f.tileRadius != null) ? f.tileRadius : 1,<br />
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,<br />
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,<br />
+            angle: (f.angle != null) ? f.angle : 0,<br />
+            points: (f.points != null) ? f.points : RECT_GRID,<br />
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,<br />
+            includeRed: (f.includeRed != null) ? f.includeRed : true,<br />
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,<br />
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,<br />
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,<br />
+        }];<br />
+    },</p>
+<p>// <strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.<br />
+    tint: function (f) {</p>
+<pre><code>    let redInRed = (f.redInRed != null) ? f.redInRed : 1,
+        redInGreen = (f.redInGreen != null) ? f.redInGreen : 0,
+        redInBlue = (f.redInBlue != null) ? f.redInBlue : 0,
+        greenInRed = (f.greenInRed != null) ? f.greenInRed : 0,
+        greenInGreen = (f.greenInGreen != null) ? f.greenInGreen : 1,
+        greenInBlue = (f.greenInBlue != null) ? f.greenInBlue : 0,
+        blueInRed = (f.blueInRed != null) ? f.blueInRed : 0,
+        blueInGreen = (f.blueInGreen != null) ? f.blueInGreen : 0,
+        blueInBlue = (f.blueInBlue != null) ? f.blueInBlue : 1;
+
+    if (f.redColor != null) {
+
+        [redInRed, greenInRed, blueInRed] = colorEngine.extractRGBfromColor(f.redColor);
+
+        redInRed /= 255;
+        greenInRed /= 255;
+        blueInRed /= 255;
+
+        f.redInRed = redInRed;
+        f.greenInRed = greenInRed;
+        f.blueInRed = blueInRed;
+
+        delete f.redColor;
+    }
+
+    if (f.greenColor != null) {
+
+        [redInGreen, greenInGreen, blueInGreen] = colorEngine.extractRGBfromColor(f.greenColor);
+
+        redInGreen /= 255;
+        greenInGreen /= 255;
+        blueInGreen /= 255;
+
+        f.redInGreen = redInGreen;
+        f.greenInGreen = greenInGreen;
+        f.blueInGreen = blueInGreen;
+
+        delete f.greenColor;
+    }
+
+    if (f.blueColor != null) {
+
+        [redInBlue, greenInBlue, blueInBlue] = colorEngine.extractRGBfromColor(f.blueColor);
+
+        redInBlue /= 255;
+        greenInBlue /= 255;
+        blueInBlue /= 255;
+
+        f.redInBlue = redInBlue;
+        f.greenInBlue = greenInBlue;
+        f.blueInBlue = blueInBlue;
+
+        delete f.blueColor;
+    }
+
+    f.actions = [{
+        action: TINT_CHANNELS,
+        lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+        lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+        opacity: (f.opacity != null) ? f.opacity : 1,
+        redInRed,
+        redInGreen,
+        redInBlue,
+        greenInRed,
+        greenInGreen,
+        greenInBlue,
+        blueInRed,
+        blueInGreen,
+        blueInBlue,
+    }];
+},</code></pre>
+<h3 id="method-yellow">Method: <code>yellow</code></h3>
+<p>Sets the input's blue channel values to zero, and averages the remaining channel colors for each pixel</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h2 id="filter-engine-internal-processes-and-code-considerations">Filter engine internal processes and code considerations</h2>
+<p>[todo]</p>
+<h3 id="preparations-to-use-the-filter-engine">Preparations to use the filter engine</h3>
+<p>[todo]</p>
+<h4 id="protocol-to-apply-filters-to-entity-objects">Protocol to apply filters to entity objects</h4>
+<p>SC filters are applied to the display output of entity objects at the point where they are stamped onto their host Cell. This is achieved using the following protocol:</p>
+<ol>
+<li>Determine whether any filters need to be applied to the entity:<ul>
+<li>If no, use the entity's <code>regularStamp</code> functionality (not detailed below).</li>
+<li>If yes, use the entity's <code>filteredStamp</code> functionality.</li></ul></li>
+<li>If the entity has not been stamped before, or its <code>entity.dirtyFilters</code> flag is <code>true</code>, process the filter objects into the internal <code>entity.currentFilters</code> Array so they are ready for application.</li>
+<li>Request a <code>pool</code> Cell object, size it to match the host Cell's dimensions and <code>regularStamp</code> the entity onto it (ignoring the <code>entity.globalCompositeOperation</code> attribute).<ul>
+<li>If the <code>entity.isStencil</code> Boolean flag has been set to <code>true</code>, stamp the host Cell's current display over the entity (using <code>globalCompositeOperation: 'source-in'</code>).</li></ul></li>
+<li>Get the current image data from the <code>pool</code> Cell</li>
+<li>Preprocess the filter objects - specifically to retrieve data for any external images used by the filters.</li>
+<li>Invoke the filter engine's <code>filterEngine.action()</code> function, passing all the required data to it.</li>
+<li>Reset the <code>pool</code> Cell and stamp the filter engine's returned <code>imageData</code> data into it.</li>
+<li>If the <code>entity.stashOutput</code> Boolean flag has been set to <code>true</code>, stash the <code>pool</code> data, either in a DOM <code>&lt;img&gt;</code> element or as <code>imageData</code> assigned to the <code>entity.stashedImageData</code> attribute.</li>
+<li>Stamp the <code>pool</code> Cell onto the host Cell (taking into account the <code>entity.globalCompositeOperation</code> attribute).</li>
+<li>Release the <code>pool</code> Cell object.</li>
+</ol>
+<p>All entity objects, apart from the EnhancedLabel entity, share the above functionality, whose code can be found in the <a href="../source/mixin/entity.html">mixin/entity.js</a> file - specifically the <code>filteredStamp()</code> and <code>getCellCoverage()</code> functions.</p>
+<h4 id="protocol-to-apply-filters-to-group-objects">Protocol to apply filters to Group objects</h4>
+<p>[todo]</p>
+<h4 id="protocol-to-apply-filters-to-cell-objects">Protocol to apply filters to Cell objects</h4>
+<p>[todo]</p>
+<h4 id="protocol-to-apply-filters-to-enhancedlabel-entity-objects">Protocol to apply filters to EnhancedLabel entity objects</h4>
+<p>[todo]</p>
+<h3 id="resources-used-by-the-filter-engine">Resources used by the filter engine</h3>
+<p>[todo]</p>
+<h4 id="the-seeded-random-numbers-generator">The seeded random numbers generator</h4>
+<p>[todo]</p>
+<h4 id="noise-generators">Noise generators</h4>
+<p>[todo]</p>
+<h4 id="colors-and-gradients">Colors and gradients</h4>
+<p>[todo]</p>
+<h3 id="code-efficiency">Code efficiency</h3>
+<p>[todo]</p>
+<h4 id="external-caching-using-the-sc-workstore">External caching using the SC workstore</h4>
+<p>[todo]</p>
+<h4 id="filter-engine-internal-cache">Filter engine internal cache</h4>
+<p>[todo]</p>
+<h4 id="color-caches">Color caches</h4>
+<p>[todo]</p>
+<h3 id="protocol-for-processing-a-filter-request">Protocol for processing a filter request</h3>
+<p>[todo]</p>
+<p>The code associated with assigning and managing Filter objects on Cell, Group and entity objects, and applying filter effects to them, is spread across the repo as follows:</p>
+<ul>
+<li><a href="../source/factory/cell.html">factory/cell.js</a> - </li>
+<li><a href="../source/factory/enhanced-label.html">factory/enhanced-label.js</a> - </li>
+<li><a href="../source/factory/group.html">factory/group.js</a> - </li>
+</ul>
+<p>Two additional filter-related files also exist:</p>
+<ul>
+<li><a href="../source/factory/filter.html">factory/filter.js</a> - </li>
+<li><a href="../source/helper/filter-engine-bluenoise-data.html">helper/filter-engine-bluenoise-data.js</a> - </li>
+</ul>
+<p>Filter primitives with no or one filter primitive input can be linked together to a <strong>filter chain</strong>.</p>
     </main>
     
     <nav>
