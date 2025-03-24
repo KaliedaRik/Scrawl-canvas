@@ -489,7 +489,6 @@ Clamp each color channel to a range determined by a set of `low` and `high` chan
 
 Dev-users can also supply the reference colors as CSS-color-strings, in `lowColor` and `highColor` attributes.
 
-
 Creates an ActionObject for the `clamp-channels` primitive function.
 
 See test demo [Filters-020](../../demo/filters-020.html).
@@ -695,93 +694,95 @@ tolerance                   yes         0
 keepOnlyChangedAreas        yes         false
 ```
 
-flood
-Creates a uniform sheet of the required color, which can then be used by other filter actions
-// + Note that the `alpha` value is given in the range `0-255` (like the color channels), not `0-1` or `0%-100%` (as is expected in various CSS color String definitions)
-// + Since v8.7.0, this filter also accepts a `reference` color string in place of the `red, green, blue, alpha` values
-    flood: function (f) {
+### Method: `flood`
+Creates a uniform sheet of the required color, which can then be used by other filter actions. The color are set through the `red`, `green`, `blue` and `alpha` attributes; these attributes' values should be integer Numbers (between `0` and `255`). 
 
-        let red = (f.red != null) ? f.red : 0,
-            green = (f.green != null) ? f.green : 0,
-            blue = (f.blue != null) ? f.blue : 0,
-            alpha = (f.alpha != null) ? f.alpha : 255;
+Dev-users can also supply a `reference` color as a CSS-color-string.
 
-        const excludeAlpha = (f.excludeAlpha != null) ? f.excludeAlpha : false;
+The flood can be restricted to only apply to non-transparent input pixels using the `excludeAlpha` flag.
 
-        if (f.reference != null) {
+Creates an ActionObject for the `flood` primitive function.
 
-            [red, green, blue, alpha] = colorEngine.extractRGBfromColor(f.reference);
+See test demo [Filters-013](../../demo/filters-013.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
 
-            alpha = _round(alpha * 255);
+reference                   no          (pseudo-attribute)
+alpha                       yes         255
+blue                        yes         0
+green                       yes         0
+red                         yes         0
 
-            f.red = red;
-            f.green = green;
-            f.blue = blue;
-            f.alpha = alpha;
+excludeAlpha                yes         false
+```
 
-            delete f.reference;
-        }
+### Method: `gaussianBlur`
+Generates a [gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur) effect from the input. 
 
-        f.actions = [{
-            action: FLOOD,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            red,
-            green,
-            blue,
-            alpha,
-            excludeAlpha,
-        }];
-    },
+The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.
 
-// __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
-    gaussianBlur: function (f) {
-        if (f.radius != null) {
-            f.radiusHorizontal = f.radius;
-            f.radiusVertical = f.radius;
-            delete f.radius;
-        }
+Creates an ActionObject for the `gaussian-blur` primitive function.
 
-        f.actions = [{
-            action: GAUSSIAN_BLUR,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
-            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
-            radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
-        }];
-    },
+See test demo [Filters-034](../../demo/filters-034.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
 
-// __glitch__ - semi-randomly shift rows left/right
-    glitch: function (f) {
-        f.actions = [{
-            action: GLITCH,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
-            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
-            step: (f.step != null) ? f.step : 1,
-            offsetMin: (f.offsetMin != null) ? f.offsetMin : 0,
-            offsetMax: (f.offsetMax != null) ? f.offsetMax : 0,
-            offsetRedMin: (f.offsetRedMin != null) ? f.offsetRedMin : 0,
-            offsetRedMax: (f.offsetRedMax != null) ? f.offsetRedMax : 0,
-            offsetGreenMin: (f.offsetGreenMin != null) ? f.offsetGreenMin : 0,
-            offsetGreenMax: (f.offsetGreenMax != null) ? f.offsetGreenMax : 0,
-            offsetBlueMin: (f.offsetBlueMin != null) ? f.offsetBlueMin : 0,
-            offsetBlueMax: (f.offsetBlueMax != null) ? f.offsetBlueMax : 0,
-            offsetAlphaMin: (f.offsetAlphaMin != null) ? f.offsetAlphaMin : 0,
-            offsetAlphaMax: (f.offsetAlphaMax != null) ? f.offsetAlphaMax : 0,
-            transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
-            level: (f.level != null) ? f.level : 0,
-        }];
-    },
+excludeTransparentPixels    yes         false
+includeAlpha                yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+radius                      no          (pseudo-attribute)
+radiusHorizontal            yes         1
+radiusVertical              yes         1
+```
+
+### Method: `glitch`
+Generates a semi-random shift across the input's horizontal rows.
+
+The effect can be generated across channels, or applied to channels separately, through the `useMixedChannel` flag. 
+
+The `level` value (a float Number between `0` and `1`) determines the likliness of a glitch occurring in a row, while the `step` value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.
+
+The strength of the glitch is controlled by the various `offset` attributes.
+
+Creates an ActionObject for the `glitch` primitive function.
+
+See test demo [Filters-025](../../demo/filters-025.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+level                       yes         0
+seed                        yes         DEFAULT_SEED string
+step                        yes         1
+transparentEdges            yes         false
+
+offsetAlphaMax              yes         0
+offsetAlphaMin              yes         0
+offsetBlueMax               yes         0
+offsetBlueMin               yes         0
+offsetGreenMax              yes         0
+offsetGreenMin              yes         0
+offsetMax                   yes         0
+offsetMin                   yes         0
+offsetRedMax                yes         0
+offsetRedMin                yes         0
+
+useMixedChannel             yes         true
+```
 
 ### Method: `gray`
 Averages the input's color channel values for each pixel.
@@ -797,15 +798,19 @@ lineOut                     yes         ''
 opacity                     yes         1
 ```
 
-// __grayscale__ - produces a more realistic black-and-white photograph effect
-    grayscale: function (f) {
-        f.actions = [{
-            action: GRAYSCALE,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-        }];
-    },
+### Method: `grayscale`
+Averages the input's appropriately weighted color channel values for each pixel, to produce a more realistic black-and-white monochrome effect.
+
+Creates an ActionObject for the `grayscale` primitive function.
+
+See test demos [Filters-001](../../demo/filters-001.html) and [Filters-002](../../demo/filters-002.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+```
 
 ### Method: `green`
 Sets the input's red and blue channel values to zero.
@@ -821,34 +826,53 @@ lineOut                     yes         ''
 opacity                     yes         1
 ```
 
-// __image__ (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image
-    image: function (f) {
+### Method: `image`
+Load an image into the filter engine, where it can then be used by other filter actions. Useful for effects such as watermarking an image.
 
-        f.actions = [{
-            action: PROCESS_IMAGE,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            asset: (f.asset != null) ? f.asset : ZERO_STR,
-            width: (f.width != null) ? f.width : 1,
-            height: (f.height != null) ? f.height : 1,
-            copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
-            copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
-            copyX: (f.copyX != null) ? f.copyX : 0,
-            copyY: (f.copyY != null) ? f.copyY : 0,
-        }];
-    },
+The portion of the image to be imported into the filter engine can be controlled using the `copy` attributes. These attributes can be set in either absolute pixel values, or relative (to the image) 'string%' values.
 
-// __invert__ - inverts the colors in the image, producing an effect similar to a photograph negative
-    invert: function (f) {
-        f.actions = [{
-            action: INVERT_CHANNELS,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeGreen: true,
-            includeBlue: true,
-        }];
-    },
+The `asset` attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects.
+
+The `lineOut` attribute's value must be a (unique) string, which other primitive functions can use as their `lineIn` and `lineMix` values.
+
+Creates an ActionObject for the `process-image` primitive function.
+
+See test demos [Filters-101](../../demo/filters-101.html) and [Filters-102](../../demo/filters-102.html), which include image filters.
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineOut                     yes         ''
+
+asset                       yes         ''
+
+copyHeight                  yes         1
+copyWidth                   yes         1
+copyX                       yes         0
+copyY                       yes         0
+
+height                      yes         1
+width                       yes         1
+```
+
+### Method: `invert`
+Inverts the color channel values in the input (`0 > 255`, `200 > 55`, etc), producing an effect similar to a photograph negative. 
+
+Has no impact on the alpha channel.
+
+Creates an ActionObject for the `invert-channels` primitive function.
+
+See test demos [Filters-001](../../demo/filters-001.html) and [Filters-002](../../demo/filters-002.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+```
 
 ### Method: `magenta`
 Sets the input's green channel values to zero, and averages the remaining channel colors for each pixel
@@ -864,105 +888,164 @@ lineOut                     yes         ''
 opacity                     yes         1
 ```
 
-// __mapToGradient__ - produces a more realistic black-and-white photograph effect
-    mapToGradient: function (f) {
+### Method: `mapToGradient`
+Applies a gradient to a grayscaled input. 
 
-        if (f.gradient && f.gradient.substring) f.gradient = styles[f.gradient];
+The type of grayscale can be set using the `useNaturalGrayscale` flag. The grayscale is applied as part of the primative function and does not need to be created in a prior chained ActionObject.
 
-        f.actions = [{
-            action: MAP_TO_GRADIENT,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            useNaturalGrayscale: (f.useNaturalGrayscale != null) ? f.useNaturalGrayscale : false,
-            gradient: f.gradient || makeGradient(),
-        }];
-    },
+The `gradient` attribute can be a Gradient object, or that object's `name` attribute.
 
-// __matrix__ - applies a 3x3 convolution matrix, kernel or mask operation to the image
-    matrix: function (f) {
-        f.actions = [{
-            action: MATRIX,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            width: 3,
-            height: 3,
-            offsetX: 1,
-            offsetY: 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            weights: (f.weights != null) ? f.weights : [0,0,0,0,1,0,0,0,0],
-        }];
-    },
+Creates an ActionObject for the `map-to-gradient` primitive function.
 
-// __matrix5__ - applies a 5x5 convolution matrix, kernel or mask operation to the image
-    matrix5: function (f) {
-        f.actions = [{
-            action: MATRIX,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            width: 5,
-            height: 5,
-            offsetX: 2,
-            offsetY: 2,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-        }];
-    },
+See test demo [Filters-022](../../demo/filters-022.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
 
-// __modifyOk__ - (new in v8.14.0) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB
-    modifyOk: function (f) {
-        f.actions = [{
-            action: MODIFY_OK_CHANNELS,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            channelL: (f.channelL != null) ? f.channelL : 0,
-            channelA: (f.channelA != null) ? f.channelA : 0,
-            channelB: (f.channelB != null) ? f.channelB : 0,
-        }];
-    },
+useNaturalGrayscale         yes         false
+gradient                    yes         default Gradient object
+```
 
-// __modulateOk__ - (new in v8.14.0) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB
-    modulateOk: function (f) {
-        f.actions = [{
-            action: MODULATE_OK_CHANNELS,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            channelL: (f.channelL != null) ? f.channelL : 1,
-            channelA: (f.channelA != null) ? f.channelA : 1,
-            channelB: (f.channelB != null) ? f.channelB : 1,
-        }];
-    },
+### Method: `matrix`
+Applies a 3x3 [convolution matrix](https://en.wikipedia.org/wiki/Kernel_(image_processing)) (also known as a kernel, or mask) operation to the input.
 
-// __negative__ - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
-    negative: function (f) {
-        f.actions = [{
-            action: NEGATIVE,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-        }];
-    },
+The `weights` attribute should be an Array of length `9`.
 
-// __newsprint__ - Attempts to simulate a black-white dither effect similar to newsprint
-    newsprint: function (f) {
-        f.actions = [{
-            action: NEWSPRINT,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            width: (f.width != null) ? f.width : 1,
-        }];
-    },
+Individual channels can be excluded from the calculation.
+
+Creates an ActionObject for the `matrix` primitive function.
+
+See test demo [Filters-012](../../demo/filters-012.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+weights                     yes         [
+                                          0, 0, 0,
+                                          0, 1, 0,
+                                          0, 0, 0
+                                        ]
+```
+
+### Method: `matrix5`
+Applies a 5x5 [convolution matrix](https://en.wikipedia.org/wiki/Kernel_(image_processing)) (also known as a kernel, or mask) operation to the input.
+
+The `weights` attribute should be an Array of length `25`.
+
+Individual channels can be excluded from the calculation.
+
+Creates an ActionObject for the `matrix` primitive function.
+
+See test demo [Filters-012](../../demo/filters-012.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+weights                     yes         [
+                                          0, 0, 0, 0, 0, 
+                                          0, 0, 0, 0, 0, 
+                                          0, 0, 1, 0, 0,
+                                          0, 0, 0, 0, 0, 
+                                          0, 0, 0, 0, 0, 
+                                        ]
+```
+
+### Method: `modifyOk`
+For each pixel in the input:
++ Convert to OKLAB
++ Add a value to each of the OKLAB channels
++ Convert back to RGB
+
+Creates an ActionObject for the `modify-ok-channels` primitive function.
+
+See test demo [Filters-031](../../demo/filters-031.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+channelA                    yes         0
+channelB                    yes         0
+channelL                    yes         0
+```
+
+### Method: `modulateOk`
+For each pixel in the input:
++ Convert to OKLAB
++ Multiply a value to each of the OKLAB channels
++ Convert back to RGB
+
+Creates an ActionObject for the `modulate-ok-channels` primitive function.
+
+See test demo [Filters-032](../../demo/filters-032.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+channelA                    yes         0
+channelB                    yes         0
+channelL                    yes         0
+```
+
+### Method: `negative`
+For each pixel in the input:
++ Convert to OKLCH
++ Rotate hue value `180deg`
++ Subtract luminance from 1
++ Convert back to RGB
+
+Creates an ActionObject for the `negative` primitive function.
+
+See test demo [Filters-030](../../demo/filters-030.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+```
+
+### Method: `newsprint`
+Attempts to simulate a black-white dither effect similar to newsprint across the input.
+
+The `width` attribute defines the size of the blocks used in the filter.
+
+Creates an ActionObject for the `newsprint` primitive function.
+
+See test demo [Filters-016](../../demo/filters-016.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+width                       yes         1
+```
 
 ### Method: `notblue`
 Sets the input's blue channel values to zero.
@@ -1006,41 +1089,45 @@ lineOut                     yes         ''
 opacity                     yes         1
 ```
 
-// __offset__ (new in v8.4.0) - moves the image in its entirety by the given offset
-    offset: function (f) {
-        f.actions = [{
-            action: OFFSET,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            offsetRedX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetRedY: (f.offsetY != null) ? f.offsetY : 0,
-            offsetGreenX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetGreenY: (f.offsetY != null) ? f.offsetY : 0,
-            offsetBlueX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetBlueY: (f.offsetY != null) ? f.offsetY : 0,
-            offsetAlphaX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetAlphaY: (f.offsetY != null) ? f.offsetY : 0,
-        }];
-    },
+### Method: `offset`
+Moves the input in its entirety by the given offsets.
 
-// __offsetChannels__ (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output
-    offsetChannels: function (f) {
-        f.actions = [{
-            action: OFFSET,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            offsetRedX: (f.offsetRedX != null) ? f.offsetRedX : 0,
-            offsetRedY: (f.offsetRedY != null) ? f.offsetRedY : 0,
-            offsetGreenX: (f.offsetGreenX != null) ? f.offsetGreenX : 0,
-            offsetGreenY: (f.offsetGreenY != null) ? f.offsetGreenY : 0,
-            offsetBlueX: (f.offsetBlueX != null) ? f.offsetBlueX : 0,
-            offsetBlueY: (f.offsetBlueY != null) ? f.offsetBlueY : 0,
-            offsetAlphaX: (f.offsetAlphaX != null) ? f.offsetAlphaX : 0,
-            offsetAlphaY: (f.offsetAlphaY != null) ? f.offsetAlphaY : 0,
-        }];
-    },
+Creates an ActionObject for the `offset` primitive function.
+
+See test demo [Filters-035](../../demo/filters-035.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+offsetX                     yes         0
+offsetY                     yes         0
+```
+
+### Method: offsetChannels
+Moves each channel input by an offset set for that channel. Can create a crude stereoscopic output.
+
+Creates an ActionObject for the `offset` primitive function.
+
+See test demo [Filters-036](../../demo/filters-036.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+offsetAlphaX                yes         0
+offsetAlphaY                yes         0
+offsetBlueX                 yes         0
+offsetBlueY                 yes         0
+offsetGreenX                yes         0
+offsetGreenY                yes         0
+offsetRedX                  yes         0
+offsetRedY                  yes         0
+```
 
 // __pixelate__ - averages the colors in a block to produce a series of obscuring tiles. This is a simplified version of the `tiles` filter
     pixelate: function (f) {

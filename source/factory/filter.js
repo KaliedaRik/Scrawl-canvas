@@ -1010,7 +1010,7 @@ const setActionsArray = {
         }];
     },
 
-// __mapToGradient__ - produces a more realistic black-and-white photograph effect
+// __mapToGradient__ - applies a gradient to a grayscaled input
     mapToGradient: function (f) {
 
         if (f.gradient && f.gradient.substring) f.gradient = styles[f.gradient];

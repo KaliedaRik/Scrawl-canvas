@@ -25,13 +25,16 @@ addCheckerboardBackground(scrawl, canvas, namespace);
 
 
 // Create the filter
-const glitch = scrawl.makeFilter({
+const offset = scrawl.makeFilter({
 
-    name: name('glitch'),
-    method: 'glitch',
-    level: 0.2,
-    offsetMin: -10,
-    offsetMax: 10,
+    name: name('offset'),
+    method: 'offsetChannels',
+    offsetRedX: -20,
+    offsetRedY: -20,
+    offsetGreenX: 20,
+    offsetGreenY: 20,
+    offsetBlueX: -20,
+    offsetBlueY: 20,
 });
 
 
@@ -43,7 +46,7 @@ const piccy = scrawl.makePicture({
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
 
-    filters: [name('glitch')],
+    filters: [name('offset')],
 });
 
 
@@ -52,12 +55,10 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Level: ${dom.level.value}
-    Step: ${dom.step.value}
-    Mixed offset - min: ${dom.offsetMin.value}; max ${dom.offsetMax.value}
-    Red offset - min: ${dom.offsetRedMin.value}; max ${dom.offsetRedMax.value}
-    Green offset - min: ${dom.offsetGreenMin.value}; max ${dom.offsetGreenMax.value}
-    Blue offset - min: ${dom.offsetBlueMin.value}; max ${dom.offsetBlueMax.value}
+    Red offset - X: ${dom.offsetRedX.value}; Y ${dom.offsetRedY.value}
+    Green offset - X: ${dom.offsetGreenX.value}; Y ${dom.offsetGreenY.value}
+    Blue offset - X: ${dom.offsetBlueX.value}; Y ${dom.offsetBlueY.value}
+    Alpha offset - X: ${dom.offsetAlphaX.value}; Y ${dom.offsetAlphaY.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -74,21 +75,15 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = initializeDomInputs([
-    ['input', 'level', '0.2'],
-    ['input', 'step', '1'],
-    ['input', 'offsetMin', '-10'],
-    ['input', 'offsetMax', '10'],
-    ['input', 'offsetRedMin', '0'],
-    ['input', 'offsetRedMax', '0'],
-    ['input', 'offsetGreenMin', '0'],
-    ['input', 'offsetGreenMax', '0'],
-    ['input', 'offsetBlueMin', '0'],
-    ['input', 'offsetBlueMax', '0'],
-    ['input', 'offsetAlphaMin', '0'],
-    ['input', 'offsetAlphaMax', '0'],
+    ['input', 'offsetRedX', '-20'],
+    ['input', 'offsetRedY', '-20'],
+    ['input', 'offsetGreenX', '20'],
+    ['input', 'offsetGreenY', '20'],
+    ['input', 'offsetBlueX', '-20'],
+    ['input', 'offsetBlueY', '20'],
+    ['input', 'offsetAlphaX', '0'],
+    ['input', 'offsetAlphaY', '0'],
     ['input', 'opacity', '1'],
-    ['select', 'useMixedChannel', 1],
-    ['select', 'transparentEdges', 0],
 ]);
 
 
@@ -98,7 +93,7 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: glitch,
+    target: offset,
 
     useNativeListener: true,
     preventDefault: true,
@@ -106,18 +101,14 @@ scrawl.makeUpdater({
     updates: {
 
         opacity: ['opacity', 'float'],
-        level: ['level', 'float'],
-        step: ['step', 'round'],
-        offsetMin: ['offsetMin', 'round'],
-        offsetMax: ['offsetMax', 'round'],
-        offsetRedMin: ['offsetRedMin', 'round'],
-        offsetRedMax: ['offsetRedMax', 'round'],
-        offsetGreenMin: ['offsetGreenMin', 'round'],
-        offsetGreenMax: ['offsetGreenMax', 'round'],
-        offsetBlueMin: ['offsetBlueMin', 'round'],
-        offsetBlueMax: ['offsetBlueMax', 'round'],
-        useMixedChannel: ['useMixedChannel', 'boolean'],
-        transparentEdges: ['transparentEdges', 'boolean'],
+        offsetRedX: ['offsetRedX', 'round'],
+        offsetRedY: ['offsetRedY', 'round'],
+        offsetGreenX: ['offsetGreenX', 'round'],
+        offsetGreenY: ['offsetGreenY', 'round'],
+        offsetBlueX: ['offsetBlueX', 'round'],
+        offsetBlueY: ['offsetBlueY', 'round'],
+        offsetAlphaX: ['offsetAlphaX', 'round'],
+        offsetAlphaY: ['offsetAlphaY', 'round'],
     },
 });
 
