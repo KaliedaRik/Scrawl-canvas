@@ -546,61 +546,45 @@ The channelX and channelY attribute permitted values are:
 lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1</code></pre>
-<p>// <strong>emboss</strong> (new in v8.4.0) - outputs a black-gray-red emboss effect<br />
-    emboss: function (f) {<br />
-        const actions = [];<br />
-        if (f.useNaturalGrayscale) {<br />
-            actions.push({<br />
-                action: GRAYSCALE,<br />
-                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
-                lineOut: EMBOSS_WORK,<br />
-            });<br />
-        }<br />
-        else {<br />
-            actions.push({<br />
-                action: AVERAGE_CHANNELS,<br />
-                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,<br />
-                lineOut: EMBOSS_WORK,<br />
-                includeRed: true,<br />
-                includeGreen: true,<br />
-                includeBlue: true,<br />
-            });<br />
-        }<br />
-        if (f.clamp) {<br />
-            actions.push({<br />
-                action: CLAMP_CHANNELS,<br />
-                lineIn: EMBOSS_WORK,<br />
-                lineOut: EMBOSS_WORK,<br />
-                lowRed: 0 + f.clamp,<br />
-                lowGreen: 0 + f.clamp,<br />
-                lowBlue: 0 + f.clamp,<br />
-                highRed: 255 - f.clamp,<br />
-                highGreen: 255 - f.clamp,<br />
-                highBlue: 255 - f.clamp,<br />
-            });<br />
-        }<br />
-        if (f.smoothing) {<br />
-            actions.push({<br />
-                action: GAUSSIAN_BLUR,<br />
-                lineIn: EMBOSS_WORK,<br />
-                lineOut: EMBOSS_WORK,<br />
-                radius: f.smoothing,<br />
-            });<br />
-        }<br />
-        actions.push({<br />
-            action: EMBOSS,<br />
-            lineIn: EMBOSS_WORK,<br />
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,<br />
-            opacity: (f.opacity != null) ? f.opacity : 1,<br />
-            angle: (f.angle != null) ? f.angle : 0,<br />
-            strength: (f.strength != null) ? f.strength : 1,<br />
-            tolerance: (f.tolerance != null) ? f.tolerance : 0,<br />
-            keepOnlyChangedAreas: (f.keepOnlyChangedAreas != null) ? f.keepOnlyChangedAreas : false,<br />
-            postProcessResults: (f.postProcessResults != null) ? f.postProcessResults : true,<br />
-        });<br />
-        f.actions = actions;<br />
-    },</p>
-<p>// <strong>flood</strong> (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions<br />
+<h3 id="method-emboss">Method: <code>emboss</code></h3>
+<p>Outputs an emboss effect across the input.</p>
+<p>This method creates a chain of FilterAction objects, the composition of which can be controlled by a set of flags supplied by the dev-user:</p>
+<ul>
+<li><code>useNaturalGrayscale</code> Boolean - if <code>true</code> the filter will start with a <code>grayscale</code> pass; default is to use an <code>average-channels</code> pass.</li>
+<li><code>clamp</code> positive integer Number - clamps each color channel by the given value, using a <code>clampChannels</code> pass; pushes channel values towards a value of 127. Default is <code>0</code> (no pass).</li>
+<li><code>smoothing</code> positive float Number - adds a <code>gaussianBlur</code> pass with the attribute's value acting as the radius. Default is <code>0</code> (no pass).</li>
+</ul>
+<p>The final FilterAction object added to the chain performs an <code>emboss</code> pass on what has gone before. This filter primative function, which calculates and applies a 3x3 convolution matrix to the image data, accepts a number of attributes:</p>
+<ul>
+<li><code>angle</code> float Number (measured in degrees) - contributes to the weights used in the matrix</li>
+<li><code>strength</code> float Number - contributes to the weights used in the matrix</li>
+<li><code>postProcessResults</code> Boolean - if set to <code>true</code>, extra work happens after the matrix pass completes to either smooth pixel channels towards <code>127</code>, taking into account a <code>tolerance</code> value, or alternatively make qualifying pixels transparent</li>
+<li><code>tolerance</code> positive float Number - only used during post-processing</li>
+<li><code>keepOnlyChangedAreas</code> Boolean - determines whether, during post-processing, pixels will be smoothed towards 127, or set to transparent.</li>
+</ul>
+<p>Creates a chain of primitive function ActionObjects as follows:</p>
+<ul>
+<li><code>grayscale</code> | <code>average-channels</code> &gt; (<code>clamp</code>) &gt; (<code>gaussianBlur</code>) &gt; <code>emboss</code></li>
+</ul>
+<p>See test demo <a href="../../demo/filters-018.html">Filters-018</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+useNaturalGrayscale         yes         false
+clamp                       yes         0
+smoothing                   yes         0
+
+angle                       yes         0
+strength                    yes         1    
+
+postProcessResults          yes         false
+tolerance                   yes         0
+keepOnlyChangedAreas        yes         false</code></pre>
+<p>flood<br />
+Creates a uniform sheet of the required color, which can then be used by other filter actions<br />
 // + Note that the <code>alpha</code> value is given in the range <code>0-255</code> (like the color channels), not <code>0-1</code> or <code>0%-100%</code> (as is expected in various CSS color String definitions)<br />
 // + Since v8.7.0, this filter also accepts a <code>reference</code> color string in place of the <code>red, green, blue, alpha</code> values<br />
     flood: function (f) {</p>

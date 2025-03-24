@@ -1435,6 +1435,7 @@ P.getCellData = function (opaque = false) {
 
             coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
 
+            // We want angle `0deg` to point north, to the top of the screen
             let angle = 1 - ((_atan2(coord[1], coord[0]) / _piDouble) + 0.5);
             if (angle > 0.5) angle -= 0.5;
             else angle += 0.5;
@@ -1464,6 +1465,8 @@ P.getCellData = function (opaque = false) {
     }
 };
 
+const pixelCleaner = new Uint8ClampedArray(1);
+
 P.paintCellData = function (item = Ωempty) {
 
     const { iData, pixelState} = item;
@@ -1475,19 +1478,11 @@ P.paintCellData = function (item = Ωempty) {
         pixelState.forEach(p => {
 
             const {indexR, indexG, indexB, indexA} = p;
-            let {red, green, blue, alpha} = p;
 
-            if (red < 0) red = 0;
-            else if (red > 255) red = 255;
-
-            if (green < 0) green = 0;
-            else if (green > 255) green = 255;
-
-            if (blue < 0) blue = 0;
-            else if (blue > 255) blue = 255;
-
-            if (alpha < 0) alpha = 0;
-            else if (alpha > 255) alpha = 255;
+            const red = pixelCleaner[0] = p.red;
+            const green = pixelCleaner[0] = p.green;
+            const blue = pixelCleaner[0] = p.blue;
+            const alpha = pixelCleaner[0] = p.alpha;
 
             p.red = red;
             p.green = green;

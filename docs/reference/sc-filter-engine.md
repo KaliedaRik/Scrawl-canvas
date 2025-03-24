@@ -657,62 +657,46 @@ lineOut                     yes         ''
 opacity                     yes         1
 ```
 
-// __emboss__ (new in v8.4.0) - outputs a black-gray-red emboss effect
-    emboss: function (f) {
-        const actions = [];
-        if (f.useNaturalGrayscale) {
-            actions.push({
-                action: GRAYSCALE,
-                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-                lineOut: EMBOSS_WORK,
-            });
-        }
-        else {
-            actions.push({
-                action: AVERAGE_CHANNELS,
-                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-                lineOut: EMBOSS_WORK,
-                includeRed: true,
-                includeGreen: true,
-                includeBlue: true,
-            });
-        }
-        if (f.clamp) {
-            actions.push({
-                action: CLAMP_CHANNELS,
-                lineIn: EMBOSS_WORK,
-                lineOut: EMBOSS_WORK,
-                lowRed: 0 + f.clamp,
-                lowGreen: 0 + f.clamp,
-                lowBlue: 0 + f.clamp,
-                highRed: 255 - f.clamp,
-                highGreen: 255 - f.clamp,
-                highBlue: 255 - f.clamp,
-            });
-        }
-        if (f.smoothing) {
-            actions.push({
-                action: GAUSSIAN_BLUR,
-                lineIn: EMBOSS_WORK,
-                lineOut: EMBOSS_WORK,
-                radius: f.smoothing,
-            });
-        }
-        actions.push({
-            action: EMBOSS,
-            lineIn: EMBOSS_WORK,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            angle: (f.angle != null) ? f.angle : 0,
-            strength: (f.strength != null) ? f.strength : 1,
-            tolerance: (f.tolerance != null) ? f.tolerance : 0,
-            keepOnlyChangedAreas: (f.keepOnlyChangedAreas != null) ? f.keepOnlyChangedAreas : false,
-            postProcessResults: (f.postProcessResults != null) ? f.postProcessResults : true,
-        });
-        f.actions = actions;
-    },
+### Method: `emboss`
+Outputs an emboss effect across the input.
 
-// __flood__ (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions
+This method creates a chain of FilterAction objects, the composition of which can be controlled by a set of flags supplied by the dev-user:
++ `useNaturalGrayscale` Boolean - if `true` the filter will start with a `grayscale` pass; default is to use an `average-channels` pass.
++ `clamp` positive integer Number - clamps each color channel by the given value, using a `clampChannels` pass; pushes channel values towards a value of 127. Default is `0` (no pass).
++ `smoothing` positive float Number - adds a `gaussianBlur` pass with the attribute's value acting as the radius. Default is `0` (no pass).
+
+The final FilterAction object added to the chain performs an `emboss` pass on what has gone before. This filter primative function, which calculates and applies a 3x3 convolution matrix to the image data, accepts a number of attributes:
++ `angle` float Number (measured in degrees) - contributes to the weights used in the matrix
++ `strength` float Number - contributes to the weights used in the matrix
++ `postProcessResults` Boolean - if set to `true`, extra work happens after the matrix pass completes to either smooth pixel channels towards `127`, taking into account a `tolerance` value, or alternatively make qualifying pixels transparent
++ `tolerance` positive float Number - only used during post-processing
++ `keepOnlyChangedAreas` Boolean - determines whether, during post-processing, pixels will be smoothed towards 127, or set to transparent.
+
+Creates a chain of primitive function ActionObjects as follows:
++ `grayscale` \| `average-channels` > (`clamp`) > (`gaussianBlur`) > `emboss`
+
+See test demo [Filters-018](../../demo/filters-018.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+useNaturalGrayscale         yes         false
+clamp                       yes         0
+smoothing                   yes         0
+
+angle                       yes         0
+strength                    yes         1    
+
+postProcessResults          yes         false
+tolerance                   yes         0
+keepOnlyChangedAreas        yes         false
+```
+
+flood
+Creates a uniform sheet of the required color, which can then be used by other filter actions
 // + Note that the `alpha` value is given in the range `0-255` (like the color channels), not `0-1` or `0%-100%` (as is expected in various CSS color String definitions)
 // + Since v8.7.0, this filter also accepts a `reference` color string in place of the `red, green, blue, alpha` values
     flood: function (f) {
