@@ -402,221 +402,362 @@ Default object
 ```
 
 ### Action: `colors-to-alpha`
-Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
-    [COLORS_TO_ALPHA]: function (requirements) {
+Produces a [chroma key compositing effect](https://en.wikipedia.org/wiki/Chroma_key) across the input.
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the `red`, `green` and `blue` arguments. These attributes' values should be integer Numbers (between `0` and `255`).
 
-        const {
-            opacity = 1,
-            red = 0,
-            green = 255,
-            blue = 0,
-            opaqueAt = 1,
-            transparentAt = 0,
-            lineOut,
-        } = requirements;
+The sensitivity of the effect can be manipulated using the `transparentAt` and `opaqueAt` attribute values, both of which lie in the range `0-1`.
 
+Used by factory function method: `chromakey`.
+
+See test demo [Filters-011](../../demo/filters-011.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  blue: 0,
+  green: 255,
+  red: 0,
+
+  transparentAt: 0,
+  opaqueAt: 1,
+}
+```
 
 ### Action: `compose`
-Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
-    [COMPOSE]: function (requirements) {
+Perform a Porter-Duff compositing operation on two inputs - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators) for details.
 
+Note that the `lineMix` input - which MUST be specified - can be offset using the `offsetX` and `offsetY` attributes.
 
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
+Used by factory function method: `compose`.
 
-        const {
-            opacity = 1,
-            compose = ZERO_STR,
-            offsetX = 0,
-            offsetY = 0,
-            lineOut,
-        } = requirements;
+See test demo [Filters-101](../../demo/filters-101.html).
+```
+Default object
+{
+  lineIn: '',
+  lineMix: '',
+  lineOut: '',
+  opacity: 1,
 
+  compose: 'normal',
+  offsetX: 0,
+  offsetY: 0,
+}
+
+The compose attribute permitted values are:
+  'destination-only'      'source-only'           'clear'
+  'destination-over'      'source-over'           'xor'
+  'destination-in'        'source-in'             'normal'
+  'destination-out'       'source-out'
+  'destination-atop'      'source-atop'
+```
 
 ### Action: `corrode`
-Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
-    [CORRODE]: function (requirements) {
+Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG (`<feMorphology>`)[https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology] filter primative.
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
 
-        const {
-            opacity = 1,
-            includeRed = false,
-            includeGreen = false,
-            includeBlue = false,
-            includeAlpha = true,
-            operation = MEAN,
-            lineOut,
-        } = requirements;
+The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the `operation` attribute.
 
+Channels can be selected for inclusion in the calculation by setting the various `include` flags.
+
+Used by factory function method: `corrode`.
+
+See test demo [Filters-021](../../demo/filters-021.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeAlpha: true,
+  includeBlue: false,
+  includeGreen: false,
+  includeRed: false,
+
+  height: 3,
+  offsetX: 1,
+  offsetY: 1,
+  width: 3,
+
+  operation: 'mean',
+}
+
+The operation attribute permitted values are:
+  'lowest'    'highest'   'mean'      'median'
+```
 
 ### Action: `displace`
-Shift pixels around the image, based on the values supplied in a displacement image
-    [DISPLACE]: function (requirements) {
+Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primative.
 
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
+Note that the `lineMix` input - which MUST be specified - can be offset using the `offsetX` and `offsetY` attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller - hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate
 
-        const {
-            opacity = 1,
-            channelX = RED,
-            channelY = GREEN,
-            scaleX = 1,
-            scaleY = 1,
-            offsetX = 0,
-            offsetY = 0,
-            transparentEdges = false,
-            lineOut,
-        } = requirements;
+As for the SVG filter primative, translations in the `x` and `y` axes are tied to the pixel values in a given color channel. These pixel values can be scaled.
+
+When a pixel moves it can leave a copy of itself behind in case another pixel doesn't replace itself. If this behaviour is not wanted it can be switched off using the `transparentEdges` flag.
+
+Used by factory function method: `displace`.
+
+See test demo [Filters-017](../../demo/filters-017.html).
+```
+Default object
+{
+  lineIn: '',
+  lineMix: '',
+  lineOut: '',
+  opacity: 1,
+
+  channelX: 'red',
+  channelY: 'green',
+  offsetX: 0,
+  offsetY: 0,
+  scaleX: 1,
+  scaleY: 1,
+  transparentEdges: false,
+}
+
+The channelX and channelY attribute permitted values are:
+  'red'       'green'     'blue'      'alpha'
+```
 
 ### Action: `emboss`
-A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
-    [EMBOSS]: function (requirements) {
+Performs a [directional difference filter](https://en.wikipedia.org/wiki/Image_embossing) across the input, using a `3x3` weighted matrix.
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+The `angle` (measured in degrees) and `strength` attributes contribute to the weights used in the matrix.
 
-        const {
-            opacity = 1,
-            tolerance = 0,
-            keepOnlyChangedAreas = false,
-            postProcessResults = false,
-            lineOut,
-        } = requirements;
+The function also handles some post-processing effects, controlled by the `postProcessResults` and `keepOnlyChangedAreas` flags, and the `tolerance` positive float Number attribute..
 
+Used as the final step by factory function method: `emboss`.
+
+See test demo [Filters-018](../../demo/filters-018.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  angle: 0,
+  strength: 1,
+
+  keepOnlyChangedAreas: false,
+  postProcessResults: false,
+  tolerance: 0,
+}
+```
 
 ### Action: `flood`
-Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
-    [FLOOD]: function (requirements) {
+Creates a uniform sheet of the required color, which can then be used by other filter actions. 
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+The color are set through the `red`, `green`, `blue` and `alpha` attributes; these attribute values should be integer Numbers (between `0` and `255`). 
 
-        const {
-            opacity = 1,
-            red = 0,
-            green = 0,
-            blue = 0,
-            alpha = 255,
-            excludeAlpha = false,
-            lineOut,
-        } = requirements;
+The flood can be restricted to only apply to non-transparent input pixels using the `excludeAlpha` flag.
+
+Used by factory function method: `flood`.
+
+See test demo [Filters-013](../../demo/filters-013.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  alpha: 255,
+  blue: 0,
+  green: 0,
+  red: 0,
+
+  excludeAlpha: false,
+}
+```
 
 ### Action: `gaussian-blur`
-from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
-    [GAUSSIAN_BLUR]: function (requirements) {
+Generates a [gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur) effect from the input. 
 
+Note that this code is not original. It has been adapted from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code last accessed 1 June 2021).
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.
 
-        const {
-            opacity = 1,
-            radiusHorizontal = 1,
-            radiusVertical = 1,
-            includeRed = true,
-            includeGreen = true,
-            includeBlue = true,
-            includeAlpha = true,
-            excludeTransparentPixels = false,
-            lineOut,
-        } = requirements;
+Used by factory function method: `gaussianBlur`.
 
+See test demo [Filters-034](../../demo/filters-034.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  excludeTransparentPixels: false,
+  includeAlpha: true,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+
+  radiusHorizontal: 1,
+  radiusVertical: 1,
+}
+```
 
 ### Action: `glitch`
-Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
-    [GLITCH]: function (requirements) {
+Generates a semi-random shift across the input's horizontal rows.
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+The effect can be generated across channels, or applied to channels separately, through the `useMixedChannel` flag. 
 
-        const {
-            opacity = 1,
-            useMixedChannel = true,
-            seed = DEFAULT_SEED,
-            level = 0,
-            offsetMin = 0,
-            offsetMax = 0,
-            offsetRedMin = 0,
-            offsetRedMax = 0,
-            offsetGreenMin = 0,
-            offsetGreenMax = 0,
-            offsetBlueMin = 0,
-            offsetBlueMax = 0,
-            offsetAlphaMin = 0,
-            offsetAlphaMax = 0,
-            transparentEdges = false,
-            lineOut,
-        } = requirements;
+The `level` value (a float Number between `0` and `1`) determines the likliness of a glitch occurring in a row, while the `step` value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.
 
+The strength of the glitch is controlled by the various `offset` attributes.
+
+Used by factory function method: `glitch`.
+
+See test demo [Filters-025](../../demo/filters-025.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  level: 0,
+  seed: DEFAULT_SEED,
+  step: 1,
+  transparentEdges: false,
+
+  useMixedChannel: true,
+  offsetMax: 0,
+  offsetMin: 0,
+
+  offsetAlphaMax: 0,
+  offsetAlphaMin: 0,
+  offsetBlueMax: 0,
+  offsetBlueMin: 0,
+  offsetGreenMax: 0,
+  offsetGreenMin: 0,
+  offsetRedMax: 0,
+  offsetRedMin: 0,
+}
+```
 
 ### Action: `grayscale`
-For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
-    [GRAYSCALE]: function (requirements) {
+Averages the input's appropriately weighted color channel values for each pixel, to produce a more realistic black-and-white monochrome effect.
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+Used by factory function methods: `emboss`, `grayscale`.
 
-        const {
-            opacity = 1,
-            lineOut,
-        } = requirements;
+See test demos [Filters-001](../../demo/filters-001.html) and [Filters-002](../../demo/filters-002.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}
+```
 
 ### Action: `invert-channels`
-For each pixel, subtracts its current channel values - when included - from 255.
-    [INVERT_CHANNELS]: function (requirements) {
+Inverts the color channel values in the input (`0 > 255`, `200 > 55`, etc), producing an effect similar to a photograph negative. 
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+Color channels can be excluded from the calculation using the `include` flags. Has no impact on the alpha channel.
 
-        const {
-            opacity = 1,
-            includeRed = true,
-            includeGreen = true,
-            includeBlue = true,
-            includeAlpha = false,
-            lineOut,
-        } = requirements;
+Used by factory function method: `invert`.
 
+See test demos [Filters-001](../../demo/filters-001.html) and [Filters-002](../../demo/filters-002.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}
+```
 
 ### Action: `lock-channels-to-levels`
-Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
-    [LOCK_CHANNELS_TO_LEVELS]: function (requirements) {
+Produces a [posterization effect](https://en.wikipedia.org/wiki/Posterization) on the input. 
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+Takes in four arguments - `red`, `green`, `blue` and `alpha` - each of which is an Array of zero or more integer Numbers (between 0 and 255). 
 
-        const {
-            opacity = 1,
-            red = [0],
-            green = [0],
-            blue = [0],
-            alpha = [255],
-            lineOut,
-        } = requirements;
+The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value
+
+Used by factory function method: `channelLevels`.
+
+See test demo [Filters-006](../../demo/filters-006.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  alpha: [255],
+  blue: [0],
+  green: [0],
+  red: [0],
+}
+```
 
 ### Action: `map-to-gradient`
-maps the colors in the supplied (complex) gradient to a grayscaled input.
-    [MAP_TO_GRADIENT]: function (requirements) {
+Applies a gradient to a grayscaled input. 
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+The type of grayscale can be set using the `useNaturalGrayscale` flag. The grayscale is applied as part of the primative function and does not need to be created in a prior chained ActionObject.
 
-        const {
-            opacity = 1,
-            useNaturalGrayscale = false,
-            gradient = false,
-            lineOut,
-        } = requirements;
+The `gradient` attribute can be a Gradient object, or that object's `name` attribute.
+
+Used by factory function method: `mapToGradient`.
+
+See test demo [Filters-022](../../demo/filters-022.html)
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  useNaturalGrayscale: false,
+  gradient: default Gradient object,
+}
+```
 
 ### Action: `matrix`
-Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
-    [MATRIX]: function (requirements) {
+Applies a [convolution matrix](https://en.wikipedia.org/wiki/Kernel_(image_processing)) (also known as a kernel, or mask) operation to the input.
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+The matrix dimensions must be set using the `width` and `height` attributes, and the weights for the matrix supplied in the `weights` attribute's Array. The length of the `weights` array must equal `width x height`.
 
-        const {
-            opacity = 1,
-            includeRed = true,
-            includeGreen = true,
-            includeBlue = true,
-            includeAlpha = false,
-            offsetX = 1,
-            offsetY = 1,
-            lineOut,
-        } = requirements;
+The matrix does not need to be centered. Use the `offset` attributes to define the position of the home pixel within the matrix grid.
+
+Individual channels can be excluded from the calculation.
+
+Used by factory function methods: `edgeDetect`, `matrix`, `matrix5`, `sharpen`.
+
+See test demo [Filters-012](../../demo/filters-012.html)
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  height: 3,
+  offsetY: 1,
+  offsetX: 1,
+  width: 3,
+
+  weights: [],
+
+  includeAlpha: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}
+```
 
 ### Action: `modify-ok-channels`
 Adds a value to each of the OKLAB channels. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
@@ -1109,7 +1250,7 @@ lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1
 
-alpha                       yes         [0]
+alpha                       yes         [255]
 blue                        yes         [0]
 green                       yes         [0]
 red                         yes         [0]
@@ -1602,7 +1743,7 @@ width                       yes         1
 ### Method: `invert`
 Inverts the color channel values in the input (`0 > 255`, `200 > 55`, etc), producing an effect similar to a photograph negative. 
 
-Has no impact on the alpha channel.
+Color channels can be excluded from the calculation using the `include` flags. Has no impact on the alpha channel.
 
 Creates an ActionObject for the `invert-channels` primitive function.
 
