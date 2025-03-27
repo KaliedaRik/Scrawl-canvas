@@ -629,171 +629,263 @@ The channelX and channelY attribute permitted values are:
   includeRed: true,
 }</code></pre>
 <h3 id="action-modify-ok-channels">Action: <code>modify-ok-channels</code></h3>
-<p>Adds a value to each of the OKLAB channels. Note that: the <code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white); the <code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red); the <code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow).<br />
-    [MODIFY_OK_CHANNELS]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Add a value to each of the OKLAB channels</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Where: </p>
+<ul>
+<li><code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white)</li>
+<li><code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red)</li>
+<li><code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow)</li>
+</ul>
+<p>Used by factory function method: <code>modifyOk</code>.</p>
+<p>See test demo <a href="../../demo/filters-031.html">Filters-031</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        channelA = 0,
-        channelB = 0,
-        channelL = 0,
-        lineOut,
-    } = requirements;</code></pre>
+  channelA: 0,
+  channelB: 0,
+  channelL: 0,
+}</code></pre>
 <h3 id="action-modulate-channels">Action: <code>modulate-channels</code></h3>
-<p>Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.<br />
-    [MODULATE_CHANNELS]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>Multiplies each channel's value by the supplied argument value. A channel-argument's value of <code>0</code> will set that channel's value to zero; a value of <code>1</code> will leave the channel value unchanged. </p>
+<p>If the <code>saturation</code> flag is set to <code>true</code> the calculation changes to start at that pixel's grayscale values.</p>
+<p>Used by factory function methods: <code>brightness</code>, <code>channels</code>, <code>saturation</code>.</p>
+<p>See test demos <a href="../../demo/filters-003.html">Filters-003</a>, <a href="../../demo/filters-007.html">Filters-007</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        red = 1,
-        green = 1,
-        blue = 1,
-        alpha = 1,
-        saturation = false,
-        lineOut,
-    } = requirements;</code></pre>
+  alpha: 1,
+  blue: 1,
+  green: 1,
+  red: 1,
+
+  saturation: false,
+}</code></pre>
 <h3 id="action-modulate-ok-channels">Action: <code>modulate-ok-channels</code></h3>
-<p>Multiplies each of the OKLAB channels by a given amount. Note that: the <code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white); the <code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red); the <code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow).<br />
-    [MODULATE_OK_CHANNELS]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Multiplies a value to each of the OKLAB channels</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Where: </p>
+<ul>
+<li><code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white)</li>
+<li><code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red)</li>
+<li><code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow)</li>
+</ul>
+<p>Used by factory function method: <code>modulateOk</code>.</p>
+<p>See test demo <a href="../../demo/filters-032.html">Filters-032</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        channelA = 1,
-        channelB = 1,
-        channelL = 1,
-        lineOut,
-    } = requirements;</code></pre>
+  channelA: 1,
+  channelB: 1,
+  channelL: 1,
+}</code></pre>
 <h3 id="action-negative">Action: <code>negative</code></h3>
-<p>for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB<br />
-    [NEGATIVE]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
-
-    const {
-        opacity = 1,
-        lineOut,
-    } = requirements;</code></pre>
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLCH</li>
+<li>Rotate hue value <code>180deg</code></li>
+<li>Subtract luminance from 1</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Used by factory function method: <code>negative</code>.</p>
+<p>See test demo <a href="../../demo/filters-030.html">Filters-030</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}</code></pre>
 <h3 id="action-newsprint">Action: <code>newsprint</code></h3>
-<p>Attempts to simulate a black-white dither effect similar to newsprint<br />
-    [NEWSPRINT]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>Attempts to simulate a black-white dither effect similar to newsprint across the input.</p>
+<p>The <code>width</code> attribute defines the size of the blocks used in the filter.</p>
+<p>Used by factory function method: <code>newsprint</code>.</p>
+<p>See test demo <a href="../../demo/filters-016.html">Filters-016</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        lineOut,
-    } = requirements;
-
-    let width = _floor(requirements.width || 1);</code></pre>
+  width: 1,
+}</code></pre>
 <h3 id="action-offset">Action: <code>offset</code></h3>
-<p>Offset the input image in the output image.<br />
-    [OFFSET]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>Moves each channel input by an offset (measured in <code>px</code>) set for that channel.</p>
+<p>Used by factory function methods: <code>offset</code>, <code>offsetChannels</code>.</p>
+<p>See test demos <a href="../../demo/filters-035.html">Filters-035</a>, <a href="../../demo/filters-036.html">Filters-036</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        offsetRedX = 0,
-        offsetRedY = 0,
-        offsetGreenX = 0,
-        offsetGreenY = 0,
-        offsetBlueX = 0,
-        offsetBlueY = 0,
-        offsetAlphaX = 0,
-        offsetAlphaY = 0,
-        lineOut,
-    } = requirements;</code></pre>
+  offsetAlphaX: 0,
+  offsetAlphaY: 0,
+  offsetBlueX: 0,
+  offsetBlueY: 0,
+  offsetGreenX: 0,
+  offsetGreenY: 0,
+  offsetRedX: 0,
+  offsetRedY: 0,
+}</code></pre>
 <h3 id="action-pixelate">Action: <code>pixelate</code></h3>
-<p>Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.<br />
-    [PIXELATE]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>Averages the colors within a set of rectangular blocks across the input to produce a series of obscuring tiles.</p>
+<p>Individual channels can be included in the calculation by setting their respective <code>include</code> flags.</p>
+<p>The effect can be offset using the <code>offset</code> attributes (measured in <code>px</code>).</p>
+<p>Used by factory function method: <code>pixelate</code>.</p>
+<p>See test demo <a href="../../demo/filters-009.html">Filters-009</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        tileWidth = 1,
-        tileHeight = 1,
-        offsetX = 0,
-        offsetY = 0,
-        includeRed = true,
-        includeGreen = true,
-        includeBlue = true,
-        includeAlpha = false,
-        lineOut,
-    } = requirements;</code></pre>
+  includeAlpha: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+
+  offsetX: 0,
+  offsetY: 0,
+  tileHeight: 1,
+  tileWidth: 1,
+}</code></pre>
 <h3 id="action-process-image">Action: <code>process-image</code></h3>
-<p>Add an asset to the filter, which can then be used by other filters as either their <code>lineIn</code> or <code>lineMix</code> inputs.<br />
-// + <code>asset</code> - the String name of the asset object. The asset must be pre-loaded before it can be included in the filter; where things go wrong, the system will attempt to load a 1x1 transparent pixel in place of the asset.<br />
-// + <code>width</code> and <code>height</code> - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions).<br />
-// + <code>copyX</code>, <code>copyY</code>, <code>copyWidth</code>, <code>copyHeight</code> - the start and dimensions of the area of the image to be used in the filter; values are integer Number pixels, or % strings relative to the image's natural dimensions.<br />
-// + If the image's dimensions differ from the source entity/Group/Cell dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left.<br />
-// + Filters will run faster when the asset's dimensions match the dimensions of the entity/Group/Cell to which the filter is being applied.<br />
-// + <code>lineOut</code> - required. The image will be stored in the filter engine's cache using this name. Be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.<br />
-// + Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes.<br />
-// + Adding assets to a filter chain will very often disable filter memoization functionality!<br />
-    [PROCESS_IMAGE]: function (requirements) {</p>
-<pre><code>    const {assetData, lineOut} = requirements;</code></pre>
+<p>Loads an image into the filter engine, where it can then be used by other filter actions. Useful for effects such as watermarking an image.</p>
+<p>The portion of the image to be imported into the filter engine can be controlled using the <code>copy</code> attributes. These attributes can be set in either absolute pixel values, or relative (to the image) 'string%' values.</p>
+<p>The <code>asset</code> attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects. Where things go wrong, the system will attempt to load a <code>1x1</code> transparent pixel in place of the asset.</p>
+<p>If the image's dimensions differ from the source dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left. Note that Filters will run faster when the asset's dimensions match the dimensions of the source to which the filter is being applied.</p>
+<p>The <code>lineOut</code> attribute's value must be a (unique) string, which other primitive functions can use as their <code>lineIn</code> and <code>lineMix</code> values.</p>
+<p>Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes. Adding assets to a filter chain will very often disable filter memoization functionality!</p>
+<p>Used by factory function method: <code>image</code>.</p>
+<p>See test demos <a href="../../demo/filters-101.html">Filters-101</a> and <a href="../../demo/filters-102.html">Filters-102</a>, which include image filters.</p>
+<pre><code>Default object
+{
+  lineOut: '',
+
+  asset: '',
+
+  copyHeight: 1,
+  copyWidth: 1,
+  copyX: 0,
+  copyY: 0,
+
+  height: 1,
+  width: 1,
+}</code></pre>
 <h3 id="action-random-noise">Action: <code>random-noise</code></h3>
-<p>Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels<br />
-    [RANDOM_NOISE]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>Creates a stippling effect across the image.</p>
+<p>The spread of the effect can be controlled using the <code>width</code> and <code>height</code> attributes (which can be negative). Dev-users can manage the intensity of the effect using the <code>level</code> attribute, which ranges from <code>0</code> to <code>1</code>.</p>
+<p>The effect can be wrapped by setting the <code>noWrap</code> Boolean flag. Channels can be excluded from the calculations using their respective <code>include</code> flags.</p>
+<p>The effect supports 3 noise types:</p>
+<ul>
+<li><code>random</code> noise creates a general spread effect; the <a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom generator's</a> <code>seed</code> can be set to any String value.</li>
+<li><code>ordered</code> and <code>bluenoise</code> noise can be used for more directional results.</li>
+</ul>
+<p>Used by factory function method: <code>randomNoise</code>.</p>
+<p>See test demo <a href="../../demo/filters-023.html">Filters-023</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        width = 1,
-        height = 1,
-        level = 0.5,
-        seed = DEFAULT_SEED,
-        noiseType = RANDOM,
-        noWrap = false,
-        includeRed = true,
-        includeGreen = true,
-        includeBlue = true,
-        includeAlpha = true,
-        excludeTransparentPixels = true,
-        lineOut,
-    } = requirements;</code></pre>
+  includeAlpha: true,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+
+  height: 1,
+  level: 0,
+  width: 1,
+
+  excludeTransparentPixels: true,
+  noiseType: 'random',
+  noWrap: false,
+  seed: DEFAULT_SEED,
+}
+
+The noiseType permitted values are:
+  'bluenoise'     'ordered'       'random'</code></pre>
 <h3 id="action-reduce-palette">Action: <code>reduce-palette</code></h3>
-<p>Reduce the number of colors in its palette. The <code>palette</code> attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'<br />
-    [REDUCE_PALETTE]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>Analyses the input and, dependant on settings:</p>
+<ul>
+<li>If necessary, calculate a "commonest colors" reduced palette based on the input colors, guided by the number of colors required and a <a href="https://en.wikipedia.org/wiki/Color_difference">minimum color distance</a> between the selected colors.</li>
+<li>Apply the palette to the input, using a given <a href="https://en.wikipedia.org/wiki/Dither">dithering effect</a>.</li>
+</ul>
+<p>The <code>palette</code> attribute is multi-functional. It can accept:</p>
+<ul>
+<li>A defined string to create various grayscale outputs: <code>'black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'</code></li>
+<li>An Array of predefined CSS Color strings which will form the reduced palette.</li>
+<li>A Number, representing the number of "commonest color" colors to calculate for the reduced palette.</li>
+</ul>
+<p>The effect can output different dithering results dependent on the selected <code>noiseType</code> value.</p>
+<p>Used by factory function method: <code>reducePalette</code>.</p>
+<p>See test demo <a href="../../demo/filters-027.html">Filters-027</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        seed = DEFAULT_SEED,
-        useBluenoise = false,
-        minimumColorDistance = 500,
-        lineOut,
-    } = requirements;
+  minimumColorDistance: 1000,
+  noiseType: 'random',
+  palette: 'black-white',
+  seed: DEFAULT_SEED,
+}
 
-    let {
-        palette = BLACK_WHITE,
-    } = requirements;
-
-    const noiseType = (useBluenoise) ? BLUENOISE : requirements.noiseType || RANDOM;</code></pre>
+The noiseType permitted values are:
+  'bluenoise'     'ordered'       'random'</code></pre>
 <h3 id="action-rotate-hue">Action: <code>rotate-hue</code></h3>
-<p>for each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB<br />
-    [ROTATE_HUE]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLCH</li>
+<li>Rotate hue value by given angle (measured in degrees)</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Used by factory function method: <code>rotateHue</code>.</p>
+<p>See test demo <a href="../../demo/filters-029.html">Filters-029</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        angle = 0,
-        lineOut,
-    } = requirements;</code></pre>
+  angle: 0,
+}</code></pre>
 <h3 id="action-set-channel-to-level">Action: <code>set-channel-to-level</code></h3>
-<p>Sets the value of each pixel's included channel to the value supplied in the "level" argument.<br />
-    [SET_CHANNEL_TO_LEVEL]: function (requirements) {</p>
-<pre><code>    const [input, output] = this.getInputAndOutputLines(requirements);
+<p>Sets the value of each pixel's included channel to the value supplied in the <code>level</code> attribute.</p>
+<p>Used by factory function methods: <code>notRed</code>, <code>notGreen</code>, <code>notBlue</code>.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-    const {
-        opacity = 1,
-        includeRed = false,
-        includeGreen = false,
-        includeBlue = false,
-        includeAlpha = false,
-        level = 0,
-        lineOut,
-    } = requirements;</code></pre>
+  includeAlpha: false,
+  includeBlue: false,
+  includeGreen: false,
+  includeRed: false,
+
+  level: 0,
+}</code></pre>
 <h3 id="action-step-channels">Action: <code>step-channels</code></h3>
 <p>Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization.<br />
 //<br />
@@ -1391,10 +1483,12 @@ lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1</code></pre>
 <h3 id="method-image">Method: <code>image</code></h3>
-<p>Load an image into the filter engine, where it can then be used by other filter actions. Useful for effects such as watermarking an image.</p>
+<p>Loads an image into the filter engine, where it can then be used by other filter actions. Useful for effects such as watermarking an image.</p>
 <p>The portion of the image to be imported into the filter engine can be controlled using the <code>copy</code> attributes. These attributes can be set in either absolute pixel values, or relative (to the image) 'string%' values.</p>
-<p>The <code>asset</code> attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects.</p>
+<p>The <code>asset</code> attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects. Where things go wrong, the system will attempt to load a <code>1x1</code> transparent pixel in place of the asset.</p>
+<p>If the image's dimensions differ from the source dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left. Note that Filters will run faster when the asset's dimensions match the dimensions of the source to which the filter is being applied.</p>
 <p>The <code>lineOut</code> attribute's value must be a (unique) string, which other primitive functions can use as their <code>lineIn</code> and <code>lineMix</code> values.</p>
+<p>Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes. Adding assets to a filter chain will very often disable filter memoization functionality!</p>
 <p>Creates an ActionObject for the <code>process-image</code> primitive function.</p>
 <p>See test demos <a href="../../demo/filters-101.html">Filters-101</a> and <a href="../../demo/filters-102.html">Filters-102</a>, which include image filters.</p>
 <pre><code>Attribute                   Retained?   Default
@@ -1500,6 +1594,12 @@ weights                     yes         [
 <li>Add a value to each of the OKLAB channels</li>
 <li>Convert back to RGB</li>
 </ul>
+<p>Where: </p>
+<ul>
+<li><code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white)</li>
+<li><code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red)</li>
+<li><code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow)</li>
+</ul>
 <p>Creates an ActionObject for the <code>modify-ok-channels</code> primitive function.</p>
 <p>See test demo <a href="../../demo/filters-031.html">Filters-031</a></p>
 <pre><code>Attribute                   Retained?   Default
@@ -1526,9 +1626,9 @@ lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1
 
-channelA                    yes         0
-channelB                    yes         0
-channelL                    yes         0</code></pre>
+channelA                    yes         1
+channelB                    yes         1
+channelL                    yes         1</code></pre>
 <h3 id="method-negative">Method: <code>negative</code></h3>
 <p>For each pixel in the input:</p>
 <ul>
@@ -1614,8 +1714,9 @@ offsetGreenY                yes         0
 offsetRedX                  yes         0
 offsetRedY                  yes         0</code></pre>
 <h3 id="method-pixelate">Method: <code>pixelate</code></h3>
-<p>Averages the colors within a set of rectangular blocks to produce a series of obscuring tiles.</p>
-<p>This is a simplified version of the <code>tiles</code> filter.</p>
+<p>Averages the colors within a set of rectangular blocks across the input to produce a series of obscuring tiles.</p>
+<p>Individual channels can be included in the calculation by setting their respective <code>include</code> flags.</p>
+<p>The effect can be offset using the <code>offset</code> attributes (measured in <code>px</code>).</p>
 <p>Creates an ActionObject for the <code>pixelate</code> primitive function.</p>
 <p>See test demo <a href="../../demo/filters-009.html">Filters-009</a>.</p>
 <pre><code>Attribute                   Retained?   Default
