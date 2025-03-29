@@ -133,7 +133,13 @@ const pixels = scrawl.makeFilter({        const pixels = scrawl.makeFilter({
 <p>To clone a Filter object, use the <code>filter.clone({key: value, ...})</code> function. Data included in the function's argument object will overwrite the existing Filter object's values.</p>
 <p>The <code>filter.kill()</code> function will remove the Filter object entirely from the SC environment. This includes removing the filter from any Cell, Group or entity object that may be using it.</p>
 <h2 id="filter-application">Filter application</h2>
-<p>[todo]</p>
+<p>Filter objects are not part of the SC scene graph. Instead they are applied directly to the SC objects they have been associated with (via those objects' <code>filters</code> attribute array), as follows:</p>
+<ul>
+<li>For Cell objects, their associated Filter objects are applied at the point where the Cell stamps itself onto its host Cell, during the <code>show</code> operation of the Display cycle.</li>
+<li>Group objects set up their filtered output by instructing their associated entity Objects to stamp themselves onto a <code>pool</code> Cell that the Group instantiates and supplies; the filters are then applied to the pool Cell before it is stamped into the Group object's host Cell (at the end of the <code>compile</code> operation of the Display cycle).</li>
+<li>Entity objects also make use of <code>pool</code> Cells to generate their filtered output, which then gets stamped onto whichever Cell object their Group object has supplied to them (that is: the host Cell for unfiltered Groups, or another <code>pool</code> Cell for filtered Groups).</li>
+</ul>
+<p>Note that both CSS/SVG filters, and SC Filter objects, can (in theory) be applied to a Cell or entity object at the same time. The advice to dev-users considering such an approach is: don't! Filters are expensive operations; invoking two entirely separate filter systems on the same object will increase the risk of page performance degredation.</p>
 <h3 id="stacking-filters">Stacking filters</h3>
 <p>CSS filters can be combined:</p>
 <pre><code>&lt;div class="filtered-div"&gt;
@@ -146,8 +152,8 @@ const pixels = scrawl.makeFilter({        const pixels = scrawl.makeFilter({
   }
 &lt;/style&gt;</code></pre>
 <p>In the above example, the browser will first apply the <code>hue-rotate</code> filter to the <code>&lt;div&gt;</code> element, then pass the result of that pixel manipulation to the <code>drop-shadow</code> filter for further processing before delivering the final output to the browser's display.</p>
-<p>The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect the output from the previous filter becomes the input for the next filter. The end user only sees the final result of the entire operation.</p>
-<p>The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primative functions, in turn, to the entity display. Only once the last primative function completes does the filter engine return the results to the SC system for stamping onto the host Cell.</p>
+<p>The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect, the output from the previous filter becomes the input for the next filter. The end-user only sees the final result of the entire operation.</p>
+<p>The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primative functions, in turn, to the entity display. Only after the last primative function completes does the filter engine return the results to the SC system for stamping onto the host Cell.</p>
 <p>This means that the order in which Filter objects appear in the <code>entity.filters</code> Array becomes very important:</p>
 <pre><code>scrawl.makeFilter({
   name: 'my-gray-filter',
@@ -190,9 +196,89 @@ scrawl.makePicture({
 <h3 id="chaining-filters">Chaining filters</h3>
 <p>SVG filters include a way to define the inputs for an SVG filter primitive, and label the primitive's output so that it can be used as an input for a subsequent primitive operation. This method of <strong>filter chaining</strong> is what gives SVG filters their unique power to break away from the linear stacking approach to filter composition.</p>
 <p>SC follows in SVG's footsteps. Every SC filter primative function includes <code>lineIn</code> and <code>lineOut</code> argument attributes to define the primitive's input data and output label; some functions also require a <code>lineMix</code> attribute </p>
-<p>[todo]</p>
+<h4 id="input-and-output-identifiers">Input and output identifiers</h4>
+<p>When an SC object invokes the filter engine to create a filtered output, it will include an <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">imageData object</a> of its unfiltered display for the filter engine to work on. The imageData dimensions will match the dimensions of the host Cell on which the filtered output will eventually be stamped.</p>
+<p>When the SC filter engine receives this imageData, it's first action will be to <strong><em>unwrap</em></strong> the data in preparation for work. Three copies of the imageData object will be cached:</p>
+<ul>
+<li><code>source</code> - this copy is never altered by the filters.</li>
+<li><code>sourceAlpha</code> - this copy is mutated: all pixel color channels get set to <code>0</code>, while the pixel's alpha channel is set to <code>0</code> for transparent pixels, <code>255</code> otherwise.</li>
+<li><code>work</code> - this is the working copy of the imageData object.</li>
+</ul>
+<p>The filter engine then iterates through each filter action object. When the object's action function is invoked, it will check the object's <code>lineIn</code> (and <code>lineMix</code>, if required) attribute and select its input data as follows:</p>
+<ul>
+<li><code>lineIn: 'source'</code> - use the <code>cache.source</code> imageData.</li>
+<li><code>lineIn: 'source-alpha'</code> - use the <code>cache.sourceAlpha</code> imageData.</li>
+<li><code>lineIn: undefined</code> - use the <code>cache.work</code> imageData.</li>
+</ul>
+<p>The <code>lineIn</code> and <code>lineMix</code> attributes can also be String identifiers:</p>
+<ul>
+<li>Whenever an action function completes, it will replace the <code>cache.work</code> imageData object with its own modified imageData output - except where the action object's <code>lineOut</code> identifier String has been defined, in which case the output will be stored in a new <code>cache[identifier]</code> attribute.</li>
+<li>Once a new <code>cache[identifier]</code> attribute has been created, any subsequent action function can use that identifier String for their <code>lineIn</code> (and <code>lineMix</code>) attribute value. The function will use that identifier's imageData object for its input.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th id="filter">Filter</th>
+<th id="input">Input</th>
+<th id="output">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Path 1 step 1</strong> <br> <code>action: 'gaussian-blur'</code> <br> <code>lineIn: undefined</code> <br> <code>radius: 1</code> <br> <code>lineOut: 'outline1'</code></td>
+<td><img src="sc-filter-engine-asset-003.webp" alt="Step 1.1 in" /></td>
+<td><img src="sc-filter-engine-asset-004.webp" alt="Step 1.1 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 1 step 2</strong> <br> <code>action: 'matrix'</code> <br> <code>lineIn: 'outline1'</code> <br> <code>width: 3'</code> <br> <code>height: 3'</code> <br> <code>offsetX: 1'</code> <br> <code>offsetY: 1</code> <br> <code>weights: [0,1,0,1,-4,1,0,1,0]</code> <br> <code>lineOut: 'outline2'</code></td>
+<td><img src="sc-filter-engine-asset-004.webp" alt="Step 1.2 in" /></td>
+<td><img src="sc-filter-engine-asset-005.webp" alt="Step 1.2 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 1 step 3</strong> <br> <code>action: 'threshold'</code> <br> <code>lineIn: 'outline2'</code> <br> <code>level: 6</code> <br> <code>high: [0,0,0,255]</code> <br> <code>low: [0,0,0,0]</code> <br> <code>includeAlpha: true</code> <br> <code>lineOut: 'outline3'</code></td>
+<td><img src="sc-filter-engine-asset-005.webp" alt="Step 1.3 in" /></td>
+<td><img src="sc-filter-engine-asset-006.webp" alt="Step 1.3 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 1 step 4</strong> <br> <code>action: 'gaussian-blur'</code> <br> <code>lineIn: 'outline3'</code> <br> <code>radius: 1</code> <br> <code>lineOut: 'outline4'</code></td>
+<td><img src="sc-filter-engine-asset-006.webp" alt="Step 1.4 in" /></td>
+<td><img src="sc-filter-engine-asset-007.webp" alt="Step 1.4 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 2 step 1</strong> <br> <code>action: 'step-channels'</code> <br> <code>lineIn: undefined</code> <br> <code>red: 16</code> <br> <code>green: 16</code> <br> <code>blue: 16</code> <br> <code>clamp: 'round'</code> <br> <code>lineOut: 'color1'</code></td>
+<td><img src="sc-filter-engine-asset-003.webp" alt="Step 2.1 in" /></td>
+<td><img src="sc-filter-engine-asset-008.webp" alt="Step 2.1 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 2 step 2</strong> <br> <code>action: 'gaussian-blur'</code> <br> <code>lineIn: 'color1'</code> <br> <code>radius: 4</code> <br> <code>lineOut: 'color2'</code></td>
+<td><img src="sc-filter-engine-asset-008.webp" alt="Step 2.2 in" /></td>
+<td><img src="sc-filter-engine-asset-009.webp" alt="Step 2.2 out" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th id="filter">Filter</th>
+<th id="input_1">Input 1</th>
+<th id="input_2">Input 2</th>
+<th id="output">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Composition step</strong> <br> <code>action: 'compose'</code> <br> <code>lineIn: 'color2'</code> <br> <code>lineMix: 'outline4'</code> <br> <code>compose: 'destination-over'</code> <br> <code>lineOut: undefined</code></td>
+<td><img src="sc-filter-engine-asset-009.webp" alt="Step 3 in" /></td>
+<td><img src="sc-filter-engine-asset-007.webp" alt="Step 3 mix" /></td>
+<td><img src="sc-filter-engine-asset-010.webp" alt="Step 3 out" /></td>
+</tr>
+</tbody>
+</table>
 <h3 id="using-objects-as-filter-stencils">Using objects as filter stencils</h3>
-<p>[todo]</p>
+<p>CSS/SVG filters can be used to add a filter effect to the background behind a DOM element, via the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter">CSS backdrop-filter property</a>.</p>
+<p>In a similar vein, SC filters can be applied to the (currently stamped) display behind an SC entity object, or a Group of such objects. Dev-users can set up this effect by setting the object's <code>isStencil</code> attribute to <code>true</code>.</p>
+<p>Note that the object will not be able to memoize its filtered output - there's no way that SC can predict whether the background behind an entity has changed between Display cycle frames.</p>
+<p>Test demo <a href="../../demo/filters-028.html">Filters-028</a> demonstrates stencilled filter effects.</p>
 <h3 id="memoizing-a-filtered-objects-output">Memoizing a filtered object's output</h3>
 <p>[todo]</p>
 <h3 id="one-time-capture-of-a-filtered-objects-output">One-time capture of a filtered object's output</h3>

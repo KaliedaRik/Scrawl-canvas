@@ -139,7 +139,7 @@ P.action = function (packet) {
 
     for (i = 0, iz = filters.length; i < iz; i++) {
 
-        actions.push(...filters[i].actions)
+        actions.push(...filters[i].actions);
     }
 
     const actionsLen = actions.length;
