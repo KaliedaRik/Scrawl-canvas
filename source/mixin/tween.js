@@ -91,7 +91,7 @@ export default function (P = Ωempty) {
 
             const t = animationtickers[ticker];
 
-            if (t) t.kill();
+            if (t) t.kill(false);
         }
         else if (ticker) this.removeFromTicker(ticker);
 

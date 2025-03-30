@@ -125,7 +125,7 @@ P.kill = function (killTweens = true, autokill = true) {
 
         const subs = [...this.subscribers];
 
-        for (i = 0, iz = subs.length; i < iz; i++) {
+        for (let i = 0, iz = subs.length; i < iz; i++) {
 
             const sub = tween[subs[i]];
 

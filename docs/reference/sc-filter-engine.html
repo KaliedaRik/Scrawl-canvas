@@ -215,6 +215,7 @@ scrawl.makePicture({
 <li>Whenever an action function completes, it will replace the <code>cache.work</code> imageData object with its own modified imageData output - except where the action object's <code>lineOut</code> identifier String has been defined, in which case the output will be stored in a new <code>cache[identifier]</code> attribute.</li>
 <li>Once a new <code>cache[identifier]</code> attribute has been created, any subsequent action function can use that identifier String for their <code>lineIn</code> (and <code>lineMix</code>) attribute value. The function will use that identifier's imageData object for its input.</li>
 </ul>
+<p>The following example shows the steps involved in creating the filtered output for the comic filter effect, whose code was shown earlier on this page:</p>
 <table>
 <thead>
 <tr>
@@ -274,15 +275,53 @@ scrawl.makePicture({
 </tr>
 </tbody>
 </table>
+<h3 id="filter-opacity">Filter opacity</h3>
+<p>All SC filter primitive functions include a final step - a crude channel-by-channel blending of the function's input imageData data and its calculated output data. The strength of this blend is set in the filter's <code>opacity</code> attribute:</p>
+<ul>
+<li>For <code>opacity: 0</code>, the final output is 100% input + 0% calculated effect</li>
+<li>For <code>opacity: 1</code>, the final output is 0% input + 100% calculated effect</li>
+<li>For <code>opacity: 0.4</code>, the final output is 60% input + 40% calculated effect</li>
+<li>… etc.</li>
+</ul>
+<p>Most of the Filter test demos include an <code>opacity</code> control for repo-dev testing and dev-user investigation.</p>
 <h3 id="using-objects-as-filter-stencils">Using objects as filter stencils</h3>
 <p>CSS/SVG filters can be used to add a filter effect to the background behind a DOM element, via the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter">CSS backdrop-filter property</a>.</p>
 <p>In a similar vein, SC filters can be applied to the (currently stamped) display behind an SC entity object, or a Group of such objects. Dev-users can set up this effect by setting the object's <code>isStencil</code> attribute to <code>true</code>.</p>
 <p>Note that the object will not be able to memoize its filtered output - there's no way that SC can predict whether the background behind an entity has changed between Display cycle frames.</p>
 <p>Test demo <a href="../../demo/filters-028.html">Filters-028</a> demonstrates stencilled filter effects.</p>
 <h3 id="memoizing-a-filtered-objects-output">Memoizing a filtered object's output</h3>
-<p>[todo]</p>
+<p>For any SC-controlled <code>&lt;canvas&gt;</code> which includes any animated effects in its display, that canvas needs to update at a minimum of 20 frames-per-second (fps) - every 50 milliseconds - to make the animation tolerable for the end-user, and preferably should update at a rate of 60fps (16ms) for a smooth animation effect. Some device/screen combinations allow for an update rate of 120fps (8ms) or higher!</p>
+<p>This means that SC must complete all of a Display cycle's required updates - across all <code>&lt;canvas&gt;</code> elements currently animating on the web page - within 16ms. For scenes which include filtered Cell, Group or entity objects this can be a difficult ask, given the intense computational nature of filter calculations.</p>
+<p>Thus it makes sense for filtered objects to cache - <strong><em>memoize</em></strong> - their filtered output as comprehensively as possible. Dev-users can achieve this by setting the <code>memoizeFilterOutput</code> attribute to <code>true</code> on these objects.</p>
+<p>SC attempts to make the memoization process as painless as possible for dev-users. Much of the functionality has been internalized so setting the <code>memoizeFilterOutput</code> flag should be the only action the dev-user has to take.</p>
+<h4 id="internal-memoization-functionality">Internal memoization functionality</h4>
+<p>When a filtered object first has its <code>memoizeFilterOutput</code> flag set to <code>true</code> it will generate a random String and associate it to its internal <code>filterIdentifier</code> attribute. The first time the filter engine processes the object's filters and generates an output it will lodge that output in the SC workstore, keyed to the identifier string, before returning the output for stamping.</p>
+<p>The next time the filter engine encounters the object, it will check the workstore for the identifier key. If the key exists, the engine immediately returns that previously generated output.</p>
+<p>There are a number of actions that can invalidate the memoized filter output. These include:</p>
+<ul>
+<li>Any change to the filtered object's position, dimensions, scale, rotation or other styling.</li>
+<li>Any change to the Array of filters that need to be applied to the object, or (for legacy filters) changes to an associated Filter object's attributes.</li>
+<li>Objects acting as a filter stencil cannot be memoized as there's no way to predict that the canvas display behind the object has not changed</li>
+<li>Filtered Cell object output cannot be memoized (for the same reason).</li>
+</ul>
+<p>Whenever the dev-user triggers such changes, the object will set a <code>dirtyFilterIdentifier</code> flag which in turn will cause the object to set its <code>filterIdentifier</code> attribute to a new random String. The next time the filter engine encounters the object it will not find the new identifier in the SC workstore, leading to it running all the required filter operations on the object and lodging that output in the workstore keyed to the new identifier.</p>
+<p>The workstore regularly purges unaccessed keys - the output keyed to the old identifier will generally be purged one second after it was last accessed.</p>
 <h3 id="one-time-capture-of-a-filtered-objects-output">One-time capture of a filtered object's output</h3>
-<p>[todo]</p>
+<p>SC includes three functions to capture either a Cell, Group or entity object's output in a DOM <code>&lt;img&gt;</code> element which can then be imported into the SC environment as an ImageAsset object. These functions (defined in the <a href="../source/asset-management/image-asset.html">asset-management/image-asset.js</a> file) are:</p>
+<ul>
+<li><code>scrawl.createImageFromCell(object, assetName)</code></li>
+<li><code>scrawl.createImageFromGroup(object, assetName)</code></li>
+<li><code>scrawl.createImageFromEntity(object, assetName)</code></li>
+</ul>
+<p>Where:</p>
+<ul>
+<li>The <code>object</code> argument is either the Cell, Group or entity object, or that object's <code>name</code> attribute value.</li>
+<li>The <code>assetName</code> argument is the String <code>name</code> value which will be given to the new Asset object.</li>
+</ul>
+<p>These functions are one-shot functions: the capture will happen as part of the next Display cycle. The functionality includes adding the visual output to an <code>&lt;img&gt;</code> element in the DOM, as a child of an appropriately hidden <code>&lt;div&gt;</code> element within the <code>&lt;canvas&gt;</code> element. The action is necessarily asynchronous, thus the new Asset object may take a few additional iterations of the Display cycle to show up.</p>
+<p>There are various reasons why a dev-user may want to capture a static image of a Cell, Group or entity object - for instance when a particularly complicated filter has been applied to that object's display but it is not possible to memoize the object's output.</p>
+<p>Once the new asset is captured it can be displayed multiple times in canvas scenes using Picture entitys. For example, see test demos <a href="../../demo/canvas-046.html">Canvas-046</a>, and <a href="../../demo/canvas-020.html">Canvas-020</a>.</p>
+<p>The code associated with this functionality is closely tied with the filter functionality code (described below) as both functionalities rely on using <code>pool</code> Cell objects for generating their output.</p>
 <h3 id="internal-coding-protocols">Internal coding protocols</h3>
 <p>[todo]</p>
 <h4 id="apply-filters-to-cell-objects">Apply filters to Cell objects</h4>
@@ -377,7 +416,7 @@ scrawl.makePicture({
 <h4 id="action-channels-to-alpha">Action: <code>channels-to-alpha</code></h4>
 <p>Calculates an average value from each pixel's included channels and applies that value to the pixel's alpha channel.</p>
 <p>Used by factory function method: <code>channelsToAlpha</code>.</p>
-<p>No test demo available for this method.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
 <pre><code>Default object
 {
   lineIn: '',
@@ -1105,6 +1144,37 @@ The noiseType permitted values are:
 }</code></pre>
 <h3 id="ok-filters">OK filters</h3>
 <p>[Needs a sentence]</p>
+<h4 id="action-alpha-to-luminance">Action: <code>alpha-to-luminance</code></h4>
+<p>For each pixel in the input, where alpha is not <code>0</code>:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Set L to alpha value</li>
+<li>Set A and B to 0</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Used by factory function method: <code>alphaToLuminance</code>.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}</code></pre>
+<h4 id="action-luminance-to-alpha">Action: <code>luminance-to-alpha</code></h4>
+<p>For each pixel in the input:</p>
+<ul>
+<li>Calculate OKLAB luminance from RGB colors</li>
+<li>Set alpha to luminance</li>
+<li>Set color channels to <code>0</code></li>
+</ul>
+<p>Used by factory function method: <code>luminanceToAlpha</code>.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}</code></pre>
 <h4 id="action-modify-ok-channels">Action: <code>modify-ok-channels</code></h4>
 <p>For each pixel in the input:</p>
 <ul>
@@ -1223,7 +1293,7 @@ The noiseType permitted values are:
 <p><strong>(Color channels filter)</strong> Copies an input's alpha channel value over to each selected channel's value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. </p>
 <p>Setting the appropriate <code>includeChannel</code> flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate <code>excludeChannel</code> flag will set that channel's value to zero.</p>
 <p>Creates an ActionObject for the <code>alpha-to-channels</code> primitive function.</p>
-<p>No test demo available for this method.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
 <pre><code>Attribute                   Retained?   Default
 --------------------------  ----------  ----------------
 lineIn                      yes         ''
@@ -1236,6 +1306,21 @@ excludeRed                  yes         true
 includeBlue                 yes         true
 includeGreen                yes         true
 includeRed                  yes         true</code></pre>
+<h3 id="method-alphatoluminance">Method: <code>alphaToLuminance</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input, where alpha is not <code>0</code>:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Set L to alpha value</li>
+<li>Set A and B to 0</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Creates an ActionObject for the <code>alpha-to-luminance</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
 <h3 id="method-areaalpha">Method: <code>areaAlpha</code></h3>
 <p><strong>(Alpha channel filter)</strong> Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to the appropriate value specified in the <code>areaAlphaLevels</code> attribute. Can be used to create horizontal or vertical bars, or chequerboard effects:</p>
 <ul>
@@ -1394,7 +1479,7 @@ The clamp attribute permitted values are:
 <h3 id="method-channelstoalpha">Method: <code>channelsToAlpha</code></h3>
 <p><strong>(Alpha channel filter)</strong> Calculates an average value from each pixel's included channels and applies that value to the pixel's alpha channel.</p>
 <p>Creates an ActionObject for the <code>channels-to-alpha</code> primitive function.</p>
-<p>No test demo available for this method.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
 <pre><code>Attribute                   Retained?   Default
 --------------------------  ----------  ----------------
 lineIn                      yes         ''
@@ -1487,7 +1572,7 @@ The compose attribute permitted values are:
   'destination-out'       'source-out'
   'destination-atop'      'source-atop'</code></pre>
 <h3 id="method-corrode">Method: <code>corrode</code></h3>
-<p><strong>(Convolution filter)</strong> Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG (<code>&lt;feMorphology&gt;</code>)[<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology">https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology</a>] filter primative.</p>
+<p><strong>(Convolution filter)</strong> Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology"><code>&lt;feMorphology&gt;</code></a> filter primative.</p>
 <p>The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel's position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments.</p>
 <p>The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>operation</code> attribute.</p>
 <p>Channels can be selected for inclusion in the calculation by setting the <code>includeRed</code>, <code>includeGreen</code>, <code>includeBlue</code> (all false by default) and <code>includeAlpha</code> (default: true) flags.</p>
@@ -1742,6 +1827,20 @@ opacity                     yes         1
 includeBlue                 yes         true
 includeGreen                yes         true
 includeRed                  yes         true</code></pre>
+<h3 id="method-luminancetoalpha">Method: <code>luminanceToAlpha</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input:</p>
+<ul>
+<li>Calculate OKLAB luminance from RGB colors</li>
+<li>Set alpha to luminance</li>
+<li>Set color channels to <code>0</code></li>
+</ul>
+<p>Creates an ActionObject for the <code>luminance-to-alpha</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
 <h3 id="method-magenta">Method: <code>magenta</code></h3>
 <p><strong>(Color channels filter)</strong> Sets the input's green channel values to zero, and averages the remaining channel colors for each pixel</p>
 <p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
