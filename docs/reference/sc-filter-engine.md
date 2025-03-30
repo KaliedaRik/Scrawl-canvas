@@ -281,13 +281,34 @@ Once the new asset is captured it can be displayed multiple times in canvas scen
 The code associated with this functionality is closely tied with the filter functionality code (described below) as both functionalities rely on using `pool` Cell objects for generating their output.
 
 ### Internal coding protocols
-[todo]
+The work to set up a Cell, Group or entity object to be modified by SC filters, and to display the filtered results on a host Cell, happens outside of the SC filter engine and factory code. 
+
+Due to Cell, Group and entity objects having distinct roles in the Display cycle, the protocols for applying filters to them necessarily differ - as described below. All of this functionality happens internally; the dev-user only needs to add filters to the objects for the processes to take place.
 
 #### Apply filters to Cell objects
-[todo]
+SC Cell object filters are applied at the end of the Cell's participation in the Display cycle `compile` operation, after all entitys have stamped themselves onto its display. This filtered result will directly replace the original image data, ready for final display as part of the Display cycle `show` operation.
+
+Any required output stashing functionality (as requested by `scrawl.createImageFromCell()`) happens after the filtering functionality completes.
+
+This functionality is all defined in the [factory/cell.js](../source/factory/cell.html) file, specifically the `cell.compile()`, `cell.applyFilters()` and `cell.stashOutputAction()` functions.
 
 #### Apply filters to Group objects
-[todo]
+At the start of every Display cycle `compile` operation, each Cell object goes through its Array of associated Group objects and invokes the `group.stamp()` function on each of them in turn. This leads to the Group object performing the following protocol:
+1. Determine whether any filters have been associated with the Group object, or if output needs to be stashed (as requested by `scrawl.createImageFromGroup()` function):
+  - If yes, retrieve a `pool` Cell object and set its dimensions to the Group's host Cell object's dimensions.
+  - If no, use the Group's host Cell object for the following steps.
+2. Prepare the Group object's associated entity objects for stamping by invoking `group.prepareStamp()`.
+3. Invoke the `group.stampAction()` function, passing it the `pool` Cell object if one has been created.
+4. All associated entity objects now stamp themselves onto the required Cell object (as determined in step 1).
+5. If a `pool` Cell was supplied as the function's argument and Filter objects have been associated with the group, invoke the `group.applyFilters()` function:
+  - If the group is acting as a stencil, do the work to retrieve the host Cell's current display and stamp it onto the `pool` Cell, clipped by the Group's entity object's stamped displays.
+  - Preprocess the filters to load any external assets into the filter engine.
+  - Invoke the filter engine, passing it the necessary input and filter data.
+  - Stamp the filter engine's results onto the host Cell.
+6. If output stashing is required then invoke the `group.stashAction()` function.
+7. If a `pool` Cell object was used, release it back to the pool.
+
+This functionality is all defined in the [factory/group.js](../source/factory/group.html) file.
 
 #### Apply filters to entity objects
 SC filters are applied to the display output of entity objects at the point where they are stamped onto their host Cell. This is achieved using the following protocol:
@@ -297,7 +318,7 @@ SC filters are applied to the display output of entity objects at the point wher
 2. If the entity has not been stamped before, or its `entity.dirtyFilters` flag is `true`, process the filter objects into the internal `entity.currentFilters` Array so they are ready for application.
 3. Request a `pool` Cell object, size it to match the host Cell's dimensions and `regularStamp` the entity onto it (ignoring the `entity.globalCompositeOperation` attribute).
   - If the `entity.isStencil` Boolean flag has been set to `true`, stamp the host Cell's current display over the entity (using `globalCompositeOperation: 'source-in'`).
-4. Get the current image data from the `pool` Cell
+4. Get the current image data from the `pool` Cell.
 5. Preprocess the filter objects - specifically to retrieve data for any external images used by the filters.
 6. Invoke the filter engine's `filterEngine.action()` function, passing all the required data to it.
 7. Reset the `pool` Cell and stamp the filter engine's returned `imageData` data into it.
@@ -308,10 +329,12 @@ SC filters are applied to the display output of entity objects at the point wher
 All entity objects, apart from the EnhancedLabel entity, share the above functionality, whose code can be found in the [mixin/entity.js](../source/mixin/entity.html) file - specifically the `filteredStamp()` and `getCellCoverage()` functions.
 
 #### Apply filters to EnhancedLabel entity objects
-[todo]
+Because the EnhancedLabel entity is so tightly coupled with the [SC text layout engine](sc-text-layout-engine.html), repo-devs have had to replicate the entity filter protocol in that entity's factory function. Thus changes in the entity filter protocol will need to be replicated in the [factory/enhanced-label.js](../source/factory/enhanced-label.html) file.
 
 ## The SC filter engine
-[todo]
+The filter engine has been designed as a single, standalone JS object that handles all SC filter requirements across all SC-controlled `<canvas>` elements on a web page. The object instantiates when the SC library first runs, which generally happens when it is first imported into the page furing page load.
+
+All engine functionality can be found in the [helper/filter-engine.js](../source/helper/filter-engine.html) file. The file exports the instantiated object itself to other files in the SC ecosystem. Files that import the object should only use the `engine.action(packetObject)` function which takes a packet of data as its argument and returns an [ImageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) ready to be written to a [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) engine.
 
 ### Resources used by the filter engine
 [todo]
@@ -340,23 +363,21 @@ All entity objects, apart from the EnhancedLabel entity, share the above functio
 ### Protocol for processing a filter request
 [todo]
 
-
-The code associated with assigning and managing Filter objects on Cell, Group and entity objects, and applying filter effects to them, is spread across the repo as follows:
-+ [factory/cell.js](../source/factory/cell.html) - 
-+ [factory/enhanced-label.js](../source/factory/enhanced-label.html) - 
-+ [factory/group.js](../source/factory/group.html) - 
-
-Two additional filter-related files also exist:
-+ [factory/filter.js](../source/factory/filter.html) - 
-+ [helper/filter-engine-bluenoise-data.js](../source/helper/filter-engine-bluenoise-data.html) - 
-
-Filter primitives with no or one filter primitive input can be linked together to a **filter chain**.
-
 ## SC filter primitive functions
-[todo]
+The SC filter engine has been built around the principle of manipulating [ImageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) pixel data, which presents as a [Uint8ClampedArray](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray) whose elements are restricted to being positive integer Numbers in the range `0`-`255`.
+
+Each pixel in the image data is coded in the [sRGB color space](https://developer.mozilla.org/en-US/docs/Glossary/RGB) using three color channels and an additional alpha channel, always in the order `[red, green, blue, alpha]`. This means that for an ImageData object with a width of 100px and a height of 50px, the `imageData.data` Array will be `100 * 50 * 4 = 20,000` elements long.
+
+Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for these primitive functions. The following guidelines may help:
++ Precalculate any requirements that a primitive function may have - for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile - and cache the results in case other filter primitives can make use of them.
++ Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.
++ Always check to see if the current pixel is transparent (its alpha channel has a value of `0`) and, if yes, skip the calculations for that pixel.
++ When dealing with non-RGB color space calculations, use the color caches - calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.
 
 ### Alpha channel filters
-[Needs a sentence]
+The following primitive functions primarily handle manipulations that affect a pixel's alpha channel, in particular for creating [chroma key compositing effects](https://en.wikipedia.org/wiki/Chroma_key).
+
+Note that many other filters may impact with the pixel's alpha channel, though that is not their primary functionality.
 
 #### Action: `area-alpha`
 Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to the appropriate value specified in the `areaAlphaLevels` attribute. Can be used to create horizontal or vertical bars, or chequerboard effects:
@@ -458,7 +479,7 @@ Default object
 ```
 
 ### Color channel filters
-[Needs a sentence]
+The following primitive functions primarily handle manipulations that affect a pixel's color channels.
 
 #### Action: `alpha-to-channels`
 Copies an input's alpha channel value over to each selected channel's value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. 
@@ -812,7 +833,7 @@ Default object
 ```
 
 ### Composition filters
-[Needs a sentence]
+The following primitive functions use two inputs (for compositing). The external image import function is also grouped here. 
 
 #### Action: `blend`
 Uses two inputs - `lineIn`, `lineMix` - and combines their pixel data using various separable and non-separable blend modes, as defined in the [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending) specification.
@@ -906,7 +927,7 @@ Default object
 ```
 
 ### Convolution filters
-[Needs a sentence]
+The following primitive functions all make use of some form of [convolution matrix](https://en.wikipedia.org/wiki/Kernel_(image_processing)) for their image data manipulations.
 
 #### Action: `blur`
 A bespoke [box blur](https://en.wikipedia.org/wiki/Box_blur) function. Creates visual artefacts with various settings that might be useful. 
@@ -1160,7 +1181,7 @@ The points attribute's permitted values are:
 ```
 
 ### Displacement filters
-[Needs a sentence]
+The following primitive functions handle the movement of pixel data around the image data Array
 
 #### Action: `displace`
 Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primative.
@@ -1332,7 +1353,7 @@ Default object
 ```
 
 ### OK filters
-[Needs a sentence]
+The following primitive functions manipulate pixel image data in the [CIELAB color space](https://developer.mozilla.org/en-US/docs/Glossary/Color_space#cielab_color_spaces) - in particular OKLAB and OKLCH.
 
 #### Action: `alpha-to-luminance`
 For each pixel in the input, where alpha is not `0`:
@@ -1497,7 +1518,11 @@ Default object
 ```
 
 ## SC predefined filter effects
-[todo intro]
+The Filter factory function `scrawl.makeFilter()` comes with a large set of predefined filter ***methods*** which are, in many ways, easier to use than using the alternative, ***actions*** approach of defining a filter. Even so, these *method* filters allow the dev-user to chain filters together (using `lineIn`, `lineMix` and `lineOut` attributes) and to control each filter's strength in the final output (using the `opacity` attribute).
+
+So the only disadvantage to using *method* objects is that a complex filter effect will require the generation of several objects which all need to be added to a Cell, Group or entity object, compared to defining the filter in a single *actions* object.
+
+Against that, it is a lot easier to animate *method* object attributes! 
 
 ### Method: `alphaToChannels`
 **(Color channels filter)** Copies an input's alpha channel value over to each selected channel's value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. 
