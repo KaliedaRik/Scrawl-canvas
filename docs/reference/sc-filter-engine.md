@@ -124,8 +124,8 @@ The `filter.kill()` function will remove the Filter object entirely from the SC 
 
 ## Filter application
 Filter objects are not part of the SC scene graph. Instead they are applied directly to the SC objects they have been associated with (via those objects' `filters` attribute array), as follows:
-+ For Cell objects, their associated Filter objects are applied at the point where the Cell stamps itself onto its host Cell, during the `show` operation of the Display cycle.
-+ Group objects set up their filtered output by instructing their associated entity Objects to stamp themselves onto a `pool` Cell that the Group instantiates and supplies; the filters are then applied to the pool Cell before it is stamped into the Group object's host Cell (at the end of the `compile` operation of the Display cycle).
++ For Cell objects, their associated Filter objects are applied at the point where the Cell stamps itself onto its host Cell, at the end of the `compile` operation of the Display cycle.
++ Group objects set up their filtered output by instructing their associated entity Objects to stamp themselves onto a `pool` Cell that the Group instantiates and supplies; the filters are then applied to the pool Cell before it is stamped into the Group object's host Cell (near the end of the `compile` operation of the Display cycle).
 + Entity objects also make use of `pool` Cells to generate their filtered output, which then gets stamped onto whichever Cell object their Group object has supplied to them (that is: the host Cell for unfiltered Groups, or another `pool` Cell for filtered Groups).
 
 Note that both CSS/SVG filters, and SC Filter objects, can (in theory) be applied to a Cell or entity object at the same time. The advice to dev-users considering such an approach is: don't! Filters are expensive operations; invoking two entirely separate filter systems on the same object will increase the risk of page performance degredation.
@@ -146,7 +146,7 @@ CSS filters can be combined:
 
 In the above example, the browser will first apply the `hue-rotate` filter to the `<div>` element, then pass the result of that pixel manipulation to the `drop-shadow` filter for further processing before delivering the final output to the browser's display.
 
-The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect, the output from the previous filter becomes the input for the next filter. The end-user only sees the final result of the entire operation.
+The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect, the output from the previous filter becomes the input for the next filter. The end-user only sees the top of the stack; that is, the final result of the entire operation.
 
 The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primative functions, in turn, to the entity display. Only after the last primative function completes does the filter engine return the results to the SC system for stamping onto the host Cell.
 
@@ -332,21 +332,9 @@ All entity objects, apart from the EnhancedLabel entity, share the above functio
 Because the EnhancedLabel entity is so tightly coupled with the [SC text layout engine](sc-text-layout-engine.html), repo-devs have had to replicate the entity filter protocol in that entity's factory function. Thus changes in the entity filter protocol will need to be replicated in the [factory/enhanced-label.js](../source/factory/enhanced-label.html) file.
 
 ## The SC filter engine
-The filter engine has been designed as a single, standalone JS object that handles all SC filter requirements across all SC-controlled `<canvas>` elements on a web page. The object instantiates when the SC library first runs, which generally happens when it is first imported into the page furing page load.
+The filter engine has been designed as a single, standalone JS object that handles all SC filter requirements across all SC-controlled `<canvas>` elements on a web page. The object instantiates when the SC library first runs, which generally happens when it is first imported into the page during page load.
 
 All engine functionality can be found in the [helper/filter-engine.js](../source/helper/filter-engine.html) file. The file exports the instantiated object itself to other files in the SC ecosystem. Files that import the object should only use the `engine.action(packetObject)` function which takes a packet of data as its argument and returns an [ImageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) ready to be written to a [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) engine.
-
-### Resources used by the filter engine
-[todo]
-
-#### The seeded random numbers generator
-[todo]
-
-#### Noise generators
-[todo]
-
-#### Colors and gradients
-[todo]
 
 ### Code efficiency
 [todo]
@@ -360,6 +348,18 @@ All engine functionality can be found in the [helper/filter-engine.js](../source
 #### Color caches
 [todo]
 
+### Resources used by the filter engine
+[todo]
+
+#### The seeded random numbers generator
+[todo]
+
+#### Noise generators
+[todo]
+
+#### Colors and gradients
+[todo]
+
 ### Protocol for processing a filter request
 [todo]
 
@@ -371,7 +371,7 @@ Each pixel in the image data is coded in the [sRGB color space](https://develope
 Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for these primitive functions. The following guidelines may help:
 + Precalculate any requirements that a primitive function may have - for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile - and cache the results in case other filter primitives can make use of them.
 + Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.
-+ Always check to see if the current pixel is transparent (its alpha channel has a value of `0`) and, if yes, skip the calculations for that pixel.
++ Always check to see if the current pixel is transparent (its alpha channel has a value of `0`) and, if yes, skip the calculations for that pixel if possible.
 + When dealing with non-RGB color space calculations, use the color caches - calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.
 
 ### Alpha channel filters
@@ -488,7 +488,7 @@ Setting the appropriate `includeChannel` flags will copy the alpha channel value
 
 Used by factory function method: `alphaToChannels`.
 
-No test demo available for this action.
+See test demo [Filters-037](../../demo/filters-037.html)
 ```
 Default object
 {
@@ -559,7 +559,7 @@ The flood can be restricted to only apply to non-transparent input pixels using 
 
 Used by factory function method: `flood`.
 
-See test demo [Filters-013](../../demo/filters-013.html).
+See test demos [Filters-013](../../demo/filters-013.html) and [Filters-037](../../demo/filters-037.html).
 ```
 Default object
 {
