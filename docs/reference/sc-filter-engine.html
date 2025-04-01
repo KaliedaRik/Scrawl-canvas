@@ -135,8 +135,8 @@ const pixels = scrawl.makeFilter({        const pixels = scrawl.makeFilter({
 <h2 id="filter-application">Filter application</h2>
 <p>Filter objects are not part of the SC scene graph. Instead they are applied directly to the SC objects they have been associated with (via those objects' <code>filters</code> attribute array), as follows:</p>
 <ul>
-<li>For Cell objects, their associated Filter objects are applied at the point where the Cell stamps itself onto its host Cell, during the <code>show</code> operation of the Display cycle.</li>
-<li>Group objects set up their filtered output by instructing their associated entity Objects to stamp themselves onto a <code>pool</code> Cell that the Group instantiates and supplies; the filters are then applied to the pool Cell before it is stamped into the Group object's host Cell (at the end of the <code>compile</code> operation of the Display cycle).</li>
+<li>For Cell objects, their associated Filter objects are applied at the point where the Cell stamps itself onto its host Cell, at the end of the <code>compile</code> operation of the Display cycle.</li>
+<li>Group objects set up their filtered output by instructing their associated entity Objects to stamp themselves onto a <code>pool</code> Cell that the Group instantiates and supplies; the filters are then applied to the pool Cell before it is stamped into the Group object's host Cell (near the end of the <code>compile</code> operation of the Display cycle).</li>
 <li>Entity objects also make use of <code>pool</code> Cells to generate their filtered output, which then gets stamped onto whichever Cell object their Group object has supplied to them (that is: the host Cell for unfiltered Groups, or another <code>pool</code> Cell for filtered Groups).</li>
 </ul>
 <p>Note that both CSS/SVG filters, and SC Filter objects, can (in theory) be applied to a Cell or entity object at the same time. The advice to dev-users considering such an approach is: don't! Filters are expensive operations; invoking two entirely separate filter systems on the same object will increase the risk of page performance degredation.</p>
@@ -152,7 +152,7 @@ const pixels = scrawl.makeFilter({        const pixels = scrawl.makeFilter({
   }
 &lt;/style&gt;</code></pre>
 <p>In the above example, the browser will first apply the <code>hue-rotate</code> filter to the <code>&lt;div&gt;</code> element, then pass the result of that pixel manipulation to the <code>drop-shadow</code> filter for further processing before delivering the final output to the browser's display.</p>
-<p>The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect, the output from the previous filter becomes the input for the next filter. The end-user only sees the final result of the entire operation.</p>
+<p>The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect, the output from the previous filter becomes the input for the next filter. The end-user only sees the top of the stack; that is, the final result of the entire operation.</p>
 <p>The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primative functions, in turn, to the entity display. Only after the last primative function completes does the filter engine return the results to the SC system for stamping onto the host Cell.</p>
 <p>This means that the order in which Filter objects appear in the <code>entity.filters</code> Array becomes very important:</p>
 <pre><code>scrawl.makeFilter({
@@ -368,8 +368,44 @@ scrawl.makePicture({
 <h4 id="apply-filters-to-enhancedlabel-entity-objects">Apply filters to EnhancedLabel entity objects</h4>
 <p>Because the EnhancedLabel entity is so tightly coupled with the <a href="sc-text-layout-engine.html">SC text layout engine</a>, repo-devs have had to replicate the entity filter protocol in that entity's factory function. Thus changes in the entity filter protocol will need to be replicated in the <a href="../source/factory/enhanced-label.html">factory/enhanced-label.js</a> file.</p>
 <h2 id="the-sc-filter-engine">The SC filter engine</h2>
-<p>The filter engine has been designed as a single, standalone JS object that handles all SC filter requirements across all SC-controlled <code>&lt;canvas&gt;</code> elements on a web page. The object instantiates when the SC library first runs, which generally happens when it is first imported into the page furing page load.</p>
-<p>All engine functionality can be found in the <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> file. The file exports the instantiated object itself to other files in the SC ecosystem. Files that import the object should only use the <code>engine.action(packetObject)</code> function which takes a packet of data as its argument and returns an <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData object</a> ready to be written to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a> engine.</p>
+<p>The filter engine has been designed as a single, standalone JS object that handles all SC filter requirements across all SC-controlled <code>&lt;canvas&gt;</code> elements on a web page. The object instantiates when the SC library first runs, which generally happens when it is first imported into the page during page load.</p>
+<p>All engine functionality can be found in the <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> file. The file exports the instantiated object itself to other files in the SC environment. Files that import the object should only use the <code>engine.action(packetObject)</code> function which takes a packet of data as its argument and returns an <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData object</a> ready to be written to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a> engine.</p>
+<h3 id="code-efficiency">Code efficiency</h3>
+<p>The SC filter engine has been built around the principle of manipulating <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData object</a> pixel data, which presents as a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray">Uint8ClampedArray</a> whose elements are restricted to being positive integer Numbers in the range <code>0</code>-<code>255</code>.</p>
+<p>Each pixel in the image data is coded in the <a href="https://developer.mozilla.org/en-US/docs/Glossary/RGB">sRGB color space</a> using three color channels and an additional alpha channel, always in the order <code>[red, green, blue, alpha]</code>. This means that for an ImageData object with a width of 100px and a height of 50px, the <code>imageData.data</code> Array will be <code>100 * 50 * 4 = 20,000</code> elements long.</p>
+<p>Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for these primitive functions. The following guidelines may help:</p>
+<ul>
+<li>Precalculate any requirements that a primitive function may have - for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile - and cache the results in case other primitive functions can make use of them.</li>
+<li>Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.</li>
+<li>Always check to see if the current pixel is transparent (its alpha channel has a value of <code>0</code>) and, if yes, skip the calculations for that pixel if possible.</li>
+<li>When dealing with non-RGB color space calculations, use the color caches - calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.</li>
+</ul>
+<h4 id="filter-regions">Filter regions</h4>
+<p>A key difference between SVG filters and SC filters is that the SVG restricts its filter computations to a <a href="https://www.w3.org/TR/SVG11/filters.html#FilterEffectsRegion">filter effects region</a>. It takes this approach to limit the pixel area that needs to be processed by the filter functions.</p>
+<p>SC does not take this approach. Instead the ImageData object that the filter engine receives will have the dimensions of the host Cell where the filter results will be applied. When a dev-user applies a filter to a <code>10px x 10px</code> Block entity, and a Wheel entity with radius <code>10px</code>, both appearing on a <code>100px x 100px</code> Cell, the ImageData objects presented to the filter engine will include a data Array containing (<code>100 x 100 x 4 = 40,000</code>) elements.</p>
+<p>Consider the situation where both the Block and Wheel entitys have the same <code>pixellate</code> filter applied to them. The pixellate primitive function, as part of its work, will generate a set of objects containing the location details (the data Array indexes) for the pixels contained in each of the tiles required to generate the effect. It calculates this locations data across the entire ImageData, and stashes the results in the SC workstore. Thus while the calculation may happen for the first entity the primitive functions encounters, for every other entity on that Cell using the same filter the primitive function only needs to retrieve those calculated results from the workstore - and this remains true even if the Block or Wheel entitys subsequently change their dimensions, scale or position.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> SVG filter regions are (often) tied to the elements to which the filter is applied. SC filter regions are tied to the Cell on which their effects appear.</p>
+</blockquote>
+<p>While it may seem sensible to limit the area over which a filter effect gets applied, to minimize the calculation effort, the current SC approach - paradoxically - doesn't seem to significantly damage filter performance.</p>
+<h4 id="external-caching-using-the-sc-workstore">External caching using the SC workstore</h4>
+<p>The SC <code>workstore</code> is a keyed object used for longer-term caching of generated data. Like the SC library and the filter engine itself, only one <code>workstore</code> object exists in the SC environment, instantiated at the same time as those other objects during page initialization.</p>
+<p>The <code>workstore</code> itself (alongside an accompanying <code>workstoreLastAccessed</code> object which helps keep track of stale workstore items) is not exported. Instead the file exports getter and setter functions that other SC files can import:</p>
+<ul>
+<li><code>checkForWorkstoreItem('key')</code></li>
+<li><code>getWorkstoreItem('key')</code></li>
+<li><code>setWorkstoreItem('key', data)</code></li>
+<li><code>getOrAddWorkstoreItem('key', data)</code></li>
+<li><code>setAndReturnWorkstoreItem('key', data)</code></li>
+</ul>
+<p>Code for the workstore can be found in the <a href="../source/helper/workstore.html">helper/workstore.js</a> file.</p>
+<p>The filter engine makes extensive use of the workstore. Many of the calculations undertaken by the engine are expensive, thus it makes sense to cache the results after their first calculation to speed up future operations.</p>
+<p>[list of current cached calculations]</p>
+<p>[also mention memoized filter results]</p>
+<h4 id="filter-engine-internal-cache">Filter engine internal cache</h4>
+<p>[todo]</p>
+<h4 id="color-caches">Color caches</h4>
+<p>[todo]</p>
 <h3 id="resources-used-by-the-filter-engine">Resources used by the filter engine</h3>
 <p>[todo]</p>
 <h4 id="the-seeded-random-numbers-generator">The seeded random numbers generator</h4>
@@ -378,26 +414,130 @@ scrawl.makePicture({
 <p>[todo]</p>
 <h4 id="colors-and-gradients">Colors and gradients</h4>
 <p>[todo]</p>
-<h3 id="code-efficiency">Code efficiency</h3>
-<p>[todo]</p>
-<h4 id="external-caching-using-the-sc-workstore">External caching using the SC workstore</h4>
-<p>[todo]</p>
-<h4 id="filter-engine-internal-cache">Filter engine internal cache</h4>
-<p>[todo]</p>
-<h4 id="color-caches">Color caches</h4>
-<p>[todo]</p>
 <h3 id="protocol-for-processing-a-filter-request">Protocol for processing a filter request</h3>
-<p>[todo]</p>
+<p>While the filter engine has many functions defined on its prototype, only one is of interest for the wider code base: <code>engine.action(packet)</code>. This is the function that gets invoked whenever another part of the code base needs to apply filter manipulations to an ImageData object.</p>
+<p>The <code>packet</code> argument supplied to the <code>action</code> function has the following shape:</p>
+<pre><code>{
+  identifier: memoization identifier String 
+  image: unprocessed ImageData object
+  filters: An Array of filter action objects (detailed below)
+}</code></pre>
+<p>The <code>action</code> function itself is simple:</p>
+<pre><code>engine.prototype.action = function (packet) {
+
+  // Define helper variables 
+  const { identifier, filters, image } = packet;
+  const { actions, theBigActionsObject } = this;
+  let i, iz, actData, a;
+
+  // 1. Check to see if output data has been previously generated for this identifier
+  const itemInWorkstore = getWorkstoreItem(identifier);
+  if (itemInWorkstore) return itemInWorkstore;
+
+  // 2. Populate the engine.actions Array with action objects
+  actions.length = 0;
+
+  for (i = 0, iz = filters.length; i &lt; iz; i++) {
+
+      actions.push(...filters[i].actions);
+  }
+
+  const actionsLen = actions.length;
+
+  // 3. Only do work if there's work to be done
+  // - The calling code should have already checked that there's a need to filter data
+  if (actionsLen) {
+
+    // 4. Populate engine.cache with initial DataObjects
+    // - cache.source
+    // - cache['source-alpha']
+    // - cache.work
+    this.unknit(image);
+
+    // 5. Loop through each action object in turn
+    for (i = 0; i &lt; actionsLen; i++) {
+
+      actData = actions[i];
+      a = theBigActionsObject[actData.action];
+
+      // 6. Only invoke the primitive function if it exists
+      if (a) a.call(this, actData);
+    }
+
+    // 7. Cache the resulting ImageData object in the SC workstore, if required
+    if (identifier) setWorkstoreItem(identifier, this.cache.work);
+
+    // 8. Return the resulting ImageData object
+    return this.cache.work;
+  }
+  // 9. If there was no work to do, return the unprocessed ImageData object
+  return image;
+}</code></pre>
 <h2 id="sc-filter-primitive-functions">SC filter primitive functions</h2>
-<p>The SC filter engine has been built around the principle of manipulating <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData object</a> pixel data, which presents as a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray">Uint8ClampedArray</a> whose elements are restricted to being positive integer Numbers in the range <code>0</code>-<code>255</code>.</p>
-<p>Each pixel in the image data is coded in the <a href="https://developer.mozilla.org/en-US/docs/Glossary/RGB">sRGB color space</a> using three color channels and an additional alpha channel, always in the order <code>[red, green, blue, alpha]</code>. This means that for an ImageData object with a width of 100px and a height of 50px, the <code>imageData.data</code> Array will be <code>100 * 50 * 4 = 20,000</code> elements long.</p>
-<p>Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for these primitive functions. The following guidelines may help:</p>
-<ul>
-<li>Precalculate any requirements that a primitive function may have - for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile - and cache the results in case other filter primitives can make use of them.</li>
-<li>Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.</li>
-<li>Always check to see if the current pixel is transparent (its alpha channel has a value of <code>0</code>) and, if yes, skip the calculations for that pixel.</li>
-<li>When dealing with non-RGB color space calculations, use the color caches - calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.</li>
-</ul>
+<p>All primitive functions live in an object called <code>engine.theBigActionsObject</code>. They mostly follow a similar code design pattern:</p>
+<pre><code>// The requirements argument is an action object
+[FUNCTION_NAME]: function (requirements) {
+
+  // Define local functions at the top of the object
+
+  // Get input, output (and mix, if required) ImageData objects
+  const [input, output] = this.getInputAndOutputLines(requirements);
+
+  // Setup convenience variables
+  const iData = input.data,
+      oData = output.data,
+      len = iData.length;
+
+  // Extract remaining data from the requirements object
+  // - All variable values should have default values
+  // - Except lineOut - which can be a String, or undefined (default)
+  const {
+    opacity = 1,
+    includeRed = true,
+    includeGreen = true,
+    includeBlue = true,
+    includeAlpha = true,
+    lineOut,
+  } = requirements;
+
+  // Define additional variables that will be used in the processing loop
+  let r, g, b, a, i;
+
+  // The processing loop:
+  // - Works on a per-pixel basis by stepping through the input Array in batches of 4
+  // - Extracts the input data 
+  // - Manipulates the data, as required
+  // - Places the results of the data manipulation in the output Array
+  for (i = 0; i &lt; len; i += 4) {
+
+    // Many primitive functions can skip over transparent pixels
+    if (iData[i + 3]) {
+
+      r = i;
+      g = r + 1;
+      b = g + 1;
+      a = b + 1;
+
+      oData[r] = (includeRed) ? iData[r] : 0;
+      oData[g] = (includeGreen) ? iData[g] : 0;
+      oData[b] = (includeBlue) ? iData[b] : 0;
+      oData[a] = (includeAlpha) ? iData[a] : 0;
+    }
+
+    // Skipped pixel data still needs to transfer to the output Array
+    else {
+
+      oData[r] = iData[r];
+      oData[g] = iData[g];
+      oData[b] = iData[b];
+      oData[a] = iData[a];
+    }
+  }
+
+  // Merge the input and output data in line with opacity requirements
+  if (lineOut) this.processResults(output, input, 1 - opacity);
+  else this.processResults(this.cache.work, output, opacity);
+},</code></pre>
 <h3 id="alpha-channel-filters">Alpha channel filters</h3>
 <p>The following primitive functions primarily handle manipulations that affect a pixel's alpha channel, in particular for creating <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effects</a>.</p>
 <p>Note that many other filters may impact with the pixel's alpha channel, though that is not their primary functionality.</p>
@@ -486,7 +626,7 @@ scrawl.makePicture({
 <p>Copies an input's alpha channel value over to each selected channel's value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. </p>
 <p>Setting the appropriate <code>includeChannel</code> flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate <code>excludeChannel</code> flag will set that channel's value to zero.</p>
 <p>Used by factory function method: <code>alphaToChannels</code>.</p>
-<p>No test demo available for this action.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
 <pre><code>Default object
 {
   lineIn: '',
@@ -540,7 +680,7 @@ scrawl.makePicture({
 <p>The color are set through the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> attributes; these attribute values should be integer Numbers (between <code>0</code> and <code>255</code>). </p>
 <p>The flood can be restricted to only apply to non-transparent input pixels using the <code>excludeAlpha</code> flag.</p>
 <p>Used by factory function method: <code>flood</code>.</p>
-<p>See test demo <a href="../../demo/filters-013.html">Filters-013</a>.</p>
+<p>See test demos <a href="../../demo/filters-013.html">Filters-013</a> and <a href="../../demo/filters-037.html">Filters-037</a>.</p>
 <pre><code>Default object
 {
   lineIn: '',
