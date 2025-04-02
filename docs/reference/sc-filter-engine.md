@@ -334,7 +334,7 @@ Because the EnhancedLabel entity is so tightly coupled with the [SC text layout 
 ## The SC filter engine
 The filter engine has been designed as a single, standalone JS object that handles all SC filter requirements across all SC-controlled `<canvas>` elements on a web page. The object instantiates when the SC library first runs, which generally happens when it is first imported into the page during page load.
 
-All engine functionality can be found in the [helper/filter-engine.js](../source/helper/filter-engine.html) file. The file exports the instantiated object itself to other files in the SC environment. Files that import the object should only use the `engine.action(packetObject)` function which takes a packet of data as its argument and returns an [ImageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) ready to be written to a [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) engine.
+All engine functionality can be found in the [helper/filter-engine.js](../source/helper/filter-engine.html) file. The file exports the instantiated object itself to other files in the SC environment. Files that import the object should only use the `engine.action(packetObject)` function which takes a packet of data as its argument and returns an [ImageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) ready to be painted onto a [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) engine.
 
 ### Code efficiency
 The SC filter engine has been built around the principle of manipulating [ImageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) pixel data, which presents as a [Uint8ClampedArray](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray) whose elements are restricted to being positive integer Numbers in the range `0`-`255`.
@@ -352,7 +352,7 @@ A key difference between SVG filters and SC filters is that the SVG restricts it
 
 SC does not take this approach. Instead the ImageData object that the filter engine receives will have the dimensions of the host Cell where the filter results will be applied. When a dev-user applies a filter to a `10px x 10px` Block entity, and a Wheel entity with radius `10px`, both appearing on a `100px x 100px` Cell, the ImageData objects presented to the filter engine will include a data Array containing (`100 x 100 x 4 = 40,000`) elements.
 
-Consider the situation where both the Block and Wheel entitys have the same `pixellate` filter applied to them. The pixellate primitive function, as part of its work, will generate a set of objects containing the location details (the data Array indexes) for the pixels contained in each of the tiles required to generate the effect. It calculates this locations data across the entire ImageData, and stashes the results in the SC workstore. Thus while the calculation may happen for the first entity the primitive functions encounters, for every other entity on that Cell using the same filter the primitive function only needs to retrieve those calculated results from the workstore - and this remains true even if the Block or Wheel entitys subsequently change their dimensions, scale or position.
+Consider the situation where both the Block and Wheel entitys have the same `pixellate` filter applied to them. The pixellate primitive function, as part of its work, will generate a set of objects containing the location details (the data Array indexes) for the pixels contained in each of the tiles required to generate the effect. It calculates this locations data across the entire ImageData, and stashes the results in the SC workstore. Thus while the calculation may happen for the first entity the primitive function encounters, for every other entity on that Cell using the same filter the primitive function only needs to retrieve those calculated results from the workstore - and this remains true even if the Block or Wheel entitys subsequently change their dimensions, scale or position.
 
 > **tl;dr:** SVG filter regions are (often) tied to the elements to which the filter is applied. SC filter regions are tied to the Cell on which their effects appear.
 
@@ -361,38 +361,67 @@ While it may seem sensible to limit the area over which a filter effect gets app
 #### External caching using the SC workstore
 The SC `workstore` is a keyed object used for longer-term caching of generated data. Like the SC library and the filter engine itself, only one `workstore` object exists in the SC environment, instantiated at the same time as those other objects during page initialization.
 
-The `workstore` itself (alongside an accompanying `workstoreLastAccessed` object which helps keep track of stale workstore items) is not exported. Instead the file exports getter and setter functions that other SC files can import:
+The `workstore` itself (alongside an accompanying `workstoreLastAccessed` object which helps keep track of stale workstore items) is not exported. Instead the [helper/workstore.js](../source/helper/workstore.html) file exports getter and setter functions that other SC files can import:
 + `checkForWorkstoreItem('key')`
 + `getWorkstoreItem('key')`
 + `setWorkstoreItem('key', data)`
 + `getOrAddWorkstoreItem('key', data)`
 + `setAndReturnWorkstoreItem('key', data)`
 
-Code for the workstore can be found in the [helper/workstore.js](../source/helper/workstore.html) file.
+The filter engine makes extensive use of the workstore. Many of the calculations undertaken by the engine are expensive, thus it makes sense to cache the results after their first calculation to speed up future operations:
 
-The filter engine makes extensive use of the workstore. Many of the calculations undertaken by the engine are expensive, thus it makes sense to cache the results after their first calculation to speed up future operations.
++ **buildHorizontalBlur** creates a grid - an Array of Arrays - detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Stores the result in the key `blur-h-${gridWidth}-${gridHeight}-${radius}`. Used by the `blur` primitive function.
 
-[list of current cached calculations]
++ **buildImageGrid** creates a grid - an Array of Arrays representing columns and rows - which contains the location of each pixel in an `ImageData.data` Array. Stores the result in the key `grid-${ImageData.width}-${ImageData.height}`. Used by the `blur`, `offset` and `swirl` primitive functions.
 
-[also mention memoized filter results]
++ **buildMatrixGrid** creates a grid - an Array of Arrays - detailing which pixels contribute to each pixel's matrix calculation. Stores the result in the key `matrix-${ImageData.width}-${ImageData.height}-${width}-${height}-${x}-${y}`. Used by the `corrode`, `emboss` and `matrix` primitive functions.
+
++ **buildVerticalBlur** creates a grid - an Array of Arrays - detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Stores the result in the key `blur-v-${gridWidth}-${gridHeight}-${radius}`. Used by the `blur` primitive function.
+
++ **getGradientData** creates an imageData object containing the pixel values from a `256px x 1px` canvas to which a linear gradient has been applied. Stores the result in the key `gradient-data-${gradient.name}`. Used by the `map-to-gradient` primitive function as well as SC gradient Palette objects.
+
++ **getRandomNumbers** generates an array of "random" numbers from either *bluenoise* or *ordered* data, or alternatively from a seeded random number generator, to a given length. Stores the results in the key `random-${seed}-${length}-${type}`. Used by the `glitch`, `random-noise`, `reduce-palette` and (indirectly) `tiles` primitive functions.
+
+If a Cell, Group or entity object has requested that its filtered output be memoized, then the final results of those filter operations will also be cached in the workstore, keyed to the object's `filterIdentifier` attribute.
 
 #### Filter engine internal cache
-[todo]
+The filter engine includes a `cache` object which gets reset to an empty object every time the `engine.action()` function gets invoked. This cache holds references to the initial ImageData objects supplied to the `action()` function, alongside any intermediate ImageData objects created as the engine processes the filter action objects.
 
 #### Color caches
-[todo]
+Color space conversion calculations are expensive. For this reason SC will cache the results of each calculation in an object containing a set of three Arrays. This object gets stored in the SC workstore keyed to the `color-point-arrays` String.
 
-### Resources used by the filter engine
-[todo]
+The structures of the Array elements held by the color cache Arrays are:
++ **labColorLib** maps quantized OKLAB color values to their RGB equivalent values, stored as an `[r, g, b]` array
++ **lchColorLib** maps quantized OKLCH color values to their RGB equivalent values, stored as an `[r, g, b]` array
++ **rgbColorLib** maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
+
+The colorLib Arrays themselves are sets of nested sparse Arrays. See the code in the filter engine `getOkColorVals()`, `getRegularColorVals()`, `setOkColorVals()`, `memoizeLab()`, `memoizeLch()`, `getColorLabIndices()` and `getColorLchIndices()` functions for details.
+
+The color conversion algorithms themselves are handled by an SC color object. The filter engine generates (and exports) a Color object - named `SC-core-color-engine` - when the file's code first runs. The algorithm code can be seen in the [factory/color.js](../source/factory/color.html) file.
+
+### Additional resources used by the filter engine
+The filter engine file imports a number of pool functions, which repo-devs can then use when building and maintaining the filter primitive functions. As ever, always release a pooled object after using it - failure to release can lead to slow memory leaks:
++ `releaseCell`, `requestCell`
++ `releaseCoordinate`, `requestCoordinate`
++ `releaseArray`, `requestArray`
 
 #### The seeded random numbers generator
-[todo]
+The filter engine's `getRandomNumbers()` function generates arrays of random numbers that get consumed by the `glitch`, `random-noise`, `reduce-palette` and `tiles` primitive functions. However these functions require their random numbers to be consistent.
+
+For this reason, SC uses a [pseudorandom number generator](https://en.wikipedia.org/wiki/Pseudorandom_number_generator), whose code is defined in the [helper/random-seed.js](../source/helper/random-seed.html) file. This code, created by Gibson Research Corporation, has been taken verbatim from the [skratchdot/random-seed repository](https://github.com/skratchdot/random-seed) on GitHub. Repo-devs made the decision to directly import this code into the code base because: 1. it's very good at its job; and 2. SC prides itself on having no direct dependencies.
+
+The generator repo itself includes a direct dependency on the [moll/json-stringify-safe repository](https://github.com/moll/json-stringify-safe). Again, SC takes that code and includes it in the [helper/random-seed.js](../source/helper/random-seed.html) file.
+
+Licenses for the above code:
++ skratchdot/random-seed repository - [MIT](https://opensource.org/license/mit) - Gibson Research Corporation.
++ moll/json-stringify-safe - [ISC](https://opensource.org/license/isc-license-txt) - Isaac Z. Schlueter and Contributors.
 
 #### Noise generators
-[todo]
+Generating noise can be computationally intensive. In addition to random noise, SC makes use of [blue noise](https://en.wikipedia.org/wiki/Colors_of_noise#Blue_noise) and [ordered noise](), consumed by the `random-noise` and `reduce-palette` primitive functions.
 
-#### Colors and gradients
-[todo]
+The blue noise values Array has been retrieved from blue noise images donated to the [Public Domain](https://creativecommons.org/public-domain/) by Christoph Peters, who has a very interesting blog post on [how to generate blue noise](http://momentsingraphics.de/BlueNoise.html). SC keeps its blue noise values Array in the [helper/filter-engine-bluenoise-data.js](../source/helper/filter-engine-bluenoise-data.html) file, for convenience.
+
+SC defines its own (much shorter) [ordered noise](https://en.wikipedia.org/wiki/Ordered_dithering) values array in the filter engine code.
 
 ### Protocol for processing a filter request
 While the filter engine has many functions defined on its prototype, only one is of interest for the wider code base: `engine.action(packet)`. This is the function that gets invoked whenever another part of the code base needs to apply filter manipulations to an ImageData object.
