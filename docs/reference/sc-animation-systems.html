@@ -112,8 +112,8 @@
 </ul>
 <p>The default behaviour of a generic Animation object, when created, is to run immediately. Dev-users can prevent this by adding a <code>delay: true</code> attribute to the factory function's argument object.</p>
 <h3 id="the-fn-function">The <code>fn</code> function</h3>
-<p>When the Animation object is added to the core animation loop, the loop will invoke the objects <code>fn</code> function - choke permitting - as part of each iteration of the loop. By default, the <code>fn</code> does nothing (in SC repo terms, it defaults to the <code>λnull</code> lambda function defined in the <a href="../source/helper/utilities.html">helper/utilities.js</a> file).</p>
-<p>Dev-users can set the Animation object's <code>fn</code> attribute to perform any task either within the SC ecosystem, or beyond. This includes building a bespoke Display cycle animation - see test demo <a href="../../demo/canvas-041.html">Canvas-041</a> for an example.</p>
+<p>When the Animation object is added to the core animation loop, the loop will invoke the object's <code>fn</code> function - choke permitting - as part of each iteration of the loop. By default, the <code>fn</code> does nothing (in SC repo terms, it defaults to the <code>λnull</code> lambda function defined in the <a href="../source/helper/utilities.html">helper/utilities.js</a> file).</p>
+<p>Dev-users can associate a function object to the <code>fn</code> attribute. That function can perform any task either within the SC ecosystem, or beyond. This includes building a bespoke Display cycle animation - see test demo <a href="../../demo/canvas-041.html">Canvas-041</a> for an example.</p>
 <h3 id="the-hook-functions">The hook functions</h3>
 <p>Similar to the <code>fn</code> function, the hook functions - <code>onRun</code>, <code>onHalt</code>, <code>onKill</code> - default to <code>λnull</code> lambda functions. Dev-users can use these hooks to perform setup and cleanup actions each time the animation run or halts.</p>
 <h3 id="animation-choke-functionality">Animation choke functionality</h3>
@@ -162,12 +162,17 @@
 </ul>
 <p>Note that in the repo code, a single iteration of the Animation object is referred to as a <strong>tick</strong>.</p>
 <p>Ticker object sorting is required whenever a Ticker object is added to, or removed from, the <code>tickerAnimations</code> Array, and also when the dev-user updates a Ticker object's <code>order</code> attribute. Any of these actions will result in the <code>tickerAnimationsFlag</code> signal boolean being set to <code>true</code>, which in turns triggers the sorting functionality. As for other SC order functionality, sorting is performed by means of a bucket sort algorithm.</p>
-<h4 id="create-serialize-clone-and-kill-ticker-objects">Create, serialize, clone and kill Ticker objects</h4>
+<h4 id="create-serialize-and-clone-ticker-objects">Create, serialize and clone Ticker objects</h4>
 <p>Dev-users can create a Ticker object using the <code>scrawl.makeTicker({key: value, ...})</code> factory function.</p>
 <p>Ticker objects can be serialized using the <code>ticker.saveAsPacket()</code> function, and restored against any SC object that includes <code>mixin/base</code> functionality using the <code>obj.actionPacket('packet-string')</code> function.</p>
 <p>Any Ticker object can be cloned using the <code>ticker.clone({key: value, ...})</code> function.</p>
-<p>To remove a Ticker object from the SC environment, invoke <code>ticker.kill()</code> on it. The kill function will also remove all Tween/Action objects currently subscribed to it. To remove the Tween/Action objects while retaining the Ticker object, invoke the <code>ticker.killTweens()</code> function.</p>
-<p>Note that Tickers can be set up to automatically delete themselves once their run completes, by setting their <code>killOnComplete</code> flag to <code>true</code>.</p>
+<h4 id="kill-ticker-objects">Kill Ticker objects</h4>
+<p>To remove a Ticker object from the SC environment, invoke <code>ticker.kill(killTweens = true, autokill = true)</code> on it:</p>
+<ul>
+<li>If the <code>killTweens</code> argument is set to <code>true</code> then SC will also remove all Tween/Action objects currently subscribed to the Ticker.</li>
+<li>To remove the Tween/Action objects while retaining the Ticker object, dev-users can invoke the <code>ticker.killTweens()</code> function - this is a convenience function for <code>ticker.kill(true, false)</code>.</li>
+<li>Tickers can be set up to automatically delete themselves once their run completes, by setting their <code>killOnComplete</code> flag to <code>true</code>. This action will automatically remove all Tween and Action objects associated with the Ticker.</li>
+</ul>
 <h4 id="ticker-attributes">Ticker attributes</h4>
 <p>The following attributes can be set during Ticker object creation, then updated using the <code>ticker.set()</code> function:</p>
 <pre><code>Attribute         Type                               Default
@@ -252,7 +257,7 @@ onReset           Function                           λnull</code></pre>
 <p>SC Ticker objects can run both forwards and backwards. Dev-users can change the <em>temporal direction</em> of the ticker by invoking the <code>ticker.reverse()</code> function when required. This function acts like a switch: if the ticker was running forwards, it will immediately start running backwards; if it was running backwards it will now run forwards.</p>
 <p>Internally, SC doesn't actually reverse time; rather it updates the ticker's currently associated subscriber Tween/Action objects with the new temporal direction of travel (using the <code>changeSubscriberDirection()</code> function). It is up to Tween and Action objects to interpret the data that their Ticker object sends to them on each tick</p>
 <h4 id="subscriber-communication">Subscriber communication</h4>
-<p>During each iteration of the Ticker object's run, the overarching ticker Animstion object will, if relevant, invoke the Ticker object's <code>ticker.fn(reverse: Boolean)</code> function. Here, the ticker calculates relevant timing data which it passes onto each of its Tween/Action object subscribers' <code>tween.update()</code> function.</p>
+<p>During each iteration of the Ticker object's run, the overarching ticker Animation object will, if relevant, invoke the Ticker object's <code>ticker.fn(reverse: Boolean)</code> function. Here, the ticker calculates relevant timing data which it passes onto each of its Tween/Action object subscribers' <code>tween.update()</code> function.</p>
 <p>This data is passed to subscribers in the following shape:</p>
 <pre><code>{
   tick: Number - elapsed time (currentTime - startTime)
@@ -269,6 +274,68 @@ onReset           Function                           λnull</code></pre>
 </ul>
 <h3 id="tween-objects">Tween objects</h3>
 <p>[write up]</p>
+<h4 id="create-and-serialize-tween-objects">Create and serialize Tween objects</h4>
+<p>Dev-users can create a Tween object using the <code>scrawl.makeTween({key: value, ...})</code> factory function.</p>
+<p>If the factory function's argument object includes a valid <code>ticker</code> attribute, then the new Tween will associate itself to that Ticker object. If however the attribute is not included in the argument object, or the desired Ticker object does not (yet) exist, then the new Tween will create its own ticker, giving it the name <code>${tween.name}_ticker</code>.</p>
+<p>Tweens are not animation objects,  but they do include functionality that makes them seem like they are animation objects. For instance, the invocation <code>scrawl.makeTween({key: value, ...}).run()</code> will make the new Tween run immediately after its creation.</p>
+<p>Tween objects can be serialized using the <code>tween.saveAsPacket()</code> function, and restored against any SC <em>tracked object</em> using the <code>obj.actionPacket('packet-string')</code> function.</p>
+<h4 id="clone-tween-objects">Clone Tween objects</h4>
+<p>Any Tween object can be cloned using the <code>tween.clone({key: value, ...})</code> function.</p>
+<p>When a Tween is cloned it will, by default, associate itself to its original's Ticker object. Dev-users can force the Tween to create its own new Ticker object by including the attribute <code>useNewTicker: true</code> in the clone function's argument object.</p>
+<h4 id="kill-tween-objects">Kill Tween objects</h4>
+<p>To remove a Tween object from the SC environment, invoke <code>tween.kill()</code> on it.</p>
+<p>If the Tween object, when created or cloned, created its own Ticker object, then killing the Tween will also kill that Ticker. Otherwise the Tween will disassociate itself from any Ticker objects before terminating its existence.</p>
+<h4 id="tween-attributes">Tween attributes</h4>
+<p>The following attributes can be set during Tween object creation, then updated using the <code>tween.set()</code> function:</p>
+<pre><code>Attribute           Type                               Default
+------------------------------------------------------------------------------------------
+name                String                             Autogenerated (names must be unique)
+order               positive integer Number            1
+targets             SC-object | String | Array         []
+
+ticker              String                             ''
+time                Number | String                    0
+duration            Number | String                    0
+reverseOnCycleEnd   Boolean                            false
+killOnComplete      Boolean                            false
+
+definitions         Array of definition objects        []
+
+action              Function                           λnull
+commenceAction      Function                           λnull
+completeAction      Function                           λnull
+onRun               Function                           λnull
+onHalt              Function                           λnull
+onResume            Function                           λnull
+onReverse           Function                           λnull
+onSeekTo            Function                           λnull
+onSeekFor           Function                           λnull
+
+// The following attributes are kept on the associated Ticker, not the Tween
+cycles              positive integer Number            1
+observer            RenderAnimation object | String    undefined</code></pre>
+<p>time__ - the timeline time when the Tween/Action activates and runs.<br />
+// + Tween/Actions given a time value of <code>0</code> will run as soon as their associated Ticker timeline runs; values greater than 0 will delay their run until that time is reached on the timeline.<br />
+// + Time can be set as a Number value representing microseconds<br />
+// + It can also be set as a time string - <code>3s</code> is 3000 milliseconds; <code>200ms</code> is 200 milliseconds<br />
+// + Or it can be set as a percentage String - <code>30%</code> - measured against the duration of the Ticker timeline.<br />
+        time: 0,</p>
+<p>// <strong>definitions</strong> - Array of objects defining the animations to be performed by the Tween. Object attributes include:<br />
+// + <strong>attribute</strong> (required) - String attribute key.<br />
+// + <strong>start</strong> - Number or String value for this attribute's start point.<br />
+// + <strong>end</strong> - Number or String value for this attribute's end point.<br />
+// + <strong>integer</strong> - Boolean flag indicating whether we should force results to be integers (default: false)<br />
+// + <strong>engine</strong> - String name for the easing function <strong><em>engine</em></strong> to be used to animate this change; or an easing function supplied by the developer.<br />
+//<br />
+// Scrawl-canvas includes functionality to allow <code>start</code> and <code>end</code> values to be defined as Strings, with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number.<br />
+// + These values should be of a type that the target object (generally an artefact) expects to receive in its <code>set</code> function.<br />
+// + Any object with a <code>set</code> function that takes an object as its argument can be tweened.<br />
+    definitions: null,</p>
+<p>// <strong>duration</strong> - can accept a variety of values:<br />
+// + Number, representing milliseconds.<br />
+// + String time value, for example <code>'500ms', '0.5s'</code>.<br />
+// + % String value - <code>20%</code> - a relative value measured against the Ticker's <strong><em>effective duration</em></strong>. For example, if the Ticker has an effective duration of 5000 (5 seconds), and the Tween wants to run for 20% of that time, the Tween's effective duration will be 1000 (1 second).<br />
+    duration: 0,</p>
 <h4 id="tween-targets">Tween targets</h4>
 <p>[write up]</p>
 <h4 id="definitions-objects">Definitions objects</h4>

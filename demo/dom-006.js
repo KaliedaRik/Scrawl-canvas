@@ -98,7 +98,7 @@ scrawl.makeTween({
 
     name: name('myTween'),
     targets: element,
-    ticker: name('myTicker'),
+    ticker: ticker,
     duration: '100%',
     time: 0,
     definitions: [

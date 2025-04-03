@@ -13,7 +13,7 @@ import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
 // Shared constants
-import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TICKER, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants (none defined)
 
@@ -21,14 +21,15 @@ import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, 
 // #### Tween constructor
 const Tween = function (items = Ωempty) {
 
-    let tn;
-
     this.makeName(items.name);
     this.register();
 
     this.set(this.defs);
 
     this.setObj = null;
+
+    let t = items.ticker;
+    if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
 
     this.set(items);
 
@@ -44,7 +45,7 @@ const Tween = function (items = Ωempty) {
     if (animationtickers[items.ticker]) this.addToTicker(items.ticker);
     else {
 
-        tn = `${this.name}_ticker`;
+        const tn = `${this.name}_ticker`;
 
         makeTicker({
             name: tn,
@@ -247,6 +248,9 @@ S.completeAction = function (item) {
 // + updating the Tween's Ticker object happens here
 // + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
 P.set = function (items = Ωempty) {
+
+    let t = items.ticker;
+    if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
 
     const setters = this.setters,
         keys = _keys(items),

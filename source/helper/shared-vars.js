@@ -235,6 +235,7 @@ export const T_RD_ASSET = 'RdAsset';
 export const T_RENDER_ANIMATION = 'RenderAnimation';
 export const T_SPRITE = 'Sprite';
 export const T_STACK = 'Stack';
+export const T_TICKER = 'Ticker';
 export const T_TWEEN = 'Tween';
 export const T_VECTOR = 'Vector';
 export const T_VIDEO = 'Video';

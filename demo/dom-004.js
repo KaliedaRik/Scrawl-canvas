@@ -44,7 +44,6 @@ const tween = scrawl.makeTween({
 
     duration: 5000,
     killOnComplete: true,
-    useNewTicker: true,
 
     definitions: [
         {

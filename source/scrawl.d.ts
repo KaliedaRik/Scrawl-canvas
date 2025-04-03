@@ -2821,7 +2821,7 @@ interface TweenFactoryInputs extends BaseMixinInputs, TweenMixinInputs, TweenFac
     onRun?: DefaultInputFunction;
     onSeekFor?: DefaultInputFunction;
     onSeekTo?: DefaultInputFunction;
-    ticker?: string;
+    ticker?: string | TickerInstance;
     useNewTicker?: boolean;
 }
 

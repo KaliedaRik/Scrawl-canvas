@@ -379,9 +379,10 @@ mygoose.clone({
     },
 });
 
+// Test creating Tweens referencing the Ticker object rather than the object's `name` string
 myLocalTweenFactory(
     name('test-goose2-tween'),
-    name('test-video-ticker'),
+    myticker,
     name('test-goose2-hitzone'),
     [
         [0,       '4s',   '89%', '89%', '77%', '80%'],
