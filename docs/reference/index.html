@@ -373,6 +373,9 @@
         <ul>
           <li>Stacking filters</li>
           <li>Chaining filters</li>
+          <ul>
+            <li>Input and output identifiers</li>
+          </ul>
           <li>Filter opacity</li>
           <li>Using objects as filter stencils</li>
           <li>Memoizing a filtered object's output</li>
@@ -390,17 +393,17 @@
         </ul>
         <li><a href="sc-filter-engine.html#the-sc-filter-engine">The SC filter engine</a></li>
         <ul>
-          <li>Resources used by the filter engine</li>
-          <ul>
-            <li>The seeded random numbers generator</li>
-            <li>Noise generators</li>
-            <li>Colors and gradients</li>
-          </ul>
           <li>Code efficiency</li>
           <ul>
+            <li>Filter regions</li>
             <li>External caching using the SC workstore</li>
             <li>Filter engine internal cache</li>
             <li>Color caches</li>
+          </ul>
+          <li>Additional resources used by the filter engine</li>
+          <ul>
+            <li>The seeded random numbers generator</li>
+            <li>Noise generators</li>
           </ul>
           <li>Protocol for processing a filter request</li>
         </ul>
@@ -457,6 +460,8 @@
           </ul>
           <li>OK filters</li>
           <ul>
+            <li>Action: alpha-to-luminance</li>
+            <li>Action: luminance-to-alpha</li>
             <li>Action: modify-ok-channels</li>
             <li>Action: modulate-ok-channels</li>
             <li>Action: negative</li>
@@ -467,6 +472,7 @@
         <li><a href="sc-filter-engine.html#sc-predefined-filter-effects">SC predefined filter effects</a></li>
         <ul>
           <li>Method: alphaToChannels</li>
+          <li>Method: alphaToLuminance</li>
           <li>Method: areaAlpha</li>
           <li>Method: blend</li>
           <li>Method: blue</li>
@@ -494,6 +500,7 @@
           <li>Method: green</li>
           <li>Method: image</li>
           <li>Method: invert</li>
+          <li>Method: luminanceToAlpha</li>
           <li>Method: magenta</li>
           <li>Method: mapToGradient</li>
           <li>Method: matrix</li>

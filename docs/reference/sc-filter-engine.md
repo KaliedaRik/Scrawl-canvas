@@ -341,14 +341,14 @@ The SC filter engine has been built around the principle of manipulating [ImageD
 
 Each pixel in the image data is coded in the [sRGB color space](https://developer.mozilla.org/en-US/docs/Glossary/RGB) using three color channels and an additional alpha channel, always in the order `[red, green, blue, alpha]`. This means that for an ImageData object with a width of 100px and a height of 50px, the `imageData.data` Array will be `100 * 50 * 4 = 20,000` elements long.
 
-Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for these primitive functions. The following guidelines may help:
+Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for filter primitive functions. The following guidelines may help:
 + Precalculate any requirements that a primitive function may have - for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile - and cache the results in case other primitive functions can make use of them.
 + Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.
 + Always check to see if the current pixel is transparent (its alpha channel has a value of `0`) and, if yes, skip the calculations for that pixel if possible.
 + When dealing with non-RGB color space calculations, use the color caches - calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.
 
 #### Filter regions
-A key difference between SVG filters and SC filters is that the SVG restricts its filter computations to a [filter effects region](https://www.w3.org/TR/SVG11/filters.html#FilterEffectsRegion). It takes this approach to limit the pixel area that needs to be processed by the filter functions.
+A key difference between SVG filters and SC filters is that the SVG restricts its filter computations to a [filter effects region](https://www.w3.org/TR/SVG11/filters.html#FilterEffectsRegion). It takes this approach to limit the pixel area that needs to be processed by its filter functions.
 
 SC does not take this approach. Instead the ImageData object that the filter engine receives will have the dimensions of the host Cell where the filter results will be applied. When a dev-user applies a filter to a `10px x 10px` Block entity, and a Wheel entity with radius `10px`, both appearing on a `100px x 100px` Cell, the ImageData objects presented to the filter engine will include a data Array containing (`100 x 100 x 4 = 40,000`) elements.
 
@@ -356,7 +356,7 @@ Consider the situation where both the Block and Wheel entitys have the same `pix
 
 > **tl;dr:** SVG filter regions are (often) tied to the elements to which the filter is applied. SC filter regions are tied to the Cell on which their effects appear.
 
-While it may seem sensible to limit the area over which a filter effect gets applied, to minimize the calculation effort, the current SC approach - paradoxically - doesn't seem to significantly damage filter performance.
+While it may seem sensible to limit the area over which a filter effect gets applied, to minimize the calculation effort, the current SC approach - paradoxically - doesn't seem to significantly damage filter performance. This can be seen in test demo [Canvas-007](../../demo/canvas-007.html).
 
 #### External caching using the SC workstore
 The SC `workstore` is a keyed object used for longer-term caching of generated data. Like the SC library and the filter engine itself, only one `workstore` object exists in the SC environment, instantiated at the same time as those other objects during page initialization.
@@ -376,7 +376,7 @@ The filter engine makes extensive use of the workstore. Many of the calculations
 
 + **buildMatrixGrid** creates a grid - an Array of Arrays - detailing which pixels contribute to each pixel's matrix calculation. Stores the result in the key `matrix-${ImageData.width}-${ImageData.height}-${width}-${height}-${x}-${y}`. Used by the `corrode`, `emboss` and `matrix` primitive functions.
 
-+ **buildVerticalBlur** creates a grid - an Array of Arrays - detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Stores the result in the key `blur-v-${gridWidth}-${gridHeight}-${radius}`. Used by the `blur` primitive function.
++ **buildVerticalBlur** creates a grid - an Array of Arrays - detailing which pixels contribute to the vertical part of each pixel's blur calculation. Stores the result in the key `blur-v-${gridWidth}-${gridHeight}-${radius}`. Used by the `blur` primitive function.
 
 + **getGradientData** creates an imageData object containing the pixel values from a `256px x 1px` canvas to which a linear gradient has been applied. Stores the result in the key `gradient-data-${gradient.name}`. Used by the `map-to-gradient` primitive function as well as SC gradient Palette objects.
 
@@ -391,11 +391,11 @@ The filter engine includes a `cache` object which gets reset to an empty object 
 Color space conversion calculations are expensive. For this reason SC will cache the results of each calculation in an object containing a set of three Arrays. This object gets stored in the SC workstore keyed to the `color-point-arrays` String.
 
 The structures of the Array elements held by the color cache Arrays are:
-+ **labColorLib** maps quantized OKLAB color values to their RGB equivalent values, stored as an `[r, g, b]` array
-+ **lchColorLib** maps quantized OKLCH color values to their RGB equivalent values, stored as an `[r, g, b]` array
-+ **rgbColorLib** maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
++ **labColorLib** - maps quantized OKLAB color values to their RGB equivalent values, stored as an `[r, g, b]` array
++ **lchColorLib** - maps quantized OKLCH color values to their RGB equivalent values, stored as an `[r, g, b]` array
++ **rgbColorLib** - maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
 
-The colorLib Arrays themselves are sets of nested sparse Arrays. See the code in the filter engine `getOkColorVals()`, `getRegularColorVals()`, `setOkColorVals()`, `memoizeLab()`, `memoizeLch()`, `getColorLabIndices()` and `getColorLchIndices()` functions for details.
+The colorLib Arrays are sets of nested sparse Arrays. See the code in the filter engine `getOkColorVals()`, `getRegularColorVals()`, `setOkColorVals()`, `memoizeLab()`, `memoizeLch()`, `getColorLabIndices()` and `getColorLchIndices()` functions for details.
 
 The color conversion algorithms themselves are handled by an SC color object. The filter engine generates (and exports) a Color object - named `SC-core-color-engine` - when the file's code first runs. The algorithm code can be seen in the [factory/color.js](../source/factory/color.html) file.
 
@@ -417,11 +417,11 @@ Licenses for the above code:
 + moll/json-stringify-safe - [ISC](https://opensource.org/license/isc-license-txt) - Isaac Z. Schlueter and Contributors.
 
 #### Noise generators
-Generating noise can be computationally intensive. In addition to random noise, SC makes use of [blue noise](https://en.wikipedia.org/wiki/Colors_of_noise#Blue_noise) and [ordered noise](), consumed by the `random-noise` and `reduce-palette` primitive functions.
+Generating noise can be computationally intensive. In addition to random noise, SC makes use of [blue noise](https://en.wikipedia.org/wiki/Colors_of_noise#Blue_noise) and [ordered noise](https://en.wikipedia.org/wiki/Ordered_dithering), consumed by the `random-noise` and `reduce-palette` primitive functions.
 
 The blue noise values Array has been retrieved from blue noise images donated to the [Public Domain](https://creativecommons.org/public-domain/) by Christoph Peters, who has a very interesting blog post on [how to generate blue noise](http://momentsingraphics.de/BlueNoise.html). SC keeps its blue noise values Array in the [helper/filter-engine-bluenoise-data.js](../source/helper/filter-engine-bluenoise-data.html) file, for convenience.
 
-SC defines its own (much shorter) [ordered noise](https://en.wikipedia.org/wiki/Ordered_dithering) values array in the filter engine code.
+SC defines its own (much shorter) ordered noise values array in the filter engine code.
 
 ### Protocol for processing a filter request
 While the filter engine has many functions defined on its prototype, only one is of interest for the wider code base: `engine.action(packet)`. This is the function that gets invoked whenever another part of the code base needs to apply filter manipulations to an ImageData object.
@@ -1152,7 +1152,7 @@ Default object
 ```
 
 #### Action: `corrode`
-Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG (`<feMorphology>`)[https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology] filter primative.
+Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG [`<feMorphology>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology) filter primative.
 
 The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
 
@@ -1192,7 +1192,7 @@ Performs a [directional difference filter](https://en.wikipedia.org/wiki/Image_e
 
 The `angle` (measured in degrees) and `strength` attributes contribute to the weights used in the matrix.
 
-The function also handles some post-processing effects, controlled by the `postProcessResults` and `keepOnlyChangedAreas` flags, and the `tolerance` positive float Number attribute..
+The function also handles some post-processing effects, controlled by the `postProcessResults` and `keepOnlyChangedAreas` flags, and the `tolerance` positive float Number attribute.
 
 Used as the final step by factory function method: `emboss`.
 
@@ -1216,7 +1216,7 @@ Default object
 #### Action: `gaussian-blur`
 Generates a [gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur) effect from the input. 
 
-Note that this code is not original. It has been adapted from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code last accessed 1 June 2021).
+The code behind this approach uses an [infinite impulse response](https://en.wikipedia.org/wiki/Infinite_impulse_response) algorithm to produce the blur. The concept was developed by IBM engineers but, sadly, the paper seems to have been removed from the IBM site. The IBM concept was adapted to run in Javascript by contributors to the [nodeca/glur](https://github.com/nodeca/glur/blob/master/index.js) GitHub repository - it is that code which repo-devs have adapted into the SC code base for this blur effect. The nodeca/glur code uses the [MIT](https://opensource.org/license/mit) license.
 
 The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.
 
