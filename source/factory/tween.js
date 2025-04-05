@@ -24,9 +24,12 @@ const Tween = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
 
-    this.set(this.defs);
-
     this.setObj = null;
+
+    this.targets = [];
+    this.definitions = [];
+
+    this.set(this.defs);
 
     let t = items.ticker;
     if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
@@ -138,9 +141,10 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAc
 
 P.finalizePacketOut = function (copy) {
 
-    if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+    // if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+    copy.targets = this.targets.map(t => t.name);
 
-    if (_isArray(this.definitions)) {
+    // if (_isArray(this.definitions)) {
 
         copy.definitions = this.definitions.map(d => {
 
@@ -165,7 +169,7 @@ P.finalizePacketOut = function (copy) {
             }
             return res;
         });
-    }
+    // }
     return copy;
 };
 

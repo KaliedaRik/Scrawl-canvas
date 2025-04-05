@@ -13,7 +13,7 @@ import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } f
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { FUNCTION, PC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+import { FUNCTION, PC, T_TICKER, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'],
@@ -109,10 +109,10 @@ export default function (P = Ωempty) {
 // + the getter returns a fresh copy of the current targets Array
     G.targets = function () {
 
-        return [].concat(this.targets);
+        return [...this.targets];
     };
 
-    S.targets = function (item = []) {
+    S.targets = function (item) {
 
         this.setTargets(item);
     };
@@ -153,6 +153,8 @@ export default function (P = Ωempty) {
 // `addToTicker`
     P.addToTicker = function (item) {
 
+        if (item && !item.substring && item.name && item.type === T_TICKER) item = item.name;
+
         if (xt(item)) {
 
             const oldT = this.ticker,
@@ -173,7 +175,8 @@ export default function (P = Ωempty) {
 // `removeFromTicker`
     P.removeFromTicker = function (item) {
 
-        item = (xt(item)) ? item : this.ticker;
+        if (item && !item.substring && item.name && item.type === T_TICKER) item = item.name;
+        if (!item) item = this.ticker;
 
         if (item) {
 
@@ -188,119 +191,118 @@ export default function (P = Ωempty) {
         return this;
     };
 
-// `setTargets`
-    P.setTargets = function (items) {
+    const populateTargetArrays = function (...args) {
 
-        items = [].concat(items);
+        const items = requestArray(),
+            targetnames = requestArray(),
+            targets = requestArray();
 
-        const newTargets = requestArray();
+        args.forEach(arg => {
+
+            if (Array.isArray(arg)) items.push(...arg);
+            else items.push(arg);
+        });
 
         items.forEach(item => {
 
-            if (isa_fn(item)) {
+            if (item != null) {
 
-                if (isa_fn(item.set)) newTargets.push(item);
-            }
-            else if (isa_obj(item) && xt(item.name)) newTargets.push(item);
-            else {
+                // Handle bespoke functions with a set function
+                if (isa_fn(item) && isa_fn(item.set)) targets.push(item);
 
-                const result = locateTarget(item);
+                // Handle strings
+                else if (item.substring && !targetnames.includes(item)) {
 
-                if (result) newTargets.push(result);
+                    const result = locateTarget(item);
+
+                    if (result) {
+
+                        targetnames.push(item);
+                        targets.push(result);
+                    }
+                }
+
+                // Handle SC objects
+                else if (isa_obj(item) && isa_fn(item.set) && item.name && !targetnames.includes(item.name)) {
+
+                    targetnames.push(item.name);
+                    targets.push(item);
+                }
             }
         });
+        releaseArray(items, targetnames);
 
-        if (!this.targets) this.targets = [];
+        return targets;
+    }
+
+// `setTargets`
+    P.setTargets = function (...args) {
+
+        const targets = populateTargetArrays(args);
+
         this.targets.length = 0;
-        this.targets.push(...newTargets);
+        this.targets.push(...targets);
 
-        releaseArray(newTargets);
-
-        return this;
+        releaseArray(targets);
     };
 
 // `addToTargets`
-    P.addToTargets = function (items) {
+    P.addToTargets = function (...args) {
 
-        items = [].concat(items);
+        const targets = populateTargetArrays(args);
 
-        let result;
+        const currentTargets = [...this.targets];
 
-        items.forEach(item => {
+        const currentTargetNames = currentTargets.map(t => t.name || '');
 
-            if (typeof item === FUNCTION) {
+        targets.forEach(t => {
 
-                if (typeof item.set === FUNCTION) this.targets.push(item);
-            }
-            else {
+            if (!t.name) currentTargets.push(t);
 
-                result = locateTarget(item);
+            else if (!currentTargetNames.includes(t.name)) currentTargets.push(t);
+        });
 
-                if (result) this.targets.push(result);
-            }
-        }, this);
+        this.targets.length = 0;
+        this.targets.push(...currentTargets);
 
-        return this;
+        releaseArray(targets);
     };
 
 // `removeFromTargets`
     P.removeFromTargets = function (items) {
 
-        items = [].concat(items);
+        const targets = populateTargetArrays(args),
+            currentTargets = [...this.targets],
+            currentTargetNames = currentTargets.map(t => t.name || '');
 
-        const identifiers = requestArray(),
-            newTargets = [].concat(this.targets);
+        const targetsToRemove = requestArray(),
+            functionsToKeep = requestArray();
 
-        newTargets.forEach(target => {
+        targets.forEach(t => {
 
-            const type = target.type || UNKNOWN,
-                name = target.name || UNNAMED;
-
-            if (type !== UNKNOWN && name !== UNNAMED) identifiers.push(`${type}_${name}`);
+            if (!t.name) functionsToKeep.push(t);
+            else if (currentTargetNames.includes(t.name)) targetsToRemove.push(t.name);
         });
 
-        items.forEach(item => {
+        this.targets.length = 0;
+        this.targets.push(...functionsToKeep);
+        this.targets.push(...currentTargets.filter(t => {
 
-            let myObj;
+            if (!t.name) return false;
+            return !targetsToRemove.includes(t.name);
+        }));
 
-            if (typeof item === FUNCTION) myObj = item;
-            else myObj = locateTarget(item);
-
-            if (myObj) {
-
-                const type = myObj.type || UNKNOWN,
-                    name = myObj.name || UNNAMED;
-
-                if (type !== UNKNOWN && name !== UNNAMED) {
-
-                    const objName = `${type}_${name}`,
-                        doRemove = identifiers.indexOf(objName);
-
-                    if (doRemove >= 0) newTargets[doRemove] = false;
-                }
-            }
-        });
-
-        if (!this.targets) this.targets = [];
-        const t = this.targets;
-        t.length = 0;
-
-        newTargets.forEach(target => {
-
-            if (target) t.push(target);
-        }, this);
-
-        releaseArray(identifiers);
-
-        return this;
+        releaseArray(targets, targetsToRemove, functionsToKeep);
     };
 
 // `checkForTarget`
     P.checkForTarget = function (item) {
 
-        if (!item.substring) return false;
+        if (item.substring) return this.targets.some(t => t.name === item);
 
-        return this.targets.some(t => t.name === item);
+        if (!item.name) return false
+
+        return this.targets.some(t => t.name === item.name);
     };
 
     P.run = λnull;
