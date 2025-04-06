@@ -438,7 +438,8 @@ const conicOne = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, angle } = pixel;
+        let { red, green, blue } = pixel;
+        const angle = pixel.angle;
 
         if (angle < 0.33) red++;
         else if (angle < 0.67) green++;
@@ -455,7 +456,8 @@ const conicTwo = () => {
 
     pixelState.forEach(pixel => {
 
-        let { red, green, blue, angle } = pixel;
+        let { red, green, blue } = pixel;
+        const angle = pixel.angle;
 
         if (angle < 0.33) red--;
         else if (angle < 0.67) green--;

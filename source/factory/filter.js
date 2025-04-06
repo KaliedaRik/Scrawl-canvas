@@ -9,7 +9,7 @@
 // #### Imports
 import { cell, constructors, entity, group, styles } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from './gradient.js';
 import { colorEngine } from '../helper/filter-engine.js';
@@ -981,7 +981,7 @@ const setActionsArray = {
 // __image__ (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image
     image: function (f) {
 
-        f.actions = [{
+        const o = {
             action: PROCESS_IMAGE,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             asset: (f.asset != null) ? f.asset : ZERO_STR,
@@ -991,7 +991,13 @@ const setActionsArray = {
             copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
             copyX: (f.copyX != null) ? f.copyX : 0,
             copyY: (f.copyY != null) ? f.copyY : 0,
-        }];
+        };
+
+        o.identifier = `user-image-${o.asset}-${generateUuid()}`;
+
+        console.log(o);
+
+        f.actions = [o];
     },
 
 // __invert__ - inverts the colors in the image, producing an effect similar to a photograph negative

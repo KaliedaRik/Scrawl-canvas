@@ -31,12 +31,10 @@ const Tween = function (items = Ωempty) {
 
     this.set(this.defs);
 
-    let t = items.ticker;
+    const t = items.ticker;
     if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
 
     this.set(items);
-
-    this.setDefinitionsValues();
 
     // `status` magic numbers: `-1` = "before"; `0` = "running"; `1` = "after".
     this.status = -1;
@@ -141,41 +139,37 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAc
 
 P.finalizePacketOut = function (copy) {
 
-    // if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
     copy.targets = this.targets.map(t => t.name);
 
-    // if (_isArray(this.definitions)) {
+    copy.definitions = this.definitions.map(d => {
 
-        copy.definitions = this.definitions.map(d => {
+        const res = {};
+        res.attribute = d.attribute;
+        res.start = d.start;
+        res.end = d.end;
 
-            const res = {};
-            res.attribute = d.attribute;
-            res.start = d.start;
-            res.end = d.end;
+        if (d.engine && d.engine.substring) res.engine = d.engine.substring;
+        else {
 
-            if (d.engine && d.engine.substring) res.engine = d.engine.substring;
-            else {
+            if (xt(d.engine) && d.engine != null) {
 
-                if (xt(d.engine) && d.engine != null) {
+                const e = this.stringifyFunction(d.engine);
 
-                    const e = this.stringifyFunction(d.engine);
+                if (e) {
 
-                    if (e) {
-
-                        res.engine = e;
-                        res.engineIsFunction = true;
-                    }
+                    res.engine = e;
+                    res.engineIsFunction = true;
                 }
             }
-            return res;
-        });
-    // }
+        }
+        return res;
+    });
     return copy;
 };
 
 
 // #### Clone management
-// When cloning a ticker, we can use an additional attribute in the clone function's argument object:
+// When cloning a tween, we can use an additional attribute in the clone function's argument object:
 // + __useNewTicker__ - Boolean flag - when set, the clone will also create its own Ticker object
 P.postCloneAction = function(clone, items) {
 
@@ -223,13 +217,12 @@ const G = P.getters,
 // __definitions__
 G.definitions = function() {
 
-    return [].concat(this.definitions);
+    return [...this.definitions];
 };
 
 S.definitions = function (item) {
 
-    this.definitions = [].concat(item);
-    this.setDefinitionsValues();
+    if (item) this.setDefinitions(item);
 };
 
 // __commenceAction__
@@ -253,7 +246,7 @@ S.completeAction = function (item) {
 // + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
 P.set = function (items = Ωempty) {
 
-    let t = items.ticker;
+    const t = items.ticker;
     if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
 
     const setters = this.setters,
@@ -464,6 +457,20 @@ P.engineActions = function(engine, start, change, position) {
 
     const e = (null != easeEngines[engine]) ? engine : LINEAR;
     return start + (change * easeEngines[e](position));
+};
+
+// `setDefinitions`, `clearDefinitions`
+P.setDefinitions = function (...args) {
+
+    this.definitions.length = 0;
+    this.definitions.push(...args.flat(Infinity));
+
+    this.setDefinitionsValues();
+};
+
+P.clearDefinitions = function () {
+
+    this.definitions.length = 0;
 };
 
 // `setDefinitionsValues` - convert `start` and `end` values into float Numbers.

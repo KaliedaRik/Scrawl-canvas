@@ -13,11 +13,10 @@ import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } f
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { FUNCTION, PC, T_TICKER, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+import { FUNCTION, PC, T_TICKER, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'],
-    UNNAMED = 'unnamed';
+const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'];
 
 
 // Helper function
@@ -193,15 +192,10 @@ export default function (P = Ωempty) {
 
     const populateTargetArrays = function (...args) {
 
-        const items = requestArray(),
-            targetnames = requestArray(),
+        const targetnames = requestArray(),
             targets = requestArray();
 
-        args.forEach(arg => {
-
-            if (Array.isArray(arg)) items.push(...arg);
-            else items.push(arg);
-        });
+        const items = args.flat(Infinity);
 
         items.forEach(item => {
 
@@ -230,7 +224,7 @@ export default function (P = Ωempty) {
                 }
             }
         });
-        releaseArray(items, targetnames);
+        releaseArray(targetnames);
 
         return targets;
     }
@@ -269,7 +263,7 @@ export default function (P = Ωempty) {
     };
 
 // `removeFromTargets`
-    P.removeFromTargets = function (items) {
+    P.removeFromTargets = function (...args) {
 
         const targets = populateTargetArrays(args),
             currentTargets = [...this.targets],

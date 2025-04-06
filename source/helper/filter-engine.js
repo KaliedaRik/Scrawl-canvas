@@ -4432,11 +4432,15 @@ P.theBigActionsObject = {
 // + Adding assets to a filter chain will very often disable filter memoization functionality!
     [PROCESS_IMAGE]: function (requirements) {
 
-        const {assetData, lineOut} = requirements;
+        const {identifier, lineOut} = requirements;
 
         if (lineOut && lineOut.substring && lineOut.length) {
 
-            let {width, height, data} = assetData;
+            const assetData = getWorkstoreItem(identifier);
+
+            let width = assetData ? assetData.width : 1,
+                height = assetData ? assetData.height : 1,
+                data = assetData ? assetData.data : new Uint8ClampedArray(4);
 
             if (width && height && data) {
 

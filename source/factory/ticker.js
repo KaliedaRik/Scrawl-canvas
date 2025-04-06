@@ -5,7 +5,7 @@
 // #### Imports
 import { animation, animationtickers, constructors, tween } from '../core/library.js';
 
-import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, xtGet, Ωempty } from '../helper/utilities.js';
+import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
@@ -14,7 +14,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _floor, _isArray, _now, FUNCTION, PC, T_ACTION, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _now, FUNCTION, PC, T_ACTION, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const ANIMATIONTICKERS = 'animationtickers'
@@ -167,7 +167,7 @@ const G = P.getters,
 // + setter accepts a Tween or Action name-String, or an Array of such Strings. Will replace the existing `subscribers` Array with this new data.
 G.subscribers = function () {
 
-    return [].concat(this.subscribers);
+    return [...this.subscribers];
 };
 S.subscribers = function (item) {
 
@@ -224,13 +224,7 @@ S.duration = function (item) {
 // + an Array of such name-Strings or objects
 P.subscribe = function (...args) {
 
-    const items = requestArray();
-
-    args.forEach(item => {
-
-        if (_isArray(item)) items.push(...item);
-        else items.push(item);
-    });
+    const items = args.flat(Infinity);
 
     if (items.length) {
 
@@ -252,7 +246,6 @@ P.subscribe = function (...args) {
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
-    releaseArray(items);
     return this;
 };
 
@@ -261,13 +254,7 @@ P.subscribe = function (...args) {
 // + an Array of such name-Strings or objects
 P.unsubscribe = function (...args) {
 
-    const items = requestArray();
-
-    args.forEach(item => {
-
-        if (_isArray(item)) items.push(...item);
-        else items.push(item);
-    });
+    const items = args.flat(Infinity);
 
     if (items.length) {
 
@@ -288,8 +275,6 @@ P.unsubscribe = function (...args) {
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
-
-    releaseArray(items);
     return this;
 };
 

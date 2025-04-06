@@ -22,7 +22,7 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the filter
-const myFilter = scrawl.makeFilter({
+scrawl.makeFilter({
 
     name: name('luminanceToAlpha'),
     method: 'luminanceToAlpha',

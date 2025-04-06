@@ -657,7 +657,7 @@ interface TweenMixinInputs {
     order?: number;
     reverseOnCycleEnd?: boolean;
     targets?: TweenTargetInstance | TweenTargetInstance[];
-    ticker?: string;
+    ticker?: TickerInstance | string;
 }
 
 interface TweenMixinFunctions {
