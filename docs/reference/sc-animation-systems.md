@@ -412,11 +412,57 @@ scrawl.makeTween({
 ```
 
 #### Easing engine functions
-[write up]
+SC includes a large number of easing functions out of the box - see test demo [Canvas-047](../../demo/canvas-047.html).
 
-Bespoke easing functions
-+ Test demo [Canvas-005](../../demo/canvas-005.html) - animating a gradient over 3 loops
-+ Test demo [Canvas-017](../../demo/canvas-017.html) - bespoke easings for gradients
+The naming convention for these functions follows the metaphor of trains and stations. This is (probably) different to how easings are named elsewhere:
++ `in` - the easing starts fast and slows down (the train eases into the station, and stops).
++ `out` - the easing starts slow and speeds up (the train eases out of the station, gsthering speed).
+
+The code for these pre-defined easing functions can be found in the [helper/utilities.js](../source/helper/utilities.html) file:
+```
+linear            cosine            hermite           quintic
+
+out                                                   in
+
+easeOut           easeOutIn         easeInOut         easeIn
+easeOut3          easeOutIn3        easeInOut3        easeIn3
+easeOut4          easeOutIn4        easeInOut4        easeIn4      
+easeOut5          easeOutIn5        easeInOut5        easeIn5
+
+easeOutSine       easeOutInSine                       easeInSine     
+easeOutQuad       easeOutInQuad                       easeInQuad     
+easeOutCubic      easeOutInCubic                      easeInCubic    
+easeOutQuart      easeOutInQuart                      easeInQuart    
+easeOutQuint      easeOutInQuint                      easeInQuint    
+easeOutCirc       easeOutInCirc                       easeInCirc     
+
+easeOutBack       easeOutInBack                       easeInBack   
+easeOutElastic    easeOutInElastic                    easeInElastic
+easeOutBounce     easeOutInBounce                     easeInBounce 
+```
+
+Easing functions are not restricted to Tween objects. SC also uses them to help interpret Color object `range` requests, and applies them to various gradient-based objects - **eased linear gradients** - and even the swirl filter.
+
+Dev-users can also define their own easing engines. The function will need to take the following arguments:
+```
+const myEasingFunction = function (start, change, position) {
+  
+  // code here
+
+  return result;  // Number
+};
+
+Where:
+  start     - the required start value of the attribute (Number)
+  change    - the required end value of the attribute (Number)
+  position  - elapsed time / duration (Number between 0 and 1)
+```
+
+For examples of some bespoke easing functions, see:
++ Test demos [Canvas-003](../../demo/canvas-003.html), [Canvas-004](../../demo/canvas-004.html), [Canvas-017](../../demo/canvas-017.html) - eased linear gradients
++ Test demo [Canvas-005](../../demo/canvas-005.html) - easing a gradient animation for 3 loops
+for+ Test demo [Filters-022](../../demo/filters-022.html) - easings applied to a mapToGradient filter
++ Test demo [Filters-026](../../demo/filters-026.html) - easings applied to a swirl filter
 
 ### Action objects
 [write up]
