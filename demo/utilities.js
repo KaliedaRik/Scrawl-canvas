@@ -508,7 +508,7 @@ const addImageDragAndDrop = (scrawl, canvas, selector, targets, callback = () =>
                                 copyHeight: dim,
                             });
                         }
-                        else {
+                        else if (target.type !== 'Filter') {
 
                             target.set({
                                 copyStartX,

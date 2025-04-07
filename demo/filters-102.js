@@ -81,8 +81,6 @@ scrawl.makeFilter({
     name: name('star-filter'),
     method: 'image',
     asset: name('star-cell'),
-    width: 400,
-    height: 400,
     copyWidth: 400,
     copyHeight: 400,
     lineOut: 'star',
@@ -99,14 +97,14 @@ const imageFilter = scrawl.makeFilter({
     name: name('flower-filter'),
     method: 'image',
     asset: 'iris',
-    width: '80%',
-    height: '80%',
-    copyWidth: '100%',
-    copyHeight: '100%',
+    copyX: '10%',
+    copyY: '10%',
+    copyWidth: '80%',
+    copyHeight: '80%',
     lineOut: 'flower',
 });
 
-const composeFilter = scrawl.makeFilter({
+const blendFilter = scrawl.makeFilter({
 
     name: name('block-filter'),
     method: 'blend',
@@ -114,7 +112,7 @@ const composeFilter = scrawl.makeFilter({
     lineMix: 'flower',
     offsetX: 0,
     offsetY: 0,
-    compose: 'normal',
+    blend: 'color-burn',
 });
 
 
@@ -178,7 +176,7 @@ const dom = initializeDomInputs([
     ['input', 'opacity', '1'],
     ['select', 'source', 3],
     ['select', 'destination', 4],
-    ['select', 'blend', 0],
+    ['select', 'blend', 1],
 ]);
 
 
@@ -188,7 +186,7 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: composeFilter,
+    target: blendFilter,
 
     useNativeListener: true,
     preventDefault: true,

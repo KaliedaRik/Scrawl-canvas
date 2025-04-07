@@ -81,8 +81,6 @@ scrawl.makeFilter({
     name: name('star-filter'),
     method: 'image',
     asset: name('star-cell'),
-    width: 400,
-    height: 400,
     copyWidth: 400,
     copyHeight: 400,
     lineOut: 'star',
@@ -99,10 +97,10 @@ const imageFilter = scrawl.makeFilter({
     name: name('flower-filter'),
     method: 'image',
     asset: 'iris',
-    width: '80%',
-    height: '80%',
-    copyWidth: '100%',
-    copyHeight: '100%',
+    copyX: '10%',
+    copyY: '10%',
+    copyWidth: '80%',
+    copyHeight: '80%',
     lineOut: 'flower',
 });
 

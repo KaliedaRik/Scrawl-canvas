@@ -487,7 +487,7 @@ P.applyFilters = function (myCell) {
 
     const myimage = filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height);
 
-    this.preprocessFilters(this.currentFilters);
+    this.preprocessFilters(this.currentFilters, filterCellElement.width, filterCellElement.height);
 
     const img = filterEngine.action({
         identifier: this.filterIdentifier,

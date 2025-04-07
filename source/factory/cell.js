@@ -1088,11 +1088,12 @@ P.show = function () {
 // `applyFilters` - Internal function - add filters to the Cell's current output.
 P.applyFilters = function () {
 
-    const engine = this.engine;
+    const engine = this.engine,
+        element = this.element;
 
     const image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
 
-    this.preprocessFilters(this.currentFilters);
+    this.preprocessFilters(this.currentFilters, element.width, element.height);
 
     const img = filterEngine.action({
         identifier: this.filterIdentifier,

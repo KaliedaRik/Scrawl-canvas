@@ -985,8 +985,6 @@ const setActionsArray = {
             action: PROCESS_IMAGE,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             asset: (f.asset != null) ? f.asset : ZERO_STR,
-            width: (f.width != null) ? f.width : 1,
-            height: (f.height != null) ? f.height : 1,
             copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
             copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
             copyX: (f.copyX != null) ? f.copyX : 0,
@@ -994,8 +992,6 @@ const setActionsArray = {
         };
 
         o.identifier = `user-image-${o.asset}-${generateUuid()}`;
-
-        console.log(o);
 
         f.actions = [o];
     },

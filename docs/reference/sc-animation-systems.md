@@ -352,7 +352,7 @@ Examples of Tween targeting include:
 + Test demo [Canvas-047](../../demo/canvas-047.html) - tweening an SC Color object's `range` attribute.
 + Test demo [Modules-003](../../demo/modules-003.html) - tween an SC Gradient object's `paletteStart` and `paletteEnd` attributes.
 
-#### Definitions objects
+#### Tween Definition objects
 Definitions objects are normal Javascript objects with the following attributes:
 ```
 {
@@ -446,7 +446,7 @@ Easing functions are not restricted to Tween objects. SC also uses them to help 
 Dev-users can also define their own easing engines. The function will need to take the following arguments:
 ```
 const myEasingFunction = function (start, change, position) {
-  
+
   // code here
 
   return result;  // Number

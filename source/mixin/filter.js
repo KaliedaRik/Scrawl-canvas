@@ -12,7 +12,7 @@ import { checkForWorkstoreItem, setWorkstoreItem } from '../helper/workstore.js'
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _abs, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_FILTER, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _floor, _isArray, _max, PROCESS_IMAGE, SOURCE_OVER, T_FILTER, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants (none defined)
 
@@ -182,23 +182,25 @@ export default function (P = Ωempty) {
     };
 
 // `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the SC Workstore, where it can be used as a lineIn or lineMix argument for other filter actions.
-    P.preprocessFilters = function (filters) {
+    P.preprocessFilters = function (filters, hostWidth, hostHeight) {
 
-        let i, iz, img, width, height, snd, cnd, filter, obj, copyX, copyY, copyWidth, copyHeight, destWidth, destHeight;
-
-        for (i = 0, iz = filters.length; i < iz; i++) {
+        for (let i = 0, iz = filters.length, filter; i < iz; i++) {
 
             filter = filters[i];
 
-            for (let j = 0, jz = filter.actions.length; j < jz; j++) {
+            for (let j = 0, jz = filter.actions.length, obj; j < jz; j++) {
 
                 obj = filter.actions[j];
 
                 if (obj.action === PROCESS_IMAGE) {
 
-                    img = asset[obj.asset];
+                    const img = asset[obj.asset];
 
                     if (img) {
+
+                        let width, height, snd, cnd,
+                            copyX, copyY, copyWidth, copyHeight,
+                            outputWidth, outputHeight;
 
                         if (T_IMAGE !== img.type) {
 
@@ -231,65 +233,82 @@ export default function (P = Ωempty) {
 
                             if (width && height) {
 
-                                // flag = false;
-
                                 copyX = obj.copyX || 0;
                                 copyY = obj.copyY || 0;
                                 copyWidth = obj.copyWidth || 1;
                                 copyHeight = obj.copyHeight || 1;
-                                destWidth = obj.width || 1;
-                                destHeight = obj.height || 1;
 
                                 if (copyX.substring) copyX = (parseFloat(copyX) / 100) * width;
                                 if (copyY.substring) copyY = (parseFloat(copyY) / 100) * height;
                                 if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
                                 if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
-                                if (destWidth.substring) destWidth = (parseFloat(destWidth) / 100) * width;
-                                if (destHeight.substring) destHeight = (parseFloat(destHeight) / 100) * height;
 
 
-                                copyX = _abs(copyX);
-                                copyY = _abs(copyY);
-                                copyWidth = _abs(copyWidth);
-                                copyHeight = _abs(copyHeight);
-                                destWidth = _abs(destWidth);
-                                destHeight = _abs(destHeight);
+                                copyX = _floor(_abs(copyX));
+                                copyY = _floor(_abs(copyY));
+                                copyWidth = _floor(_abs(copyWidth));
+                                copyHeight = _floor(_abs(copyHeight));
 
-                                if (copyX > width) {
-                                    copyX = width - 2;
+                                if (copyX >= width) {
+
+                                    copyX = width - 1;
                                     copyWidth = 1;
                                 }
 
-                                if (copyY > height) {
-                                    copyY = height - 2;
-                                    copyHeight = 1;
-                                }
-
                                 if (copyWidth > width) {
-                                    copyWidth = width - 1;
+
+                                    copyWidth = width;
                                     copyX = 0;
                                 }
 
+                                if (copyX + copyWidth > width) copyX = width - copyWidth;
+
+                                if (copyY >= height) {
+
+                                    copyY = height - 1;
+                                    copyHeight = 1;
+                                }
+
                                 if (copyHeight > height) {
-                                    copyHeight = height - 1;
+
+                                    copyHeight = height;
                                     copyY = 0;
                                 }
 
-
-                                if (copyX + copyWidth > width) {
-                                    copyX = width - copyWidth - 1;
-                                }
-
-                                if (copyY + copyHeight > height) {
-                                    copyY = height - copyHeight - 1;
-                                }
+                                if (copyY + copyHeight > height) copyY = height - copyHeight;
 
                                 const mycell = requestCell(),
                                     engine = mycell.engine,
                                     canvas = mycell.element;
 
-                                canvas.width = destWidth;
-                                canvas.height = destHeight;
+                                const hostWidthRatio = hostWidth / copyWidth,
+                                    hostHeightRatio = hostHeight / copyHeight;
+
+                                outputWidth = copyWidth,
+                                outputHeight = copyHeight;
+
+                                if (hostWidthRatio < 1 || hostHeightRatio < 1) {
+
+                                    if (hostWidthRatio < 1 && hostHeightRatio < 1) {
+
+                                        const maxRatio = _max(hostWidthRatio, hostHeightRatio);
+                                        outputWidth = copyWidth * maxRatio;
+                                        outputHeight = copyHeight * maxRatio;
+                                    }
+                                    else if (hostWidthRatio < 1) {
+
+                                        outputWidth = copyWidth * hostWidthRatio;
+                                        outputHeight = hostHeight;
+                                    }
+                                    else {
+
+                                        outputWidth = hostWidth;
+                                        outputHeight = copyHeight * hostHeightRatio;
+                                    }
+                                }
+
+                                canvas.width = outputWidth;
+                                canvas.height = outputHeight;
 
                                 engine.setTransform(1, 0, 0, 1, 0, 0);
                                 engine.globalCompositeOperation = SOURCE_OVER;
@@ -297,9 +316,9 @@ export default function (P = Ωempty) {
 
                                 const src = img.source || img.element;
 
-                                engine.drawImage(src, ~~copyX, ~~copyY, ~~copyWidth, ~~copyHeight, 0, 0, ~~destWidth, ~~destHeight);
+                                engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, outputWidth, outputHeight);
 
-                                setWorkstoreItem(obj.identifier, engine.getImageData(0, 0, ~~destWidth, ~~destHeight));
+                                setWorkstoreItem(obj.identifier, engine.getImageData(0, 0, outputWidth, outputHeight));
 
                                 releaseCell(mycell);
                             }

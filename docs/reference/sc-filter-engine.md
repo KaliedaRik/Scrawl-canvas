@@ -1089,8 +1089,6 @@ If the image's dimensions differ from the source dimensions then, where a given 
 
 The `lineOut` attribute's value must be a (unique) string, which other primitive functions can use as their `lineIn` and `lineMix` values.
 
-Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes. Adding assets to a filter chain will very often disable filter memoization functionality!
-
 Used by factory function method: `image`.
 
 See test demos [Filters-101](../../demo/filters-101.html) and [Filters-102](../../demo/filters-102.html), which include image filters.
@@ -1105,9 +1103,6 @@ Default object
   copyWidth: 1,
   copyX: 0,
   copyY: 0,
-
-  height: 1,
-  width: 1,
 }
 ```
 
@@ -2373,8 +2368,6 @@ If the image's dimensions differ from the source dimensions then, where a given 
 
 The `lineOut` attribute's value must be a (unique) string, which other primitive functions can use as their `lineIn` and `lineMix` values.
 
-Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes. Adding assets to a filter chain will very often disable filter memoization functionality!
-
 Creates an ActionObject for the `process-image` primitive function.
 
 See test demos [Filters-101](../../demo/filters-101.html) and [Filters-102](../../demo/filters-102.html), which include image filters.
@@ -2389,9 +2382,6 @@ copyHeight                  yes         1
 copyWidth                   yes         1
 copyX                       yes         0
 copyY                       yes         0
-
-height                      yes         1
-width                       yes         1
 ```
 
 ### Method: `invert`

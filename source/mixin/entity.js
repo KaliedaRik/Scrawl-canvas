@@ -607,7 +607,7 @@ export default function (P = Ωempty) {
 
                 const myimage = filterEng.getImageData(0, 0, w, h);
 
-                this.preprocessFilters(filters);
+                this.preprocessFilters(filters, w, h);
 
                 const img = filterEngine.action({
                     identifier: this.filterIdentifier,

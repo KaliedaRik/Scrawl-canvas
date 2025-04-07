@@ -2830,7 +2830,7 @@ P.regularStamp = function (host) {
 
                     const myimage = finalEngine.getImageData(0, 0, w, h);
 
-                    this.preprocessFilters(filters);
+                    this.preprocessFilters(filters, element.width, element.height);
 
                     const img = filterEngine.action({
                         identifier: this.filterIdentifier,
