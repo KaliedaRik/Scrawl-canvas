@@ -16,6 +16,7 @@ import tweenMix from '../mixin/tween.js';
 import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TICKER, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Set objects - used by tweens as the argument for `target.set`, `target.setArtefact` invocations
+// + Using an informal cache to cut down on the number of objects created for heavily tweened scenes
 const setObjectsHold = {};
 
 const getSetObjectKey = (defs) => {
