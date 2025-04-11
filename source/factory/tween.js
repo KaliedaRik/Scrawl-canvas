@@ -15,7 +15,29 @@ import tweenMix from '../mixin/tween.js';
 // Shared constants
 import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TICKER, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
-// Local constants (none defined)
+// Set objects - used by tweens as the argument for `target.set`, `target.setArtefact` invocations
+const setObjectsHold = {};
+
+const getSetObjectKey = (defs) => {
+
+    let response = '';
+
+    defs.forEach(d => response += d.attribute);
+
+    return response;
+};
+
+const getSetObject = (key) => {
+
+    if (setObjectsHold[key]) return setObjectsHold[key];
+
+    if (key.substring) {
+
+        setObjectsHold[key] = {};
+        return setObjectsHold[key];
+    }
+    return {};
+};
 
 
 // #### Tween constructor
@@ -25,7 +47,6 @@ const Tween = function (items = Ωempty) {
     this.register();
 
     // this.setObj = null;
-    this.setObj = {};
 
     this.targets = [];
     this.definitions = [];
@@ -36,6 +57,8 @@ const Tween = function (items = Ωempty) {
     if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
 
     this.set(items);
+
+    this.setObj = getSetObjectKey(this.definitions);
 
     // `status` magic numbers: `-1` = "before"; `0` = "running"; `1` = "after".
     this.status = -1;
@@ -93,7 +116,6 @@ const defaultAttributes = {
 // Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number.
 // + These values should be of a type that the target object (generally an artefact) expects to receive in its `set` function.
 // + Any object with a `set` function that takes an object as its argument can be tweened.
-    definitions: null,
 
 // __duration__ - can accept a variety of values:
 // + Number, representing milliseconds.
@@ -397,9 +419,7 @@ P.doSimpleUpdate = function (items = Ωempty) {
         definitions = this.definitions,
         targets = this.targets,
         action = this.action,
-
-        // We store the `setObj` object as an attribute on the Tween object for convenience, and to cut down on the number of objects created during the lifetime of the Tween.
-        setObj = this.setObj;
+        setObj = getSetObject(this.setObj);
 
     let progress;
 
@@ -457,7 +477,7 @@ P.setDefinitions = function (...args) {
 
     this.definitions.length = 0;
     this.definitions.push(...args.flat(Infinity));
-    this.setObj = {};
+    this.setObj = getSetObjectKey(this.definitions);
 
     this.setDefinitionsValues();
 };
@@ -465,7 +485,7 @@ P.setDefinitions = function (...args) {
 P.clearDefinitions = function () {
 
     this.definitions.length = 0;
-    this.setObj = {};
+    this.setObj = getSetObjectKey(this.definitions);
 };
 
 // `setDefinitionsValues` - convert `start` and `end` values into float Numbers.
