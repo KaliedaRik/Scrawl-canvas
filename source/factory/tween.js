@@ -24,7 +24,8 @@ const Tween = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
 
-    this.setObj = null;
+    // this.setObj = null;
+    this.setObj = {};
 
     this.targets = [];
     this.definitions = [];
@@ -398,46 +399,38 @@ P.doSimpleUpdate = function (items = Ωempty) {
         action = this.action,
 
         // We store the `setObj` object as an attribute on the Tween object for convenience, and to cut down on the number of objects created during the lifetime of the Tween.
-        setObj = this.setObj || {};
+        setObj = this.setObj;
 
-    let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute,
-        i, iz, j, jz, progress;
+    let progress;
 
     const effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
 
     if (effectiveDuration && !status) progress = effectiveTick / effectiveDuration;
     else progress = (status > 0) ? 1 : 0;
 
-    for (i = 0, iz = definitions.length; i < iz; i++) {
+    for (let i = 0, iz = definitions.length, val, def, engine; i < iz; i++) {
 
         def = definitions[i];
         engine = def.engine;
-        effectiveStart = def.effectiveStart;
-        effectiveChange = def.effectiveChange;
-        int = def.integer;
-        suffix = def.suffix;
-        attribute = def.attribute;
 
         // Invoke the appropriate easing function for this particular definition object
-        if (engine.substring) val = actions(engine, effectiveStart, effectiveChange, progress);
-        else val = engine(effectiveStart, effectiveChange, progress);
+        if (engine.substring) val = actions(engine, def.effectiveStart, def.effectiveChange, progress);
+        else val = engine(def.effectiveStart, def.effectiveChange, progress);
 
-        if (int) val = _round(val);
+        if (def.integer) val = _round(val);
 
-        if (suffix) val += suffix;
+        if (def.suffix) val += def.suffix;
 
-        setObj[attribute] = val;
+        setObj[def.attribute] = val;
     }
 
-    for (j = 0, jz = targets.length; j < jz; j++) {
+    for (let j = 0, jz = targets.length, t; j < jz; j++) {
 
-        const t = targets[j];
+        t = targets[j];
 
         if (T_GROUP === t.type) t.setArtefacts(setObj);
         else t.set(setObj);
     }
-
-    this.setObj = setObj;
 
     // We call the `action` attribute function (if it is defined) at the completion of every update.
     if (action) action();
@@ -464,6 +457,7 @@ P.setDefinitions = function (...args) {
 
     this.definitions.length = 0;
     this.definitions.push(...args.flat(Infinity));
+    this.setObj = {};
 
     this.setDefinitionsValues();
 };
@@ -471,6 +465,7 @@ P.setDefinitions = function (...args) {
 P.clearDefinitions = function () {
 
     this.definitions.length = 0;
+    this.setObj = {};
 };
 
 // `setDefinitionsValues` - convert `start` and `end` values into float Numbers.

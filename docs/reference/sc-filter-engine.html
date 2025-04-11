@@ -975,7 +975,6 @@ The compose attribute permitted values are:
 <p>The <code>asset</code> attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects. Where things go wrong, the system will attempt to load a <code>1x1</code> transparent pixel in place of the asset.</p>
 <p>If the image's dimensions differ from the source dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left. Note that Filters will run faster when the asset's dimensions match the dimensions of the source to which the filter is being applied.</p>
 <p>The <code>lineOut</code> attribute's value must be a (unique) string, which other primitive functions can use as their <code>lineIn</code> and <code>lineMix</code> values.</p>
-<p>Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes. Adding assets to a filter chain will very often disable filter memoization functionality!</p>
 <p>Used by factory function method: <code>image</code>.</p>
 <p>See test demos <a href="../../demo/filters-101.html">Filters-101</a> and <a href="../../demo/filters-102.html">Filters-102</a>, which include image filters.</p>
 <pre><code>Default object
@@ -988,9 +987,6 @@ The compose attribute permitted values are:
   copyWidth: 1,
   copyX: 0,
   copyY: 0,
-
-  height: 1,
-  width: 1,
 }</code></pre>
 <h3 id="convolution-filters">Convolution filters</h3>
 <p>The following primitive functions all make use of some form of <a href="https://en.wikipedia.org/wiki/Kernel_(image_processing)">convolution matrix</a> for their image data manipulations.</p>
@@ -1982,7 +1978,6 @@ opacity                     yes         1</code></pre>
 <p>The <code>asset</code> attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects. Where things go wrong, the system will attempt to load a <code>1x1</code> transparent pixel in place of the asset.</p>
 <p>If the image's dimensions differ from the source dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left. Note that Filters will run faster when the asset's dimensions match the dimensions of the source to which the filter is being applied.</p>
 <p>The <code>lineOut</code> attribute's value must be a (unique) string, which other primitive functions can use as their <code>lineIn</code> and <code>lineMix</code> values.</p>
-<p>Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes. Adding assets to a filter chain will very often disable filter memoization functionality!</p>
 <p>Creates an ActionObject for the <code>process-image</code> primitive function.</p>
 <p>See test demos <a href="../../demo/filters-101.html">Filters-101</a> and <a href="../../demo/filters-102.html">Filters-102</a>, which include image filters.</p>
 <pre><code>Attribute                   Retained?   Default
@@ -1994,10 +1989,7 @@ asset                       yes         ''
 copyHeight                  yes         1
 copyWidth                   yes         1
 copyX                       yes         0
-copyY                       yes         0
-
-height                      yes         1
-width                       yes         1</code></pre>
+copyY                       yes         0</code></pre>
 <h3 id="method-invert">Method: <code>invert</code></h3>
 <p><strong>(Color channels filter)</strong> Inverts the color channel values in the input (<code>0 &gt; 255</code>, <code>200 &gt; 55</code>, etc), producing an effect similar to a photograph negative. </p>
 <p>Color channels can be excluded from the calculation using the <code>include</code> flags. Has no impact on the alpha channel.</p>

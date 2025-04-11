@@ -1938,7 +1938,7 @@ P.positionTextUnitsInSpace = function () {
             if (languageDirectionIsLtr && (unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE))) {
 
                 unit = textUnits[unitData[unitData.length - 2]];
-                spaceRemaining -= (unit.replaceLen != null) ? unit.replaceLen : 0;
+                spaceRemaining -= (unit && unit.replaceLen != null) ? unit.replaceLen : 0;
             }
 
             // Add unused space to distances as we push data into adjustedDistances
