@@ -47,8 +47,6 @@ const Tween = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
 
-    // this.setObj = null;
-
     this.targets = [];
     this.definitions = [];
 
@@ -107,17 +105,6 @@ tweenMix(P);
 // #### Tween attributes
 const defaultAttributes = {
 
-// __definitions__ - Array of objects defining the animations to be performed by the Tween. Object attributes include:
-// + __attribute__ (required) - String attribute key.
-// + __start__ - Number or String value for this attribute's start point.
-// + __end__ - Number or String value for this attribute's end point.
-// + __integer__ - Boolean flag indicating whether we should force results to be integers (default: false)
-// + __engine__ - String name for the easing function ___engine___ to be used to animate this change; or an easing function supplied by the developer.
-//
-// Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number.
-// + These values should be of a type that the target object (generally an artefact) expects to receive in its `set` function.
-// + Any object with a `set` function that takes an object as its argument can be tweened.
-
 // __duration__ - can accept a variety of values:
 // + Number, representing milliseconds.
 // + String time value, for example `'500ms', '0.5s'`.
@@ -153,6 +140,17 @@ const defaultAttributes = {
 // The following [Ticker](./ticker.html)-related attributes are not stored in the Tween object:
 // + __cycles__ - positive integer Number representing the number of cycles the Ticker will undertake before it completes.
 // + __observer__ - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object
+
+// __definitions__ - Array of objects defining the animations to be performed by the Tween. Object attributes include:
+// + __attribute__ (required) - String attribute key.
+// + __start__ - Number or String value for this attribute's start point.
+// + __end__ - Number or String value for this attribute's end point.
+// + __integer__ - Boolean flag indicating whether we should force results to be integers (default: false)
+// + __engine__ - String name for the easing function ___engine___ to be used to animate this change; or an easing function supplied by the developer.
+//
+// Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number.
+// + These values should be of a type that the target object (generally an artefact) expects to receive in its `set` function.
+// + Any object with a `set` function that takes an object as its argument can be tweened.
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 

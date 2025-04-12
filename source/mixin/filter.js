@@ -284,7 +284,7 @@ export default function (P = Ωempty) {
                                 const hostWidthRatio = hostWidth / copyWidth,
                                     hostHeightRatio = hostHeight / copyHeight;
 
-                                outputWidth = copyWidth,
+                                outputWidth = copyWidth;
                                 outputHeight = copyHeight;
 
                                 if (hostWidthRatio < 1 || hostHeightRatio < 1) {
