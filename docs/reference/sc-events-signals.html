@@ -23,16 +23,107 @@
 
     <main>
         <h1 id="scrawl-canvas-events-and-signals">Scrawl-canvas events and signals</h1>
-<p>Discuss how SC handles events</p>
+<p>SC does not include a bespoke implementation of an event-driven system. SC artefact, entity and animation objects do not generate any <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">custom events</a> as part of their functionality.</p>
+<p>Instead SC relies on the normal <a href="https://developer.mozilla.org/en-US/docs/Web/Events">event system</a> provided by the browser to handle user interactions with an SC Canvas or Stack display:</p>
 <ul>
-<li>The pub-sub signalling system and "dirty" flags</li>
-<li>User preferences and system events</li>
-<li>Browser resize events and responsive behaviour - including Canvas/Stack shape and size</li>
-<li>Browser scroll events and Canvas/Stack viewport position</li>
-<li>Keyboard events</li>
-<li>Mouse, touch and pointer events</li>
-<li>Drag-and-drop behaviour</li>
-<li>Bespoke event listeners: <code>scrawl.addListener()</code>, <code>scrawl.addNativeListener()</code></li>
+<li>SC uses a number of system-generated event listeners to handle changes in the browser environment, for instance:<ul>
+<li>A single event listener to track mouse movement across the viewport.</li>
+<li>Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">Intersection observers</a> to report on <code>&lt;canvas&gt;</code> and stack DOM element positioning within the browser viewport.</li>
+<li>Event listeners assigned to various <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries">CSS matchMedia() queries</a> to monitor, in particular, user-set media preferences.</li></ul></li>
+<li>SC also supplies the dev-user with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:<ul>
+<li>Mouse, touch and pointer events.</li>
+<li>Drag-and-drop functionality.</li>
+<li>Keyboard navigation and trigger events.</li>
+<li>Interactions with form element controls.</li>
+<li>Responsive image management.</li>
+<li>Media stream, and screen capture, events.</li></ul></li>
+</ul>
+<p>[add something about signals]</p>
+<h2 id="system-events">System events</h2>
+<p>[write up]</p>
+<h3 id="the-core-listeners-tracker-function">The core listeners tracker function</h3>
+<p>[write up]</p>
+<h4 id="resize-action">Resize action</h4>
+<p>[write up]</p>
+<h4 id="scroll-action">Scroll action</h4>
+<p>[write up]</p>
+<h4 id="move-action">Move action</h4>
+<p>[write up]</p>
+<h3 id="tracking-the-browser-environment">Tracking the browser environment</h3>
+<p>[write up]</p>
+<h4 id="accessibility-preferences">Accessibility preferences</h4>
+<p>[write up]</p>
+<p>Preferences:</p>
+<ul>
+<li>prefers-contrast</li>
+<li>prefers-reduced-motion</li>
+<li>prefers-color-scheme</li>
+<li>prefers-reduced-transparency</li>
+<li>prefers-reduced-data</li>
+<li>inverted-colors</li>
+<li>forced-colors</li>
+</ul>
+<h4 id="system-and-device-screen-capabilities">System and device screen capabilities</h4>
+<p>[write up]</p>
+<p>Capabilities:</p>
+<ul>
+<li>Display-P3 support</li>
+<li>Device pixel ratio</li>
+</ul>
+<h4 id="font-management">Font management</h4>
+<p>[write up]</p>
+<h2 id="dynamic-asset-management">Dynamic asset management</h2>
+<p>[write up]</p>
+<h3 id="responsive-images">Responsive images</h3>
+<p>[write up]</p>
+<h3 id="responsive-video-and-video-streams">Responsive video and video streams</h3>
+<p>[write up]</p>
+<h3 id="third-party-canvas-sources">Third-party canvas sources</h3>
+<p>[write up]</p>
+<h2 id="user-interaction">User interaction</h2>
+<p>[write up]</p>
+<h3 id="sc-event-listener-convenience-functions">SC event listener convenience functions</h3>
+<p>[write up]</p>
+<h4 id="the-addlistener-function">The <code>addListener()</code> function</h4>
+<p>[write up]</p>
+<h4 id="the-addnativelistener-function">The <code>addNativeListener()</code> function</h4>
+<p>[write up]</p>
+<h4 id="cascading-events">Cascading events</h4>
+<p>[write up]</p>
+<h4 id="group-hover-event-functionality">Group hover event functionality</h4>
+<p>[write up]</p>
+<h3 id="drag-and-drop-functionality">Drag-and-drop functionality</h3>
+<p>[write up]</p>
+<h3 id="scrawl-canvas-anchor-and-button-objects">Scrawl-canvas Anchor and Button objects</h3>
+<p>[write up]</p>
+<h3 id="keyboard-navigation">Keyboard navigation</h3>
+<p>[write up]</p>
+<h3 id="user-interaction-with-form-controls">User interaction with form controls</h3>
+<p>[write up]</p>
+<h2 id="the-scrawl-canvas-signalling-system">The Scrawl-canvas signalling system</h2>
+<p>[write up]</p>
+<h3 id="marking-objects-as-dirty">Marking objects as <code>dirty</code></h3>
+<p>[write up]</p>
+<h3 id="cleaning-dirty-objects">Cleaning <code>dirty</code> objects</h3>
+<p>[write up]</p>
+<p>Files:</p>
+<ul>
+<li><a href="../source/core/events.html">core/events.js</a></li>
+<li><a href="../source/core/user-interaction.html">core/user-interaction.js</a></li>
+<li><a href="../source/factory/anchor.html">factory/anchor.js</a></li>
+<li><a href="../source/factory/button.html">factory/button.js</a></li>
+<li><a href="../source/factory/canvas.html">factory/canvas.js</a></li>
+<li><a href="../source/factory/cell.html">factory/cell.js</a></li>
+<li><a href="../source/factory/group.html">factory/group.js</a></li>
+<li><a href="../source/factory/render-animation.html">factory/render-animation.js</a></li>
+<li><a href="../source/mixin/anchor.html">mixin/anchor.js</a></li>
+<li><a href="../source/mixin/button.html">mixin/button.js</a></li>
+<li><a href="../source/mixin/cell-key-functions.html">mixin/cell-key-functions.js</a></li>
+<li><a href="../source/mixin/entity.html">mixin/entity.js</a></li>
+<li><a href="../source/untracked-factory/drag-zone.html">untracked-factory/drag-zone.js</a></li>
+<li><a href="../source/untracked-factory/keyboard-zone.html">untracked-factory/keyboard-zone.js</a></li>
+<li><a href="../source/untracked-factory/observe-update.html">untracked-factory/observe-update.js</a></li>
 </ul>
     </main>
     
