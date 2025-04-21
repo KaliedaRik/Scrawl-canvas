@@ -130,12 +130,12 @@ The following code creates a canvas display with this output. Note that the code
 
       // Part of the Canvas artefact's base Cell's namesake Group
       scrawl.makeBlock({
-          name: name('black-block'),
+          name: name('brown-block'),
           dimensions: ['30%', '30%'],
           pivot: name('orange-block'),
           lockTo: 'pivot',
           handle: ['center', 'center'],
-          fillStyle: 'black',
+          fillStyle: 'brown',
           lineWidth: 2,
           method: 'fillThenDraw',
       });

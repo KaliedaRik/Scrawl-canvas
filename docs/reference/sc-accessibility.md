@@ -44,7 +44,7 @@ Accessibility legislation links:
 No formal guidelines exist for making the HTML5 `<canvas>` element accessible. Yet the need to make canvas-based displays, animations and applications more accessible is widely accepted:
 + [Paul J. Adam's essay on `<canvas>` accessibility](https://pauljadam.com/demos/canvas.html) has been around for many years, and still remains accurate and relevant.
 + The [W3C community had lengthy discussions](https://www.w3.org/html/wg/wiki/AddedElementCanvas) around `<canvas>` accessibility while developing the specification.
-+ Those discussions still continue, though intermittently. Fore example, these issues currently open on the [w3c/aria Github](https://github.com/w3c/aria/issues?q=is%3Aissue%20state%3Aopen%20canvas).
++ Those discussions still continue, though intermittently. For example, these issues currently open on the [w3c/aria Github](https://github.com/w3c/aria/issues?q=is%3Aissue%20state%3Aopen%20canvas).
 + Research into `<canvas>` element accessibility seems limited, if [the results of this Google search](https://www.google.com/search?sca_esv=0e7d64b0605ffa6f&udm=14&q=%22research%22+into+making+the+html5+canvas+element+more+accessible&sa=X&ved=2ahUKEwikx6TRk-GMAxWAQUEAHaFgFigQ5t4CegQIGRAB&biw=1342&bih=795&dpr=1) can be trusted.
 
 (Note that online searching for standards, essays and investigations around canvas accessibility is made harder by the existence of the [Canvas LMS](https://www.instructure.com/canvas) SAAS offering, used widely by schools and colleges. More recently [OpenAI launched a product called Canvas](https://openai.com/index/introducing-canvas/) which doesn't help the search for relevant information. Not forgetting, of course, the [Canva](https://www.canva.com/) design studio thing.)
@@ -162,12 +162,12 @@ Dev-users can tell SC to add labels, descriptions and titles to a `<canvas>` ele
   data-scrawl-canvas
 
   data-label=[...accessible label string]
-  data-description=[...accessible description]
+  data-description=[...accessible description string]
 
   title=[...title string]
 >
   [...fallback content markup]
-</canvas
+</canvas>
 ```
 
 Once SC has finished importing the `<canvas>` element into the SC system, dev-users can change the values of the `<div>` elements containing the `label` and `description` strings using normal SC `set()` functionality. When the update occurs in the DOM the affected `<div>` element's `aria-busy` attribute will be set to `true`, then set back to `false` when the update completes. The change will be announced to the end-user politely:
@@ -279,7 +279,7 @@ For the intrepid developer, check out the [Web Audio API](https://developer.mozi
 #### Managing video asset captions and subtitles
 SC functionality for importing video into the SC system as an asset, for use in Picture entitys and Pattern style objects, can be found in the [assets page](sc-assets.html) of this Runbook.
 
-SC does not (at this time) include functionality to access or display [HTMLTrackElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement) data. The native `<video>` element expects to find `<track>` element children placed between its opening and closing tags. The text supplied in those text tracks are not part of the video stream data itself. Instead the text tends to be displayed in normal HTML elements displayed over the `<video>` element's display.
+SC does not (at this time) include functionality to access or display [HTMLTrackElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement) data. The native `<video>` element expects to find `<track>` element children placed between its opening and closing tags. The text supplied in those text tracks are not part of the video stream data itself. Instead the text tends to be displayed in normal HTML elements placed over the `<video>` element's display.
 
 If dev-users want to play a user-controlled video in an SC-managed `<canvas>` element, then they need to implement the video controls themselves. The control inputs and buttons should (ideally!) be created using normal HTML `<button>` and `<input>` elements, though SC does not prevent the dev-user from creating them using SC entitys - see test demo [Canvas-027](../../demo/canvas-027.html) for a proof-of-concept example.
 
@@ -313,8 +313,12 @@ Meeting this requirement allows content to be correctly read aloud, enlarged, or
 **1.3.6 (AAA) - [Identify Purpose](https://www.w3.org/WAI/WCAG22/Understanding/identify-purpose.html)**
 + It is unlikely that a `<canvas>` element will represent an entire [region](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA11) of a web page. Doing so is not advised!
 
-#### Making `<canvas>` elements responsive with SC
-TODO
+#### SC support for the content presentation requirements
+SC supports responsive canvas elements out-of-the-box, which should be good enough to meet the orientation requirement above. See the [responsiveness section](sc-dom-artefacts.html#responsiveness) of the Artefacts and the DOM page of this Runbook for further details.
+
+Canvas roles and ARIA markup are discussed in the [Text alternatives for non-text content](sc-accessibility.html#text-alternatives-for-non-text-content) section above.
+
+See the [SC text management functionality](sc-accessibility.html#sc-text-management-functionality) section below for details about how SC makes graphical text in a Canvas element accessible.
 
 ### Content is easier to see and hear
 Distinguishable content is easier to see and hear. Such content includes:
@@ -377,13 +381,21 @@ Meeting this requirement helps separate foreground from background, to make impo
 + If a `<canvas>` element is animated and includes behaviour such as adding or removing additional content as a result of a hover or focus interaction, then the designer needs to take this accessibility requirement into consideration when designing those interactions.
 
 #### SC Color space support 
-TODO
+While the use of accessible color is (almost entirely) a design issue, SC does help a little by supporting all legitimate absolute (that is, [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/)) color strings - including CIELAB LCH and OKLCH color space strings. See test demos [Canvas-015](../../demo/canvas-015.html) and [Canvas-016](../../demo/canvas-016.html).
+
+SC does not support [CSS Color Module Level 5](https://www.w3.org/TR/css-color-5/) relative colors. Dev-users can instead precalculate those colors and store them in [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties), then extract those variables into code using the Javascript `getPropertyValue()` function.
+
+Details about SC's support for [wide-gamut color support](sc-dom-artefacts.html#wide-gamut-color-support---display-p3) - `display-p3` - can be found at the linked section in the Artefacts and the DOM page of this Runbook.
 
 #### SC function hooks to adapt to color-based user preferences settings
-TODO
+SC comes with built-in support to action changes to a canvas display based on any preference media settings - `forced-colors`, `inverted-colors`, `prefers-color-scheme`, `prefers-contrast`, `prefers-reduced-transparency` - that the end-user may have set on their device. This functionality has been detailed in the [Accessibility section](http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility) of the Artefacts and the DOM page of this Runbook.
 
 #### SC support for browser zoom (not pinch zoom)
-TODO
+Browser implementations for zoom generally follow the pattern of modifying the browser's [window.devicePixelRatio](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio) value. This has a direct impact on any `<canvas>` elements in the web page, which need to adapt to the user interaction as it happens, to maintain the canvas display or animation's clarity.
+
+While SC makes a best effort to manage `devicePixelRatio` update functionality behind-the-scenes, dev-users are strongly advised to test any `<canvas>` elements they add to the page across a range of devices and screens at a variety of zoom levels.
+
+Note that browsers operating in touch-enabled environments will generally handle user [pinch-zoom gestures](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Pinch_zoom_gestures) in a different way. SC relies entirely on the browser "doing the right thing" in such situations, and makes no effort to listen for, or react to, such events.
 
 ### Functionality is available from a keyboard
 Many people do not use the mouse and rely on the keyboard to interact with the Web. This requires keyboard access to all functionality, including form controls, input, and other user interface components.

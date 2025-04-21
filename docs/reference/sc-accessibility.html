@@ -71,7 +71,7 @@
 <ul>
 <li><a href="https://pauljadam.com/demos/canvas.html">Paul J. Adam's essay on <code>&lt;canvas&gt;</code> accessibility</a> has been around for many years, and still remains accurate and relevant.</li>
 <li>The <a href="https://www.w3.org/html/wg/wiki/AddedElementCanvas">W3C community had lengthy discussions</a> around <code>&lt;canvas&gt;</code> accessibility while developing the specification.</li>
-<li>Those discussions still continue, though intermittently. Fore example, these issues currently open on the <a href="https://github.com/w3c/aria/issues?q=is%3Aissue%20state%3Aopen%20canvas">w3c/aria Github</a>.</li>
+<li>Those discussions still continue, though intermittently. For example, these issues currently open on the <a href="https://github.com/w3c/aria/issues?q=is%3Aissue%20state%3Aopen%20canvas">w3c/aria Github</a>.</li>
 <li>Research into <code>&lt;canvas&gt;</code> element accessibility seems limited, if <a href="https://www.google.com/search?sca_esv=0e7d64b0605ffa6f&udm=14&q=%22research%22+into+making+the+html5+canvas+element+more+accessible&sa=X&ved=2ahUKEwikx6TRk-GMAxWAQUEAHaFgFigQ5t4CegQIGRAB&biw=1342&bih=795&dpr=1">the results of this Google search</a> can be trusted.</li>
 </ul>
 <p>(Note that online searching for standards, essays and investigations around canvas accessibility is made harder by the existence of the <a href="https://www.instructure.com/canvas">Canvas LMS</a> SAAS offering, used widely by schools and colleges. More recently <a href="https://openai.com/index/introducing-canvas/">OpenAI launched a product called Canvas</a> which doesn't help the search for relevant information. Not forgetting, of course, the <a href="https://www.canva.com/">Canva</a> design studio thing.)</p>
@@ -177,12 +177,12 @@
   data-scrawl-canvas
 
   data-label=[...accessible label string]
-  data-description=[...accessible description]
+  data-description=[...accessible description string]
 
   title=[...title string]
 &gt;
   [...fallback content markup]
-&lt;/canvas</code></pre>
+&lt;/canvas&gt;</code></pre>
 <p>Once SC has finished importing the <code>&lt;canvas&gt;</code> element into the SC system, dev-users can change the values of the <code>&lt;div&gt;</code> elements containing the <code>label</code> and <code>description</code> strings using normal SC <code>set()</code> functionality. When the update occurs in the DOM the affected <code>&lt;div&gt;</code> element's <code>aria-busy</code> attribute will be set to <code>true</code>, then set back to <code>false</code> when the update completes. The change will be announced to the end-user politely:</p>
 <pre><code>&lt;script&gt;
   [...other code]
@@ -293,7 +293,7 @@
 <p>For the intrepid developer, check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API">Web Audio API</a> page on MDN. If that feels too overwhelming, then the <a href="https://github.com/notthetup/awesome-webaudio">awesome-webaudio</a> page on GitHub has links to many Javascript libraries that may help a web page meet a designer's audio-related demands.</p>
 <h4 id="managing-video-asset-captions-and-subtitles">Managing video asset captions and subtitles</h4>
 <p>SC functionality for importing video into the SC system as an asset, for use in Picture entitys and Pattern style objects, can be found in the <a href="sc-assets.html">assets page</a> of this Runbook.</p>
-<p>SC does not (at this time) include functionality to access or display <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement">HTMLTrackElement</a> data. The native <code>&lt;video&gt;</code> element expects to find <code>&lt;track&gt;</code> element children placed between its opening and closing tags. The text supplied in those text tracks are not part of the video stream data itself. Instead the text tends to be displayed in normal HTML elements displayed over the <code>&lt;video&gt;</code> element's display.</p>
+<p>SC does not (at this time) include functionality to access or display <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement">HTMLTrackElement</a> data. The native <code>&lt;video&gt;</code> element expects to find <code>&lt;track&gt;</code> element children placed between its opening and closing tags. The text supplied in those text tracks are not part of the video stream data itself. Instead the text tends to be displayed in normal HTML elements placed over the <code>&lt;video&gt;</code> element's display.</p>
 <p>If dev-users want to play a user-controlled video in an SC-managed <code>&lt;canvas&gt;</code> element, then they need to implement the video controls themselves. The control inputs and buttons should (ideally!) be created using normal HTML <code>&lt;button&gt;</code> and <code>&lt;input&gt;</code> elements, though SC does not prevent the dev-user from creating them using SC entitys - see test demo <a href="../../demo/canvas-027.html">Canvas-027</a> for a proof-of-concept example.</p>
 <p>Similarly, dev-users can - once they have built the functionality to capture change events emitted by the video's <code>&lt;track&gt;</code> element - display those captions near to (or over) the <code>&lt;canvas&gt;</code> element, preferable in normal HTML elements or, alternatively, in SC Label and EnhancedLabel entitys.</p>
 <h3 id="content-can-be-presented-in-different-ways">Content can be presented in different ways</h3>
@@ -330,8 +330,10 @@
 <ul>
 <li>It is unlikely that a <code>&lt;canvas&gt;</code> element will represent an entire <a href="https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA11">region</a> of a web page. Doing so is not advised!</li>
 </ul>
-<h4 id="making-canvas-elements-responsive-with-sc">Making <code>&lt;canvas&gt;</code> elements responsive with SC</h4>
-<p>TODO</p>
+<h4 id="sc-support-for-the-content-presentation-requirements">SC support for the content presentation requirements</h4>
+<p>SC supports responsive canvas elements out-of-the-box, which should be good enough to meet the orientation requirement above. See the <a href="sc-dom-artefacts.html#responsiveness">responsiveness section</a> of the Artefacts and the DOM page of this Runbook for further details.</p>
+<p>Canvas roles and ARIA markup are discussed in the <a href="sc-accessibility.html#text-alternatives-for-non-text-content">Text alternatives for non-text content</a> section above.</p>
+<p>See the <a href="sc-accessibility.html#sc-text-management-functionality">SC text management functionality</a> section below for details about how SC makes graphical text in a Canvas element accessible.</p>
 <h3 id="content-is-easier-to-see-and-hear">Content is easier to see and hear</h3>
 <p>Distinguishable content is easier to see and hear. Such content includes:</p>
 <ul>
@@ -406,11 +408,15 @@
 <li>If a <code>&lt;canvas&gt;</code> element is animated and includes behaviour such as adding or removing additional content as a result of a hover or focus interaction, then the designer needs to take this accessibility requirement into consideration when designing those interactions.</li>
 </ul>
 <h4 id="sc-color-space-support">SC Color space support</h4>
-<p>TODO</p>
+<p>While the use of accessible color is (almost entirely) a design issue, SC does help a little by supporting all legitimate absolute (that is, <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a>) color strings - including CIELAB LCH and OKLCH color space strings. See test demos <a href="../../demo/canvas-015.html">Canvas-015</a> and <a href="../../demo/canvas-016.html">Canvas-016</a>.</p>
+<p>SC does not support <a href="https://www.w3.org/TR/css-color-5/">CSS Color Module Level 5</a> relative colors. Dev-users can instead precalculate those colors and store them in <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties">CSS custom properties</a>, then extract those variables into code using the Javascript <code>getPropertyValue()</code> function.</p>
+<p>Details about SC's support for <a href="sc-dom-artefacts.html#wide-gamut-color-support---display-p3">wide-gamut color support</a> - <code>display-p3</code> - can be found at the linked section in the Artefacts and the DOM page of this Runbook.</p>
 <h4 id="sc-function-hooks-to-adapt-to-color-based-user-preferences-settings">SC function hooks to adapt to color-based user preferences settings</h4>
-<p>TODO</p>
+<p>SC comes with built-in support to action changes to a canvas display based on any preference media settings - <code>forced-colors</code>, <code>inverted-colors</code>, <code>prefers-color-scheme</code>, <code>prefers-contrast</code>, <code>prefers-reduced-transparency</code> - that the end-user may have set on their device. This functionality has been detailed in the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility">Accessibility section</a> of the Artefacts and the DOM page of this Runbook.</p>
 <h4 id="sc-support-for-browser-zoom-not-pinch-zoom">SC support for browser zoom (not pinch zoom)</h4>
-<p>TODO</p>
+<p>Browser implementations for zoom generally follow the pattern of modifying the browser's <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio">window.devicePixelRatio</a> value. This has a direct impact on any <code>&lt;canvas&gt;</code> elements in the web page, which need to adapt to the user interaction as it happens, to maintain the canvas display or animation's clarity.</p>
+<p>While SC makes a best effort to manage <code>devicePixelRatio</code> update functionality behind-the-scenes, dev-users are strongly advised to test any <code>&lt;canvas&gt;</code> elements they add to the page across a range of devices and screens at a variety of zoom levels.</p>
+<p>Note that browsers operating in touch-enabled environments will generally handle user <a href="https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Pinch_zoom_gestures">pinch-zoom gestures</a> in a different way. SC relies entirely on the browser "doing the right thing" in such situations, and makes no effort to listen for, or react to, such events.</p>
 <h3 id="functionality-is-available-from-a-keyboard">Functionality is available from a keyboard</h3>
 <p>Many people do not use the mouse and rely on the keyboard to interact with the Web. This requires keyboard access to all functionality, including form controls, input, and other user interface components.</p>
 <p>Keyboard accessibility includes:</p>

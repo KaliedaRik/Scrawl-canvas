@@ -165,11 +165,58 @@
 </ul>
 <h4 id="tracking-artefact-element-shape-and-size">Tracking Artefact element shape and size</h4>
 <p>SC implements functionality to continually observe the dimensions of Stack and Canvas artefact elements, and gives dev-users a set of function hooks where they can implement changes to the canvas/stack display when various trigger measurements are crossed. This functionality is defined in the <a href="../source/mixin/display-shape.html">mixin/display-shape.js</a> file. </p>
-<p>The SC implementation monitors not only for changes in size - <code>smallest, smaller, regular, larger, largest</code> - but also for changes in shape: <code>banner, landscape, rectangle, portrait, skyscraper</code>. The break points between each of these can be set by the dev-user. Test demo examples of the functionality in action include:</p>
+<p>SC measures element shape and size across a broad granularity; each is measured against five categories.</p>
+<p>For <strong><em>shape</em></strong>, SC categorieses (from broad to narrow) as follows:</p>
 <ul>
-<li><a href="../../demo/canvas-034.html">Canvas-034</a> - for Canvas artefacts</li>
-<li><a href="../../demo/dom-016.html">DOM-016</a> - for Stack artefacts</li>
-<li><a href="../../demo/modules-006.html">Modules-006</a> - a more complex use case (responsive scrollytelling)</li>
+<li><code>banner</code> - the element has a width 3 times greater than its height</li>
+<li><code>landscape</code> - the element has a width between 1.5 and 3 times greater than its height</li>
+<li><code>rectangle</code> - the element has reasonably eqivalent width and height</li>
+<li><code>portrait</code> - the element has a height between 1.5 and 3 times greater than its width</li>
+<li><code>skyscraper</code> - the element has a width 3 times smaller than its height</li>
+</ul>
+<p>The ratio cutoff points between each shape - where the ratio value is <code>element width / element height</code> - can be adjusted by dev-users to meet the individual requirements of each Stack or Canvas display. Ratio values are kept in the following attributes:</p>
+<ul>
+<li><code>breakToBanner</code> - defaults to <code>3.0</code></li>
+<li><code>breakToLandscape</code> - defaults to <code>1.5</code></li>
+<li><code>breakToPortrait</code> - defaults to <code>0.65</code></li>
+<li><code>breakToSkyscraper</code> - defaults to <code>0.35</code></li>
+</ul>
+<p>The <em>shape-related hook functions</em> will run each time the element's shape changes from one category to another. These hook functions are associated with the following Canvas and Stack artefact object attributes which SC sets, by default, to the SC <code>λnull</code> function. Dev-users can update these functions in the normal way using (for example) <code>canvas.set({...})</code>; SC also includes convenience functions to set each hook function individually:</p>
+<ul>
+<li><code>actionBannerShape</code> - <code>canvas.setActionBannerShape(Function)</code></li>
+<li><code>actionLandscapeShape</code> - <code>canvas.setActionLandscapeShape(Function)</code></li>
+<li><code>actionRectangleShape</code> - <code>canvas.setActionRectangleShape(Function)</code></li>
+<li><code>actionPortraitShape</code> - <code>canvas.setActionPortraitShape(Function)</code></li>
+<li><code>actionSkyscraperShape</code> - <code>canvas.setActionSkyscraperShape(Function)</code></li>
+</ul>
+<p>For <strong><em>size</em></strong>, SC categorieses (from smallest to largest) as follows:</p>
+<ul>
+<li><code>smallest</code> - the element has an area less than 20,000 px²</li>
+<li><code>smaller</code> - the element has an area between 20,000 and 80,000 px²</li>
+<li><code>regular</code> - the element has an area between 80,000 and 180,000 px²</li>
+<li><code>larger</code> - the element has an area between 180,000 and 320,000 px²</li>
+<li><code>largest</code> - the element has an area greater than 320,000 px²</li>
+</ul>
+<p>The size cutoff points - where the size value is <code>element width × element height</code> - can be adjusted by dev-users to meet the individual requirements of each Stack or Canvas display. Size values are kept in the following attributes:</p>
+<ul>
+<li><code>breakToSmallest</code> - defaults to <code>20000</code></li>
+<li><code>breakToSmaller</code> - defaults to <code>80000</code></li>
+<li><code>breakToLarger</code> - defaults to <code>180000</code></li>
+<li><code>breakToLargest</code> - defaults to <code>320000</code></li>
+</ul>
+<p>The <em>size-related hook functions</em> will run each time the element's size changes from one category to another. These hook functions are associated with the following Canvas and Stack artefact object attributes which SC sets, by default, to the SC <code>λnull</code> function. Dev-users can update these functions in the normal way using (for example) <code>canvas.set({...})</code>; SC also includes convenience functions to set each hook function individually:</p>
+<ul>
+<li><code>actionSmallestArea</code> - <code>canvas.setActionSmallestArea(Function)</code></li>
+<li><code>actionSmallerArea</code> - <code>canvas.setActionSmallerArea(Function)</code></li>
+<li><code>actionRegularArea</code> - <code>canvas.setActionRegularArea(Function)</code></li>
+<li><code>actionLargerArea</code> - <code>canvas.setActionLargerArea(Function)</code></li>
+<li><code>actionLargestArea</code> - <code>canvas.setActionLargestArea(Function)</code></li>
+</ul>
+<p>Test demo examples of SC responsiveness functionality include:</p>
+<ul>
+<li><a href="../../demo/canvas-034.html">Canvas-034</a> - for Canvas artefacts.</li>
+<li><a href="../../demo/dom-016.html">DOM-016</a> - for Stack artefacts.</li>
+<li><a href="../../demo/modules-006.html">Modules-006</a> - a more complex use case (responsive scrollytelling).</li>
 </ul>
 <p><strong>To note:</strong> the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API">Resize Observer API</a> became widely supported across browsers in mid-2020. SC currently doesn't use resize observers for this work, but probably should. TODO: investigate and (hopefully) implement.</p>
 <h3 id="perspective-and-3d-rotation">Perspective and 3d rotation</h3>

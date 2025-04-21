@@ -157,10 +157,52 @@ SC includes functionality to help manage three aspects of [responsive web design
 #### Tracking Artefact element shape and size
 SC implements functionality to continually observe the dimensions of Stack and Canvas artefact elements, and gives dev-users a set of function hooks where they can implement changes to the canvas/stack display when various trigger measurements are crossed. This functionality is defined in the [mixin/display-shape.js](../source/mixin/display-shape.html) file. 
 
-The SC implementation monitors not only for changes in size - `smallest, smaller, regular, larger, largest` - but also for changes in shape: `banner, landscape, rectangle, portrait, skyscraper`. The break points between each of these can be set by the dev-user. Test demo examples of the functionality in action include:
-+ [Canvas-034](../../demo/canvas-034.html) - for Canvas artefacts
-+ [DOM-016](../../demo/dom-016.html) - for Stack artefacts
-+ [Modules-006](../../demo/modules-006.html) - a more complex use case (responsive scrollytelling)
+SC measures element shape and size across a broad granularity; each is measured against five categories.
+
+For ***shape***, SC categorieses (from broad to narrow) as follows:
++ `banner` - the element has a width 3 times greater than its height
++ `landscape` - the element has a width between 1.5 and 3 times greater than its height
++ `rectangle` - the element has reasonably eqivalent width and height
++ `portrait` - the element has a height between 1.5 and 3 times greater than its width
++ `skyscraper` - the element has a width 3 times smaller than its height
+
+The ratio cutoff points between each shape - where the ratio value is `element width / element height` - can be adjusted by dev-users to meet the individual requirements of each Stack or Canvas display. Ratio values are kept in the following attributes:
++ `breakToBanner` - defaults to `3.0`
++ `breakToLandscape` - defaults to `1.5`
++ `breakToPortrait` - defaults to `0.65`
++ `breakToSkyscraper` - defaults to `0.35`
+
+The *shape-related hook functions* will run each time the element's shape changes from one category to another. These hook functions are associated with the following Canvas and Stack artefact object attributes which SC sets, by default, to the SC `λnull` function. Dev-users can update these functions in the normal way using (for example) `canvas.set({...})`; SC also includes convenience functions to set each hook function individually:
++ `actionBannerShape` - `canvas.setActionBannerShape(Function)`
++ `actionLandscapeShape` - `canvas.setActionLandscapeShape(Function)`
++ `actionRectangleShape` - `canvas.setActionRectangleShape(Function)`
++ `actionPortraitShape` - `canvas.setActionPortraitShape(Function)`
++ `actionSkyscraperShape` - `canvas.setActionSkyscraperShape(Function)`
+
+For ***size***, SC categorieses (from smallest to largest) as follows:
++ `smallest` - the element has an area less than 20,000 px²
++ `smaller` - the element has an area between 20,000 and 80,000 px²
++ `regular` - the element has an area between 80,000 and 180,000 px²
++ `larger` - the element has an area between 180,000 and 320,000 px²
++ `largest` - the element has an area greater than 320,000 px²
+
+The size cutoff points - where the size value is `element width × element height` - can be adjusted by dev-users to meet the individual requirements of each Stack or Canvas display. Size values are kept in the following attributes:
++ `breakToSmallest` - defaults to `20000`
++ `breakToSmaller` - defaults to `80000`
++ `breakToLarger` - defaults to `180000`
++ `breakToLargest` - defaults to `320000`
+
+The *size-related hook functions* will run each time the element's size changes from one category to another. These hook functions are associated with the following Canvas and Stack artefact object attributes which SC sets, by default, to the SC `λnull` function. Dev-users can update these functions in the normal way using (for example) `canvas.set({...})`; SC also includes convenience functions to set each hook function individually:
++ `actionSmallestArea` - `canvas.setActionSmallestArea(Function)`
++ `actionSmallerArea` - `canvas.setActionSmallerArea(Function)`
++ `actionRegularArea` - `canvas.setActionRegularArea(Function)`
++ `actionLargerArea` - `canvas.setActionLargerArea(Function)`
++ `actionLargestArea` - `canvas.setActionLargestArea(Function)`
+
+Test demo examples of SC responsiveness functionality include:
++ [Canvas-034](../../demo/canvas-034.html) - for Canvas artefacts.
++ [DOM-016](../../demo/dom-016.html) - for Stack artefacts.
++ [Modules-006](../../demo/modules-006.html) - a more complex use case (responsive scrollytelling).
 
 **To note:** the [Resize Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API) became widely supported across browsers in mid-2020. SC currently doesn't use resize observers for this work, but probably should. TODO: investigate and (hopefully) implement.
 
