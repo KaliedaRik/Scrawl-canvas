@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-025.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
 
 
 // #### Scene setup
@@ -74,7 +74,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'offsetRedX', '-20'],
     ['input', 'offsetRedY', '-20'],
     ['input', 'offsetGreenX', '20'],

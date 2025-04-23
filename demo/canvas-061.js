@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-061.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -131,7 +131,7 @@ scrawl.makeUpdater({
 
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'displacement', '60'],
     ['input', 'innerRadius', '80'],
     ['input', 'outerRadius', '120'],

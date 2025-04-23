@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-002.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, killArtefact, initializeDomInputs } from './utilities.js';
+import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
@@ -241,7 +241,7 @@ scrawl.makeUpdater({
 
 
 // Set the DOM input values
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'clearAlpha', '0.9'],
     ['select', 'backgroundColor', 0],
 ]);

@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-020.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -75,7 +75,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'low_color', '#170078'],
     ['input', 'low_red', '20'],
     ['input', 'low_green', '0'],
@@ -101,16 +101,16 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
         if ('low_color' === target) {
 
             myFilter.set({ lowColor: val });
-            dom.low_red.value = r;
-            dom.low_green.value = g;
-            dom.low_blue.value = b;
+            dom.low_red.value = r.toFixed(0);
+            dom.low_green.value = g.toFixed(0);
+            dom.low_blue.value = b.toFixed(0);
         }
         else if ('high_color' === target) {
 
             myFilter.set({ highColor: val });
-            dom.high_red.value = r;
-            dom.high_green.value = g;
-            dom.high_blue.value = b;
+            dom.high_red.value = r.toFixed(0);
+            dom.high_green.value = g.toFixed(0);
+            dom.high_blue.value = b.toFixed(0);
         }
     }
 }, '.colorSelector');
@@ -140,9 +140,9 @@ scrawl.makeUpdater({
 
     callback: () => {
 
-        dom.low_color.value = colorFactory.convertRGBtoHex(dom.low_red.value, dom.low_green.value, dom.low_blue.value);
+        dom.low_color.value = colorFactory.convertRGBtoHex(parseInt(dom.low_red.value, 10), parseInt(dom.low_green.value, 10), parseInt(dom.low_blue.value, 10));
 
-        dom.high_color.value = colorFactory.convertRGBtoHex(dom.high_red.value, dom.high_green.value, dom.high_blue.value);
+        dom.high_color.value = colorFactory.convertRGBtoHex(parseInt(dom.high_red.value, 10), parseInt(dom.high_green.value, 10), parseInt(dom.high_blue.value, 10));
     },
 });
 

@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-040.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -458,7 +458,7 @@ const myTween = scrawl.makeTween({
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'progress', '0'],
 ]);
 

@@ -562,95 +562,6 @@ const addCheckerboardBackground = (scrawl, canvas, namespace) => {
     });
 };
 
-
-const initializeDomInputs = (items) => {
-
-    const results = {};
-
-    items.forEach(item => {
-
-        const [type, selector, value] = item;
-
-        switch (type) {
-
-            case 'input' : {
-
-                if (value.substring) {
-
-                    /** @type {HTMLInputElement} */
-                    const S = document.querySelector(`#${selector}`);
-
-                    if (S) {
-
-                        S.value = value;
-                        results[selector] = S;
-                    }
-                    else results[selector] = {};
-                }
-                else results[selector] = {};
-                break;
-            }
-
-            case 'select' : {
-
-                if (value.toFixed) {
-
-                    /** @type {HTMLSelectElement} */
-                    const S = document.querySelector(`#${selector}`);
-
-                    if (S) {
-
-                        S.options.selectedIndex = value;
-                        results[selector] = S;
-                    }
-                    else results[selector] = {};
-                }
-                else results[selector] = {};
-                break;
-            }
-
-            case 'button' : {
-
-                if (value.substring) {
-
-                    /** @type {HTMLButtonElement} */
-                    const S = document.querySelector(`#${selector}`);
-
-                    if (S) {
-
-                        S.textContent = value;
-                        results[selector] = S;
-                    }
-                    else results[selector] = {};
-                }
-                else results[selector] = {};
-                break;
-            }
-
-            case 'element' : {
-
-                /** @type {HTMLElement} */
-                const S = document.querySelector(`${selector}`);
-
-                if (S) results[selector] = S;
-                else results[selector] = {};
-                break;
-            }
-
-            default : {
-
-                /** @type {HTMLElement} */
-                const S = document.querySelector(`#${selector}`);
-
-                if (S) results[selector] = S;
-                else results[selector] = {};
-            }
-        }
-    });
-
-    return results;
-}
-
 export {
     reportSpeed,
     reportFullLibrary,
@@ -663,6 +574,4 @@ export {
 
     addCheckerboardBackground,
     addImageDragAndDrop,
-
-    initializeDomInputs,
 }

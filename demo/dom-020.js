@@ -4,7 +4,7 @@
 // [Run code](../../demo/dom-020.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
 
 
 // #### Scene setup
@@ -66,7 +66,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'transparentAt', '0.32'],
     ['input', 'opaqueAt', '0.39'],
     ['input', 'opacity', '1'],

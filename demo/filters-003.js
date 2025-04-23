@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-003.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -180,7 +180,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'opacity', '1'],
     ['input', 'level', '1'],
     ['input', 'red', '1'],
@@ -194,7 +194,7 @@ scrawl.addNativeListener(['input', 'change'], () => {
 
     simpleFilters.forEach(f => {
         f.set({
-            opacity: dom.opacity.value,
+            opacity: parseFloat(dom.opacity.value),
         });
     });
 
@@ -218,7 +218,7 @@ scrawl.addNativeListener(['input', 'change'], () => {
 
     simpleFilters.forEach(f => {
         f.set({
-            level: dom.level.value,
+            level: parseFloat(dom.level.value),
         });
     });
 

@@ -4,7 +4,7 @@
 // [Run code](../../demo/mediapipe-003.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -26,7 +26,7 @@ const width = 1280,
 //     wormEnd = 270;
 
 
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'wormstart', '220'],
     ['input', 'wormend', '270'],
 ]);

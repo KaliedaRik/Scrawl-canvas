@@ -328,7 +328,7 @@ interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, 
 
 // Entity mixin
 // -------------------------------------
-type MethodValues = 'draw' | 'fill' | 'drawAndFill' | 'fillAndDraw' | 'drawThenFill' | 'fillThenDraw' | 'clip' | 'clear' | 'none';
+type MethodValues = 'draw' | 'fill' | 'drawAndFill' | 'fillAndDraw' | 'drawThenFill' | 'fillThenDraw' | 'clip' | 'clear' | 'none' | string;
 
 type WindingValues = 'nonzero' | 'evenodd';
 
@@ -3243,6 +3243,15 @@ interface SnippetReturn {
 export function makeSnippet(items: SnippetInputs): SnippetReturn;
 
 
+
+
+// initialize DOM input
+type InitializeDomInputElement = [string, string, string | number] | ['' | 'element', string];
+type InputElements = HTMLInputElement | HTMLSelectElement | HTMLButtonElement;
+interface InitializeDomInputResult {
+    [index: string]: InputElements;
+}
+export function initializeDomInputs(item: InitializeDomInputElement[]): InitializeDomInputResult;
 
 
 // Other Scrawl-canvas function exports

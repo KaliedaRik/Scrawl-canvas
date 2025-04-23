@@ -18,6 +18,15 @@
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
     }
+    details {
+
+      & summary {
+        cursor: pointer;
+        background-color: #fafafa;
+        padding: 1rem;
+        border: 1px dotted black;
+      }
+    }
   </style>
 </head>
 
@@ -29,74 +38,77 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 023</h1>
   <h2>Grid entity - using picture-based assets (image, video, sprite)</h2>
 
-  <div class="controls">
+  <details>
+    <summary>Click here to show/hide the Grid contents controls</summary>
+    <div class="controls">
 
-    <div class="pink label">Columns</div>
-    <div class="pink"><input class="controlItem" id="columns" type="range" value="6" min="1" max="20" step="1" /></div>
-    <div class="pink">&nbsp;</div>
+      <div class="pink label">Columns</div>
+      <div class="pink"><input class="controlItem" id="columns" type="range" value="6" min="1" max="20" step="1" /></div>
+      <div class="pink">&nbsp;</div>
 
-    <div class="pink label">Rows</div>
-    <div class="pink"><input class="controlItem" id="rows" type="range" value="6" min="1" max="20" step="1" /></div>
-    <div class="pink">&nbsp;</div>
+      <div class="pink label">Rows</div>
+      <div class="pink"><input class="controlItem" id="rows" type="range" value="6" min="1" max="20" step="1" /></div>
+      <div class="pink">&nbsp;</div>
 
-    <div class="pink label">Column gutter</div>
-    <div class="pink"><input class="controlItem" id="columnGutter" type="range" value="1" min="0" max="5" step="0.1" /></div>
-    <div class="pink">&nbsp;</div>
+      <div class="pink label">Column gutter</div>
+      <div class="pink"><input class="controlItem" id="columnGutter" type="range" value="1" min="0" max="5" step="0.1" /></div>
+      <div class="pink">&nbsp;</div>
 
-    <div class="pink label">Row gutter</div>
-    <div class="pink"><input class="controlItem" id="rowGutter" type="range" value="1" min="0" max="5" step="0.1" /></div>
-    <div class="pink">&nbsp;</div>
+      <div class="pink label">Row gutter</div>
+      <div class="pink"><input class="controlItem" id="rowGutter" type="range" value="1" min="0" max="5" step="0.1" /></div>
+      <div class="pink">&nbsp;</div>
 
-    <div class="pink label">Grid width</div>
-    <div class="pink">n% <input class="controlItem" id="relativeWidth" type="range" value="50" min="10" max="90" step="0.1" /></div>
-    <div class="pink">n <input class="controlItem" id="absoluteWidth" type="range" value="300" min="0" max="600" step="1" /></div>
+      <div class="pink label">Grid width</div>
+      <div class="pink">n% <input class="controlItem" id="relativeWidth" type="range" value="50" min="10" max="90" step="0.1" /></div>
+      <div class="pink">n <input class="controlItem" id="absoluteWidth" type="range" value="300" min="0" max="600" step="1" /></div>
 
-    <div class="pink label">Grid height</div>
-    <div class="pink">n% <input class="controlItem" id="relativeHeight" type="range" value="50" min="10" max="90" step="0.1" /></div>
-    <div class="pink">n <input class="controlItem" id="absoluteHeight" type="range" value="200" min="0" max="400" step="1" /></div>
+      <div class="pink label">Grid height</div>
+      <div class="pink">n% <input class="controlItem" id="relativeHeight" type="range" value="50" min="10" max="90" step="0.1" /></div>
+      <div class="pink">n <input class="controlItem" id="absoluteHeight" type="range" value="200" min="0" max="400" step="1" /></div>
 
-    <div class="pink label">Base fill</div>
-    <div class="pink"><select class="controlItem" id="baseFill">
-        <option value="imageGrid">Image across grid</option>
-        <option value="imageTile">Image in tile</option>
-        <option value="videoGrid">Video across grid</option>
-        <option value="videoTile">Video in tile</option>
-        <option value="spriteGrid">Sprite across grid</option>
-        <option value="spriteTile">Sprite in tile</option>
-      </select>
+      <div class="pink label">Base fill</div>
+      <div class="pink"><select class="controlItem" id="baseFill">
+          <option value="imageGrid">Image across grid</option>
+          <option value="imageTile">Image in tile</option>
+          <option value="videoGrid">Video across grid</option>
+          <option value="videoTile">Video in tile</option>
+          <option value="spriteGrid">Sprite across grid</option>
+          <option value="spriteTile">Sprite in tile</option>
+        </select>
+      </div>
+      <div class="pink">&nbsp;</div>
+
+      <div class="pink label">Highlight fill</div>
+      <div class="pink"><select class="controlItem" id="highlightFill">
+          <option value="imageGrid">Image across grid</option>
+          <option value="imageTile">Image in tile</option>
+          <option value="videoGrid">Video across grid</option>
+          <option value="videoTile">Video in tile</option>
+          <option value="spriteGrid">Sprite across grid</option>
+          <option value="spriteTile">Sprite in tile</option>
+        </select>
+      </div>
+      <div class="pink">&nbsp;</div>
+
+      <div class="pink label">Grid lines stroke</div>
+      <div class="pink"><select class="controlItem" id="gridStroke">
+          <option value="">Grey</option>
+          <option value="base">Base fill</option>
+          <option value="highlight">Highlight fill</option>
+          <option value="imageGrid">Image across grid</option>
+          <option value="imageTile">Image in tile</option>
+          <option value="videoGrid">Video across grid</option>
+          <option value="videoTile">Video in tile</option>
+          <option value="spriteGrid">Sprite across grid</option>
+          <option value="spriteTile">Sprite in tile</option>
+        </select>
+      </div>
+      <div class="pink">&nbsp;</div>
+      <div class="pink">&nbsp;</div>
+      <div class="pink">&nbsp;</div>
+      <div class="pink">&nbsp;</div>
     </div>
-    <div class="pink">&nbsp;</div>
-
-    <div class="pink label">Highlight fill</div>
-    <div class="pink"><select class="controlItem" id="highlightFill">
-        <option value="imageGrid">Image across grid</option>
-        <option value="imageTile">Image in tile</option>
-        <option value="videoGrid">Video across grid</option>
-        <option value="videoTile">Video in tile</option>
-        <option value="spriteGrid">Sprite across grid</option>
-        <option value="spriteTile">Sprite in tile</option>
-      </select>
-    </div>
-    <div class="pink">&nbsp;</div>
-
-    <div class="pink label">Grid lines stroke</div>
-    <div class="pink"><select class="controlItem" id="gridStroke">
-        <option value="">Grey</option>
-        <option value="base">Base fill</option>
-        <option value="highlight">Highlight fill</option>
-        <option value="imageGrid">Image across grid</option>
-        <option value="imageTile">Image in tile</option>
-        <option value="videoGrid">Video across grid</option>
-        <option value="videoTile">Video in tile</option>
-        <option value="spriteGrid">Sprite across grid</option>
-        <option value="spriteTile">Sprite in tile</option>
-      </select>
-    </div>
-    <div class="pink">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
-  </div>
+  </details>
 
   <canvas 
     id="mycanvas" 
@@ -106,89 +118,92 @@
     data-base-background-color="aliceblue"
   ></canvas>
 
+  <details>
+    <summary>Click here to show/hide the Grid position controls</summary>
+    <div class="controls">
+
+      <div class="blue label">Starts ('n%')</div>
+      <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+      <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+      <div class="green label">Handles ('n%')</div>
+      <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+      <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+      <div class="blue label">Starts (n)</div>
+      <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+      <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+      <div class="green label">Handles (n)</div>
+      <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+      <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+      <div class="blue label">Starts ('str')</div>
+      <div class="blue">X: <select class="controlItem" id="start_xString">
+          <option value="left">left</option>
+          <option value="center">center</option>
+          <option value="right">right</option>
+        </select>
+      </div>
+      <div class="blue">Y: <select class="controlItem" id="start_yString">
+          <option value="top">top</option>
+          <option value="center">center</option>
+          <option value="bottom">bottom</option>
+        </select>
+      </div>
+
+      <div class="green label">Handles ('str')</div>
+      <div class="green">X: <select class="controlItem" id="handle_xString">
+          <option value="left">left</option>
+          <option value="center">center</option>
+          <option value="right">right</option>
+        </select>
+      </div>
+      <div class="green">Y: <select class="controlItem" id="handle_yString">
+          <option value="top">top</option>
+          <option value="center">center</option>
+          <option value="bottom">bottom</option>
+        </select>
+      </div>
+
+      <div class="lavender label">Offset ('n%')</div>
+      <div class="lavender">X: <input class="controlItem" id="offset_xPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+      <div class="lavender">Y: <input class="controlItem" id="offset_yPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+
+      <div class="lavender label">Offset (n)</div>
+      <div class="lavender">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+      <div class="lavender">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+
+      <div class="yellow label">Roll</div>
+      <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+      <div class="yellow">&nbsp;</div>
+
+      <div class="yellow label">Scale</div>
+      <div class="yellow"><input class="controlItem" id="scale" type="range" value="1.0" min="0" max="2.0" step="0.05" /></div>
+      <div class="yellow">&nbsp;</div>
+
+      <div class="yellow label">Flip-upend</div>
+      <div class="yellow">
+        <select class="controlItem" id="upend">
+          <option value="0">false</option>
+          <option value="1">true</option>
+        </select>
+      </div>
+      <div class="yellow">&nbsp;</div>
+
+      <div class="yellow label">Flip-reverse</div>
+      <div class="yellow">
+        <select class="controlItem" id="reverse">
+          <option value="0">false</option>
+          <option value="1">true</option>
+        </select>
+      </div>
+      <div class="yellow">&nbsp;</div>
+
+    </div>
+  </details>
+
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
-
-  <div class="controls">
-
-    <div class="blue label">Starts ('n%')</div>
-    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
-    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
-
-    <div class="green label">Handles ('n%')</div>
-    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
-
-    <div class="blue label">Starts (n)</div>
-    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
-    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
-
-    <div class="green label">Handles (n)</div>
-    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
-
-    <div class="blue label">Starts ('str')</div>
-    <div class="blue">X: <select class="controlItem" id="start_xString">
-        <option value="left">left</option>
-        <option value="center">center</option>
-        <option value="right">right</option>
-      </select>
-    </div>
-    <div class="blue">Y: <select class="controlItem" id="start_yString">
-        <option value="top">top</option>
-        <option value="center">center</option>
-        <option value="bottom">bottom</option>
-      </select>
-    </div>
-
-    <div class="green label">Handles ('str')</div>
-    <div class="green">X: <select class="controlItem" id="handle_xString">
-        <option value="left">left</option>
-        <option value="center">center</option>
-        <option value="right">right</option>
-      </select>
-    </div>
-    <div class="green">Y: <select class="controlItem" id="handle_yString">
-        <option value="top">top</option>
-        <option value="center">center</option>
-        <option value="bottom">bottom</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Offset ('n%')</div>
-    <div class="lavender">X: <input class="controlItem" id="offset_xPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
-    <div class="lavender">Y: <input class="controlItem" id="offset_yPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
-
-    <div class="lavender label">Offset (n)</div>
-    <div class="lavender">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
-    <div class="lavender">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
-
-    <div class="yellow label">Roll</div>
-    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1.0" min="0" max="2.0" step="0.05" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Flip-upend</div>
-    <div class="yellow">
-      <select class="controlItem" id="upend">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Flip-reverse</div>
-    <div class="yellow">
-      <select class="controlItem" id="reverse">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="yellow">&nbsp;</div>
-
-  </div>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

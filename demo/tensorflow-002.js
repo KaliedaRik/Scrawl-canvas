@@ -4,7 +4,7 @@
 // [Run code](../../demo/tensorflow-002.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -233,7 +233,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['select', 'backgroundFilter', 0],
     ['select', 'outlineFilter', 1],
 ]);

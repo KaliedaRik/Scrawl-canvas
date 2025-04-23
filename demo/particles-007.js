@@ -4,7 +4,7 @@
 // [Run code](../../demo/particles-007.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -223,7 +223,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 
 
 // Setup form observer functionality
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'particleCount', '50'],
     ['input', 'brownianIntensity', '2'],
     ['select', 'filter', 0],

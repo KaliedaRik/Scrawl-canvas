@@ -443,7 +443,14 @@
 <li>The work of meeting this requirement lies with the designer and UX developer. <code>&lt;canvas&gt;</code> elements that include interactive content should not be ignored in any work to assign keyboard shortcuts, or reassigning those shortcuts to different key strokes.</li>
 </ul>
 <h4 id="keyboard-event-management-for-sc-canvas-artefacts">Keyboard event management for SC Canvas artefacts</h4>
-<p>TODO</p>
+<p>The best approach to giving end-users more accessible control over a canvas display is to add a set of <code>&lt;input&gt;</code> elements to the DOM markup next to the <code>&lt;canvas&gt;</code> element, which they can then use to manipulate the canvas output. This approach makes use of the browser's built-in <code>&lt;input&gt;</code> and <code>&lt;select&gt;</code> element accessibility functionality (for selectors, ranges, etc). Many of the test demos include such controls.</p>
+<p>Adding <code>&lt;input&gt;</code> and <code>&lt;select&gt;</code> element controls can lead to some convoluted code to wire user updates to the canvas display. SC includes two helper functions which attempt to make this a little easier for dev-users to implement and manage. More detail can be found in the <a href="sc-events-signals.html#user-interaction-with-form-controls">user interaction with form controls</a> section of the Events and Signals page of this Runbook:</p>
+<ul>
+<li><code>scrawl.initializeDomInputs()</code> locates the DOM control elements, sets them to initial values and returns an object of those elements keyed to their <code>id</code> values.</li>
+<li><code>scrawl.makeUpdater()</code> adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC Artefact, entity or Group object.</li>
+</ul>
+<p>While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls - for instance by placing them inside a <code>&lt;details&gt;</code> element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo <a href="../../demo/canvas-023.html">Canvas-023</a> for an example.</p>
+<p>For more application also includes a <strong>keyboardZone</strong> convenience object to help dev-users implement keyboard shortcuts for their interactive canvas displays, which is explored in more detail in the </p>
 <h3 id="users-have-enough-time-to-read-and-use-the-content">Users have enough time to read and use the content</h3>
 <p>Some people need more time than others to read and use the content. For instance, some people require more time to type text, understand instructions, operate controls, or to otherwise complete tasks on a website.</p>
 <p>Examples of providing enough time include providing mechanisms to:</p>

@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-207.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -69,7 +69,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['', 'domText'],
     ['input', 'alignment', '0'],
     ['input', 'height', '80'],

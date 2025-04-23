@@ -420,7 +420,15 @@ Meeting this requirement helps keyboard users, including people using alternativ
 + The work of meeting this requirement lies with the designer and UX developer. `<canvas>` elements that include interactive content should not be ignored in any work to assign keyboard shortcuts, or reassigning those shortcuts to different key strokes.
 
 #### Keyboard event management for SC Canvas artefacts
-TODO
+The best approach to giving end-users more accessible control over a canvas display is to add a set of `<input>` elements to the DOM markup next to the `<canvas>` element, which they can then use to manipulate the canvas output. This approach makes use of the browser's built-in `<input>` and `<select>` element accessibility functionality (for selectors, ranges, etc). Many of the test demos include such controls.
+
+Adding `<input>` and `<select>` element controls can lead to some convoluted code to wire user updates to the canvas display. SC includes two helper functions which attempt to make this a little easier for dev-users to implement and manage. More detail can be found in the [user interaction with form controls](sc-events-signals.html#user-interaction-with-form-controls) section of the Events and Signals page of this Runbook:
++ `scrawl.initializeDomInputs()` locates the DOM control elements, sets them to initial values and returns an object of those elements keyed to their `id` values.
++ `scrawl.makeUpdater()` adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC Artefact, entity or Group object.
+
+While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls - for instance by placing them inside a `<details>` element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo [Canvas-023](../../demo/canvas-023.html) for an example.
+
+For more application also includes a **keyboardZone** convenience object to help dev-users implement keyboard shortcuts for their interactive canvas displays, which is explored in more detail in the 
 
 ### Users have enough time to read and use the content
 Some people need more time than others to read and use the content. For instance, some people require more time to type text, understand instructions, operate controls, or to otherwise complete tasks on a website.

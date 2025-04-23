@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-062.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 const ovalCanvas = scrawl.findCanvas('oval-canvas');
@@ -178,7 +178,7 @@ scrawl.makeUpdater({
 
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'radiusX_absolute', '150'],
     ['input', 'radiusX_relative', '37.5'],
     ['input', 'radiusY_absolute', '150'],
