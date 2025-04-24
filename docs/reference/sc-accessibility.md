@@ -428,7 +428,12 @@ Adding `<input>` and `<select>` element controls can lead to some convoluted cod
 
 While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls - for instance by placing them inside a `<details>` element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo [Canvas-023](../../demo/canvas-023.html) for an example.
 
-For more application also includes a **keyboardZone** convenience object to help dev-users implement keyboard shortcuts for their interactive canvas displays, which is explored in more detail in the 
+For more application-like interactive canvas displays - for instance: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; etc - best practice is to include keyboard shortcuts for each of the possible interactions. To help dev-users, SC includes a **keyboardZone** convenience object in which dev-users can define the shortcut and associated action for the targeted `<canvas>` element. See the following test demos for examples:
++ [Snippets-005](../../demo/snippets-005.html) - Create a responsive, interactive and accessible before/after slider infographic.
++ [Modules-005](../../demo/modules-005.html) - Accessible GUI-based simple canvas editor.
++ [Canvas-211](../../demo/canvas-211.html) - EnhancedLabel entity - keyboard navigation.
+
+More details about the `scrawl.makeKeyboardZone()` factory function can be found in the [keyboard shortcut management](sc-events-signals.html#keyboard-shortcut-management) section of the Events and Signals page of this Runbook.
 
 ### Users have enough time to read and use the content
 Some people need more time than others to read and use the content. For instance, some people require more time to type text, understand instructions, operate controls, or to otherwise complete tasks on a website.

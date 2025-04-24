@@ -450,7 +450,13 @@
 <li><code>scrawl.makeUpdater()</code> adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC Artefact, entity or Group object.</li>
 </ul>
 <p>While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls - for instance by placing them inside a <code>&lt;details&gt;</code> element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo <a href="../../demo/canvas-023.html">Canvas-023</a> for an example.</p>
-<p>For more application also includes a <strong>keyboardZone</strong> convenience object to help dev-users implement keyboard shortcuts for their interactive canvas displays, which is explored in more detail in the </p>
+<p>For more application-like interactive canvas displays - for instance: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; etc - best practice is to include keyboard shortcuts for each of the possible interactions. To help dev-users, SC includes a <strong>keyboardZone</strong> convenience object in which dev-users can define the shortcut and associated action for the targeted <code>&lt;canvas&gt;</code> element. See the following test demos for examples:</p>
+<ul>
+<li><a href="../../demo/snippets-005.html">Snippets-005</a> - Create a responsive, interactive and accessible before/after slider infographic.</li>
+<li><a href="../../demo/modules-005.html">Modules-005</a> - Accessible GUI-based simple canvas editor.</li>
+<li><a href="../../demo/canvas-211.html">Canvas-211</a> - EnhancedLabel entity - keyboard navigation.</li>
+</ul>
+<p>More details about the <code>scrawl.makeKeyboardZone()</code> factory function can be found in the <a href="sc-events-signals.html#keyboard-shortcut-management">keyboard shortcut management</a> section of the Events and Signals page of this Runbook.</p>
 <h3 id="users-have-enough-time-to-read-and-use-the-content">Users have enough time to read and use the content</h3>
 <p>Some people need more time than others to read and use the content. For instance, some people require more time to type text, understand instructions, operate controls, or to otherwise complete tasks on a website.</p>
 <p>Examples of providing enough time include providing mechanisms to:</p>

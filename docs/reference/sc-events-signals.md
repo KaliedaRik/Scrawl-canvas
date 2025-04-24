@@ -99,6 +99,9 @@ Capabilities:
 ### User interaction with form controls 
 [write up]
 
+### Keyboard shortcut management
+[write up]
+
 ## The Scrawl-canvas signalling system
 [write up]
 
