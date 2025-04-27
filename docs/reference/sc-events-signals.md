@@ -69,7 +69,7 @@ Capabilities:
 ### Third-party canvas sources
 [write up]
 
-## User interaction
+## Pointer (mouse and touch) interaction
 [write up]
 
 ### SC event listener convenience functions
@@ -88,6 +88,9 @@ Capabilities:
 [write up]
 
 ### Drag-and-drop functionality
+[write up]
+
+## Non-pointer interaction
 [write up]
 
 ### Scrawl-canvas Anchor and Button objects

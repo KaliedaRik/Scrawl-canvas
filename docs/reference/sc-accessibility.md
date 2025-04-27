@@ -1,5 +1,5 @@
 # Accessibility
-The following summary has been stolen (with very minor formatting amendments) from the [Introduction to Web Accessibility](https://www.w3.org/WAI/fundamentals/accessibility-intro/) page of the W3C Web Accessibility Initiative site (last stolen on 13 April 2025):
+The following summary has been stolen (with very minor formatting amendments) from the [Introduction to Web Accessibility](https://www.w3.org/WAI/fundamentals/accessibility-intro/) page of the W3C Web Accessibility Initiative site:
 
 > Web accessibility means that websites, tools, and technologies are designed and developed so that people with disabilities can use them. More specifically, people can: perceive, understand, navigate, and interact with the Web; and contribute to the Web.
 > 
@@ -26,7 +26,7 @@ Current guidelines documentation links:
 + [Web Content Accessibility Guidelines (WCAG) v2.1](https://www.w3.org/TR/WCAG21/)
 + [Web Content Accessibility Guidelines (WCAG) v2.2](https://www.w3.org/TR/WCAG22/)
 + [WCAG 2 Overview](https://www.w3.org/WAI/standards-guidelines/wcag/)
-+ [Links to all WCAG 2.2 "Understanding" Docs](https://www.w3.org/WAI/WCAG22/Understanding/) - "Understanding" documents provide detailed explanations for Web Content Accessibility Guidelines (WCAG) guidelines and success criteria. They are informative, not part of the "normative" WCAG standard.
++ [Links to all WCAG 2.2 "Understanding" Docs](https://www.w3.org/WAI/WCAG22/Understanding/) - "Understanding" documents provide detailed explanations for WCAG guidelines and success criteria. They are informative, not part of the "normative" WCAG standard.
 + [Techniques for WCAG 2.2](https://www.w3.org/WAI/WCAG22/Techniques/) - "Techniques" are examples of ways to meet Web Content Accessibility Guidelines (WCAG). They are not required to meet WCAG.
 
 For the future - WCAG 3 drafts links:
@@ -190,13 +190,13 @@ The [role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Refer
 
 SC, by default, will assign an imported `<canvas>` element to the [ARIA `img` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/img_role). For the most part this seems to work reasonably well with screen reader technology. This is because while most screen readers will consider the element with `role="img"` set on it to be like a black box (and not access the individual elements inside it), they are far more likely to just disregard the `<canvas>` element when they encounter it and process its fallback content instead.
 
-However `<canvas>` elements are eminently adaptable; dev-users can find many use cases for them. Thus it is important for designers and dev-users to carefully consider the role being played by each canvas display in the web page and adapt the element's role accordingly:
+However `<canvas>` elements are eminently adaptable; dev-users can find many use cases for them. Thus it is important for designers and dev-users to carefully consider the work being done by each canvas display in the web page and adapt the element's `role` value accordingly:
 + Static canvas displays should keep the **`img`** role if the display is relevant (but not essential) to understanding the surrounding text.
 + Static or animated canvas displays that don't contribute to the user's understanding of the surrounding text - for instance background or decorative artwork - should use the [ARIA `presentation` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/presentation_role), or its synonym **`none`**.
 + Chart and graph canvas displays should probably be given the [ARIA `figure` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/figure_role).
 + Similarly, interactive image displays - such as a carousel or before-after component - may benefit from taking the **`figure`** role.
-+ If the entire `<canvas>` element (not just part of it) is being used as a button, best practice is to wrap it in a `<button>` (or `<input type="button">`) element, in which case set its role to **`presentation`**. If that is not possible, then the element must take the [ARIA `button` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/button_role). At the same time, the element's [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex) attribute should be explicitly set to `0`.
-+ If the entire `<canvas>` element (not just part of it) is being used as a navigation link, best practice is to wrap it in an `<a href=[...URL]>` element, in which case set its role to **`presentation`**. If that is not possible, then the element must take the [ARIA `link` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/link_role). At the same time, the element's [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex) attribute should be explicitly set to `0`.
++ If the entire `<canvas>` element (not just part of it) is being used as a button, best practice is to wrap it in a `<button>` (or `<input type="button">`) element, in which case set its role to **`presentation`**. If that is not possible, then the element must take the [ARIA `button` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/button_role) and at the same time the element's [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex) attribute should be explicitly set to `0`.
++ If the entire `<canvas>` element (not just part of it) is being used as a navigation link, best practice is to wrap it in an `<a href=[...URL]>` element, in which case set its role to **`presentation`**. If that is not possible, then the element must take the [ARIA `link` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/link_role) and at the same time the element's [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex) attribute should be explicitly set to `0`.
 + If the entire `<canvas>` element (not just part of it) is being used as a visual progress bar, or conveying timer information (for instance a video playback progress bar, or a clock readout) then it might be appropriate to give the element an [ARIA `progressbar` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/progressbar_role) or [ARIA `timer` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/timer_role).
 + Highly interactive `<canvas>` elements need to be given the [ARIA `application` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/application_role) - but use this role with care! The **`application`** role should be reserved for app-like canvas displays such as: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; (collaborative) whiteboard experiences; etc.
 
@@ -302,7 +302,7 @@ Meeting this requirement allows content to be correctly read aloud, enlarged, or
 + For any relevant graphical text contained in the canvas display, that text should be reflected back into the web page DOM in a way so that it makes sense - both in itself, and in the wider context of the surrounding text - to end users accessing that text using assistive technology.
 
 **1.3.3 (A) - [Sensory Characteristics](https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html)**
-+ Probably not applicable - `<canvas>` elements that are more likely to be the control elements rather than the describers of control elements.
++ Probably not applicable - `<canvas>` elements are more likely to be the control elements rather than the describers of control elements.
 
 **1.3.4 (AA) - [Orientation](https://www.w3.org/WAI/WCAG22/Understanding/orientation.html)**
 + `<canvas>` elements are not naturally responsive; developers will need to apply some effort towards making the element fit appropriately into its environment's orientation without distorting the canvas display.
@@ -424,7 +424,7 @@ The best approach to giving end-users more accessible control over a canvas disp
 
 Adding `<input>` and `<select>` element controls can lead to some convoluted code to wire user updates to the canvas display. SC includes two helper functions which attempt to make this a little easier for dev-users to implement and manage. More detail can be found in the [user interaction with form controls](sc-events-signals.html#user-interaction-with-form-controls) section of the Events and Signals page of this Runbook:
 + `scrawl.initializeDomInputs()` locates the DOM control elements, sets them to initial values and returns an object of those elements keyed to their `id` values.
-+ `scrawl.makeUpdater()` adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC Artefact, entity or Group object.
++ `scrawl.makeUpdater()` adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC artefact, entity or Group object.
 
 While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls - for instance by placing them inside a `<details>` element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo [Canvas-023](../../demo/canvas-023.html) for an example.
 
@@ -445,27 +445,40 @@ Examples of providing enough time include providing mechanisms to:
 + Re-authenticate when a session expires without losing data
 
 **2.2.1 (A) - [Timing Adjustable](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html)**
-+ `<canvas>` elements that have animated displays should also include user-accessble controls to halt the animation at will.
++ `<canvas>` elements that have animated displays should also include user-accessble controls to adjust the speed of the animation.
 
 **2.2.2 (A) - [Pause, Stop, Hide](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html)**
 + `<canvas>` elements that have animated displays should also include user-accessble controls to halt/resume the animation at will. The user should also be able to hide the `<canvas>` element if they so desire.
 + Websites should pay attention to user preferences - in particular to: `prefers-reduced-motion`. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page - in this case to halt any animation if it runs for more than five seconds.
 
 **2.2.3 (AAA) - [No Timing](https://www.w3.org/WAI/WCAG22/Understanding/no-timing.html)**
-+ `<canvas>` elements that have animated displays should also include user-accessble controls to halt/resume the animation at will. The user should also be able to hide the `<canvas>` element if they so desire.
++ This is a page design issue, thus not applicable specifically to `<canvas>` elements.
 
 **2.2.4 (AAA) - [Interruptions](https://www.w3.org/WAI/WCAG22/Understanding/interruptions.html)**
-+ This is a user session and/or web page concern, thus not applicable specifically to `<canvas>` elements.
++ This is a page design issue, thus not applicable specifically to `<canvas>` elements.
 
 **2.2.5 (AAA) - [Re-authenticating](https://www.w3.org/WAI/WCAG22/Understanding/re-authenticating.html)**
-+ This is a user session and/or web page concern, thus not applicable specifically to `<canvas>` elements.
++ This is a page design issue, thus not applicable specifically to `<canvas>` elements.
 + `<canvas>` elements should NEVER be used as a replacement for form elements!
 
 **2.2.6 (AAA) - [Timeouts](https://www.w3.org/WAI/WCAG22/Understanding/timeouts.html)**
-+ This is a user session and/or web page concern, thus not applicable specifically to `<canvas>` elements.
++ This is a page design issue, thus not applicable specifically to `<canvas>` elements.
 
 #### Managing SC Animations
-TODO
+Each SC generic, Ticker and display animation objects includes an attribute - `anim.maxFrameRate` which can be used to control the speed of that animation. By default SC sets the value of this attribute to `60` frames-per-second, but this can be changed at any time using the normal `anim.set()` functionality. For an example, see test demo [Canvas-050](../../demo/canvas-050.html).
+
+All SC animation objects can be started and stopped at any time using the `anim.run()` and `anim.halt()` functions. See the following test demos for inspiration:
++ [Canvas-027](../../demo/canvas-027.html) - Video control and manipulation.
++ [Canvas-033](../../demo/canvas-033.html) - User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled.
++ [Canvas-208](../../demo/canvas-208.html) - EnhancedLabel entity - text along a path.
++ [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop.
++ [Snippets-006](../../demo/snippets-006.html) - Editable header text colorizer and animation effect snippets.
+
+SC Ticker animation objects are the only time-based animations in the SC system. There is (at this time) no simple way for the dev-user to dilate a Ticker animation (make it run faster or slower) to meet end-user preferences, but there's also nothing to prevent them changing the duration of a Ticker animation at any time. 
+
+SC Tween and Action objects can take temporal-relative String% values for their `.start` and `.duration` attributes, meaning that a Tween can be defined to start `20%` of the Ticker's duration after it starts running, and last for `30%` of its duration. This should make the work of dilating a Ticker animation a little easier for the dev-user.
+
+More information about managing SC animations can be found in the [Animation and Display cycle](sc-animation-systems.html) page of this Runbook.
 
 ### Content does not cause seizures and physical reactions
 Content that flashes at certain rates or patterns can cause photosensitive reactions, including seizures. Flashing content is ideally avoided entirely or only used in a way that does not cause known risks. Also animations and moving content can cause discomfort and physical reactions.
@@ -487,7 +500,7 @@ Examples of avoiding causing seizures and physical reactions:
 + Websites should pay attention to user preferences - in particular to: `prefers-reduced-motion`. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page - in this case to suppress unnecessary animations arising from user interactions with the `<canvas>` element.
 
 #### SC function hooks to adapt to motion-based user preferences settings
-TODO
+SC comes with built-in support to action changes to a canvas display based on motion preference media settings - `prefers-reduced-motion` - that the end-user may have set on their device. This functionality has been detailed in the [Accessibility section](http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility) of the Artefacts and the DOM page of this Runbook.
 
 ### Users can easily navigate, find content, and determine where they are
 Well organized content helps users to orient themselves and to navigate effectively. Such content includes:
@@ -524,7 +537,7 @@ Meeting this requirement helps people to navigate through web pages in different
 
 **2.4.7 (AA) - [Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html)**
 + Developers can create - with some effort - `<canvas>` elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.
-+ When the user focuses on the element, or the graphical region within the display acting as a button or link, then that focussing action should be visibly conveyed to the user.
++ When the user focuses on the element, or the graphical region within the display acting as a button or link - for instance through a mouse hover, or a click or tap interaction - then that focussing action should be visibly conveyed to the user.
 + This extends to keyboard navigation - when the user focusses on the `<a>` or `<button>` elements contained by the canvas, that action should be visibly indicated to the user in some way.
 
 **2.4.8 (AAA) - [Location](https://www.w3.org/WAI/WCAG22/Understanding/location.html)**
@@ -550,14 +563,24 @@ Meeting this requirement helps people to navigate through web pages in different
 + Developers can create - with some effort - `<canvas>` elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.
 + When the user keyboard focusses on the `<a>` or `<button>` elements contained by the canvas, then the `<canvas>` element, or the region within the canvas display tied to that button or link, should change its appearance to meet the requirements of this criterion.
 
-#### Button and link functionality in SC Canvas artefact displays
-TODO
+#### SC link and action regions
+SC includes functionality to create regions in the `<canvas>` element display which can act as **links** or **action buttons**. These regions are defined as SC entity objects:
++ For *action regions* the entity will be associated with an HTML `<button>` element, stored in a dedicated `<div>` element within the `<canvas>` element's *fallback content*.
++ Similarly, for *link regions* the entity will be associated with an HTML `<a>` element, stored in a dedicated `<nav>` element within the `<canvas>` element's *fallback content*.
 
-#### Focus management for interactive SC entitys
-TODO
+This approach allows SC to leverage the browser's built-in accessibility functionality for the `<button>` and `<a>` elements, including keyboard navigation and element focus/blur.
+
+Further details of this functionality can be found in the [interactive entitys](sc-graphical-entity-functionality.html#interactive-entitys) section of the Scrawl-canvas graphical entity functionality page of this Runbook. Test demo examples include:
++ [Canvas-009](../../demo/canvas-009.html) - Entity web link anchors.
++ [Modules-001](../../demo/modules-001.html) - Scrawl-canvas modularized code - London crime charts.
++ [Modules-005](../../demo/modules-005.html) - Accessible GUI-based simple canvas editor.
 
 #### Apply canvas decoration to HTML headers using SC Snippet functionality
-TODO
+SC includes experimental functionality - [SC Snippets](sc-snippets.html) - to associate a `<canvas>` element with normal (non-SC controlled) DOM elements. The results are similar to the [Houdini](https://ishoudinireadyyet.com/) [CSS Painting API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API), though the path to achieving those results is different.
+
+When a dev-user chooses to apply an SC Snippet to a DOM element such as a heading, then they will need to make sure that the added `<canvas>` does not interfere with the accessibility of the header.
+
+Test demo [Snippets-006](../../demo/snippets-006.html) investigates this issue, including the need to accommodate end-user preferences (eg: `prefers-dark-mode`, `prefers-contrast`), and to include mechanisms to afford end-users control of animated effects.
 
 ### Users can use different input modalities beyond keyboard
 Input modalities beyond keyboard, such as touch activation, voice recognition (speech input), and gestures make content easier to use for many people. Yet not everyone can use each of these input modalities, and to the same degree. Particular design considerations maximize the benefit of these input modalities. This includes:
@@ -630,7 +653,17 @@ Meeting this requirement helps software, including assistive technology, to proc
 + This is a web page design and development issue. `<canvas>` elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.
 
 #### SC text management functionality
-TODO
+SC manages graphical text through the Label and EnhancedLabel entitys. In both cases the entitys, by default, replicate their text into dedicated `<div>` elements which are part of the `<canvas>` element's *fallback content* - thus making the text available to accessibility technologies like screen readers. These elements will announce text changes to the end-user **politely**.
+
+However, not all of the text in a canvas display may be relevant to an end-user's understanding of the wider web page. For instance in a chart, it is often enough to inform the end-user of the start and end values of each axis without the need to tell them the value of each tick displayed in the chart - information which could distract them from the more important information which the chart demonstrates visually. To this end, SC allows dev-users to suppress an entity's text replication into the DOM on a case-by-case basis, controlled by the `entity.textIsAccessible` boolean attribute.
+
+Furthermore, it is not enough to replicate graphical text into the DOM. That replicated text needs to make coherent sense to the end-user, which means:
++ The text may need to be manipulated to turn it into a meaningful phrase; and
++ Separate phrases need to be ordered within the DOM generate a coherent sequential output.
+
+To help meet these requirements SC text-related entitys include a vary simple templating system controlled by the `entity.accessibleText` and `entity.accessibleTextPlaceholder` attributes. Dev-users can set the order in which multiple text-related entitys present their text to the end-user using the `entity.accessibleTextOrder` attribute.
+
+A fuller investigation of Label and EnhancedLabel entity functionality can be found in the [Text-based entitys](sc-text-based-entitys.html) page of this Runbook.
 
 ### Content appears and operates in predictable ways
 Many people rely on predictable user interfaces and are disoriented or distracted by inconsistent appearance or behavior. Examples of making content more predictable include:

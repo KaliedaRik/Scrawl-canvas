@@ -23,7 +23,7 @@
 
     <main>
         <h1 id="accessibility">Accessibility</h1>
-<p>The following summary has been stolen (with very minor formatting amendments) from the <a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/">Introduction to Web Accessibility</a> page of the W3C Web Accessibility Initiative site (last stolen on 13 April 2025):</p>
+<p>The following summary has been stolen (with very minor formatting amendments) from the <a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/">Introduction to Web Accessibility</a> page of the W3C Web Accessibility Initiative site:</p>
 <blockquote>
   <p>Web accessibility means that websites, tools, and technologies are designed and developed so that people with disabilities can use them. More specifically, people can: perceive, understand, navigate, and interact with the Web; and contribute to the Web.</p>
   <p>Web accessibility encompasses all disabilities that affect access to the Web, including: auditory; cognitive; neurological; physical; speech; visual; etc.</p>
@@ -50,7 +50,7 @@
 <li><a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines (WCAG) v2.1</a></li>
 <li><a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines (WCAG) v2.2</a></li>
 <li><a href="https://www.w3.org/WAI/standards-guidelines/wcag/">WCAG 2 Overview</a></li>
-<li><a href="https://www.w3.org/WAI/WCAG22/Understanding/">Links to all WCAG 2.2 "Understanding" Docs</a> - "Understanding" documents provide detailed explanations for Web Content Accessibility Guidelines (WCAG) guidelines and success criteria. They are informative, not part of the "normative" WCAG standard.</li>
+<li><a href="https://www.w3.org/WAI/WCAG22/Understanding/">Links to all WCAG 2.2 "Understanding" Docs</a> - "Understanding" documents provide detailed explanations for WCAG guidelines and success criteria. They are informative, not part of the "normative" WCAG standard.</li>
 <li><a href="https://www.w3.org/WAI/WCAG22/Techniques/">Techniques for WCAG 2.2</a> - "Techniques" are examples of ways to meet Web Content Accessibility Guidelines (WCAG). They are not required to meet WCAG.</li>
 </ul>
 <p>For the future - WCAG 3 drafts links:</p>
@@ -198,14 +198,14 @@
 <h4 id="canvas-roles">Canvas roles</h4>
 <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles">role</a> of a <code>&lt;canvas&gt;</code> element can vary depending on how it is being used in the web page. </p>
 <p>SC, by default, will assign an imported <code>&lt;canvas&gt;</code> element to the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/img_role">ARIA <code>img</code> role</a>. For the most part this seems to work reasonably well with screen reader technology. This is because while most screen readers will consider the element with <code>role="img"</code> set on it to be like a black box (and not access the individual elements inside it), they are far more likely to just disregard the <code>&lt;canvas&gt;</code> element when they encounter it and process its fallback content instead.</p>
-<p>However <code>&lt;canvas&gt;</code> elements are eminently adaptable; dev-users can find many use cases for them. Thus it is important for designers and dev-users to carefully consider the role being played by each canvas display in the web page and adapt the element's role accordingly:</p>
+<p>However <code>&lt;canvas&gt;</code> elements are eminently adaptable; dev-users can find many use cases for them. Thus it is important for designers and dev-users to carefully consider the work being done by each canvas display in the web page and adapt the element's <code>role</code> value accordingly:</p>
 <ul>
 <li>Static canvas displays should keep the <strong><code>img</code></strong> role if the display is relevant (but not essential) to understanding the surrounding text.</li>
 <li>Static or animated canvas displays that don't contribute to the user's understanding of the surrounding text - for instance background or decorative artwork - should use the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/presentation_role">ARIA <code>presentation</code> role</a>, or its synonym <strong><code>none</code></strong>.</li>
 <li>Chart and graph canvas displays should probably be given the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/figure_role">ARIA <code>figure</code> role</a>.</li>
 <li>Similarly, interactive image displays - such as a carousel or before-after component - may benefit from taking the <strong><code>figure</code></strong> role.</li>
-<li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a button, best practice is to wrap it in a <code>&lt;button&gt;</code> (or <code>&lt;input type="button"&gt;</code>) element, in which case set its role to <strong><code>presentation</code></strong>. If that is not possible, then the element must take the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/button_role">ARIA <code>button</code> role</a>. At the same time, the element's <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">tabindex</a> attribute should be explicitly set to <code>0</code>.</li>
-<li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a navigation link, best practice is to wrap it in an <code>&lt;a href=[...URL]&gt;</code> element, in which case set its role to <strong><code>presentation</code></strong>. If that is not possible, then the element must take the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/link_role">ARIA <code>link</code> role</a>. At the same time, the element's <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">tabindex</a> attribute should be explicitly set to <code>0</code>.</li>
+<li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a button, best practice is to wrap it in a <code>&lt;button&gt;</code> (or <code>&lt;input type="button"&gt;</code>) element, in which case set its role to <strong><code>presentation</code></strong>. If that is not possible, then the element must take the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/button_role">ARIA <code>button</code> role</a> and at the same time the element's <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">tabindex</a> attribute should be explicitly set to <code>0</code>.</li>
+<li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a navigation link, best practice is to wrap it in an <code>&lt;a href=[...URL]&gt;</code> element, in which case set its role to <strong><code>presentation</code></strong>. If that is not possible, then the element must take the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/link_role">ARIA <code>link</code> role</a> and at the same time the element's <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">tabindex</a> attribute should be explicitly set to <code>0</code>.</li>
 <li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a visual progress bar, or conveying timer information (for instance a video playback progress bar, or a clock readout) then it might be appropriate to give the element an <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/progressbar_role">ARIA <code>progressbar</code> role</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/timer_role">ARIA <code>timer</code> role</a>.</li>
 <li>Highly interactive <code>&lt;canvas&gt;</code> elements need to be given the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/application_role">ARIA <code>application</code> role</a> - but use this role with care! The <strong><code>application</code></strong> role should be reserved for app-like canvas displays such as: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; (collaborative) whiteboard experiences; etc.</li>
 </ul>
@@ -316,7 +316,7 @@
 </ul>
 <p><strong>1.3.3 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html">Sensory Characteristics</a></strong></p>
 <ul>
-<li>Probably not applicable - <code>&lt;canvas&gt;</code> elements that are more likely to be the control elements rather than the describers of control elements.</li>
+<li>Probably not applicable - <code>&lt;canvas&gt;</code> elements are more likely to be the control elements rather than the describers of control elements.</li>
 </ul>
 <p><strong>1.3.4 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/orientation.html">Orientation</a></strong></p>
 <ul>
@@ -447,7 +447,7 @@
 <p>Adding <code>&lt;input&gt;</code> and <code>&lt;select&gt;</code> element controls can lead to some convoluted code to wire user updates to the canvas display. SC includes two helper functions which attempt to make this a little easier for dev-users to implement and manage. More detail can be found in the <a href="sc-events-signals.html#user-interaction-with-form-controls">user interaction with form controls</a> section of the Events and Signals page of this Runbook:</p>
 <ul>
 <li><code>scrawl.initializeDomInputs()</code> locates the DOM control elements, sets them to initial values and returns an object of those elements keyed to their <code>id</code> values.</li>
-<li><code>scrawl.makeUpdater()</code> adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC Artefact, entity or Group object.</li>
+<li><code>scrawl.makeUpdater()</code> adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC artefact, entity or Group object.</li>
 </ul>
 <p>While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls - for instance by placing them inside a <code>&lt;details&gt;</code> element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo <a href="../../demo/canvas-023.html">Canvas-023</a> for an example.</p>
 <p>For more application-like interactive canvas displays - for instance: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; etc - best practice is to include keyboard shortcuts for each of the possible interactions. To help dev-users, SC includes a <strong>keyboardZone</strong> convenience object in which dev-users can define the shortcut and associated action for the targeted <code>&lt;canvas&gt;</code> element. See the following test demos for examples:</p>
@@ -468,7 +468,7 @@
 </ul>
 <p><strong>2.2.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html">Timing Adjustable</a></strong></p>
 <ul>
-<li><code>&lt;canvas&gt;</code> elements that have animated displays should also include user-accessble controls to halt the animation at will.</li>
+<li><code>&lt;canvas&gt;</code> elements that have animated displays should also include user-accessble controls to adjust the speed of the animation.</li>
 </ul>
 <p><strong>2.2.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html">Pause, Stop, Hide</a></strong></p>
 <ul>
@@ -477,23 +477,34 @@
 </ul>
 <p><strong>2.2.3 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/no-timing.html">No Timing</a></strong></p>
 <ul>
-<li><code>&lt;canvas&gt;</code> elements that have animated displays should also include user-accessble controls to halt/resume the animation at will. The user should also be able to hide the <code>&lt;canvas&gt;</code> element if they so desire.</li>
+<li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
 <p><strong>2.2.4 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/interruptions.html">Interruptions</a></strong></p>
 <ul>
-<li>This is a user session and/or web page concern, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
+<li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
 <p><strong>2.2.5 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/re-authenticating.html">Re-authenticating</a></strong></p>
 <ul>
-<li>This is a user session and/or web page concern, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
+<li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
 <p><strong>2.2.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/timeouts.html">Timeouts</a></strong></p>
 <ul>
-<li>This is a user session and/or web page concern, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
+<li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
 <h4 id="managing-sc-animations">Managing SC Animations</h4>
-<p>TODO</p>
+<p>Each SC generic, Ticker and display animation objects includes an attribute - <code>anim.maxFrameRate</code> which can be used to control the speed of that animation. By default SC sets the value of this attribute to <code>60</code> frames-per-second, but this can be changed at any time using the normal <code>anim.set()</code> functionality. For an example, see test demo <a href="../../demo/canvas-050.html">Canvas-050</a>.</p>
+<p>All SC animation objects can be started and stopped at any time using the <code>anim.run()</code> and <code>anim.halt()</code> functions. See the following test demos for inspiration:</p>
+<ul>
+<li><a href="../../demo/canvas-027.html">Canvas-027</a> - Video control and manipulation.</li>
+<li><a href="../../demo/canvas-033.html">Canvas-033</a> - User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled.</li>
+<li><a href="../../demo/canvas-208.html">Canvas-208</a> - EnhancedLabel entity - text along a path.</li>
+<li><a href="../../demo/dom-009.html">DOM-009</a> - Stop and restart the main animation loop.</li>
+<li><a href="../../demo/snippets-006.html">Snippets-006</a> - Editable header text colorizer and animation effect snippets.</li>
+</ul>
+<p>SC Ticker animation objects are the only time-based animations in the SC system. There is (at this time) no simple way for the dev-user to dilate a Ticker animation (make it run faster or slower) to meet end-user preferences, but there's also nothing to prevent them changing the duration of a Ticker animation at any time. </p>
+<p>SC Tween and Action objects can take temporal-relative String% values for their <code>.start</code> and <code>.duration</code> attributes, meaning that a Tween can be defined to start <code>20%</code> of the Ticker's duration after it starts running, and last for <code>30%</code> of its duration. This should make the work of dilating a Ticker animation a little easier for the dev-user.</p>
+<p>More information about managing SC animations can be found in the <a href="sc-animation-systems.html">Animation and Display cycle</a> page of this Runbook.</p>
 <h3 id="content-does-not-cause-seizures-and-physical-reactions">Content does not cause seizures and physical reactions</h3>
 <p>Content that flashes at certain rates or patterns can cause photosensitive reactions, including seizures. Flashing content is ideally avoided entirely or only used in a way that does not cause known risks. Also animations and moving content can cause discomfort and physical reactions.</p>
 <p>Examples of avoiding causing seizures and physical reactions:</p>
@@ -517,7 +528,7 @@
 <li>Websites should pay attention to user preferences - in particular to: <code>prefers-reduced-motion</code>. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page - in this case to suppress unnecessary animations arising from user interactions with the <code>&lt;canvas&gt;</code> element.</li>
 </ul>
 <h4 id="sc-function-hooks-to-adapt-to-motion-based-user-preferences-settings">SC function hooks to adapt to motion-based user preferences settings</h4>
-<p>TODO</p>
+<p>SC comes with built-in support to action changes to a canvas display based on motion preference media settings - <code>prefers-reduced-motion</code> - that the end-user may have set on their device. This functionality has been detailed in the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility">Accessibility section</a> of the Artefacts and the DOM page of this Runbook.</p>
 <h3 id="users-can-easily-navigate-find-content-and-determine-where-they-are">Users can easily navigate, find content, and determine where they are</h3>
 <p>Well organized content helps users to orient themselves and to navigate effectively. Such content includes:</p>
 <ul>
@@ -560,7 +571,7 @@
 <p><strong>2.4.7 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">Focus Visible</a></strong></p>
 <ul>
 <li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
-<li>When the user focuses on the element, or the graphical region within the display acting as a button or link, then that focussing action should be visibly conveyed to the user.</li>
+<li>When the user focuses on the element, or the graphical region within the display acting as a button or link - for instance through a mouse hover, or a click or tap interaction - then that focussing action should be visibly conveyed to the user.</li>
 <li>This extends to keyboard navigation - when the user focusses on the <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> elements contained by the canvas, that action should be visibly indicated to the user in some way.</li>
 </ul>
 <p><strong>2.4.8 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/location.html">Location</a></strong></p>
@@ -592,12 +603,23 @@
 <li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>When the user keyboard focusses on the <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> elements contained by the canvas, then the <code>&lt;canvas&gt;</code> element, or the region within the canvas display tied to that button or link, should change its appearance to meet the requirements of this criterion.</li>
 </ul>
-<h4 id="button-and-link-functionality-in-sc-canvas-artefact-displays">Button and link functionality in SC Canvas artefact displays</h4>
-<p>TODO</p>
-<h4 id="focus-management-for-interactive-sc-entitys">Focus management for interactive SC entitys</h4>
-<p>TODO</p>
+<h4 id="sc-link-and-action-regions">SC link and action regions</h4>
+<p>SC includes functionality to create regions in the <code>&lt;canvas&gt;</code> element display which can act as <strong>links</strong> or <strong>action buttons</strong>. These regions are defined as SC entity objects:</p>
+<ul>
+<li>For <em>action regions</em> the entity will be associated with an HTML <code>&lt;button&gt;</code> element, stored in a dedicated <code>&lt;div&gt;</code> element within the <code>&lt;canvas&gt;</code> element's <em>fallback content</em>.</li>
+<li>Similarly, for <em>link regions</em> the entity will be associated with an HTML <code>&lt;a&gt;</code> element, stored in a dedicated <code>&lt;nav&gt;</code> element within the <code>&lt;canvas&gt;</code> element's <em>fallback content</em>.</li>
+</ul>
+<p>This approach allows SC to leverage the browser's built-in accessibility functionality for the <code>&lt;button&gt;</code> and <code>&lt;a&gt;</code> elements, including keyboard navigation and element focus/blur.</p>
+<p>Further details of this functionality can be found in the <a href="sc-graphical-entity-functionality.html#interactive-entitys">interactive entitys</a> section of the Scrawl-canvas graphical entity functionality page of this Runbook. Test demo examples include:</p>
+<ul>
+<li><a href="../../demo/canvas-009.html">Canvas-009</a> - Entity web link anchors.</li>
+<li><a href="../../demo/modules-001.html">Modules-001</a> - Scrawl-canvas modularized code - London crime charts.</li>
+<li><a href="../../demo/modules-005.html">Modules-005</a> - Accessible GUI-based simple canvas editor.</li>
+</ul>
 <h4 id="apply-canvas-decoration-to-html-headers-using-sc-snippet-functionality">Apply canvas decoration to HTML headers using SC Snippet functionality</h4>
-<p>TODO</p>
+<p>SC includes experimental functionality - <a href="sc-snippets.html">SC Snippets</a> - to associate a <code>&lt;canvas&gt;</code> element with normal (non-SC controlled) DOM elements. The results are similar to the <a href="https://ishoudinireadyyet.com/">Houdini</a> <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API">CSS Painting API</a>, though the path to achieving those results is different.</p>
+<p>When a dev-user chooses to apply an SC Snippet to a DOM element such as a heading, then they will need to make sure that the added <code>&lt;canvas&gt;</code> does not interfere with the accessibility of the header.</p>
+<p>Test demo <a href="../../demo/snippets-006.html">Snippets-006</a> investigates this issue, including the need to accommodate end-user preferences (eg: <code>prefers-dark-mode</code>, <code>prefers-contrast</code>), and to include mechanisms to afford end-users control of animated effects.</p>
 <h3 id="users-can-use-different-input-modalities-beyond-keyboard">Users can use different input modalities beyond keyboard</h3>
 <p>Input modalities beyond keyboard, such as touch activation, voice recognition (speech input), and gestures make content easier to use for many people. Yet not everyone can use each of these input modalities, and to the same degree. Particular design considerations maximize the benefit of these input modalities. This includes:</p>
 <ul>
@@ -682,7 +704,15 @@
 <li>This is a web page design and development issue. <code>&lt;canvas&gt;</code> elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.</li>
 </ul>
 <h4 id="sc-text-management-functionality">SC text management functionality</h4>
-<p>TODO</p>
+<p>SC manages graphical text through the Label and EnhancedLabel entitys. In both cases the entitys, by default, replicate their text into dedicated <code>&lt;div&gt;</code> elements which are part of the <code>&lt;canvas&gt;</code> element's <em>fallback content</em> - thus making the text available to accessibility technologies like screen readers. These elements will announce text changes to the end-user <strong>politely</strong>.</p>
+<p>However, not all of the text in a canvas display may be relevant to an end-user's understanding of the wider web page. For instance in a chart, it is often enough to inform the end-user of the start and end values of each axis without the need to tell them the value of each tick displayed in the chart - information which could distract them from the more important information which the chart demonstrates visually. To this end, SC allows dev-users to suppress an entity's text replication into the DOM on a case-by-case basis, controlled by the <code>entity.textIsAccessible</code> boolean attribute.</p>
+<p>Furthermore, it is not enough to replicate graphical text into the DOM. That replicated text needs to make coherent sense to the end-user, which means:</p>
+<ul>
+<li>The text may need to be manipulated to turn it into a meaningful phrase; and</li>
+<li>Separate phrases need to be ordered within the DOM generate a coherent sequential output.</li>
+</ul>
+<p>To help meet these requirements SC text-related entitys include a vary simple templating system controlled by the <code>entity.accessibleText</code> and <code>entity.accessibleTextPlaceholder</code> attributes. Dev-users can set the order in which multiple text-related entitys present their text to the end-user using the <code>entity.accessibleTextOrder</code> attribute.</p>
+<p>A fuller investigation of Label and EnhancedLabel entity functionality can be found in the <a href="sc-text-based-entitys.html">Text-based entitys</a> page of this Runbook.</p>
 <h3 id="content-appears-and-operates-in-predictable-ways">Content appears and operates in predictable ways</h3>
 <p>Many people rely on predictable user interfaces and are disoriented or distracted by inconsistent appearance or behavior. Examples of making content more predictable include:</p>
 <ul>
