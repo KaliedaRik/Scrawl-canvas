@@ -32,10 +32,10 @@ import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-ele
 
 import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
-import { uiSubscribedElements } from '../core/user-interaction.js';
+import { getCanvasColorSpace, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeState } from '../untracked-factory/state.js';
-import { getCanvasColorSpace, makeCell } from './cell.js';
+import { makeCell } from './cell.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 

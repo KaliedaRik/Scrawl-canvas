@@ -1508,13 +1508,3 @@ export const makeCell = function (items) {
 };
 
 constructors.Cell = Cell;
-
-
-
-// Wide gamut colors helper
-export const getCanvasColorSpace = (useP3) => {
-
-    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
-    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
-    return SRGB;
-};

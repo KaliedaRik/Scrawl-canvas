@@ -15,7 +15,9 @@ Instead SC relies on the normal [event system](https://developer.mozilla.org/en-
   - Responsive image management.
   - Media stream, and screen capture, events.
 
-[add something about signals]
+For the most part, these events do not trigger immediate changes in the SC system or its data. Rather they will update values held in the `currentCorePosition` object (which acts as SC's Single Source of Truth for this data) and set relevant [dirty flags](https://gameprogrammingpatterns.com/dirty-flag.html) which the system can then address during the next Display cycle.
+
+This **signals system** pattern is also used by other SC objects - in particular artefact and entity objects - to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.
 
 ## System events
 [write up]
@@ -106,10 +108,98 @@ Capabilities:
 [write up]
 
 ## The Scrawl-canvas signalling system
-[write up]
+SC uses a system of `dirty` flags and `clean` functions, alongside `subscriber` Arrays and `updateSubscribers` functions, to manage communication across the SC objects estate. The system is diffuse rather than centralised, relying on objects to subscribe themselves to other objects to receive notifications (via `dirty` flags) of when the other object state changes.
+
+> **tl;dr** Repo-devs need to be aware that the signalling system is the most brittle part of the code base. If issues arise, the problem may well be because of a failure to signal under a given circumstance, or a failure to clean in the correct order. In particular the order in which cleaning operations take place is important!
 
 ### Marking objects as `dirty`
-[write up]
+The signalling system rests on the ability of objects to set dirty flags when something changes. This is the reason why SC is so aggressively opinionated about the need for all object updates to be routed through the `object.set()` and `object.setDelta()` functions.
+
+The basal `set` and `setDelta` functions get defined in the [mixin/base.js](../source/mixin/base.html) file. This is also where the object prototype `getters`, `setters` and `deltaSetters` objects get created, alongside the `defs` object used to store an object's default attribute values. Each of these objects store data keyed to attribute Strings:
+
+The example code demonstrates the basic `set` operation:
+```
+prototype.defs = {
+
+  attributeOne: 0,
+  attributeTwo: 0,
+};
+
+prototype.setters = {
+
+  attributeTwo: function (item) {
+
+    this.attributeTwo = item * 2;
+
+    this.dirtyAttributeTwo = true;
+    this.dirtyOtherThing = true;
+  },
+};
+
+prototype.set = function (items = Ωempty) {
+
+  let i, key, val, fn;
+
+  const keys = _keys(items),
+    keysLen = keys.length;
+
+  if (keysLen) {
+
+    const setters = this.setters,
+      defs = this.defs;
+
+    for (i = 0; i < keysLen; i++) {
+
+      key = keys[i];
+      val = items[key];
+
+      // The object.name attribute can only be set during object construction
+      if (key && key !== NAME && val != null) {
+
+        // Accept the update if there is a dedicated setter function for the attribute
+        fn = setters[key];
+
+        if (fn) fn.call(this, val);
+
+        // Accept the update if the attribute exists in the defs object
+        else if (typeof defs[key] !== UNDEF) this[key] = val;
+      }
+    }
+  }
+  return this;
+};
+
+// Later, something updates the object using a set invocation
+object.set({
+  attributeOne: 10,
+  attributeTwo: 10,
+  attributeThree: 10,
+});
+
+// The results of the set invocation:
+// - attributeOne is defined in the defs object, the update is accepted
+// - attributeTwo has a setter function, the update is accepted and processed
+//   - this includes setting some associated dirty flags
+// - attributeThree is neither defined in the defs object, nor the setters object
+//   - the update is ignored
+```
+
+The code may seem over-complicated ... but it works! Repo-devs have chosen to use this approach because:
++ It keeps the factory file code understandable:
+  - Object attributes can be defined and explained in the `defs` object.
+  - Attribute updates requiring `dirty` flags to be set can be managed more easily.
++ It prevents dev-users accidentally damaging object shapes, which can lead to code efficiency degredation
++ It couples tightly with the object `packet` (serialization) system, and thus with the accompanying object `clone` system.
++ Mixin and factory files can easily add attributes to the `defs` object to meet their particular requirements.
++ Mixin and factory files can easily overwrite the `get`, `set` and `setDelta` functions, and individual `getter`, `setter` and `deltaSetter` attribute functions, to meet their particular requirements.
+
+The downside to this approach is that the SC signals system has not been centralised as it needs to adapt to the individual requirements of each mixin and factory file code. For instance, the code base includes a total of 75 `dirty` flag attributes which may be defined in one file but actioned in various ways by various downstream files. The current list of `dirty` flag attributes includes: `dirtyAnchor`, `dirtyAria`, `dirtyAsset`, `dirtyAssetSubscribers`, `dirtyButton`, `dirtyCache`, `dirtyCells`, `dirtyClasses`, `dirtyContent`, `dirtyControl`, `dirtyControlLock`, `dirtyCopyDimensions`, `dirtyCopyStart`, `dirtyCss`, `dirtyData`, `dirtyDimensions`, `dirtyDimensionsOverride`, `dirtyDisplayArea`, `dirtyDisplayShape`, `dirtyDomDimensions`, `dirtyEnd`, `dirtyEndControl`, `dirtyEndControlLock`, `dirtyEndLock`, `dirtyFilterIdentifier`, `dirtyFilters`, `dirtyFiltersCache`, `dirtyFont`, `dirtyHandle`, `dirtyHeight`, `dirtyHost`, `dirtyImage`, `dirtyImageSubscribers`, `dirtyInput`, `dirtyLayout`, `dirtyLock`, `dirtyMimicDimensions`, `dirtyMimicHandle`, `dirtyMimicOffset`, `dirtyMimicRotation`, `dirtyMimicScale`, `dirtyNavigationTabOrder`, `dirtyNoise`, `dirtyOffset`, `dirtyOffsetZ`, `dirtyOutput`, `dirtyPalette`, `dirtyPaletteData`, `dirtyParticles`, `dirtyPaste`, `dirtyPathData`, `dirtyPathObject`, `dirtyPerspective`, `dirtyPins`, `dirtyPivotRotation`, `dirtyPosition`, `dirtyPositionSubscribers`, `dirtyRotation`, `dirtyScale`, `dirtyScene`, `dirtySpecies`, `dirtyStampHandlePositions`, `dirtyStampOrder`, `dirtyStampPositions`, `dirtyStart`, `dirtyStartControl`, `dirtyStartControlLock`, `dirtyStyle`, `dirtyTargetImage`, `dirtyText`, `dirtyTextLayout`, `dirtyTextTabOrder`, `dirtyTransform`, `dirtyTransformOrigin`, `dirtyVisibility`, `dirtyZIndex`.
+
+Because of the need to set `dirty` flags to notify objects that they will need to do work to update their state, repo-devs should always use the `set` functions within the code base. For instance Tween animation objects use `target.set()` to communicate time-based updates to target objects. Similarly the observe-update object uses `target.set()` to inform an SC object of end-user interactions with DOM form elements.
+
+> **tl;dr:** Dev-users should never update an SC object using `object.attribute = newValue` or `object['attribute'] = newValue` approaches. Such code will break SC functionality!
+> 
+> Instead all object updates should be performed using the `object.set({ key: value, ...})` or `object.setDelta({ key: value, ...})` functions.
 
 ### Cleaning `dirty` objects
 [write up]

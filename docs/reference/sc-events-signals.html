@@ -39,7 +39,8 @@
 <li>Responsive image management.</li>
 <li>Media stream, and screen capture, events.</li></ul></li>
 </ul>
-<p>[add something about signals]</p>
+<p>For the most part, these events do not trigger immediate changes in the SC system or its data. Rather they will update values held in the <code>currentCorePosition</code> object (which acts as SC's Single Source of Truth for this data) and set relevant <a href="https://gameprogrammingpatterns.com/dirty-flag.html">dirty flags</a> which the system can then address during the next Display cycle.</p>
+<p>This <strong>signals system</strong> pattern is also used by other SC objects - in particular artefact and entity objects - to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.</p>
 <h2 id="system-events">System events</h2>
 <p>[write up]</p>
 <h3 id="the-core-listeners-tracker-function">The core listeners tracker function</h3>
@@ -106,9 +107,93 @@
 <h3 id="keyboard-shortcut-management">Keyboard shortcut management</h3>
 <p>[write up]</p>
 <h2 id="the-scrawl-canvas-signalling-system">The Scrawl-canvas signalling system</h2>
-<p>[write up]</p>
+<p>SC uses a system of <code>dirty</code> flags and <code>clean</code> functions, alongside <code>subscriber</code> Arrays and <code>updateSubscribers</code> functions, to manage communication across the SC objects estate. The system is diffuse rather than centralised, relying on objects to subscribe themselves to other objects to receive notifications (via <code>dirty</code> flags) of when the other object state changes.</p>
+<blockquote>
+  <p><strong>tl;dr</strong> Repo-devs need to be aware that the signalling system is the most brittle part of the code base. If issues arise, the problem may well be because of a failure to signal under a given circumstance, or a failure to clean in the correct order. In particular the order in which cleaning operations take place is important!</p>
+</blockquote>
 <h3 id="marking-objects-as-dirty">Marking objects as <code>dirty</code></h3>
-<p>[write up]</p>
+<p>The signalling system rests on the ability of objects to set dirty flags when something changes. This is the reason why SC is so aggressively opinionated about the need for all object updates to be routed through the <code>object.set()</code> and <code>object.setDelta()</code> functions.</p>
+<p>The basal <code>set</code> and <code>setDelta</code> functions get defined in the <a href="../source/mixin/base.html">mixin/base.js</a> file. This is also where the object prototype <code>getters</code>, <code>setters</code> and <code>deltaSetters</code> objects get created, alongside the <code>defs</code> object used to store an object's default attribute values. Each of these objects store data keyed to attribute Strings:</p>
+<p>The example code demonstrates the basic <code>set</code> operation:</p>
+<pre><code>prototype.defs = {
+
+  attributeOne: 0,
+  attributeTwo: 0,
+};
+
+prototype.setters = {
+
+  attributeTwo: function (item) {
+
+    this.attributeTwo = item * 2;
+
+    this.dirtyAttributeTwo = true;
+    this.dirtyOtherThing = true;
+  },
+};
+
+prototype.set = function (items = Ωempty) {
+
+  let i, key, val, fn;
+
+  const keys = _keys(items),
+    keysLen = keys.length;
+
+  if (keysLen) {
+
+    const setters = this.setters,
+      defs = this.defs;
+
+    for (i = 0; i &lt; keysLen; i++) {
+
+      key = keys[i];
+      val = items[key];
+
+      // The object.name attribute can only be set during object construction
+      if (key &amp;&amp; key !== NAME &amp;&amp; val != null) {
+
+        // Accept the update if there is a dedicated setter function for the attribute
+        fn = setters[key];
+
+        if (fn) fn.call(this, val);
+
+        // Accept the update if the attribute exists in the defs object
+        else if (typeof defs[key] !== UNDEF) this[key] = val;
+      }
+    }
+  }
+  return this;
+};
+
+// Later, something updates the object using a set invocation
+object.set({
+  attributeOne: 10,
+  attributeTwo: 10,
+  attributeThree: 10,
+});
+
+// The results of the set invocation:
+// - attributeOne is defined in the defs object, the update is accepted
+// - attributeTwo has a setter function, the update is accepted and processed
+//   - this includes setting some associated dirty flags
+// - attributeThree is neither defined in the defs object, nor the setters object
+//   - the update is ignored</code></pre>
+<p>The code may seem over-complicated … but it works! Repo-devs have chosen to use this approach because:</p>
+<ul>
+<li>It keeps the factory file code understandable:<ul>
+<li>Object attributes can be defined and explained in the <code>defs</code> object.</li>
+<li>Attribute updates requiring <code>dirty</code> flags to be set can be managed more easily.</li></ul></li>
+<li>It prevents dev-users accidentally damaging object shapes, which can lead to code efficiency degredation</li>
+<li>It couples tightly with the object <code>packet</code> (serialization) system, and thus with the accompanying object <code>clone</code> system.</li>
+<li>Mixin and factory files can easily add attributes to the <code>defs</code> object to meet their particular requirements.</li>
+<li>Mixin and factory files can easily overwrite the <code>get</code>, <code>set</code> and <code>setDelta</code> functions, and individual <code>getter</code>, <code>setter</code> and <code>deltaSetter</code> attribute functions, to meet their particular requirements.</li>
+</ul>
+<p>The downside to this approach is that the SC signals system has not been centralised as it needs to adapt to the individual requirements of each mixin and factory file code. For instance, the code base includes a total of 75 <code>dirty</code> flag attributes which may be defined in one file but actioned in various ways by various downstream files. The current list of <code>dirty</code> flag attributes includes: <code>dirtyAnchor</code>, <code>dirtyAria</code>, <code>dirtyAsset</code>, <code>dirtyAssetSubscribers</code>, <code>dirtyButton</code>, <code>dirtyCache</code>, <code>dirtyCells</code>, <code>dirtyClasses</code>, <code>dirtyContent</code>, <code>dirtyControl</code>, <code>dirtyControlLock</code>, <code>dirtyCopyDimensions</code>, <code>dirtyCopyStart</code>, <code>dirtyCss</code>, <code>dirtyData</code>, <code>dirtyDimensions</code>, <code>dirtyDimensionsOverride</code>, <code>dirtyDisplayArea</code>, <code>dirtyDisplayShape</code>, <code>dirtyDomDimensions</code>, <code>dirtyEnd</code>, <code>dirtyEndControl</code>, <code>dirtyEndControlLock</code>, <code>dirtyEndLock</code>, <code>dirtyFilterIdentifier</code>, <code>dirtyFilters</code>, <code>dirtyFiltersCache</code>, <code>dirtyFont</code>, <code>dirtyHandle</code>, <code>dirtyHeight</code>, <code>dirtyHost</code>, <code>dirtyImage</code>, <code>dirtyImageSubscribers</code>, <code>dirtyInput</code>, <code>dirtyLayout</code>, <code>dirtyLock</code>, <code>dirtyMimicDimensions</code>, <code>dirtyMimicHandle</code>, <code>dirtyMimicOffset</code>, <code>dirtyMimicRotation</code>, <code>dirtyMimicScale</code>, <code>dirtyNavigationTabOrder</code>, <code>dirtyNoise</code>, <code>dirtyOffset</code>, <code>dirtyOffsetZ</code>, <code>dirtyOutput</code>, <code>dirtyPalette</code>, <code>dirtyPaletteData</code>, <code>dirtyParticles</code>, <code>dirtyPaste</code>, <code>dirtyPathData</code>, <code>dirtyPathObject</code>, <code>dirtyPerspective</code>, <code>dirtyPins</code>, <code>dirtyPivotRotation</code>, <code>dirtyPosition</code>, <code>dirtyPositionSubscribers</code>, <code>dirtyRotation</code>, <code>dirtyScale</code>, <code>dirtyScene</code>, <code>dirtySpecies</code>, <code>dirtyStampHandlePositions</code>, <code>dirtyStampOrder</code>, <code>dirtyStampPositions</code>, <code>dirtyStart</code>, <code>dirtyStartControl</code>, <code>dirtyStartControlLock</code>, <code>dirtyStyle</code>, <code>dirtyTargetImage</code>, <code>dirtyText</code>, <code>dirtyTextLayout</code>, <code>dirtyTextTabOrder</code>, <code>dirtyTransform</code>, <code>dirtyTransformOrigin</code>, <code>dirtyVisibility</code>, <code>dirtyZIndex</code>.</p>
+<p>Because of the need to set <code>dirty</code> flags to notify objects that they will need to do work to update their state, repo-devs should always use the <code>set</code> functions within the code base. For instance Tween animation objects use <code>target.set()</code> to communicate time-based updates to target objects. Similarly the observe-update object uses <code>target.set()</code> to inform an SC object of end-user interactions with DOM form elements.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> Dev-users should never update an SC object using <code>object.attribute = newValue</code> or <code>object['attribute'] = newValue</code> approaches. Such code will break SC functionality!</p>
+  <p>Instead all object updates should be performed using the <code>object.set({ key: value, ...})</code> or <code>object.setDelta({ key: value, ...})</code> functions.</p>
+</blockquote>
 <h3 id="cleaning-dirty-objects">Cleaning <code>dirty</code> objects</h3>
 <p>[write up]</p>
 <p>Files:</p>
