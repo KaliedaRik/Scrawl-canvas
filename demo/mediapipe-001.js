@@ -199,7 +199,7 @@ scrawl.importMediaStream({
     model = new SelfieSegmentation({
 
 /* eslint-enable */
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`,
     });
 
     model.setOptions({ modelSelection: 1 });

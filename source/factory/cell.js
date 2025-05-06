@@ -45,7 +45,7 @@ import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
 // Shared constants
-import { _atan2, _isFinite, _floor, _piDouble, _round, _values, _2D, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _isFinite, _floor, _piDouble, _round, _values, _2D, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR, _isArray } from '../helper/shared-vars.js';
 
 // Local constants
 const CELL = 'cell',
@@ -341,11 +341,18 @@ G.dimensions = function () {
 
     return [w, h];
 };
-S.dimensions = function (w, h) {
+S.dimensions = function (item) {
 
-    this.setCoordinateHelper(DIMENSIONS, w, h);
-    this.dirtyDimensions = true;
-    this.dirtyDimensionsOverride = true;
+    if (_isArray(item) && item.length > 1) {
+
+        const [w, h] = item;
+
+        if (w != null) this.dimensions[0] = w;
+        if (h != null) this.dimensions[1] = h;
+
+        this.dirtyDimensions = true;
+        this.dirtyDimensionsOverride = true;
+    }
 };
 
 // Internal setters
