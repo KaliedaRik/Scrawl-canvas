@@ -7,7 +7,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, generateUniqueString, xt, λcloneError, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, mergeOver, xt, λcloneError, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -77,7 +77,24 @@ export const settableVideoAssetAtributes = [
 // #### VideoAsset constructor
 const VideoAsset = function (items = Ωempty) {
 
-    return this.assetConstructor(items);
+    this.makeName(items.name);
+    this.register();
+    this.subscribers = [];
+    this.set(this.defs);
+
+    this.source = null;
+    this.currentSrc = null;
+    this.currentFile = null;
+    this.sourceNaturalWidth = 0;
+    this.sourceNaturalHeight = 0;
+
+    this.onMediaStreamEnd = λnull;
+
+    this.set(items);
+
+    if (items.subscribe) this.subscribers.push(items.subscribe);
+
+    return this;
 };
 
 
@@ -94,9 +111,13 @@ baseMix(P);
 assetMix(P);
 
 
-
 // #### VideoAsset attributes
-// No additional attributes required beyond those supplied by the mixins
+const defaultAttributes = {
+    mediaStream: null,
+    mediaStreamTrack: null,
+    onMediaStreamEnd: null,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
@@ -115,7 +136,17 @@ P.clone = λcloneError;
 
 
 // #### Kill management
-// No additional kill functionality required
+P.kill = function (removeDomEntity = false) {
+
+    if (removeDomEntity && this.source) this.source.remove();
+
+    if (this.mediaStream && this.mediaStreamTrack && this.mediaStream.active) {
+
+        this.mediaStream.removeTrack(this.mediaStreamTrack);
+    }
+
+    return this.deregister();
+};
 
 
 // #### Get, Set, deltaSet
@@ -425,6 +456,7 @@ export const importScreenCapture = function (items = Ωempty) {
     const vid = makeVideoAsset({
         name: name,
         source: el,
+        onMediaStreamEnd: items.onMediaStreamEnd || λnull,
     });
 
     return new Promise((resolve, reject) => {
@@ -437,11 +469,20 @@ export const importScreenCapture = function (items = Ωempty) {
             })
             .then(mediaStream => {
 
+                vid.mediaStream = mediaStream;
+
                 const actuals = mediaStream.getVideoTracks();
 
                 let data;
 
-                if (_isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+                if (_isArray(actuals) && actuals[0]) {
+
+                    data = actuals[0].getConstraints();
+
+                    vid.mediaStreamTrack = actuals[0];
+
+                    vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                }
 
                 el.id = vid.name;
 

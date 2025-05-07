@@ -16,7 +16,7 @@ import { artefact, asset, canvas, constructors, group } from '../core/library.js
 
 import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
-import { getIgnorePixelRatio, getPixelRatio, currentCorePosition } from '../core/user-interaction.js';
+import { getIgnorePixelRatio, getPixelRatio } from '../core/user-interaction.js';
 
 
 import { makeGroup } from './group.js';
@@ -45,7 +45,7 @@ import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
 // Shared constants
-import { _atan2, _isFinite, _floor, _piDouble, _round, _values, _2D, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR, _isArray } from '../helper/shared-vars.js';
+import { _atan2, _isFinite, _floor, _piDouble, _round, _values, _2D, CANVAS, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR, _isArray } from '../helper/shared-vars.js';
 
 // Local constants
 const CELL = 'cell',
