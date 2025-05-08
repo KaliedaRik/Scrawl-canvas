@@ -369,6 +369,7 @@ export const importMediaStream = function (items = Ωempty) {
     const vid = makeVideoAsset({
         name: name,
         source: el,
+        onMediaStreamEnd: items.onMediaStreamEnd || λnull,
     });
 
     return new Promise((resolve, reject) => {
@@ -377,6 +378,8 @@ export const importMediaStream = function (items = Ωempty) {
 
             navigator.mediaDevices.getUserMedia(constraints)
             .then(mediaStream => {
+
+                vid.mediaStream = mediaStream;
 
                 const actuals = mediaStream.getVideoTracks();
 
