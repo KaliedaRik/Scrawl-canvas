@@ -146,7 +146,11 @@ let video, myBackground, myOutline;
 scrawl.importMediaStream({
 
     name: name('device-camera'),
-    audio: false,
+    video: {
+        width: { ideal: 600 },
+        height: { ideal: 400 },
+        facingMode: 'user',
+    },
 })
 .then(mycamera => {
 
@@ -154,9 +158,9 @@ scrawl.importMediaStream({
 
     // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
 /** @ts-expect-error */
-    video.source.width = "1280";
+    video.source.width = "600";
 /** @ts-expect-error */
-    video.source.height = "720";
+    video.source.height = "400";
 
     // Take the media stream and display it in our canvas element
     myBackground = scrawl.makePicture({

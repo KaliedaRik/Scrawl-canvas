@@ -121,7 +121,11 @@ let video, model, output;
 scrawl.importMediaStream({
 
     name: name('device-camera'),
-    audio: false,
+    video: {
+        width: { ideal: width },
+        height: { ideal: height },
+        facingMode: 'user',
+    },
 })
 .then(mycamera => {
 

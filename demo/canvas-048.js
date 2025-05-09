@@ -88,7 +88,11 @@ scrawl.makeFilter({
 scrawl.importMediaStream({
 
     name: name('video-feed'),
-    audio: false,
+    video: {
+        width: { ideal: 600 },
+        height: { ideal: 400 },
+        facingMode: 'user',
+    },
 })
 .then(res => {
 

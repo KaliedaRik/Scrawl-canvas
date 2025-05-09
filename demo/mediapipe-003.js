@@ -21,11 +21,6 @@ const width = 1280,
     height = 720;
 
 
-// Create and manipulate the face worm
-// let wormStart = 220,
-//     wormEnd = 270;
-
-
 const dom = scrawl.initializeDomInputs([
     ['input', 'wormstart', '220'],
     ['input', 'wormend', '270'],
@@ -188,7 +183,11 @@ let video, model, output;
 scrawl.importMediaStream({
 
     name: name('device-camera'),
-    audio: false,
+    video: {
+        width: { ideal: width },
+        height: { ideal: height },
+        facingMode: 'user',
+    },
 })
 .then(mycamera => {
 

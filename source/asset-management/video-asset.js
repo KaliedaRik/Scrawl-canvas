@@ -336,30 +336,13 @@ export const importDomVideo = function (query) {
 
 // `importMediaStream` - __Warning: experimental!__
 // + This function will attempt to link a mediaStream - for instance from a device's camera - to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
-// + TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
 export const importMediaStream = function (items = Ωempty) {
 
     // Setup the constraints object with user-supplied data in the items argument
     const constraints = {};
 
-    // For proof-of-concept, only interested in wheter to include or exclude audio in the capture
-    constraints.audio = (xt(items.audio)) ? items.audio : true;
-
-    // For video, limiting functionality to accepting user values for video width and height (as minDIMENSION, maxDIMENSION and the ideal DIMENSION, and a preference for which camera to use - where applicable
-    constraints.video = {};
-
-    const width = constraints.video.width = {};
-    if (items.minWidth) width.min = items.minWidth;
-    if (items.maxWidth) width.max = items.maxWidth;
-    width.ideal = (items.width) ? items.width : 1280;
-
-    const height = constraints.video.height = {};
-    if (items.minHeight) height.min = items.minHeight;
-    if (items.maxHeight) height.max = items.maxHeight;
-    height.ideal = (items.height) ? items.height : 720;
-
-    // For mobile devices etc - values can be 'user' or 'environment'
-    if (items.facing) constraints.video.facingMode = items.facing;
+    constraints.audio = (items.audio != null) ? items.audio : false;
+    constraints.video = (items.video != null) ? items.video : false;
 
     // We need a video element to receive the media stream
     const name = items.name || generateUniqueString();
