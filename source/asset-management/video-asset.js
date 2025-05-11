@@ -368,7 +368,12 @@ export const importMediaStream = function (items = Ωempty) {
 
                 let data;
 
-                if (_isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+                if (_isArray(actuals) && actuals[0]) {
+
+                    data = actuals[0].getConstraints();
+                    vid.mediaStreamTrack = actuals[0];
+                    vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                }
 
                 el.id = vid.name;
 
@@ -464,9 +469,7 @@ export const importScreenCapture = function (items = Ωempty) {
                 if (_isArray(actuals) && actuals[0]) {
 
                     data = actuals[0].getConstraints();
-
                     vid.mediaStreamTrack = actuals[0];
-
                     vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
                 }
 
