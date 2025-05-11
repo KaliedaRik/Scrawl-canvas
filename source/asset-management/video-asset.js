@@ -89,6 +89,7 @@ const VideoAsset = function (items = Ωempty) {
     this.sourceNaturalHeight = 0;
 
     this.onMediaStreamEnd = λnull;
+    this.isAudioOnly = false;
 
     this.set(items);
 
@@ -355,6 +356,8 @@ export const importMediaStream = function (items = Ωempty) {
         onMediaStreamEnd: items.onMediaStreamEnd || λnull,
     });
 
+    if (!constraints.video) vid.isAudioOnly = true;
+
     return new Promise((resolve, reject) => {
 
         if (navigator && navigator.mediaDevices) {
@@ -364,32 +367,42 @@ export const importMediaStream = function (items = Ωempty) {
 
                 vid.mediaStream = mediaStream;
 
-                const actuals = mediaStream.getVideoTracks();
+                // For audio-only video
+                if (vid.isAudioOnly) {
 
-                let data;
+                    let actuals = mediaStream.getAudioTracks();
 
-                if (_isArray(actuals) && actuals[0]) {
+                    if (_isArray(actuals) && actuals[0]) {
 
-                    data = actuals[0].getConstraints();
-                    vid.mediaStreamTrack = actuals[0];
-                    vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                        vid.mediaStreamTrack = actuals[0];
+                        vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                    }
                 }
 
-                el.id = vid.name;
+                // For video-only video
+                else {
 
-                if (data) {
+                    let actuals = mediaStream.getVideoTracks();
+                    let data;
 
-                    el.width = data.width;
-                    el.height = data.height;
+                    if (_isArray(actuals) && actuals[0]) {
+
+                        data = actuals[0].getConstraints();
+                        vid.mediaStreamTrack = actuals[0];
+                        vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                    }
+                    el.id = vid.name;
+
+                    if (data) {
+
+                        el.width = data.width;
+                        el.height = data.height;
+                    }
+
+                    el.srcObject = mediaStream;
+
+                    el.onloadedmetadata = function () { el.play(); }
                 }
-
-                el.srcObject = mediaStream;
-
-                el.onloadedmetadata = function () {
-
-                    el.play();
-                }
-
                 resolve(vid);
             })
             .catch (err => {
