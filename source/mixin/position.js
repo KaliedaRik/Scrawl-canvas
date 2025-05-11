@@ -650,6 +650,23 @@ export default function (P = Ωempty) {
 
         this.calculateOrder = val;
         this.stampOrder = val;
+
+        const g = this.group;
+        if (g && g.type === T_GROUP) g.batchResort = true;
+    };
+    S.calculateOrder = function (val) {
+
+        this.calculateOrder = val;
+
+        const g = this.group;
+        if (g && g.type === T_GROUP) g.batchResort = true;
+    };
+    S.stampOrder = function (val) {
+
+        this.stampOrder = val;
+
+        const g = this.group;
+        if (g && g.type === T_GROUP) g.batchResort = true;
     };
 
 // __particle__
