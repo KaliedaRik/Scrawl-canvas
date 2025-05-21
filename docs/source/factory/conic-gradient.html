@@ -576,16 +576,6 @@
               </div>
               <h1 id="conicgradient-factory">ConicGradient factory</h1>
 <p>Scrawl-canvas ConicGradient objects implement the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient">createConicGradient</a> method. The resulting <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> object can be used by any Scrawl-canvas entity as its <code>fillStyle</code> or <code>strokeStyle</code>.</p>
-<ul>
-<li>Most gradient-related functionality has been coded up in the <a href="../mixin/styles.html">styles mixin</a>, and is documented there.</li>
-<li>ConicGradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.</li>
-<li>ConicGradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.</li>
-</ul>
-<p>ConicGradients can be applied to an entity in two different ways, depending on the entity’s <code>lockFillStyleToEntity</code> and <code>lockStrokeStyleToEntity</code> attribute flags:</p>
-<ul>
-<li><strong>Cell-locked</strong> ConicGradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient</li>
-<li><strong>Entity-locked</strong> ConicGradients display their entire color range on the entity, move with the entity and even rotate with the entity.</li>
-</ul>
 
             </div>
             

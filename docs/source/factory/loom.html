@@ -580,16 +580,6 @@
 <ul>
 <li>Every Loom object requires two (or one) path-enabled <a href="./shape.html">Shape</a> entitys to act as its left and right tracks.</li>
 <li>A Loom entity also requires a <a href="./picture.html">Picture</a> entity to act as its image source.</li>
-<li>Looms can use CSS color Strings for their strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
-<li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
-<li>Looms can be cloned, and killed.</li>
-</ul>
-<p><em><strong>Note that this is experimental technology!</strong></em></p>
-<ul>
-<li>Current code does not use <a href="./mixin/position.html">position</a> or <a href="./mixin/entity.html">entity</a> mixins, meaning much of the code here has been copied over from those mixins (DRY issue).</li>
-<li>TODO: clone functionality not yet tested. A possible use case is to clome a Loom so they share the same Shape struts, but have different Picture sources and <code>from/toPathStart/End</code> cursor values - multiple images tracked and animated.</li>
 </ul>
 
             </div>
@@ -609,7 +599,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors, group } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λ<span class="hljs-literal">null</span>, λcloneError, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
 
@@ -1200,7 +1190,7 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λcloneError;</pre></div></div>
             
         </li>
         

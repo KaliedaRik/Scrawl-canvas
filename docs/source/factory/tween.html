@@ -576,23 +576,6 @@
               </div>
               <h1 id="tween-factory">Tween factory</h1>
 <p>A <em><strong>tween</strong></em> - <em>inbetween animation</em> - is a small, targeted, time-limited animation where we define the start and end points (<em>key frames</em>) of the animation, and a method for calculating the intermediate values between the two (<em>interpolation</em>, using an <em>easing</em> function).</p>
-<p>Scrawl-canvas includes a full range of functionality to implement tweening. Any Scrawl-canvas object that includes a <code>set</code> function, which accepts a <code>{key:value}</code> object as its single argument, can be tweened.</p>
-<ul>
-<li>Tween animations are defined by creating a Tween object using the <code>makeTween</code> factory function.</li>
-<li>Each Tween object includes a <code>targets</code> Array - one Tween may animate many objects.</li>
-<li>Each Tween also includes a <code>definitions</code> Array which sets out the details of the animation to be performed.</li>
-<li>The <code>definitions</code> Array can include multiple objects, each defining a change to a specific attribute that needs to be applied to the target objects.</li>
-<li><strong>Any number-type attribute can be animated using a Tween</strong> - this includes integer and float Numbers, percentage Strings (<code>12.5%</code>) and measurement Strings (<code>20px</code>).</li>
-<li>We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running).</li>
-<li>We can dynamically halt, resume, restart and terminate Tweens in response to user interactions.</li>
-<li>Tweens include <code>packet</code> functionality: they can be saved, and cloned.</li>
-</ul>
-<p>Scrawl-canvas separates the timing aspects of its Tweens from their definitions.</p>
-<ul>
-<li>Tweens run against a <em><strong>timeline</strong></em> object called a <a href="./ticker.html">Ticker</a>.</li>
-<li>When we define a Tween, we can either assign it to an existing Ticker, or get the Tween factory to create a new Ticker for it.</li>
-<li>Tickers can also have <a href="./action.html">Action</a> objects assigned to them, allowing us to trigger functions at specific points along the timeline.</li>
-</ul>
 
             </div>
             
@@ -604,39 +587,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
-              <h5 id="using-other-tween-factories">Using other tween factories</h5>
-<p>We don’t recommend using other tween factories - such as <a href="https://greensock.com/">Greensock</a> - with Scrawl-canvas objects at this time.</p>
-<ul>
-<li>The reason is simple. All updates to Scrawl-canvas objects should be made through their dedicated <code>set</code>, <code>setDelta</code> and related functions, which take a single Javascript object as their argument.</li>
-<li>When attributes are updated in this way, Scrawl-canvas makes sure various <code>dirty</code> flags get set (among other work), so the object can update itself appropriately at the most convenient time for itself.</li>
-<li>Libraries like GSAP works by directly updating object attributes, which misses out the necessary work of setting the appropriate <code>dirty</code> flags - thus the object will not know that it needs to do work.</li>
-<li><em><strong>This does not mean you can’t use other tween libraries in your web page</strong></em> - just be aware of the limitations of trying to use them with Scrawl-canvas objects!</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <p>TODO: basic packet and kill functionality tested in Demo DOM-004, but there’s a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see <a href="./ticker.html#section-2">Ticker TODO section</a> for issues and suggested work).</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -654,17 +604,86 @@
         </li>
         
         
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _keys, _round, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">T_TICKER</span>, <span class="hljs-variable constant_">T_TWEEN</span>, <span class="hljs-variable constant_">TWEEN</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Set objects - used by tweens as the argument for <code>target.set</code>, <code>target.setArtefact</code> invocations</p>
+<ul>
+<li>Using an informal cache to cut down on the number of objects created for heavily tweened scenes</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setObjectsHold = {};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">getSetObjectKey</span> = (<span class="hljs-params">defs</span>) =&gt; {
+
+    <span class="hljs-keyword">let</span> response = <span class="hljs-string">&#x27;&#x27;</span>;
+
+    defs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> response += d.<span class="hljs-property">attribute</span>);
+
+    <span class="hljs-keyword">return</span> response;
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">getSetObject</span> = (<span class="hljs-params">key</span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (setObjectsHold[key]) <span class="hljs-keyword">return</span> setObjectsHold[key];
+
+    <span class="hljs-keyword">if</span> (key.<span class="hljs-property">substring</span>) {
+
+        setObjectsHold[key] = {};
+        <span class="hljs-keyword">return</span> setObjectsHold[key];
+    }
+    <span class="hljs-keyword">return</span> {};
+};</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Shared constants</p>
+              <h4 id="tween-constructor">Tween constructor</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _keys, _round, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">T_TWEEN</span>, <span class="hljs-variable constant_">TWEEN</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Tween</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+
+    <span class="hljs-keyword">const</span> t = items.<span class="hljs-property">ticker</span>;
+    <span class="hljs-keyword">if</span> (t &amp;&amp; !t.<span class="hljs-property">substring</span> &amp;&amp; t.<span class="hljs-property">name</span> &amp;&amp; t.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_TICKER</span>) items.<span class="hljs-property">ticker</span> = t.<span class="hljs-property">name</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> = <span class="hljs-title function_">getSetObjectKey</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>);</pre></div></div>
             
         </li>
         
@@ -674,47 +693,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>Local constants (none defined)</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <h4 id="tween-constructor">Tween constructor</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Tween</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
-
-    <span class="hljs-keyword">let</span> tn;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> = <span class="hljs-literal">null</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDefinitionsValues</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><code>status</code> magic numbers: <code>-1</code> = “before”; <code>0</code> = “running”; <code>1</code> = “after”.</p>
 
@@ -727,11 +705,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>All Tweens require a Ticker to act as their timeline.</p>
 <ul>
@@ -743,14 +721,13 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (animationtickers[items.<span class="hljs-property">ticker</span>]) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addToTicker</span>(items.<span class="hljs-property">ticker</span>);
     <span class="hljs-keyword">else</span> {
 
-        tn = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>_ticker`</span>;
+        <span class="hljs-keyword">const</span> tn = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>_ticker`</span>;
 
         <span class="hljs-title function_">makeTicker</span>({
             <span class="hljs-attr">name</span>: tn,
             <span class="hljs-attr">order</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">order</span>,
             <span class="hljs-attr">subscribers</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
             <span class="hljs-attr">duration</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span>,
-            <span class="hljs-attr">eventChoke</span>: <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">eventChoke</span>, <span class="hljs-number">0</span>),
             <span class="hljs-attr">cycles</span>: <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">cycles</span>, <span class="hljs-number">1</span>),
             <span class="hljs-attr">killOnComplete</span>: <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">killOnComplete</span>, <span class="hljs-literal">false</span>),
             <span class="hljs-attr">observer</span>: items.<span class="hljs-property">observer</span>,
@@ -766,11 +743,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="tween-prototype">Tween prototype</h4>
 
@@ -785,11 +762,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -801,11 +778,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-12">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="tween-attributes">Tween attributes</h4>
 
@@ -816,38 +793,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-13">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p><strong>definitions</strong> - Array of objects defining the animations to be performed by the Tween. Object attributes include:</p>
-<ul>
-<li><strong>attribute</strong> (required) - String attribute key.</li>
-<li><strong>start</strong> - Number or String value for this attribute’s start point.</li>
-<li><strong>end</strong> - Number or String value for this attribute’s end point.</li>
-<li><strong>integer</strong> - Boolean flag indicating whether we should force results to be integers (default: false)</li>
-<li><strong>engine</strong> - String name for the easing function <em><strong>engine</strong></em> to be used to animate this change; or an easing function supplied by the developer.</li>
-</ul>
-<p>Scrawl-canvas includes functionality to allow <code>start</code> and <code>end</code> values to be defined as Strings, with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number.</p>
-<ul>
-<li>These values should be of a type that the target object (generally an artefact) expects to receive in its <code>set</code> function.</li>
-<li>Any object with a <code>set</code> function that takes an object as its argument can be tweened.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">definitions</span>: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>duration</strong> - can accept a variety of values:</p>
 <ul>
@@ -863,11 +813,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-15">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>killOnComplete</strong> - Boolean flag; if set, the Tween will kill itself when it completes</p>
 
@@ -878,11 +828,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-16">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>The Tween object supports some <strong>tween animation hook functions</strong>:</p>
 <ul>
@@ -910,11 +860,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>ticker</strong> - String name of Ticker object which this Tween will associate itself with.</p>
 <ul>
@@ -928,17 +878,41 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-18">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>The following <a href="./ticker.html">Ticker</a>-related attributes are not stored in the Tween object:</p>
 <ul>
 <li><strong>cycles</strong> - positive integer Number representing the number of cycles the Ticker will undertake before it completes.</li>
-<li><strong>eventChoke</strong> Number representing minimum number of milliseconds between Ticker event emissions</li>
 <li><strong>observer</strong> - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p><strong>definitions</strong> - Array of objects defining the animations to be performed by the Tween. Object attributes include:</p>
+<ul>
+<li><strong>attribute</strong> (required) - String attribute key.</li>
+<li><strong>start</strong> - Number or String value for this attribute’s start point.</li>
+<li><strong>end</strong> - Number or String value for this attribute’s end point.</li>
+<li><strong>integer</strong> - Boolean flag indicating whether we should force results to be integers (default: false)</li>
+<li><strong>engine</strong> - String name for the easing function <em><strong>engine</strong></em> to be used to animate this change; or an easing function supplied by the developer.</li>
+</ul>
+<p>Scrawl-canvas includes functionality to allow <code>start</code> and <code>end</code> values to be defined as Strings, with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number.</p>
+<ul>
+<li>These values should be of a type that the target object (generally an artefact) expects to receive in its <code>set</code> function.</li>
+<li>Any object with a <code>set</code> function that takes an object as its argument can be tweened.</li>
 </ul>
 
             </div>
@@ -949,11 +923,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -964,48 +938,45 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
 P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>)) copy.<span class="hljs-property">targets</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-property">name</span>);
+    copy.<span class="hljs-property">targets</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-property">name</span>);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>)) {
+    copy.<span class="hljs-property">definitions</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> {
 
-        copy.<span class="hljs-property">definitions</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> {
+        <span class="hljs-keyword">const</span> res = {};
+        res.<span class="hljs-property">attribute</span> = d.<span class="hljs-property">attribute</span>;
+        res.<span class="hljs-property">start</span> = d.<span class="hljs-property">start</span>;
+        res.<span class="hljs-property">end</span> = d.<span class="hljs-property">end</span>;
 
-            <span class="hljs-keyword">const</span> res = {};
-            res.<span class="hljs-property">attribute</span> = d.<span class="hljs-property">attribute</span>;
-            res.<span class="hljs-property">start</span> = d.<span class="hljs-property">start</span>;
-            res.<span class="hljs-property">end</span> = d.<span class="hljs-property">end</span>;
+        <span class="hljs-keyword">if</span> (d.<span class="hljs-property">engine</span> &amp;&amp; d.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>) res.<span class="hljs-property">engine</span> = d.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>;
+        <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">if</span> (d.<span class="hljs-property">engine</span> &amp;&amp; d.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>) res.<span class="hljs-property">engine</span> = d.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>;
-            <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(d.<span class="hljs-property">engine</span>) &amp;&amp; d.<span class="hljs-property">engine</span> != <span class="hljs-literal">null</span>) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(d.<span class="hljs-property">engine</span>) &amp;&amp; d.<span class="hljs-property">engine</span> != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">const</span> e = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stringifyFunction</span>(d.<span class="hljs-property">engine</span>);
 
-                    <span class="hljs-keyword">const</span> e = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stringifyFunction</span>(d.<span class="hljs-property">engine</span>);
+                <span class="hljs-keyword">if</span> (e) {
 
-                    <span class="hljs-keyword">if</span> (e) {
-
-                        res.<span class="hljs-property">engine</span> = e;
-                        res.<span class="hljs-property">engineIsFunction</span> = <span class="hljs-literal">true</span>;
-                    }
+                    res.<span class="hljs-property">engine</span> = e;
+                    res.<span class="hljs-property">engineIsFunction</span> = <span class="hljs-literal">true</span>;
                 }
             }
-            <span class="hljs-keyword">return</span> res;
-        });
-    }
+        }
+        <span class="hljs-keyword">return</span> res;
+    });
     <span class="hljs-keyword">return</span> copy;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
-<p>When cloning a ticker, we can use an additional attribute in the clone function’s argument object:</p>
+<p>When cloning a tween, we can use an additional attribute in the clone function’s argument object:</p>
 <ul>
 <li><strong>useNewTicker</strong> - Boolean flag - when set, the clone will also create its own Ticker object</li>
 </ul>
@@ -1048,11 +1019,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -1065,11 +1036,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1081,11 +1052,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-23">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>definitions</strong></p>
 
@@ -1093,23 +1064,22 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
             
             <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>);
+    <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>];
 };
 
 S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span> = [].<span class="hljs-title function_">concat</span>(item);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDefinitionsValues</span>();
+    <span class="hljs-keyword">if</span> (item) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDefinitions</span>(item);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>commenceAction</strong></p>
 
@@ -1125,11 +1095,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>completeAction</strong></p>
 
@@ -1145,11 +1115,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-26">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>set</code> - we perform some additional functionality in the Tween <code>set</code> function</p>
 <ul>
@@ -1160,6 +1130,9 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+
+    <span class="hljs-keyword">const</span> t = items.<span class="hljs-property">ticker</span>;
+    <span class="hljs-keyword">if</span> (t &amp;&amp; !t.<span class="hljs-property">substring</span> &amp;&amp; t.<span class="hljs-property">name</span> &amp;&amp; t.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_TICKER</span>) items.<span class="hljs-property">ticker</span> = t.<span class="hljs-property">name</span>;
 
     <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
         keys = <span class="hljs-title function_">_keys</span>(items),
@@ -1197,11 +1170,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-27">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="animation">Animation</h4>
 
@@ -1210,11 +1183,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-28">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>getEndTime</code> - Ticker-related help function</p>
 
@@ -1228,11 +1201,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-29">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>calculateEffectiveDuration</code></p>
 
@@ -1272,11 +1245,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-30">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>update</code> - <em><strong>main animation function</strong></em>, invoked by the Ticker that this Tween subscribes to; runs once per RequestAnimationFrame while the Ticker is running.</p>
 <ul>
@@ -1300,11 +1273,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-31">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Should we do work for this Tween?</p>
 
@@ -1330,11 +1303,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-32">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>For Tweens with a duration &gt; 0</p>
 
@@ -1354,11 +1327,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-33">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>For Tweens with a duration === 0</p>
 
@@ -1385,11 +1358,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-34">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>doSimpleUpdate</code> - internal function called by <code>update</code> function.</p>
 
@@ -1400,11 +1373,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-35">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>We create handles to a bunch of attributes so that we only need to look them up once each time the function runs</p>
 
@@ -1416,82 +1389,60 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         status = <span class="hljs-variable language_">this</span>.<span class="hljs-property">status</span>,
         definitions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>,
         targets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>,
-        action = <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p>We store the <code>setObj</code> object as an attribute on the Tween object for convenience, and to cut down on the number of objects created during the lifetime of the Tween.</p>
+        action = <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span>,
+        setObj = <span class="hljs-title function_">getSetObject</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span>);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        setObj = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> || {};
-
-    <span class="hljs-keyword">let</span> def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute,
-        i, iz, j, jz, progress;
+    <span class="hljs-keyword">let</span> progress;
 
     <span class="hljs-keyword">const</span> effectiveTick = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">reversed</span>) ? items.<span class="hljs-property">reverseTick</span> - starts : items.<span class="hljs-property">tick</span> - starts;
 
     <span class="hljs-keyword">if</span> (effectiveDuration &amp;&amp; !status) progress = effectiveTick / effectiveDuration;
     <span class="hljs-keyword">else</span> progress = (status &gt; <span class="hljs-number">0</span>) ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = definitions.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = definitions.<span class="hljs-property">length</span>, val, def, engine; i &lt; iz; i++) {
 
         def = definitions[i];
-        engine = def.<span class="hljs-property">engine</span>;
-        effectiveStart = def.<span class="hljs-property">effectiveStart</span>;
-        effectiveChange = def.<span class="hljs-property">effectiveChange</span>;
-        int = def.<span class="hljs-property">integer</span>;
-        suffix = def.<span class="hljs-property">suffix</span>;
-        attribute = def.<span class="hljs-property">attribute</span>;</pre></div></div>
+        engine = def.<span class="hljs-property">engine</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-37">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Invoke the appropriate easing function for this particular definition object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (engine.<span class="hljs-property">substring</span>) val = <span class="hljs-title function_">actions</span>(engine, effectiveStart, effectiveChange, progress);
-        <span class="hljs-keyword">else</span> val = <span class="hljs-title function_">engine</span>(effectiveStart, effectiveChange, progress);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (engine.<span class="hljs-property">substring</span>) val = <span class="hljs-title function_">actions</span>(engine, def.<span class="hljs-property">effectiveStart</span>, def.<span class="hljs-property">effectiveChange</span>, progress);
+        <span class="hljs-keyword">else</span> val = <span class="hljs-title function_">engine</span>(def.<span class="hljs-property">effectiveStart</span>, def.<span class="hljs-property">effectiveChange</span>, progress);
 
-        <span class="hljs-keyword">if</span> (int) val = <span class="hljs-title function_">_round</span>(val);
+        <span class="hljs-keyword">if</span> (def.<span class="hljs-property">integer</span>) val = <span class="hljs-title function_">_round</span>(val);
 
-        <span class="hljs-keyword">if</span> (suffix) val += suffix;
+        <span class="hljs-keyword">if</span> (def.<span class="hljs-property">suffix</span>) val += def.<span class="hljs-property">suffix</span>;
 
-        setObj[attribute] = val;
+        setObj[def.<span class="hljs-property">attribute</span>] = val;
     }
 
-    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = targets.<span class="hljs-property">length</span>; j &lt; jz; j++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>, jz = targets.<span class="hljs-property">length</span>, t; j &lt; jz; j++) {
 
-        <span class="hljs-keyword">const</span> t = targets[j];
+        t = targets[j];
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">T_GROUP</span> === t.<span class="hljs-property">type</span>) t.<span class="hljs-title function_">setArtefacts</span>(setObj);
         <span class="hljs-keyword">else</span> t.<span class="hljs-title function_">set</span>(setObj);
-    }
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> = setObj;</pre></div></div>
+    }</pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>We call the <code>action</code> attribute function (if it is defined) at the completion of every update.</p>
 
@@ -1503,11 +1454,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-39">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>engineActions</code> - internal function to run built-in easing engines</p>
 <ul>
@@ -1534,11 +1485,39 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-40">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p><code>setDefinitions</code>, <code>clearDefinitions</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setDefinitions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>.<span class="hljs-title function_">push</span>(...args.<span class="hljs-title function_">flat</span>(<span class="hljs-title class_">Infinity</span>));
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> = <span class="hljs-title function_">getSetObjectKey</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDefinitionsValues</span>();
+};
+
+P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> = <span class="hljs-title function_">getSetObjectKey</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>setDefinitionsValues</code> - convert <code>start</code> and <code>end</code> values into float Numbers.</p>
 <ul>
@@ -1569,11 +1548,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-41">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>The default easing function is <code>linear</code></p>
 
@@ -1590,11 +1569,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-42">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>parseDefinitionsValue</code> - internal function invoked by <code>setDefinitionsValues</code> function.</p>
 
@@ -1621,11 +1600,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-43">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h4 id="animation-control">Animation control</h4>
 
@@ -1634,11 +1613,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-44">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>run</code></p>
 <ul>
@@ -1665,11 +1644,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-45">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - check to see if Tween is in a running state.</p>
 
@@ -1686,11 +1665,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-46">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>halt</code></p>
 <ul>
@@ -1716,11 +1695,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-47">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>reverse</code></p>
 <ul>
@@ -1746,11 +1725,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-48">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>resume</code></p>
 <ul>
@@ -1776,11 +1755,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-49">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>seekTo</code></p>
 <ul>
@@ -1806,11 +1785,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-50">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>seekFor</code></p>
 <ul>
@@ -1836,11 +1815,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-51">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeTween</span>({

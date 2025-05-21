@@ -617,7 +617,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>, <span class="hljs-variable constant_">AREA_ALPHA</span>, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>, <span class="hljs-variable constant_">BLACK_WHITE</span>, <span class="hljs-variable constant_">BLEND</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>, <span class="hljs-variable constant_">CHROMA</span>, <span class="hljs-variable constant_">CLAMP_CHANNELS</span>, <span class="hljs-variable constant_">CLEAR</span>, <span class="hljs-variable constant_">COLOR</span>, <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>, <span class="hljs-variable constant_">COMPOSE</span>, <span class="hljs-variable constant_">CORRODE</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">DESTINATION_OVER</span>, <span class="hljs-variable constant_">DISPLACE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">EMBOSS</span>, <span class="hljs-variable constant_">FLOOD</span>, <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>, <span class="hljs-variable constant_">GLITCH</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">GREEN</span>, <span class="hljs-variable constant_">INVERT_CHANNELS</span>, <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>, <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>, <span class="hljs-variable constant_">MATRIX</span>, <span class="hljs-variable constant_">MEAN</span>, <span class="hljs-variable constant_">MODIFY_OK_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_OK_CHANNELS</span>, <span class="hljs-variable constant_">MULTIPLY</span>, <span class="hljs-variable constant_">NEGATIVE</span>, <span class="hljs-variable constant_">NEWSPRINT</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-variable constant_">PIXELATE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RANDOM_NOISE</span>, <span class="hljs-variable constant_">RECT_GRID</span>, <span class="hljs-variable constant_">RED</span>, <span class="hljs-variable constant_">REDUCE_PALETTE</span>, <span class="hljs-variable constant_">ROTATE_HUE</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>, <span class="hljs-variable constant_">SOURCE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OUT</span>, <span class="hljs-variable constant_">STEP_CHANNELS</span>, <span class="hljs-variable constant_">SWIRL</span>, <span class="hljs-variable constant_">THRESHOLD</span>, <span class="hljs-variable constant_">TILES</span>, <span class="hljs-variable constant_">TINT_CHANNELS</span>, <span class="hljs-variable constant_">UP</span>, <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>, <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>, <span class="hljs-variable constant_">ALPHA_TO_LUMINANCE</span>, <span class="hljs-variable constant_">AREA_ALPHA</span>, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>, <span class="hljs-variable constant_">BLACK_WHITE</span>, <span class="hljs-variable constant_">BLEND</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>, <span class="hljs-variable constant_">CHROMA</span>, <span class="hljs-variable constant_">CLAMP_CHANNELS</span>, <span class="hljs-variable constant_">CLEAR</span>, <span class="hljs-variable constant_">COLOR</span>, <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>, <span class="hljs-variable constant_">COMPOSE</span>, <span class="hljs-variable constant_">CORRODE</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">DESTINATION_OVER</span>, <span class="hljs-variable constant_">DISPLACE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">EMBOSS</span>, <span class="hljs-variable constant_">FLOOD</span>, <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>, <span class="hljs-variable constant_">GLITCH</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">GREEN</span>, <span class="hljs-variable constant_">INVERT_CHANNELS</span>, <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>, <span class="hljs-variable constant_">LUMINANCE_TO_ALPHA</span>, <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>, <span class="hljs-variable constant_">MATRIX</span>, <span class="hljs-variable constant_">MEAN</span>, <span class="hljs-variable constant_">MODIFY_OK_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_OK_CHANNELS</span>, <span class="hljs-variable constant_">MULTIPLY</span>, <span class="hljs-variable constant_">NEGATIVE</span>, <span class="hljs-variable constant_">NEWSPRINT</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-variable constant_">PIXELATE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RANDOM_NOISE</span>, <span class="hljs-variable constant_">RECT_GRID</span>, <span class="hljs-variable constant_">RED</span>, <span class="hljs-variable constant_">REDUCE_PALETTE</span>, <span class="hljs-variable constant_">ROTATE_HUE</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>, <span class="hljs-variable constant_">SOURCE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OUT</span>, <span class="hljs-variable constant_">STEP_CHANNELS</span>, <span class="hljs-variable constant_">SWIRL</span>, <span class="hljs-variable constant_">THRESHOLD</span>, <span class="hljs-variable constant_">TILES</span>, <span class="hljs-variable constant_">TINT_CHANNELS</span>, <span class="hljs-variable constant_">UP</span>, <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>, <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -788,7 +788,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><strong>actions</strong> - the Array of action objects that the engine needs to process - data supplied by the main thread in its message’s <code>packetFiltersArray</code> attribute.</p>
+              <p><strong>actions</strong> - the Array of action objects that the engine needs to process.</p>
 
             </div>
             
@@ -826,7 +826,7 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = filters.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-        actions.<span class="hljs-title function_">push</span>(...filters[i].<span class="hljs-property">actions</span>)
+        actions.<span class="hljs-title function_">push</span>(...filters[i].<span class="hljs-property">actions</span>);
     }
 
     <span class="hljs-keyword">const</span> actionsLen = actions.<span class="hljs-property">length</span>;
@@ -2409,6 +2409,71 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
               <div class="sswrap ">
                 <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
+              <p><strong>alpha-to-luminance</strong> - Sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">ALPHA_TO_LUMINANCE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
+
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>,
+            len = iData.<span class="hljs-property">length</span>;
+
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
+
+        <span class="hljs-keyword">const</span> libs = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveColorPointLibraries</span>();
+
+        <span class="hljs-keyword">let</span> r, g, b, a, i, L, _r, _g, _b, alpha;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
+
+            r = i;
+            g = r + <span class="hljs-number">1</span>;
+            b = g + <span class="hljs-number">1</span>;
+            a = b + <span class="hljs-number">1</span>;
+
+            alpha = iData[a];
+
+            <span class="hljs-keyword">if</span> (alpha) {
+
+                L = alpha / <span class="hljs-number">256</span>;
+                <span class="hljs-keyword">if</span> (L &gt; <span class="hljs-number">1</span>) L = <span class="hljs-number">1</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (L &lt; <span class="hljs-number">0</span>) L = <span class="hljs-number">0</span>;
+
+                [_r, _g, _b] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRegularColorVals</span>(L, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, libs);
+
+                oData[r] = _r;
+                oData[g] = _g;
+                oData[b] = _b;
+                oData[a] = <span class="hljs-number">255</span>;
+            }
+            <span class="hljs-keyword">else</span> {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = <span class="hljs-number">0</span>;
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
               <p><strong>area-alpha</strong> - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.</p>
 
             </div>
@@ -2458,11 +2523,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>average-channels</strong> - Calculates an average value from each pixel’s included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.</p>
 
@@ -2542,11 +2607,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>blend</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations).</p>
 <ul>
@@ -2629,11 +2694,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>Pixel calculations</p>
 
@@ -3085,11 +3150,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>Creates a color with the hue and saturation of the source color and the luminosity of the backdrop color.</p>
 
@@ -3134,11 +3199,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>Creates a color with the hue of the source color and the saturation and luminosity of the backdrop color.</p>
 
@@ -3183,11 +3248,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>Creates a color with the luminosity of the source color and the hue and saturation of the backdrop color.</p>
 
@@ -3232,11 +3297,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Creates a color with the saturation of the source color and the hue and luminosity of the backdrop color.</p>
 
@@ -3295,11 +3360,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>blur</strong> - Performs a multi-loop, two-step ‘horizontal-then-vertical averaging sweep’ calculation across all pixels to create a blur effect.
 Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.</p>
@@ -3308,7 +3373,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">BLUR</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">const</span> getUncheckedValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">flag, gridStore, pos, data, offset</span>) {
+        <span class="hljs-keyword">const</span> getUncheckedValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">flag, gridStore, pos, data, offset, step</span>) {
 
             <span class="hljs-keyword">if</span> (flag) {
 
@@ -3335,7 +3400,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             <span class="hljs-keyword">return</span> data[(pos * <span class="hljs-number">4</span>) + offset];
         };
 
-        <span class="hljs-keyword">const</span> getCheckedValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">flag, gridStore, pos, data, offset</span>) {
+        <span class="hljs-keyword">const</span> getCheckedValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">flag, gridStore, pos, data, offset, step</span>) {
 
             <span class="hljs-keyword">if</span> (flag) {
 
@@ -3377,16 +3442,19 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">const</span> {
             opacity = <span class="hljs-number">1</span>,
-            radius = <span class="hljs-number">0</span>,
-            passes = <span class="hljs-number">1</span>,
             processVertical = <span class="hljs-literal">true</span>,
+            radiusVertical = <span class="hljs-number">0</span>,
+            passesVertical = <span class="hljs-number">1</span>,
+            stepVertical = <span class="hljs-number">1</span>,
             processHorizontal = <span class="hljs-literal">true</span>,
+            radiusHorizontal = <span class="hljs-number">0</span>,
+            passesHorizontal = <span class="hljs-number">1</span>,
+            stepHorizontal = <span class="hljs-number">1</span>,
             includeRed = <span class="hljs-literal">true</span>,
             includeGreen = <span class="hljs-literal">true</span>,
             includeBlue = <span class="hljs-literal">true</span>,
             includeAlpha = <span class="hljs-literal">false</span>,
             excludeTransparentPixels = <span class="hljs-literal">false</span>,
-            step = <span class="hljs-number">1</span>,
             lineOut,
         } = requirements;
 
@@ -3396,9 +3464,9 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">const</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input);
 
-            <span class="hljs-keyword">if</span> (processHorizontal)  horizontalBlurGrid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildHorizontalBlur</span>(grid, radius);
+            <span class="hljs-keyword">if</span> (processHorizontal)  horizontalBlurGrid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildHorizontalBlur</span>(grid, radiusHorizontal);
 
-            <span class="hljs-keyword">if</span> (processVertical) verticalBlurGrid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildVerticalBlur</span>(grid, radius);
+            <span class="hljs-keyword">if</span> (processVertical) verticalBlurGrid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildVerticalBlur</span>(grid, radiusVertical);
         }
 
         oData.<span class="hljs-title function_">set</span>(iData);
@@ -3409,9 +3477,9 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">let</span> counter, r, g, b, a, pass;
 
-        <span class="hljs-keyword">for</span> (pass = <span class="hljs-number">0</span>; pass &lt; passes; pass++) {
+        <span class="hljs-keyword">if</span> (processHorizontal) {
 
-            <span class="hljs-keyword">if</span> (processHorizontal) {
+            <span class="hljs-keyword">for</span> (pass = <span class="hljs-number">0</span>; pass &lt; passesHorizontal; pass++) {
 
                 <span class="hljs-keyword">for</span> (counter = <span class="hljs-number">0</span>; counter &lt; pixelLen; counter++) {
 
@@ -3422,17 +3490,20 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
                     <span class="hljs-keyword">if</span> (includeAlpha || hold[a]) {
 
-                        oData[r] = <span class="hljs-title function_">selectedMethod</span>(includeRed, horizontalBlurGrid, counter, hold, <span class="hljs-number">0</span>);
-                        oData[g] = <span class="hljs-title function_">selectedMethod</span>(includeGreen, horizontalBlurGrid, counter, hold, <span class="hljs-number">1</span>);
-                        oData[b] = <span class="hljs-title function_">selectedMethod</span>(includeBlue, horizontalBlurGrid, counter, hold, <span class="hljs-number">2</span>);
-                        oData[a] = <span class="hljs-title function_">getUncheckedValue</span>(includeAlpha, horizontalBlurGrid, counter, hold, <span class="hljs-number">3</span>);
+                        oData[r] = <span class="hljs-title function_">selectedMethod</span>(includeRed, horizontalBlurGrid, counter, hold, <span class="hljs-number">0</span>, stepHorizontal);
+                        oData[g] = <span class="hljs-title function_">selectedMethod</span>(includeGreen, horizontalBlurGrid, counter, hold, <span class="hljs-number">1</span>, stepHorizontal);
+                        oData[b] = <span class="hljs-title function_">selectedMethod</span>(includeBlue, horizontalBlurGrid, counter, hold, <span class="hljs-number">2</span>, stepHorizontal);
+                        oData[a] = <span class="hljs-title function_">getUncheckedValue</span>(includeAlpha, horizontalBlurGrid, counter, hold, <span class="hljs-number">3</span>, stepHorizontal);
                     }
                 }
 
-                <span class="hljs-keyword">if</span> (processVertical || pass &lt; passes - <span class="hljs-number">1</span>) hold.<span class="hljs-title function_">set</span>(oData);
+                <span class="hljs-keyword">if</span> (processVertical || pass &lt; passesHorizontal - <span class="hljs-number">1</span>) hold.<span class="hljs-title function_">set</span>(oData);
             }
+        }
 
-            <span class="hljs-keyword">if</span> (processVertical) {
+        <span class="hljs-keyword">if</span> (processVertical) {
+
+            <span class="hljs-keyword">for</span> (pass = <span class="hljs-number">0</span>; pass &lt; passesVertical; pass++) {
 
                 <span class="hljs-keyword">for</span> (counter = <span class="hljs-number">0</span>; counter &lt; pixelLen; counter++) {
 
@@ -3443,13 +3514,13 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
                     <span class="hljs-keyword">if</span> (includeAlpha || hold[a]) {
 
-                        oData[r] = <span class="hljs-title function_">selectedMethod</span>(includeRed, verticalBlurGrid, counter, hold, <span class="hljs-number">0</span>);
-                        oData[g] = <span class="hljs-title function_">selectedMethod</span>(includeGreen, verticalBlurGrid, counter, hold, <span class="hljs-number">1</span>);
-                        oData[b] = <span class="hljs-title function_">selectedMethod</span>(includeBlue, verticalBlurGrid, counter, hold, <span class="hljs-number">2</span>);
-                        oData[a] = <span class="hljs-title function_">getUncheckedValue</span>(includeAlpha, verticalBlurGrid, counter, hold, <span class="hljs-number">3</span>);
+                        oData[r] = <span class="hljs-title function_">selectedMethod</span>(includeRed, verticalBlurGrid, counter, hold, <span class="hljs-number">0</span>, stepVertical);
+                        oData[g] = <span class="hljs-title function_">selectedMethod</span>(includeGreen, verticalBlurGrid, counter, hold, <span class="hljs-number">1</span>, stepVertical);
+                        oData[b] = <span class="hljs-title function_">selectedMethod</span>(includeBlue, verticalBlurGrid, counter, hold, <span class="hljs-number">2</span>, stepVertical);
+                        oData[a] = <span class="hljs-title function_">getUncheckedValue</span>(includeAlpha, verticalBlurGrid, counter, hold, <span class="hljs-number">3</span>, stepVertical);
                     }
                 }
-                <span class="hljs-keyword">if</span> (pass &lt; passes - <span class="hljs-number">1</span>) hold.<span class="hljs-title function_">set</span>(oData);
+                <span class="hljs-keyword">if</span> (pass &lt; passesVertical - <span class="hljs-number">1</span>) hold.<span class="hljs-title function_">set</span>(oData);
             }
         }
 
@@ -3460,11 +3531,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>channels-to-alpha</strong> - Calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -3528,11 +3599,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - Using an array of ‘range’ arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each ‘range’ array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.</p>
 
@@ -3590,11 +3661,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>clamp-channels</strong> - Clamp each color channel to a range set by lowColor and highColor values</p>
 
@@ -3662,11 +3733,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>colors-to-alpha</strong> - Determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the “red”, “green” and “blue” arguments. The sensitivity of the effect can be manipulated using the “transparentAt” and “opaqueAt” values, both of which lie in the range 0-1.</p>
 
@@ -3733,11 +3804,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</p>
 
@@ -3793,11 +3864,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>Pixel calculations</p>
 
@@ -4103,11 +4174,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the “level” attribute. Channels can be selected by setting the “includeRed”, “includeGreen”, “includeBlue” (all false by default) and “includeAlpha” (default: true) flags.</p>
 
@@ -4202,11 +4273,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> - Shift pixels around the image, based on the values supplied in a displacement image</p>
 
@@ -4318,11 +4389,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: “strength”, and “angle” - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action</p>
 
@@ -4468,11 +4539,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> - Set all pixels to the channel values supplied in the “red”, “green”, “blue” and “alpha” arguments</p>
 
@@ -4525,11 +4596,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>gaussian-blur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
 
@@ -4560,11 +4631,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>Attempt to force type to FP32.</p>
 
@@ -4578,11 +4649,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>takes src image and writes the blurred and transposed result into out</p>
 
@@ -4609,11 +4680,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>left to right</p>
 
@@ -4684,11 +4755,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>right to left</p>
 
@@ -4770,7 +4841,13 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">const</span> {
             opacity = <span class="hljs-number">1</span>,
-            radius = <span class="hljs-number">1</span>,
+            radiusHorizontal = <span class="hljs-number">1</span>,
+            radiusVertical = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">true</span>,
+            excludeTransparentPixels = <span class="hljs-literal">false</span>,
             lineOut,
         } = requirements;
 
@@ -4781,12 +4858,54 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(src32.<span class="hljs-property">length</span>),
             tmp_line = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>(<span class="hljs-title function_">_max</span>(width, height) * <span class="hljs-number">4</span>);
 
-        <span class="hljs-keyword">const</span> coeff = <span class="hljs-title function_">gaussCoef</span>(radius);
+        <span class="hljs-keyword">const</span> horizontalCoeff = <span class="hljs-title function_">gaussCoef</span>(radiusHorizontal),
+            verticalCoeff = <span class="hljs-title function_">gaussCoef</span>(radiusVertical);
 
-        <span class="hljs-title function_">convolveRGBA</span>(src32, out, tmp_line, coeff, width, height, radius);
-        <span class="hljs-title function_">convolveRGBA</span>(out, src32, tmp_line, coeff, height, width, radius);
+        <span class="hljs-title function_">convolveRGBA</span>(src32, out, tmp_line, horizontalCoeff, width, height, radiusHorizontal);
+        <span class="hljs-title function_">convolveRGBA</span>(out, src32, tmp_line, verticalCoeff, height, width, radiusVertical);
 
-        oData.<span class="hljs-title function_">set</span>(hold);
+        <span class="hljs-keyword">let</span> r, g, b, a, i, iz;
+
+        <span class="hljs-keyword">if</span> (!excludeTransparentPixels) {
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = iData.<span class="hljs-property">length</span>; i &lt; iz; i += <span class="hljs-number">4</span>) {
+
+                r = i;
+                g = r + <span class="hljs-number">1</span>;
+                b = g + <span class="hljs-number">1</span>;
+                a = b + <span class="hljs-number">1</span>;
+
+                oData[r] = (includeRed) ? hold[r] : iData[r];
+                oData[g] = (includeGreen) ? hold[g] : iData[g];
+                oData[b] = (includeBlue) ? hold[b] : iData[b];
+                oData[a] = (includeAlpha) ? hold[a] : iData[a];
+            }
+        }
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = iData.<span class="hljs-property">length</span>; i &lt; iz; i += <span class="hljs-number">4</span>) {
+
+                r = i;
+                g = r + <span class="hljs-number">1</span>;
+                b = g + <span class="hljs-number">1</span>;
+                a = b + <span class="hljs-number">1</span>;
+
+                <span class="hljs-keyword">if</span> (iData[a]) {
+
+                    oData[r] = (includeRed) ? hold[r] : iData[r];
+                    oData[g] = (includeGreen) ? hold[g] : iData[g];
+                    oData[b] = (includeBlue) ? hold[b] : iData[b];
+                    oData[a] = (includeAlpha) ? hold[a] : iData[a];
+                }
+                <span class="hljs-keyword">else</span> {
+
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = iData[a];
+                }
+            }
+        }
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
@@ -4795,11 +4914,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><strong>glitch</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -4935,11 +5054,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.</p>
 
@@ -4984,11 +5103,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><strong>invert-channels</strong> - For each pixel, subtracts its current channel values - when included - from 255.</p>
 
@@ -5033,11 +5152,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><strong>lock-channels-to-levels</strong> - Produces a posterize effect. Takes in four arguments - “red”, “green”, “blue” and “alpha” - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value.</p>
 
@@ -5095,11 +5214,60 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
+              </div>
+              <p><strong>luminance-to-alpha</strong> - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">LUMINANCE_TO_ALPHA</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
+
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>,
+            len = iData.<span class="hljs-property">length</span>;
+
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
+
+        <span class="hljs-keyword">const</span> libs = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveColorPointLibraries</span>();
+
+        <span class="hljs-keyword">let</span> r, g, b, a, i, L;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
+
+            r = i;
+            g = r + <span class="hljs-number">1</span>;
+            b = g + <span class="hljs-number">1</span>;
+            a = b + <span class="hljs-number">1</span>;
+
+            [L] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOkColorVals</span>(iData[r], iData[g], iData[b], libs);
+
+            oData[r] = <span class="hljs-number">0</span>;
+            oData[g] = <span class="hljs-number">0</span>;
+            oData[b] = <span class="hljs-number">0</span>;
+            oData[a] = <span class="hljs-title function_">_floor</span>(L * <span class="hljs-number">256</span>);
+        }
+
+        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><strong>map-to-gradient</strong> - maps the colors in the supplied (complex) gradient to a grayscaled input.</p>
 
@@ -5165,11 +5333,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-75">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - Performs a matrix operation on each pixel’s channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The weights to be applied need to be supplied in the “weights” argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The ‘edgeDetect’, ‘emboss’ and ‘sharpen’ convenience filter methods all use the matrix action, pre-setting the required weights.</p>
 
@@ -5254,11 +5422,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-76">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p>modify-ok-channels__ - Adds a value to each of the OKLAB channels. Note that: the <code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white); the <code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red); the <code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow).</p>
 
@@ -5330,11 +5498,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-77">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><strong>modulate-channels</strong> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at that pixel’s grayscale values. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value.</p>
 
@@ -5406,11 +5574,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-78">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><strong>modulate-ok-channels</strong> - Multiplies each of the OKLAB channels by a given amount. Note that: the <code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white); the <code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red); the <code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow).</p>
 
@@ -5482,11 +5650,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-79">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><strong>negative</strong> - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB</p>
 
@@ -5546,11 +5714,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-80">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><strong>newsprint</strong> - Attempts to simulate a black-white dither effect similar to newsprint</p>
 
@@ -5657,11 +5825,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-81">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> - Offset the input image in the output image.</p>
 
@@ -5764,11 +5932,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-82">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the “tileWidth”, “tileHeight”, “offsetX” and “offsetY” arguments.</p>
 
@@ -5841,11 +6009,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-83">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p><strong>process-image</strong> - Add an asset to the filter, which can then be used by other filters as either their <code>lineIn</code> or <code>lineMix</code> inputs.</p>
 <ul>
@@ -5863,11 +6031,15 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">PROCESS_IMAGE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">const</span> {assetData, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {identifier, lineOut} = requirements;
 
         <span class="hljs-keyword">if</span> (lineOut &amp;&amp; lineOut.<span class="hljs-property">substring</span> &amp;&amp; lineOut.<span class="hljs-property">length</span>) {
 
-            <span class="hljs-keyword">let</span> {width, height, data} = assetData;
+            <span class="hljs-keyword">const</span> assetData = <span class="hljs-title function_">getWorkstoreItem</span>(identifier);
+
+            <span class="hljs-keyword">let</span> width = assetData ? assetData.<span class="hljs-property">width</span> : <span class="hljs-number">1</span>,
+                height = assetData ? assetData.<span class="hljs-property">height</span> : <span class="hljs-number">1</span>,
+                data = assetData ? assetData.<span class="hljs-property">data</span> : <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(<span class="hljs-number">4</span>);
 
             <span class="hljs-keyword">if</span> (width &amp;&amp; height &amp;&amp; data) {
 
@@ -5918,11 +6090,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-84">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p><strong>random-noise</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -6043,11 +6215,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-85">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p><strong>reducePalette</strong> - Reduce the number of colors in its palette. The <code>palette</code> attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: ‘black-white’</p>
 
@@ -6060,11 +6232,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-86">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p>Filter generics (as used by all filters)</p>
 
@@ -6096,11 +6268,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-87">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p>Noise - used for dithering the output</p>
 
@@ -6118,11 +6290,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-88">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-88">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <p>Check we have a valid palette value</p>
 
@@ -6136,11 +6308,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-89">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-89">&#x00a7;</a>
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <p>Grayscale vs array vs commonest colors palettes follow different computing paths</p>
 
@@ -6161,11 +6333,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-90">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-90">&#x00a7;</a>
+                <a class="ss" href="#section-92">&#x00a7;</a>
               </div>
               <p>Grayscale palette</p>
 
@@ -6202,11 +6374,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-91">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-91">&#x00a7;</a>
+                <a class="ss" href="#section-93">&#x00a7;</a>
               </div>
               <p>Because of the palette’s ordered data shape, we can short-circuit calculations for G8/G16 palettes</p>
 
@@ -6248,11 +6420,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-92">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-92">&#x00a7;</a>
+                <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
               <p>Array of colors palette</p>
 <ul>
@@ -6344,11 +6516,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-93">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-93">&#x00a7;</a>
+                <a class="ss" href="#section-95">&#x00a7;</a>
               </div>
               <p>Commonest colors palette</p>
 <ul>
@@ -6362,11 +6534,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-94">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-94">&#x00a7;</a>
+                <a class="ss" href="#section-96">&#x00a7;</a>
               </div>
               <ol>
 <li>Go through the data to collect metadata: frequency, values, etc</li>
@@ -6392,11 +6564,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-95">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-95">&#x00a7;</a>
+                <a class="ss" href="#section-97">&#x00a7;</a>
               </div>
               <p>Ignore transparent pixels</p>
 
@@ -6422,11 +6594,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-96">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-96">&#x00a7;</a>
+                <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
               <ol start="2">
 <li>Filter metadata, then sort for commonest colors</li>
@@ -6440,11 +6612,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-97">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-97">&#x00a7;</a>
+                <a class="ss" href="#section-99">&#x00a7;</a>
               </div>
               <ol start="3">
 <li>Generate the palette, using minimumColorDistance to winnow out similar colors</li>
@@ -6486,11 +6658,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-98">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-98">&#x00a7;</a>
+                <a class="ss" href="#section-100">&#x00a7;</a>
               </div>
               <ol start="4">
 <li>Update metadata, replacing each entry’s RGB with its 2 closest candidates in the palette</li>
@@ -6530,11 +6702,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-99">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-99">&#x00a7;</a>
+                <a class="ss" href="#section-101">&#x00a7;</a>
               </div>
               <ol start="5">
 <li>Apply the filter results to the output</li>
@@ -6582,11 +6754,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-100">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-100">&#x00a7;</a>
+                <a class="ss" href="#section-102">&#x00a7;</a>
               </div>
               <p>Boilerplate filter post-processing</p>
 
@@ -6599,11 +6771,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-101">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-101">&#x00a7;</a>
+                <a class="ss" href="#section-103">&#x00a7;</a>
               </div>
               <p><strong>rotate-hue</strong> - for each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB</p>
 
@@ -6667,11 +6839,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-102">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-102">&#x00a7;</a>
+                <a class="ss" href="#section-104">&#x00a7;</a>
               </div>
               <p><strong>set-channel-to-level</strong> - Sets the value of each pixel’s included channel to the value supplied in the “level” argument.</p>
 
@@ -6717,11 +6889,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-103">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-103">&#x00a7;</a>
+                <a class="ss" href="#section-105">&#x00a7;</a>
               </div>
               <p><strong>step-channels</strong> - Takes three divisor values - “red”, “green”, “blue”. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of ‘50’ applied to a channel value of ‘120’ will give a result of ‘100’. The output is a form of posterization.</p>
 <p>A new <code>clamp</code> attribute was added in v8.7.0, which can take the following String values:</p>
@@ -6789,11 +6961,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-104">
+        <li id="section-106">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-104">&#x00a7;</a>
+                <a class="ss" href="#section-106">&#x00a7;</a>
               </div>
               <p><strong>swirl</strong> - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
 <ul>
@@ -7001,11 +7173,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-105">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-105">&#x00a7;</a>
+                <a class="ss" href="#section-107">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color</p>
 <ul>
@@ -7111,11 +7283,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-106">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-106">&#x00a7;</a>
+                <a class="ss" href="#section-108">&#x00a7;</a>
               </div>
               <p><strong>tiles</strong> - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the <code>pixelate</code> filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output</p>
 <ul>
@@ -7204,11 +7376,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-107">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-107">&#x00a7;</a>
+                <a class="ss" href="#section-109">&#x00a7;</a>
               </div>
               <p><strong>tint-channels</strong> - Has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The ‘sepia’ convenience filter presets these values to create a sepia effect.</p>
 
@@ -7262,11 +7434,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-108">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-108">&#x00a7;</a>
+                <a class="ss" href="#section-110">&#x00a7;</a>
               </div>
               <p><strong>user-defined-legacy</strong> - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.</p>
 
@@ -7295,11 +7467,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-109">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-109">&#x00a7;</a>
+                <a class="ss" href="#section-111">&#x00a7;</a>
               </div>
               <p><strong>vary-channels-by-weights</strong> - manipulate colors using a set of channel curve arrays.</p>
 <ul>
@@ -7379,11 +7551,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-110">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-110">&#x00a7;</a>
+                <a class="ss" href="#section-112">&#x00a7;</a>
               </div>
               <p>We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their <code>dirtyFilterIdentifier</code> flag to false.</p>
 
@@ -7414,11 +7586,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-111">
+        <li id="section-113">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-111">&#x00a7;</a>
+                <a class="ss" href="#section-113">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -7429,11 +7601,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-112">
+        <li id="section-114">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-112">&#x00a7;</a>
+                <a class="ss" href="#section-114">&#x00a7;</a>
               </div>
               <p>Create a singleton filter engine, for export and use within this code base</p>
 

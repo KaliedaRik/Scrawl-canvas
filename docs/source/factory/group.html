@@ -575,7 +575,6 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="group-factory">Group factory</h1>
-<p>Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Label, Picture, Shape, Stack, Wheel, etc) for common functions.</p>
 <p>Groups connect artefacts with controller objects - Stack, Cell - through which the Display cycle can cascade. Each controller object can have more than one Group associated with it. Only Groups whose <strong>visibility</strong> flag has been set to true will propagate the Display cycle cascade to their member artefacts. The order in which each controller object invokes its Group objects is determined by each Group object’s <strong>order</strong> value.</p>
 <p>Groups can also be used for purposes beyond the Display cycle:</p>
 <ul>
@@ -583,8 +582,6 @@
 <li>They can be used to propagate updates to their constituent artefacts - for instance animating them in a coordinated manner.</li>
 <li>Filters can be applied to entity objects at the Group level</li>
 </ul>
-<p>Additional functionality to help control and interact with Groups is defined in the <strong>cascade</strong> mixin. Groups also use the <strong>base</strong> mixin, thus they come equipped with packet functionality, alongside clone and kill functions.</p>
-<p>NOTE: <strong>Groups are NOT used to position a set of artefacts in the display</strong> - they have no positioning functionality, which is instead handled by the artefact objects themselves. To position and move a collection of artefacts around the display, choose one of them to act as a a reference, and then <strong>pivot</strong> or <strong>mimic</strong> other artefacts to that reference. When you position or animate the reference artefact, all the other artefacts will position/move with it. See Demo <a href="../../demo/canvas-002.html">Canvas-002</a> for an example.</p>
 
             </div>
             
@@ -871,7 +868,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
     <span class="hljs-keyword">let</span> host;
 
-    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span>) {
+    <span class="hljs-keyword">if</span> (items &amp;&amp; items.<span class="hljs-property">host</span>) {
 
         <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span>.<span class="hljs-property">substring</span>) host = artefact[items.<span class="hljs-property">host</span>];
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span>.<span class="hljs-property">type</span> &amp;&amp; <span class="hljs-variable constant_">ACCEPTED_OWNERS</span>.<span class="hljs-title function_">includes</span>(items.<span class="hljs-property">host</span>.<span class="hljs-property">type</span>)) host = items.<span class="hljs-property">host</span>;
@@ -892,9 +889,6 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         <span class="hljs-keyword">if</span> (!clone.<span class="hljs-property">host</span>) clone.<span class="hljs-property">host</span> = host.<span class="hljs-property">name</span>;
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityHover</span>) clone.<span class="hljs-property">onEntityHover</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityHover</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityNoHover</span>) clone.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityNoHover</span>;
-
     <span class="hljs-keyword">return</span> clone;
 };</pre></div></div>
             
@@ -911,9 +905,9 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = <span class="hljs-literal">false</span></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = <span class="hljs-literal">false</span>, killDomElement = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());
+    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>(killDomElement));
 
     <span class="hljs-keyword">const</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
@@ -964,9 +958,9 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
 }
 
-P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killDomElement = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>(killDomElement));
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 }</pre></div></div>
@@ -1604,7 +1598,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">const</span> myimage = filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>);
 
     <span class="hljs-keyword">const</span> img = filterEngine.<span class="hljs-title function_">action</span>({
         <span class="hljs-attr">identifier</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">filterIdentifier</span>,

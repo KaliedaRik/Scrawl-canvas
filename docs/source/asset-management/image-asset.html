@@ -576,9 +576,6 @@
               </div>
               <h1 id="imageasset-factory">ImageAsset factory</h1>
 <p>The factory generates wrapper Objects around &lt;img&gt; elements which can either be pulled from the current document (DOM-based assets), or fetched from the server using an URL address.</p>
-<p>Image-based assets can also be created from entity artefacts, groups of entity artefacts, and Cell wrappers</p>
-<p>ImageAssets are used by <a href="./picture.html">Picture</a> and <a href="./grid.html">Grid</a> entitys, and <a href="./pattern.html">Pattern</a> styles.</p>
-<p>TODO: ImageAssets don’t support animated <code>.gif</code> images (or if they do, then its entirely a lucky accident). Tested image formats are <code>.jpg</code> and <code>.png</code>.</p>
 
             </div>
             
@@ -597,7 +594,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, canvas, cell, constructors, group } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, isa_obj, mergeOver, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, isa_obj, mergeOver, λ<span class="hljs-literal">null</span>, λcloneError, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;</pre></div></div>
@@ -762,7 +759,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λcloneError;</pre></div></div>
             
         </li>
         

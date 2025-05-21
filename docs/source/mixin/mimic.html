@@ -836,9 +836,7 @@
                 <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
                 <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
                 <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
-            }
-        }
-    };</pre></div></div>
+            }</pre></div></div>
             
         </li>
         
@@ -848,6 +846,23 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>To help fix the bug where user has mimicked to an artefact which they have not yet defined</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (newMimic == <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> = item;
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>useMimicDimensions</strong>, <strong>useMimicScale</strong>, <strong>useMimicStart</strong>, <strong>useMimicHandle</strong>, <strong>useMimicOffset</strong>, <strong>useMimicRotation</strong></p>
 
@@ -887,11 +902,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>addOwnDimensionsToMimic</strong>, <strong>addOwnScaleToMimic</strong>, <strong>addOwnStartToMimic</strong>, <strong>addOwnHandleToMimic</strong>, <strong>addOwnOffsetToMimic</strong>, <strong>addOwnRotationToMimic</strong></p>
 
@@ -931,11 +946,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -944,11 +959,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>updateMimicSubscribers</code></p>
 

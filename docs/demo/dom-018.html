@@ -560,11 +560,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-002a.html">
-                  ./demo/filters-002a.js
-                </a>
-              
-                
                 <a class="source" href="filters-003.html">
                   ./demo/filters-003.js
                 </a>
@@ -712,6 +707,31 @@
                 
                 <a class="source" href="filters-032.html">
                   ./demo/filters-032.js
+                </a>
+              
+                
+                <a class="source" href="filters-033.html">
+                  ./demo/filters-033.js
+                </a>
+              
+                
+                <a class="source" href="filters-034.html">
+                  ./demo/filters-034.js
+                </a>
+              
+                
+                <a class="source" href="filters-035.html">
+                  ./demo/filters-035.js
+                </a>
+              
+                
+                <a class="source" href="filters-036.html">
+                  ./demo/filters-036.js
+                </a>
+              
+                
+                <a class="source" href="filters-037.html">
+                  ./demo/filters-037.js
                 </a>
               
                 
@@ -932,6 +952,11 @@
                 
                 <a class="source" href="snippets-006.html">
                   ./demo/snippets-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-001.html">
+                  ./demo/temp-001.js
                 </a>
               
                 
@@ -1511,7 +1536,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> dragging !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; dragging) {
 
-            <span class="hljs-keyword">if</span> (dragging.<span class="hljs-property">artefact</span> &amp;&amp; dragging.<span class="hljs-property">artefact</span>.<span class="hljs-property">name</span> === <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animated-block&#x27;</span>)) tweeny.<span class="hljs-title function_">run</span>();
+            <span class="hljs-keyword">if</span> (dragging.<span class="hljs-property">artefact</span>.<span class="hljs-property">name</span> === <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animated-block&#x27;</span>)) tweeny.<span class="hljs-title function_">run</span>();
         }
     }
 };</pre></div></div>
@@ -1543,10 +1568,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>Gradient animation is not automatically handled by the Display cycle</p>
-<ul>
-<li>instead we have to trigger it manually</li>
-</ul>
+              <p>We’re animating the ‘pipes’ gradient by means of a tween. This checks to see if we have to invoke that tween as a result of user interaction</p>
 
             </div>
             

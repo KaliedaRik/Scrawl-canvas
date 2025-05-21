@@ -1004,6 +1004,115 @@
             
         </li>
         
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p><strong>initializeDomInputs</strong> - exported helper function</p>
+<ul>
+<li>Argument is an Array of arrays, where each element Array holds the following data:</li>
+<li><code>[kind: String, selector: String, value: String | number]</code>, where</li>
+<li><code>kind</code> defines the kind of element to be processed - <code>input</code>, <code>select</code>, <code>button</code>, <code>element</code></li>
+<li><code>selector</code> - for <code>input</code>, <code>select</code> and <code>button</code> elements, that element’s unique <code>id</code> value; for anything else, a valid CSS query selector string</li>
+<li><code>value</code> - the initial value to set the input to - for <code>select</code> this will be a number</li>
+<li>Returns an object of elements keyed to the selector string</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">initializeDomInputs</span> = (<span class="hljs-params">items</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> results = {};
+
+    items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> [kind, selector, value] = item;
+
+        <span class="hljs-keyword">switch</span> (kind) {
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;input&#x27;</span> : {
+
+                <span class="hljs-keyword">if</span> (value.<span class="hljs-property">substring</span>) {
+
+                    <span class="hljs-comment">/** <span class="hljs-doctag">@type</span> {<span class="hljs-type">HTMLInputElement</span>} */</span>
+                    <span class="hljs-keyword">const</span> S = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${selector}</span>`</span>);
+
+                    <span class="hljs-keyword">if</span> (S) {
+
+                        S.<span class="hljs-property">value</span> = value;
+                        results[selector] = S;
+                    }
+                    <span class="hljs-keyword">else</span> results[selector] = {};
+                }
+                <span class="hljs-keyword">else</span> results[selector] = {};
+                <span class="hljs-keyword">break</span>;
+            }
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;select&#x27;</span> : {
+
+                <span class="hljs-keyword">if</span> (value.<span class="hljs-property">toFixed</span>) {
+
+                    <span class="hljs-comment">/** <span class="hljs-doctag">@type</span> {<span class="hljs-type">HTMLSelectElement</span>} */</span>
+                    <span class="hljs-keyword">const</span> S = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${selector}</span>`</span>);
+
+                    <span class="hljs-keyword">if</span> (S) {
+
+                        S.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = value;
+                        results[selector] = S;
+                    }
+                    <span class="hljs-keyword">else</span> results[selector] = {};
+                }
+                <span class="hljs-keyword">else</span> results[selector] = {};
+                <span class="hljs-keyword">break</span>;
+            }
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;button&#x27;</span> : {
+
+                <span class="hljs-keyword">if</span> (value.<span class="hljs-property">substring</span>) {
+
+                    <span class="hljs-comment">/** <span class="hljs-doctag">@type</span> {<span class="hljs-type">HTMLButtonElement</span>} */</span>
+                    <span class="hljs-keyword">const</span> S = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${selector}</span>`</span>);
+
+                    <span class="hljs-keyword">if</span> (S) {
+
+                        S.<span class="hljs-property">textContent</span> = value;
+                        results[selector] = S;
+                    }
+                    <span class="hljs-keyword">else</span> results[selector] = {};
+                }
+                <span class="hljs-keyword">else</span> results[selector] = {};
+                <span class="hljs-keyword">break</span>;
+            }
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;element&#x27;</span> : {
+
+                <span class="hljs-comment">/** <span class="hljs-doctag">@type</span> {<span class="hljs-type">HTMLElement</span>} */</span>
+                <span class="hljs-keyword">const</span> S = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`<span class="hljs-subst">${selector}</span>`</span>);
+
+                <span class="hljs-keyword">if</span> (S) results[selector] = S;
+                <span class="hljs-keyword">else</span> results[selector] = {};
+                <span class="hljs-keyword">break</span>;
+            }
+
+            <span class="hljs-keyword">default</span> : {
+
+                <span class="hljs-comment">/** <span class="hljs-doctag">@type</span> {<span class="hljs-type">HTMLElement</span>} */</span>
+                <span class="hljs-keyword">const</span> S = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${selector}</span>`</span>);
+
+                <span class="hljs-keyword">if</span> (S) results[selector] = S;
+                <span class="hljs-keyword">else</span> results[selector] = {};
+            }
+        }
+    });
+
+    <span class="hljs-keyword">return</span> results;
+};</pre></div></div>
+            
+        </li>
+        
     </ul>
   </div>
 </body>

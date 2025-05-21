@@ -578,26 +578,6 @@
 <p>Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - <strong>animationLoop</strong> - for all animation objects.</p>
 <p><a href="../factory/animation.html">Animation objects</a> are Scrawl-canvas objects with a <strong>fn</strong> attribute; the function will be invoked once per RAF cycle.</p>
 <p>The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the <strong>doAnimation</strong> flag remains true.</p>
-<p>To stop the RAF:</p>
-<p><code>scrawl.stopCoreAnimationLoop()</code></p>
-<p>To restart the RAF after it has been stopped:</p>
-<p><code>scrawl.startCoreAnimationLoop()</code></p>
-<p>… Functionality tested in <a href="../../demo/dom-009.html">Demo DOM-009</a></p>
-<p>As part of initialization, two animation objects are created and added to the <strong>animate</strong> array:</p>
-<ul>
-<li><strong>coreTickersAnimation</strong> (order: 0) - which will invoke all ticker animations currently subscribed to it - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li><strong>coreListenersTracker</strong> (order: 0) - which channels window-based events (mouse/touch movement, viewport resize, scrolling) to Scrawl-canvas objects that need to take action in response (thus choking such actions to a maximum 60-per-second) - <a href="./userInteraction.html">core/userInteraction.js</a></li>
-</ul>
-<p>Additional animations can be created via a number of ‘make’ functions:</p>
-<ul>
-<li>makeAnimation (runs by default) - <a href="../factory/animation.html">factory/animation.js</a></li>
-<li>makeRender (runs by default) - <a href="../factory/renderAnimation.html">factory/renderAnimation.js</a></li>
-<li>makeTicker (halted by default) - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li>makeTween (halted by default) - <a href="../factory/tween.html">factory/tween.js</a></li>
-</ul>
-<p>These objects can be added to the <em>animate</em> Array by invoking their <strong>run</strong> function, and removed by invoking their <strong>halt</strong> function.</p>
-<p>The order in which animations objects run during each RAF cycle (= <strong>Display cycle</strong>) can be (partly) determined by the objects’ <strong>order</strong> attribute: those with a lower order value will be invoked before those with a higher value.</p>
-<p>Note that ticker/tween animations will all run before other animations (order differences between tickers/tween objects will be respected).</p>
 
             </div>
             
@@ -761,10 +741,11 @@
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = animate_sorted.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">const</span> a = animate_sorted[i],
-            now = <span class="hljs-title function_">_now</span>();
+        <span class="hljs-keyword">const</span> a = animate_sorted[i];
 
-        <span class="hljs-keyword">if</span> (a.<span class="hljs-property">chokedAnimation</span>) {</pre></div></div>
+        <span class="hljs-keyword">if</span> (a.<span class="hljs-property">chokedAnimation</span>) {
+
+            <span class="hljs-keyword">const</span> now = <span class="hljs-title function_">_now</span>();</pre></div></div>
             
         </li>
         

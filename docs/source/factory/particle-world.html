@@ -575,20 +575,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="world-factory">World factory</h1>
-<p>The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:</p>
-<ul>
-<li><a href="./particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="../untracked-factory/vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
-<li><a href="../untracked-factory/particleHistory.html">History arrays</a> which can be pooled (reused) to cut down on Array creation and distruction during the animation.</li>
-<li><a href="./particleForce.html">Force objects</a> which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a <strong>gravity</strong> force object is pre-defined by Scrawl-canvas.</li>
-<li><a href="./particleSpring.html">Spring objects</a> used to define a constraint (connection) between two particles in a system.</li>
-<li><a href="./particleWorld.html">World objects</a> where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.</li>
-</ul>
-<p>We do not have to handle particle generation and manipulation ourselves. Instead, Scrawl-canvas gives us three dedicated <strong>entitys</strong> which we use to add particle animation effects to the canvas scene. These entitys are:</p>
-<ul>
-<li><a href="./tracer.html">Tracer</a> - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.</li>
-<li><a href="./emitter.html">Emitter</a> - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.</li>
-<li><a href="./net.html">Net</a> - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.</li>
-</ul>
+<p>World objects can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.</p>
 
             </div>
             

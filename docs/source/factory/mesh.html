@@ -580,17 +580,6 @@
 <ul>
 <li>Every Mesh object requires a <a href="./net.html">Net</a> entity create the grid that it uses for transforming its image.</li>
 <li>A Mesh entity also requires a <a href="./picture.html">Picture</a> entity to act as its image source.</li>
-<li>Meshes can (in theory) use CSS color Strings for their strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
-<li>They can (in theory) use <strong>Anchor</strong> objects for user navigation.</li>
-<li>They can (in theory) be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
-<li>They can (in theory) be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
-<li>Meshes can (in theory) be cloned, and killed.</li>
-</ul>
-<p><em><strong>Note that this is experimental technology!</strong></em></p>
-<ul>
-<li>The Mesh entity code base shares many similarities to that of the Loom entity; some of the code has been copied over from that file directly.</li>
-<li>Current code does not use <a href="./mixin/position.html">position</a> or <a href="./mixin/entity.html">entity</a> mixins, meaning much of the code here has been copied over from those mixins (DRY issue).</li>
-<li>TODO: packet management, clone and kill functionality not yet tested. Much of the other functionality also lacks tests.</li>
 </ul>
 
             </div>
@@ -610,7 +599,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors, group } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, pushUnique, xta, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, pushUnique, xta, λ<span class="hljs-literal">null</span>, λcloneError, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
 
@@ -1096,7 +1085,7 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λcloneError;</pre></div></div>
             
         </li>
         

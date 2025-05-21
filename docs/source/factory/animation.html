@@ -576,17 +576,6 @@
               </div>
               <h1 id="animation-factory">Animation factory</h1>
 <p>Animations lie at the heart of Scrawl-canvas functionality. While static <a href="./canvas.html">Canvas</a> and <a href="./stack.html">Stack</a> displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.</p>
-<p>There are a number of ways to create an Animation object:</p>
-<ul>
-<li><code>scrawl.makeAnimation</code> - as coded by this factory - will supply a very basic Animation object.</li>
-</ul>
-<p>Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier:</p>
-<ul>
-<li><code>scrawl.makeRender</code> - use this function to create an animation object which will <strong>control the Display cycle for a canvas or stack</strong>. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.</li>
-<li><code>scrawl.makeTween</code> and <code>scrawl.makeTicker</code> - both of these factory functions use animation objects under the hood</li>
-<li><code>scrawl.makeSnippet</code> - used in snippet files, the factory function will automatically add an animation object to the snippet, alongside much of the functionality supplied by <code>makeRender</code>. It will also create an <code>IntersectionObserver</code> on the window object that will automatically run/stop the animation object dependant on its canvas element’s position in the browser/device viewport.</li>
-</ul>
-<p>Animation objects can be controlled through some simple functions: <code>run</code> to start the animation running; <code>halt</code> to stop it; and <code>kill</code> to remove it from the system.</p>
 <p>NOTE that Animation objects do not take part in Scrawl-canvas’s <code>packet</code> save-and-load functionality, as a result of which they cannot be cloned.</p>
 
             </div>
@@ -606,7 +595,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, mergeOver, xt, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, xt, λ<span class="hljs-literal">null</span>, λcloneError, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/system-flags.js&#x27;</span>;
 
@@ -849,7 +838,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λcloneError;</pre></div></div>
             
         </li>
         

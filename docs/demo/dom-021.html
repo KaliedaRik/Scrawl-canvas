@@ -560,11 +560,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-002a.html">
-                  ./demo/filters-002a.js
-                </a>
-              
-                
                 <a class="source" href="filters-003.html">
                   ./demo/filters-003.js
                 </a>
@@ -712,6 +707,31 @@
                 
                 <a class="source" href="filters-032.html">
                   ./demo/filters-032.js
+                </a>
+              
+                
+                <a class="source" href="filters-033.html">
+                  ./demo/filters-033.js
+                </a>
+              
+                
+                <a class="source" href="filters-034.html">
+                  ./demo/filters-034.js
+                </a>
+              
+                
+                <a class="source" href="filters-035.html">
+                  ./demo/filters-035.js
+                </a>
+              
+                
+                <a class="source" href="filters-036.html">
+                  ./demo/filters-036.js
+                </a>
+              
+                
+                <a class="source" href="filters-037.html">
+                  ./demo/filters-037.js
                 </a>
               
                 
@@ -932,6 +952,11 @@
                 
                 <a class="source" href="snippets-006.html">
                   ./demo/snippets-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-001.html">
+                  ./demo/temp-001.js
                 </a>
               
                 
@@ -1260,11 +1285,15 @@ scrawl.<span class="hljs-title function_">makeLabel</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>The canvas gets resized by the browser but in the popover context this doesn’t get picked up (until the user interacts with the web page, for example by moving the mouse cursor). So we need to manually invoke the canvas wrapper’s reaction to the change ourselves.</p>
+              <p>The canvas gets resized by the browser but in the popover context this doesn’t get picked up.</p>
+<ul>
+<li>The <code>reset</code> function triggers the canvas to recalculate its current values outside of the Scrawl-canvas display cycle</li>
+<li>This will then trigger associated Cells and entitys to recalculate themselves appropriately</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">apply</span>();
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">reset</span>();
     }
 
     <span class="hljs-keyword">else</span> {

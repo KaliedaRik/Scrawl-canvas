@@ -577,7 +577,6 @@
               <h1 id="button-factory">Button factory</h1>
 <p>In Scrawl-canvas, a Button object holds all the data and functionality required to turn an artefact into a tab-able button. That functionality gets defined in this file.</p>
 <p>Scrawl-canvas uses the <a href="../mixin/button.html">Button mixin</a> to add button functionality to artefacts - in particular canvas entitys. This (alongside Anchor objects) gives us a interactive canvas containing dynamic, clickable regions.</p>
-<p>We use buttons to trigger a desired action. This can be achieved by setting the button object’s <strong>clickAction</strong> attribute to a function.</p>
 <p>NOTE - generating a button will have an impact on the DOM document code, as an (off-viewport) &lt;button&gt; element will be added to it.</p>
 <p>The <strong>makeButton</strong> function is not exposed to the ‘scrawl’ object, thus objects can only be created indirectly. Buttons can be saved, cloned and killed as part of wider save/kill/clone functionality.</p>
 

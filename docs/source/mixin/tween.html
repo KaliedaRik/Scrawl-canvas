@@ -616,7 +616,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_TICKER</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -631,8 +631,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">TARGET_SECTIONS</span> = [<span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;group&#x27;</span>, <span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationtickers&#x27;</span>, <span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;tween&#x27;</span>, <span class="hljs-string">&#x27;styles&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>],
-    <span class="hljs-variable constant_">UNNAMED</span> = <span class="hljs-string">&#x27;unnamed&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">TARGET_SECTIONS</span> = [<span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;group&#x27;</span>, <span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationtickers&#x27;</span>, <span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;tween&#x27;</span>, <span class="hljs-string">&#x27;styles&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -858,7 +857,7 @@
 
             <span class="hljs-keyword">const</span> t = animationtickers[ticker];
 
-            <span class="hljs-keyword">if</span> (t) t.<span class="hljs-title function_">kill</span>();
+            <span class="hljs-keyword">if</span> (t) t.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">false</span>);
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ticker) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeFromTicker</span>(ticker);
 
@@ -901,10 +900,10 @@
             
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">targets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>);
+        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>];
     };
 
-    S.<span class="hljs-property">targets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = []</span>) {
+    S.<span class="hljs-property">targets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setTargets</span>(item);
     };</pre></div></div>
@@ -991,6 +990,8 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">addToTicker</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
+        <span class="hljs-keyword">if</span> (item &amp;&amp; !item.<span class="hljs-property">substring</span> &amp;&amp; item.<span class="hljs-property">name</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_TICKER</span>) item = item.<span class="hljs-property">name</span>;
+
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
             <span class="hljs-keyword">const</span> oldT = <span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span>,
@@ -1023,7 +1024,8 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">removeFromTicker</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        item = (<span class="hljs-title function_">xt</span>(item)) ? item : <span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span>;
+        <span class="hljs-keyword">if</span> (item &amp;&amp; !item.<span class="hljs-property">substring</span> &amp;&amp; item.<span class="hljs-property">name</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_TICKER</span>) item = item.<span class="hljs-property">name</span>;
+        <span class="hljs-keyword">if</span> (!item) item = <span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span>;
 
         <span class="hljs-keyword">if</span> (item) {
 
@@ -1036,7 +1038,18 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
             }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-    };</pre></div></div>
+    };
+
+    <span class="hljs-keyword">const</span> populateTargetArrays = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+
+        <span class="hljs-keyword">const</span> targetnames = <span class="hljs-title function_">requestArray</span>(),
+            targets = <span class="hljs-title function_">requestArray</span>();
+
+        <span class="hljs-keyword">const</span> items = args.<span class="hljs-title function_">flat</span>(<span class="hljs-title class_">Infinity</span>);
+
+        items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) {</pre></div></div>
             
         </li>
         
@@ -1047,39 +1060,11 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><code>setTargets</code></p>
+              <p>Handle bespoke functions with a set function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setTargets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-
-        items = [].<span class="hljs-title function_">concat</span>(items);
-
-        <span class="hljs-keyword">const</span> newTargets = <span class="hljs-title function_">requestArray</span>();
-
-        items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
-
-                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item.<span class="hljs-property">set</span>)) newTargets.<span class="hljs-title function_">push</span>(item);
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; <span class="hljs-title function_">xt</span>(item.<span class="hljs-property">name</span>)) newTargets.<span class="hljs-title function_">push</span>(item);
-            <span class="hljs-keyword">else</span> {
-
-                <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">locateTarget</span>(item);
-
-                <span class="hljs-keyword">if</span> (result) newTargets.<span class="hljs-title function_">push</span>(result);
-            }
-        });
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span> = [];
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(...newTargets);
-
-        <span class="hljs-title function_">releaseArray</span>(newTargets);
-
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item) &amp;&amp; <span class="hljs-title function_">isa_fn</span>(item.<span class="hljs-property">set</span>)) targets.<span class="hljs-title function_">push</span>(item);</pre></div></div>
             
         </li>
         
@@ -1090,32 +1075,20 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p><code>addToTargets</code></p>
+              <p>Handle strings</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">addToTargets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; !targetnames.<span class="hljs-title function_">includes</span>(item)) {
 
-        items = [].<span class="hljs-title function_">concat</span>(items);
+                    <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">locateTarget</span>(item);
 
-        <span class="hljs-keyword">let</span> result;
+                    <span class="hljs-keyword">if</span> (result) {
 
-        items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-variable constant_">FUNCTION</span>) {
-
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item.<span class="hljs-property">set</span> === <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(item);
-            }
-            <span class="hljs-keyword">else</span> {
-
-                result = <span class="hljs-title function_">locateTarget</span>(item);
-
-                <span class="hljs-keyword">if</span> (result) <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(result);
-            }
-        }, <span class="hljs-variable language_">this</span>);
-
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-    };</pre></div></div>
+                        targetnames.<span class="hljs-title function_">push</span>(item);
+                        targets.<span class="hljs-title function_">push</span>(result);
+                    }
+                }</pre></div></div>
             
         </li>
         
@@ -1126,60 +1099,21 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p><code>removeFromTargets</code></p>
+              <p>Handle SC objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">removeFromTargets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; <span class="hljs-title function_">isa_fn</span>(item.<span class="hljs-property">set</span>) &amp;&amp; item.<span class="hljs-property">name</span> &amp;&amp; !targetnames.<span class="hljs-title function_">includes</span>(item.<span class="hljs-property">name</span>)) {
 
-        items = [].<span class="hljs-title function_">concat</span>(items);
-
-        <span class="hljs-keyword">const</span> identifiers = <span class="hljs-title function_">requestArray</span>(),
-            newTargets = [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>);
-
-        newTargets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
-
-            <span class="hljs-keyword">const</span> type = target.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
-                name = target.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">UNNAMED</span>;
-
-            <span class="hljs-keyword">if</span> (type !== <span class="hljs-variable constant_">UNKNOWN</span> &amp;&amp; name !== <span class="hljs-variable constant_">UNNAMED</span>) identifiers.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>);
-        });
-
-        items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> myObj;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-variable constant_">FUNCTION</span>) myObj = item;
-            <span class="hljs-keyword">else</span> myObj = <span class="hljs-title function_">locateTarget</span>(item);
-
-            <span class="hljs-keyword">if</span> (myObj) {
-
-                <span class="hljs-keyword">const</span> type = myObj.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
-                    name = myObj.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">UNNAMED</span>;
-
-                <span class="hljs-keyword">if</span> (type !== <span class="hljs-variable constant_">UNKNOWN</span> &amp;&amp; name !== <span class="hljs-variable constant_">UNNAMED</span>) {
-
-                    <span class="hljs-keyword">const</span> objName = <span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>,
-                        doRemove = identifiers.<span class="hljs-title function_">indexOf</span>(objName);
-
-                    <span class="hljs-keyword">if</span> (doRemove &gt;= <span class="hljs-number">0</span>) newTargets[doRemove] = <span class="hljs-literal">false</span>;
+                    targetnames.<span class="hljs-title function_">push</span>(item.<span class="hljs-property">name</span>);
+                    targets.<span class="hljs-title function_">push</span>(item);
                 }
             }
         });
+        <span class="hljs-title function_">releaseArray</span>(targetnames);
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span> = [];
-        <span class="hljs-keyword">const</span> t = <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>;
-        t.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-
-        newTargets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (target) t.<span class="hljs-title function_">push</span>(target);
-        }, <span class="hljs-variable language_">this</span>);
-
-        <span class="hljs-title function_">releaseArray</span>(identifiers);
-
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-    };</pre></div></div>
+        <span class="hljs-keyword">return</span> targets;
+    }</pre></div></div>
             
         </li>
         
@@ -1190,15 +1124,113 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
+              <p><code>setTargets</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setTargets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+
+        <span class="hljs-keyword">const</span> targets = <span class="hljs-title function_">populateTargetArrays</span>(args);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(...targets);
+
+        <span class="hljs-title function_">releaseArray</span>(targets);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p><code>addToTargets</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">addToTargets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+
+        <span class="hljs-keyword">const</span> targets = <span class="hljs-title function_">populateTargetArrays</span>(args);
+
+        <span class="hljs-keyword">const</span> currentTargets = [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>];
+
+        <span class="hljs-keyword">const</span> currentTargetNames = currentTargets.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>);
+
+        targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (!t.<span class="hljs-property">name</span>) currentTargets.<span class="hljs-title function_">push</span>(t);
+
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!currentTargetNames.<span class="hljs-title function_">includes</span>(t.<span class="hljs-property">name</span>)) currentTargets.<span class="hljs-title function_">push</span>(t);
+        });
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(...currentTargets);
+
+        <span class="hljs-title function_">releaseArray</span>(targets);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p><code>removeFromTargets</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">removeFromTargets</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+
+        <span class="hljs-keyword">const</span> targets = <span class="hljs-title function_">populateTargetArrays</span>(args),
+            currentTargets = [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>],
+            currentTargetNames = currentTargets.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> targetsToRemove = <span class="hljs-title function_">requestArray</span>(),
+            functionsToKeep = <span class="hljs-title function_">requestArray</span>();
+
+        targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (!t.<span class="hljs-property">name</span>) functionsToKeep.<span class="hljs-title function_">push</span>(t);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentTargetNames.<span class="hljs-title function_">includes</span>(t.<span class="hljs-property">name</span>)) targetsToRemove.<span class="hljs-title function_">push</span>(t.<span class="hljs-property">name</span>);
+        });
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(...functionsToKeep);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(...currentTargets.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (!t.<span class="hljs-property">name</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">return</span> !targetsToRemove.<span class="hljs-title function_">includes</span>(t.<span class="hljs-property">name</span>);
+        }));
+
+        <span class="hljs-title function_">releaseArray</span>(targets, targetsToRemove, functionsToKeep);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
               <p><code>checkForTarget</code></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">checkForTarget</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">substring</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-property">name</span> === item);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-property">name</span> === item);
+        <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">name</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-property">name</span> === item.<span class="hljs-property">name</span>);
     };
 
     P.<span class="hljs-property">run</span> = λ<span class="hljs-literal">null</span>;

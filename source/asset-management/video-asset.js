@@ -7,7 +7,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, generateUniqueString, mergeOver, xt, λcloneError, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, mergeOver, λcloneError, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -370,7 +370,7 @@ export const importMediaStream = function (items = Ωempty) {
                 // For audio-only video
                 if (vid.isAudioOnly) {
 
-                    let actuals = mediaStream.getAudioTracks();
+                    const actuals = mediaStream.getAudioTracks();
 
                     if (_isArray(actuals) && actuals[0]) {
 
@@ -382,7 +382,7 @@ export const importMediaStream = function (items = Ωempty) {
                 // For video-only video
                 else {
 
-                    let actuals = mediaStream.getVideoTracks();
+                    const actuals = mediaStream.getVideoTracks();
                     let data;
 
                     if (_isArray(actuals) && actuals[0]) {

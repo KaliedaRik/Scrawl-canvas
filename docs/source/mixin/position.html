@@ -575,14 +575,20 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="position-mixin">Position mixin</h1>
-<p>This mixin defines the key attributes and functionality of Scrawl-canvas <strong>artefact objects</strong>.</p>
-<p>We define an artefact as something that can be displayed in a Scrawl-canvas <a href="../factory/stack.html">Canvas</a> or <a href="../factory/stack.html">Stack</a> wrapper - both of which wrap DOM elements in the web page document - &lt;canvas&gt;, and other DOM elements (most commonly a &lt;div&gt; element), respectively.</p>
-<ul>
-<li>We call canvas based artefacts <strong>entity objects</strong> - these objects represent a shape, path or image drawn in the canvas.</li>
-<li>Entitys include: <a href="../factory/block.html">Block</a>; <a href="../factory/grid.html">Grid</a>; <a href="../factory/loom.html">Loom</a>; <a href="../factory/label.html">Label</a> for text; <a href="../factory/picture.html">Picture</a> for images, videos, etc; <a href="../factory/shape.html">Shape</a>s of various types; <a href="../factory/wheel.html">Wheel</a>, etc.</li>
-<li><strong>Other artefacts</strong> live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and <a href="../factory/element.html">Element</a> wrappers for other direct child elements.</li>
-</ul>
-<h5 id="positioning">Positioning</h5>
+<p>This mixin defines the key attributes and functionality of Scrawl-canvas <strong>artefact</strong> and <strong>entity</strong> objects.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <h5 id="positioning">Positioning</h5>
 <p>Artefacts break away from the normal flow mechanisms of the HTML document; instead they are explicitly positioned within their containers in a variety of ways:</p>
 <ul>
 <li><strong>absolute</strong> positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (<code>[0, 0]</code>, <code>[347, 26.4]</code>, etc).</li>
@@ -711,11 +717,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-2">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -734,11 +740,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-3">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Shared constants</p>
 
@@ -749,11 +755,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Local constants</p>
 
@@ -768,11 +774,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="export-function">Export function</h4>
 
@@ -783,11 +789,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
@@ -798,11 +804,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>group</strong> - every Scrawl-canvas artefact should belong to at least one Group, and can belong to more than one Group. Groups can be used for a variety of purposes, and play a major role in the <strong>Display cycle</strong> and in <strong>collision detection</strong>.</p>
 <ul>
@@ -841,11 +847,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The <strong>visibility</strong> attribute is a boolean flag (default: true); when the flag is set, the Display cycle functionality will run on the artefact. If the attribute’s value is false, then the Display cycle functionality will ignore the artefact. This has the following effects:</p>
 <ul>
@@ -860,11 +866,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The <strong>order</strong> pseudo-attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. Since v8.9.2 this attribute has been broken into two - <strong>calculateOrder</strong> and <strong>stampOrder</strong> so that the processing order of artefacts can be different in the <code>prestamp</code> and <code>stamp</code> parts of the <code>compile</code> step of the Display cycle.</p>
 <ul>
@@ -884,11 +890,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>The <strong>start</strong> attribute represents an artefact’s <em><strong>Rotation-Reflexion point</strong></em>, and is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>, placing the artifact at the container object’s (Cell, Stack) top-left corner.</p>
 <pre><code><span class="hljs-keyword">let</span> myBlock = scrawl.<span class="hljs-title function_">makeBlock</span>({
@@ -927,11 +933,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>The <strong>handle</strong> attribute represents a distance from the artefact’s <em><strong>Rotation-Reflexion</strong></em> point, measured along the <em><strong>artefact’s local axes</strong></em>. It is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>.</p>
 <ul>
@@ -945,11 +951,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>The <strong>offset</strong> attribute represents an offset from the artefact’s <em><strong>Rotation-Reflexion</strong></em> point, measured along the <em><strong>container’s axes</strong></em>. It is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>.</p>
 <ul>
@@ -964,11 +970,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>The <strong>dimensions</strong> attribute represents the artefact’s <strong>width</strong> and <strong>height</strong>. It is held in a <code>[w, h]</code> Coordinate Array. The default values vary between different types of artefact.</p>
 <ul>
@@ -982,11 +988,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>pivoted</strong> - internal Array holding details of the artefacts using this artefact as their pivot reference.</p>
 
@@ -997,11 +1003,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>mimicked</strong> - internal Array holding details of the artefacts using this artefact as their mimic reference.</p>
 
@@ -1012,11 +1018,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>particle</strong> - attribute to store any particle the artefact mey be using for its position reference</p>
 
@@ -1027,11 +1033,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>lockTo</strong> - <code>[x-lock, y-lock]</code> Array; locks can be set to: <code>start</code> (the default), <code>pivot</code>, <code>path</code>, <code>mimic</code>, <code>particle</code>, or <code>mouse</code>.</p>
 <ul>
@@ -1045,11 +1051,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>bringToFrontOnDrag</strong> - flag which, when set (default), will force the artefact currently being dragged to appear on top of other artefacts</p>
 
@@ -1060,11 +1066,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>ignoreDragForX</strong>, <strong>ignoreDragForY</strong> - flag which, when set, will skip the drag effects for that particular direction</p>
 
@@ -1076,11 +1082,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>All artefacts (except compound entities such as Loom) can be scaled by setting their <strong>scale</strong> attribute to an appropriate float Number value:</p>
 <ul>
@@ -1097,11 +1103,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>roll</strong> - float Number representing the artefact’s rotation around the <code>z-axis</code> of its <em><strong>Rotation-Reflection point</strong></em>.</p>
 <ul>
@@ -1116,11 +1122,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h5 id="animation-speed">Animation speed</h5>
 <p>Scrawl-canvas assumes that an artefact will be <em>ready for anything</em>. However if we know beforehand that an artefact will not be requiring certain functionalities, we can switch them off; this will help make the artefact render more quickly. These <strong>noXXX</strong> flags include:</p>
@@ -1148,11 +1154,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>purge</strong> - ?</p>
 
@@ -1165,11 +1171,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1205,11 +1211,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>handles both anchor and button objects</p>
 
@@ -1235,11 +1241,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality defined here</p>
@@ -1249,11 +1255,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1266,11 +1272,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Remove artefact from all groups</p>
 
@@ -1284,11 +1290,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>If the artefact has an anchor, it needs to be removed</p>
 
@@ -1299,11 +1305,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>If the artefact has a button, it needs to be removed</p>
 
@@ -1314,11 +1320,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Remove from other artefacts</p>
 
@@ -1348,11 +1354,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Remove from tweens and actions targets arrays</p>
 
@@ -1366,11 +1372,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Factory-specific actions required to complete the kill</p>
 
@@ -1381,11 +1387,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Remove artefact from the Scrawl-canvas library</p>
 
@@ -1399,11 +1405,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Specific factories can overwrite this function to perform additional actions required to clean themselves from the Scrawl-canvas system</p>
 
@@ -1414,11 +1420,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <ul>
@@ -1434,11 +1440,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>position</strong>, <strong>positionX</strong>, <strong>positionY</strong></p>
 <ul>
@@ -1463,11 +1469,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>start</strong>, <strong>startX</strong>, <strong>startY</strong></p>
 
@@ -1527,11 +1533,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>handle</strong>, <strong>handleX</strong>, <strong>handleY</strong></p>
 
@@ -1591,11 +1597,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>offset</strong>, <strong>offsetX</strong>, <strong>offsetY</strong></p>
 
@@ -1655,11 +1661,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>dimensions</strong>, <strong>width</strong>, <strong>height</strong></p>
 
@@ -1719,11 +1725,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>order</strong> - the <code>get</code> function returns the <code>stampOrder</code> value; while the <code>set</code> function applies the argument value to both the <code>calculateOrder</code> and<code>stampOrder</code> attributes</p>
 
@@ -1737,16 +1743,33 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">calculateOrder</span> = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> = val;
+
+        <span class="hljs-keyword">const</span> g = <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>;
+        <span class="hljs-keyword">if</span> (g &amp;&amp; g.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) g.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+    };
+    S.<span class="hljs-property">calculateOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">calculateOrder</span> = val;
+
+        <span class="hljs-keyword">const</span> g = <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>;
+        <span class="hljs-keyword">if</span> (g &amp;&amp; g.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) g.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+    };
+    S.<span class="hljs-property">stampOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> = val;
+
+        <span class="hljs-keyword">const</span> g = <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>;
+        <span class="hljs-keyword">if</span> (g &amp;&amp; g.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) g.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>particle</strong></p>
 
@@ -1775,11 +1798,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><strong>lockXTo</strong>, <strong>lockYTo</strong>, <strong>lockTo</strong></p>
 
@@ -1816,11 +1839,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>roll</strong></p>
 
@@ -1844,11 +1867,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>scale</strong></p>
 
@@ -1872,11 +1895,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>host</strong> - internal function</p>
 
@@ -1902,11 +1925,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>group</strong></p>
 
@@ -1941,11 +1964,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>noFilters</strong></p>
 
@@ -1960,11 +1983,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1973,11 +1996,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>purgeArtefact</code> - Artefact objects gather many attributes during their creation. Many of these may not be subsequentlyt used - for instance, if the artefact is never going to mimic another artefact, then it doesn’t need all the attributes and flags associated with mimic functionality. In such cases, we can purge the artefact object of those attributes to free up a tiny bit of extra memory</p>
 <ul>
@@ -2051,11 +2074,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>initializePositions</code> - Internal function called by all artefact factories</p>
 <ul>
@@ -2132,11 +2155,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function used by positional and dimensional setter (S.) functions. Arguments are:</p>
 <ul>
@@ -2180,11 +2203,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>setDeltaCoordinateHelper</code> - internal helper function used by positional and dimensional delta-setter (D.) functions. Arguments are:</p>
 <ul>
@@ -2230,11 +2253,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - internal function - return the <strong>host</strong> object. Hosts can be various things, for instance:</p>
 <ul>
@@ -2267,11 +2290,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>getHere</code> - the <strong>here</strong> parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling <code>updateUiSubscribedElement</code> - thus not defined or updated by the artefact itself.</p>
 <pre><code>here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}
@@ -2312,11 +2335,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 <p>Clean functions are triggered by artefacts as they prepare to stamp themselves into their host environment. The decision to trigger a clean function is mediated by various <code>dirty...</code> flags, which get set when the artefact is updated via <code>set</code> and <code>deltaSet</code> calls.</p>
@@ -2326,11 +2349,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>cleanPosition</code> - internal helper function used by <code>cleanStart</code>, <code>cleanHandle</code> and <code>cleanOffset</code> functions</p>
 
@@ -2356,11 +2379,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>cleanScale</code> - set the artefact’s <strong>currentScale</strong> value.</p>
 <ul>
@@ -2411,11 +2434,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>cleanDimensions</code> - calculate the artefact’s <strong>currentDimensions</strong> Array</p>
 <ul>
@@ -2482,11 +2505,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwritten by some artefact factory files</p>
 
@@ -2497,11 +2520,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>cleanLock</code> - clean function for <strong>lockTo</strong> array</p>
 
@@ -2518,11 +2541,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>cleanStart</code> - calculate the artefact’s <strong>currentStart</strong> Array</p>
 <ul>
@@ -2564,11 +2587,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>cleanOffset</code> - calculate the artefact’s <strong>currentOffset</strong> Array</p>
 <ul>
@@ -2612,11 +2635,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>cleanHandle</code> - calculate the artefact’s <strong>currentHandle</strong> Array</p>
 <ul>
@@ -2640,11 +2663,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>cleanRotation</code> - calculate the artefact’s <strong>currentRotation</strong> value</p>
 <ul>
@@ -2699,11 +2722,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>This only affects artefacts using EnhancedLabel entitys as their pivots</p>
 
@@ -2723,11 +2746,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>If this artefact is being mimicked by other artefacts, it needs to check its rotation values on every iteration of the display cycle</p>
 
@@ -2741,11 +2764,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>cleanStampPositions</code></p>
 <ul>
@@ -2790,9 +2813,6 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
                 ignoreDragForY,
                 isBeingDragged,
                 lockTo,
-                mimic,
-                path,
-                pivot,
                 pivotCorner,
                 pivotPin,
                 pivotIndex,
@@ -2800,8 +2820,67 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
                 useMimicStart,
             } = <span class="hljs-variable language_">this</span>;
 
+            <span class="hljs-keyword">let</span> { mimic, path, pivot } = <span class="hljs-variable language_">this</span>;
+
             <span class="hljs-keyword">let</span> physParticle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">particle</span>,
-                textIndex;
+                textIndex;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
+              </div>
+              <p>To help fix the bug where user has pivoted to an artefact which they have not yet defined</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (pivot &amp;&amp; pivot.<span class="hljs-property">substring</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ pivot });
+                pivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span>;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-72">&#x00a7;</a>
+              </div>
+              <p>To help fix the bug where user has mimicked to an artefact which they have not yet defined</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (mimic &amp;&amp; mimic.<span class="hljs-property">substring</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ mimic });
+                mimic = <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span>;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
+              </div>
+              <p>To help fix the bug where user has pathed to an artefact which they have not yet defined</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (path &amp;&amp; path.<span class="hljs-property">substring</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ path });
+                path = <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span>;
+            }
 
             <span class="hljs-keyword">const</span> confirmLock = <span class="hljs-keyword">function</span> (<span class="hljs-params">lock</span>) {
 
@@ -2833,11 +2912,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-70">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p>When the pivot is an Element artefact, can use its corner values as pivots</p>
 
@@ -2851,11 +2930,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-71">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p>When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)</p>
 
@@ -2869,11 +2948,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-72">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p>When the pivot is an EnhancedLabel entity, need also to confirm which pin to use (default 0)</p>
 
@@ -2893,11 +2972,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-73">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p>Everything else</p>
 
@@ -2952,11 +3031,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-74">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>x</code> and <code>y</code> coordinates can have different lockTo values</p>
 
@@ -3011,11 +3090,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-75">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>cleanStampHandlePositions</code></p>
 <ul>
@@ -3054,11 +3133,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-76">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p>We loop twice - once for each coordinate: <code>x</code> is calculated on the first loop (<code>i === 0</code>); <code>y</code> on the second (<code>i === 1</code>)</p>
 
@@ -3102,11 +3181,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-77">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p>At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality.</p>
 
@@ -3121,11 +3200,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-78">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -3186,11 +3265,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-79">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p>Function overwritten by entitys, if required</p>
 
@@ -3208,11 +3287,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-80">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><code>pickupArtefact</code></p>
 
@@ -3262,6 +3341,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             <span class="hljs-keyword">if</span> (bringToFrontOnDrag) {
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> += <span class="hljs-number">9999</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampOrder</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampOrder</span> = <span class="hljs-literal">true</span>;
+
                 group.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
             }
 
@@ -3273,11 +3354,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-81">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p><code>dropArtefact</code></p>
 
@@ -3323,10 +3404,10 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> -= <span class="hljs-number">9999</span>;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> &lt; <span class="hljs-number">0</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampOrder</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampOrder</span> = <span class="hljs-literal">true</span>;
 
             group.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
         }
-
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
 
@@ -3338,11 +3419,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-82">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <h4 id="subscription-management">Subscription management</h4>
 <p>Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes.</p>
@@ -3359,11 +3440,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-83">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p><code>updatePositionSubscribers</code></p>
 
@@ -3381,11 +3462,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-84">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p><code>updatePivotSubscribers</code></p>
 
@@ -3396,11 +3477,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-85">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p><code>updateMimicSubscribers</code></p>
 
@@ -3411,11 +3492,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-86">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
@@ -3426,11 +3507,11 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         </li>
         
         
-        <li id="section-87">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <p><code>updateImageSubscribers</code></p>
 

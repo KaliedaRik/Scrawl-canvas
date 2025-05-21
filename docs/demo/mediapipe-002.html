@@ -560,11 +560,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-002a.html">
-                  ./demo/filters-002a.js
-                </a>
-              
-                
                 <a class="source" href="filters-003.html">
                   ./demo/filters-003.js
                 </a>
@@ -712,6 +707,31 @@
                 
                 <a class="source" href="filters-032.html">
                   ./demo/filters-032.js
+                </a>
+              
+                
+                <a class="source" href="filters-033.html">
+                  ./demo/filters-033.js
+                </a>
+              
+                
+                <a class="source" href="filters-034.html">
+                  ./demo/filters-034.js
+                </a>
+              
+                
+                <a class="source" href="filters-035.html">
+                  ./demo/filters-035.js
+                </a>
+              
+                
+                <a class="source" href="filters-036.html">
+                  ./demo/filters-036.js
+                </a>
+              
+                
+                <a class="source" href="filters-037.html">
+                  ./demo/filters-037.js
                 </a>
               
                 
@@ -932,6 +952,11 @@
                 
                 <a class="source" href="snippets-006.html">
                   ./demo/snippets-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-001.html">
+                  ./demo/temp-001.js
                 </a>
               
                 
@@ -1222,7 +1247,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importMediaStream</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;device-camera&#x27;</span>),
-    <span class="hljs-attr">audio</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">video</span>: {
+        <span class="hljs-attr">width</span>: { <span class="hljs-attr">ideal</span>: width },
+        <span class="hljs-attr">height</span>: { <span class="hljs-attr">ideal</span>: height },
+        <span class="hljs-attr">facingMode</span>: <span class="hljs-string">&#x27;user&#x27;</span>,
+    },
 })
 .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mycamera</span> =&gt;</span> {
 

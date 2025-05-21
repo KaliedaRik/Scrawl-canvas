@@ -560,11 +560,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-002a.html">
-                  ./demo/filters-002a.js
-                </a>
-              
-                
                 <a class="source" href="filters-003.html">
                   ./demo/filters-003.js
                 </a>
@@ -712,6 +707,31 @@
                 
                 <a class="source" href="filters-032.html">
                   ./demo/filters-032.js
+                </a>
+              
+                
+                <a class="source" href="filters-033.html">
+                  ./demo/filters-033.js
+                </a>
+              
+                
+                <a class="source" href="filters-034.html">
+                  ./demo/filters-034.js
+                </a>
+              
+                
+                <a class="source" href="filters-035.html">
+                  ./demo/filters-035.js
+                </a>
+              
+                
+                <a class="source" href="filters-036.html">
+                  ./demo/filters-036.js
+                </a>
+              
+                
+                <a class="source" href="filters-037.html">
+                  ./demo/filters-037.js
                 </a>
               
                 
@@ -932,6 +952,11 @@
                 
                 <a class="source" href="snippets-006.html">
                   ./demo/snippets-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-001.html">
+                  ./demo/temp-001.js
                 </a>
               
                 
@@ -1473,6 +1498,42 @@
         pixel.<span class="hljs-property">blue</span> = blue;
     });
     <span class="hljs-title function_">update</span>();
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">conicOne</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    pixelState.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">pixel</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
+        <span class="hljs-keyword">const</span> angle = pixel.<span class="hljs-property">angle</span>;
+
+        <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.33</span>) red++;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.67</span>) green++;
+        <span class="hljs-keyword">else</span> blue++;
+
+        pixel.<span class="hljs-property">red</span> = red;
+        pixel.<span class="hljs-property">green</span> = green;
+        pixel.<span class="hljs-property">blue</span> = blue;
+    });
+    <span class="hljs-title function_">update</span>();
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">conicTwo</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    pixelState.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">pixel</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
+        <span class="hljs-keyword">const</span> angle = pixel.<span class="hljs-property">angle</span>;
+
+        <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.33</span>) red--;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.67</span>) green--;
+        <span class="hljs-keyword">else</span> blue--;
+
+        pixel.<span class="hljs-property">red</span> = red;
+        pixel.<span class="hljs-property">green</span> = green;
+        pixel.<span class="hljs-property">blue</span> = blue;
+    });
+    <span class="hljs-title function_">update</span>();
 };</pre></div></div>
             
         </li>
@@ -1549,6 +1610,8 @@
     thinStripe,
     circlesGradient,
     thinStripeReverse,
+    conicOne,
+    conicTwo,
 ];
 
 <span class="hljs-keyword">const</span> optionNames = [
@@ -1569,6 +1632,8 @@
     <span class="hljs-string">&#x27;thinStripe&#x27;</span>,
     <span class="hljs-string">&#x27;circlesGradient&#x27;</span>,
     <span class="hljs-string">&#x27;thinStripeReverse&#x27;</span>,
+    <span class="hljs-string">&#x27;conicOne&#x27;</span>,
+    <span class="hljs-string">&#x27;conicTwo&#x27;</span>,
 ];
 
 <span class="hljs-keyword">const</span> len = updateOptions.<span class="hljs-property">length</span>;

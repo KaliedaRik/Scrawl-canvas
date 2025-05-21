@@ -560,11 +560,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-002a.html">
-                  ./demo/filters-002a.js
-                </a>
-              
-                
                 <a class="source" href="filters-003.html">
                   ./demo/filters-003.js
                 </a>
@@ -712,6 +707,31 @@
                 
                 <a class="source" href="filters-032.html">
                   ./demo/filters-032.js
+                </a>
+              
+                
+                <a class="source" href="filters-033.html">
+                  ./demo/filters-033.js
+                </a>
+              
+                
+                <a class="source" href="filters-034.html">
+                  ./demo/filters-034.js
+                </a>
+              
+                
+                <a class="source" href="filters-035.html">
+                  ./demo/filters-035.js
+                </a>
+              
+                
+                <a class="source" href="filters-036.html">
+                  ./demo/filters-036.js
+                </a>
+              
+                
+                <a class="source" href="filters-037.html">
+                  ./demo/filters-037.js
                 </a>
               
                 
@@ -935,6 +955,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-001.html">
+                  ./demo/temp-001.js
+                </a>
+              
+                
                 <a class="source" href="temp-shape-scale-investigation.html">
                   ./demo/temp-shape-scale-investigation.js
                 </a>
@@ -989,7 +1014,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop, initializeDomInputs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1503,7 +1528,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = <span class="hljs-title function_">initializeDomInputs</span>([
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = scrawl.<span class="hljs-title function_">initializeDomInputs</span>([
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;skewX&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;skewY&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
@@ -1731,16 +1756,16 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>),
             });
 
-            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1&#x27;</span>;
+            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1&#x27;</span>;
+            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
             dom.<span class="hljs-property">blend</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;multiply&#x27;</span>;
             dom.<span class="hljs-property">patternGradient</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;
-            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
+            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
 
             <span class="hljs-keyword">break</span>;
 
@@ -1767,16 +1792,16 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ring-cell-gradient&#x27;</span>),
             });
 
-            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1&#x27;</span>;
+            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1&#x27;</span>;
+            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
             dom.<span class="hljs-property">blend</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;multiply&#x27;</span>;
             dom.<span class="hljs-property">patternGradient</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;ring-cell-gradient&#x27;</span>;
-            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
+            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
 
             <span class="hljs-keyword">break</span>;
 
@@ -1803,16 +1828,16 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>),
             });
 
-            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = -<span class="hljs-number">0.65</span>;
-            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = -<span class="hljs-number">0.31</span>;
-            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0.26</span>;
-            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;-0.65&#x27;</span>;
+            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;-0.31&#x27;</span>;
+            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1&#x27;</span>;
+            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0.26&#x27;</span>;
+            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
             dom.<span class="hljs-property">blend</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;screen&#x27;</span>;
             dom.<span class="hljs-property">patternGradient</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;
-            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
+            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
 
             <span class="hljs-keyword">break</span>;
 
@@ -1839,16 +1864,16 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>),
             });
 
-            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">1.04</span>;
-            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;
-            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0.35</span>;
-            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+            dom.<span class="hljs-property">skewX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1.04&#x27;</span>;
+            dom.<span class="hljs-property">skewY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0.05&#x27;</span>;
+            dom.<span class="hljs-property">stretchX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0.35&#x27;</span>;
+            dom.<span class="hljs-property">stretchY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">shiftX</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            dom.<span class="hljs-property">shiftY</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
             dom.<span class="hljs-property">blend</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;luminosity&#x27;</span>;
             dom.<span class="hljs-property">patternGradient</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;
-            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            dom.<span class="hljs-property">pattern_width</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
+            dom.<span class="hljs-property">pattern_height</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;80&#x27;</span>;
 
             <span class="hljs-keyword">break</span>;
     }
@@ -1864,13 +1889,13 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
     });
 
-    dom.<span class="hljs-property">opacity</span>.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-    dom.<span class="hljs-property">filter_width</span>.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-    dom.<span class="hljs-property">filter_height</span>.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-    dom.<span class="hljs-property">filter_offset_x</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-    dom.<span class="hljs-property">filter_offset_y</span>.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-    dom.<span class="hljs-property">filter_scale_x</span>.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
-    dom.<span class="hljs-property">filter_scale_y</span>.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
+    dom.<span class="hljs-property">opacity</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1&#x27;</span>;
+    dom.<span class="hljs-property">filter_width</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;100&#x27;</span>;
+    dom.<span class="hljs-property">filter_height</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;100&#x27;</span>;
+    dom.<span class="hljs-property">filter_offset_x</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+    dom.<span class="hljs-property">filter_offset_y</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+    dom.<span class="hljs-property">filter_scale_x</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;10&#x27;</span>;
+    dom.<span class="hljs-property">filter_scale_y</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;10&#x27;</span>;
     dom.<span class="hljs-property">easing</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;linear&#x27;</span>;
 
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>

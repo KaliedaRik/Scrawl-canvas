@@ -578,44 +578,6 @@
 <p>Filters take in an image representation of an <a href="../mixin/entity.html">entity</a>, <a href="./group.html">Group</a> of entitys or a <a href="./cell.html">Cell</a> display and, by manipulating the image’s data, return an updated image which replaces those entitys or Cell in the final output display.</p>
 <p>Scrawl-canvas defines its filters in <strong>Filter objects</strong>, detailed in this module. The functionality to make use of these objects is coded up in the <a href="../mixin/filter.html">filter mixin</a>, which is used by the Cell, Group and all entity factories.</p>
 <p>The Scrawl-canvas filter engine implements a number of common filter algorithms. These algorithms - <strong>called filter actions</strong> - can be combined in a wide variety of ways, including the use of multiple pathways, to create complex filter results.</p>
-<h4 id="filter-engine-actions">Filter engine actions</h4>
-<p><code>alpha-to-channels</code> - Copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel’s value unchanged. Setting the appropriate “includeChannel” flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate “excludeChannel” flag will set that channel’s value to zero. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue</code>.</p>
-<p><code>area-alpha</code> - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to values set in the <code>areaAlphaLevels</code> array. Can be used to create horizontal or vertical bars, or chequerboard effects. Object attributes: <code>action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels</code>.</p>
-<p><code>average-channels</code> - Calculates an average value from each pixel’s included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue</code>.</p>
-<p><code>blend</code> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations). The blending method is determined by the String value supplied in the <code>blend</code> argument; permitted values are: ‘color-burn’, ‘color-dodge’, ‘darken’, ‘difference’, ‘exclusion’, ‘hard-light’, ‘lighten’, ‘lighter’, ‘multiply’, ‘overlay’, ‘screen’, ‘soft-light’, ‘color’, ‘hue’, ‘luminosity’, and ‘saturation’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments. Object attributes: <code>action, lineIn, lineOut, lineMix, opacity, blend, offsetX, offsetY</code>.</p>
-<p><code>blur</code> - Performs a multi-loop, two-step ‘horizontal-then-vertical averaging sweep’ calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects. Object attributes: <code>action, lineIn, lineOut, opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, step</code>.</p>
-<p><code>channels-to-alpha</code> - Calculates an average value from each pixel’s included channels and applies that value to the alpha channel. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue</code>.</p>
-<p><code>chroma</code> - A chroma-key effect. Using an array of ‘range’ color arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each ‘range’ color array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values. Object attributes: <code>action, lineIn, lineOut, opacity, ranges</code>.</p>
-<p><code>clamp-channels</code> - Clamp each color channel to a range set by lowColor and highColor values. Object attributes: <code>action, lineIn, lineOut, opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</code>.</p>
-<p><code>colors-to-alpha</code> - A chroma-key effect. Determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the “red”, “green” and “blue” arguments. The sensitivity of the effect can be manipulated using the “transparentAt” and “opaqueAt” values, both of which lie in the range 0-1. Object attributes: <code>action, lineIn, lineOut, opacity, red, green, blue, opaqueAt, transparentAt</code>; pseudo-arguments for the convenience method include <code>reference</code> - any valid CSS color string from which the channel values will be calculated.</p>
-<p><code>compose</code> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments. Object attributes: <code>action, lineIn, lineOut, lineMix, opacity, compose, offsetX, offsetY</code>.</p>
-<p><code>corrode</code> - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The operation will set the pixel’s channel value to match either the ‘lowest’, ‘highest’ or ‘average’ (default) values as dictated by its neighbours - this value is set in the “level” attribute. Channels can be selected by setting the “includeRed”, “includeGreen”, “includeBlue” (all false by default) and “includeAlpha” (default: true) flags. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation</code>.</p>
-<p><code>displace</code> - Shift pixels around the image, based on the values supplied in a displacement process-image. Common source images can be generated from the various Noise assets, though any image will create an effect. Object attributes: <code>action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY</code>.</p>
-<p><code>emboss</code> - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: “strength”, and “angle” - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: <code>action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults</code>; pseudo-arguments for the convenience method include <code>useNaturalGrayscale, clamp, smoothing</code>.</p>
-<p><code>flood</code> - Set all pixels to the channel values supplied in the “red”, “green”, “blue” and “alpha” arguments. Object attributes: <code>action, lineIn, lineOut, opacity, red, green, blue, alpha</code>; pseudo-arguments for the convenience method include <code>reference</code> - any valid CSS color string from which the channel values will be calculated.</p>
-<p><code>gaussianblur</code> - a fast linear gaussian blur algorithm taken from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021). Object attributes: <code>action, lineIn, lineOut, opacity, radius</code>.</p>
-<p><code>glitch</code> - CRT television/monitor glitching effect - shifts rows horizontally by a random amount (mediated by limits). Object attributes: <code>action, lineIn, lineOut, opacity, useMixedChannel, seed, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, level</code>.</p>
-<p><code>grayscale</code> - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect. Object attributes: <code>action, lineIn, lineOut, opacity</code>.</p>
-<p><code>invert-channels</code> - For each pixel, subtracts its current channel values - when included - from 255. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha</code>.</p>
-<p><code>lock-channels-to-levels</code> - Produces a posterize effect. Takes in four arguments - “red”, “green”, “blue” and “alpha” - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value. Object attributes: <code>action, lineIn, lineOut, opacity, red, green, blue, alpha</code>.</p>
-<p><code>map-to-gradient</code> - maps the colors in the supplied (complex) gradient to a grayscaled input. Object attributes: <code>action, lineIn, lineOut, opacity, useNaturalGrayscale, gradient</code>.</p>
-<p><code>matrix</code> - Performs a matrix operation on each pixel’s channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The weights to be applied need to be supplied in the “weights” argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The ‘edgeDetect’, ‘emboss’ and ‘sharpen’ convenience filter methods all use the matrix action, pre-setting the required weights. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights</code>.</p>
-<p><code>modify-ok-channels</code> - Adds a value to each of the OKLAB channels. Note that: the <code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white); the <code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red); the <code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow). Object attributes: <code>action, lineIn, lineOut, opacity, channelA, channelB, channelL</code></p>
-<p><code>modulate-channels</code> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at the color range mid point. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value. Object attributes: <code>action, lineIn, lineOut, opacity, red, green, blue, alpha, saturation</code>; pseudo-argument: <code>level</code></p>
-<p><code>modulate-ok-channels</code> - Multiplies each of the OKLAB channels by a given amount. Note that: the <code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white); the <code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red); the <code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow). Object attributes: <code>action, lineIn, lineOut, opacity, channelA, channelB, channelL</code></p>
-<p><code>negative</code> - For each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB. Object attributes: <code>action, lineIn, lineOut, opacity</code>.</p>
-<p><code>offset</code> - Offset the input image in the output image. Object attributes: <code>action, lineIn, lineOut, opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY; pseudo-argument: offsetX, offsetY</code>.</p>
-<p><code>pixelate</code> - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the “tileWidth”, “tileHeight”, “offsetX” and “offsetY” arguments. Object attributes: <code>action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha</code>.</p>
-<p><code>process-image</code> - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The “width” and “height” arguments are measured in integer Number pixels; the “copy” arguments can be either percentage Strings (relative to the asset’s natural dimensions) or absolute Number values (in pixels). The “lineOut” argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset’s data. Object attributes: <code>action, lineOut, asset, width, height, copyWidth, copyHeight, copyX, copyY</code>.</p>
-<p><code>reduce-palette</code> - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: ‘black-white’. All internal color comparisons to match pixels to the closest palette color happen in the LAB color space. Dithering is applied to select the closest, or second closest, color when setting each pixel’s final output color; dithering can be random (default), ordered or blue-noise. When calculating commonest colors, a minimum color distance can be set to get a better representative spread for images which have a predominant color (eg: images containing sky, clouds, vegetation or a plain background); calculating the commonest colors can take place in either the RGB space, or the LAB space. The Object attributes: <code>action, lineIn, lineOut, lineMix, opacity, palette, useBluenoise, minimumColorDistance</code>.</p>
-<p><code>rotate-hue</code> - For each pixel: convert to OKLCH; rotate hue value by supplied angle; convert back to RGB. Object attributes: <code>action, lineIn, lineOut, angle, opacity</code>.</p>
-<p><code>set-channel-to-level</code> - Sets the value of each pixel’s included channel to the value supplied in the “level” argument. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, level</code>.</p>
-<p><code>step-channels</code> - Takes three divisor values - “red”, “green”, “blue”. For each pixel, its color channel values are divided by the corresponding color divisor, rounded down or up to the integer value and then multiplied by the divisor. For example a divisor value of ‘50’ applied to a channel value of ‘120’ will give a result of ‘100’ (if clamp is set to “down” or “round”) or ‘150’ (clamp set to “up”). The output is a form of posterization. Object attributes: <code>action, lineIn, lineOut, opacity, red, green, blue, clamp</code>.</p>
-<p><code>swirl</code> - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate. Object attributes: <code>action, lineIn, lineOut, opacity, swirls (array of arrays)</code>; pseudo-arguments (for one swirl): startX, startY, innerRadius, outerRadius, angle, easing, staticSwirls`. Note that the start paramenters can be absolute (Number) or relative (String) values, with values relative to the host Cell’s dimensions; inner and outer radius values can also be Strings relative to the host Cell’s width. Supported easing values are included in demo Filters-026.</p>
-<p><code>threshold</code> - Grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color. The “high” and “low” arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes “highRed”, “lowRed” etc in place of the “high” and “low” Arrays. Object attributes: <code>action, lineIn, lineOut, opacity, low, high; pseudo-arguments: lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</code>; this filter also accepts <code>lowColor</code> and <code>highColor</code> pseudo-attributes - CSS color Strings in place of the <code>lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</code> values.</p>
-<p><code>tint-channels</code> - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The ‘sepia’ convenience filter presets these values to create a sepia effect. Object attributes: <code>action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue</code>; pseudo-arguments for the convenience method include <code>reference</code> - any valid CSS color string from which the channel values will be calculated; pseudo-arguments for the convenience method include <code>redColor, greenColor, blueColor</code> - any valid CSS color string from which the rgbIn values will be calculated.</p>
-<p><code>user-defined-legacy</code> - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: <code>action, lineIn, lineOut, opacity</code>.</p>
-<p><code>vary-channels-by-weights</code> - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of <code>1.0</code>. Object attributes: <code>action, lineIn, lineOut, opacity, weights, useMixedChannel</code>.</p>
 
             </div>
             
@@ -634,7 +596,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, constructors, entity, group, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./gradient.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { colorEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/filter-engine.js&#x27;</span>;
@@ -654,7 +616,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _keys, _round, _values, <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>, <span class="hljs-variable constant_">AREA_ALPHA</span>, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLACK_WHITE</span>, <span class="hljs-variable constant_">BLEND</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>, <span class="hljs-variable constant_">CHROMA</span>, <span class="hljs-variable constant_">CLAMP_CHANNELS</span>, <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>, <span class="hljs-variable constant_">COMPOSE</span>, <span class="hljs-variable constant_">CORRODE</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">DISPLACE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">EMBOSS</span>, <span class="hljs-variable constant_">FILTER</span>, <span class="hljs-variable constant_">FLOOD</span>, <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>, <span class="hljs-variable constant_">GLITCH</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">GREEN</span>, <span class="hljs-variable constant_">INVERT_CHANNELS</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>, <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>, <span class="hljs-variable constant_">MATRIX</span>, <span class="hljs-variable constant_">MEAN</span>, <span class="hljs-variable constant_">MODIFY_OK_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_OK_CHANNELS</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NEGATIVE</span>, <span class="hljs-variable constant_">NEWSPRINT</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">PIXELATE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RANDOM_NOISE</span>, <span class="hljs-variable constant_">RECT_GRID</span>, <span class="hljs-variable constant_">RED</span>, <span class="hljs-variable constant_">REDUCE_PALETTE</span>, <span class="hljs-variable constant_">ROTATE_HUE</span>, <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STEP_CHANNELS</span>, <span class="hljs-variable constant_">SWIRL</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">THRESHOLD</span>, <span class="hljs-variable constant_">TILES</span>, <span class="hljs-variable constant_">TINT_CHANNELS</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>, <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _keys, _round, _values, <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>, <span class="hljs-variable constant_">ALPHA_TO_LUMINANCE</span>, <span class="hljs-variable constant_">AREA_ALPHA</span>, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLACK_WHITE</span>, <span class="hljs-variable constant_">BLEND</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>, <span class="hljs-variable constant_">CHROMA</span>, <span class="hljs-variable constant_">CLAMP_CHANNELS</span>, <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>, <span class="hljs-variable constant_">COMPOSE</span>, <span class="hljs-variable constant_">CORRODE</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">DISPLACE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">EMBOSS</span>, <span class="hljs-variable constant_">FILTER</span>, <span class="hljs-variable constant_">FLOOD</span>, <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>, <span class="hljs-variable constant_">GLITCH</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">GREEN</span>, <span class="hljs-variable constant_">INVERT_CHANNELS</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>, <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>, <span class="hljs-variable constant_">LUMINANCE_TO_ALPHA</span>, <span class="hljs-variable constant_">MATRIX</span>, <span class="hljs-variable constant_">MEAN</span>, <span class="hljs-variable constant_">MODIFY_OK_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_OK_CHANNELS</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NEGATIVE</span>, <span class="hljs-variable constant_">NEWSPRINT</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">PIXELATE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RANDOM_NOISE</span>, <span class="hljs-variable constant_">RECT_GRID</span>, <span class="hljs-variable constant_">RED</span>, <span class="hljs-variable constant_">REDUCE_PALETTE</span>, <span class="hljs-variable constant_">ROTATE_HUE</span>, <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STEP_CHANNELS</span>, <span class="hljs-variable constant_">SWIRL</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">THRESHOLD</span>, <span class="hljs-variable constant_">TILES</span>, <span class="hljs-variable constant_">TINT_CHANNELS</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>, <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -966,11 +928,15 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">outerRadius</span>: <span class="hljs-title class_">PC30</span>,
     <span class="hljs-attr">palette</span>: <span class="hljs-variable constant_">BLACK_WHITE</span>,
     <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">passesHorizontal</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">passesVertical</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">postProcessResults</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">processHorizontal</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">processVertical</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">radiusHorizontal</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">radiusVertical</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">ranges</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">redInBlue</span>: <span class="hljs-number">0</span>,
@@ -985,6 +951,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">startX</span>: <span class="hljs-title class_">PC50</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-title class_">PC50</span>,
     <span class="hljs-attr">step</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">stepHorizontal</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">stepVertical</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">strength</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">staticSwirls</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">1</span>,
@@ -1299,6 +1267,28 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
+              <p><strong>alphaToLuminance</strong> - (new in v8.15.0) - sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">alphaToLuminance</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">ALPHA_TO_LUMINANCE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+        }];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
               <p><strong>areaAlpha</strong> (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.</p>
 
             </div>
@@ -1322,11 +1312,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>blend</strong> (new in v8.4.0) - perform a blend operation on two images; available blend options include: <code>&#39;color-burn&#39;, &#39;color-dodge&#39;, &#39;darken&#39;, &#39;difference&#39;, &#39;exclusion&#39;, &#39;hard-light&#39;, &#39;lighten&#39;, &#39;lighter&#39;, &#39;multiply&#39;, &#39;overlay&#39;, &#39;screen&#39;, &#39;soft-light&#39;, &#39;color&#39;, &#39;hue&#39;, &#39;luminosity&#39;, and &#39;saturation&#39;</code> - see <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a></p>
 
@@ -1348,11 +1338,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>blue</strong> - removes red and green channel color from the image</p>
 
@@ -1372,11 +1362,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>blur</strong> - blurs the image
 A bespoke blur function. Creates visual artefacts with various settings that might be useful. Strongly advise to memoize the results from this filter as it is resource-intensive.</p>
@@ -1387,6 +1377,25 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">blur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) {
+            f.<span class="hljs-property">radiusHorizontal</span> = f.<span class="hljs-property">radius</span>;
+            f.<span class="hljs-property">radiusVertical</span> = f.<span class="hljs-property">radius</span>;
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">radius</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">step</span> != <span class="hljs-literal">null</span>) {
+            f.<span class="hljs-property">stepHorizontal</span> = f.<span class="hljs-property">step</span>;
+            f.<span class="hljs-property">stepVertical</span> = f.<span class="hljs-property">step</span>;
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">step</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">passes</span> != <span class="hljs-literal">null</span>) {
+            f.<span class="hljs-property">passesHorizontal</span> = f.<span class="hljs-property">passes</span>;
+            f.<span class="hljs-property">passesVertical</span> = f.<span class="hljs-property">passes</span>;
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">passes</span>;
+        }
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">BLUR</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
@@ -1398,21 +1407,24 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">excludeTransparentPixels</span>: (f.<span class="hljs-property">excludeTransparentPixels</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">excludeTransparentPixels</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">processHorizontal</span>: (f.<span class="hljs-property">processHorizontal</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">processHorizontal</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">radiusHorizontal</span>: (f.<span class="hljs-property">radiusHorizontal</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radiusHorizontal</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">stepHorizontal</span>: (f.<span class="hljs-property">stepHorizontal</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">stepHorizontal</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">passesHorizontal</span>: (f.<span class="hljs-property">passesHorizontal</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">passesHorizontal</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">processVertical</span>: (f.<span class="hljs-property">processVertical</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">processVertical</span> : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">passes</span>: (f.<span class="hljs-property">passes</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">passes</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">step</span>: (f.<span class="hljs-property">step</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">step</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">radiusVertical</span>: (f.<span class="hljs-property">radiusVertical</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radiusVertical</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">stepVertical</span>: (f.<span class="hljs-property">stepVertical</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">stepVertical</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">passesVertical</span>: (f.<span class="hljs-property">passesVertical</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">passesVertical</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>brightness</strong> - adjusts the brightness of the image</p>
 
@@ -1435,11 +1447,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>channelLevels</strong> (new in v8.4.0) - produces a posterize effect. Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value</p>
 <ul>
@@ -1464,11 +1476,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>channels</strong> - adjust the value of each channel by a specified multiplier</p>
 
@@ -1490,11 +1502,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>channelstep</strong> - restrict the number of color values that each channel can set by imposing regular bands on each channel</p>
 
@@ -1521,11 +1533,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>channelsToAlpha</strong> (new in v8.4.0) - calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -1546,11 +1558,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - using an array of <code>range</code> arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each range array comprises six Numbers representing <code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code> values.</p>
 <ul>
@@ -1598,11 +1610,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>chromakey</strong> (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> values, both of which lie in the range 0-1.</p>
 <ul>
@@ -1644,11 +1656,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><strong>clampChannels</strong> (new in v8.4.0) - clamp each color channel to a range set by <code>lowColor</code> and <code>highColor</code> values</p>
 <ul>
@@ -1705,11 +1717,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> (new in v8.4.0) - perform a composite operation on two images; available <code>compose</code> options include: <code>&#39;destination-only&#39;, &#39;destination-over&#39;, &#39;destination-in&#39;, &#39;destination-out&#39;, &#39;destination-atop&#39;, &#39;source-only&#39;, &#39;source-over&#39; (default), &#39;source-in&#39;, &#39;source-out&#39;, &#39;source-atop&#39;, &#39;clear&#39;, and &#39;xor&#39;</code> - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a></p>
 
@@ -1731,11 +1743,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> (new in v8.5.2) - performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values.</p>
 <ul>
@@ -1768,11 +1780,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>curveWeights</strong> (new in v8.6.1) - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of 1.0</p>
 
@@ -1792,11 +1804,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>cyan</strong> - removes red channel color from the image, and averages the remaining channel colors</p>
 
@@ -1817,11 +1829,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image</p>
 
@@ -1847,11 +1859,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>edgeDetect</strong> (new in v8.4.0) - applies a preset 3x3 edge-detect matrix to the image</p>
 
@@ -1878,11 +1890,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> (new in v8.4.0) - outputs a black-gray-red emboss effect</p>
 
@@ -1945,11 +1957,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions</p>
 <ul>
@@ -1998,34 +2010,46 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>gaussianBlur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gaussianBlur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) {
+            f.<span class="hljs-property">radiusHorizontal</span> = f.<span class="hljs-property">radius</span>;
+            f.<span class="hljs-property">radiusVertical</span> = f.<span class="hljs-property">radius</span>;
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">radius</span>;
+        }
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">excludeTransparentPixels</span>: (f.<span class="hljs-property">excludeTransparentPixels</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">excludeTransparentPixels</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">radiusHorizontal</span>: (f.<span class="hljs-property">radiusHorizontal</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radiusHorizontal</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">radiusVertical</span>: (f.<span class="hljs-property">radiusVertical</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radiusVertical</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>glitch</strong> - semi-randomly shift rows left/right</p>
 
@@ -2058,11 +2082,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>gray</strong> (new in v8.4.0) - averages the three color channel colors</p>
 
@@ -2083,11 +2107,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -2105,11 +2129,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>green</strong> - removes red and blue channel color from the image</p>
 
@@ -2129,11 +2153,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
 
@@ -2141,27 +2165,29 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">image</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
 
-        f.<span class="hljs-property">actions</span> = [{
+        <span class="hljs-keyword">const</span> o = {
             <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">PROCESS_IMAGE</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">asset</span>: (f.<span class="hljs-property">asset</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">asset</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
-            <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">height</span>: (f.<span class="hljs-property">height</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">height</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">copyWidth</span>: (f.<span class="hljs-property">copyWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyWidth</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">copyHeight</span>: (f.<span class="hljs-property">copyHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyHeight</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">copyX</span>: (f.<span class="hljs-property">copyX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">copyY</span>: (f.<span class="hljs-property">copyY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyY</span> : <span class="hljs-number">0</span>,
-        }];
+        };
+
+        o.<span class="hljs-property">identifier</span> = <span class="hljs-string">`user-image-<span class="hljs-subst">${o.asset}</span>-<span class="hljs-subst">${generateUuid()}</span>`</span>;
+
+        f.<span class="hljs-property">actions</span> = [o];
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>invert</strong> - inverts the colors in the image, producing an effect similar to a photograph negative</p>
 
@@ -2182,11 +2208,33 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p><strong>luminanceToAlpha</strong> - (new in v8.15.0) - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">luminanceToAlpha</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">LUMINANCE_TO_ALPHA</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+        }];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>magenta</strong> - removes green channel color from the image, and averages the remaining channel colors</p>
 
@@ -2207,13 +2255,13 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-53">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
-              <p><strong>mapToGradient</strong> - produces a more realistic black-and-white photograph effect</p>
+              <p><strong>mapToGradient</strong> - applies a gradient to a grayscaled input</p>
 
             </div>
             
@@ -2234,11 +2282,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - applies a 3x3 convolution matrix, kernel or mask operation to the image</p>
 
@@ -2265,11 +2313,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>matrix5</strong> - applies a 5x5 convolution matrix, kernel or mask operation to the image</p>
 
@@ -2296,11 +2344,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>modifyOk</strong> - (new in v8.14.0) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB</p>
 
@@ -2321,11 +2369,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>modulateOk</strong> - (new in v8.14.0) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB</p>
 
@@ -2346,11 +2394,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-58">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>negative</strong> - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB</p>
 
@@ -2368,11 +2416,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><strong>newsprint</strong> - Attempts to simulate a black-white dither effect similar to newsprint</p>
 
@@ -2391,11 +2439,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>notblue</strong> - zeroes the blue channel values (not the same effect as the yellow filter)</p>
 
@@ -2415,11 +2463,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>notgreen</strong> - zeroes the green channel values (not the same effect as the magenta filter)</p>
 
@@ -2439,11 +2487,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>notred</strong> - zeroes the red channel values (not the same effect as the cyan filter)</p>
 
@@ -2463,11 +2511,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> (new in v8.4.0) - moves the image in its entirety by the given offset</p>
 
@@ -2493,11 +2541,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>offsetChannels</strong> (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output</p>
 
@@ -2523,11 +2571,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles. This is a simplified version of the <code>tiles</code> filter</p>
 
@@ -2553,11 +2601,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>randomNoise</strong> (new in v8.6.0) - creates a stippling effect across the image</p>
 
@@ -2589,11 +2637,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>red</strong> - removes blue and green channel color from the image</p>
 
@@ -2613,11 +2661,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>reducePalette</strong> - reduce the number of colors in its palette</p>
 
@@ -2641,11 +2689,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>useBluenoise</code> is deprecated</p>
 <ul>
@@ -2672,11 +2720,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>rotateHue</strong> - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value by given angle; convert back to RGB</p>
 
@@ -2695,11 +2743,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-71">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
@@ -2723,11 +2771,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-72">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2754,11 +2802,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-73">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2785,11 +2833,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-74">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><strong>swirl</strong> - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
 <ul>
@@ -2822,11 +2870,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-75">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
 <ul>
@@ -2903,11 +2951,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-76">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><strong>tiles</strong> - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the <code>pixelate</code> filter</p>
 
@@ -2937,11 +2985,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-77">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
@@ -3024,11 +3072,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-78">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -3046,11 +3094,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-79">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -3072,11 +3120,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-80">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -3086,11 +3134,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-81">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
