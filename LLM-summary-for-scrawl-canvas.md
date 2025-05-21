@@ -74,10 +74,13 @@ Scrawl-canvas simplifies the creation of fully responsive, resolution-independen
 
 ### 8. **Text and Typography**
 
+Scrawl-canvas Label and EnhancedLabel entities support styled, multiline text with DOM reflection for accessibility.
+
 - Dynamic and animated text entities (`Label`, `EnhancedLabel`) with support for path-following.
 - Font loading via CSS or `@import`.
 - Text measurement, wrapping, rotation, and accessibility attributes.
 - Letter-by-letter layout animation (e.g., quote text flowing along a path).
+- EnhancedLabel adds layout shaping, RTL and non-Western language handling, custom line/word breaking, interactive highlighting, and support for rotated and animated text within complex designs.
 
 ### 9. **Particle Physics System**
 
@@ -94,21 +97,15 @@ Scrawl-canvas includes a lightweight, customizable 2D particle physics engine.
 - Systems can be layered, filtered, or animated like any other scene element.
 - No external dependencies — all physics calculations are built into the Scrawl-canvas core.
 
-### 10. **Accessible and internationalized text rendering** 
-
-Scrawl-canvas Label and EnhancedLabel entities support styled, multiline text with DOM reflection for accessibility.
-
-- EnhancedLabel adds layout shaping, RTL and non-Western language handling, custom line/word breaking, interactive highlighting, and support for rotated and animated text within complex designs.
-
-### 11. **Stack-based DOM and canvas integration**
+### 10. **Stack-based DOM and canvas integration**
 
 Seamlessly synchronize positioning, animation, and interaction between canvas-based entities and DOM elements. Enables effects like DOM elements following canvas paths, canvas shapes aligning to DOM elements, and fully responsive mixed-layer layouts.
 
-### 12. **Progressive Enhancement Support**
+### 11. **Progressive Enhancement Support**
 
 Scrawl-canvas enables progressive enhancement patterns where static, semantic HTML content (e.g. images, captions, timestamps) can be dynamically upgraded into interactive canvas experiences. The library supports graceful fallback (e.g. when JavaScript is unavailable), DOM content ingestion, and full accessibility for keyboard and screen reader users.---
 
-### 13. **Modular Composition for Developers**
+### 12. **Modular Composition for Developers**
 
 Scrawl-canvas encourages modular design by allowing developers to wrap interactive canvas logic into importable JavaScript modules. Each canvas scene can be scoped, namespaced, and embedded using clean, reusable functions with no global dependencies — ideal for progressive enhancement and component-driven architectures.
 
