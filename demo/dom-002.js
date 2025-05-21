@@ -4,7 +4,7 @@
 // [Run code](../../demo/dom-002.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -134,7 +134,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Housekeeping - set the DOM input values to their starting values on each page reload
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'dims_widthPercent', '50'],
     ['input', 'dims_heightPercent', '50'],
     ['input', 'dims_widthAbsolute', '250'],

@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-022.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -313,7 +313,7 @@ scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'absoluteHeight', '200'],
     ['input', 'absoluteWidth', '300'],
     ['input', 'columnGutter', '1'],

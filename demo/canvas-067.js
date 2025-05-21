@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-067.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -152,7 +152,7 @@ scrawl.makeUpdater({
 
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'innerControlsDistance_absolute', '0'],
     ['input', 'innerControlsDistance_relative', '0'],
     ['input', 'innerControlsOffset_absolute', '0'],

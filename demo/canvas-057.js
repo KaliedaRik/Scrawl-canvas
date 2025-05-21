@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-057.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -319,7 +319,7 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'lineWidth', '4'],
     ['input', 'lineLengthMultiplier', '20'],
     ['input', 'lineLengthStart', '5'],

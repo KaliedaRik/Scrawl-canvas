@@ -4,9 +4,6 @@
 // + if the timeline is moving backwards the __revert__ function will be invoked
 
 
-// TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
 
@@ -16,10 +13,10 @@ import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
 // Shared constants
-import { _isArray, _keys, FUNCTION, NAME, TWEEN, UNDEF } from '../helper/shared-vars.js';
+import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../helper/shared-vars.js';
 
 // Local constants
-const T_ACTION = 'Action';
+// + No additional constants required
 
 
 // #### Action constructor
@@ -27,6 +24,9 @@ const Action = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
+
+    this.targets = [];
+
     this.set(this.defs);
 
     this.action = λnull;

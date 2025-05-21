@@ -1,17 +1,11 @@
 // # ImageAsset factory
 // The factory generates wrapper Objects around &lt;img> elements which can either be pulled from the current document (DOM-based assets), or fetched from the server using an URL address.
-//
-// Image-based assets can also be created from entity artefacts, groups of entity artefacts, and Cell wrappers
-//
-// ImageAssets are used by [Picture](./picture.html) and [Grid](./grid.html) entitys, and [Pattern](./pattern.html) styles.
-//
-// TODO: ImageAssets don't support animated `.gif` images (or if they do, then its entirely a lucky accident). Tested image formats are `.jpg` and `.png`.
 
 
 // #### Imports
 import { artefact, canvas, cell, constructors, group } from '../core/library.js';
 
-import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_obj, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -75,7 +69,7 @@ P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

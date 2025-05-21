@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-104.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -281,7 +281,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'opacity', '1'],
     ['input', 'skewX', '0'],
     ['input', 'skewY', '0'],
@@ -441,16 +441,16 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: name('bar-cell-gradient'),
             });
 
-            dom.skewX.value = 0;
-            dom.skewY.value = 0;
-            dom.stretchX.value = 1;
-            dom.stretchY.value = 1;
-            dom.shiftX.value = 0;
-            dom.shiftY.value = 0;
+            dom.skewX.value = '0';
+            dom.skewY.value = '0';
+            dom.stretchX.value = '1';
+            dom.stretchY.value = '1';
+            dom.shiftX.value = '0';
+            dom.shiftY.value = '0';
             dom.blend.value = 'multiply';
             dom.patternGradient.value = 'bar-cell-gradient';
-            dom.pattern_width.value = 80;
-            dom.pattern_height.value = 80;
+            dom.pattern_width.value = '80';
+            dom.pattern_height.value = '80';
 
             break;
 
@@ -477,16 +477,16 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: name('ring-cell-gradient'),
             });
 
-            dom.skewX.value = 0;
-            dom.skewY.value = 0;
-            dom.stretchX.value = 1;
-            dom.stretchY.value = 1;
-            dom.shiftX.value = 0;
-            dom.shiftY.value = 0;
+            dom.skewX.value = '0';
+            dom.skewY.value = '0';
+            dom.stretchX.value = '1';
+            dom.stretchY.value = '1';
+            dom.shiftX.value = '0';
+            dom.shiftY.value = '0';
             dom.blend.value = 'multiply';
             dom.patternGradient.value = 'ring-cell-gradient';
-            dom.pattern_width.value = 80;
-            dom.pattern_height.value = 80;
+            dom.pattern_width.value = '80';
+            dom.pattern_height.value = '80';
 
             break;
 
@@ -513,16 +513,16 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: name('bar-cell-gradient'),
             });
 
-            dom.skewX.value = -0.65;
-            dom.skewY.value = -0.31;
-            dom.stretchX.value = 1;
-            dom.stretchY.value = 0.26;
-            dom.shiftX.value = 0;
-            dom.shiftY.value = 0;
+            dom.skewX.value = '-0.65';
+            dom.skewY.value = '-0.31';
+            dom.stretchX.value = '1';
+            dom.stretchY.value = '0.26';
+            dom.shiftX.value = '0';
+            dom.shiftY.value = '0';
             dom.blend.value = 'screen';
             dom.patternGradient.value = 'bar-cell-gradient';
-            dom.pattern_width.value = 80;
-            dom.pattern_height.value = 80;
+            dom.pattern_width.value = '80';
+            dom.pattern_height.value = '80';
 
             break;
 
@@ -549,16 +549,16 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: name('bar-cell-gradient'),
             });
 
-            dom.skewX.value = 1.04;
-            dom.skewY.value = 0.05;
-            dom.stretchX.value = 0.35;
-            dom.stretchY.value = 0;
-            dom.shiftX.value = 0;
-            dom.shiftY.value = 0;
+            dom.skewX.value = '1.04';
+            dom.skewY.value = '0.05';
+            dom.stretchX.value = '0.35';
+            dom.stretchY.value = '0';
+            dom.shiftX.value = '0';
+            dom.shiftY.value = '0';
             dom.blend.value = 'luminosity';
             dom.patternGradient.value = 'bar-cell-gradient';
-            dom.pattern_width.value = 80;
-            dom.pattern_height.value = 80;
+            dom.pattern_width.value = '80';
+            dom.pattern_height.value = '80';
 
             break;
     }
@@ -574,13 +574,13 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
         easing: 'linear',
     });
 
-    dom.opacity.value = 1;
-    dom.filter_width.value = 100;
-    dom.filter_height.value = 100;
-    dom.filter_offset_x.value = 0;
-    dom.filter_offset_y.value = 0;
-    dom.filter_scale_x.value = 10;
-    dom.filter_scale_y.value = 10;
+    dom.opacity.value = '1';
+    dom.filter_width.value = '100';
+    dom.filter_height.value = '100';
+    dom.filter_offset_x.value = '0';
+    dom.filter_offset_y.value = '0';
+    dom.filter_scale_x.value = '10';
+    dom.filter_scale_y.value = '10';
     dom.easing.value = 'linear';
 
 /** @ts-expect-error */

@@ -13,11 +13,10 @@ import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } f
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { FUNCTION, PC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+import { FUNCTION, PC, T_TICKER, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'],
-    UNNAMED = 'unnamed';
+const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'];
 
 
 // Helper function
@@ -91,7 +90,7 @@ export default function (P = Ωempty) {
 
             const t = animationtickers[ticker];
 
-            if (t) t.kill();
+            if (t) t.kill(false);
         }
         else if (ticker) this.removeFromTicker(ticker);
 
@@ -109,10 +108,10 @@ export default function (P = Ωempty) {
 // + the getter returns a fresh copy of the current targets Array
     G.targets = function () {
 
-        return [].concat(this.targets);
+        return [...this.targets];
     };
 
-    S.targets = function (item = []) {
+    S.targets = function (item) {
 
         this.setTargets(item);
     };
@@ -153,6 +152,8 @@ export default function (P = Ωempty) {
 // `addToTicker`
     P.addToTicker = function (item) {
 
+        if (item && !item.substring && item.name && item.type === T_TICKER) item = item.name;
+
         if (xt(item)) {
 
             const oldT = this.ticker,
@@ -173,7 +174,8 @@ export default function (P = Ωempty) {
 // `removeFromTicker`
     P.removeFromTicker = function (item) {
 
-        item = (xt(item)) ? item : this.ticker;
+        if (item && !item.substring && item.name && item.type === T_TICKER) item = item.name;
+        if (!item) item = this.ticker;
 
         if (item) {
 
@@ -188,119 +190,113 @@ export default function (P = Ωempty) {
         return this;
     };
 
-// `setTargets`
-    P.setTargets = function (items) {
+    const populateTargetArrays = function (...args) {
 
-        items = [].concat(items);
+        const targetnames = requestArray(),
+            targets = requestArray();
 
-        const newTargets = requestArray();
-
-        items.forEach(item => {
-
-            if (isa_fn(item)) {
-
-                if (isa_fn(item.set)) newTargets.push(item);
-            }
-            else if (isa_obj(item) && xt(item.name)) newTargets.push(item);
-            else {
-
-                const result = locateTarget(item);
-
-                if (result) newTargets.push(result);
-            }
-        });
-
-        if (!this.targets) this.targets = [];
-        this.targets.length = 0;
-        this.targets.push(...newTargets);
-
-        releaseArray(newTargets);
-
-        return this;
-    };
-
-// `addToTargets`
-    P.addToTargets = function (items) {
-
-        items = [].concat(items);
-
-        let result;
+        const items = args.flat(Infinity);
 
         items.forEach(item => {
 
-            if (typeof item === FUNCTION) {
+            if (item != null) {
 
-                if (typeof item.set === FUNCTION) this.targets.push(item);
-            }
-            else {
+                // Handle bespoke functions with a set function
+                if (isa_fn(item) && isa_fn(item.set)) targets.push(item);
 
-                result = locateTarget(item);
+                // Handle strings
+                else if (item.substring && !targetnames.includes(item)) {
 
-                if (result) this.targets.push(result);
-            }
-        }, this);
+                    const result = locateTarget(item);
 
-        return this;
-    };
+                    if (result) {
 
-// `removeFromTargets`
-    P.removeFromTargets = function (items) {
+                        targetnames.push(item);
+                        targets.push(result);
+                    }
+                }
 
-        items = [].concat(items);
+                // Handle SC objects
+                else if (isa_obj(item) && isa_fn(item.set) && item.name && !targetnames.includes(item.name)) {
 
-        const identifiers = requestArray(),
-            newTargets = [].concat(this.targets);
-
-        newTargets.forEach(target => {
-
-            const type = target.type || UNKNOWN,
-                name = target.name || UNNAMED;
-
-            if (type !== UNKNOWN && name !== UNNAMED) identifiers.push(`${type}_${name}`);
-        });
-
-        items.forEach(item => {
-
-            let myObj;
-
-            if (typeof item === FUNCTION) myObj = item;
-            else myObj = locateTarget(item);
-
-            if (myObj) {
-
-                const type = myObj.type || UNKNOWN,
-                    name = myObj.name || UNNAMED;
-
-                if (type !== UNKNOWN && name !== UNNAMED) {
-
-                    const objName = `${type}_${name}`,
-                        doRemove = identifiers.indexOf(objName);
-
-                    if (doRemove >= 0) newTargets[doRemove] = false;
+                    targetnames.push(item.name);
+                    targets.push(item);
                 }
             }
         });
+        releaseArray(targetnames);
 
-        if (!this.targets) this.targets = [];
-        const t = this.targets;
-        t.length = 0;
+        return targets;
+    }
 
-        newTargets.forEach(target => {
+// `setTargets`
+    P.setTargets = function (...args) {
 
-            if (target) t.push(target);
-        }, this);
+        const targets = populateTargetArrays(args);
 
-        releaseArray(identifiers);
+        this.targets.length = 0;
+        this.targets.push(...targets);
 
-        return this;
+        releaseArray(targets);
+    };
+
+// `addToTargets`
+    P.addToTargets = function (...args) {
+
+        const targets = populateTargetArrays(args);
+
+        const currentTargets = [...this.targets];
+
+        const currentTargetNames = currentTargets.map(t => t.name || '');
+
+        targets.forEach(t => {
+
+            if (!t.name) currentTargets.push(t);
+
+            else if (!currentTargetNames.includes(t.name)) currentTargets.push(t);
+        });
+
+        this.targets.length = 0;
+        this.targets.push(...currentTargets);
+
+        releaseArray(targets);
+    };
+
+// `removeFromTargets`
+    P.removeFromTargets = function (...args) {
+
+        const targets = populateTargetArrays(args),
+            currentTargets = [...this.targets],
+            currentTargetNames = currentTargets.map(t => t.name || '');
+
+        const targetsToRemove = requestArray(),
+            functionsToKeep = requestArray();
+
+        targets.forEach(t => {
+
+            if (!t.name) functionsToKeep.push(t);
+            else if (currentTargetNames.includes(t.name)) targetsToRemove.push(t.name);
+        });
+
+        this.targets.length = 0;
+        this.targets.push(...functionsToKeep);
+        this.targets.push(...currentTargets.filter(t => {
+
+            if (!t.name) return false;
+            return !targetsToRemove.includes(t.name);
+        }));
+
+        releaseArray(targets, targetsToRemove, functionsToKeep);
     };
 
 // `checkForTarget`
     P.checkForTarget = function (item) {
 
-        if (!item.substring) return false;
+        if (item.substring) return this.targets.some(t => t.name === item);
 
-        return this.targets.some(t => t.name === item);
+        if (!item.name) return false
+
+        return this.targets.some(t => t.name === item.name);
     };
 
     P.run = λnull;

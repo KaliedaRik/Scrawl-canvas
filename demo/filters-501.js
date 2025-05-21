@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-501.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -81,7 +81,7 @@ let filterTarget = piccy,
 
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['select', 'filter', 0],
     ['select', 'target', 0],
 ]);

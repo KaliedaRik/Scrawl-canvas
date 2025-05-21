@@ -145,7 +145,8 @@ export { makeDragZone } from './untracked-factory/drag-zone.js';
 export { makeKeyboardZone } from './untracked-factory/keyboard-zone.js';
 export {
     observeAndUpdate,
-    makeUpdater
+    makeUpdater,
+    initializeDomInputs,
 } from './untracked-factory/observe-update.js';
 export {
     requestQuaternion,

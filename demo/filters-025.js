@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-025.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
 
 
 // #### Scene setup
@@ -53,6 +53,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     return `
     Level: ${dom.level.value}
+    Step: ${dom.step.value}
     Mixed offset - min: ${dom.offsetMin.value}; max ${dom.offsetMax.value}
     Red offset - min: ${dom.offsetRedMin.value}; max ${dom.offsetRedMax.value}
     Green offset - min: ${dom.offsetGreenMin.value}; max ${dom.offsetGreenMax.value}
@@ -72,7 +73,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'level', '0.2'],
     ['input', 'step', '1'],
     ['input', 'offsetMin', '-10'],

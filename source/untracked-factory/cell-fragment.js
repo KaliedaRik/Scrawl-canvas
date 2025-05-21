@@ -3,14 +3,14 @@
 
 
 // #### Imports
-import { doCreate, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from './state.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 
-import { getCanvasColorSpace } from '../factory/cell.js'
+import { getCanvasColorSpace } from '../core/user-interaction.js';
 
 // Shared constants
 import { _2D, CANVAS, DISPLAY_P3, LEFT, SRGB, TOP } from '../helper/shared-vars.js';
@@ -61,7 +61,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality

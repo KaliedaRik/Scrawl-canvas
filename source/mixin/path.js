@@ -85,6 +85,9 @@ export default function (P = Ωempty) {
                 this.dirtyStampPositions = true;
                 this.dirtyStampHandlePositions = true;
             }
+
+            // To help fix the bug where user has pathed to an artefact which they have not yet defined
+            else if (newPath == null) this.path = item;
         }
     };
 

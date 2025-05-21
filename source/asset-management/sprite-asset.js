@@ -1,16 +1,12 @@
 // # SpriteAsset factory
 // The factory generates wrapper Objects around spritesheet &lt;img> elements fetched from the server using an URL address.
 // + Scrawl-canvas expects every spritesheet to be accompanied by a __manifest__, defined in either a `.json` encoded file, or a Javascript object. There is no single source of truth for the requirements or format of manifests, so Scrawl-canvas uses its own manifest format.
-//
-// SpriteAssets are used by [Picture](./picture.html) and [Grid](./grid.html) entitys, and [Pattern](./pattern.html) styles.
-//
-// TODO: SpriteAssets don't support animated `.gif` images (or if they do, then its entirely a lucky accident). Tested image formats are `.jpg` and `.png`.
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_obj, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -68,7 +64,7 @@ P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

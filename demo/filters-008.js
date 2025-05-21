@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-008.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -84,7 +84,7 @@ const _round = Math.round,
     green = colorFactory.convertRGBtoHex(_round(0.35 * 255), _round(0.69 * 255), _round(0.17 * 255)),
     blue = colorFactory.convertRGBtoHex(_round(0.27 * 255), _round(0.53 * 255), _round(0.13 * 255));
 
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'redInRed', '0.39'],
     ['input', 'greenInRed', '0.77'],
     ['input', 'blueInRed', '0.19'],
@@ -119,25 +119,25 @@ scrawl.addNativeListener(['change'], (e) => {
 
             myFilter.set({ redColor: val });
 
-            dom.redInRed.value = r;
-            dom.greenInRed.value = g;
-            dom.blueInRed.value = b;
+            dom.redInRed.value = r.toFixed(0);
+            dom.greenInRed.value = g.toFixed(0);
+            dom.blueInRed.value = b.toFixed(0);
         }
         else if ('greenColor' === target) {
 
             myFilter.set({ greenColor: val });
 
-            dom.redInGreen.value = r;
-            dom.greenInGreen.value = g;
-            dom.blueInGreen.value = b;
+            dom.redInGreen.value = r.toFixed(0);
+            dom.greenInGreen.value = g.toFixed(0);
+            dom.blueInGreen.value = b.toFixed(0);
         }
         else if ('blueColor' === target) {
 
             myFilter.set({ blueColor: val });
 
-            dom.redInBlue.value = r;
-            dom.greenInBlue.value = g;
-            dom.blueInBlue.value = b;
+            dom.redInBlue.value = r.toFixed(0);
+            dom.greenInBlue.value = g.toFixed(0);
+            dom.blueInBlue.value = b.toFixed(0);
         }
     }
 }, '.colorSelector');
@@ -170,15 +170,15 @@ scrawl.makeUpdater({
 
     callback: () => {
 
-        const rR = _round(dom.redInRed.value * 255),
-            gR = _round(dom.greenInRed.value * 255),
-            bR = _round(dom.blueInRed.value * 255),
-            rG = _round(dom.redInGreen.value * 255),
-            gG = _round(dom.greenInGreen.value * 255),
-            bG = _round(dom.blueInGreen.value * 255),
-            rB = _round(dom.redInBlue.value * 255),
-            gB = _round(dom.greenInBlue.value * 255),
-            bB = _round(dom.blueInBlue.value * 255);
+        const rR = _round(parseFloat(dom.redInRed.value) * 255),
+            gR = _round(parseFloat(dom.greenInRed.value) * 255),
+            bR = _round(parseFloat(dom.blueInRed.value) * 255),
+            rG = _round(parseFloat(dom.redInGreen.value) * 255),
+            gG = _round(parseFloat(dom.greenInGreen.value) * 255),
+            bG = _round(parseFloat(dom.blueInGreen.value) * 255),
+            rB = _round(parseFloat(dom.redInBlue.value) * 255),
+            gB = _round(parseFloat(dom.greenInBlue.value) * 255),
+            bB = _round(parseFloat(dom.blueInBlue.value) * 255);
 
         dom.redColor.value = colorFactory.convertRGBtoHex(rR, gR, bR);
         dom.greenColor.value = colorFactory.convertRGBtoHex(rG, gG, bG);

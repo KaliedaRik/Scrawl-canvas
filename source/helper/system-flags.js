@@ -34,6 +34,14 @@ let prefersReduceDataChanged = false;
 export const getPrefersReduceDataChanged = () => prefersReduceDataChanged;
 export const setPrefersReduceDataChanged = (val) => prefersReduceDataChanged = val;
 
+let prefersForcedColorsChanged = false;
+export const getPrefersForcedColorsChanged = () => prefersForcedColorsChanged;
+export const setPrefersForcedColorsChanged = (val) => prefersForcedColorsChanged = val;
+
+let prefersInvertedColorsChanged = false;
+export const getPrefersInvertedColorsChanged = () => prefersInvertedColorsChanged;
+export const setPrefersInvertedColorsChanged = (val) => prefersInvertedColorsChanged = val;
+
 let resortBatchAnimations = true;
 export const getResortBatchAnimations = () => resortBatchAnimations;
 export const setResortBatchAnimations = (val) => resortBatchAnimations = val;

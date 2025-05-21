@@ -5,11 +5,7 @@
 // + `scrawl.getCanvas` - locates a &lt;canvas> element in the DOM and creates a wrapper for it.
 // + `scrawl.addCanvas` - generates a new &lt;canvas> element, creates a wrapper for it, then adds it to the DOM.
 //
-// During initialization Scrawl-canvas will search the DOM tree and automatically create Canvas wrappers for all the &lt;canvas> elements it discovers. The first &lt;canvas> element discovered becomes the __current canvas__; all entitys created without a specified `group` attribute will be assigned to that element's wrapper's base Cell's Group object. We can change the current canvas by invoking the `scrawl.setCurrentCanvas` function.
-//
-// A canvas wrapper can include more than one Cell object. It will always include a base Cell object; additional Cells can be treated as ___cell layers___ and/or normal artefacts contributing to the final display.
-//
-// During their creation, Canvas wrappers will directly modify the DOM, adding &lt;div> and &lt;nav> elements to it. These new elements are used as _holds_ where the Canvas will store data and text, mainly to expose &lt;a> links and &lt;p> blocks which expose scene details to assistive technologies (accessibility). These additional elements have zero dimensions and should not affect the layout or painting of the rest of the web page.
+// During initialization Scrawl-canvas will search the DOM tree and automatically create Canvas wrappers for all the &lt;canvas> elements it discovers. During their creation, Canvas wrappers will directly modify the DOM, adding &lt;div> and &lt;nav> elements to it. These new elements are used as _holds_ where the Canvas will store data and text, mainly to expose &lt;a> links and &lt;p> blocks which expose scene details to assistive technologies (accessibility). These additional elements have zero dimensions and should not affect the layout or painting of the rest of the web page.
 //
 // Canvas wrapper objects use the __base__, __position__, __dom__ and __anchor__ mixins. Thus Canvas wrappers are also __artefact__ objects: if a &lt;canvas> element is a direct child of a Stack wrapper's element then it can be positioned, dimensioned and rotated like any other artefact.
 //
@@ -34,12 +30,12 @@ import { domShow } from '../core/document.js';
 
 import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-elements.js";
 
-import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
-import { uiSubscribedElements } from '../core/user-interaction.js';
+import { getCanvasColorSpace, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeState } from '../untracked-factory/state.js';
-import { getCanvasColorSpace, makeCell } from './cell.js';
+import { makeCell } from './cell.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
@@ -156,6 +152,14 @@ const Canvas = function (items = Ωempty) {
 
         this.cleanDimensions();
 
+        let willReadFrequently = ds.willReadFrequently;
+
+        if (willReadFrequently === "false") willReadFrequently = false;
+        else willReadFrequently = items.willReadFrequently;
+
+        if (willReadFrequently == null) willReadFrequently = true;
+        else willReadFrequently = !!willReadFrequently;
+
         // setup base cell
         const cellArgs = {
             name: `${this.name}_base`,
@@ -170,6 +174,7 @@ const Canvas = function (items = Ωempty) {
             controller: this,
             order: 10,
             canvasColorSpace: this.canvasColorSpace,
+            willReadFrequently,
         };
 
         if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);
@@ -345,7 +350,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality

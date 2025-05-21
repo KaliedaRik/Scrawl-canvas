@@ -4,7 +4,7 @@
 // [Run code](../../demo/mediapipe-001.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -154,7 +154,11 @@ let video, model, myBackground, myOutline;
 scrawl.importMediaStream({
 
     name: name('device-camera'),
-    audio: false,
+    video: {
+        width: { ideal: 600 },
+        height: { ideal: 400 },
+        facingMode: 'user',
+    },
 })
 .then(mycamera => {
 
@@ -162,9 +166,9 @@ scrawl.importMediaStream({
 
     // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
 /** @ts-expect-error */
-    video.source.width = "1280";
+    video.source.width = "600";
 /** @ts-expect-error */
-    video.source.height = "720";
+    video.source.height = "400";
 
     // Take the media stream and display it in our canvas element
     myBackground = scrawl.makePicture({
@@ -199,7 +203,7 @@ scrawl.importMediaStream({
     model = new SelfieSegmentation({
 
 /* eslint-enable */
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`,
     });
 
     model.setOptions({ modelSelection: 1 });
@@ -240,7 +244,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['select', 'backgroundFilter', 0],
     ['select', 'outlineFilter', 1],
 ]);

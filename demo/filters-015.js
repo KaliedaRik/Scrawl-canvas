@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-015.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -71,7 +71,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'tile_width', '20'],
     ['input', 'tile_height', '20'],
     ['input', 'tile_radius', '14'],
@@ -101,7 +101,7 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 points: parseInt(dom.random_points.value, 10),
                 tileRadius: 100,
             });
-            dom.tile_radius.value = 100;
+            dom.tile_radius.value = '100';
             break;
 
         case 'hex-grid' :
@@ -110,8 +110,8 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 tileRadius: 20,
                 tileHeight: 40,
             });
-            dom.tile_radius.value = 20;
-            dom.tile_height.value = 40;
+            dom.tile_radius.value = '20';
+            dom.tile_height.value = '40';
             break;
 
         case 'rect-grid' :
@@ -120,8 +120,8 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 tileWidth: 20,
                 tileHeight: 20,
             });
-            dom.tile_width.value = 20;
-            dom.tile_height.value = 20;
+            dom.tile_width.value = '20';
+            dom.tile_height.value = '20';
             break;
     }
 }, dom.points);

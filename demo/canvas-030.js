@@ -5,7 +5,7 @@
 // [Run code](../../demo/canvas-030.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, killPolylineArtefact, initializeDomInputs } from './utilities.js';
+import { reportSpeed, killPolylineArtefact } from './utilities.js';
 
 
 // #### Scene setup
@@ -269,7 +269,7 @@ scrawl.addNativeListener(['input', 'change'], updatePins, '#pins');
 
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'roll', '0'],
     ['input', 'scale', '1'],
     ['input', 'tension', '0'],

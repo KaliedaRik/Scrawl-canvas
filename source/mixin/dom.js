@@ -121,6 +121,10 @@ export default function (P = Ωempty) {
         noPreferenceTransparencyAction: null,
         reduceDataAction: null,
         noPreferenceDataAction: null,
+        invertedColorsAction: null,
+        normalColorsAction: null,
+        noForcedColorsAction: null,
+        activeForcedColorsAction: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -419,6 +423,7 @@ export default function (P = Ωempty) {
 // ##### DOM element class attribute management
 
 // `addClasses`
+// + Argument should be a single String of space-separated classes
     P.addClasses = function (item) {
 
         if (item.substring) {
@@ -435,11 +440,12 @@ export default function (P = Ωempty) {
     };
 
 // `removeClasses`
+// + Argument should be a single string of space-separated classes
     P.removeClasses = function (item) {
 
         if (item.substring) {
 
-            const targets = item.split();
+            const targets = item.split(' ');
 
             let classes = this.classes,
                 search;
@@ -897,6 +903,10 @@ export default function (P = Ωempty) {
         this.noPreferenceDataAction = λnull;
         this.moreContrastAction = λnull;
         this.otherContrastAction = λnull;
+        this.invertedColorsAction = λnull;
+        this.normalColorsAction = λnull;
+        this.noForcedColorsAction = λnull;
+        this.activeForcedColorsAction = λnull;
     };
 
 // __prefers-contrast__ accessibility user choice
@@ -1046,6 +1056,64 @@ export default function (P = Ωempty) {
         }
     };
 
+// __inverted-colors__ accessibility user choice
+    S.invertedColorsAction = function (item) {
+        if (isa_fn(item)) this.invertedColorsAction = item;
+    };
+    P.setInvertedColorsAction = function (item) {
+        if (isa_fn(item)) this.invertedColorsAction = item;
+    };
+    S.normalColorsAction = function (item) {
+        if (isa_fn(item)) this.normalColorsAction = item;
+    };
+    P.setNormalColorsAction = function (item) {
+        if (isa_fn(item)) this.normalColorsAction = item;
+    };
+    P.invertedColorsActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const flag = here.prefersInvertedColors;
+
+            if (xt(flag)) {
+
+                if (flag) this.invertedColorsAction();
+                else this.normalColorsAction();
+            }
+        }
+    };
+
+// __forced-colors__ accessibility user choice
+    S.noForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.noForcedColorsAction = item;
+    };
+    P.setNoForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.noForcedColorsAction = item;
+    };
+    S.activeForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.activeForcedColorsAction = item;
+    };
+    P.setActiveForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.activeForcedColorsAction = item;
+    };
+    P.forcedColorsActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const accessibilityFlag = here.prefersForcedColors;
+
+            if (xt(accessibilityFlag)) {
+
+                if (accessibilityFlag) this.activeForcedColorsAction();
+                else this.noForcedColorsAction();
+            }
+        }
+    };
+
     P.checkAccessibilityValues = function () {
 
         this.contrastActions();
@@ -1053,5 +1121,7 @@ export default function (P = Ωempty) {
         this.colorSchemeActions();
         this.reducedTransparencyActions();
         this.reducedDataActions();
+        this.invertedColorsActions();
+        this.forcedColorsActions()
     };
 }

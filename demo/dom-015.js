@@ -4,7 +4,7 @@
 // [Run code](../../demo/dom-015.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -192,7 +192,7 @@ scrawl.makeRender({
 
 // #### More user interaction
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'width', '200'],
     ['input', 'height', '200'],
     ['input', 'handle_xAbsolute', '100'],

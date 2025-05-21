@@ -1,36 +1,11 @@
 // # Stack factory
 // The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity positioning and dimensioning functionality.
-// + Entitys exist in a Cell environment
-// + They can position themselves within that Cell either __absolutely__ (px coordinates), or __relatively__ (% coordinates, with values relative to the Cell's dimensions), or __by reference__ (using other entity's coordinates to calculate their own coordinates - `pivot`, `mimic`, `path`)
-// + They can also base their dimensions on absolute (px) or relative (%) values
-// + They can be __animated__ directly (`set`, `deltaSet`), or through automation (`delta` object), or through the Scrawl-canvas `tween` functionality
-// + They can be stored and retrieved ('packet' functionality), cloned ('clone', based on packets) and killed ('kill' functions)
-//
-// __A Stack is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
-// ```
-// Stack    ~~> Canvas/Cell
-// Element  ~~> Entity (eg Block)
-// ```
-// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
-// + Stack elements have `relative` positioning within the DOM
-// + Element elements have `absolute` positioning within the Stack
-//
-// The Stack factory is not used directly; the factory is not exported as part of the __scrawl object__ during Scrawl-canvas initialization. Instead, wrappers can be created for a DOM-based &lt;div> element using the following scrawl function:
-// + `scrawl.addStack` - generates a new &lt;div> element, creates a wrapper for it, then adds it to the DOM.
-//
-// Stack wrapper objects use the __base__, __position__, __anchor__, __cascade__ and __dom__ mixins. Thus Stack wrappers are also __artefact__ objects: if a Stack's DOM element is a direct child of another Stack wrapper's element then it can be positioned, dimensioned and rotated like any other artefact.
-//
-// By default, all Stack wrappers will track mouse/touch movements across their DOM element, supplying this data to constituent Canvas objects and artefacts as-and-when-required.
-//
-// Stack wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle.
-//
-// Stack wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Stack wrapper will remove its DOM element from the document - __including all Elements and Canvases that it contains__.
 
 
 // #### Imports
 import { artefact, constructors, group, purge, stack } from '../core/library.js';
 
-import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { domShow } from '../core/document.js';
 
@@ -166,7 +141,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality
@@ -476,7 +451,7 @@ constructors.Stack = Stack;
 
 
 // #### Stack discovery
-// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them.
+// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-scrawl-stack__ attribute; then create __Stack__ artefact wrappers for each of them.
 //
 // This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
 export const getStacks = function (query = $DATA_SCRAWL_STACK) {

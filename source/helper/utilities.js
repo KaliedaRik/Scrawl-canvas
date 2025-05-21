@@ -140,7 +140,9 @@ export const correctForZero = (item) => {
 // __λ functions__ helps us avoid errors when invoking a function attribute settable by the coder
 export const λnull = () => {};
 export const λfirstArg = function (a) { return a; };
-export const λthis = function () { return this; };
+export const λcloneError = function () {
+    return new Error('Clone functionality is not supported for this object');
+};
 
 // Note that, when developing in this file, the Ωempty object should be frozen - `Object.freeze({})`. This is to prevent any code adding attributes to it (`Object.seal({})`) would also do the job). Sadly, Object freezing (and sealing) has a slight detriment to performance as the JS engine may perform additional checks when encountering the Ωempty object which are not required when we already know the code does not add any attributes to it
 

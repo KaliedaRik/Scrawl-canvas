@@ -5,7 +5,7 @@
 
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 const stack = scrawl.findStack('mystack'),
@@ -156,7 +156,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Housekeeping - set the DOM input values to their starting values on each page reload
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'width', '400'],
     ['input', 'height', '400'],
     ['input', 'start_xAbsolute', '300'],

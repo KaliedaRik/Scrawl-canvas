@@ -434,6 +434,42 @@ const circlesGradient = () => {
     update();
 };
 
+const conicOne = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue } = pixel;
+        const angle = pixel.angle;
+
+        if (angle < 0.33) red++;
+        else if (angle < 0.67) green++;
+        else blue++;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
+const conicTwo = () => {
+
+    pixelState.forEach(pixel => {
+
+        let { red, green, blue } = pixel;
+        const angle = pixel.angle;
+
+        if (angle < 0.33) red--;
+        else if (angle < 0.67) green--;
+        else blue--;
+
+        pixel.red = red;
+        pixel.green = green;
+        pixel.blue = blue;
+    });
+    update();
+};
+
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -475,6 +511,8 @@ const updateOptions = [
     thinStripe,
     circlesGradient,
     thinStripeReverse,
+    conicOne,
+    conicTwo,
 ];
 
 const optionNames = [
@@ -495,6 +533,8 @@ const optionNames = [
     'thinStripe',
     'circlesGradient',
     'thinStripeReverse',
+    'conicOne',
+    'conicTwo',
 ];
 
 const len = updateOptions.length;

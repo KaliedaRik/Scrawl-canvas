@@ -1938,7 +1938,7 @@ P.positionTextUnitsInSpace = function () {
             if (languageDirectionIsLtr && (unitData.includes(TEXT_TYPE_SOFT_HYPHEN) || unitData.includes(TEXT_TYPE_TRUNCATE))) {
 
                 unit = textUnits[unitData[unitData.length - 2]];
-                spaceRemaining -= (unit.replaceLen != null) ? unit.replaceLen : 0;
+                spaceRemaining -= (unit && unit.replaceLen != null) ? unit.replaceLen : 0;
             }
 
             // Add unused space to distances as we push data into adjustedDistances
@@ -2830,7 +2830,7 @@ P.regularStamp = function (host) {
 
                     const myimage = finalEngine.getImageData(0, 0, w, h);
 
-                    this.preprocessFilters(filters);
+                    this.preprocessFilters(filters, element.width, element.height);
 
                     const img = filterEngine.action({
                         identifier: this.filterIdentifier,

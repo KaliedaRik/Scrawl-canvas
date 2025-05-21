@@ -4,7 +4,7 @@
 // [Run code](../../demo/particles-002.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -235,7 +235,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'world_speed', '2'],
     ['input', 'max_fill', '#000000'],
     ['input', 'min_fill', '#ffffff'],

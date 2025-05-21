@@ -9,14 +9,12 @@ import { mergeOver, xt, Ωempty } from '../helper/utilities.js';
 
 import { asset } from '../core/library.js';
 
-import { _now } from '../helper/shared-vars.js';
-
 import { importImage } from '../asset-management/image-asset.js';
 import { importVideo } from '../asset-management/video-asset.js';
 import { importSprite } from '../asset-management/sprite-asset.js';
 
 // Shared constants
-import { T_SPRITE, T_VIDEO } from '../helper/shared-vars.js';
+import { _now, T_SPRITE, T_VIDEO } from '../helper/shared-vars.js';
 
 // Local constants
 const ADD_TEXT_TRACK = 'addTextTrack',

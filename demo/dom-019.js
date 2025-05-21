@@ -4,7 +4,7 @@
 // [Run code](../../demo/dom-019.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -108,7 +108,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['select', 'backgroundFilter', 0],
     ['button', 'screen_request_button', 'Request screen capture'],
 ]);

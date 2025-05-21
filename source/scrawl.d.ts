@@ -82,7 +82,6 @@ interface AssetAdvancedFunctionalityMixinInputs {
     colors?: StyleColorsArray[];
     colorSpace?: ColorSpacesValues;
     cyclePalette?: boolean;
-    // delta?: AssetAdvancedFunctionalityMixinDeltaInputs;
     easing?: string | DefaultInputFunction;
     precision?: number;
     returnColorAs?: ReturnColorValues;
@@ -307,7 +306,6 @@ interface DomMixinInputs extends PositionMixinInputs, DeltaMixinInputs, PivotMix
     reduceDataAction?: DefaultInputFunction;
     reduceMotionAction?: DefaultInputFunction;
     reduceTransparencyAction?: DefaultInputFunction;
-    smoothFont?: boolean;
     trackHere?: string;
 }
 
@@ -330,7 +328,7 @@ interface DomMixinFunctions extends BaseMixinFunctions, PositionMixinFunctions, 
 
 // Entity mixin
 // -------------------------------------
-type MethodValues = 'draw' | 'fill' | 'drawAndFill' | 'fillAndDraw' | 'drawThenFill' | 'fillThenDraw' | 'clip' | 'clear' | 'none';
+type MethodValues = 'draw' | 'fill' | 'drawAndFill' | 'fillAndDraw' | 'drawThenFill' | 'fillThenDraw' | 'clip' | 'clear' | 'none' | string;
 
 type WindingValues = 'nonzero' | 'evenodd';
 
@@ -413,7 +411,7 @@ interface PathMixinInputs {
     addPathOffset?: boolean;
     addPathRotation?: boolean;
     constantSpeedAlongPath?: boolean;
-    path?: ShapeInstance | string;
+    path?: ShapeBasedInstance | string;
 }
 
 interface PathMixinFunctions {}
@@ -581,7 +579,7 @@ interface ShapeCurveMixinInputs extends ShapeBasicMixinInputs {
     addEndPivotOffset?: boolean;
     endLockTo?: LockToValues | [LockToValues, LockToValues];
     endParticle?: string;
-    endPath?: ShapeInstance | string;
+    endPath?: ShapeBasedInstance | string;
     endPivot?: ArtefactInstance | string;
     endPivotCorner?: PivotCornerValues;
     endPivotIndex?: number;
@@ -659,7 +657,7 @@ interface TweenMixinInputs {
     order?: number;
     reverseOnCycleEnd?: boolean;
     targets?: TweenTargetInstance | TweenTargetInstance[];
-    ticker?: string;
+    ticker?: TickerInstance | string;
 }
 
 interface TweenMixinFunctions {
@@ -806,7 +804,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     addStartControlPivotOffset?: boolean;
     startControlLockTo?: LockToValues | [LockToValues, LockToValues];
     startControlParticle?: string;
-    startControlPath?: ShapeInstance | string;
+    startControlPath?: ShapeBasedInstance | string;
     startControlPivot?: ArtefactInstance | string;
     startControlPivotCorner?: PivotCornerValues;
     startControlPivotPin?: number;
@@ -818,7 +816,7 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     addEndControlPivotOffset?: boolean;
     endControlLockTo?: LockToValues | [LockToValues, LockToValues];
     endControlParticle?: string;
-    endControlPath?: ShapeInstance | string;
+    endControlPath?: ShapeBasedInstance | string;
     endControlPivot?: ArtefactInstance | string;
     endControlPivotCorner?: PivotCornerValues;
     endControlPivotPin?: number;
@@ -991,7 +989,6 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     setRelativeDimensionsUsingBase?: boolean;
     shown?: boolean;
     showOrder?: number;
-    smoothFont?: boolean;
     stashHeight?: StringOrNumberInput;
     stashWidth?: StringOrNumberInput;
     stashX?: StringOrNumberInput;
@@ -1022,6 +1019,7 @@ interface CellPixelStateObject {
     row: number;
     col: number;
     distance: number;
+    angle: number;
 }
 
 interface CellImageDataObject {
@@ -1462,8 +1460,12 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     opacity?: number;
     opaqueAt?: number;
     passes?: number;
+    passesHorizontal?: number;
+    passesVertical?: number;
     outerRadius?: StringOrNumberInput;
     radius?: number;
+    radiusHorizontal?: number;
+    radiusVertical?: number;
     redInBlue?: number;
     redInGreen?: number;
     redInRed?: number;
@@ -1473,6 +1475,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     startX?: StringOrNumberInput;
     startY?: StringOrNumberInput;
     step?: number;
+    stepHorizontal?: number;
+    stepVertical?: number;
     strength?: number;
     tileHeight?: StringOrNumberInput;
     tileRadius?: number;
@@ -2199,7 +2203,7 @@ interface QuadraticFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs,
     addControlPivotOffset?: boolean;
     controlLockTo?: LockToValues | [LockToValues, LockToValues];
     controlParticle?: string;
-    controlPath?: ShapeInstance | string;
+    controlPath?: ShapeBasedInstance | string;
     controlPivot?: ArtefactInstance | string;
     controlPivotCorner?: PivotCornerValues;
     controlPivotPin?: number;
@@ -2718,7 +2722,6 @@ interface TickerFactoryDeltaInputs extends BaseMixinDeltaInputs {
 
 interface TickerFactoryInputs extends BaseMixinInputs, TickerFactoryDeltaInputs {
     delta?: TickerFactoryDeltaInputs;
-    eventChoke?: number;
     killOnComplete?: boolean;
     observer?: string | RenderInstance;
     onComplete?: DefaultInputFunction;
@@ -2730,6 +2733,7 @@ interface TickerFactoryInputs extends BaseMixinInputs, TickerFactoryDeltaInputs 
     onSeekFor?: DefaultInputFunction;
     onSeekTo?: DefaultInputFunction;
     order?: number;
+    subscribers?: (string | TweenInstance | ActionInstance)[]
 }
 
 interface TickerSaveInputs extends TickerFactoryInputs, SaveInputs {}
@@ -2748,6 +2752,8 @@ interface TickerFactoryFunctions extends BaseMixinFunctions {
     seekTo: (milliseconds: number, resume?: boolean) => TickerInstance;
     set: (item?: TickerFactoryInputs) => TickerInstance;
     setDelta: (item?: TickerFactoryDeltaInputs) => TickerInstance;
+    subscribe: (...args: (string | TweenInstance | ActionInstance | (string | TweenInstance | ActionInstance)[])[]) => TickerInstance;
+    unsubscribe: (...args: (string | TweenInstance | ActionInstance | (string | TweenInstance | ActionInstance)[])[]) => TickerInstance;
 }
 
 export interface TickerInstance extends TickerFactoryInputs, TickerFactoryFunctions {}
@@ -2807,7 +2813,6 @@ interface TweenFactoryInputs extends BaseMixinInputs, TweenMixinInputs, TweenFac
     cycles?: number;
     delta?: TweenFactoryDeltaInputs;
     definitions?: TweenDefinitionsObject[];
-    eventChoke?: number;
     killOnComplete?: boolean;
     observer?: string | RenderInstance;
     onHalt?: DefaultInputFunction;
@@ -2816,7 +2821,7 @@ interface TweenFactoryInputs extends BaseMixinInputs, TweenMixinInputs, TweenFac
     onRun?: DefaultInputFunction;
     onSeekFor?: DefaultInputFunction;
     onSeekTo?: DefaultInputFunction;
-    ticker?: string;
+    ticker?: string | TickerInstance;
     useNewTicker?: boolean;
 }
 
@@ -3238,6 +3243,15 @@ interface SnippetReturn {
 export function makeSnippet(items: SnippetInputs): SnippetReturn;
 
 
+
+
+// initialize DOM input
+type InitializeDomInputElement = [string, string, string | number] | ['' | 'element', string];
+type InputElements = HTMLInputElement | HTMLSelectElement | HTMLButtonElement;
+interface InitializeDomInputResult {
+    [index: string]: InputElements;
+}
+export function initializeDomInputs(item: InitializeDomInputElement[]): InitializeDomInputResult;
 
 
 // Other Scrawl-canvas function exports

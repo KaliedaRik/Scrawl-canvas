@@ -24,7 +24,7 @@ import { makeColor } from '../factory/color.js';
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -115,7 +115,7 @@ const FilterEngine = function () {
     // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
     this.cache = null;
 
-    // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
+    // __actions__ - the Array of action objects that the engine needs to process.
     this.actions = [];
 
     return this;
@@ -139,7 +139,7 @@ P.action = function (packet) {
 
     for (i = 0, iz = filters.length; i < iz; i++) {
 
-        actions.push(...filters[i].actions)
+        actions.push(...filters[i].actions);
     }
 
     const actionsLen = actions.length;
@@ -1279,6 +1279,59 @@ P.theBigActionsObject = {
                 oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? 0 : iData[g]);
                 oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? 0 : iData[b]);
                 oData[a] = 255;
+            }
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __alpha-to-luminance__ - Sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)
+    [ALPHA_TO_LUMINANCE]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
+
+        const libs = this.retrieveColorPointLibraries();
+
+        let r, g, b, a, i, L, _r, _g, _b, alpha;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            alpha = iData[a];
+
+            if (alpha) {
+
+                L = alpha / 256;
+                if (L > 1) L = 1;
+                else if (L < 0) L = 0;
+
+                [_r, _g, _b] = this.getRegularColorVals(L, 0, 0, libs);
+
+                oData[r] = _r;
+                oData[g] = _g;
+                oData[b] = _b;
+                oData[a] = 255;
+            }
+            else {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = 0;
             }
         }
 
@@ -3693,6 +3746,43 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// __luminance-to-alpha__ - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).
+    [LUMINANCE_TO_ALPHA]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
+
+        const libs = this.retrieveColorPointLibraries();
+
+        let r, g, b, a, i, L;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            [L] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+
+            oData[r] = 0;
+            oData[g] = 0;
+            oData[b] = 0;
+            oData[a] = _floor(L * 256);
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 // __map-to-gradient__ - maps the colors in the supplied (complex) gradient to a grayscaled input.
     [MAP_TO_GRADIENT]: function (requirements) {
 
@@ -4342,11 +4432,15 @@ P.theBigActionsObject = {
 // + Adding assets to a filter chain will very often disable filter memoization functionality!
     [PROCESS_IMAGE]: function (requirements) {
 
-        const {assetData, lineOut} = requirements;
+        const {identifier, lineOut} = requirements;
 
         if (lineOut && lineOut.substring && lineOut.length) {
 
-            let {width, height, data} = assetData;
+            const assetData = getWorkstoreItem(identifier);
+
+            let width = assetData ? assetData.width : 1,
+                height = assetData ? assetData.height : 1,
+                data = assetData ? assetData.data : new Uint8ClampedArray(4);
 
             if (width && height && data) {
 

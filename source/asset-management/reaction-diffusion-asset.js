@@ -9,7 +9,7 @@ import { constructors, entity } from '../core/library.js';
 
 import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 
-import { constrain, doCreate, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { constrain, doCreate, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -124,7 +124,7 @@ P.saveAsPacket = function () {
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

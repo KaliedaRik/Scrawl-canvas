@@ -115,8 +115,6 @@ scrawl.makeFilter({
     name: name('noise'),
     method: 'image',
     asset: name('my-noise-generator'),
-    width: 400,
-    height: 400,
     copyWidth: '100%',
     copyHeight: '100%',
     lineOut: 'map',

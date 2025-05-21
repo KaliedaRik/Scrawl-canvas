@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-049.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -159,7 +159,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 
 // Set the DOM input values
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'angle', '0'],
     ['input', 'paletteEnd', '999'],
     ['input', 'paletteStart', '0'],

@@ -8,7 +8,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_fn, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_fn, mergeOver, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { makeQuaternion } from '../untracked-factory/quaternion.js';
 import { makeVector } from '../untracked-factory/vector.js';
@@ -107,7 +107,7 @@ P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

@@ -1,30 +1,5 @@
 // # Picture factory
 // Picture entitys are image, video or canvas-based rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [CanvasRenderingContext2D interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - in particular the [drawImage](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage) method.
-// + Positioning and dimensions functionality for the Picture is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
-// + Pictures can use [ImageAsset](./imageAsset.html), [SpriteAsset](./spriteAsset.html), [VideoAsset](./videoAsset.html), or [Cells](./cell.html) for the source of the image they display.
-// + Additionally, we can restrict the display to a portion of the source by defining and updating `copy` attributes.
-//
-// We define the source copy area in a similar way to how we position and dimension the Picture entity on its Cell host, using two additional [Coordinate](./coordinate.html) Arrays to hold our data.
-// + for both positioning and dimensions, we can define the coordinate in absolute, or relative, terms
-// + __absolute__ positioning and dimensions - where we give the artefact a Number coordinate measured in pixels.
-// + __relative__ positioning and dimensions - where we use String percentage coordinates, with `['0%', '0%']` representing the top left corner of the source, and `['100%', '100%']` its bottom right corner.
-//
-// Source dimensions are the ___natural width and height___ of the image or video
-// + The code will check automatically to make sure that any combination of start and dimensions values does not lead to an attempt to copy image data that does not exist (which otherwise throws an error).
-// + Where `copyStartX + width` values are greater than the source width, the start value will be reduced until the copy frame fits within the bounds of the source dimensions.
-// + Where `copyStartY + height` values are greater than the source height, the start value will be reduced until the copy frame fits within the bounds of the source dimensions.
-//
-// Loading sources is an asynchronous action. If we attempt to stamp a Picture entity whose source has not yet been fetched or loaded, the Picture will skip its stamp functionality for that Display cycle.
-// + Stamping a Picture entity directly, immediately after defining it, will (almost certainly) lead to the image not displaying on the canvas.
-// + For this reason, its best to use Picture entitys inside a Display cycle animation. As soon as the source finishes loading, the Picture entity will display as expected.
-//
-// Also:
-// + Pictures can use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
-// + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation.
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
-// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
-// + Pictures (but not their source assets) can be cloned, and killed.
 
 
 // #### Imports

@@ -19,7 +19,6 @@
     "html5",
     "dom",
     "canvas",
-    "canvas2d",
     "2d",
     "graphics",
     "infographics",
@@ -30,7 +29,12 @@
     "javascript",
     "accessible",
     "accessibility",
-    "responsive"
+    "responsive",
+    "interactive",
+    "ui",
+    "drawing",
+    "game",
+    "creative coding"
   ],
   "repository": {
     "type": "git",

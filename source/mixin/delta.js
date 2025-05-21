@@ -93,7 +93,7 @@ export default function (P = Ωempty) {
 
 // #### Prototype functions
 
- // `updateByDelta` - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
+// `updateByDelta` - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
     P.updateByDelta = function () {
 
         this.setDelta(this.delta);
@@ -271,7 +271,7 @@ export default function (P = Ωempty) {
         else this.performDeltaChecks = true;
     };
 
-// `setDeltaValues`
+// `setDeltaValues` - warning: EXPERIMENTAL and not currently tested!
 // Update the artefact's `delta` object in a more intelligent way. The function accepts an object argument containing a set of instructions which will be interpreted and applied to the delat object.
 // ```
 // // Original delta object:

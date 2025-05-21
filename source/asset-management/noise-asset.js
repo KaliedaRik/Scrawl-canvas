@@ -21,7 +21,7 @@
 import { constructors } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 
-import { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
@@ -157,7 +157,7 @@ P.saveAsPacket = function () {
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

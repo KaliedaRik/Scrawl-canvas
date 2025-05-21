@@ -365,7 +365,7 @@ export default function (P = Ωempty) {
         return copy;
     };
 
-// `importPacket` - Import and unpack a string representation of a factory object using the __saveAsPacket__ function.
+// `importPacket` - Import and unpack a string representation of a factory object serialized using the __saveAsPacket__ function.
 // + Uses __fetch__, thus is an asynchronous process and returns a promise
 // + Once we have the packet, we can further action it using actionPacket()
     P.importPacket = function (items) {
