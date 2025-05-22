@@ -1874,8 +1874,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> oldGCO = (state) ? state.<span class="hljs-property">globalCompositeOperation</span> : <span class="hljs-variable constant_">SOURCE_OVER</span>;
-            state.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> oldGCO = <span class="hljs-variable constant_">SOURCE_OVER</span>
+            <span class="hljs-keyword">if</span> (state) oldGCO = state.<span class="hljs-property">globalCompositeOperation</span>;</pre></div></div>
             
         </li>
         
@@ -1905,7 +1905,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            state.<span class="hljs-property">globalCompositeOperation</span> = oldGCO;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (state) state.<span class="hljs-property">globalCompositeOperation</span> = oldGCO;
 
             <span class="hljs-keyword">if</span> (hasFilters) {
 

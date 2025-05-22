@@ -593,7 +593,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/vector.js&#x27;</span>;
 
@@ -790,7 +790,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 };
 D.<span class="hljs-property">outerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
 S.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -800,7 +800,7 @@ S.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">fu
 };
 D.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
@@ -824,7 +824,7 @@ D.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">fu
 };
 D.<span class="hljs-property">outerControlsDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsDistance</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsDistance</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsDistance</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
 S.<span class="hljs-property">innerControlsDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -834,7 +834,7 @@ S.<span class="hljs-property">innerControlsDistance</span> = <span class="hljs-k
 };
 D.<span class="hljs-property">innerControlsDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsDistance</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsDistance</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsDistance</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
@@ -858,7 +858,7 @@ D.<span class="hljs-property">innerControlsDistance</span> = <span class="hljs-k
 };
 D.<span class="hljs-property">outerControlsOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsOffset</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsOffset</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsOffset</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
 S.<span class="hljs-property">innerControlsOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -868,7 +868,7 @@ S.<span class="hljs-property">innerControlsOffset</span> = <span class="hljs-key
 };
 D.<span class="hljs-property">innerControlsOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsOffset</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsOffset</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsOffset</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             

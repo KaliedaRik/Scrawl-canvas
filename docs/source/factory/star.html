@@ -594,7 +594,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/vector.js&#x27;</span>;
 
@@ -786,7 +786,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 };
 D.<span class="hljs-property">radius1</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius1</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius1</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">radius1</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
 S.<span class="hljs-property">radius2</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -796,7 +796,7 @@ S.<span class="hljs-property">radius2</span> = <span class="hljs-keyword">functi
 };
 D.<span class="hljs-property">radius2</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius2</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius2</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">radius2</span>, item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             

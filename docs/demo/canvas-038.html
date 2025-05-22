@@ -1138,9 +1138,22 @@ scrawl.<span class="hljs-title function_">makeRectangle</span>({
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;25%&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Known issue: the entity will get “jittery” in a responsive environment. Fix, as yet, unknown</p>
 
-    <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-string">&#x27;60%&#x27;</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-string">&#x27;60%&#x27;</span>,
     <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-string">&#x27;15%&#x27;</span>,
 
     <span class="hljs-attr">radiusT</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
@@ -1164,9 +1177,22 @@ scrawl.<span class="hljs-title function_">makeStar</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;responsive-star&#x27;</span>),
 
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;25%&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Known issue: the entity will get “jittery” in a responsive environment. The current fix (in a hacky, undesirable way) is to make <code>radius2</code> larger than <code>radius1</code></p>
 
-    <span class="hljs-attr">radius1</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">radius1</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
     <span class="hljs-attr">radius2</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
 
     <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
@@ -1204,9 +1230,22 @@ scrawl.<span class="hljs-title function_">makeCog</span>({
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;responsive-cog&#x27;</span>),
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;responsive-cog&#x27;</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Known issue: the entity will get “jittery” in a responsive environment. The current fix (in a hacky, undesirable way) is to make the <code>innerRadius</code> larger than the <code>outerRadius</code></p>
 
-    <span class="hljs-attr">outerRadius</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">180</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">outerRadius</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">180</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
     <span class="hljs-attr">innerRadius</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">160</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
     <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">10</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
     <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">6</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
@@ -1218,11 +1257,11 @@ scrawl.<span class="hljs-title function_">makeCog</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1234,11 +1273,11 @@ scrawl.<span class="hljs-title function_">makeCog</span>({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1254,11 +1293,11 @@ scrawl.<span class="hljs-title function_">makeCog</span>({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
