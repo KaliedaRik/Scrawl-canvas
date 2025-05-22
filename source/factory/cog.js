@@ -4,7 +4,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
@@ -80,7 +80,7 @@ S.outerRadius = function (item) {
 };
 D.outerRadius = function (item) {
 
-    this.outerRadius += item;
+    this.outerRadius = addStrings(this.outerRadius, item);
     this.updateDirty();
 };
 S.innerRadius = function (item) {
@@ -90,7 +90,7 @@ S.innerRadius = function (item) {
 };
 D.innerRadius = function (item) {
 
-    this.innerRadius += item;
+    this.innerRadius = addStrings(this.innerRadius, item);
     this.updateDirty();
 };
 
@@ -102,7 +102,7 @@ S.outerControlsDistance = function (item) {
 };
 D.outerControlsDistance = function (item) {
 
-    this.outerControlsDistance += item;
+    this.outerControlsDistance = addStrings(this.outerControlsDistance, item);
     this.updateDirty();
 };
 S.innerControlsDistance = function (item) {
@@ -112,7 +112,7 @@ S.innerControlsDistance = function (item) {
 };
 D.innerControlsDistance = function (item) {
 
-    this.innerControlsDistance += item;
+    this.innerControlsDistance = addStrings(this.innerControlsDistance, item);
     this.updateDirty();
 };
 
@@ -124,7 +124,7 @@ S.outerControlsOffset = function (item) {
 };
 D.outerControlsOffset = function (item) {
 
-    this.outerControlsOffset += item;
+    this.outerControlsOffset = addStrings(this.outerControlsOffset, item);
     this.updateDirty();
 };
 S.innerControlsOffset = function (item) {
@@ -134,7 +134,7 @@ S.innerControlsOffset = function (item) {
 };
 D.innerControlsOffset = function (item) {
 
-    this.innerControlsOffset += item;
+    this.innerControlsOffset = addStrings(this.innerControlsOffset, item);
     this.updateDirty();
 };
 

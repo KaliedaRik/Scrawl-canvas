@@ -659,6 +659,6 @@ export default function (P = Ωempty) {
         if (w < minDims) w = minDims;
         if (h < minDims) h = minDims;
 
-        return [_floor(x - hX), _floor(y - hY), _ceil(w), _ceil(h), sX, sY];
+        return [x - hX, y - hY, w, h, sX, sY];
     };
 }

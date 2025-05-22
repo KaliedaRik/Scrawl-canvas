@@ -5,7 +5,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
@@ -76,7 +76,7 @@ S.radius1 = function (item) {
 };
 D.radius1 = function (item) {
 
-    this.radius1 += item;
+    this.radius1 = addStrings(this.radius1, item);
     this.updateDirty();
 };
 S.radius2 = function (item) {
@@ -86,7 +86,7 @@ S.radius2 = function (item) {
 };
 D.radius2 = function (item) {
 
-    this.radius2 += item;
+    this.radius2 = addStrings(this.radius2, item);
     this.updateDirty();
 };
 

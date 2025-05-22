@@ -228,6 +228,8 @@
       <li>Check that we can manipulate the Star-specific attributes</li>
     </ul>
 
+    <p><b>Known issue:</b> for some perverse reason, the entity gets 'jittery' when attempting to animate radius values (and scale - if the radius1 value is larger (or even very slightly smaller) than the radius2 value. The current fix, if required, is to keep the radius2 larger than radius1. Note that this may also impact on entitys defined in relative (%) values in a responsive canvas environment.</p>
+
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/canvas-065.html">Annotated code</a></p>

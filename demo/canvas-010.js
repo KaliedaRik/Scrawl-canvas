@@ -76,7 +76,7 @@ const viddyTwo = scrawl.makePicture({
 let viddyThree;
 
 scrawl.importMediaStream({
-    audio: false,
+    video: true,
 })
 .then(myface => {
 

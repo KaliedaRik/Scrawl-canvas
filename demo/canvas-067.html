@@ -251,6 +251,8 @@
       <li>Check that we can manipulate the Cog-specific attributes</li>
     </ul>
 
+    <p><b>Known issue:</b> for some perverse reason, the entity gets 'jittery' when attempting to animate particular values - scale, control distances or offsets - if the outer radius value is larger (or even very slightly smaller) than the inner radius value. The current fix, if required, is to keep the inner radius larger than the outer radius. Note that this may also impact on entitys defined in relative (%) values in a responsive canvas environment.</p>
+
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/canvas-067.html">Annotated code</a></p>
